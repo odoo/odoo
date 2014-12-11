@@ -152,6 +152,7 @@ class product_uom(osv.osv):
     _defaults = {
         'active': 1,
         'rounding': 0.01,
+        'factor': 1,
         'uom_type': 'reference',
     }
 
@@ -177,10 +178,7 @@ class product_uom(osv.osv):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
-        # First round to the precision of the original unit, so that
-        # float representation errors do not bias the following ceil()
-        # e.g. with 1 / (1/12) we could get 12.0000048, ceiling to 13! 
-        amount = float_round(qty/from_unit.factor, precision_rounding=from_unit.rounding)
+        amount = qty/from_unit.factor
         if to_unit:
             amount = ceiling(amount * to_unit.factor, to_unit.rounding)
         return amount
@@ -532,6 +530,10 @@ class product_product(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def _get_name_template_ids(self, cr, uid, ids, context=None):
+        template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
+        return list(set(template_ids))
+
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
@@ -563,7 +565,11 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store=True, select=True),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
+            'product.template': (_get_name_template_ids, ['name'], 10),
+            'product.product': (lambda self, cr, uid, ids, c=None: ids, ['product_tmpl_id'], 10),
+
+            }, select=True),
         'color': fields.integer('Color Index'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",

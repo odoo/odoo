@@ -46,23 +46,24 @@ class stock_invoice_onshipping(osv.osv_memory):
         browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
 
         for pick in browse_picking:
-            if not pick.move_lines:
-                continue
-            src_usage = pick.move_lines[0].location_id.usage
-            dest_usage = pick.move_lines[0].location_dest_id.usage
-            type = pick.type
-            if type == 'out' and dest_usage == 'supplier':
-                journal_type = 'purchase_refund'
-            elif type == 'out' and dest_usage == 'customer':
-                journal_type = 'sale'
-            elif type == 'in' and src_usage == 'supplier':
-                journal_type = 'purchase'
-            elif type == 'in' and src_usage == 'customer':
-                journal_type = 'sale_refund'
-            else:
-                journal_type = 'sale'
+            domain = [('type', 'in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])]
+            if pick.move_lines:
+                src_usage = pick.move_lines[0].location_id.usage
+                dest_usage = pick.move_lines[0].location_dest_id.usage
+                type = pick.type
+                if type == 'out' and dest_usage == 'supplier':
+                    journal_type = 'purchase_refund'
+                elif type == 'out' and dest_usage == 'customer':
+                    journal_type = 'sale'
+                elif type == 'in' and src_usage == 'supplier':
+                    journal_type = 'purchase'
+                elif type == 'in' and src_usage == 'customer':
+                    journal_type = 'sale_refund'
+                else:
+                    journal_type = 'sale'
+                domain = [('type', '=', journal_type)]
 
-            value = journal_obj.search(cr, uid, [('type', '=',journal_type )])
+            value = journal_obj.search(cr, uid, domain)
             for jr_type in journal_obj.browse(cr, uid, value, context=context):
                 t1 = jr_type.id,jr_type.name
                 if t1 not in vals:

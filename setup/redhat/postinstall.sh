@@ -24,7 +24,7 @@ db_host = False
 db_port = False
 db_user = openerp
 db_password = False
-addons_path = /usr/local/lib/python2.6/dist-packages/openerp/addons
+addons_path = /usr/lib/python2.6/site-packages/openerp/addons
 " > $ODOO_CONFIGURATION_FILE
 chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
 chmod 0640 $ODOO_CONFIGURATION_FILE
@@ -37,7 +37,6 @@ mkdir -p $ODOO_DATA_DIR
 chown $ODOO_USER:$ODOO_GROUP $ODOO_DATA_DIR
 
 echo '#!/bin/sh
-
 ### BEGIN INIT INFO
 # Provides:     openerp-server
 # Required-Start:   $remote_fs $syslog
@@ -49,7 +48,6 @@ echo '#!/bin/sh
 # Short-Description:    Enterprise Resource Management software
 # Description:      Open ERP is a complete ERP and CRM software.
 ### END INIT INFO
-
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
 DAEMON=/usr/bin/openerp-server
 NAME=openerp-server
@@ -57,46 +55,37 @@ DESC=openerp-server
 CONFIG=/etc/openerp/openerp-server.conf
 LOGFILE=/var/log/openerp/openerp-server.log
 USER=openerp
-
 test -x ${DAEMON} || exit 0
-
 set -e
-
 do_start () {
     echo -n "Starting ${DESC}: "
     start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid --chuid ${USER} --background --make-pidfile --exec ${DAEMON} -- --config=${CONFIG} --logfile=${LOGFILE}
     echo "${NAME}."
 }
-
 do_stop () {
     echo -n "Stopping ${DESC}: "
     start-stop-daemon --stop --quiet --pidfile /var/run/${NAME}.pid --oknodo
     echo "${NAME}."
 }
-
 case "${1}" in
     start)
         do_start
         ;;
-
     stop)
         do_stop
         ;;
-
     restart|force-reload)
         echo -n "Restarting ${DESC}: "
         do_stop
         sleep 1
         do_start
         ;;
-
     *)
         N=/etc/init.d/${NAME}
         echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
         exit 1
         ;;
 esac
-
 exit 0
 ' > /etc/init.d/openerp
 chmod 700 /etc/init.d/openerp

@@ -501,7 +501,17 @@ class browse_record(object):
     def __getattr__(self, name):
         try:
             return self[name]
-        except KeyError, e:
+        except KeyError as e:
+            if name in self._all_columns:
+                raise ValueError(
+                    'Cannot fetch field "%(field)s" for "%(model)s" record '
+                    'with ID %(id)s, that record does not exist or has been '
+                    'deleted' % {
+                        'field': name,
+                        'model': self._model._name,
+                        'id': self._id,
+                    }
+                )
             raise AttributeError(e)
 
     def __contains__(self, name):
