@@ -167,7 +167,7 @@ class crm_case_categ(osv.osv):
 
     _defaults = {
         'object_id': _find_object_id,
-        'active': lambda *a: 1,
+        'active': True,
     }
 
 
