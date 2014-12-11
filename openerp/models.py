@@ -1483,7 +1483,7 @@ class BaseModel(object):
         Get the detailed composition of the requested view like fields, model, view architecture
 
         :param view_id: id of the view or None
-        :param view_type: type of the view to return if view_id is None ('form', tree', ...)
+        :param view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param toolbar: true to include contextual actions
         :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
