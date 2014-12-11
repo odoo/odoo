@@ -159,6 +159,11 @@ class crm_lead(format_address, osv.osv):
             fold[stage.id] = stage.fold or False
         return result, fold
 
+    def _lead_merge_fields(self, cr, uid, context=None):
+        """ Returns the list of fields that are checked when two lead merges
+        together. """
+        return list(CRM_LEAD_FIELDS_TO_MERGE)
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context and context.get('opportunity_id'):
             action = self._get_formview_action(cr, user, context['opportunity_id'], context=context)
@@ -547,8 +552,7 @@ class crm_lead(format_address, osv.osv):
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
-            fields = list(CRM_LEAD_FIELDS_TO_MERGE)
-            details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
+            details.append(self._mail_body(cr, uid, opportunity, self._lead_merge_fields(cr, uid), title=title, context=context))
 
         # Chatter message's subject
         subject = subject[0] + ": " + ", ".join(subject[1:])
@@ -661,8 +665,7 @@ class crm_lead(format_address, osv.osv):
 
         tail_opportunities = opportunities_rest
 
-        fields = list(CRM_LEAD_FIELDS_TO_MERGE)
-        merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
+        merged_data = self._merge_data(cr, uid, ids, highest, self._lead_merge_fields(cr, uid), context=context)
 
         if user_id:
             merged_data['user_id'] = user_id
@@ -682,7 +685,7 @@ class crm_lead(format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities 
+        # Delete tail opportunities
         # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
         self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
