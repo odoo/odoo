@@ -128,5 +128,3 @@ class asset_modify(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 asset_modify()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

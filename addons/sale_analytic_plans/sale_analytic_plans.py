@@ -48,5 +48,3 @@ class sale_order(osv.osv):
         if res.get('value',{}).get('project_id'):
             del(res['value']['project_id'])
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

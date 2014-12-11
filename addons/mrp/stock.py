@@ -185,5 +185,3 @@ class split_in_production_lot(osv.osv_memory):
         return new_moves
 
 split_in_production_lot()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

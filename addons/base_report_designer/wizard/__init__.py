@@ -20,5 +20,3 @@
 ##############################################################################
 
 import base_report_designer_modify
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

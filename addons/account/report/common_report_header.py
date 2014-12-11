@@ -139,7 +139,3 @@ class common_report_header(object):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
         return ''
-
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

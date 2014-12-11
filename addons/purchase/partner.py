@@ -59,8 +59,3 @@ class res_partner(osv.osv):
         'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order')
     }
 res_partner()
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

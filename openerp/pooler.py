@@ -47,5 +47,3 @@ def get_db(db_name):
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
     """Return a model registry."""
     return get_db_and_pool(db_name, force_demo, status, update_module)[1]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

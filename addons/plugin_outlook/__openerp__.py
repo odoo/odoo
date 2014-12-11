@@ -43,4 +43,3 @@ into mail.message with attachments.
     'images': ['images/config_outlook.jpeg','images/outlook_config_openerp.jpeg','images/outlook_push.jpeg'],
 
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

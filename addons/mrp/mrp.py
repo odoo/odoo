@@ -1110,5 +1110,3 @@ class product_product(osv.osv):
     _columns = {
         'bom_ids': fields.one2many('mrp.bom', 'product_id', 'Bill of Materials'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

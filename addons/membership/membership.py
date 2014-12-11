@@ -562,5 +562,3 @@ class account_invoice_line(osv.osv):
         return result
 
 account_invoice_line()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

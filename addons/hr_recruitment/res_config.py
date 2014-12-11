@@ -34,4 +34,3 @@ class hr_applicant_settings(osv.osv_memory):
             help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
                 and create automatically application documents in the system."""),
     }
-

@@ -113,5 +113,3 @@ class stock_change_product_qty(osv.osv_memory):
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

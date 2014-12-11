@@ -47,4 +47,3 @@ class account_analytic_chart(osv.osv_memory):
         return result
 
 account_analytic_chart()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

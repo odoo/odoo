@@ -63,6 +63,3 @@ class action_traceability(osv.osv_memory):
         return value
 
 action_traceability()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

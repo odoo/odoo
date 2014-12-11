@@ -426,6 +426,3 @@ class WorkerCron(Worker):
         mct = config['max_cron_threads']
         p = float(self.pid % mct) / mct
         self.db_index = int(len(self._db_list()) * p)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

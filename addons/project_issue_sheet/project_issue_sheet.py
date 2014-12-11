@@ -78,5 +78,3 @@ class hr_analytic_issue(osv.osv):
     }
 
 hr_analytic_issue()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

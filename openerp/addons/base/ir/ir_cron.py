@@ -285,5 +285,3 @@ class ir_cron(osv.osv):
         self._try_lock(cr, uid, ids, context)
         res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

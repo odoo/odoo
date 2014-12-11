@@ -65,5 +65,3 @@ class hr_attendance_error(osv.osv_memory):
         }
 
 hr_attendance_error()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

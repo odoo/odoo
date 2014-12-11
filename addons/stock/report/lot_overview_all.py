@@ -50,7 +50,3 @@ class lot_overview_all(report_sxw.rml_parse):
         return self.grand_total
 
 report_sxw.report_sxw('report.lot.stock.overview_all', 'stock.location', 'addons/stock/report/lot_overview_all.rml', parser=lot_overview_all,header='internal')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

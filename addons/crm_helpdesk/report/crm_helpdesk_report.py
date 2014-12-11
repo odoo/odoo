@@ -109,5 +109,3 @@ class crm_helpdesk_report(osv.osv):
             )""")
 
 crm_helpdesk_report()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

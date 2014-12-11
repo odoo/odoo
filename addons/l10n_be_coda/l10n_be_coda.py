@@ -68,6 +68,3 @@ class account_bank_statement_line(osv.osv):
                         except ValueError:
                             pass
         return True
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

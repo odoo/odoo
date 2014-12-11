@@ -250,5 +250,3 @@ class base_gengo_translations(osv.osv_memory):
                 _logger.info('No Translation terms to process.')
         except Exception, e:
             _logger.error("%s", e)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

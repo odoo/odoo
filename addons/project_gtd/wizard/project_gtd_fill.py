@@ -57,5 +57,3 @@ class project_timebox_fill(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 project_timebox_fill()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -69,4 +69,3 @@ The validation can be configured in the company:
     'css': ['static/src/css/timesheet.css',],
     'qweb': ['static/src/xml/timesheet.xml',],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

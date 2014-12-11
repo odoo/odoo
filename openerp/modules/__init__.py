@@ -36,6 +36,3 @@ from openerp.modules.module import \
     adapt_version
 
 from openerp.modules.loading import load_modules
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

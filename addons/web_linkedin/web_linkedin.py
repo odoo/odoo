@@ -55,4 +55,3 @@ class web_linkedin_settings(osv.osv_memory):
     def set_linkedin(self, cr, uid, ids, context=None):
         key = self.browse(cr, uid, ids[0], context)["api_key"] or ""
         self.pool.get("ir.config_parameter").set_param(cr, uid, "web.linkedin.apikey", key)
-

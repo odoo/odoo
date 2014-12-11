@@ -132,5 +132,3 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         return self.result_acc
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

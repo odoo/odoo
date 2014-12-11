@@ -60,5 +60,3 @@ the bank account\nin the journal definition for reconciliation.'))
              }
 
 account_move_bank_reconcile()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -342,5 +342,3 @@ class partner_vat_listing_print(report_sxw.rml_parse):
         super(partner_vat_listing_print, self).set_context(objects, data, ids)
 
 report_sxw.report_sxw('report.partner.vat.listing.print', 'res.partner', 'addons/l10n_be/wizard/l10n_be_partner_vat_listing.rml', parser=partner_vat_listing_print,header=False)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

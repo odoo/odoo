@@ -66,6 +66,3 @@ def start_server():
         ds = ftp_server()
         ds.daemon = True
         ds.start()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

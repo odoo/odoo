@@ -1399,5 +1399,3 @@ class product_product(osv.osv):
             'view_id': False,
             'context':context,
         }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

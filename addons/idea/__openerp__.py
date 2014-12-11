@@ -47,4 +47,3 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'installable': True,
     'images': [],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

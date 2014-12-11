@@ -72,5 +72,3 @@ class sale_make_invoice(osv.osv_memory):
         return result
 
 sale_make_invoice()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

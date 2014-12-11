@@ -166,5 +166,3 @@ class PointOfSaleController(openerp.addons.web.http.Controller):
     def print_pdf_invoice(self, request, pdfinvoice):
         print 'print_pdf_invoice' + str(pdfinvoice)
         return
-
-

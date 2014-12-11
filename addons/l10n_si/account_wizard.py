@@ -31,4 +31,3 @@ class AccountWizard_cd(osv.osv_memory):
 	}
 
 AccountWizard_cd()
-

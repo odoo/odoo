@@ -79,5 +79,3 @@ class email_template_preview(osv.osv_memory):
         for k in ('email_from','email_to','email_cc','reply_to','subject','body_html'):
             vals[k] = mail_values[k]
         return {'value': vals}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

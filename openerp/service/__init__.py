@@ -154,5 +154,3 @@ def restart_server():
         else:
             openerp.phoenix = True
             os.kill(os.getpid(), signal.SIGINT)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

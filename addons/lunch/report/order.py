@@ -74,5 +74,3 @@ class order(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.lunch.order.line', 'lunch.order.line',
         'addons/lunch/report/order.rml',parser=order, header='external')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

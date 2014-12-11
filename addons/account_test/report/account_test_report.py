@@ -83,5 +83,3 @@ class report_assert_account(report_sxw.rml_parse):
         return result
 
 report_sxw.report_sxw('report.account.test.assert.print', 'accounting.assert.test', 'addons/account_test/report/account_test.rml', parser=report_assert_account, header=False)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -42,4 +42,3 @@ This module adds a contact page (with a contact form creating a lead when submit
     'category': 'Hidden',
     'css': ['static/src/css/portal_crm.css'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

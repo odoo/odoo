@@ -74,4 +74,3 @@ confirmation email to communicate the login/password of moodle to your subscribe
     'auto_install': False,
     'images': ['images/token.png','images/enable_webservice.png','images/active_xmlrpc.png'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

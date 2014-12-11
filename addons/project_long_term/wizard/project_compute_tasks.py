@@ -60,5 +60,3 @@ class project_compute_tasks(osv.osv_memory):
         return result
 
 project_compute_tasks()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

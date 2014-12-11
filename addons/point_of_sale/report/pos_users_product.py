@@ -64,5 +64,3 @@ class pos_user_product(report_sxw.rml_parse):
         return self.total
 
 report_sxw.report_sxw('report.pos.user.product', 'account.bank.statement', 'addons/statement/report/pos_users_product.rml', parser=pos_user_product,header='internal')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

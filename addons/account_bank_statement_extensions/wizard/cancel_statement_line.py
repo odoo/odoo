@@ -33,5 +33,3 @@ class cancel_statement_line(osv.osv_memory):
         return {}
 
 cancel_statement_line()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

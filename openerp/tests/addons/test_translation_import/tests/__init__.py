@@ -6,4 +6,3 @@ import test_term_count
 suite = [
     test_term_count
     ]
-

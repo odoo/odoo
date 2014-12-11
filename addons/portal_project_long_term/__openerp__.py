@@ -39,4 +39,3 @@ This module adds necessary security rules and access rights for project long ter
     'auto_install': True,
     'category': 'Hidden',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

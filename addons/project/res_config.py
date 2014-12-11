@@ -76,5 +76,3 @@ class project_configuration(osv.osv_memory):
         if group_time_work_estimation_tasks or module_project_timesheet:
             return {'value': {'group_tasks_work_on_tasks': True}}
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

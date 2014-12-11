@@ -68,5 +68,3 @@ class account_partner_ledger(osv.osv_memory):
         }
 
 account_partner_ledger()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

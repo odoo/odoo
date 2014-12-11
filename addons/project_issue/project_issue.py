@@ -613,5 +613,3 @@ class project_project(osv.osv):
     _defaults = {
         'use_issues': True
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

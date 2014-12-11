@@ -39,7 +39,3 @@ The decimal precision is configured per company.
     'installable': True,
     'images': ['images/1_decimal_accuracy_form.jpeg','images/1_decimal_accuracy_list.jpeg'],
 }
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

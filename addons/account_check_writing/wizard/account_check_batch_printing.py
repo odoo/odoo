@@ -84,4 +84,3 @@ class account_check_write(osv.osv_memory):
             }
 
 account_check_write()
-

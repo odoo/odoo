@@ -285,5 +285,3 @@ class report_account_sales(osv.osv):
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
 report_account_sales()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -54,5 +54,3 @@ class base_module_update(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

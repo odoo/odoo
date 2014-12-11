@@ -32,8 +32,3 @@ class crm_todo(osv.osv):
     _columns = {
         'task_ids': fields.one2many('project.task', 'lead_id', 'Tasks'),
     }
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

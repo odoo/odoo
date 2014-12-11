@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-# vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak
 # Copyright (c) 2007, Ashish Kulkarni <kulkarni.ashish@gmail.com>
@@ -1859,5 +1858,3 @@ def _alg35(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encr
 #
 #    output.addPage(page1)
 #    output.write(file("test\\merge-test.pdf", "wb"))
-
-

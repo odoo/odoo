@@ -244,5 +244,3 @@ class res_partner(osv.osv):
              'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
 
 res_partner()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

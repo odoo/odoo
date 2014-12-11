@@ -44,5 +44,3 @@ class res_currency_account(osv.osv):
         return rate
 
 res_currency_account()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

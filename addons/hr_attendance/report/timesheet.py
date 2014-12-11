@@ -122,4 +122,3 @@ class report_custom(report_rml):
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.hr.attendance.allweeks', 'hr.employee', '', 'addons/hr_attendance/report/timesheet.xsl')
-# vim:noexpandtab:tw=0

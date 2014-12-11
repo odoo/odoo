@@ -317,6 +317,3 @@ class purchase_order_line(osv.osv):
         return {'value': result.get('value',{}), 'warning':warning}
 
 purchase_order_line()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

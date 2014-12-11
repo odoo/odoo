@@ -43,4 +43,3 @@ You can now define the following for a product:
     'installable': True,
     'images': ['images/products_manufacturer.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

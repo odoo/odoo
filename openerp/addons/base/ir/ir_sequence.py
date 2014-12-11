@@ -305,6 +305,3 @@ class ir_sequence(openerp.osv.osv.osv):
         deprecated.
         """
         return self.get_id(cr, uid, code, 'code', context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

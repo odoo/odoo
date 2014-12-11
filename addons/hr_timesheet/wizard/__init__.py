@@ -22,6 +22,3 @@
 import hr_timesheet_sign_in_out
 import hr_timesheet_print_employee
 import hr_timesheet_print_users
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

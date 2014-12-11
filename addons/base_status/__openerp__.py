@@ -38,4 +38,3 @@ This module handles state and stage. It is derived from the crm_base and crm_cas
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

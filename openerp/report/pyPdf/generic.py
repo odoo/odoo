@@ -1,4 +1,3 @@
-# vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak
 # All rights reserved.
@@ -797,4 +796,3 @@ for i in xrange(256):
         continue
     assert char not in _pdfDocEncoding_rev
     _pdfDocEncoding_rev[char] = i
-

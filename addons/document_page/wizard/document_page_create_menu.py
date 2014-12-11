@@ -83,6 +83,3 @@ class document_page_create_menu(osv.osv_memory):
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

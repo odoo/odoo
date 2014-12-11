@@ -34,6 +34,3 @@ class cdr(base_report.base_report):
         super(cdr, self).__init__(cr, uid, name, context)
 
 report_sxw.report_sxw('report.l10n.fr.compute_resultant', 'account.move.line','addons/l10n_fr/report/compute_resultant_report.rml', parser=cdr, header=False)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

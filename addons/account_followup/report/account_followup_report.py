@@ -92,5 +92,3 @@ class account_followup_stat(osv.osv):
                     l.id, l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
 account_followup_stat()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

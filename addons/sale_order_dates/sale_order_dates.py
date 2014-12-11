@@ -60,5 +60,3 @@ class sale_order_dates(osv.osv):
     }
 
 sale_order_dates()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

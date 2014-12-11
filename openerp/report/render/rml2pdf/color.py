@@ -40,6 +40,3 @@ def get(col_str):
     if res:
         return tuple([ float(int(res.group(i),16))/255 for i in range(1,4)])
     return colors.red
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

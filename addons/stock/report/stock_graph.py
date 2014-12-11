@@ -110,6 +110,3 @@ if __name__ == '__main__':
     gt.add(2, 'Cailloux', [('2005-07-29', 9), ('2005-07-30', -4), ('2005-07-31', 2)])
     gt.draw()
     gt.close()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

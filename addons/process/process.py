@@ -386,5 +386,3 @@ class process_transition_action(osv.osv):
         return super(process_transition_action, self).copy_data(cr, uid, id, default, context)
 
 process_transition_action()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,4 +30,3 @@ class m(openerp.osv.osv.Model):
 
     def generate_undefined(self, cr, uid, ids, context=None):
         self.surely_undefined_sumbol
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

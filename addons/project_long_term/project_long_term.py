@@ -334,5 +334,3 @@ class project_task(osv.osv):
         'phase_id': fields.many2one('project.phase', 'Project Phase', domain="[('project_id', '=', project_id)]"),
     }
 project_task()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -78,7 +78,3 @@ def check(cr, workitem, ident, transition, signal):
             return False
 
     return _eval_expr(cr, ident, workitem, transition['condition'])
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

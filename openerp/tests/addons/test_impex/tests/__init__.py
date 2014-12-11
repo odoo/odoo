@@ -10,5 +10,3 @@ checks = [
     test_import,
     test_load,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

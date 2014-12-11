@@ -121,7 +121,3 @@ class purchase_line_invoice(osv.osv_memory):
             'type': 'ir.actions.act_window'
         }
 purchase_line_invoice()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

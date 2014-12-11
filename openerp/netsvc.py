@@ -326,5 +326,3 @@ def post_mortem(info):
     if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
         import pdb
         pdb.post_mortem(info[2])
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

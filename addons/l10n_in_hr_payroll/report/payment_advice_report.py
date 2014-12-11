@@ -83,5 +83,3 @@ class payment_advice_report(osv.osv):
             )
         """)
 payment_advice_report()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

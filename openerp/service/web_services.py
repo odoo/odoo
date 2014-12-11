@@ -769,6 +769,3 @@ def start_service():
     common()
     objects_proxy()
     report_spool()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

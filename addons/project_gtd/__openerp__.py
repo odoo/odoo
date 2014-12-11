@@ -53,4 +53,3 @@ GTD rests on the principle that a person needs to move tasks out of the mind by 
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

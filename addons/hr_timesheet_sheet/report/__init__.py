@@ -21,5 +21,3 @@
 
 import timesheet_report
 import hr_timesheet_report
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

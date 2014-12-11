@@ -23,6 +23,3 @@ class except_wkf(Exception):
     def __init__(self, name, value):
         self.name = name
         self.value = value
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

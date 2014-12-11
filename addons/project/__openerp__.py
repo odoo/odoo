@@ -89,4 +89,3 @@ Dashboard / Reports for Project Management will include:
     'css': ['static/src/css/project.css'],
     'js': ['static/src/js/project.js'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

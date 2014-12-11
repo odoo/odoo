@@ -106,5 +106,3 @@ allows pre-setting the default groups and menus of the first-time users.
         'python' : ['ldap'],
     }
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

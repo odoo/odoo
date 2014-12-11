@@ -53,5 +53,3 @@ class res_partner(osv.osv):
         'out_inv_comm_type': 'none',
     }
 res_partner()    
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

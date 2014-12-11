@@ -251,5 +251,3 @@ class delivery_grid_line(osv.osv):
     _order = 'list_price'
 
 delivery_grid_line()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

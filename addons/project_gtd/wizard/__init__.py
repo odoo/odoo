@@ -21,6 +21,3 @@
 
 import project_gtd_empty
 import project_gtd_fill
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

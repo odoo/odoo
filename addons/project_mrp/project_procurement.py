@@ -101,5 +101,3 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

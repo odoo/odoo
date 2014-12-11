@@ -36,5 +36,3 @@ Importing them from here is deprecated.
 
 # get_module_path is used only by base_module_quality
 from openerp.modules import get_module_resource, get_module_path
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

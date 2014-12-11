@@ -102,5 +102,3 @@ Dashboard / Reports for Warehouse Management will include:
     'auto_install': False,
     'css': [ 'static/src/css/stock.css' ],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

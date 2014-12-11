@@ -121,5 +121,3 @@ report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
         'account.analytic.account',
         'addons/account/project/report/quantity_cost_ledger.rml',
         parser=account_analytic_quantity_cost_ledger, header="internal")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

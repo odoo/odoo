@@ -24,5 +24,3 @@ from . import test_multicompany
 checks = [
     test_multicompany,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

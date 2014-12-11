@@ -38,5 +38,3 @@ class knowledge_config_settings(osv.osv_memory):
             help="""Access your documents in OpenERP through WebDAV.
                 This installs the module document_webdav."""),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -147,6 +147,3 @@ setuptools.setup(
       tests_require = ['unittest2'],
       **py2exe_options()
 )
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

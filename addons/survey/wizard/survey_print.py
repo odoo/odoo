@@ -65,5 +65,3 @@ class survey_print(osv.osv_memory):
             'datas': datas,
         }
 survey_print()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

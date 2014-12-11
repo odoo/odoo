@@ -143,5 +143,3 @@ class ir_filters(osv.osv):
     }
 
 ir_filters()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

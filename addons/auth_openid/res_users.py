@@ -91,7 +91,3 @@ class res_users(osv.osv):
                 self._uid_cache.setdefault(db, {})[uid] = passwd
 
 res_users()
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

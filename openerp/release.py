@@ -51,5 +51,3 @@ author_email = 'info@openerp.com'
 license = 'AGPL-3'
 
 nt_service_name = "openerp-server-" + serie
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

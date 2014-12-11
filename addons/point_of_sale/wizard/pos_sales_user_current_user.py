@@ -54,6 +54,3 @@ class pos_sales_user_today_current_user(osv.osv_memory):
        }
 
 pos_sales_user_today_current_user()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

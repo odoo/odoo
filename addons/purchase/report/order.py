@@ -30,6 +30,3 @@ class order(report_sxw.rml_parse):
         self.localcontext.update({'time': time})
 
 report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase/report/order.rml',parser=order)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

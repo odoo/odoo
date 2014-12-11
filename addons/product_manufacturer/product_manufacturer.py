@@ -39,5 +39,3 @@ class product_attribute(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
     }
 product_attribute()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

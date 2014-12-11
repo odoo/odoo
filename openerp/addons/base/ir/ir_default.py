@@ -44,6 +44,3 @@ class ir_default(osv.osv):
         'company_id': _get_company_id,
     }
 ir_default()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

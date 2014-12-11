@@ -82,6 +82,3 @@ class repair_cancel(osv.osv_memory):
         return res
 
 repair_cancel()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

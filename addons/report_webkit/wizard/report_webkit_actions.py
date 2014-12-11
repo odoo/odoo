@@ -140,5 +140,3 @@ class report_webkit_actions(osv.osv_memory):
                 }                   
 
 report_webkit_actions()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

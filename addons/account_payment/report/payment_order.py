@@ -74,5 +74,3 @@ class payment_order(report_sxw.rml_parse):
         return False
 
 report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header="external")
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

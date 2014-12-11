@@ -28,6 +28,3 @@ class res_users(osv.osv):
         'gmail_password': fields.char('Password', size=64),
     }
 res_users()    
-
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
-

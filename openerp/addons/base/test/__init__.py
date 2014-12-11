@@ -23,5 +23,3 @@
 # This must be (un)commented with the corresponding yml file
 # in ../__openerp__.py.
 # import test_ir_cron
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

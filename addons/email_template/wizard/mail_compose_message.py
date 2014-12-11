@@ -179,5 +179,3 @@ class mail_compose_message(osv.TransientModel):
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         return self.pool.get('email.template').render_template(cr, uid, template, model, res_id, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

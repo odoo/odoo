@@ -413,5 +413,3 @@ class email_template(osv.osv):
         if force_send:
             mail_mail.send(cr, uid, [msg_id], recipient_ids=recipient_ids, context=context)
         return msg_id
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

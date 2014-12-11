@@ -74,5 +74,3 @@ class calendar_attendee(osv.osv):
                         string='Event Type', type="many2one", \
                         relation="crm.case.categ", multi='categ_id'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

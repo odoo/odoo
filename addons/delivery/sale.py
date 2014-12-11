@@ -76,6 +76,3 @@ class sale_order(osv.osv):
         #return {'type': 'ir.actions.act_window_close'} action reload?
 
 sale_order()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

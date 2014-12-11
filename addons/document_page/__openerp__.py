@@ -45,4 +45,3 @@ Web pages
     'images': [],
     'css' : ['static/src/css/document_page.css'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

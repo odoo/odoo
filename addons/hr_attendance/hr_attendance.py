@@ -167,5 +167,3 @@ class hr_employee(osv.osv):
         return True
 
 hr_employee()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -169,7 +169,3 @@ class subscription_subscription_history(osv.osv):
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
 subscription_subscription_history()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

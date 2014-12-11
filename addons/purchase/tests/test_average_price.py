@@ -174,4 +174,3 @@ class TestAveragePrice(common.TransactionCase):
             new_price,
             (self.available_qty * self.standard_price + self.order_qty * self.order_price_unit)
             /(self.available_qty + self.order_qty))
-

@@ -40,4 +40,3 @@ This module adds a list of employees to your portal's contact page if hr and por
     'category': 'Hidden',
     'css': ['static/src/css/portal_hr_employees.css'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

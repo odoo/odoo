@@ -169,5 +169,3 @@ class hr_si_project(osv.osv_memory):
         return res
 
 hr_si_project()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

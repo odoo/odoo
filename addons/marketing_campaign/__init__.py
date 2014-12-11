@@ -22,6 +22,3 @@
 import marketing_campaign
 import res_partner
 import report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -99,5 +99,3 @@ class crm_phonecall2phonecall(osv.osv_memory):
         return res
 
 crm_phonecall2phonecall()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

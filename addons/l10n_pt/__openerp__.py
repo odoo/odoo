@@ -45,4 +45,3 @@
     'demo_xml': [],
     'installable': True,
 }
-

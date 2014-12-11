@@ -316,5 +316,3 @@ class account_followup_print(osv.osv_memory):
         return {'partner_ids': partner_list, 'to_update': to_update}
 
 account_followup_print()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

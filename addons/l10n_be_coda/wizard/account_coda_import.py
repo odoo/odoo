@@ -411,7 +411,3 @@ class account_coda_import(osv.osv_memory):
 
 def rmspaces(s):
     return " ".join(s.split())
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

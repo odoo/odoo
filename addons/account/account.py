@@ -3592,5 +3592,3 @@ class account_bank_accounts_wizard(osv.osv_memory):
     }
 
 account_bank_accounts_wizard()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,5 +41,3 @@ class plugin_thunderbird_installer(osv.osv_memory):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         res['plugin_file'] = base_url + '/plugin_thunderbird/static/openerp_plugin.xpi'
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

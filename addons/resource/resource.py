@@ -510,5 +510,3 @@ class resource_calendar_leaves(osv.osv):
         return {'value': {'calendar_id': []}}
 
 resource_calendar_leaves()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

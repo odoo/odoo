@@ -55,5 +55,3 @@ class account_payment_make_payment(osv.osv_memory):
 #        return obj_act.read(cr, uid, [id])[0]
 
 account_payment_make_payment()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

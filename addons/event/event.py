@@ -404,5 +404,3 @@ class event_registration(osv.osv):
             d = self.onchange_contact_id(cr, uid, ids, addr, part, context)
             data.update(d['value'])
         return {'value': data}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

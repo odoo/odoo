@@ -67,5 +67,3 @@ class authorizer:
     def get_msg_quit(self, username):
         """Return the user's quitting message."""
         return 'Bye.'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

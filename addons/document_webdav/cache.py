@@ -36,6 +36,3 @@ def memoize(maxsize):
         wrapper.hits = wrapper.misses = 0
         return wrapper 
     return decorating_function
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

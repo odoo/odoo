@@ -75,5 +75,3 @@ def get_precision(application):
         res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, application)
         return (16, res)
     return change_digit
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
