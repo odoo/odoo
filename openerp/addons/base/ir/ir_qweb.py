@@ -338,7 +338,12 @@ class QWeb(orm.AbstractModel):
             return "<%s%s/>" % (name, generated_attributes)
 
     def render_attribute(self, element, name, value, qwebcontext):
-        return ' %s="%s"' % (name, escape(value))
+        value = ' %s="%s"' % (name, escape(value))
+        if isinstance(value, unicode):
+            value = value.encode('utf-8')
+        if isinstance(value, str):
+            return value.decode('utf-8')
+        return value
 
     def render_text(self, text, element, qwebcontext):
         return text.encode('utf-8')
