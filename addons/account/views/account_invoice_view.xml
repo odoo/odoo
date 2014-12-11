@@ -61,7 +61,7 @@
                         </group>
                         <group>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id)]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
-                            <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
+                            <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)], ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
@@ -81,7 +81,6 @@
                     <field name="manual"/>
                     <field name="name"/>
                     <field name="account_id" groups="base.group_account_user"/>
-                    <field name="base"/>
                     <field name="amount"/>
                 </tree>
             </field>
@@ -99,14 +98,6 @@
                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
-                        <field name="base" readonly="0"/>
-                        <separator colspan="4" string="Tax Codes"/>
-                        <field name="base_code_id"/>
-                        <field name="base_amount"/>
-                        <field name="tax_code_id"/>
-                        <field name="tax_amount"/>
-                        <field name="factor_base" invisible="True"/>
-                        <field name="factor_tax" invisible="True"/>
                     </group>
                 </form>
             </field>
@@ -210,7 +201,7 @@
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
@@ -234,13 +225,7 @@
                                         <field name="name"/>
                                         <field name="account_id" groups="account.group_account_invoice"/>
                                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                        <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                         <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-
-                                        <field invisible="True" name="base_amount"/>
-                                        <field invisible="True" name="tax_amount"/>
-                                        <field name="factor_base" invisible="True"/>
-                                        <field name="factor_tax" invisible="True"/>
                                     </tree>
                                 </field>
                             </div>
@@ -363,7 +348,7 @@
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
-                                        domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
+                                        domain="[('type_tax_use','!=','as_child'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
@@ -410,12 +395,7 @@
                                 <tree editable="bottom" string="Taxes">
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
-                                    <field name="base" on_change="base_change(base,parent.currency_id,parent.company_id,parent.date_invoice)" readonly="1"/>
                                     <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-                                    <field invisible="True" name="base_amount"/>
-                                    <field invisible="True" name="tax_amount"/>
-                                    <field name="factor_base" invisible="True"/>
-                                    <field name="factor_tax" invisible="True"/>
                                 </tree>
                             </field>
                         </page>

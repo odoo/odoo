@@ -109,7 +109,7 @@ openerp.account = function (instance) {
                         relation: "account.tax",
                         string: _t("Tax"),
                         type: "many2one",
-                        domain: [['type_tax_use','!=','as_child']],
+                        domain: [['type_tax_use','=','purchase']],
                     },
                 },
                 amount: {
@@ -980,7 +980,7 @@ openerp.account = function (instance) {
                 var tax = self.map_tax_id_amount[self.tax_id_field.get("value")];
                 if (amount && tax) {
                     deferred_tax = self.model_tax
-                        .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount])
+                        .call("compute_all", [self.tax_id_field.get("value"), amount])
                         .then(function(data){
                             line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
                             line_created_being_edited[0].amount = (data.total.toFixed(4) === amount.toFixed(4) ? amount : data.total);

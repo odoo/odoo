@@ -541,229 +541,62 @@ class account_move_reconcile(models.Model):
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------
-"""
-a documenter
-child_depend: la taxe depend des taxes filles
-"""
-class account_tax_code(models.Model):
-    """
-    A code for the tax object.
-
-    This code is used for some tax declarations.
-    """
-    @api.multi
-    def _sum(self, where ='', where_params=()):
-        parent_ids = tuple(self.search([('parent_id', 'child_of', self.ids)]).ids)
-        if parent_ids:
-            if self._context.get('based_on', 'invoices') == 'payments':
-                self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                        FROM account_move_line AS line, \
-                            account_move AS move \
-                            LEFT JOIN account_invoice invoice ON \
-                                (invoice.move_id = move.id) \
-                        WHERE line.tax_code_id IN %s '+where+' \
-                            AND move.id = line.move_id \
-                            AND ((invoice.state = \'paid\') \
-                                OR (invoice.id IS NULL)) \
-                                GROUP BY line.tax_code_id',
-                                    (parent_ids,) + where_params)
-            else:
-                self._cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                        FROM account_move_line AS line, \
-                        account_move AS move \
-                        WHERE line.tax_code_id IN %s '+where+' \
-                        AND move.id = line.move_id \
-                        GROUP BY line.tax_code_id',
-                           (parent_ids,) + where_params)
-        res=dict(self._cr.fetchall())
-        res2 = {}
-        for record in self:
-            def _rec_get(record):
-                amount = res.get(record.id, 0.0)
-                for rec in record.child_ids:
-                    amount += _rec_get(rec) * rec.sign
-                return amount
-            amount = round(_rec_get(record), self.env['decimal.precision'].precision_get('Account'))
-            record.sum = amount
-
-    @api.multi
-    def _sum_year(self):
-        move_state = ('posted', )
-        FiscalyearObj = self.env['account.fiscalyear']
-        if self._context.get('state', 'all') == 'all':
-            move_state = ('draft', 'posted', )
-        if self._context.get('fiscalyear_id', False):
-            fiscalyear_id = [self._context['fiscalyear_id']]
-        else:
-            dt = fields.Date.context_today(self)
-            fiscalyear_id = FiscalyearObj.search([('date_start', '<=' ,dt), ('date_stop', '>=', dt)], limit=1).id
-        where = ''
-        where_params = ()
-        if fiscalyear_id:
-            for fiscalyear in FiscalyearObj.browse(fiscalyear_id):
-                date_start = fiscalyear.date_start
-                date_stop = fiscalyear.date_stop
-                where = ' AND line.date >= %s AND line.date <= %s AND move.state IN %s '
-                where_params = (date_start, date_stop, move_state)
-        self._sum(where=where, where_params=where_params)
-
-    _name = 'account.tax.code'
-    _description = 'Tax Code'
-    _rec_name = 'code'
-    _order = 'sequence, code'
-
-    name = fields.Char(string='Tax Case Name', required=True, translate=True)
-    code = fields.Char(string='Case Code', size=64)
-    info = fields.Text(string='Description')
-    sum = fields.Float(compute='_sum_year', string='Year Sum')
-    parent_id = fields.Many2one('account.tax.code', string='Parent Code', index=True)
-    child_ids = fields.One2many('account.tax.code', 'parent_id', string='Child Codes')
-    line_ids = fields.One2many('account.move.line', 'tax_code_id', string='Lines')
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    sign = fields.Float(string='Coefficent for parent', required=True, default=1.0,
-        help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.')
-    notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
-        help="Check this box if you don't want any tax related to this tax code to appear on invoices")
-    sequence = fields.Integer(string='Sequence',
-        help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'")
-
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=80):
-        args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('code', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('code', operator, name), ('name', operator, name)]
-        recs = self.search(expression.AND([domain, args]), limit=limit)
-        return recs.name_get()
-
-    @api.multi
-    @api.depends('name', 'code')
-    def name_get(self):
-        return [(x.id, (x.code and (x.code + ' - ') or '') + x.name) for x in self]
-
-    _constraints = [
-        (models.Model._check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
-    ]
-
-def get_precision_tax():
-    def change_digit_tax(cr):
-        res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
-        return (16, res+3)
-    return change_digit_tax
-
 
 class account_tax(models.Model):
-    """
-    A tax object.
-
-    Type: percent, fixed, none, code
-        PERCENT: tax = price * amount
-        FIXED: tax = price + amount
-        NONE: no tax line
-        CODE: execute python code. localcontext = {'price_unit':pu}
-            return result in the context
-            Ex: result=round(price_unit*0.21,4)
-    """
-
-    @api.one
-    def copy_data(self, default=None):
-        if default is None:
-            default = {}
-        default = dict(default, name=_("%s (Copy)") % self.name)
-        return super(account_tax, self).copy_data(default=default)
-
     _name = 'account.tax'
     _description = 'Tax'
     _order = 'sequence'
 
-    name = fields.Char(string='Tax Name', required=True, translate=True, help="This name will be displayed on reports")
-    sequence = fields.Integer(string='Sequence', required=True, default=1,
-        help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important.")
-    amount = fields.Float(string='Amount', required=True, digits=get_precision_tax(), default=0,
-        help="For taxes of type percentage, enter % ratio between 0-1.")
-    active = fields.Boolean(string='Active', default=True,
-        help="If the active field is set to False, it will allow you to hide the tax without removing it.")
-    type = fields.Selection([('percent', 'Percentage'), ('fixed', 'Fixed Amount'), ('none', 'None'), ('code', 'Python Code'), ('balance', 'Balance')],
-        default='percent', string='Tax Type', required=True, help="The computation method for the tax amount.")
-    applicable_type = fields.Selection([('true', 'Always'), ('code', 'Given by Python Code')], string='Applicability', required=True, default='true',
-        help="If not applicable (computed through a Python code), the tax won't appear on the invoice.")
-    domain = fields.Char(string='Domain',
-        help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain.")
-    account_collected_id = fields.Many2one('account.account', string='Invoice Tax Account', domain=[('deprecated', '=', False)],
-        help="Set the account that will be set by default on invoice tax lines for invoices. Leave empty to use the expense account.")
-    account_paid_id = fields.Many2one('account.account', string='Refund Tax Account', domain=[('deprecated', '=', False)],
-        help="Set the account that will be set by default on invoice tax lines for refunds. Leave empty to use the expense account.")
-    account_analytic_collected_id = fields.Many2one('account.analytic.account', 'Invoice Tax Analytic Account',
-        help="Set the analytic account that will be used by default on the invoice tax lines for invoices. Leave empty if you don't want to use an analytic account on the invoice tax lines by default.")
-    account_analytic_paid_id = fields.Many2one('account.analytic.account', string='Refund Tax Analytic Account',
-        help="Set the analytic account that will be used by default on the invoice tax lines for refunds. Leave empty if you don't want to use an analytic account on the invoice tax lines by default.")
-    parent_id = fields.Many2one('account.tax', string='Parent Tax Account', index=True)
-    child_ids = fields.One2many('account.tax', 'parent_id', string='Child Tax Accounts')
-    child_depend = fields.Boolean(string='Tax on Children',
-        help="Set if the tax computation is based on the computation of child taxes rather than on the total amount.")
-    python_compute = fields.Text(string='Python Code',
-        default='''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''')
-    python_compute_inv = fields.Text(string='Python Code (reverse)',
-        default='''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''')
-    python_applicable = fields.Text(string='Applicable Code')
-
-    #
-    # Fields used for the Tax declaration
-    #
-    base_code_id = fields.Many2one('account.tax.code', string='Account Base Code', help="Use this code for the tax declaration.")
-    tax_code_id = fields.Many2one('account.tax.code', string='Account Tax Code', help="Use this code for the tax declaration.")
-    base_sign = fields.Float(string='Base Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
-    tax_sign = fields.Float(string='Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
-
-    # Same fields for refund invoices
-
-    ref_base_code_id = fields.Many2one('account.tax.code', string='Refund Base Code', help="Use this code for the tax declaration.")
-    ref_tax_code_id = fields.Many2one('account.tax.code', string='Refund Tax Code', help="Use this code for the tax declaration.")
-    ref_base_sign = fields.Float(string='Refund Base Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
-    ref_tax_sign = fields.Float(string='Refund Tax Code Sign', help="Usually 1 or -1.", digits=get_precision_tax(), default=1)
-    include_base_amount = fields.Boolean(string='Included in base amount', default=False,
-        help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes")
+    name = fields.Char(string='Tax Name', required=True, translate=True)
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
+    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
+        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
+    active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    description = fields.Char(string='Tax Code')
-    price_include = fields.Boolean(string='Tax Included in Price', default=False,
+    children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
+    sequence = fields.Integer(required=True, default=1,
+        help="The sequence field is used to define order in which the tax lines are applied.")
+    amount = fields.Float(required=True, digits=(16, 3))
+    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account',
+        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
+        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+    description = fields.Char(string='Display on Invoices')
+    price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
-    type_tax_use = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('all', 'All')], string='Tax Application', required=True, default='all')
+    include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
+        help="If set, taxes which are computed after this one will be computed based on the price tax included.")
+    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
     ]
 
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=80):
-        """
-        Returns a list of tupples containing id, name, as internally it is called {def name_get}
-        result format: {[(id, name), (id, name), ...]}
+    @api.one
+    @api.constrains('children_tax_ids', 'type_tax_use')
+    def _check_children_scope(self):
+        if not all(child.type_tax_use in ('as_child', self.type_tax_use) for child in self.children_tax_ids):
+            raise Warning(_('The application scope of taxes in a group must be either the same as the group or "Only in Tax Group".'))
 
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param name: name to search
-        @param args: other arguments
-        @param operator: default operator is 'ilike', it can be changed
-        @param context: context arguments, like lang, time zone
-        @param limit: Returns first 'n' ids of complete result, default is 80.
+    @api.one
+    def copy(self, default=None):
+        default = dict(default or {}, name=_("%s (Copy)") % self.name)
+        return super(account_tax, self).copy(default=default)
 
-        @return: Returns a list of tupples containing id and name
-        """
-        if not args:
-            args = []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('description', operator, name), ('name', operator, name)]
-        else:
-            domain = ['|', ('description', operator, name), ('name', operator, name)]
-        taxes = self.search(expression.AND([domain, args]), limit=limit)
-        return taxes.name_get()
-
-    @api.multi
-    def write(self, vals):
-        if vals.get('type', False) and vals['type'] in ('none', 'code'):
-            vals.update({'amount': 0.0})
-        return super(account_tax, self).write(vals)
+    #@api.model
+    #def name_search(self, name, args=None, operator='ilike', limit=80):
+    #    """
+    #    Returns a list of tupples containing id, name, as internally it is called {def name_get}
+    #    result format: {[(id, name), (id, name), ...]}
+    #    """
+    #    args = args or []
+    #    if operator in expression.NEGATIVE_TERM_OPERATORS:
+    #        domain = [('description', operator, name), ('name', operator, name)]
+    #    else:
+    #        domain = ['|', ('description', operator, name), ('name', operator, name)]
+    #    taxes = self.search(expression.AND([domain, args]), limit=limit)
+    #    return taxes.name_get()
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -771,301 +604,116 @@ class account_tax(models.Model):
 
         if context.get('type'):
             if context.get('type') in ('out_invoice', 'out_refund'):
-                args += [('type_tax_use', 'in', ['sale', 'all'])]
+                args += [('type_tax_use', '=', 'sale')]
             elif context.get('type') in ('in_invoice', 'in_refund'):
-                args += [('type_tax_use', 'in', ['purchase', 'all'])]
+                args += [('type_tax_use', '=', 'purchase')]
 
         if context.get('journal_id'):
             journal = self.env['account.journal'].browse(context.get('journal_id'))
             if journal.type in ('sale', 'purchase'):
-                args += [('type_tax_use', 'in', [journal.type, 'all'])]
+                args += [('type_tax_use', '=', journal.type)]
 
         return super(account_tax, self).search(args, offset, limit, order, count=count)
 
-    @api.multi
-    @api.depends('name', 'description')
-    def name_get(self):
-        res = []
-        for record in self:
-            name = record.description and record.description or record.name
-            res.append((record.id, name ))
-        return res
+    #@api.multi
+    #@api.depends('name', 'description')
+    #def name_get(self):
+    #    res = []
+    #    for record in self:
+    #        name = record.description and record.description or record.name
+    #        res.append((record.id, name))
+    #    return res
+
+    @api.onchange('amount')
+    def onchange_amount(self):
+        if not self.description and self.amount_type in ('percent', 'division') and self.amount != 0.0:
+            self.description = "{0:.4g} %".format(self.amount)
+
+    @api.onchange('account_id')
+    def onchange_account_id(self):
+        self.refund_account_id = self.account_id
 
     @api.multi
-    def _applicable(self, price_unit, product=None, partner=None):
-        res = []
-        for tax in self:
-            if tax.applicable_type == 'code':
-                localdict = {'price_unit': price_unit, 'product': product, 'partner': partner}
-                exec tax.python_applicable in localdict
-                if localdict.get('result', False):
-                    res.append(tax)
-            else:
-                res.append(tax)
-        return res
-
-    @api.multi
-    def _unit_compute(self, price_unit, product=None, partner=None, quantity=0):
-        taxes = self._applicable(price_unit ,product, partner)
-        res = []
-        cur_price_unit = price_unit
-        for tax in taxes:
-            # we compute the amount for the current tax object and append it to the result
-            data = {'id': tax.id,
-                    'name': tax.description and tax.description + " - " + tax.name or tax.name,
-                    'account_collected_id': tax.account_collected_id.id,
-                    'account_paid_id': tax.account_paid_id.id,
-                    'account_analytic_collected_id': tax.account_analytic_collected_id.id,
-                    'account_analytic_paid_id': tax.account_analytic_paid_id.id,
-                    'base_code_id': tax.base_code_id.id,
-                    'ref_base_code_id': tax.ref_base_code_id.id,
-                    'sequence': tax.sequence,
-                    'base_sign': tax.base_sign,
-                    'tax_sign': tax.tax_sign,
-                    'ref_base_sign': tax.ref_base_sign,
-                    'ref_tax_sign': tax.ref_tax_sign,
-                    'price_unit': cur_price_unit,
-                    'tax_code_id': tax.tax_code_id.id,
-                    'ref_tax_code_id': tax.ref_tax_code_id.id,
-            }
-            res.append(data)
-            if tax.type == 'percent':
-                amount = cur_price_unit * tax.amount
-                data['amount'] = amount
-
-            elif tax.type == 'fixed':
-                data['amount'] = tax.amount
-                data['tax_amount'] = quantity
-               # data['amount'] = quantity
-            elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
-                exec tax.python_compute in localdict
-                amount = localdict['result']
-                data['amount'] = amount
-            elif tax.type == 'balance':
-                data['amount'] = cur_price_unit - reduce(lambda x, y: y.get('amount', 0.0) + x, res, 0.0)
-                data['balance'] = cur_price_unit
-
-            amount2 = data.get('amount', 0.0)
-            if tax.child_ids:
-                if tax.child_depend:
-                    latest = res.pop()
-                amount = amount2
-                child_tax = tax.child_ids._unit_compute(amount, product, partner, quantity)
-                res.extend(child_tax)
-                for child in child_tax:
-                    amount2 += child.get('amount', 0.0)
-                if tax.child_depend:
-                    for r in res:
-                        for name in ('base', 'ref_base'):
-                            if latest[name + '_code_id'] and latest[name + '_sign'] and not r[name + '_code_id']:
-                                r[name + '_code_id'] = latest[name + '_code_id']
-                                r[name + '_sign'] = latest[name + '_sign']
-                                r['price_unit'] = latest['price_unit']
-                                latest[name + '_code_id'] = False
-                        for name in ('tax', 'ref_tax'):
-                            if latest[name + '_code_id'] and latest[name + '_sign'] and not r[name + '_code_id']:
-                                r[name + '_code_id'] = latest[name + '_code_id']
-                                r[name + '_sign'] = latest[name + '_sign']
-                                r['amount'] = data['amount']
-                                latest[name + '_code_id'] = False
-            if tax.include_base_amount:
-                cur_price_unit += amount2
-        return res
-
-    @api.one
-    def compute_for_bank_reconciliation(self, amount):
-        """ Called by RPC by the bank statement reconciliation widget """
-        return self.compute_all(amount, 1) # TOCHECK may use force_exclude parameter
-
-    @api.v7
-    def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
-        """
-        :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
-            tax. It's used in encoding by line where you don't matter if you encoded a tax with that boolean to True or
-            False
-        RETURN: {
-                'total': 0.0,                # Total without taxes
-                'total_included: 0.0,        # Total with taxes
-                'taxes': []                  # List of taxes, see compute for the format
-            }
-        """
-
-        # By default, for each tax, tax amount will first be computed
-        # and rounded at the 'Account' decimal precision for each
-        # PO/SO/invoice line and then these rounded amounts will be
-        # summed, leading to the total amount for that tax. But, if the
-        # company has tax_calculation_rounding_method = round_globally,
-        # we still follow the same method, but we use a much larger
-        # precision when we round the tax amount for each line (we use
-        # the 'Account' decimal precision + 5), and that way it's like
-        # rounding after the sum of the tax amounts of each line
-        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        tax_compute_precision = precision
-        if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
-            tax_compute_precision += 5
-        totalin = totalex = round(price_unit * quantity, precision)
-        tin = []
-        tex = []
-        for tax in taxes:
-            if not tax.price_include or force_excluded:
-                tex.append(tax.id)
-            else:
-                tin.append(tax.id)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
-        for r in tin:
-            totalex -= r.get('amount', 0.0)
-        totlex_qty = 0.0
-        try:
-            totlex_qty = totalex/quantity
-        except:
-            pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision)
-        for r in tex:
-            totalin += r.get('amount', 0.0)
-        return {
-            'total': totalex,
-            'total_included': totalin,
-            'taxes': tin + tex
-        }
+    def normalized_set(self):
+        """ Returns a recordset where groups are replaced by their children and each tax appears only once sorted by default sort order (sequence).
+            NB : It might make more sense to first filter out first-level taxes that appear in groups. """
+        return self.mapped(lambda r: r.amount_type == 'group' and r.children_tax_ids or r).sorted()
 
     @api.v8
-    def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
-        return self._model.compute_all(
-            self._cr, self._uid, self, price_unit, quantity,
-            product=product, partner=partner, force_excluded=force_excluded)
+    def compute_all(self, price_unit, quantity=1.0, product=None, partner=None):
+        """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
 
-    @api.multi
-    def compute(self, price_unit, quantity,  product=None, partner=None):
-        _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
-        return self._compute(price_unit, quantity, product, partner)
+        RETURN: {
+            'total_excluded': 0.0,           # Total without taxes
+            'total_includedi': 0.0,          # Total with taxes
+            'taxes': [{             # One dict for each tax in self and their children
+                'id': int,
+                'name': str,
+                'amount': float,
+                'sequence': int,
+                'account_id': int,
+                'refund_account_id': int,
+                'analytic': boolean,
+            }]
+        } """
 
-    @api.multi
-    def _compute(self, price_unit, quantity, product=None, partner=None, precision=None):
-        """
-        Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
+        taxes = []
+        # TODO: use currency rounding
+        prec = self.env['decimal.precision'].precision_get('Account')
+        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        for tax in self:
+            if tax.amount_type == 'group':
+                ret = tax.children_tax_ids.compute_all(price_unit, quantity)
+                total_excluded = ret['total_excluded']
+                base = ret['total_excluded']
+                total_included = ret['total_included']
+                tax_amount = total_included - total_excluded
+                taxes += ret['taxes']
+                continue
 
-        RETURN:
-            [ tax ]
-            tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
-            one tax for each tax id in IDS and their children
-        """
-        if not precision:
-            precision = self.env['decimal.precision'].precision_get('Account')
-        res = self._unit_compute(price_unit, product, partner, quantity)
-        total = 0.0
-        for r in res:
-            if r.get('balance', False):
-                r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
+            if tax.amount_type == 'fixed':
+                tax_amount = tax.amount
+            elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
+                tax_amount = base * tax.amount / 100
+            elif tax.amount_type == 'percent' and tax.price_include:
+                tax_amount = base - (base / (1 + tax.amount / 100))
+            elif tax.amount_type == 'division' and not tax.price_include:
+                tax_amount = base / (1 - tax.amount / 100) - base
+            tax_amount = round(tax_amount, prec)
+            if tax.price_include:
+                total_excluded -= tax_amount
+                base -= tax_amount
             else:
-                r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
-                total += r['amount']
-        return res
-
-    @api.multi
-    def _unit_compute_inv(self, price_unit, product=None, partner=None):
-        taxes = self._applicable(price_unit,  product, partner)
-        res = []
-        taxes.reverse()
-        cur_price_unit = price_unit
-
-        tax_parent_tot = 0.0
-        for tax in taxes:
-            if (tax.type == 'percent') and not tax.include_base_amount:
-                tax_parent_tot += tax.amount
-
-        for tax in taxes:
-            if (tax.type == 'fixed') and not tax.include_base_amount:
-                cur_price_unit -= tax.amount
-
-        for tax in taxes:
-            if tax.type == 'percent':
+                total_included += tax_amount
                 if tax.include_base_amount:
-                    amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
-                else:
-                    amount = (cur_price_unit / (1 + tax_parent_tot)) * tax.amount
-
-            elif tax.type == 'fixed':
-                amount = tax.amount
-
-            elif tax.type == 'code':
-                localdict = {'price_unit': cur_price_unit, 'product': product, 'partner': partner}
-                exec tax.python_compute_inv in localdict
-                amount = localdict['result']
-            elif tax.type == 'balance':
-                amount = cur_price_unit - reduce(lambda x, y: y.get('amount', 0.0) + x, res, 0.0)
-
-            if tax.include_base_amount:
-                cur_price_unit -= amount
-                todo = 0
-            else:
-                todo = 1
-            res.append({
+                    base += tax_amount
+            taxes.append({
                 'id': tax.id,
-                'todo': todo,
                 'name': tax.name,
-                'amount': amount,
-                'account_collected_id': tax.account_collected_id.id,
-                'account_paid_id': tax.account_paid_id.id,
-                'account_analytic_collected_id': tax.account_analytic_collected_id.id,
-                'account_analytic_paid_id': tax.account_analytic_paid_id.id,
-                'base_code_id': tax.base_code_id.id,
-                'ref_base_code_id': tax.ref_base_code_id.id,
+                'amount': tax_amount,
                 'sequence': tax.sequence,
-                'base_sign': tax.base_sign,
-                'tax_sign': tax.tax_sign,
-                'ref_base_sign': tax.ref_base_sign,
-                'ref_tax_sign': tax.ref_tax_sign,
-                'price_unit': cur_price_unit,
-                'tax_code_id': tax.tax_code_id.id,
-                'ref_tax_code_id': tax.ref_tax_code_id.id,
+                'account_id': tax.account_id.id,
+                'refund_account_id': tax.refund_account_id.id,
+                'analytic': tax.analytic,
             })
-            if tax.child_ids:
-                if tax.child_depend:
-                    del res[-1]
-                    amount = price_unit
 
-            parent_tax = tax.child_ids._unit_compute_inv(amount, product, partner)
-            res.extend(parent_tax)
+        return {
+            'taxes': taxes,
+            'total_excluded': round(total_excluded, prec),
+            'total_included': round(total_included, prec)
+        }
 
-        total = 0.0
-        for r in res:
-            if r['todo']:
-                total += r['amount']
-        for r in res:
-            r['price_unit'] -= total
-            r['todo'] = 0
-        return res
-
-    @api.multi
-    def compute_inv(self, price_unit, quantity, product=None, partner=None, precision=None):
-        """
-        Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
-        Price Unit is a Tax included price
-
-        RETURN:
-            [ tax ]
-            tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
-            one tax for each tax id in IDS and their children
-        """
-        if not precision:
-            precision = self.env['decimal.precision'].precision_get('Account')
-        res = self._unit_compute_inv(price_unit, product, partner=None)
-        total = 0.0
-        for r in res:
-            if r.get('balance', False):
-                r['amount'] = round(r['balance'] * quantity, precision) - total
-            else:
-                r['amount'] = round(r['amount'] * quantity, precision)
-                total += r['amount']
-        return res
+    @api.v7
+    def compute_all(self, cr, uid, ids, price_unit, quantity=1.0, product=None, partner=None, context=None):
+        """ Called by RPC by the bank statement reconciliation widget """
+        ids = isinstance(ids, (int, long)) and [ids] or ids
+        recs = self.browse(cr, uid, ids, context=context)
+        return recs.compute_all(price_unit, quantity, product, partner)
 
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
-class account_tax_template(models.Model):
-    _name = 'account.tax.template'
 
 class account_account_template(models.Model):
     _name = "account.account.template"
@@ -1190,75 +838,12 @@ class account_add_tmpl_wizard(models.TransientModel):
         return { 'type': 'state', 'state': 'end' }
 
 
-class account_tax_code_template(models.Model):
-    _name = 'account.tax.code.template'
-    _description = 'Tax Code Template'
-    _order = 'sequence, code'
-    _rec_name = 'code'
-
-    name = fields.Char(string='Tax Case Name', required=True)
-    code = fields.Char(string='Case Code', size=64)
-    info = fields.Text(string='Description')
-    parent_id = fields.Many2one('account.tax.code.template', string='Parent Code', index=True)
-    child_ids = fields.One2many('account.tax.code.template', 'parent_id', string='Child Codes')
-    sign = fields.Float(string='Sign For Parent', required=True, default=1.0)
-    notprintable = fields.Boolean(string='Not Printable in Invoice', default=False,
-        help="Check this box if you don't want any tax related to this tax Code to appear on invoices.")
-    sequence = fields.Integer(string='Sequence', help=(
-            "Determine the display order in the report 'Accounting "
-            "\ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
-        )
-
-    @api.one
-    def generate_tax_code(self, company_id):
-        '''
-        This function generates the tax codes from the templates of tax code that are children of the given one passed
-        in argument. Then it returns a dictionary with the mappping between the templates and the real objects.
-
-        :param company_id: id of the company the wizard is running for
-        :returns: dictionary with the mappping between the templates and the real objects.
-        :rtype: dict
-        '''
-        obj_tax_code = self.env['account.tax.code']
-        tax_code_template_ref = {}
-        company = self.env['res.company'].browse(company_id)
-
-        #find all the children
-        children_tax_code_template = self.search([('parent_id', 'child_of', self.ids)], order='id') or []
-        for tax_code_template in children_tax_code_template:
-            vals = {
-                'name': (self.id == tax_code_template.id) and company.name or tax_code_template.name,
-                'code': tax_code_template.code,
-                'info': tax_code_template.info,
-                'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
-                'company_id': company_id,
-                'sign': tax_code_template.sign,
-                'sequence': tax_code_template.sequence,
-            }
-            #check if this tax code already exists
-            rec_list = obj_tax_code.search([('name', '=', vals['name']), ('code', '=', vals['code']), ('company_id', '=', vals['company_id'])], limit=1)
-            if not rec_list:
-                #if not yet, create it
-                new_tax_code = obj_tax_code.create(vals)
-                #recording the new tax code to do the mapping
-                tax_code_template_ref[tax_code_template.id] = new_tax_code.id
-        return tax_code_template_ref
-
-    @api.multi
-    @api.depends('name', 'code')
-    def name_get(self):
-        return [(record.id, (record.code and record.code + ' - ' or '') + record.name) for record in self]
-
-    _constraints = [
-        (models.Model._check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
-    ]
-
-
 class account_chart_template(models.Model):
     _name="account.chart.template"
     _description= "Templates for Account Chart"
 
     name = fields.Char(string='Name', required=True)
+    company_id = fields.Many2one('res.company', string='Root Tax Code')
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
     visible = fields.Boolean(string='Can be Visible?', default=True,
@@ -1267,7 +852,6 @@ class account_chart_template(models.Model):
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete')
     account_root_id = fields.Many2one('account.account.template', string='Root Account')
-    tax_code_root_id = fields.Many2one('account.tax.code.template', string='Root Tax Code', domain=[('parent_id','=',False)])
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_view_id = fields.Many2one('account.account.template', string='Bank Account')
@@ -1284,50 +868,37 @@ class account_chart_template(models.Model):
 class account_tax_template(models.Model):
     _name = 'account.tax.template'
     _description = 'Templates for Taxes'
-    _order = 'sequence'
+    _order = 'id'
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    name = fields.Char(string='Tax Name', required=True)
-    sequence = fields.Integer(string='Sequence', required=True, default=1,
-        help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important.")
-    amount = fields.Float(string='Amount', required=True, digits=get_precision_tax(), default=0, help="For Tax Type percent enter % ratio between 0-1.")
-    type = fields.Selection([('percent', 'Percent'), ('fixed', 'Fixed'), ('none', 'None'), ('code', 'Python Code'), ('balance', 'Balance')],
-        string='Tax Type', default='percent', required=True)
-    applicable_type = fields.Selection([('true', 'True'), ('code', 'Python Code')], string='Applicable Type', required=True,
-        default='true', help="If not applicable (computed through a Python code), the tax won't appear on the invoice.")
-    domain = fields.Char(string='Domain',
-        help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain.")
-    account_collected_id = fields.Many2one('account.account.template', string='Invoice Tax Account')
-    account_paid_id = fields.Many2one('account.account.template', string='Refund Tax Account')
-    parent_id = fields.Many2one('account.tax.template', string='Parent Tax Account', index=True)
-    child_depend = fields.Boolean(string='Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount.")
-    python_compute = fields.Text(string='Python Code',
-        default='''# price_unit\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''')
-    python_compute_inv = fields.Text(string='Python Code (reverse)',
-        default='''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''')
-    python_applicable = fields.Text(string='Applicable Code')
+    name = fields.Char(string='Tax Name', required=True, translate=True)
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
+    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
+        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
+    active = fields.Boolean(default=True,
+        help="Set active to false to hide the tax without removing it.")
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
-    #
-    # Fields used for the Tax declaration
-    #
-    base_code_id = fields.Many2one('account.tax.code.template', string='Base Code', help="Use this code for the tax declaration.")
-    tax_code_id = fields.Many2one('account.tax.code.template', string='Tax Code', help="Use this code for the tax declaration.")
-    base_sign = fields.Float(string='Base Code Sign', default=1, help="Usually 1 or -1.")
-    tax_sign = fields.Float(string='Tax Code Sign', default=1, help="Usually 1 or -1.")
+    children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
 
-    # Same fields for refund invoices
-
-    ref_base_code_id = fields.Many2one('account.tax.code.template', string='Refund Base Code', help="Use this code for the tax declaration.")
-    ref_tax_code_id = fields.Many2one('account.tax.code.template', string='Refund Tax Code', help="Use this code for the tax declaration.")
-    ref_base_sign = fields.Float(string='Refund Base Code Sign', default=1, help="Usually 1 or -1.")
-    ref_tax_sign = fields.Float(string='Refund Tax Code Sign', default=1, help="Usually 1 or -1.")
-    include_base_amount = fields.Boolean(string='Include in Base Amount', default=False,
-        help="Set if the amount of tax must be included in the base amount before computing the next taxes.")
-    description = fields.Char(string='Internal Name')
-    type_tax_use = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('all', 'All')], default='all',
-        string='Tax Use In', required=True)
-    price_include = fields.Boolean(string='Tax Included in Price', default=False,
+    sequence = fields.Integer(required=True, default=1,
+        help="The sequence field is used to define order in which the tax lines are applied.")
+    amount = fields.Float(required=True, digits=(16, 3))
+    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account',
+        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
+        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+    description = fields.Char(string='Display on Invoices')
+    price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
+    include_base_amount = fields.Boolean(string='Affect subsequent taxes', default=False,
+        help="If set, taxes which are computed after this one will be computed based on the price tax included.")
+    analytic_cost = fields.Boolean(string="Analytic Cost")
+
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
+    ]
 
     @api.multi
     @api.depends('name', 'description')
@@ -1339,11 +910,10 @@ class account_tax_template(models.Model):
         return res
 
     @api.multi
-    def _generate_tax(self, tax_code_template_ref, company_id):
+    def _generate_tax(self, company_id):
         """
         This method generate taxes from templates.
 
-        :param tax_code_template_ref: Taxcode templates reference.
         :param company_id: id of the company the wizard is running for
         :returns:
             {
@@ -1357,36 +927,24 @@ class account_tax_template(models.Model):
         for tax in self:
             vals_tax = {
                 'name': tax.name,
+                'type_tax_use': tax.type_tax_use,
+                'amount_type': tax.amount_type,
+                'active': tax.active,
+                'company_id': tax.company_id,
+                'children_tax_ids': tax.children_tax_ids,
                 'sequence': tax.sequence,
                 'amount': tax.amount,
-                'type': tax.type,
-                'applicable_type': tax.applicable_type,
-                'domain': tax.domain,
-                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_to_tax) and tax_template_to_tax[tax.parent_id.id]) or False,
-                'child_depend': tax.child_depend,
-                'python_compute': tax.python_compute,
-                'python_compute_inv': tax.python_compute_inv,
-                'python_applicable': tax.python_applicable,
-                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
-                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
-                'base_sign': tax.base_sign,
-                'tax_sign': tax.tax_sign,
-                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
-                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
-                'ref_base_sign': tax.ref_base_sign,
-                'ref_tax_sign': tax.ref_tax_sign,
-                'include_base_amount': tax.include_base_amount,
                 'description': tax.description,
-                'company_id': company_id,
-                'type_tax_use': tax.type_tax_use,
-                'price_include': tax.price_include
+                'price_include': tax.price_include,
+                'include_base_amount': tax.include_base_amount,
+                'analytic_cost': tax.analytic_cost,
             }
             new_tax = self.env['account.tax'].create(vals_tax)
             tax_template_to_tax[tax.id] = new_tax.id
-            #as the accounts have not been created yet, we have to wait before filling these fields
+            # Since the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax.id] = {
-                'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
-                'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
+                'account_id': tax.account_id,
+                'refund_account_id': tax.refund_account_id,
             }
         res.update({'tax_template_to_tax': tax_template_to_tax, 'account_dict': todo_dict})
         return res
@@ -1516,8 +1074,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
                 base_tax_domain = [('chart_template_id', 'in', chart_ids), ('parent_id', '=', False)]
-                sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale', 'all'))]
-                purchase_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('purchase', 'all'))]
+                sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
+                purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
                 sale_taxes = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
                 purchase_taxes = tax_templ_obj.search(purchase_tax_domain, order="sequence, id desc", limit=1)
                 res['value']['sale_tax'] = sale_taxes.ids and sale_taxes.ids[0] or False
@@ -1562,11 +1120,11 @@ class wizard_multi_charts_accounts(models.TransientModel):
                             'chart_template_id': chart_id})
             if 'sale_tax' in fields:
                 sale_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
-                                                              ('type_tax_use', 'in', ('sale', 'all'))], limit=1, order='sequence')
+                                                              ('type_tax_use', '=', 'sale')], limit=1, order='sequence')
                 res.update({'sale_tax': sale_tax and sale_tax.id or False})
             if 'purchase_tax' in fields:
                 purchase_tax = tax_templ_obj.search([('chart_template_id', 'in', chart_hierarchy_ids),
-                                                                  ('type_tax_use', 'in', ('purchase', 'all'))], limit=1, order='sequence')
+                                                                  ('type_tax_use', '=', 'purchase')], limit=1, order='sequence')
                 res.update({'purchase_tax': purchase_tax and purchase_tax.id or False})
         res.update({
             'purchase_tax_rate': 15.0,
@@ -1725,7 +1283,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         return True
 
     @api.model
-    def _install_template(self, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None, tax_code_ref=None):
+    def _install_template(self, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
 
@@ -1735,34 +1293,28 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :param obj_wizard: the current wizard for generating the COA from the templates
         :param acc_ref: Mapping between ids of account templates and real accounts created from them
         :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :param tax_code_ref: Mapping between ids of tax code templates and real tax codes created from them
         :returns: return a tuple with a dictionary containing
             * the mapping between the account template ids and the ids of the real accounts that have been generated
               from them, as first item,
             * a similar dictionary for mapping the tax templates and taxes, as second item,
-            * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
         if acc_ref is None:
             acc_ref = {}
         if taxes_ref is None:
             taxes_ref = {}
-        if tax_code_ref is None:
-            tax_code_ref = {}
         template = self.env['account.chart.template'].browse(template_id)
         if template.parent_id:
-            tmp1, tmp2, tmp3 = self._install_template(template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref)
+            tmp1, tmp2 = self._install_template(template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-            tax_code_ref.update(tmp3)
-        tmp1, tmp2, tmp3 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref)
+        tmp1, tmp2, tmp3 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
-        tax_code_ref.update(tmp3)
-        return acc_ref, taxes_ref, tax_code_ref
+        return acc_ref, taxes_ref
 
     @api.model
-    def _load_template(self, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None, tax_code_ref=None):
+    def _load_template(self, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None):
         '''
         This function generates all the objects from the templates
 
@@ -1772,28 +1324,21 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :param obj_wizard: the current wizard for generating the COA from the templates
         :param acc_ref: Mapping between ids of account templates and real accounts created from them
         :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :param tax_code_ref: Mapping between ids of tax code templates and real tax codes created from them
         :returns: return a tuple with a dictionary containing
             * the mapping between the account template ids and the ids of the real accounts that have been generated
               from them, as first item,
             * a similar dictionary for mapping the tax templates and taxes, as second item,
-            * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
         if account_ref is None:
             account_ref = {}
         if taxes_ref is None:
             taxes_ref = {}
-        if tax_code_ref is None:
-            tax_code_ref = {}
         template = self.env['account.chart.template'].browse(template_id)
         AccountTaxObj = self.env['account.tax']
 
-        # create all the tax code.
-        tax_code_ref.update(self.env['account.tax.code.template'].generate_tax_code(template.tax_code_root_id.id, company_id))
-
         # Generate taxes from templates.
-        generated_tax_res = template.tax_template_ids._generate_tax(tax_code_ref, company_id)
+        generated_tax_res = template.tax_template_ids._generate_tax(company_id)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
@@ -1817,28 +1362,27 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         self.env['account.fiscal.position.template'].generate_fiscal_position(template_id, taxes_ref, account_ref, company_id)
 
-        return account_ref, taxes_ref, tax_code_ref
+        return account_ref, taxes_ref
 
     @api.one
     def _create_tax_templates_from_rates(self, company_id):
         '''
         This function checks if the chosen chart template is configured as containing a full set of taxes, and if
-        it's not the case, it creates the templates for account.tax.code and for account.account.tax objects accordingly
-        to the provided sale/purchase rates. Then it saves the new tax templates as default taxes to use for this chart
-        template.
+        it's not the case, it creates the templates for account.tax object accordingly to the provided sale/purchase rates.
+        Then it saves the new tax templates as default taxes to use for this chart template.
 
         :param company_id: id of the company for wich the wizard is running
         :return: True
         '''
         obj_tax_temp = self.env['account.tax.template']
         all_parents = self._get_chart_parent_ids(self.chart_template_id)
-        # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
+        # create tax templates from purchase_tax_rate and sale_tax_rate fields
         if not self.chart_template_id.complete_tax_set:
             value = self.sale_tax_rate
-            ref_tax_ids = obj_tax_temp.search([('type_tax_use','in', ('sale','all')), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_tax_ids = obj_tax_temp.search([('type_tax_use','=','sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
             ref_tax_ids.write({'amount': value/100.0, 'name': _('Tax %.2f%%') % value})
             value = self.purchase_tax_rate
-            ref_tax_ids = obj_tax_temp.search([('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
+            ref_tax_ids = obj_tax_temp.search([('type_tax_use','=','purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
             ref_tax_ids.write({'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
 
@@ -1846,7 +1390,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     def execute(self):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
-        all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
+        all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
         if self._uid != SUPERUSER_ID and not self.env.user.has_group('base.group_erp_manager'):
@@ -1869,7 +1413,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         self._create_tax_templates_from_rates(company_id)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=self.code_digits, obj_wizard=self)
+        acc_template_ref, taxes_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=self.code_digits, obj_wizard=self)
 
         # write values of default taxes for product as super user
         if self.sale_tax and taxes_ref:
@@ -2009,7 +1553,6 @@ class account_operation_template(models.Model):
     _description = "Preset to create journal entries during a reconciliation"
 
     # TODO :
-    # - wait for new tax design merge for domain=[('type_tax_use','!=','as_child'] to make sense
     # - wait for account.analytic.account to ckeck that domain=[('state','not in',('close','cancelled'))] is correct
 
     name = fields.Char(string='Button Label', required=True)
@@ -2025,10 +1568,10 @@ class account_operation_template(models.Model):
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
     amount = fields.Float(digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '!=', 'as_child')])
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
+    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])
 
-    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type', '!=', 'consolidation')])
+    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type','!=','consolidation')])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     second_label = fields.Char(string='Journal Item Label')
     second_amount_type = fields.Selection([
@@ -2036,5 +1579,5 @@ class account_operation_template(models.Model):
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
     second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '!=', 'as_child')])
-    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state', 'not in', ('close', 'cancelled'))])
+    second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])

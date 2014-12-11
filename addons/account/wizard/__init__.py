@@ -32,7 +32,6 @@ import account_invoice_refund
 import account_report_aged_partner_balance
 import account_report_partner_ledger
 import account_report_partner_balance
-import account_vat
 
 import account_invoice_state
 import account_financial_report

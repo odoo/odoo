@@ -532,11 +532,10 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
+                            <h1><field name="name"/></h1>
                         </div>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field class="oe_right oe_inline" nolabel="1" name="company_id" groups="base.group_multi_company"/>
+                        <br/><br/><br/>
                         <group>
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
@@ -726,107 +725,19 @@
             </field>
         </record>
 
-        <!-- Tax Codes -->
-        <record id="view_tax_code_search" model="ir.ui.view">
-            <field name="name">account.tax.code.search</field>
-            <field name="model">account.tax.code</field>
-            <field name="arch" type="xml">
-                <search string="Account Tax Code">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Tax Code"/>
-                    <field name="parent_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </search>
-            </field>
-        </record>
-        <record id="view_tax_code_tree" model="ir.ui.view">
-            <field name="name">account.tax.code.tree</field>
-            <field name="model">account.tax.code</field>
-            <field name="field_parent">child_ids</field>
-            <field name="priority">100</field>
-            <field name="arch" type="xml">
-                <tree string="Account Tax Code" toolbar="1">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="sum"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_tax_code_form" model="ir.ui.view">
-            <field name="name">account.tax.code.form</field>
-            <field name="model">account.tax.code</field>
-            <field name="arch" type="xml">
-                <form string="Account Tax Code">
-                    <group>
-                        <group col="4" colspan="2">
-                            <field name="name"/>
-                            <field name="code"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                        <group string="Reporting Configuration">
-                            <field name="notprintable"/>
-                            <field name="sign"/>
-                        </group>
-                        <group string="Statistics">
-                            <field name="sum"/>
-                        </group>
-                    </group>
-                    <separator string="Description"/>
-                    <field name="info"/>
-                </form>
-            </field>
-        </record>
-        <record id="action_tax_code_list" model="ir.actions.act_window">
-            <field name="name">Tax codes</field>
-            <field name="res_model">account.tax.code</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_tax_code_tree"/>
-            <field name="search_view_id" ref="view_tax_code_search"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new tax code.
-              </p><p>
-                Depending on the country, a tax code is usually a cell to fill
-                in your legal tax statement. Odoo allows you to define the
-                tax structure and each tax computation will be registered in
-                one or several tax code.
-              </p>
-            </field>
-        </record>
-        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="4"/>
-        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="2" groups="base.group_no_one"/>
-
-        <act_window
-            id="action_tax_code_line_open"
-            name="Journal Items"
-            domain="[('tax_code_id','child_of',active_id)]"
-            res_model="account.move.line"
-            src_model="account.tax.code"/>
-
-        <!-- Enable drill-down from Chart Of Taxes tree view -->
-        <act_window
-            id="action_tax_code_items"
-            name="Journal Items"
-            domain="[('tax_code_id','child_of',active_id)]"
-            res_model="account.move.line"
-            src_model="account.tax.code"
-            key2="tree_but_open"/>
-
-
         <!-- Tax -->
+        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="4"/>
+        
         <record id="view_tax_tree" model="ir.ui.view">
             <field name="name">account.tax.tree</field>
             <field name="model">account.tax</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="price_include"/>
-                    <field name="description"/>
+                    <field name="type_tax_use"/>
+                    <field name="description" string="Short Name"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <field name="type_tax_use" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -841,7 +752,7 @@
                     <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" />
                     <group string="Group By">
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
-                        <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -854,70 +765,51 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="description"/>
                         </group>
                         <group>
                             <field name="type_tax_use"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Tax Definition">
-                        <group>
-                            <group string="Tax Computation">
-                                <label for="type"/>
-                                <div>
-                                    <field name="type"/>
-                                    <field name="amount" attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
-                                </div>
-                                <field name="python_compute" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
-                                <field name="python_compute_inv" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
-                                <field name="price_include"/>
+                        <page string="Definition">
+                            <group>
+                                <group>
+                                    <field name="amount_type" />
+                                    <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <div attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                        <field name="amount" class="oe_inline" />
+                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                    </div>
+                                </group>
+                                <group attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                    <field name="account_id"/>
+                                    <field name="refund_account_id"/>
+                                </group>
                             </group>
-                            <group string="Misc">
-                                <field name="sequence"/>
-                                <field name="include_base_amount"/>
-                                <field name="child_depend"/>
-                            </group>
-                            <group string="Invoices">
-                                  <field name="account_collected_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('type', '!=','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
-
-                                  <field name="base_code_id"/>
-                                  <field name="base_sign"/>
-                                  <field name="tax_code_id"/>
-                                  <field name="tax_sign"/>
-
-                            </group>
-                            <group string="Refunds">
-                                  <field name="account_paid_id" domain="[('user_type.type', '!=', 'consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type', '!=', 'view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
-
-                                  <field name="ref_base_code_id"/>
-                                  <field name="ref_base_sign"/>
-                                  <field name="ref_tax_code_id"/>
-                                  <field name="ref_tax_sign"/>
-                            </group>
-                            <group string="Children/Sub Taxes" colspan="2">
-                                <field name="child_ids" nolabel="1" colspan="2">
-                                      <tree string="Account Tax">
-                                          <field name="sequence"/>
-                                          <field name="name"/>
-                                          <field name="price_include"/>
-                                          <field name="description"/>
-                                     </tree>
-                                </field>
-                            </group>
-                        </group>
+                            <field name="children_tax_ids"
+                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','as_child')]}"
+                                domain="[('type_tax_use','in',('as_child',type_tax_use)), ('amount_type','!=','group')]">
+                                <tree string="Children Taxes">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name"/>
+                                    <field name="amount_type" />
+                                    <field name="amount" />
+                                </tree>
+                            </field>
                         </page>
-                        <page string="Special Computation">
-                            <group col="4">
-                                <separator colspan="4" string="Applicability Options"/>
-                                <field name="applicable_type"/>
-                                <field name="domain"/>
-                                <separator colspan="4" string="Applicable Code (if type=code)"/>
-                                <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
+                        <page string="Advanced Options">
+                            <group>
+                                <group>
+                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <br/><br/>
+                                    <field name="active" groups="base.group_no_one"/>
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                </group>
+                                <group>
+                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -928,18 +820,10 @@
             <field name="name">Taxes</field>
             <field name="res_model">account.tax</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_tax_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27" sequence="1"/>
-
-        <record id="action_tax_code_tree" model="ir.actions.act_window">
-            <field name="name">Chart of Taxes</field>
-            <field name="res_model">account.tax.code</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_tax_code_tree"/>
-        </record>
 
         <!-- Journal Items -->
         <record id="view_move_line_form" model="ir.ui.view">
@@ -978,9 +862,8 @@
                                         <field name="date_maturity"/>
                                     </group>
                                     <group string="Taxes">
-                                        <field name="tax_code_id"/>
-                                        <field name="tax_amount"/>
-                                        <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                        <field name="tax_line_id"/>
+                                        <field name="tax_ids"/>
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
@@ -1036,7 +919,8 @@
                                 <field name="date"/>
                                 <field name="blocked"/>
                                 <newline/>
-                                <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                <field name="tax_ids"/>
+                                <field name="tax_line_id"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
@@ -1065,7 +949,8 @@
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
                     <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
-                    <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
+                    <field name="tax_ids" options='{"no_open":True}'/>
+                    <field name="tax_line_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                     <field name="move_id" required="0"/>
                     <field name="debit" sum="Total Debit"/>
@@ -1213,13 +1098,10 @@
                                                     <field name="date_maturity"/>
                                                     <field name="date"/>
                                                 </group>
-
                                                 <group string="Taxes">
-                                                    <field name="tax_code_id"/>
-                                                    <field name="tax_amount"/>
-                                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                                    <field name="tax_ids"/>
+                                                    <field name="tax_line_id"/>
                                                 </group>
-
                                                 <group string="Currency" groups="base.group_multi_currency">
                                                     <field name="currency_id"/>
                                                     <field name="amount_currency"/>
@@ -1256,8 +1138,8 @@
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
-                                    <field name="tax_code_id"/>
-                                    <field name="tax_amount"/>
+                                    <field name="tax_ids"/>
+                                    <field name="tax_line_id"/>
                                     <field name="reconcile_id"/>
                                     <field name="reconcile_partial_id"/>
                                 </tree>
@@ -1507,11 +1389,11 @@
                 <form string="Chart of Accounts Template">
                     <group col="4">
                         <field name="name"/>
+                        <field name="company_id"/>
                         <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                         <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
-                        <field name="tax_code_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                         <field name="parent_id" />
-                        <!--<field name="code_digits" />-->
+                        <field name="code_digits" />
                         <field name="visible" />
                         <field name="complete_tax_set" />
                     </group>
@@ -1556,8 +1438,8 @@
             <field name="arch" type="xml">
                 <tree string="Chart of Accounts Template">
                     <field name="name"/>
+                    <field name="company_id"/>
                     <field name="account_root_id"/>
-                    <field name="tax_code_root_id"/>
                     <field name="bank_account_view_id"/>
                     <field name="property_account_receivable" invisible="1"/>
                     <field name="property_account_payable" invisible="1"/>
@@ -1574,7 +1456,7 @@
         </record>
         <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_folder" sequence="1"/>
 
-        <!-- Account Tax Templates -->
+        <!-- Account Tax Templates 
         <record id="view_account_tax_template_form" model="ir.ui.view">
             <field name="name">account.tax.template.form</field>
             <field name="model">account.tax.template</field>
@@ -1660,59 +1542,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
-        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/>
-
-        <!-- Account Tax Code Templates -->
-        <record id="view_tax_code_template_tree" model="ir.ui.view">
-            <field name="name">account.tax.code.template.tree</field>
-            <field name="model">account.tax.code.template</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Account Tax Code Template" toolbar="1">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="parent_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_tax_code_template_search" model="ir.ui.view">
-            <field name="name">account.tax.code.template.search</field>
-            <field name="model">account.tax.code.template</field>
-            <field name="arch" type="xml">
-                <search string="Search tax template">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Tax Template"/>
-                    <field name="parent_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Parent Code" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="view_tax_code_template_form" model="ir.ui.view">
-            <field name="name">account.tax.code.template.form</field>
-            <field name="model">account.tax.code.template</field>
-            <field name="arch" type="xml">
-                <form string="Account Tax Code Template">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="parent_id"/>
-                        <field name="sign"/>
-                    </group>
-                    <separator string="Description"/>
-                    <field name="info"/>
-                </form>
-            </field>
-        </record>
-        <record id="action_account_tax_code_template_form" model="ir.actions.act_window">
-            <field name="name">Tax Code</field>
-            <field name="res_model">account.tax.code.template</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_tax_code_template_search"/>
-        </record>
-        <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="account_template_taxes" sequence="14"/>
-
+        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/> -->
 
         <!--  Wizard for Multi Charts of Accounts -->
         <record id="view_wizard_multi_chart" model="ir.ui.view">
@@ -1733,12 +1563,12 @@
                         <group>
                             <field name="company_id" options="{'no_create': True}"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                             <field name="currency_id" class="oe_inline"/>
-                            <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                            <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','sale')]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
                                 <field name="sale_tax_rate" class="oe_inline"/> %%
                             </div>
-                            <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                            <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
                             <label for="purchase_tax_rate" string="Purchase Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%

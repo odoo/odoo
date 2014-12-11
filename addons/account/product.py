@@ -26,9 +26,9 @@ class product_template(models.Model):
     _inherit = "product.template"
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
-        domain=[('parent_id', '=', False), ('type_tax_use', 'in', ['sale', 'all'])])
+        domain=[('type_tax_use', '=', 'sale')])
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Supplier Taxes',
-        domain=[('parent_id', '=', False), ('type_tax_use', 'in', ['purchase', 'all'])])
+        domain=[('type_tax_use', '=', 'purchase')])
     property_account_income = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
         domain=[('deprecated', '=', False)],

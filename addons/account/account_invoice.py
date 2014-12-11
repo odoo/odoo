@@ -594,6 +594,7 @@ class account_invoice(models.Model):
         self._cr.execute(query, (tuple(line_ids),))
         return all(row[0] for row in self._cr.fetchall())
 
+    # TODO : y so complex ?
     @api.multi
     def button_reset_taxes(self):
         account_invoice_tax = self.env['account.invoice.tax']
@@ -681,13 +682,10 @@ class account_invoice(models.Model):
             for tax in self.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
+                key = tax.tax_id.id
                 tax_key.append(key)
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
-                base = compute_taxes[key]['base']
-                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
-                    raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
                     raise except_orm(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
@@ -766,10 +764,11 @@ class account_invoice(models.Model):
             if not inv.date_invoice:
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
             date_invoice = inv.date_invoice
-
             company_currency = inv.company_id.currency_id
-            # create the analytical lines, one move line per invoice line
+
+            # create base lines and their eventual analytical lines, one move line per invoice line
             iml = inv._get_analytic_lines()
+
             # check if taxes are all computed
             compute_taxes = account_invoice_tax.compute(inv)
             inv.check_tax_lines(compute_taxes)
@@ -890,14 +889,14 @@ class account_invoice(models.Model):
             'analytic_lines': line.get('analytic_lines', []),
             'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
-            'tax_code_id': line.get('tax_code_id', False),
-            'tax_amount': line.get('tax_amount', False),
             'ref': line.get('ref', False),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id', False),
             'product_uom_id': line.get('uos_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
             'invoice': line.get('invoice', False),
+            'tax_ids': line.get('tax_ids', False),
+            'tax_line_id': line.get('tax_line_id', False),
         }
 
     @api.multi
@@ -1164,7 +1163,7 @@ class account_invoice_line(models.Model):
     def _compute_price(self):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-        self.price_subtotal = taxes['total']
+        self.price_subtotal = taxes['total_excluded']
         if self.invoice_id:
             self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
 
@@ -1223,7 +1222,7 @@ class account_invoice_line(models.Model):
         default=0.0)
     invoice_line_tax_id = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',
-        string='Taxes', domain=[('parent_id', '=', False)])
+        string='Taxes', domain=[('type_tax_use','!=','as_child')])
     account_analytic_id = fields.Many2one('account.analytic.account',
         string='Analytic Account')
     company_id = fields.Many2one('res.company', string='Company',
@@ -1343,56 +1342,23 @@ class account_invoice_line(models.Model):
 
     @api.model
     def move_line_get(self, invoice_id):
-        inv = self.env['account.invoice'].browse(invoice_id)
-        currency = inv.currency_id.with_context(date=inv.date_invoice)
-        company_currency = inv.company_id.currency_id
-
         res = []
-        for line in inv.invoice_line:
-            mres = self.move_line_get_item(line)
-            mres['invl_id'] = line.id
-            res.append(mres)
-            tax_code_found = False
-            taxes = line.invoice_line_tax_id.compute_all(
-                (line.price_unit * (1.0 - (line.discount or 0.0) / 100.0)),
-                line.quantity, line.product_id, inv.partner_id)['taxes']
-            for tax in taxes:
-                if inv.type in ('out_invoice', 'in_invoice'):
-                    tax_code_id = tax['base_code_id']
-                    tax_amount = line.price_subtotal * tax['base_sign']
-                else:
-                    tax_code_id = tax['ref_base_code_id']
-                    tax_amount = line.price_subtotal * tax['ref_base_sign']
-
-                if tax_code_found:
-                    if not tax_code_id:
-                        continue
-                    res.append(dict(mres))
-                    res[-1]['price'] = 0.0
-                    res[-1]['account_analytic_id'] = False
-                elif not tax_code_id:
-                    continue
-                tax_code_found = True
-
-                res[-1]['tax_code_id'] = tax_code_id
-                res[-1]['tax_amount'] = currency.compute(tax_amount, company_currency)
-
+        for line in self.env['account.invoice'].browse(invoice_id).invoice_line:
+            tax_ids = [(4, id, None) for id in line.invoice_line_tax_id.ids]
+            res.append({
+                'invl_id': line.id,
+                'type': 'src',
+                'name': line.name.split('\n')[0][:64],
+                'price_unit': line.price_unit,
+                'quantity': line.quantity,
+                'price': line.price_subtotal,
+                'account_id': line.account_id.id,
+                'product_id': line.product_id.id,
+                'uos_id': line.uos_id.id,
+                'account_analytic_id': line.account_analytic_id.id,
+                'tax_ids': tax_ids,
+            })
         return res
-
-    @api.model
-    def move_line_get_item(self, line):
-        return {
-            'type': 'src',
-            'name': line.name.split('\n')[0][:64],
-            'price_unit': line.price_unit,
-            'quantity': line.quantity,
-            'price': line.price_subtotal,
-            'account_id': line.account_id.id,
-            'product_id': line.product_id.id,
-            'uos_id': line.uos_id.id,
-            'account_analytic_id': line.account_analytic_id.id,
-            'taxes': line.invoice_line_tax_id,
-        }
 
     #
     # Set the tax field according to the account and the fiscal position
@@ -1419,92 +1385,34 @@ class account_invoice_tax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
-    @api.one
-    @api.depends('base', 'base_amount', 'amount', 'tax_amount')
-    def _compute_factors(self):
-        self.factor_base = self.base_amount / self.base if self.base else 1.0
-        self.factor_tax = self.tax_amount / self.amount if self.amount else 1.0
-
-    invoice_id = fields.Many2one('account.invoice', string='Invoice Line',
-        ondelete='cascade', index=True)
-    name = fields.Char(string='Tax Description',
-        required=True)
-    account_id = fields.Many2one('account.account', string='Tax Account',
-        required=True, domain=[('deprecated', '=', False)])
+    invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
+    name = fields.Char(string='Tax Description', required=True)
+    tax_id = fields.Many2one('account.tax', string='Tax')
+    account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
-    base = fields.Float(string='Base', digits=dp.get_precision('Account'))
     amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
     manual = fields.Boolean(string='Manual', default=True)
-    sequence = fields.Integer(string='Sequence',
-        help="Gives the sequence order when displaying a list of invoice tax.")
-    base_code_id = fields.Many2one('account.tax.code', string='Base Code',
-        help="The account basis of the tax declaration.")
-    base_amount = fields.Float(string='Base Code Amount', digits=dp.get_precision('Account'),
-        default=0.0)
-    tax_code_id = fields.Many2one('account.tax.code', string='Tax Code',
-        help="The tax basis of the tax declaration.")
-    tax_amount = fields.Float(string='Tax Code Amount', digits=dp.get_precision('Account'),
-        default=0.0)
-
-    company_id = fields.Many2one('res.company', string='Company',
-        related='account_id.company_id', store=True, readonly=True)
-    factor_base = fields.Float(string='Multipication factor for Base code',
-        compute='_compute_factors')
-    factor_tax = fields.Float(string='Multipication factor Tax code',
-        compute='_compute_factors')
-
-    @api.multi
-    def base_change(self, base, currency_id=False, company_id=False, date_invoice=False):
-        factor = self.factor_base if self else 1
-        company = self.env['res.company'].browse(company_id)
-        if currency_id and company.currency_id:
-            currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
-            base = currency.compute(base * factor, company.currency_id, round=False)
-        return {'value': {'base_amount': base}}
-
-    @api.multi
-    def amount_change(self, amount, currency_id=False, company_id=False, date_invoice=False):
-        factor = self.factor_tax if self else 1
-        company = self.env['res.company'].browse(company_id)
-        if currency_id and company.currency_id:
-            currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
-            amount = currency.compute(amount * factor, company.currency_id, round=False)
-        return {'value': {'tax_amount': amount}}
+    sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of invoice tax.")
+    company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
 
     @api.v8
     def compute(self, invoice):
-        tax_grouped = {}
+        tax_grouped = {} # Generate one journal item per tax, however many invoice lines it's applied to
         currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.context_today(invoice))
-        company_currency = invoice.company_id.currency_id
         for line in invoice.invoice_line:
-            taxes = line.invoice_line_tax_id.compute_all(
-                (line.price_unit * (1 - (line.discount or 0.0) / 100.0)),
-                line.quantity, line.product_id, invoice.partner_id)['taxes']
+            price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.invoice_line_tax_id.compute_all(price_unit, line.quantity, line.product_id, invoice.partner_id)['taxes']
             for tax in taxes:
                 val = {
                     'invoice_id': invoice.id,
                     'name': tax['name'],
+                    'tax_id': tax['id'],
                     'amount': tax['amount'],
                     'manual': False,
                     'sequence': tax['sequence'],
-                    'base': currency.round(tax['price_unit'] * line['quantity']),
+                    'account_analytic_id': line.account_analytic_id.id,
+                    'account_id': invoice.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
                 }
-                if invoice.type in ('out_invoice','in_invoice'):
-                    val['base_code_id'] = tax['base_code_id']
-                    val['tax_code_id'] = tax['tax_code_id']
-                    val['base_amount'] = currency.compute(val['base'] * tax['base_sign'], company_currency, round=False)
-                    val['tax_amount'] = currency.compute(val['amount'] * tax['tax_sign'], company_currency, round=False)
-                    val['account_id'] = tax['account_collected_id'] or line.account_id.id
-                    val['account_analytic_id'] = tax['account_analytic_collected_id']
-                else:
-                    val['base_code_id'] = tax['ref_base_code_id']
-                    val['tax_code_id'] = tax['ref_tax_code_id']
-                    val['base_amount'] = currency.compute(val['base'] * tax['ref_base_sign'], company_currency, round=False)
-                    val['tax_amount'] = currency.compute(val['amount'] * tax['ref_tax_sign'], company_currency, round=False)
-                    val['account_id'] = tax['account_paid_id'] or line.account_id.id
-                    val['account_analytic_id'] = tax['account_analytic_paid_id']
 
                 # If the taxes generate moves on the same financial account as the invoice line
                 # and no default analytic account is defined at the tax level, propagate the
@@ -1514,20 +1422,14 @@ class account_invoice_tax(models.Model):
                 if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
                     val['account_analytic_id'] = line.account_analytic_id.id
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
-                if not key in tax_grouped:
+                key = tax['id']
+                if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
-                    tax_grouped[key]['base'] += val['base']
                     tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base_amount'] += val['base_amount']
-                    tax_grouped[key]['tax_amount'] += val['tax_amount']
 
         for t in tax_grouped.values():
-            t['base'] = currency.round(t['base'])
             t['amount'] = currency.round(t['amount'])
-            t['base_amount'] = currency.round(t['base_amount'])
-            t['tax_amount'] = currency.round(t['tax_amount'])
 
         return tax_grouped
 
@@ -1540,23 +1442,18 @@ class account_invoice_tax(models.Model):
     @api.model
     def move_line_get(self, invoice_id):
         res = []
-        self._cr.execute(
-            'SELECT * FROM account_invoice_tax WHERE invoice_id = %s',
-            (invoice_id,)
-        )
-        for row in self._cr.dictfetchall():
-            if not (row['amount'] or row['tax_code_id'] or row['tax_amount']):
+        for tax_line in self.env['account.invoice'].browse(invoice_id).tax_line:
+            if not tax_line.amount:
                 continue
             res.append({
+                'tax_line_id': tax_line.tax_id.id,
                 'type': 'tax',
-                'name': row['name'],
-                'price_unit': row['amount'],
+                'name': tax_line.name,
+                'price_unit': tax_line.amount,
                 'quantity': 1,
-                'price': row['amount'] or 0.0,
-                'account_id': row['account_id'],
-                'tax_code_id': row['tax_code_id'],
-                'tax_amount': row['tax_amount'],
-                'account_analytic_id': row['account_analytic_id'],
+                'price': tax_line.amount or 0.0,
+                'account_id': tax_line.account_id.id,
+                'account_analytic_id': tax_line.account_analytic_id.id,
             })
         return res
 
