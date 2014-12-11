@@ -159,9 +159,13 @@ class mail_mail(osv.Model):
             :param browse_record partner: specific recipient partner
         """
         if (force or not mail.subject) and mail.record_name:
-            return 'Re: %s' % (mail.record_name)
+            mail.write(
+                {'subject': 'Re: %s' % (mail.record_name)}, context=context)
         elif (force or not mail.subject) and mail.parent_id and mail.parent_id.subject:
-            return 'Re: %s' % (mail.parent_id.subject)
+            mail.write(
+                {'subject': 'Re: %s' % (mail.parent_id.subject)},
+                context=context)
+        mail.refresh()
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
