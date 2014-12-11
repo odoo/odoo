@@ -8,6 +8,12 @@ class account_invoice_line(osv.Model):
 
 
     def _invoiced_product_move_lines(self, cr, uid, inv, i_line, dacc, cacc, context=None):
+        """
+        anglo-saxon accounting generates stock accounting entries for COGS
+        In case of product based on phantom BoM, do not generate accounting
+        entries based on the final product but on the components (as the final
+        product is not in stock).
+        """
         def _get_product_price(cr, uid, inv, bom_line, product, context=None):
             price_unit = sub_product.standard_price
             company_currency = inv.company_id.currency_id.id
