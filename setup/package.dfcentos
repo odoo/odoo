@@ -1,0 +1,25 @@
+# Please note that this Dockerfile is used for testing nightly builds and should
+# not be used to deploy Odoo
+FROM centos:centos6
+MAINTAINER Odoo S.A. <info@odoo.com>
+
+RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm && \
+	yum -y -d 0 -e 0 update -y && yum -y -d 0 -e 0 upgrade -y && \
+	yum -y -d 0 -e 0 install \
+		python-pip \
+		gcc \
+		python-devel \
+		postgresql \
+		postgresql-server \
+		postgresql-libs \
+		postgresql-contrib \
+		postgresql-devel && \
+	yum clean all && \
+	pip install xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz
+
+# Manual start of postgres
+RUN mkdir -p /var/lib/postgres/data
+RUN chown -R postgres:postgres /var/lib/postgres/data
+RUN chmod 0700 /var/lib/postgres/data
+RUN su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"
+RUN cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf
