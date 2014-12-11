@@ -177,18 +177,20 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             partners_partial = self.cr.fetchall()
             partners_amount = dict((i[0],0) for i in partners_partial)
             for partner_info in partners_partial:
+                partial = False
                 if partner_info[2]:
                     # in case of partial reconciliation, we want to keep the left amount in the oldest period
                     self.cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) FROM account_move_line WHERE reconcile_partial_id = %s''', (partner_info[2],))
                     date = self.cr.fetchall()
                     if date and args_list[-3] <= date[0][0] <= args_list[-2]:
                         # partial reconcilation
+                        partial = True
                         self.cr.execute('''SELECT SUM(l.debit-l.credit)
                                            FROM account_move_line AS l
                                            WHERE l.reconcile_partial_id = %s''', (partner_info[2],))
                         unreconciled_amount = self.cr.fetchall()
                         partners_amount[partner_info[0]] += unreconciled_amount[0][0]
-                else:
+                if not partial:
                     partners_amount[partner_info[0]] += partner_info[1]
             history.append(partners_amount)
 
