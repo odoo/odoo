@@ -731,7 +731,7 @@ class account_move_line(models.Model):
         all_accounts = []
         partners = []
         for move in self:
-            company_ids.append(move.id)
+            company_ids.append(move.company_id.id)
             all_accounts.append(move.account_id)
             if (move.account_id.user_type.type in ('receivable', 'payable')):
                 partners.append(move.partner_id.id)
