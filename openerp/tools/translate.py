@@ -50,6 +50,7 @@ _logger = logging.getLogger(__name__)
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
 SKIPPED_ELEMENTS = ('script', 'style')
+TRANSLATABLE_ATTRIBUTES = ('string', 'help', 'sum', 'confirm', 'placeholder')
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -566,12 +567,14 @@ def trans_parse_view(element, callback):
     """
     for el in element.iter():
         if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
-                and el.tag.lower() not in SKIPPED_ELEMENTS
-                and el.text):
+            and el.tag.lower() not in SKIPPED_ELEMENTS
+            and (el.tag.lower() != 'attribute'
+                 or el.get('name') in TRANSLATABLE_ATTRIBUTES)
+            and el.text):
             _push(callback, el.text, el.sourceline)
         if el.tail:
             _push(callback, el.tail, el.sourceline)
-        for attr in ('string', 'help', 'sum', 'confirm', 'placeholder'):
+        for attr in TRANSLATABLE_ATTRIBUTES:
             value = el.get(attr)
             if value:
                 _push(callback, value, el.sourceline)
