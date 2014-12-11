@@ -208,6 +208,11 @@ class crm_claim_category(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
+        'active': fields.boolean('Active'),
+    }
+
+    _defaults = {
+        'active': True,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
