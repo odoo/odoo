@@ -49,7 +49,9 @@ class MyOption (optparse.Option, object):
         super(MyOption, self).__init__(*opts, **attrs)
 
 
-def check_ssl():
+DEFAULT_LOG_HANDLER = ':INFO'
+
+def _check_ssl():
     try:
         from OpenSSL import SSL
         import socket
@@ -57,8 +59,6 @@ def check_ssl():
         return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
     except:
         return False
-
-DEFAULT_LOG_HANDLER = ':INFO'
 
 def _get_default_datadir():
     home = os.path.expanduser('~')
@@ -71,6 +71,20 @@ def _get_default_datadir():
             func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
     # No "version" kwarg as session and filestore paths are shared against series
     return func(appname=release.product_name, appauthor=release.author)
+
+def _deduplicate_loggers(loggers):
+    """ Avoid saving multiple logging levels for the same loggers to a save
+    file, that just takes space and the list can potentially grow unbounded
+    if for some odd reason people use :option`odoo.py --save`` all the time.
+    """
+    # dict(iterable) -> the last item of iterable for any given key wins,
+    # which is what we want and expect. Output order should not matter as
+    # there are no duplicates within the output sequence
+    return (
+        '{}:{}'.format(logger, level)
+        for logger, level in dict(it.split(':') for it in loggers).iteritems()
+    )
+
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -101,7 +115,7 @@ class configmanager(object):
 
         self.misc = {}
         self.config_file = fname
-        self.has_ssl = check_ssl()
+        self.has_ssl = _check_ssl()
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
@@ -623,7 +637,7 @@ class configmanager(object):
             if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             elif opt == 'log_handler':
-                p.set('options', opt, ','.join(deduplicate_loggers(self.options[opt])))
+                p.set('options', opt, ','.join(_deduplicate_loggers(self.options[opt])))
             else:
                 p.set('options', opt, self.options[opt])
 
@@ -685,19 +699,5 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
-
-def deduplicate_loggers(loggers):
-    """ Avoid saving multiple logging levels for the same loggers to a save
-    file, that just takes space and the list can potentially grow unbounded
-    if for some odd reason people use :option`odoo.py --save`` all the time.
-    """
-    # dict(iterable) -> the last item of iterable for any given key wins,
-    # which is what we want and expect. Output order should not matter as
-    # there are no duplicates within the output sequence
-    return (
-        '{}:{}'.format(logger, level)
-        for logger, level in dict(it.split(':') for it in loggers).iteritems()
-    )
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
