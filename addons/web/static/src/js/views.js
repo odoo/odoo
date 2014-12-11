@@ -407,7 +407,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
-            return initialized;
+            return $.when(initialized);
         }
         if (this.inner_widget && this.webclient.has_uncommitted_changes()) {
             return $.Deferred().reject();
@@ -638,7 +638,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (!view) {
             return $.Deferred().reject();
         }
-        if (view_type !== 'form') {
+        if ((view_type !== 'form') && (view_type !== 'diagram')) {
             this.view_stack = [];
         } 
 
@@ -956,6 +956,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         data: {action: JSON.stringify(action)},
                         complete: instance.web.unblockUI
                     });
+                } else {
+                    self.do_warn("Warning", "No record selected.");
                 }
                 break;
             case 'leave_debug':

@@ -92,6 +92,14 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="parent_id" eval="ref('mt_issue_stage')"/>
             <field name="relation_field">project_id</field>
         </record>
+        <record id="mt_project_issue_ready" model="mail.message.subtype">
+            <field name="name">Issue Ready</field>
+            <field name="sequence">24</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_issue_ready')"/>
+            <field name="relation_field">project_id</field>
+            <field name="default" eval="False" />
+        </record>
         
     </data>
 </openerp>

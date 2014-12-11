@@ -51,9 +51,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
-                <field name="origin" position="after">
+                <xpath expr="//group[@name='sale_pay']" position="inside">
                     <field name="invoice_type_id"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
