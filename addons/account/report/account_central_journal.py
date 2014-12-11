@@ -112,4 +112,3 @@ class report_agedpartnerbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_centraljournal'
     _wrapped_report_class = journal_print
-

@@ -75,5 +75,3 @@ class procurement_compute_all(osv.osv_memory):
         threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
-
-

@@ -25,5 +25,3 @@ import mrp_workcenter_load
 import change_production_qty
 import stock_move
 #import mrp_change_standard_price
-
-

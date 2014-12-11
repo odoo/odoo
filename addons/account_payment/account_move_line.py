@@ -56,5 +56,3 @@ class account_move_line(osv.osv):
             else:
                 raise osv.except_osv(_('Error!'), _('There is no partner defined on the entry line.'))
         return line2bank
-
-

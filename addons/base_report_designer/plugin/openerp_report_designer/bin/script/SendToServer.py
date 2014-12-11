@@ -219,4 +219,3 @@ if __name__<>"package" and __name__=="__main__":
     SendtoServer(None)
 elif __name__=="package":
     g_ImplementationHelper.addImplementation( SendtoServer, "org.openoffice.openerp.report.sendtoserver", ("com.sun.star.task.Job",),)
-

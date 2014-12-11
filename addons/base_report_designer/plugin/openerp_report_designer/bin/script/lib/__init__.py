@@ -26,4 +26,3 @@ import gui
 import logreport
 import rpc
 import tiny_socket
-

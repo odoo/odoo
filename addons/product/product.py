@@ -1308,4 +1308,3 @@ class decimal_precision(osv.osv):
     _constraints = [
         (_check_main_currency_rounding, 'Error! You cannot define the decimal precision of \'Account\' as greater than the rounding factor of the company\'s main currency', ['digits']),
     ]
-

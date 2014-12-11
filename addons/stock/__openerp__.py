@@ -107,4 +107,3 @@ Dashboard / Reports for Warehouse Management will include:
     'auto_install': False,
     'qweb': ['static/src/xml/picking.xml'],
 }
-

@@ -54,4 +54,3 @@ very handy when used in combination with the module 'share'.
     'auto_install': True,
     'installable': True,
 }
-

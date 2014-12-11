@@ -93,4 +93,3 @@ from openerp.tools.translate import _
 #----------------------------------------------------------
 import cli
 import http
-

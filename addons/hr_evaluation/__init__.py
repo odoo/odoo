@@ -21,5 +21,3 @@
 
 import hr_evaluation
 import report
-
-

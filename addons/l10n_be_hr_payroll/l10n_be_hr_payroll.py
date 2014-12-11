@@ -50,5 +50,3 @@ class hr_employee_be(osv.osv):
         'resident_bool': fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
         'disabled_children_number': fields.integer('Number of disabled children'),
     }
-
-

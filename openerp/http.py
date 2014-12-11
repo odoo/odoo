@@ -1544,4 +1544,3 @@ class CommonController(Controller):
 # register main wsgi handler
 root = Root()
 openerp.service.wsgi_server.register_wsgi_handler(root)
-

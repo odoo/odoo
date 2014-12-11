@@ -43,4 +43,3 @@ point of sale module.
     'installable': True,
     'auto_install': False,
 }
-

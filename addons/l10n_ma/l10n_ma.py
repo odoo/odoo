@@ -46,4 +46,3 @@ class l10n_ma_line(osv.osv):
     _sql_constraints = [
             ('code_uniq', 'unique (code)', 'The variable name must be unique !')
     ]
-

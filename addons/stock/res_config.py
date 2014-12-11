@@ -133,4 +133,3 @@ This installs the module product_expiry."""),
     _defaults = {
         'company_id': _default_company,
     }
-

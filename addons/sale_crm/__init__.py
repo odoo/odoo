@@ -21,4 +21,3 @@
 
 import wizard
 import sale_crm
-

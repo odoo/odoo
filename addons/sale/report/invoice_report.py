@@ -37,4 +37,3 @@ class account_invoice_report(osv.osv):
 
     def _group_by(self):
         return super(account_invoice_report, self)._group_by() + ", ai.section_id"
-

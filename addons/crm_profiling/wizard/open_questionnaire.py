@@ -82,5 +82,3 @@ class open_questionnaire(osv.osv_memory):
             'target': 'new',
             'context': context
         }
-
-

@@ -1297,4 +1297,3 @@ class product_template(osv.Model):
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
-

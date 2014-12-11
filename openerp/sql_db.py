@@ -629,4 +629,3 @@ def close_all():
     global _Pool
     if _Pool:
         _Pool.close_all()
-

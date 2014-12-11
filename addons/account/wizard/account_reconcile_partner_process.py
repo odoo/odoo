@@ -97,5 +97,3 @@ class account_partner_reconcile_process(osv.osv_memory):
         'today_reconciled': _get_today_reconciled,
         'next_partner_id': _get_partner,
     }
-
-

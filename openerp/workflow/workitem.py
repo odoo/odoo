@@ -331,5 +331,3 @@ class WorkflowItem(object):
                 return False
 
         return self.wkf_expr_eval_expr(transition['condition'])
-
-

@@ -41,5 +41,3 @@ class account_common_partner_report(osv.osv_memory):
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['result_selection'], context=context)[0])
         return data
-
-

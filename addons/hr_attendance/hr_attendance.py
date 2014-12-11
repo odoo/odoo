@@ -186,5 +186,3 @@ class hr_employee(osv.osv):
                 vals['name'] = action_date
             hr_attendance.create(cr, uid, vals, context=context)
         return True
-
-

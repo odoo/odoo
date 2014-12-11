@@ -51,4 +51,3 @@ class base_import_module(osv.TransientModel):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-

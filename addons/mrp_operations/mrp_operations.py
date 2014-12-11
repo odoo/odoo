@@ -544,4 +544,3 @@ class mrp_operations_operation(osv.osv):
     _defaults={
         'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
-

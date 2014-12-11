@@ -169,4 +169,3 @@ class ir_filters(osv.osv):
         'is_default': False
     }
     _order = 'model_id, name, id desc'
-

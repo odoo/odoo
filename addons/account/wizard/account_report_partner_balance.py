@@ -45,4 +45,3 @@ class account_partner_balance(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_partner'])[0])
         return self.pool['report'].get_action(cr, uid, [], 'account.report_partnerbalance', data=data, context=context)
-

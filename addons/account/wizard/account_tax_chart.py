@@ -72,5 +72,3 @@ class account_tax_chart(osv.osv_memory):
         'period_id': _get_period,
         'target_move': 'posted'
     }
-
-

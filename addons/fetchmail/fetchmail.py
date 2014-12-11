@@ -306,5 +306,3 @@ class mail_mail(osv.osv):
             values['fetchmail_server_id'] = fetchmail_server_id
         res = super(mail_mail, self).write(cr, uid, ids, values, context=context)
         return res
-
-

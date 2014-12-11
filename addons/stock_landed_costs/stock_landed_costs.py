@@ -341,4 +341,3 @@ class stock_valuation_adjustment_lines(osv.osv):
         'weight': 1.0,
         'volume': 1.0,
     }
-

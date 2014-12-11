@@ -24,4 +24,3 @@ checks = [
     test_mail,
     test_ir_actions,
 ]
-

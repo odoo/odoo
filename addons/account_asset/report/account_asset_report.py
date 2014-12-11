@@ -82,4 +82,3 @@ class asset_asset_report(osv.osv):
                     a.purchase_value, a.id, a.salvage_value
         )""")
 	
-

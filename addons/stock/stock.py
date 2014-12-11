@@ -4298,4 +4298,3 @@ class stock_picking_type(osv.osv):
         'warehouse_id': _default_warehouse,
         'active': True,
     }
-

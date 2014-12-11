@@ -213,5 +213,3 @@ class sale_advance_payment_inv(osv.osv_memory):
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
         }
-
-

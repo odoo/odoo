@@ -67,5 +67,3 @@ class sale_make_invoice(osv.osv_memory):
         result['domain'] = "[('id','in', [" + ','.join(map(str, newinv)) + "])]"
 
         return result
-
-

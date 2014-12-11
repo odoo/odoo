@@ -111,4 +111,3 @@ class TimeScale(object):
 
 
 _default_scale = TimeScale(pcal._default_calendar)
-

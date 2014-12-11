@@ -38,4 +38,3 @@ import company
 import res_currency
 import edi
 import res_config
-

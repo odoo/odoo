@@ -110,5 +110,3 @@ if __name__<>"package":
     modify(None)
 else:
     g_ImplementationHelper.addImplementation( modify, "org.openoffice.openerp.report.modify", ("com.sun.star.task.Job",),)
-
-

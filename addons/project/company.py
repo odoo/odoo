@@ -31,5 +31,3 @@ class res_company(osv.osv):
 "forget to setup the right unit of measure in your employees.",
         ),
     }
-
-

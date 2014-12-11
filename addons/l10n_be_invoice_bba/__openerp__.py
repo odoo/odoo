@@ -56,4 +56,3 @@ generated if no algorithm is specified on the Partner record.
     ],
     'auto_install': False,
     'installable': True,}
-

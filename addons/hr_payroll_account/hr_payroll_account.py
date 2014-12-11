@@ -222,5 +222,3 @@ class hr_payslip_run(osv.osv):
     _defaults = {
         'journal_id': _get_default_journal,
     }
-
-

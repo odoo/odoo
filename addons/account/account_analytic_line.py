@@ -158,5 +158,3 @@ class res_partner(osv.osv):
         'contract_ids': fields.one2many('account.analytic.account', \
                                                     'partner_id', 'Contracts', readonly=True),
     }
-
-

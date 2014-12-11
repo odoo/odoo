@@ -65,6 +65,3 @@ class product_template(osv.osv):
             help="This account will be used to value outgoing stock using cost price."),
 
     }
-
-
-

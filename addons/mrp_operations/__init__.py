@@ -21,4 +21,3 @@
 
 import mrp_operations
 import report
-

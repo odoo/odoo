@@ -22,5 +22,3 @@
 import hr_timesheet_invoice_create
 import hr_timesheet_analytic_profit
 import hr_timesheet_final_invoice_create
-
-

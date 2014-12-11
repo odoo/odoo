@@ -89,5 +89,3 @@ class makohtml2html(render.render):
 
     def _render(self):
         return makohtml.parseNode(self.html,self.localcontext)
-
-

@@ -48,4 +48,3 @@ class stock_picking(osv.osv):
                 'context': context
             }
         return res
-

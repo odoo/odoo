@@ -52,4 +52,3 @@ After installing this module, the Configuration wizard for accounting is launche
     ],
     'installable': True,
 }
-

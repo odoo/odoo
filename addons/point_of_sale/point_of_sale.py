@@ -1439,6 +1439,3 @@ class res_partner(osv.osv):
             partner_id = self.create(cr, uid, partner, context=context)
         
         return partner_id
-
-
-

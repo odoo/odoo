@@ -50,4 +50,3 @@ class hr_payslip(osv.osv):
     _columns = {
         'payment_mode': fields.char('Mode de paiement'),
     }
-

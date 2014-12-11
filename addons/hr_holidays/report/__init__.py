@@ -22,4 +22,3 @@
 import holidays_summary_report
 import available_holidays
 import hr_holidays_report
-

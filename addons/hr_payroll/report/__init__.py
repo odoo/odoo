@@ -24,4 +24,3 @@
 import report_payslip
 import report_payslip_details
 import report_contribution_register
-

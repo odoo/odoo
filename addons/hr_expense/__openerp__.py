@@ -68,4 +68,3 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'auto_install': False,
     'application': True,
 }
-

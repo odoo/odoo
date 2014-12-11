@@ -118,4 +118,3 @@ class report_product_pricelist(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'product.report_pricelist'
     _wrapped_report_class = product_pricelist
-

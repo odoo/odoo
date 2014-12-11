@@ -131,5 +131,3 @@ class project_task_delegate(osv.osv_memory):
         action['views'] = [(task_view_form_id, 'form'), (task_view_tree_id, 'tree')]
         action['help'] = False    
         return action
-
-

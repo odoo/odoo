@@ -21,5 +21,3 @@
 
 import account_followup_print
 import account_followup_report
-
-

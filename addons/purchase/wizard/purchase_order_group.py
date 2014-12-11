@@ -77,5 +77,3 @@ class purchase_order_group(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
         }
-
-

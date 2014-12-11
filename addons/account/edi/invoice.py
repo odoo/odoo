@@ -287,6 +287,3 @@ class account_invoice_line(osv.osv, EDIMixin):
 
 class account_invoice_tax(osv.osv, EDIMixin):
     _inherit = "account.invoice.tax"
-
-
-

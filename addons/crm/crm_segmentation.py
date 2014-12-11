@@ -179,6 +179,3 @@ class crm_segmentation_line(osv.osv):
                 if res:
                     return True
         return True
-
-
-

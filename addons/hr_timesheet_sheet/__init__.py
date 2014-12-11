@@ -23,4 +23,3 @@ import hr_timesheet_sheet
 import wizard
 import report
 import res_config
-

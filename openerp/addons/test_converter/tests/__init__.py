@@ -9,4 +9,3 @@ checks = [
     test_html,
     test_gbf,
 ]
-

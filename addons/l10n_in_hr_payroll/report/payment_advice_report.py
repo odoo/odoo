@@ -82,4 +82,3 @@ class payment_advice_report(osv.osv):
                     l.employee_id,l.advice_id,l.bysal,l.ifsc_code, l.name
             )
         """)
-

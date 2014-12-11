@@ -211,5 +211,3 @@ class report_timesheet_invoice(osv.osv):
                     a.user_id
             )
         """)
-
-

@@ -197,4 +197,3 @@ class OAuthController(http.Controller):
 
         kw['state'] = simplejson.dumps(state)
         return self.signin(**kw)
-

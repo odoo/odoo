@@ -22,4 +22,3 @@
 
 import fetchmail
 import res_config
-

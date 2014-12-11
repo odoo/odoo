@@ -1568,4 +1568,3 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-

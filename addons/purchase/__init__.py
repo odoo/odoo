@@ -28,5 +28,3 @@ import stock
 import company
 import edi
 import res_config
-
-

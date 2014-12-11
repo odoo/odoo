@@ -409,4 +409,3 @@ class res_company(osv.osv):
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
-

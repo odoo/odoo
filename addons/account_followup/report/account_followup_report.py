@@ -91,4 +91,3 @@ class account_followup_stat(osv.osv):
                 GROUP BY
                     l.id, l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
-

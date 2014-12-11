@@ -60,4 +60,3 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'auto_install': False,
     'application': True,
 }
-

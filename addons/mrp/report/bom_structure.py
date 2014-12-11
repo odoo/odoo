@@ -61,4 +61,3 @@ class report_mrpbomstructure(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'mrp.report_mrpbomstructure'
     _wrapped_report_class = bom_structure
-

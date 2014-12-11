@@ -129,5 +129,3 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'context': {'type': 'out_invoice'},
             'type': 'ir.actions.act_window',
         }
-
-

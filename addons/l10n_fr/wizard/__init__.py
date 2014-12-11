@@ -28,5 +28,3 @@
 
 import fr_report_bilan
 import fr_report_compute_resultant
-
-

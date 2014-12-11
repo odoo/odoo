@@ -61,4 +61,3 @@ class base_language_install(osv.osv_memory):
             'target': 'new',
             'res_id': ids and ids[0] or False,
         }
-

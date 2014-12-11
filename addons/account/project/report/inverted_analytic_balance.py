@@ -126,4 +126,3 @@ class report_invertedanalyticbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_invertedanalyticbalance'
     _wrapped_report_class = account_inverted_analytic_balance
-

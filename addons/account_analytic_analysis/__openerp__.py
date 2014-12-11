@@ -47,4 +47,3 @@ Adds menu to show relevant information to each manager.You can also view the rep
     'installable': True,
     'auto_install': False,
 }
-

@@ -57,5 +57,3 @@ class hr_timesheet_current_open(osv.osv_memory):
         if len(ids) == 1:
             value['res_id'] = ids[0]
         return value
-
-

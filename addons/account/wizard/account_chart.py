@@ -105,5 +105,3 @@ class account_chart(osv.osv_memory):
         'target_move': 'posted',
         'fiscalyear': _get_fiscalyear,
     }
-
-

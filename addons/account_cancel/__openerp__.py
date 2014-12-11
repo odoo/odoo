@@ -39,4 +39,3 @@ If set to true it allows user to cancel entries & invoices.
     'installable': True,
     'auto_install': False,
 }
-

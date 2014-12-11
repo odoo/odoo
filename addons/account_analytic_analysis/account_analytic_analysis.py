@@ -903,4 +903,3 @@ class account_analytic_account_summary_month(osv.osv):
                     ') ' \
                 'GROUP BY d.month, d.account_id ' \
                 ')')
-

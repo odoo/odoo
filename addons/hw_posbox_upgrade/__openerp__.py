@@ -43,4 +43,3 @@ and should not be installed on regular openerp servers.
     'installable':  False,
     'auto_install': False,
 }
-

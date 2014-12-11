@@ -139,5 +139,3 @@ class common_report_header(object):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
         return ''
-
-

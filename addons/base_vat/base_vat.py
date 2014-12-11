@@ -311,4 +311,3 @@ class res_partner(osv.osv):
             return int(vat[10]) == dig_check
         else:
             return False
-

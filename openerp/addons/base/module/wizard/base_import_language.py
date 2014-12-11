@@ -59,5 +59,3 @@ class base_language_import(osv.osv_memory):
         finally:
             fileobj.close()
         return True
-
-

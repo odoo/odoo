@@ -73,6 +73,3 @@ class report_xml(osv.osv):
             'report_sxw_content': sxw_data and base64.encodestring(sxw_data) or False,
             'report_rml_content': rml_data and base64.encodestring(rml_data) or False
         }
-
-
-

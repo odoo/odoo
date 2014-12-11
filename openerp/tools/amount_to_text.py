@@ -197,6 +197,3 @@ if __name__=='__main__':
             print i, ">>", amount_to_text(i, lang)
     else:
         print amount_to_text(int(argv[1]), lang)
-
-
-

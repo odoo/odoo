@@ -52,4 +52,3 @@ class res_partner(osv.osv):
     _default = {
         'out_inv_comm_type': 'none',
     }
-

@@ -54,4 +54,3 @@ class report_account_statement(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'point_of_sale.report_statement'
     _wrapped_report_class = account_statement
-

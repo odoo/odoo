@@ -83,4 +83,3 @@ class payslip_report(osv.osv):
                     l.employee_id,p.struct_id,l.category_id
             )
         """)
-

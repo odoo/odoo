@@ -69,4 +69,3 @@ class crm_case_section(osv.osv):
 
     def action_forecast(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
-

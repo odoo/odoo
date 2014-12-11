@@ -37,5 +37,3 @@ import server
     implement an extension to the network protocols, or need to debug some
     low-level behavior of the wire.
 """
-
-

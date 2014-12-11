@@ -80,6 +80,3 @@ class repair_cancel(osv.osv_memory):
                 </form>
             """
         return res
-
-
-

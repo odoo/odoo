@@ -103,5 +103,3 @@ class crm_lead_report(osv.Model):
                 WHERE c.active = 'true'
                 GROUP BY c.id
             )""")
-
-

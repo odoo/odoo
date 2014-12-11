@@ -60,5 +60,3 @@ class product_template(osv.osv):
             string="Expense Account",
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
-
-

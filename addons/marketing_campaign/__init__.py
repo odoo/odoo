@@ -21,5 +21,3 @@
 
 import marketing_campaign
 import report
-
-

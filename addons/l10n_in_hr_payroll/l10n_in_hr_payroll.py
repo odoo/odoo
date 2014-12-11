@@ -261,5 +261,3 @@ class res_company(osv.osv):
     _defaults = {
         'dearness_allowance': True,
     }
-
-

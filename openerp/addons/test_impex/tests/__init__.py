@@ -10,4 +10,3 @@ checks = [
     test_import,
     test_load,
 ]
-

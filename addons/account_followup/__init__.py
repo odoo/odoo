@@ -22,4 +22,3 @@
 import account_followup
 import wizard
 import report
-

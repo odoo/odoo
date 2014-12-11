@@ -37,5 +37,3 @@ Adds a Claim link to the delivery order.
     'installable': True,
     'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
-
-

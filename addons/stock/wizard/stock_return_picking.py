@@ -183,5 +183,3 @@ class stock_return_picking(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'context': ctx,
         }
-
-

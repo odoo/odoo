@@ -66,4 +66,3 @@ Indian Payroll Salary Rules.
     'demo': ['l10n_in_hr_payroll_demo.xml'],
     'installable': True
 }
-

@@ -58,5 +58,3 @@ if __name__<>"package":
     ConvertFieldsToBraces(None)
 else:
     g_ImplementationHelper.addImplementation( ConvertFieldsToBraces, "org.openoffice.openerp.report.convertFB", ("com.sun.star.task.Job",),)
-
-

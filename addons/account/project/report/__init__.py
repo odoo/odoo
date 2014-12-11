@@ -24,5 +24,3 @@ import analytic_balance
 import inverted_analytic_balance
 import cost_ledger
 import quantity_cost_ledger
-
-

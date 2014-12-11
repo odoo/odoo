@@ -98,4 +98,3 @@ class campaign_analysis(osv.osv):
                 wi.date::date
             )
         """)
-

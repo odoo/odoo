@@ -94,4 +94,3 @@ elif __name__=="package":
             NewReport,
             "org.openoffice.openerp.report.opennewreport",
             ("com.sun.star.task.Job",),)
-

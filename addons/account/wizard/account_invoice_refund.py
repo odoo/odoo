@@ -229,6 +229,3 @@ class account_invoice_refund(osv.osv_memory):
     def invoice_refund(self, cr, uid, ids, context=None):
         data_refund = self.read(cr, uid, ids, ['filter_refund'],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
-
-
-

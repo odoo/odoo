@@ -137,5 +137,3 @@ class report_sales_by_user_pos_month(osv.osv):
 
                 )
         """)
-
-

@@ -212,4 +212,3 @@ class account_invoice(osv.osv):
                                                                               fpos,
                                                                               counterpart_acct_id)
         return invoice_data
-

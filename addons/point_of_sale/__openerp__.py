@@ -97,4 +97,3 @@ Main Features
     'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,
 }
-

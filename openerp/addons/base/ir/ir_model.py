@@ -1269,4 +1269,3 @@ class wizard_model_menu(osv.osv_memory):
                 'icon': 'STOCK_INDENT'
             }, context)
         return {'type':'ir.actions.act_window_close'}
-

@@ -30,5 +30,3 @@ class company(osv.osv):
     _defaults = {
         'manufacturing_lead': lambda *a: 1.0,
     }
-
-

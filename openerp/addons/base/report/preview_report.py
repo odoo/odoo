@@ -28,4 +28,3 @@ class rmlparser(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.preview.report', 'res.company',
       'addons/base/report/preview_report.rml', parser=rmlparser, header='external')
-

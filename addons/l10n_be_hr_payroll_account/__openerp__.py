@@ -39,4 +39,3 @@ Accounting Data for Belgian Payroll Rules.
     ],
     'installable': True
 }
-

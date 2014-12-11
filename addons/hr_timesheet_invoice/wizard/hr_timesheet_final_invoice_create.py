@@ -57,5 +57,3 @@ class final_invoice_create(osv.osv_memory):
         act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
-
-

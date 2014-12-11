@@ -64,5 +64,3 @@ class account_invoice_line(osv.osv):
                 if line.asset_category_id.open_asset:
                     asset_obj.validate(cr, uid, [asset_id], context=context)
         return True
-
-

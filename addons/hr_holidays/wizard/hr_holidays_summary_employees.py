@@ -49,5 +49,3 @@ class hr_holidays_summary_employee(osv.osv_memory):
             'report_name': 'holidays.summary',
             'datas': datas,
             }
-
-

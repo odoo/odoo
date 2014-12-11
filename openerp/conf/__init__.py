@@ -44,4 +44,3 @@ addons_paths = []
 # installed (i.e. the majority of OpenERP addons). This is set with the --load
 # command-line option.
 server_wide_modules = []
-

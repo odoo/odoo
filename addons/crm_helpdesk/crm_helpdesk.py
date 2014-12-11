@@ -140,4 +140,3 @@ class crm_helpdesk(osv.osv):
         }
         defaults.update(custom_values)
         return super(crm_helpdesk, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-

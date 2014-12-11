@@ -38,5 +38,3 @@ class res_request_link(osv.osv):
         'priority': 5,
     }
     _order = 'priority'
-
-

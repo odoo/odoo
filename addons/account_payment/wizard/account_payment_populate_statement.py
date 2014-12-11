@@ -87,4 +87,3 @@ class account_payment_populate_statement(osv.osv_memory):
             'statement_id': statement.id,
             'ref': payment_line.communication,
         }
-

@@ -1089,4 +1089,3 @@ class crm_lead(format_address, osv.osv):
                     partner_info['full_name'] = '%s <%s>' % (lead.partner_name or lead.contact_name, email)
                     break
         return res
-

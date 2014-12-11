@@ -48,4 +48,3 @@ Allows to automatically select analytic accounts based on criterions:
     'installable': True,
     'auto_install': False,
 }
-

@@ -58,5 +58,3 @@ the bank account\nin the journal definition for reconciliation.'))
             'context': "{'journal_id': %d}" % (data['journal_id'],),
             'type': 'ir.actions.act_window'
              }
-
-

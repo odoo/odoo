@@ -35,4 +35,3 @@ class mail_vote(osv.Model):
             'user_id': fields.many2one('res.users', 'User', select=1,
                 ondelete='cascade', required=True),
         }
-

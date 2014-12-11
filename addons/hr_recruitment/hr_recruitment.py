@@ -621,4 +621,3 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-

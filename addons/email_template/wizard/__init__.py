@@ -21,5 +21,3 @@
 ##############################################################################
 import email_template_preview
 import mail_compose_message
-
-

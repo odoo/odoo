@@ -44,4 +44,3 @@ Romanian accounting chart and localization.
               ],
     "installable": True,
 }
-

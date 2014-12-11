@@ -38,4 +38,3 @@ class calendar_event(osv.Model):
         if obj.opportunity_id:
             self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.start, obj.duration, context=context)
         return res
-

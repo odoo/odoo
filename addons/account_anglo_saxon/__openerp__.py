@@ -48,4 +48,3 @@ account.""",
     'auto_install': False,
     'installable': True,
 }
-

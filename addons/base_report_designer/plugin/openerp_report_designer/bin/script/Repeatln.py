@@ -275,4 +275,3 @@ if __name__<>"package" and __name__=="__main__":
 elif __name__=="package":
     g_ImplementationHelper = unohelper.ImplementationHelper()
     g_ImplementationHelper.addImplementation( RepeatIn, "org.openoffice.openerp.report.repeatln", ("com.sun.star.task.Job",),)
-

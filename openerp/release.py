@@ -52,4 +52,3 @@ author_email = 'info@odoo.com'
 license = 'AGPL-3'
 
 nt_service_name = "odoo-server-" + series
-

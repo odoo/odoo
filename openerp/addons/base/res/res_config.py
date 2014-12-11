@@ -704,4 +704,3 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         if (action_id):
             return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
         return exceptions.Warning(msg % values)
-

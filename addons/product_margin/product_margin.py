@@ -136,5 +136,3 @@ class product_product(osv.osv):
         'expected_margin_rate' : fields.function(_product_margin, type='float', string='Expected Margin (%)', multi='product_margin',
             help="Expected margin * 100 / Expected Sale"),
     }
-
-

@@ -52,5 +52,3 @@ class invoice(osv.osv):
                 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
             }
         }
-
-

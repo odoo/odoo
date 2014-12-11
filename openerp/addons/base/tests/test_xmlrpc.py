@@ -19,4 +19,3 @@ class test_xmlrpc(openerp.tests.common.HttpCase):
         self.assertIsInstance(ids, list)
         ids = o.execute(DB, 1, 'admin', 'ir.model', 'search', [], {})
         self.assertIsInstance(ids, list)
-

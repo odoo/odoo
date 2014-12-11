@@ -36,4 +36,3 @@ class purchase_order(osv.osv):
                 fpos = order_line.order_id.fiscal_position or False
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, acc_id)
         return account_id
-

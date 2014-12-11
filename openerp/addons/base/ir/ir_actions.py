@@ -1217,4 +1217,3 @@ class ir_actions_act_client(osv.osv):
         'context': '{}',
 
     }
-

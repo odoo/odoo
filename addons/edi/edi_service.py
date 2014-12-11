@@ -59,4 +59,3 @@ def dispatch(method, params):
     return fn(*params)
 
 openerp.service.wsgi_server.register_rpc_endpoint('edi', dispatch)
-

@@ -88,4 +88,3 @@ class report_overdue(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_overdue'
     _wrapped_report_class = Overdue
-

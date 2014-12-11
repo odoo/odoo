@@ -51,4 +51,3 @@ class res_company(osv.osv):
                                                     'Available html',
                                                 ),
     }
-

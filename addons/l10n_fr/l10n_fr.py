@@ -55,5 +55,3 @@ class res_company(osv.osv):
         'siret': fields.char('SIRET', size=14),
         'ape': fields.char('APE'),
     }
-
-

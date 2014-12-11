@@ -21,5 +21,3 @@
 
 import wizard
 import product_margin
-
-

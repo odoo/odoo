@@ -620,6 +620,3 @@ class report_custom(report_int):
         self.obj.render()
         return True
 report_custom('report.custom')
-
-
-

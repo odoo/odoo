@@ -247,5 +247,3 @@ class OpenIDController(http.Controller):
     def status(self):
         session = getattr(request.session, 'openid_session', {})
         return {'status': session.get('status'), 'message': session.get('message')}
-
-

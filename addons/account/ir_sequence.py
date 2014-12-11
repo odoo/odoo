@@ -55,5 +55,3 @@ class ir_sequence(osv.osv):
                 if line.fiscalyear_id.id == context.get('fiscalyear_id'):
                     return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
         return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
-
-

@@ -499,4 +499,3 @@ class account_config_settings(osv.TransientModel):
                  'res_id': res_ids and res_ids[0] or False,
                  'view_mode': 'form,tree',
          }
-

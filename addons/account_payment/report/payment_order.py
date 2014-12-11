@@ -77,4 +77,3 @@ class report_paymentorder(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_payment.report_paymentorder'
     _wrapped_report_class = payment_order
-

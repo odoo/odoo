@@ -22,4 +22,3 @@
 
 import partner
 import invoice
-

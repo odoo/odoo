@@ -26,4 +26,3 @@ import report
 import res_users
 import res_partner
 import wizard
-

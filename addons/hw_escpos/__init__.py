@@ -21,5 +21,3 @@
 
 import controllers
 import escpos
-
-

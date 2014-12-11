@@ -67,4 +67,3 @@ class account_crossovered_analytic(osv.osv_memory):
              'form': data
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_analytic_plans.report_crossoveredanalyticplans', data=datas, context=context)
-

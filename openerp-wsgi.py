@@ -51,4 +51,3 @@ pidfile = '.gunicorn.pid'
 workers = 4
 timeout = 240
 max_requests = 2000
-

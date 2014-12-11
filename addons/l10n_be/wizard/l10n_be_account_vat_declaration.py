@@ -209,5 +209,3 @@ class l10n_be_vat_declaration(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
-
-

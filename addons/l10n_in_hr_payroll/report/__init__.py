@@ -27,4 +27,3 @@ import report_hr_salary_employee_bymonth
 import payment_advice_report
 import report_hr_yearly_salary_detail
 import payslip_report
-

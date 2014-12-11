@@ -23,4 +23,3 @@ import pricelist
 import report
 import partner
 import wizard
-

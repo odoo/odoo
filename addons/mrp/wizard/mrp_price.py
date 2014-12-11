@@ -51,5 +51,3 @@ class mrp_price(osv.osv_memory):
             'report_name':'product.price',
             'datas' : datas,
        }
-
-

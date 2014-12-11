@@ -673,4 +673,3 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _defaults = {
         'to_invoice': lambda *a: True,
     }
-

@@ -55,4 +55,3 @@ by default, you simply need to configure a Paypal account in the Accounting/Invo
     'auto_install': True,
     'category': 'Hidden',
 }
-

@@ -92,4 +92,3 @@ class report_accounttest(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_test.report_accounttest'
     _wrapped_report_class = report_assert_account
-

@@ -143,4 +143,3 @@ class account_entries_report(osv.osv):
                 where l.state != 'draft'
             )
         """)
-

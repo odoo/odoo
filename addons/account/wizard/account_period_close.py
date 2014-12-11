@@ -56,5 +56,3 @@ class account_period_close(osv.osv_memory):
                     self.invalidate_cache(cr, uid, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
-
-

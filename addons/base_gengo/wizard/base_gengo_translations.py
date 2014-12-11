@@ -271,4 +271,3 @@ class base_gengo_translations(osv.osv_memory):
                     break
         except Exception, e:
             _logger.error("%s", e)
-

@@ -21,4 +21,3 @@
 
 import procurement
 import wizard
-

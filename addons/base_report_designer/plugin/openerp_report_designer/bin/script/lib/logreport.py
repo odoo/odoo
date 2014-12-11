@@ -44,4 +44,3 @@ class Logger(object):
 
     def shutdown(self):
         logging.shutdown()
-

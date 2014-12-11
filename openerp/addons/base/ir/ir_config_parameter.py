@@ -113,4 +113,3 @@ class ir_config_parameter(osv.osv):
             vals.update(key=key)
             self.create(cr, uid, vals, context=context)
             return False
-

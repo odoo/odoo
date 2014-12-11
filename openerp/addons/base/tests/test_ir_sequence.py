@@ -217,5 +217,3 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
 if __name__ == '__main__':
     unittest2.main()
-
-

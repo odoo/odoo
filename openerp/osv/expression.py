@@ -1260,4 +1260,3 @@ class expression(object):
             query = '(%s) AND %s' % (joins, query)
 
         return query, tools.flatten(params)
-

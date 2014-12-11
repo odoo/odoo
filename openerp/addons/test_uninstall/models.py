@@ -19,4 +19,3 @@ class test_uninstall_model(Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'Each name must be unique.')
     ]
-

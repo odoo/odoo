@@ -30,5 +30,3 @@ except ImportError:
     import logging
     _logger = logging.getLogger(__name__)
     _logger.warning('Python Imaging not installed, you can use only .JPG pictures !')
-
-

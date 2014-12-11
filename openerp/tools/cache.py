@@ -175,4 +175,3 @@ class dummy_cache(object):
 
 # For backward compatibility
 cache = ormcache
-

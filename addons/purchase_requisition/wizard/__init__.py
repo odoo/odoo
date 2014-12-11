@@ -21,5 +21,3 @@
 
 import purchase_requisition_partner
 import bid_line_qty
-
-

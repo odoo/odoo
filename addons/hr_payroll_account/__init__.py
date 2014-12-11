@@ -22,4 +22,3 @@
 
 import hr_payroll_account
 import wizard
-

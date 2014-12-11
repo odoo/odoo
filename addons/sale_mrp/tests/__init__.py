@@ -24,4 +24,3 @@ from . import test_move_explode
 checks = [
     test_move_explode,
 ]
-

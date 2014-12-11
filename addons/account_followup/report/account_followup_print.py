@@ -113,4 +113,3 @@ class report_followup(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_followup.report_followup'
     _wrapped_report_class = report_rappel
-

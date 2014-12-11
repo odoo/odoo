@@ -49,4 +49,3 @@ Belgian Payroll Rules.
     ],
     'installable': True
 }
-

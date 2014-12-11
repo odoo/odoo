@@ -230,5 +230,3 @@ class HttpOptions:
 
         """
         return opts
-
-

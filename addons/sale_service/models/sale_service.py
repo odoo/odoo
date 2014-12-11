@@ -153,7 +153,3 @@ class product_product(osv.osv):
             if product.type == 'service' and product.auto_create_task:
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
-
-
-
-

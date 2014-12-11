@@ -26,5 +26,3 @@ class account_bank_statement(osv.osv):
     _columns = {
         'coda_note': fields.text('CODA Notes'),
     }
-
-

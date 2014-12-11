@@ -49,5 +49,3 @@ class account_move_line_reconcile_select(osv.osv_memory):
             'res_model': 'account.move.line',
             'type': 'ir.actions.act_window'
         }
-
-

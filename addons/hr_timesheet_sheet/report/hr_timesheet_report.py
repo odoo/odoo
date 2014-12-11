@@ -76,5 +76,3 @@ class hr_timesheet_report(osv.osv):
                         htss.state,
                         htss.id,
                         htss.department_id"""
-
-

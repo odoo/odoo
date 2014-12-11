@@ -22,4 +22,3 @@ import wizard
 import base_report_designer
 import installer
 import openerp_sxw2rml
-

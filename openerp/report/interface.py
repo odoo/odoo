@@ -263,4 +263,3 @@ class report_rml(report_int):
             'addons',
             tools.config['root_path']
         ]
-

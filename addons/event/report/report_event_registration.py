@@ -86,4 +86,3 @@ class report_event_registration(models.Model):
                 name_registration
         )
         """)
-

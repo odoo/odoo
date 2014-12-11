@@ -23,4 +23,3 @@ from . import base_action_rule_test
 checks = [
     base_action_rule_test,
 ]
-

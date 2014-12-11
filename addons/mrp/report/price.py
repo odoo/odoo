@@ -222,4 +222,3 @@ class report_custom(report_rml):
         return xml
 
 report_custom('report.product.price', 'product.product', '', 'addons/mrp/report/price.xsl')
-

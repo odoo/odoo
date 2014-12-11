@@ -310,4 +310,3 @@ class ir_cron(osv.osv):
         active = bool(self.pool[model].search_count(cr, uid, domain, context=context))
 
         return self.try_write(cr, uid, ids, {'active': active}, context=context)
-

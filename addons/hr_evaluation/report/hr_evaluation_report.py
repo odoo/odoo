@@ -94,5 +94,3 @@ class hr_evaluation_report(osv.Model):
                      s.plan_id
             )
         """)
-
-

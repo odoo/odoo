@@ -133,4 +133,3 @@ class wrapped_report_employee_salary_bymonth(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_in_hr_payroll.report_hrsalarybymonth'
     _wrapped_report_class = report_hr_salary_employee_bymonth
-

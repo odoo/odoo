@@ -85,4 +85,3 @@ class ir_actions_report_xml(orm.Model):
             return new_report
         else:
             return super(ir_actions_report_xml, self)._lookup_report(cr, name)
-

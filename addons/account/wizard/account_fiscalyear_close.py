@@ -273,5 +273,3 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
-
-

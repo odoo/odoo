@@ -49,4 +49,3 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     'auto_install': False,
     'installable': True,
 }
-

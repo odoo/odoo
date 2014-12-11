@@ -37,5 +37,3 @@ def write_data_to_file(filename, data):
     fp = file( filename, 'wb' )
     fp.write( data )
     fp.close()
-
-

@@ -36,4 +36,3 @@ import ConvertBracesToField
 import ConvertFieldsToBraces
 import ExportToRML
 import SendtoServer
-

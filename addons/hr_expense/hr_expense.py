@@ -469,4 +469,3 @@ class account_move_line(osv.osv):
                     if new_status_is_paid:
                         expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)
         return res
-

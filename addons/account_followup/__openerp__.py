@@ -66,4 +66,3 @@ Note that if you want to check the follow-up level for a given partner/account e
     'installable': True,
     'auto_install': False,
 }
-

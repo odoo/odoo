@@ -21,4 +21,3 @@
 
 import order
 import report_lunch_order
-

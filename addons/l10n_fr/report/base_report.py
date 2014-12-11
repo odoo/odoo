@@ -116,4 +116,3 @@ class base_report(report_sxw.rml_parse):
                             sum -= value
                         break
         self._set_variable(code, sum)
-

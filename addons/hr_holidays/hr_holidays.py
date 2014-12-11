@@ -573,5 +573,3 @@ class hr_employee(osv.osv):
         'leaves_count': fields.function(_leaves_count, type='integer', string='Leaves'),
 
     }
-
-

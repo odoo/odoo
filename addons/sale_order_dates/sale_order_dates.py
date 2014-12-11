@@ -103,5 +103,3 @@ class sale_order_dates(osv.osv):
             store=True, string='Effective Date',
             help="Date on which the first Delivery Order was created."),
     }
-
-

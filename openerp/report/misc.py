@@ -33,5 +33,3 @@ def choice_colors(n):
 
 if __name__=='__main__':
     print choice_colors(10)
-
-

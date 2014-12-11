@@ -60,4 +60,3 @@ class report_lunch_order(osv.osv):
                    lo.date,lo.user_id,lo.note
             )
             """)
-

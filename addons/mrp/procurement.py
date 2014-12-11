@@ -130,5 +130,3 @@ class procurement_order(osv.osv):
     def production_order_create_note(self, cr, uid, procurement, context=None):
         body = _("Manufacturing Order <em>%s</em> created.") % (procurement.production_id.name,)
         self.message_post(cr, uid, [procurement.id], body=body, context=context)
-
-

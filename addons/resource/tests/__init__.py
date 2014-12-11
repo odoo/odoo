@@ -24,4 +24,3 @@ from openerp.addons.resource.tests import test_resource
 checks = [
     test_resource,
 ]
-

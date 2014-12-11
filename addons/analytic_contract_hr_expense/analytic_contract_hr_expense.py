@@ -150,5 +150,3 @@ class account_analytic_account(osv.osv):
             'res_model': 'account.analytic.line',
             'nodestroy': True,
         }
-
-

@@ -36,4 +36,3 @@ Product extension. This module adds:
     "active": False,
     "installable": True
 }
-

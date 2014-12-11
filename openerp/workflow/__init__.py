@@ -99,4 +99,3 @@ def trg_redirect(uid, res_type, res_id, new_rid, cr):
     """
     assert isinstance(new_rid, (long, int))
     return WorkflowService.new(cr, uid, res_type, res_id).redirect(new_rid)
-

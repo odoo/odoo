@@ -75,4 +75,3 @@ configuration of their taxes and fiscal positions manually.
     'installable': True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }
-

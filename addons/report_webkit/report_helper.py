@@ -88,4 +88,3 @@ class WebKitHelper(object):
         return self.embed_image("png", logo, width, height)
 
         
-

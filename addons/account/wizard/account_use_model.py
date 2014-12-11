@@ -70,5 +70,3 @@ class account_use_model(osv.osv_memory):
             'views': [(False,'tree'),(resource_id,'form')],
             'type': 'ir.actions.act_window',
         }
-
-

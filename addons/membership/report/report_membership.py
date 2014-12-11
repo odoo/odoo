@@ -124,5 +124,3 @@ class report_membership(osv.osv):
             associate_member_id,
             membership_amount
         )""")
-
-

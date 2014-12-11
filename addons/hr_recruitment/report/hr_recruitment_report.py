@@ -97,6 +97,3 @@ class hr_recruitment_report(osv.Model):
                      s.department_id
             )
         """)
-
-
-

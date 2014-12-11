@@ -340,4 +340,3 @@ class wrapped_vat_listing_print(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_be.report_l10nvatpartnerlisting'
     _wrapped_report_class = partner_vat_listing_print
-

@@ -30,7 +30,3 @@ class res_partner(osv.osv):
           string="Delivery Method",
           help="This delivery method will be used when invoicing from picking."),
     }
-
-
-
-

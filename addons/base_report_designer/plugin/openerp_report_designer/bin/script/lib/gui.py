@@ -795,5 +795,3 @@ class DBModalDialog:
         For instance, the listener on your OK or Cancel button would call this to end the dialog.
         """
         self.oDialogControl.endExecute()
-
-

@@ -113,4 +113,3 @@ class product_bom(osv.osv):
     }
 
 product_bom()
-

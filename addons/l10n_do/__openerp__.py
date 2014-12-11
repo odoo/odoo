@@ -68,4 +68,3 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'installable': True,
     'auto_install': False,
 }
-

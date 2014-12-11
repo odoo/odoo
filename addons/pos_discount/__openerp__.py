@@ -44,4 +44,3 @@ sale discount to a customer.
     'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,
 }
-

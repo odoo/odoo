@@ -36,4 +36,3 @@ class res_partner(osv.osv):
     _defaults = {
         'opt_out': False,
     }
-

@@ -54,5 +54,3 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
             'domain': "[('id','in',["+','.join(map(str,created_move_ids))+"])]",
             'type': 'ir.actions.act_window',
         }
-
-

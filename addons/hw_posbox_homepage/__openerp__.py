@@ -44,4 +44,3 @@ regular openerp interface anymore.
     'installable': False,
     'auto_install': False,
 }
-

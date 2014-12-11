@@ -194,4 +194,3 @@ class report_budget(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_budget.report_budget'
     _wrapped_report_class = budget_report
-

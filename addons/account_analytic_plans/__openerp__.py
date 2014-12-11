@@ -81,4 +81,3 @@ The analytic plan validates the minimum and maximum percentage at the time of cr
     'installable': True,
     'auto_install': False,
 }
-

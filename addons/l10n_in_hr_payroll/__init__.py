@@ -22,4 +22,3 @@
 import l10n_in_hr_payroll
 import report
 import wizard
-

@@ -24,4 +24,3 @@ import test_controllers
 checks = [
     test_controllers,
 ]
-

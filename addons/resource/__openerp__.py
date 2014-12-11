@@ -50,4 +50,3 @@ associated to every resource. It also manages the leaves of every resource.
     'auto_install': False,
     'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }
-

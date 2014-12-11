@@ -133,5 +133,3 @@ class make_procurement(osv.osv_memory):
             res['warehouse_id'] = warehouse_id[0] if warehouse_id else False
 
         return res
-
-

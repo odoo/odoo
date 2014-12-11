@@ -823,5 +823,3 @@ class module_dependency(osv.Model):
     @api.depends('depend_id.state')
     def _compute_state(self):
         self.state = self.depend_id.state or 'unknown'
-
-

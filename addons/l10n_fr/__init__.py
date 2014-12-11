@@ -29,5 +29,3 @@
 import l10n_fr
 import report
 import wizard
-
-

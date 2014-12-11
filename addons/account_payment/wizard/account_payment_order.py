@@ -119,5 +119,3 @@ class payment_order_create(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
         }
-
-

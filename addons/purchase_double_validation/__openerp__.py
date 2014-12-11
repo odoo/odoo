@@ -47,4 +47,3 @@ exceeds minimum amount set by configuration wizard.
     'installable': True,
     'auto_install': False
 }
-

@@ -82,5 +82,3 @@ if __name__=='__main__':
     </test>'''
     if s.render():
         print s.get()
-
-

@@ -39,6 +39,3 @@ The decimal precision is configured per company.
     'installable': True,
     'images': ['images/1_decimal_accuracy_form.jpeg','images/1_decimal_accuracy_list.jpeg'],
 }
-
-
-

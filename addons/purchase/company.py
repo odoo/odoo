@@ -34,5 +34,3 @@ class company(osv.osv):
     _defaults = {
         'po_lead': lambda *a: 1.0,
     }
-
-

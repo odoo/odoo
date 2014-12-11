@@ -28,4 +28,3 @@ import pos_details
 import pos_payment_report
 import pos_report
 import pos_order_report
-

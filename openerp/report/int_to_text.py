@@ -72,5 +72,3 @@ def int_to_text(i):
 if __name__=='__main__':
     for i in range(1,999999,139):
         print int_to_text(i)
-
-

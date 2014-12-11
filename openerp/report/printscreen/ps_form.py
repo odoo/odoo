@@ -132,6 +132,3 @@ class report_printscreen_list(report_int):
         self.obj.render()
         return True
 report_printscreen_list('report.printscreen.form')
-
-
-

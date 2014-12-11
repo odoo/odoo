@@ -52,5 +52,3 @@ class project_account_analytic_line(osv.osv_memory):
               'domain': domain,
               'search_view_id': id['res_id'],
               }
-
-

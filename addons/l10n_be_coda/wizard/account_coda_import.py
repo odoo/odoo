@@ -334,6 +334,3 @@ class account_coda_import(osv.osv_memory):
 
 def rmspaces(s):
     return " ".join(s.split())
-
-
-

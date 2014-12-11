@@ -44,4 +44,3 @@ are found in other modules that must be installed separately.
     'installable': True,
     'auto_install': False,
 }
-

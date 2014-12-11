@@ -125,4 +125,3 @@ class pos_make_payment(osv.osv_memory):
         'payment_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'amount': _default_amount,
     }
-

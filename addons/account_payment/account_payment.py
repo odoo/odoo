@@ -404,5 +404,3 @@ class payment_line(osv.osv):
             res['communication2']['states']['structured'] = [('readonly', True)]
             res['communication2']['states']['normal'] = [('readonly', False)]
         return res
-
-

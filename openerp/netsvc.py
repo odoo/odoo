@@ -221,4 +221,3 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['openerp:ERROR', 'werkzeug:ERROR'],
     'critical': ['openerp:CRITICAL', 'werkzeug:CRITICAL'],
 }
-

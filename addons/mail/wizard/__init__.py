@@ -21,4 +21,3 @@
 
 import invite
 import mail_compose_message
-

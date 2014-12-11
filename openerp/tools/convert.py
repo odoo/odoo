@@ -986,5 +986,3 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
     obj.parse(doc.getroot(), mode=mode)
     return True
-
-

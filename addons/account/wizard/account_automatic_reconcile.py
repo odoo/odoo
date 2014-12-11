@@ -251,5 +251,3 @@ class account_automatic_reconcile(osv.osv_memory):
             'target': 'new',
             'context': context,
         }
-
-

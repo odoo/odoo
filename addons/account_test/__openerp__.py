@@ -46,4 +46,3 @@ and print the report from Print button in header area.
     'active': False,
     'installable': True
 }
-

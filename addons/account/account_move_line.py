@@ -1411,5 +1411,3 @@ class account_move_line(osv.osv):
             result.append((journal.id,ng[journal.id],journal.type,
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
-
-

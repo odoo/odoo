@@ -58,4 +58,3 @@ class report_pos_lines(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'point_of_sale.report_saleslines'
     _wrapped_report_class = pos_lines
-

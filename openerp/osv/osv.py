@@ -30,4 +30,3 @@ except_osv = except_orm
 osv = Model
 osv_memory = TransientModel
 osv_abstract = AbstractModel # ;-)
-

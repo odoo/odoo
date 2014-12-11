@@ -196,4 +196,3 @@ class contentIndex(object):
         return res
 
 cntIndex = contentIndex()
-

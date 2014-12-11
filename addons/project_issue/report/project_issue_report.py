@@ -88,5 +88,3 @@ class project_issue_report(osv.osv):
                 LEFT JOIN project_task t on c.task_id = t.id
                 WHERE c.active= 'true'
             )""")
-
-

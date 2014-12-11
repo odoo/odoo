@@ -57,4 +57,3 @@ automatically new claims based on incoming emails.
         'images/claims.jpeg'
     ],
 }
-

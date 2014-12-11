@@ -62,4 +62,3 @@ class hr_salary_employee_bymonth(osv.osv_memory):
         return self.pool['report'].get_action(cr, uid, ids, 
                         'l10n_in_hr_payroll.report_hrsalarybymonth', 
                         data=datas, context=context)
-

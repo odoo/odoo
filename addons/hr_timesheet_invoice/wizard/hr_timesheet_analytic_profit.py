@@ -68,4 +68,3 @@ class account_analytic_profit(osv.osv_memory):
         return self.pool['report'].get_action(
             cr, uid, [], 'hr_timesheet_invoice.report_analyticprofit', data=datas, context=context
         )
-

@@ -12,4 +12,3 @@ class TestUi(openerp.tests.HttpCase):
         self.phantom_js('/',"console.log('ok')","console")
     def test_04_js_admin(self):
         self.phantom_js('/web',"console.log('ok')","openerp.client.action_manager.inner_widget", login='admin')
-

@@ -180,4 +180,3 @@ class report_crossoveredanalyticplans(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account_analytic_plans.report_crossoveredanalyticplans'
     _wrapped_report_class = crossovered_analytic
-

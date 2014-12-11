@@ -137,5 +137,3 @@ class report_webkit_actions(osv.osv_memory):
                     'view_id': False,
                     'type': 'ir.actions.act_window',
                 }                   
-
-

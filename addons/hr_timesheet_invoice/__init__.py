@@ -21,4 +21,3 @@
 import hr_timesheet_invoice
 import wizard
 import report
-

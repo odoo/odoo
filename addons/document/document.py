@@ -2105,4 +2105,3 @@ class nodefd_db(StringIO, node_descriptor):
                 registry.get('ir.attachment').write(cr, 1, par.file_id, {'datas': data})
             cr.commit()
         StringIO.close(self)
-

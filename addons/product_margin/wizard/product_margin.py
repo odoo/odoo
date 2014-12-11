@@ -91,5 +91,3 @@ class product_margin(osv.osv_memory):
             'view_id': False,
             'search_view_id': search_view_id,
         }
-
-

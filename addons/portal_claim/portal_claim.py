@@ -40,4 +40,3 @@ class crm_claim(osv.osv):
     _defaults = {
         'partner_id': lambda s, cr, uid, c: s._get_default_partner_id(cr, uid, c),
     }
-

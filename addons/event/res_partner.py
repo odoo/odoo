@@ -26,4 +26,3 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     speaker = fields.Boolean(help="Check this box if this contact is a speaker.")
-

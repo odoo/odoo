@@ -66,5 +66,3 @@ class crm_partner_report_assign(osv.osv):
                     left join account_invoice_report i
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
-
-

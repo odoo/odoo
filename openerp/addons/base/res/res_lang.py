@@ -278,4 +278,3 @@ def intersperse(string, counts, separator=''):
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
     return left + res + right, len(splits) > 0 and len(splits) -1 or 0
-

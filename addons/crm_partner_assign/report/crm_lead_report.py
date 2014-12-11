@@ -95,5 +95,3 @@ class crm_lead_report_assign(osv.osv):
                     crm_lead c
                     left join res_partner p on (c.partner_assigned_id=p.id)
             )""")
-
-

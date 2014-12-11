@@ -80,4 +80,3 @@ class report_order_receipt(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'point_of_sale.report_receipt'
     _wrapped_report_class = order
-

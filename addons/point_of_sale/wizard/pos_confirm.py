@@ -48,4 +48,3 @@ class pos_confirm(osv.osv_memory):
                     data_lines += [x.id for x in move.line_id if x.account_id.id == invoice.account_id.id]
                     self.pool.get('account.move.line').reconcile(cr, uid, data_lines, context=context)
         return {}
-

@@ -56,4 +56,3 @@ def get_pool(db_name, force_demo=False, status=None, update_module=False):
     """Return a model registry."""
     assert openerp.conf.deprecation.openerp_pooler
     return get_db_and_pool(db_name, force_demo, status, update_module)[1]
-

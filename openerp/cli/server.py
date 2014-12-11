@@ -172,4 +172,3 @@ class Server(Command):
     """Start the odoo server (default command)"""
     def run(self, args):
         main(args)
-

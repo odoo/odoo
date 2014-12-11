@@ -29,4 +29,3 @@ class workcenter_code(report_sxw.rml_parse):
             'time': time,
         })
 report_sxw.report_sxw('report.mrp.wc.barcode', 'mrp.workcenter', 'addons/mrp_operations/report/mrp_wc_barcode.rml',parser=workcenter_code,header=False)
-

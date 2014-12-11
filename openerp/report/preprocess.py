@@ -99,5 +99,3 @@ if __name__=='__main__':
     a = report()
     result = a.preprocess_rml(node)
     print etree.tostring(result)
-
-

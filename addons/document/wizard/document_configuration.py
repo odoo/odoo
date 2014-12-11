@@ -109,4 +109,3 @@ class document_configuration(osv.osv_memory):
                 'domain': '[]',
                 'ressource_tree': 1
         })
-

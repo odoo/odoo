@@ -164,4 +164,3 @@ class report_generaljournal(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_generaljournal'
     _wrapped_report_class = journal_print
-

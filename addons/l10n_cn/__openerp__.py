@@ -51,4 +51,3 @@
     'installable': True,
     'images': ['images/config_chart_l10n_cn.jpeg','images/l10n_cn_chart.jpeg'],
 }
-

@@ -55,4 +55,3 @@ Accounts in OpenERP: the first with the type 'RIB', the second with the type 'IB
     'installable': True,
     'auto_install': False,
 }
-

@@ -58,5 +58,3 @@ class test_inherits(common.TransactionCase):
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
         self.assertEqual(mother._columns['state'].selection,
                          [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
-
-

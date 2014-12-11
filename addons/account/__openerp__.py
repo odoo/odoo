@@ -172,4 +172,3 @@ for a particular financial year and for preparation of vouchers there is a modul
     'installable': True,
     'auto_install': False,
 }
-

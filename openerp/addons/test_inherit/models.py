@@ -71,4 +71,3 @@ class daughter(models.Model):
 
     # change the default value of an inherited field
     name = fields.Char(default='Baz')
-

@@ -52,4 +52,3 @@ This module adds several restaurant features to the Point of Sale:
     'installable': True,
     'auto_install': False,
 }
-

@@ -22,4 +22,3 @@
 
 import confirm_statement_line
 import cancel_statement_line
-

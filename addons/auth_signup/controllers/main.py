@@ -123,4 +123,3 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         uid = request.session.authenticate(db, login, password)
         if not uid:
             raise SignupError(_('Authentification Failed.'))
-

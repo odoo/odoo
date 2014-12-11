@@ -5987,4 +5987,3 @@ def _normalize_ids(arg, atoms={int, long, str, unicode, NewId}):
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
 from .fields import Field, SpecialValue, FailedValue
-

@@ -119,4 +119,3 @@ class TestACL(common.TransactionCase):
 
 if __name__ == '__main__':
     unittest2.main()
-

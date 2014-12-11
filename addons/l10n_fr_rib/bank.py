@@ -101,4 +101,3 @@ class res_bank(osv.osv):
     _columns = {
         'rib_code': fields.char('RIB Bank Code'),
     }
-

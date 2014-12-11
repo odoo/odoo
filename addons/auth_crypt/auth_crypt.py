@@ -92,5 +92,3 @@ class res_users(osv.osv):
         internally
         """
         return default_crypt_context
-
-

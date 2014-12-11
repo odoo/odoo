@@ -45,4 +45,3 @@ class account_analytic_chart(osv.osv_memory):
             result_context.update({'to_date': data['to_date']})
         result['context'] = str(result_context)
         return result
-

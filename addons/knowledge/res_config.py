@@ -29,4 +29,3 @@ class knowledge_config_settings(osv.osv_memory):
             help='Document indexation, full text search of attachements.\n'
                  '-This installs the module document.'),
     }
-

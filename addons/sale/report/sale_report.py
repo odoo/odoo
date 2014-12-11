@@ -116,4 +116,3 @@ class sale_report(osv.osv):
             FROM ( %s )
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
-

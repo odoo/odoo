@@ -350,4 +350,3 @@ def exp_migrate_databases(databases):
         openerp.tools.config['update']['base'] = True
         openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
     return True
-

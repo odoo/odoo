@@ -111,4 +111,3 @@ class bank(osv.osv):
 
                 self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
         return True
-

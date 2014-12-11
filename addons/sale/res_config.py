@@ -147,4 +147,3 @@ class account_config_settings(osv.osv_memory):
         if not module_sale_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
-

@@ -23,4 +23,3 @@ from . import test_portal
 checks = [
     test_portal,
 ]
-

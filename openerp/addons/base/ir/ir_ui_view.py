@@ -1116,4 +1116,3 @@ class view(osv.osv):
         for vid, in cr.fetchall():
             if not self._check_xml(cr, uid, [vid]):
                 self.raise_view_error(cr, uid, "Can't validate view", vid)
-

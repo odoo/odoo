@@ -46,4 +46,3 @@ that would need such functionality.
     'installable': True,
     'auto_install': False,
 }
-

@@ -60,4 +60,3 @@ def exp_set_loglevel(loglevel, logger=None):
     # TODO Previously, the level was set on the now deprecated
     # `openerp.netsvc.Logger` class.
     return True
-

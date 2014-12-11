@@ -81,5 +81,3 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'date': statement.date,
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-

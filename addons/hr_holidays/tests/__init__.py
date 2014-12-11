@@ -24,4 +24,3 @@ from openerp.addons.hr_holidays.tests import test_holidays_flow
 checks = [
     test_holidays_flow,
 ]
-

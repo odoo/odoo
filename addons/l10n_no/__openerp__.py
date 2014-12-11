@@ -32,4 +32,3 @@
     "active": False,
     "installable": True
 }
-

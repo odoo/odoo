@@ -21,4 +21,3 @@
 
 import osv
 import fields
-

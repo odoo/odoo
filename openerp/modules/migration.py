@@ -176,5 +176,3 @@ class MigrationManager(object):
                             fp2.close()
                         if mod:
                             del mod
-
-

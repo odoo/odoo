@@ -57,5 +57,3 @@ class account_move_line(osv.osv):
     _columns = {
         'internal_sequence_number': fields.related('move_id','internal_sequence_number', type='char', relation='account.move', help='Internal Sequence Number', string='Internal Number'),
     }
-
-

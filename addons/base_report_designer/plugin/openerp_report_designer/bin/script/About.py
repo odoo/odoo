@@ -84,5 +84,3 @@ if __name__<>"package" and __name__=="__main__":
     About(None)
 elif __name__=="package":
     g_ImplementationHelper.addImplementation( About, "org.openoffice.openerp.report.about", ("com.sun.star.task.Job",),)
-
-

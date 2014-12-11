@@ -196,5 +196,3 @@ class stock_move(osv.osv):
     _defaults = {
         'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
-
-

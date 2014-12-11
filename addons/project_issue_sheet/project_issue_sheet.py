@@ -74,5 +74,3 @@ class hr_analytic_issue(osv.osv):
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
-
-

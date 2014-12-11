@@ -56,4 +56,3 @@ class stock_return_picking(osv.osv_memory):
             move_ids = [x.id for x in pick_obj.browse(cr, uid, new_picking, context=context).move_lines]
             move_obj.write(cr, uid, move_ids, {'invoice_state': '2binvoiced'})
         return new_picking, picking_type_id
-

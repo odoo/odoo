@@ -49,5 +49,3 @@ class res_partner(osv.osv):
         'purchase_order_count': fields.function(_purchase_invoice_count, string='# of Purchase Order', type='integer', multi="count"),
         'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Supplier Invoices', type='integer', multi="count"),
     }
-
-

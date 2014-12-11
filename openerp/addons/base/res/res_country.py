@@ -107,5 +107,3 @@ class CountryState(osv.osv):
     _order = 'code'
 
     name_search = location_name_search
-
-

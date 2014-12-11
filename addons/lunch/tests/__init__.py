@@ -23,4 +23,3 @@ from . import test_lunch
 checks = [
     test_lunch,
 ]
-

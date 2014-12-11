@@ -41,4 +41,3 @@ class product_template(osv.osv):
         'landed_cost_ok': False,
         'split_method': 'equal',
     }
-

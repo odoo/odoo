@@ -40,6 +40,3 @@ class account_common_account_report(osv.osv_memory):
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account'], context=context)[0])
         return data
-
-
-

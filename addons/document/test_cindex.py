@@ -51,4 +51,3 @@ for fname in args:
         print "Keyboard interrupt"
 
 #eof
-

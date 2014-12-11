@@ -43,4 +43,3 @@ class res_partner(osv.osv):
         default['task_ids'] = []
         return super(res_partner, self).copy(
                 cr, uid, record_id, default=default, context=context)
-

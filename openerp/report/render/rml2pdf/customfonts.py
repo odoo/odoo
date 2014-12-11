@@ -89,4 +89,3 @@ def SetCustomFonts(rmldoc):
         if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(family, font, filename, mode)
     return True
-

@@ -110,4 +110,3 @@ class _ClassProperty(property):
 
 def classproperty(func):
     return _ClassProperty(classmethod(func))
-

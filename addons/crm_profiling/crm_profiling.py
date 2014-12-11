@@ -287,6 +287,3 @@ class crm_segmentation(osv.osv):
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True
-
-
-

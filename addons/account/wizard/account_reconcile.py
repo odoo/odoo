@@ -161,5 +161,3 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                 period_id, journal_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-

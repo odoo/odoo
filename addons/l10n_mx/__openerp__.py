@@ -59,4 +59,3 @@ With this module you will have:
     "installable": True,
     "certificate": False,
 }
-

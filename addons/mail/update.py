@@ -108,4 +108,3 @@ class publisher_warranty_contract(AbstractModel):
             else:
                 raise
         return True
-

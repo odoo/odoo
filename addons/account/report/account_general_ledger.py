@@ -312,4 +312,3 @@ class report_generalledger(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_generalledger'
     _wrapped_report_class = general_ledger
-

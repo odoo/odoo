@@ -40,4 +40,3 @@ Partners geolocalization
     'auto_install': False,
     'images': [],
 }
-

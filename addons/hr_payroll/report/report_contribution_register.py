@@ -75,4 +75,3 @@ class wrapped_report_contribution_register(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'hr_payroll.report_contributionregister'
     _wrapped_report_class = contribution_register_report
-

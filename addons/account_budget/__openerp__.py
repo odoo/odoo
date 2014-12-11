@@ -73,4 +73,3 @@ Three reports are available:
     'installable': True,
     'auto_install': False,
 }
-

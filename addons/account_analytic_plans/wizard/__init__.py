@@ -21,5 +21,3 @@
 
 import analytic_plan_create_model
 import account_crossovered_analytic
-
-

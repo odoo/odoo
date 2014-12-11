@@ -114,5 +114,3 @@ class sale_receipt_report(osv.osv):
                     av.pay_now
             )
         """)
-
-

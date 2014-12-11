@@ -36,4 +36,3 @@ class wrapped_report_payslipdetailsin(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_in_hr_payroll.report_payslipdetails'
     _wrapped_report_class = payslip_details_report_in
-

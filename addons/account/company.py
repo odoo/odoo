@@ -46,5 +46,3 @@ If you have any queries regarding your account, Please contact us.
 Thank you in advance for your cooperation.
 Best Regards,'''
     }
-
-

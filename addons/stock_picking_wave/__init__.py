@@ -22,4 +22,3 @@
 import stock_picking_wave
 import wizard
 import controllers
-

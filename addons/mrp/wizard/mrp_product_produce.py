@@ -122,5 +122,3 @@ class mrp_product_produce(osv.osv_memory):
         self.pool.get('mrp.production').action_produce(cr, uid, production_id,
                             data.product_qty, data.mode, data, context=context)
         return {}
-
-

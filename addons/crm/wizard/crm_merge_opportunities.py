@@ -93,4 +93,3 @@ class crm_merge_opportunity(osv.osv_memory):
                 if section_ids:
                     section_id = section_ids[0]
         return {'value': {'section_id': section_id}}
-

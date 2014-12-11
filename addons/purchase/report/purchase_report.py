@@ -124,5 +124,3 @@ class purchase_report(osv.osv):
                     u2.factor
             )
         """)
-
-

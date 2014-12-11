@@ -32,5 +32,3 @@ def print_fnc(fnc, arg):
     if fnc in functions:
         return functions[fnc](arg)
     return ''
-
-

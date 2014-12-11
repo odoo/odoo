@@ -153,4 +153,3 @@ class report_analyticbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_analyticbalance'
     _wrapped_report_class = account_analytic_balance
-

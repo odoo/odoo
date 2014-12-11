@@ -77,5 +77,3 @@ class hr_recruitment_partner_create(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
-
-

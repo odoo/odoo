@@ -265,5 +265,3 @@ class delivery_grid_line(osv.osv):
         'variable_factor': lambda *args: 'weight',
     }
     _order = 'sequence, list_price'
-
-

@@ -50,4 +50,3 @@ class account_analytic_cost_ledger(osv.osv_memory):
         datas['form']['active_ids'] = context.get('active_ids', False)
 
         return self.pool['report'].get_action(cr, uid, [], 'account.report_analyticcostledger', data=datas, context=context)
-

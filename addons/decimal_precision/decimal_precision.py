@@ -102,4 +102,3 @@ class DecimalPrecisionTestModel(orm.Model):
         'float_2': fields.float(digits=(16, 2)),
         'float_4': fields.float(digits=(16, 4)),
     }
-

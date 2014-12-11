@@ -871,4 +871,3 @@ class account_statement_operation_template(osv.osv):
         'amount_type': 'percentage_of_balance',
         'amount': 100.0
     }
-

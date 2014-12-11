@@ -21,5 +21,3 @@
 
 import crm_claim
 import report
-
-

@@ -58,5 +58,3 @@ class crm_phonecall2meeting(osv.osv_memory):
                 'default_name': phonecall.name,
             }
         return res
-
-

@@ -23,4 +23,3 @@ class EDI(openerp.http.Controller):
         if len(result) == 1:
             return {"action": webmain.clean_action(req, result[0][2])}
         return True
-

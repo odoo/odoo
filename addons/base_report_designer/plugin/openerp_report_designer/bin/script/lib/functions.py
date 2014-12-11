@@ -242,6 +242,3 @@ def GetAFileName():
         sPath = oFileDialog.Files[0]
     oFileDialog.dispose()
     return sPath
-
-
-

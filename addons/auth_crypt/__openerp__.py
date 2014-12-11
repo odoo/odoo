@@ -57,4 +57,3 @@ necessarily have to be enabled).
     'auto_install': True,
     'installable': True,
 }
-

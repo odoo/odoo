@@ -42,4 +42,3 @@ such as the Mettler Toledo Ariva.
     'installable': True,
     'auto_install': False,
 }
-

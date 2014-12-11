@@ -72,6 +72,3 @@ class website_event(website_event):
         except ValueError:
             pass
         return super(website_event, self)._add_event(event_name, context, **kwargs)
-
-
-

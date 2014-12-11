@@ -78,5 +78,3 @@ class report_timesheet_task_user(osv.osv):
                 to_char(to_date(months.name, 'YYYY/MM/DD'),'YYYY') ,
                 to_char(to_date(months.name, 'YYYY/MM/DD'),'MM')
               ) """)
-
-

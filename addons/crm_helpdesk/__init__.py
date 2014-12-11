@@ -21,5 +21,3 @@
 
 import crm_helpdesk
 import report
-
-

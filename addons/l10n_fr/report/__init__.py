@@ -29,5 +29,3 @@
 import base_report
 import bilan_report
 import compute_resultant_report
-
-

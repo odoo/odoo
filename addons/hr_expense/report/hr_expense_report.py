@@ -108,5 +108,3 @@ class hr_expense_report(osv.osv):
                      s.employee_id
             )
         """)
-
-

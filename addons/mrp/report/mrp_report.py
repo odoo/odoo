@@ -97,7 +97,3 @@ class report_mrp_inout(osv.osv):
                 group by
                     to_char(sm.date,'YYYY:IW'), sm.company_id
             )""")
-
-
-
-

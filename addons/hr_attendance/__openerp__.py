@@ -55,4 +55,3 @@ actions(Sign in/Sign out) performed by them.
     #web
     'qweb': ["static/src/xml/attendance.xml"],
 }
-
