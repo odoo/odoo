@@ -1609,7 +1609,7 @@ class BaseModel(object):
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
 
-        :paramt int id: id of the document to open
+        :param int id: id of the document to open
         """
         return self.get_formview_action(cr, uid, id, context=context)
 
