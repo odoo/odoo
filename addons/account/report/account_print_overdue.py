@@ -64,6 +64,3 @@ class Overdue(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
         'addons/account/report/account_print_overdue.rml', parser=Overdue)
-
-
-

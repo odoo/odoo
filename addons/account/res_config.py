@@ -338,4 +338,3 @@ class account_config_settings(osv.osv_memory):
         config = self.browse(cr, uid, ids[0], context)
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
         dp.write({'digits': config.decimal_precision})
-

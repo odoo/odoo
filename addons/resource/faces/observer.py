@@ -77,4 +77,3 @@ factories = { }
 clear_cache_funcs = {}
 #@-node:@file observer.py
 #@-leo
-

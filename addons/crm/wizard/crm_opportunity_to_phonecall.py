@@ -76,4 +76,3 @@ class crm_opportunity2phonecall(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 crm_opportunity2phonecall()
-

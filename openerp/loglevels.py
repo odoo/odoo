@@ -168,4 +168,3 @@ def exception_to_unicode(e):
         return unicode(e)
     except Exception:
         return u"Unknown message"
-

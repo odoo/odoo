@@ -68,4 +68,3 @@ class crm_partner_report_assign(osv.osv):
             )""")
 
 crm_partner_report_assign()
-

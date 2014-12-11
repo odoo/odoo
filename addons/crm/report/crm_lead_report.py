@@ -146,4 +146,3 @@ class crm_lead_report(osv.osv):
             )""")
 
 crm_lead_report()
-

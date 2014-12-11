@@ -339,4 +339,3 @@ class WebKitParser(report_sxw):
         if html and html[:9].upper() != "<!DOCTYPE":
             html = "<!DOCTYPE html>\n" + html
         return html
-

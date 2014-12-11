@@ -79,4 +79,3 @@ class Controller(openerp.addons.web.http.Controller):
                 _logger.exception('error when resetting password')
                 raise(e)
         return True
-

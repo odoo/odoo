@@ -78,4 +78,3 @@ class payroll_advice_report(report_sxw.rml_parse):
         return result
 
 report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'l10n_in_hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report, header="external")
-

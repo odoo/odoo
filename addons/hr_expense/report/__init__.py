@@ -21,5 +21,3 @@
 
 import expense
 import hr_expense_report
-
-

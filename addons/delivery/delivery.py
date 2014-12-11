@@ -251,4 +251,3 @@ class delivery_grid_line(osv.osv):
     _order = 'list_price'
 
 delivery_grid_line()
-

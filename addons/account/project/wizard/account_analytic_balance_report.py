@@ -53,5 +53,3 @@ class account_analytic_balance(osv.osv_memory):
             }
 
 account_analytic_balance()
-
-

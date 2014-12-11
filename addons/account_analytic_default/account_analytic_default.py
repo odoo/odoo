@@ -119,4 +119,3 @@ class sale_order_line(osv.osv):
         return create_ids
 
 sale_order_line()
-

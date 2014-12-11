@@ -53,4 +53,3 @@ class account_bilan_report(osv.osv_memory):
         return {'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.bilan', 'datas': data}
 
 account_bilan_report()
-

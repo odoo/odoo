@@ -38,4 +38,3 @@ Price and Cost Price.
     'auto_install': False,
     'installable': True,
 }
-

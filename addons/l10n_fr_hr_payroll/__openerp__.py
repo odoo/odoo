@@ -51,4 +51,3 @@ TODO:
     ],
     'installable': True
 }
-

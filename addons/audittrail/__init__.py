@@ -21,4 +21,3 @@
 
 import audittrail
 import wizard
-

@@ -56,4 +56,3 @@ class pos_receipt(osv.osv_memory):
         }
 
 pos_receipt()
-

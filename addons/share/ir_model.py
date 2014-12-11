@@ -45,4 +45,3 @@ class ir_model_access(osv.Model):
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
     
-

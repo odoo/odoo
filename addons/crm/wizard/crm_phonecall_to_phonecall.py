@@ -99,4 +99,3 @@ class crm_phonecall2phonecall(osv.osv_memory):
         return res
 
 crm_phonecall2phonecall()
-

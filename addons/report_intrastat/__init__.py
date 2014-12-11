@@ -21,5 +21,3 @@
 
 import report_intrastat
 import report
-
-

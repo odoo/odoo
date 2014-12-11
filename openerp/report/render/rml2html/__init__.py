@@ -22,5 +22,3 @@
 from rml2html import parseString
 
 #.apidoc title: RML to HTML engine
-
-

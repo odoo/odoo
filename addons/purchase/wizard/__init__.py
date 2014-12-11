@@ -21,4 +21,3 @@
 
 import purchase_order_group
 import purchase_line_invoice
-

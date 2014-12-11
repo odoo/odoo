@@ -116,4 +116,3 @@ class OAuthController(oeweb.Controller):
 
         kw['state'] = simplejson.dumps(state)
         return self.signin(req, **kw)
-

@@ -73,5 +73,3 @@ class account_print_journal(osv.osv_memory):
         return {'type': 'ir.actions.report.xml', 'report_name': report_name, 'datas': data}
 
 account_print_journal()
-
-

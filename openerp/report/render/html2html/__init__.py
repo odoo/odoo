@@ -22,5 +22,3 @@
 from html2html import parseString
 
 #.apidoc title: HTML to HTML engine
-
-

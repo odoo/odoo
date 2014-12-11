@@ -22,6 +22,3 @@
 import wkf_service
 
 #.apidoc title: Workflow objects
-
-
-

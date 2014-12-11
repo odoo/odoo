@@ -314,5 +314,3 @@ class view_sc(osv.osv):
     _sql_constraints = [
         ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
-
-

@@ -133,4 +133,3 @@ class project_task_delegate(osv.osv_memory):
         return action
 
 project_task_delegate()
-

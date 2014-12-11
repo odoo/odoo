@@ -222,4 +222,3 @@ cntIndex.register(OpenDoc())
 
 
 #eof
-

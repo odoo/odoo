@@ -174,4 +174,3 @@ class account_installer(osv.osv_memory):
         return (modules | set([chart])) - set(['has_default_company', 'configurable'])
 
 account_installer()
-

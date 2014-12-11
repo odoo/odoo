@@ -21,4 +21,3 @@
 
 import hr_salary_employee_bymonth
 import hr_yearly_salary_detail
-

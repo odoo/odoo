@@ -82,4 +82,3 @@ class analytic_entries_report(osv.osv):
             )
         """)
 analytic_entries_report()
-

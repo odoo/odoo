@@ -72,5 +72,3 @@ class make_invoice(osv.osv_memory):
         }
 
 make_invoice()
-
-

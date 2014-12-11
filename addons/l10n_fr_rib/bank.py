@@ -104,4 +104,3 @@ class res_bank(osv.osv):
         'rib_code': fields.char('RIB Bank Code', size=64),
     }
 res_bank()
-

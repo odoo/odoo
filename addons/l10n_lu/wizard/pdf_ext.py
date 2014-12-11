@@ -104,6 +104,3 @@ def testfill_pdf(infile, outfile):
     for key in keys:
         fields.append( (key, key, '') )
     fill_pdf(infile, outfile, fields)
-
-
-

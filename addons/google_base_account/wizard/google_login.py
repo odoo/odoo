@@ -82,4 +82,3 @@ class google_login(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 google_login()
-

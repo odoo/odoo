@@ -60,4 +60,3 @@ class account_vat_declaration(osv.osv_memory):
         }
 
 account_vat_declaration()
-

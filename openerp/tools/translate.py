@@ -1121,5 +1121,3 @@ def load_language(cr, lang):
     uid = 1
     oid = language_installer.create(cr, uid, {'lang': lang})
     language_installer.lang_install(cr, uid, [oid], context=None)
-
-

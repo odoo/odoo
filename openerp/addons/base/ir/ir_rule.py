@@ -173,5 +173,3 @@ class ir_rule(osv.osv):
         return res
 
 ir_rule()
-
-

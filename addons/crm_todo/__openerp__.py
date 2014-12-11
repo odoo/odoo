@@ -35,4 +35,3 @@ Todo list for CRM leads and opportunities.
     'installable': True,
     'auto_install': False,
 }
-

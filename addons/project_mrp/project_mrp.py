@@ -107,4 +107,3 @@ class sale_order(osv.osv):
     _columns = {
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
     }
-

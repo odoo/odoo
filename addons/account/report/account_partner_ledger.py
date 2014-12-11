@@ -305,4 +305,3 @@ report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
 report_sxw.report_sxw('report.account.third_party_ledger_other', 'res.partner',
         'addons/account/report/account_partner_ledger_other.rml',parser=third_party_ledger,
         header='internal')
-

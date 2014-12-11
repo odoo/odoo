@@ -91,4 +91,3 @@ class sale_order(osv.osv):
     }
 
 sale_order()
-

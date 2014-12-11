@@ -63,4 +63,3 @@ class project_timebox_empty(osv.osv_memory):
         return {}
 
 project_timebox_empty()
-

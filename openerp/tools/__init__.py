@@ -36,5 +36,3 @@ from float_utils import *
 from mail import *
 
 #.apidoc title: Tools
-
-

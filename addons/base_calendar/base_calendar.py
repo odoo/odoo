@@ -1846,4 +1846,3 @@ class virtual_report_spool(web_services.report_spool):
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, data, context)
 
 virtual_report_spool()
-

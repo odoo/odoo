@@ -73,4 +73,3 @@ class fiche_paye_parser(report_sxw.rml_parse):
 
 
 report_sxw.report_sxw('report.fiche.paye', 'hr.payslip', 'l10n_fr_hr_payroll/report/fiche_paye.rml', parser=fiche_paye_parser)
-

@@ -703,4 +703,3 @@ class DAVClient(object):
         assert s == (201), "Bad status: %s" % s
         etag = m.getheader('ETag')
         return etag or True
-

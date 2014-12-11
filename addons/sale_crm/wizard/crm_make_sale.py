@@ -157,4 +157,3 @@ class crm_make_sale(osv.osv_memory):
     }
 
 crm_make_sale()
-

@@ -44,5 +44,3 @@ class pos_payment_report(osv.osv_memory):
        }
 
 pos_payment_report()
-
-

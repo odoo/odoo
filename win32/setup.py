@@ -67,4 +67,3 @@ setup(service      = ["OpenERPServerService"],
                         "optimize": 2,
                      }},
       )
-

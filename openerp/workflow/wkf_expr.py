@@ -78,6 +78,3 @@ def check(cr, workitem, ident, transition, signal):
             return False
 
     return _eval_expr(cr, ident, workitem, transition['condition'])
-
-
-

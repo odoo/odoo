@@ -61,4 +61,3 @@ class document_ftp_browse(osv.osv_memory):
         }
 
 document_ftp_browse()
-

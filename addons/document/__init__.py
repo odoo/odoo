@@ -24,4 +24,3 @@ import std_index
 import document
 import report
 import wizard
-

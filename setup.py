@@ -147,5 +147,3 @@ setuptools.setup(
       tests_require = ['unittest2'],
       **py2exe_options()
 )
-
-

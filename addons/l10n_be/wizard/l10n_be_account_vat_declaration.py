@@ -210,4 +210,3 @@ class l10n_be_vat_declaration(osv.osv_memory):
         }
 
 l10n_be_vat_declaration()
-

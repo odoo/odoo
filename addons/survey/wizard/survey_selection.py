@@ -101,4 +101,3 @@ class survey_name_wiz(osv.osv_memory):
             return {}
         notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
         return {'value': {'note': notes}}
-

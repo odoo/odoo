@@ -78,4 +78,3 @@ class crm_merge_opportunity(osv.osv_memory):
                 res.update({'opportunity_ids': opp_ids})
 
         return res
-

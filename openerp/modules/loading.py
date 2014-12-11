@@ -437,5 +437,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     finally:
         cr.close()
-
-

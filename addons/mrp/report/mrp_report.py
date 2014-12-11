@@ -98,6 +98,3 @@ class report_mrp_inout(osv.osv):
             )""")
 
 report_mrp_inout()
-
-
-

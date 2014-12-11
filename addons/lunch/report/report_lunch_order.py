@@ -61,4 +61,3 @@ class report_lunch_order(osv.osv):
             )
             """)
 report_lunch_order()
-

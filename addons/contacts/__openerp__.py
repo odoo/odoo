@@ -41,4 +41,3 @@ You can track your suppliers, customers and other contacts.
     'application': True,
     'auto_install': False,
 }
-

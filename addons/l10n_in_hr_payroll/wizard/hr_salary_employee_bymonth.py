@@ -67,4 +67,3 @@ class hr_salary_employee_bymonth(osv.osv_memory):
        }
 
 hr_salary_employee_bymonth()
-

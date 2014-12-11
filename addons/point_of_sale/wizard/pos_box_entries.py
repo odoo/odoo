@@ -142,5 +142,3 @@ class pos_box_entries(osv.osv_memory):
         return {}
 
 pos_box_entries()
-
-

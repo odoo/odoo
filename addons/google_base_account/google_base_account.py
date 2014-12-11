@@ -28,5 +28,3 @@ class res_users(osv.osv):
         'gmail_password': fields.char('Password', size=64),
     }
 res_users()    
-
-

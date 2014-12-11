@@ -52,4 +52,3 @@ class mrp_workcenter_load(osv.osv_memory):
        }
 
 mrp_workcenter_load()
-

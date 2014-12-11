@@ -229,4 +229,3 @@ class crm_payment_mode(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-

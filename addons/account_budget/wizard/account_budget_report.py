@@ -53,4 +53,3 @@ class account_budget_report(osv.osv_memory):
         }
 
 account_budget_report()
-

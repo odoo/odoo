@@ -49,4 +49,3 @@ class account_unreconcile_reconcile(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_unreconcile_reconcile()
-

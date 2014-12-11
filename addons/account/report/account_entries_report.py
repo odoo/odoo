@@ -155,4 +155,3 @@ class account_entries_report(osv.osv):
             )
         """)
 account_entries_report()
-

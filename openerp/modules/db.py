@@ -147,4 +147,3 @@ def has_unaccent(cr):
     """
     cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
     return len(cr.fetchall()) > 0
-

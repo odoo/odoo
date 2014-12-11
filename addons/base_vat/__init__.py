@@ -21,4 +21,3 @@
 
 import res_company
 import base_vat
-

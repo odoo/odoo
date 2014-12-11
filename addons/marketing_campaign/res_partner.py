@@ -37,5 +37,3 @@ class res_partner(osv.osv):
         return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
     
 res_partner()
-
-

@@ -45,4 +45,3 @@ Generic Payroll system Integrated with Accounting.
     'installable': True,
     'auto_install': False,
 }
-

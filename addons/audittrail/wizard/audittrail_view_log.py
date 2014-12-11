@@ -62,4 +62,3 @@ class audittrail_view_log(osv.osv_memory):
         return result
 
 audittrail_view_log()
-

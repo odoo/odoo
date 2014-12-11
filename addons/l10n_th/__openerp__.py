@@ -36,4 +36,3 @@ Thai accounting chart and localization.
     'installable': True,
     'images': ['images/config_chart_l10n_th.jpeg','images/l10n_th_chart.jpeg'],
 }
-

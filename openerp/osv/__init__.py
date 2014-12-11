@@ -23,5 +23,3 @@ import osv
 import fields
 
 #.apidoc title: Object Services and Relational Mapping
-
-

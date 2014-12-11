@@ -49,4 +49,3 @@ class hr_attendance_bymonth(osv.osv_memory):
         }
 
 hr_attendance_bymonth()
-

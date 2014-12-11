@@ -28,4 +28,3 @@ class test_cr_execute(unittest2.TestCase):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", 1)
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
-

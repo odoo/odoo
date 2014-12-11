@@ -23,4 +23,3 @@ import logging
 import webdav
 import webdav_server
 import document_webdav
-

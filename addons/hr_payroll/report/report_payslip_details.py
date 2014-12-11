@@ -114,4 +114,3 @@ class payslip_details_report(report_sxw.rml_parse):
         return res
 
 report_sxw.report_sxw('report.paylip.details', 'hr.payslip', 'hr_payroll/report/report_payslip_details.rml', parser=payslip_details_report)
-

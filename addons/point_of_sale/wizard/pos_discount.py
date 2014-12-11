@@ -69,4 +69,3 @@ class pos_discount(osv.osv_memory):
         return {}
 
 pos_discount()
-

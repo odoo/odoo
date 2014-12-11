@@ -22,4 +22,3 @@
 import crm_partner_assign
 import wizard
 import report
-

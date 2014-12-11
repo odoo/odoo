@@ -33,5 +33,3 @@ import ir_property
 
 import report
 import wizard
-
-

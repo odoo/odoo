@@ -52,4 +52,3 @@ def get_encoding():
     if trans: return trans.charset()
     return locale.getpreferredencoding()
     
-

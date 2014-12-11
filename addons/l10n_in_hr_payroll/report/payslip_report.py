@@ -84,4 +84,3 @@ class payslip_report(osv.osv):
             )
         """)
 payslip_report()
-

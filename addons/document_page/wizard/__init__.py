@@ -21,4 +21,3 @@
 
 import document_page_create_menu
 import document_page_show_diff
-

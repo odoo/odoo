@@ -44,4 +44,3 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_open_closed_fiscalyear()
-

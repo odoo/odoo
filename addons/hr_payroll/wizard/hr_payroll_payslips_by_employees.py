@@ -69,4 +69,3 @@ class hr_payslip_employees(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 hr_payslip_employees()
-

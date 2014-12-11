@@ -35,5 +35,3 @@ class account_general_journal(osv.osv_memory):
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data}
 
 account_general_journal()
-
-

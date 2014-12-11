@@ -54,4 +54,3 @@ class account_journal(osv.osv):
     }
 
 account_journal()
-

@@ -355,4 +355,3 @@ class RegistryManager(object):
             finally:
                 cr.close()
             registry.base_registry_signaling_sequence = r
-

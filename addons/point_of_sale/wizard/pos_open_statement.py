@@ -87,4 +87,3 @@ class pos_open_statement(osv.osv_memory):
         }
 
 pos_open_statement()
-

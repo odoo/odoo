@@ -40,5 +40,3 @@ class res_partner(osv.osv):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist']
 
 res_partner()
-
-

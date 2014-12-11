@@ -49,4 +49,3 @@ and categorize your interventions with a channel and a priority level.
     'auto_install': False,
     'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
 }
-

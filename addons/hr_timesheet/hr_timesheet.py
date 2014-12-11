@@ -213,4 +213,3 @@ class account_analytic_account(osv.osv):
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_timesheets'] = template.use_timesheets
         return res
-

@@ -624,6 +624,3 @@ class product_product(osv.osv):
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
-
-
-

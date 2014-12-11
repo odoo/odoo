@@ -54,4 +54,3 @@ class hr_holidays_summary_dept(osv.osv_memory):
             }
 
 hr_holidays_summary_dept()
-

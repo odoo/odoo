@@ -510,4 +510,3 @@ class resource_calendar_leaves(osv.osv):
         return {'value': {'calendar_id': []}}
 
 resource_calendar_leaves()
-

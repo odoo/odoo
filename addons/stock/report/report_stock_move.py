@@ -203,6 +203,3 @@ CREATE OR REPLACE view report_stock_inventory AS (
 );
         """)
 report_stock_inventory()
-
-
-

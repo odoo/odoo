@@ -493,4 +493,3 @@ class account_asset_history(osv.osv):
     }
 
 account_asset_history()
-

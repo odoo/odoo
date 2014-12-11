@@ -68,4 +68,3 @@ class mrp_product_produce(osv.osv_memory):
         return {}
 
 mrp_product_produce()
-

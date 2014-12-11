@@ -83,4 +83,3 @@ class asset_asset_report(osv.osv):
         )""")
 	
 asset_asset_report()
-

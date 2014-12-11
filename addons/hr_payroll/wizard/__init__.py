@@ -22,4 +22,3 @@
 
 import hr_payroll_payslips_by_employees
 import hr_payroll_contribution_register_report
-

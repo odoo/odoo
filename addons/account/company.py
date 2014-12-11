@@ -48,4 +48,3 @@ Best Regards,'''
     }
 
 res_company()
-

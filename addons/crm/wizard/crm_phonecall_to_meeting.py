@@ -60,4 +60,3 @@ class crm_phonecall2meeting(osv.osv_memory):
         return res
 
 crm_phonecall2meeting()
-

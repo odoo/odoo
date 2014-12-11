@@ -47,5 +47,3 @@ class procurement_compute(osv.osv_memory):
         return {}
 
 procurement_compute()
-
-

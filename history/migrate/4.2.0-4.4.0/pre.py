@@ -105,5 +105,3 @@ cr.commit()
 
 
 cr.close()
-
-

@@ -70,4 +70,3 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
     'auto_install': False,
     'images': ['images/config_chart_l10n_cr.jpeg','images/l10n_cr_chart.jpeg'],
 }
-

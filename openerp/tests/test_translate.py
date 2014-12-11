@@ -45,5 +45,3 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertRaises(AssertionError, quote, """test \nall kinds\n\no\r
          \\\\nope\n\n"
          """)
-
-

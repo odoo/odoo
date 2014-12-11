@@ -164,5 +164,3 @@ if __name__ == '__main__':
     dispatcher = CommandDispatcher(ReceiverEmail2Event(rpc_dispatcher))
     parser = EmailParser(['To', 'Cc', 'From'], dispatcher)
     parser.parse(email.message_from_file(sys.stdin))
-
-

@@ -119,4 +119,3 @@ class crm_lead_report_assign(osv.osv):
             )""")
 
 crm_lead_report_assign()
-

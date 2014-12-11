@@ -80,4 +80,3 @@ class report_timesheet_task_user(osv.osv):
               ) """)
 
 report_timesheet_task_user()
-

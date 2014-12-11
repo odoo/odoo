@@ -236,5 +236,3 @@ osv_abstract = AbstractModel # ;-)
 
 def start_object_proxy():
     object_proxy()
-
-

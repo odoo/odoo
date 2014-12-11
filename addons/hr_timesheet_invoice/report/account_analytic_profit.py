@@ -121,4 +121,3 @@ class account_analytic_profit(report_sxw.rml_parse):
         return line_obj.browse(self.cr, self.uid, ids)
 
 report_sxw.report_sxw('report.account.analytic.profit', 'account.analytic.line', 'addons/hr_timesheet_invoice/report/account_analytic_profit.rml', parser=account_analytic_profit)
-

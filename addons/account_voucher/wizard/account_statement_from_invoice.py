@@ -125,4 +125,3 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_statement_from_invoice_lines()
-

@@ -24,4 +24,3 @@ from . import test_multicompany
 checks = [
     test_multicompany,
 ]
-

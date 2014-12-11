@@ -121,4 +121,3 @@ class payment_order_create(osv.osv_memory):
         }
 
 payment_order_create()
-

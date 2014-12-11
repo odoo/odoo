@@ -169,4 +169,3 @@ class hr_si_project(osv.osv_memory):
         return res
 
 hr_si_project()
-

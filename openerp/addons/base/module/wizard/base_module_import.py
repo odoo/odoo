@@ -85,5 +85,3 @@ class base_module_import(osv.osv_memory):
             'res_model': 'ir.module.module',
             'type': 'ir.actions.act_window',
         }
-
-

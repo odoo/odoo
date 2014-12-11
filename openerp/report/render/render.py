@@ -68,6 +68,3 @@ class render(object):
             return self._result
         else:
             return None
-
-
-

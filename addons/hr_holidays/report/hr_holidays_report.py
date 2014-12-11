@@ -56,4 +56,3 @@ class hr_holidays_remaining_leaves_user(osv.osv):
         """)
 
 hr_holidays_remaining_leaves_user()
-

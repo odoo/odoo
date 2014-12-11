@@ -29,5 +29,3 @@ class LoginTest:
     def __init__(self):
         if not loginstatus:
             Change(None)
-
-

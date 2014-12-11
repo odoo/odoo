@@ -121,4 +121,3 @@ class project_task(osv.osv):
         return res
 
 project_task()
-

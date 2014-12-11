@@ -1110,4 +1110,3 @@ class product_product(osv.osv):
     _columns = {
         'bom_ids': fields.one2many('mrp.bom', 'product_id', 'Bill of Materials'),
     }
-

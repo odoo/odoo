@@ -93,4 +93,3 @@ class sale_report(osv.osv):
             )
         """)
 sale_report()
-

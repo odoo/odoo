@@ -50,4 +50,3 @@ You can customize the following attributes of the sequence:
     'installable': True,
     'auto_install': False,
 }
-

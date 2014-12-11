@@ -68,4 +68,3 @@ def get_ftp_fulldata(ftp, fname, limit=8192):
     return ''.join(data)
 
 #eof
-

@@ -82,4 +82,3 @@ class product_margin(osv.osv_memory):
         }
 
 product_margin()
-

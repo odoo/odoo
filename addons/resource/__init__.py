@@ -21,6 +21,3 @@
 
 import resource
 import faces
-
-
-

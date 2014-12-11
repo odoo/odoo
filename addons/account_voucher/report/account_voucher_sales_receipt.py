@@ -127,4 +127,3 @@ class sale_receipt_report(osv.osv):
         """)
 
 sale_receipt_report()
-

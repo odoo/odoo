@@ -33,4 +33,3 @@ class documnet_ftp_setting(osv.osv_memory):
     def get_default_ftp_config(self, cr, uid, fields, context=None):
         action = self.pool.get('ir.model.data').get_object(cr, uid, 'document_ftp', 'action_document_browse')
         return {'document_ftp_url': action.url}
-

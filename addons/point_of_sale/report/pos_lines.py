@@ -51,4 +51,3 @@ class pos_lines(report_sxw.rml_parse):
         return res
 
 report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines,header='internal')
-

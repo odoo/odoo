@@ -422,4 +422,3 @@ class payment_line(osv.osv):
         return res
 
 payment_line()
-

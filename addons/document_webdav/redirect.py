@@ -105,5 +105,3 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             size_remaining -= len(got)
 
 #eof
-
-

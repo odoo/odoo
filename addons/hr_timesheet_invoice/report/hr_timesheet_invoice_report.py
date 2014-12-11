@@ -216,5 +216,3 @@ class report_timesheet_invoice(osv.osv):
             )
         """)
 report_timesheet_invoice()
-
-

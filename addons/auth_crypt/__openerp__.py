@@ -39,4 +39,3 @@ will disable LDAP authentication completely if installed at the same time.
     'auto_install': False,
     'installable': True,
 }
-

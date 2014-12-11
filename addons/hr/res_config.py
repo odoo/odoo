@@ -59,4 +59,3 @@ class hr_config_settings(osv.osv_memory):
         if not attendance:
             return {'value': {'module_hr_timesheet': False}}
         return {}
-

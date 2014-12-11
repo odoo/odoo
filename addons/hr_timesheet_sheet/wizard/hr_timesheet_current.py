@@ -59,4 +59,3 @@ class hr_timesheet_current_open(osv.osv_memory):
         return value
 
 hr_timesheet_current_open()
-

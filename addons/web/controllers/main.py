@@ -1775,4 +1775,3 @@ class Reports(openerpweb.Controller):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': token})
-

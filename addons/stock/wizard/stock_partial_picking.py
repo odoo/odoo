@@ -243,4 +243,3 @@ class stock_partial_picking(osv.osv_memory):
             'view_mode': 'form,tree,calendar',
             'context': context,
         }
-

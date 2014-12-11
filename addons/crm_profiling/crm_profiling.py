@@ -290,5 +290,3 @@ class crm_segmentation(osv.osv):
         return True
 
 crm_segmentation()
-
-

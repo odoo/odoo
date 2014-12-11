@@ -259,5 +259,3 @@ class stock_picking_in(osv.osv):
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
         }
 stock_picking_in()
-
-

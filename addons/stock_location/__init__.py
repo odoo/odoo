@@ -21,4 +21,3 @@
 
 import stock_location
 import procurement_pull
-

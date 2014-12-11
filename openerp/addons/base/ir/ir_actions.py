@@ -894,4 +894,3 @@ class act_client(osv.osv):
 
     }
 act_client()
-

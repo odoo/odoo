@@ -290,6 +290,3 @@ class document(object):
     def close(self):
         self.doc = None
         self.dom = None
-
-
-

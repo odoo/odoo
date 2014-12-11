@@ -34,5 +34,3 @@ def log(cr,ident,act_id,info=''):
     #""" % (ident[1], ident[2], ident[0], act_id, info)
 
     #cr.execute('insert into wkf_logs (res_type, res_id, uid, act_id, time, info) values (%s,%s,%s,%s,current_time,%s)', (ident[1],int(ident[2]),int(ident[0]),int(act_id),info))
-
-

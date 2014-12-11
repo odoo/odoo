@@ -123,4 +123,3 @@ class procurement_order(osv.osv):
         return False
 
 procurement_order()
-

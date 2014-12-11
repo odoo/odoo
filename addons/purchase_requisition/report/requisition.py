@@ -32,5 +32,3 @@ class requisition(report_sxw.rml_parse):
         })
    
 report_sxw.report_sxw('report.purchase.requisition','purchase.requisition','addons/purchase_requisition/report/purchase_requisition.rml',parser=requisition)
-
-

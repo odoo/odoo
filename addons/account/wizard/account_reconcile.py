@@ -160,4 +160,3 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_move_line_reconcile_writeoff()
-

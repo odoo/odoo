@@ -22,4 +22,3 @@
 import mrp_wc_barcode
 import mrp_code_barcode
 import mrp_workorder_analysis
-

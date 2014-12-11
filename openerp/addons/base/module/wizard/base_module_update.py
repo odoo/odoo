@@ -54,4 +54,3 @@ class base_module_update(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
         return res
-

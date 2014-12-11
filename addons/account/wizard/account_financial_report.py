@@ -95,4 +95,3 @@ class accounting_report(osv.osv_memory):
         }
 
 accounting_report()
-

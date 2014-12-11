@@ -57,4 +57,3 @@ class showdiff(osv.osv_memory):
     _defaults = {
         'diff': get_diff
     }
-

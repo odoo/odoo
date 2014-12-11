@@ -74,4 +74,3 @@ class membership_invoice(osv.osv_memory):
         }
 
 membership_invoice()
-

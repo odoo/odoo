@@ -40,5 +40,3 @@ class order(report_sxw.rml_parse):
         return total
 
 report_sxw.report_sxw('report.repair.order','mrp.repair','addons/mrp_repair/report/order.rml',parser=order)
-
-

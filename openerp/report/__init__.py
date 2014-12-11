@@ -31,5 +31,3 @@ import report_sxw
 import printscreen
 
 #.apidoc title: Reporting Support and Engines
-
-

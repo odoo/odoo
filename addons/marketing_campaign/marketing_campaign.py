@@ -841,5 +841,3 @@ class report_xml(osv.osv):
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 
 report_xml()
-
-

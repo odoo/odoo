@@ -21,4 +21,3 @@
 
 import base_state
 import base_stage
-

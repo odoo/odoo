@@ -473,4 +473,3 @@ class res_partner(osv.osv):
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
         }
-

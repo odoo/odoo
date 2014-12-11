@@ -84,4 +84,3 @@ class test_transaction_case(common.TransactionCase):
 
 if __name__ == '__main__':
     unittest2.main()
-

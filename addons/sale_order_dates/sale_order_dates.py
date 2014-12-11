@@ -60,4 +60,3 @@ class sale_order_dates(osv.osv):
     }
 
 sale_order_dates()
-

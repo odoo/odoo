@@ -59,4 +59,3 @@ class base_report_designer_installer(osv.osv_memory):
         """
     }
 base_report_designer_installer()
-

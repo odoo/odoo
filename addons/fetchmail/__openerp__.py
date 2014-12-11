@@ -66,4 +66,3 @@ For more specific needs, you may also assign custom-defined actions
     'auto_install': True,
     'images': ['images/1_email_servers.jpeg'],
 }
-

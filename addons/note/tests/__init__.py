@@ -23,4 +23,3 @@ from . import test_note
 checks = [
     test_note,
 ]
-

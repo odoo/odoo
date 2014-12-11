@@ -605,4 +605,3 @@ class EDIMixin(object):
         self._edi_import_attachments(cr, uid, record_id, edi, context=context)
 
         return record_id
-

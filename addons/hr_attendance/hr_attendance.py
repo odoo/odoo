@@ -167,4 +167,3 @@ class hr_employee(osv.osv):
         return True
 
 hr_employee()
-

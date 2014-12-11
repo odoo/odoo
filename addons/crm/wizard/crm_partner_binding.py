@@ -95,4 +95,3 @@ class crm_partner_binding(osv.osv_memory):
             res['partner_id'] = partner_id
 
         return res
-

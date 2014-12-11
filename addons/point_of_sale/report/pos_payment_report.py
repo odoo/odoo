@@ -60,4 +60,3 @@ class pos_payment_report(report_sxw.rml_parse):
         return self.total
 
 report_sxw.report_sxw('report.pos.payment.report', 'pos.order', 'addons/point_of_sale/report/pos_payment_report.rml', parser=pos_payment_report,header='internal')
-

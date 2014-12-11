@@ -578,4 +578,3 @@ class account_bank_statement_line(osv.osv):
     }
 
 account_bank_statement_line()
-

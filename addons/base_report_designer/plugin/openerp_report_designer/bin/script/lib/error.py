@@ -33,5 +33,3 @@ class ErrorDialog:
         self.win.doModalDialog("",None)
     def btnOkOrCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
-
-

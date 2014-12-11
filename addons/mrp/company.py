@@ -31,5 +31,3 @@ class company(osv.osv):
         'manufacturing_lead': lambda *a: 1.0,
     }
 company()
-
-

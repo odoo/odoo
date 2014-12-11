@@ -476,4 +476,3 @@ class ir_mail_server(osv.osv):
         else:
             result = {'value': {'smtp_port': 25}}
         return result
-

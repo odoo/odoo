@@ -3149,4 +3149,3 @@ class stock_picking_out(osv.osv):
     _defaults = {
         'type': 'out',
     }
-

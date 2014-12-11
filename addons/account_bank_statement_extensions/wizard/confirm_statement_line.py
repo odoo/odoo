@@ -33,4 +33,3 @@ class confirm_statement_line(osv.osv_memory):
         return {}
 
 confirm_statement_line()
-

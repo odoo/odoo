@@ -349,4 +349,3 @@ class account_journal_cashbox_line(osv.osv):
     _order = 'pieces asc'
 
 account_journal_cashbox_line()
-

@@ -43,6 +43,3 @@ class journal_print(report_sxw.rml_parse):
             'sum_lines': self._sum_lines,
         }
 report_sxw.report_sxw('report.account.analytic.journal.print', 'account.analytic.journal', 'addons/account/project/report/analytic_journal.rml',parser=journal_print)
-
-
-

@@ -68,4 +68,3 @@ class account_partner_ledger(osv.osv_memory):
         }
 
 account_partner_ledger()
-

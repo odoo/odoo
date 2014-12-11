@@ -215,4 +215,3 @@ class sale_advance_payment_inv(osv.osv_memory):
         }
 
 sale_advance_payment_inv()
-

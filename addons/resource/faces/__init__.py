@@ -26,4 +26,3 @@ from task import Project, BalancedProject, AdjustedProject, Task, \
     DailyMax, VariableLoad
 
 from resource import Resource
-

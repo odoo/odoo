@@ -51,4 +51,3 @@ class payslip_lines_contribution_register(osv.osv_memory):
         }
 
 payslip_lines_contribution_register()
-

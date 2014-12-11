@@ -101,4 +101,3 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
-

@@ -946,5 +946,3 @@ def threaded_yaml_import(db_name, module_name, file_name, delay=0):
             if cr: cr.close()
             if fp: fp.close()
     threading.Thread(target=f).start()
-
-

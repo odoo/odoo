@@ -364,4 +364,3 @@ class account_move_line(osv.osv):
         return res
 
 account_move_line()
-

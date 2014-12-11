@@ -21,4 +21,3 @@
 
 import account_sequence
 import account_sequence_installer
-

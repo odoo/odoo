@@ -68,5 +68,3 @@ class account_bank_statement_line(osv.osv):
                         except ValueError:
                             pass
         return True
-
-

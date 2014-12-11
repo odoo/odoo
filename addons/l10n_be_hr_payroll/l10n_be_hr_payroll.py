@@ -53,4 +53,3 @@ class hr_employee_be(osv.osv):
     }
 
 hr_employee_be()
-

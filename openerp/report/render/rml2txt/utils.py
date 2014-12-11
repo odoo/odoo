@@ -130,4 +130,3 @@ def attr_get(node, attrs, dict=None):
             elif dict[key]=='unit':
                 res[key] = unit_get(node.get(key))
     return res
-

@@ -65,4 +65,3 @@ class hr_attendance_error(osv.osv_memory):
         }
 
 hr_attendance_error()
-

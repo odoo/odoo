@@ -64,6 +64,3 @@ import account_report_account_balance
 import account_change_currency
 
 import pos_box;
-
-
-

@@ -23,4 +23,3 @@ import hr_recruitment
 import report
 import wizard
 import res_config
-

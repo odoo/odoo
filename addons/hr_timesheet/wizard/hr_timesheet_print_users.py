@@ -53,4 +53,3 @@ class analytical_timesheet_employees(osv.osv_memory):
             }
 
 analytical_timesheet_employees()
-

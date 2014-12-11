@@ -140,6 +140,3 @@ cr.execute("delete from ir_values where key='action' and model='ir.ui.menu' and 
 cr.commit()
 
 cr.close()
-
-
-

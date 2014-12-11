@@ -53,4 +53,3 @@ class res_partner(osv.osv):
         'out_inv_comm_type': 'none',
     }
 res_partner()    
-

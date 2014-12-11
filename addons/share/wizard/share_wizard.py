@@ -931,4 +931,3 @@ class share_result_line(osv.osv_memory):
     _defaults = {
         'newly_created': True,
     }
-

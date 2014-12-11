@@ -46,4 +46,3 @@ class account_journal_select(osv.osv_memory):
         return result
 
 account_journal_select()
-

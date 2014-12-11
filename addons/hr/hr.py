@@ -336,5 +336,3 @@ class res_users(osv.osv):
         }
 
 res_users()
-
-

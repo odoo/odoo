@@ -24,4 +24,3 @@ import crm_phonecall_to_phonecall
 import crm_opportunity_to_phonecall
 import crm_lead_to_opportunity
 import crm_merge_opportunities
-

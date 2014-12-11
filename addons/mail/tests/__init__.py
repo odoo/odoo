@@ -28,4 +28,3 @@ checks = [
     test_message_read,
     test_invite,
 ]
-

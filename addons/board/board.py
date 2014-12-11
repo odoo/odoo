@@ -175,4 +175,3 @@ class board_create(osv.osv_memory):
     _defaults = {
         'menu_parent_id': _default_menu_parent_id,
     }
-

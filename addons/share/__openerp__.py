@@ -56,4 +56,3 @@ synchronization with other companies.
     'qweb' : ['static/src/xml/*.xml'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
-

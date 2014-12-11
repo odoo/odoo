@@ -148,4 +148,3 @@ class stock_invoice_onshipping(osv.osv_memory):
         return res
 
 stock_invoice_onshipping()
-

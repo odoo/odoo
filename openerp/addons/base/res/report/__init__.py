@@ -21,7 +21,3 @@
 
 #from report import report_sxw
 #report_sxw.report_sxw('report.partner.list', 'res.partner', 'addons/base/res/partner/report/partner_list.rml')
-
-
-
-

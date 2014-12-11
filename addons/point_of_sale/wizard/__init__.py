@@ -31,5 +31,3 @@ import pos_payment_report
 import pos_payment
 import pos_session_opening
 import pos_box
-
-

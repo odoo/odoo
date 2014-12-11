@@ -129,4 +129,3 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         return self.total
 
 report_sxw.report_sxw('report.salary.employee.bymonth', 'hr.salary.employee.month', 'l10n_in_hr_payroll/report/report_hr_salary_employee_bymonth.rml', parser=report_hr_salary_employee_bymonth, header='internal')
-

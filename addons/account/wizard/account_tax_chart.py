@@ -75,4 +75,3 @@ class account_tax_chart(osv.osv_memory):
     }
 
 account_tax_chart()
-

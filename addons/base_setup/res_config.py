@@ -75,4 +75,3 @@ class sale_config_settings(osv.osv_memory):
                 email into an OpenERP mail message with attachments.
                 This installs the module plugin_outlook."""),
     }
-

@@ -53,4 +53,3 @@ class mrp_price(osv.osv_memory):
        }
 
 mrp_price()
-

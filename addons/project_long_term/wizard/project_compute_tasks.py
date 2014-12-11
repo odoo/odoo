@@ -60,4 +60,3 @@ class project_compute_tasks(osv.osv_memory):
         return result
 
 project_compute_tasks()
-

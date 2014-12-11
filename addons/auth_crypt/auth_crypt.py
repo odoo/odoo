@@ -172,5 +172,3 @@ class res_users(osv.osv):
                         return
             # Reraise password incorrect
             raise
-
-

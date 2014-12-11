@@ -62,5 +62,3 @@ class validate_account_move_lines(osv.osv_memory):
         obj_move.button_validate(cr, uid, move_ids, context)
         return {'type': 'ir.actions.act_window_close'}
 validate_account_move_lines()
-
-

@@ -47,4 +47,3 @@ class account_statement(report_sxw.rml_parse):
         return total
 
 report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement,header='internal')
-

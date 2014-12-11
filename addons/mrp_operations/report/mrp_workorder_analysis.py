@@ -72,4 +72,3 @@ class mrp_workorder(osv.osv):
         )""")
 
 mrp_workorder()
-

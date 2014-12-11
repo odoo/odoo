@@ -60,4 +60,3 @@ only the country code will be validated.
     'auto_install': False,
     'images': ['images/1_partner_vat.jpeg'],
 }
-

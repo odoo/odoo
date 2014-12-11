@@ -188,4 +188,3 @@ class budget_report(report_sxw.rml_parse):
         return result
 
 report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml', parser=budget_report, header='internal')
-

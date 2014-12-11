@@ -117,6 +117,3 @@ class res_request_history(osv.osv):
         'date_sent': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 res_request_history()
-
-
-

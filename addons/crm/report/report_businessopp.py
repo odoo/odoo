@@ -183,5 +183,3 @@ class report_custom(report_int):
         return (self.obj.pdf, 'pdf')
 
 report_custom('report.crm.case')
-
-

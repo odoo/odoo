@@ -31,4 +31,3 @@ class shipping(report_sxw.rml_parse):
         })
 
 report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/delivery/report/shipping.rml',parser=shipping)
-

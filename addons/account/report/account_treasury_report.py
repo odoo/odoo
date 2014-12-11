@@ -79,4 +79,3 @@ class account_treasury_report(osv.osv):
             )
         """)
 account_treasury_report()
-

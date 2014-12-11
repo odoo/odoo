@@ -25,5 +25,3 @@ import order
 import bom_structure
 import mrp_report
 import mrp_production_order
-
-

@@ -53,4 +53,3 @@ class account_cdr_report(osv.osv_memory):
         return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.compute_resultant', 'datas': data}
 
 account_cdr_report()
-

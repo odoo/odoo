@@ -87,4 +87,3 @@ class account_aged_trial_balance(osv.osv_memory):
         }
 
 account_aged_trial_balance()
-

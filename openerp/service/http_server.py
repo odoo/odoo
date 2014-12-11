@@ -175,4 +175,3 @@ class OpenERPAuthProvider(AuthProvider):
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
         raise AuthRequiredExc(atype='Basic', realm=self.realm)
-

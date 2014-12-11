@@ -21,5 +21,3 @@
 
 import hr_holidays_summary_department
 import hr_holidays_summary_employees
-
-

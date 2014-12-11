@@ -44,4 +44,3 @@ class res_partner(osv.osv):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['nrc']
 
 res_partner()
-

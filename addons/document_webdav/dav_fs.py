@@ -1047,4 +1047,3 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()
 
 #eof
-

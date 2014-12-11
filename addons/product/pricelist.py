@@ -473,7 +473,3 @@ class product_pricelist_item(osv.osv):
             return {'value': {'name': prod[0]['code']}}
         return {}
 product_pricelist_item()
-
-
-
-

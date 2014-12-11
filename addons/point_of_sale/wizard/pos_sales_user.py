@@ -56,5 +56,3 @@ class pos_sale_user(osv.osv_memory):
        }
 
 pos_sale_user()
-
-

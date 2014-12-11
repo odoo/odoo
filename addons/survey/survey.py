@@ -793,4 +793,3 @@ class survey_request(osv.osv):
         return {}
 
 survey_request()
-

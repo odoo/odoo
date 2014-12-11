@@ -21,4 +21,3 @@
 
 import base_calendar
 import crm_meeting
-

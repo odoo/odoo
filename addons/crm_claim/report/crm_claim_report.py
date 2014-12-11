@@ -115,4 +115,3 @@ class crm_claim_report(osv.osv):
             )""")
 
 crm_claim_report()
-

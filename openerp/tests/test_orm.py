@@ -313,4 +313,3 @@ class TestO2MSerialization(common.TransactionCase):
             self.cr, UID, 'child_ids', [DELETE_ALL()], ['name'])
 
         self.assertEqual(results, [])
-

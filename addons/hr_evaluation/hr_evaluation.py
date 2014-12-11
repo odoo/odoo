@@ -358,4 +358,3 @@ class hr_evaluation_interview(osv.osv):
         return value
 
 hr_evaluation_interview()
-

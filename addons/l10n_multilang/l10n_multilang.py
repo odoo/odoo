@@ -149,4 +149,3 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, context=context)
 
 wizard_multi_charts_accounts()
-

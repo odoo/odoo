@@ -241,4 +241,3 @@ def start_service():
 
 def stop_service():
     Server.quitAll()
-

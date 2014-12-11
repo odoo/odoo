@@ -22,5 +22,3 @@
 import marketing_campaign
 import res_partner
 import report
-
-

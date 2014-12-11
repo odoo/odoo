@@ -183,5 +183,3 @@ def add_constructors():
     yaml.add_multi_constructor(u"!ref", ref_constructor)
     yaml.add_constructor(u"!ir_set", ir_set_constructor)
 add_constructors()
-
-

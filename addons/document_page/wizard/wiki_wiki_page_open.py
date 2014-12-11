@@ -62,4 +62,3 @@ class wiki_wiki_page_open(osv.osv_memory):
         return value
 
 wiki_wiki_page_open()
-

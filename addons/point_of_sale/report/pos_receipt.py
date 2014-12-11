@@ -73,4 +73,3 @@ class order(report_sxw.rml_parse):
         return data
 
 report_sxw.report_sxw('report.pos.receipt', 'pos.order', 'addons/point_of_sale/report/pos_receipt.rml', parser=order, header=False)
-

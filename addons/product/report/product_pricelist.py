@@ -127,4 +127,3 @@ class product_pricelist(report_sxw.rml_parse):
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
-

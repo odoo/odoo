@@ -949,4 +949,3 @@ if __name__ == '__main__':
     start3 = cal.StartDate("10.1.2005")
 #@-node:@file pcalendar.py
 #@-leo
-

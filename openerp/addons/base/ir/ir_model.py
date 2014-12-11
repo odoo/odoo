@@ -1146,4 +1146,3 @@ class ir_model_data(osv.osv):
                 if self.pool.get(model):
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool.get(model).unlink(cr, uid, [res_id])
-

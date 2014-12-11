@@ -67,4 +67,3 @@ class account_invoice_line(osv.osv):
         return True
 
 account_invoice_line()
-

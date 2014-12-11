@@ -250,4 +250,3 @@ class base_gengo_translations(osv.osv_memory):
                 _logger.info('No Translation terms to process.')
         except Exception, e:
             _logger.error("%s", e)
-

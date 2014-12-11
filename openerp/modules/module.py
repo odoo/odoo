@@ -584,4 +584,3 @@ def run_unit_tests(module_name):
         else:
             _logger.error('module %s: at least one error occurred in a test', module_name)
             return False
-

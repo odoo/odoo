@@ -231,4 +231,3 @@ class survey_send_invitation_log(osv.osv_memory):
         return data
 
 survey_send_invitation_log()
-

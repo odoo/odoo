@@ -76,5 +76,3 @@ class sale_order(osv.osv):
         #return {'type': 'ir.actions.act_window_close'} action reload?
 
 sale_order()
-
-

@@ -864,4 +864,3 @@ class _AndResourceGroup(_ResourceGroup):
 #@-others
 #@-node:@file resource.py
 #@-leo
-

@@ -49,4 +49,3 @@ keep track and order all your purchase orders.
     ],
     'installable': True,
 }
-

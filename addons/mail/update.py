@@ -112,5 +112,3 @@ class publisher_warranty_contract(osv.osv):
             else:
                 raise
         return True
-
-

@@ -118,4 +118,3 @@ class LRU(object):
         self.d = {}
         self.first = None
         self.last = None
-

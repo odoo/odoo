@@ -61,5 +61,3 @@ class pos_details(osv.osv_memory):
         }
 
 pos_details()
-
-

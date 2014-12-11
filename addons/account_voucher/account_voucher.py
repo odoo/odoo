@@ -1733,5 +1733,3 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
         if result != None:
             results.append(result)
     return results
-
-

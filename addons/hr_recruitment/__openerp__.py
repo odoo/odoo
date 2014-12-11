@@ -65,4 +65,3 @@ You can define the different phases of interviews and easily rate the applicant 
     'auto_install': False,
     'application': True,
 }
-

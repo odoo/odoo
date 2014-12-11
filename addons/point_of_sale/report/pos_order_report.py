@@ -86,4 +86,3 @@ class pos_order_report(osv.osv):
                     sum(l.qty * u.factor) != 0)""")
 
 pos_order_report()
-

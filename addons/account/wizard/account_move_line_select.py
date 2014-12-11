@@ -68,4 +68,3 @@ class account_move_line_select(osv.osv_memory):
         return result
 
 account_move_line_select()
-

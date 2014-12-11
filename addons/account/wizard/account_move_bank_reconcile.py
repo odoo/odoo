@@ -60,4 +60,3 @@ the bank account\nin the journal definition for reconciliation.'))
              }
 
 account_move_bank_reconcile()
-

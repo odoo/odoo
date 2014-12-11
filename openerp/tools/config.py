@@ -628,5 +628,3 @@ class configmanager(object):
         return self.options[key]
 
 config = configmanager()
-
-

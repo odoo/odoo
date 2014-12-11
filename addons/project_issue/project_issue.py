@@ -613,4 +613,3 @@ class project_project(osv.osv):
     _defaults = {
         'use_issues': True
     }
-

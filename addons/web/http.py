@@ -626,4 +626,3 @@ class Root(object):
 
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
-

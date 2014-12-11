@@ -66,4 +66,3 @@ Notes can be found in the 'Home' menu.
     'application': True,
     'auto_install': False,
 }
-

@@ -122,6 +122,3 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header="internal")
-
-
-

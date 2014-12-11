@@ -81,4 +81,3 @@ class hr_recruitment_partner_create(osv.osv_memory):
                 }
 
 hr_recruitment_partner_create()
-

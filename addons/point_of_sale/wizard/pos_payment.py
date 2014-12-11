@@ -131,5 +131,3 @@ class pos_make_payment(osv.osv_memory):
     }
 
 pos_make_payment()
-
-

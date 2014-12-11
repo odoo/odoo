@@ -130,4 +130,3 @@ class sale_order_line_make_invoice(osv.osv_memory):
         }
 
 sale_order_line_make_invoice()
-

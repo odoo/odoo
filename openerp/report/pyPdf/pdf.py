@@ -1858,5 +1858,3 @@ def _alg35(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encr
 #
 #    output.addPage(page1)
 #    output.write(file("test\\merge-test.pdf", "wb"))
-
-

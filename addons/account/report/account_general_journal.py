@@ -157,4 +157,3 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
-

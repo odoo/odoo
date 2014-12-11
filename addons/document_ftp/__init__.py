@@ -24,4 +24,3 @@ import wizard
 import res_config
 
 post_load = ftpserver.start_server
-

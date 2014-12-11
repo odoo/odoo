@@ -117,4 +117,3 @@ class change_standard_price(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 change_standard_price()
-

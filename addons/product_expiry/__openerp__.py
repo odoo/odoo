@@ -41,4 +41,3 @@ Used, for example, in food industries.""",
     'installable': True,
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
-

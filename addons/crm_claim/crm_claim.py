@@ -215,4 +215,3 @@ class res_partner(osv.osv):
     _columns = {
         'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
     }
-

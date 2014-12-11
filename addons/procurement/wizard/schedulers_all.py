@@ -80,4 +80,3 @@ class procurement_compute_all(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 procurement_compute_all()
-

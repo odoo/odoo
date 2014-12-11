@@ -122,5 +122,3 @@ for line in (
 
 cr.commit()
 cr.close()
-
-

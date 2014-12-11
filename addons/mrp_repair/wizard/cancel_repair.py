@@ -82,5 +82,3 @@ class repair_cancel(osv.osv_memory):
         return res
 
 repair_cancel()
-
-

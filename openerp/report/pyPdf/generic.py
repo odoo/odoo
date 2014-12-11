@@ -796,4 +796,3 @@ for i in xrange(256):
         continue
     assert char not in _pdfDocEncoding_rev
     _pdfDocEncoding_rev[char] = i
-

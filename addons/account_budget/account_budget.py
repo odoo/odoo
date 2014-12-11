@@ -209,4 +209,3 @@ class account_analytic_account(osv.osv):
     }
 
 account_analytic_account()
-

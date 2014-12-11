@@ -66,4 +66,3 @@ report_sxw.report_sxw(
     parser=bank_statement_balance_report,
     header='internal'
 )
-

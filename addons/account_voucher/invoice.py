@@ -54,4 +54,3 @@ class invoice(osv.osv):
         }
 
 invoice()
-

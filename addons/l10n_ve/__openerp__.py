@@ -74,4 +74,3 @@ but you will need set manually account defaults for taxes.
     'images': ['images/config_chart_l10n_ve.jpeg',
                'images/l10n_ve_chart.jpeg'],
 }
-

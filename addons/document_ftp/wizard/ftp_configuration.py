@@ -48,4 +48,3 @@ class document_ftp_configuration(osv.osv_memory):
                 {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/' + cr.dbname+'/'})
 
 document_ftp_configuration()
-

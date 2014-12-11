@@ -70,5 +70,3 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
 
 hr_timesheet_invoice_create()
-
-

@@ -106,4 +106,3 @@ allows pre-setting the default groups and menus of the first-time users.
         'python' : ['ldap'],
     }
 }
-

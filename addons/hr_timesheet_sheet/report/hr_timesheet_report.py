@@ -80,4 +80,3 @@ class hr_timesheet_report(osv.osv):
             )
         """)
 hr_timesheet_report()
-

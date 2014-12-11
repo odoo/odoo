@@ -236,4 +236,3 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 res_partner_bank()
-

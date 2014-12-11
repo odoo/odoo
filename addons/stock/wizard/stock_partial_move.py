@@ -83,4 +83,3 @@ class stock_partial_move(osv.osv_memory):
                                                           product_currency=move.currency.id)
         self.pool.get('stock.move').do_partial(cr, uid, moves_ids, partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
-

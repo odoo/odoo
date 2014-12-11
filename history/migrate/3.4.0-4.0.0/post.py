@@ -110,6 +110,3 @@ EXAMPLE:
 """
 
 cr.close()
-
-
-

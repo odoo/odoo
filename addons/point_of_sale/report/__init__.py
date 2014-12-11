@@ -33,4 +33,3 @@ import pos_sales_user_today
 import pos_payment_report_user
 import pos_report
 import pos_order_report
-

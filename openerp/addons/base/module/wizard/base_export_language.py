@@ -83,5 +83,3 @@ class base_language_export(osv.osv_memory):
             'views': [(False, 'form')],
             'target': 'new',
         }
-
-

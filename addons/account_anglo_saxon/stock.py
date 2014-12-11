@@ -58,5 +58,3 @@ class stock_picking(osv.osv):
         return res
 
 stock_picking()
-
-

@@ -71,4 +71,3 @@ class account_analytic_profit(osv.osv_memory):
              }
 
 account_analytic_profit()
-

@@ -42,4 +42,3 @@ documentation at http://doc.openerp.com.
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': False,
 }
-

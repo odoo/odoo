@@ -59,4 +59,3 @@ class account_move_line(osv.osv):
     }
 
 account_move_line()
-

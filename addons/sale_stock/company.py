@@ -35,4 +35,3 @@ class company(osv.osv):
         'security_lead': 0.0,
     }
 company()
-

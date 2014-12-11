@@ -185,5 +185,3 @@ if __name__<>"package" and __name__=="__main__":
     ModifyExistingReport(None)
 elif __name__=="package":
     g_ImplementationHelper.addImplementation( ModifyExistingReport, "org.openoffice.openerp.report.modifyreport", ("com.sun.star.task.Job",),)
-
-

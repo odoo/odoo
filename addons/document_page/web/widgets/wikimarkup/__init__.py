@@ -2142,4 +2142,3 @@ def str2url(str):
 	for i in zip(mfrom, to):
 		str = str.replace(*i)
 	return str
-

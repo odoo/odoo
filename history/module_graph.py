@@ -82,5 +82,3 @@ while len(modules):
                     print '\t%s [color=red]' % (name,)
             print '\t%s -> %s;' % (module_name, name)
 print '}'
-
-

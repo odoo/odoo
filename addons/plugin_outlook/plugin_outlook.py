@@ -38,4 +38,3 @@ class outlook_installer(osv.osv_memory):
         res['plugin32'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi'
         res['plugin64'] = base_url + '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi'
         return res
-

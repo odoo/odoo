@@ -22,5 +22,3 @@
 import crm_claim
 import report
 import res_config
-
-

@@ -49,4 +49,3 @@ class account_subscription_generate(osv.osv_memory):
         return result
 
 account_subscription_generate()
-

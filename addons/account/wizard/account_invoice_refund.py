@@ -233,4 +233,3 @@ class account_invoice_refund(osv.osv_memory):
 
 
 account_invoice_refund()
-

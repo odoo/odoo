@@ -191,4 +191,3 @@ class report_custom(report_rml):
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
-

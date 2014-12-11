@@ -106,4 +106,3 @@ class project_issue_report(osv.osv):
             )""")
 
 project_issue_report()
-

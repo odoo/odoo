@@ -121,4 +121,3 @@ class hr_expense_report(osv.osv):
         """)
 
 hr_expense_report()
-

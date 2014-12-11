@@ -44,4 +44,3 @@ You can add the following additional dates to a sales order:
     'installable': True,
     'auto_install': False,
 }
-

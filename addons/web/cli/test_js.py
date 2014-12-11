@@ -31,4 +31,3 @@ class TestJs(openerp.cli.Command):
         r = unittest2.TextTestRunner(verbosity=2).run(suite)
         if r.errors or r.failures:
             sys.exit(1)
-

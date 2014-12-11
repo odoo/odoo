@@ -85,4 +85,3 @@ class open_questionnaire(osv.osv_memory):
         }
 
 open_questionnaire()
-

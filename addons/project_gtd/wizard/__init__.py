@@ -21,5 +21,3 @@
 
 import project_gtd_empty
 import project_gtd_fill
-
-

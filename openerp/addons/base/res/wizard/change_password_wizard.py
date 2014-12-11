@@ -86,4 +86,3 @@ class change_password_user(osv.TransientModel):
     def change_password_button(self, cr, uid, ids, context=None):
         for user in self.browse(cr, uid, ids, context=context):
             self.pool.get('res.users').write(cr, uid, user.user_id.id, {'password': user.new_passwd})
-

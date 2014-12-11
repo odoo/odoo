@@ -235,4 +235,3 @@ class report_sales_by_margin_pos_month(osv.osv):
                 )
         """)
 report_sales_by_margin_pos_month()
-

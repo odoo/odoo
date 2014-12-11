@@ -279,4 +279,3 @@ class res_company(osv.osv):
     }
 
 res_company()
-

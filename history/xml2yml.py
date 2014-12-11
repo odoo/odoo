@@ -342,5 +342,3 @@ if __name__=='__main__':
     fname = sys.argv[1]
     p = xml_parse()
     p.parse(fname)
-
-

@@ -220,4 +220,3 @@ class WikiWidget(Text):
             self.data = html
 
 register_widget(WikiWidget, ["text_wiki"])
-

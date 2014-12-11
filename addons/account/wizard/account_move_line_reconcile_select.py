@@ -51,4 +51,3 @@ class account_move_line_reconcile_select(osv.osv_memory):
         }
 
 account_move_line_reconcile_select()
-

@@ -568,4 +568,3 @@ class mrp_operations_operation(osv.osv):
     }
 
 mrp_operations_operation()
-

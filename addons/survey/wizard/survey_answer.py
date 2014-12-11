@@ -1258,4 +1258,3 @@ class survey_question_wiz(osv.osv_memory):
         }
 
 survey_question_wiz()
-

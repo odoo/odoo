@@ -27,5 +27,3 @@ import ps_form
 """ A special report, that is automatically formatted to look like the
     screen contents of Form/List Views.
 """
-
-

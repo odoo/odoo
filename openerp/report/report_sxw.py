@@ -694,5 +694,3 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['makohtml2html']
         html = create_doc(mako_html,html_parser.localcontext)
         return html,'html'
-
-

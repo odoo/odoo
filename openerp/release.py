@@ -51,4 +51,3 @@ author_email = 'info@openerp.com'
 license = 'AGPL-3'
 
 nt_service_name = "openerp-server-" + serie
-

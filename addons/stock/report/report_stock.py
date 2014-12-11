@@ -163,4 +163,3 @@ class report_stock_lines_date(osv.osv):
             )""")
 
 report_stock_lines_date()
-

@@ -123,4 +123,3 @@ class report_intrastat(osv.osv):
             )""")
 
 report_intrastat()
-

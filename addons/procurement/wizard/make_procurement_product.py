@@ -131,4 +131,3 @@ class make_procurement(osv.osv_memory):
         return res
 
 make_procurement()
-

@@ -53,4 +53,3 @@ If you need to manage your meetings, you should install the CRM module.
     'auto_install': False,
     'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg',],
 }
-

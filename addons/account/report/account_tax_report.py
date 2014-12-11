@@ -235,4 +235,3 @@ class tax_report(report_sxw.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
     'addons/account/report/account_tax_report.rml', parser=tax_report, header="internal")
-

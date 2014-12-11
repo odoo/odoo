@@ -36,5 +36,3 @@ Please keep in mind that you should review and adapt it with your Accountant, be
     'auto_install': False,
     'installable': True
 }
-
-

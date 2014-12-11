@@ -141,4 +141,3 @@ class account_financial_report(osv.osv):
     }
 
 account_financial_report()
-

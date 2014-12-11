@@ -56,4 +56,3 @@ def frame_codeinfo(fframe, back=0):
         return fname, lineno
     except Exception:
         return "<unknown>", ''
-

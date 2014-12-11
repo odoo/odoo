@@ -40,4 +40,3 @@ Add a Shortcut icon besides the views title in order to add/remove a shortcut.
     'installable': True,
     'auto_install': False,
 }
-

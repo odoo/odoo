@@ -327,4 +327,3 @@ class account_analytic_line(osv.osv):
        return res
 
 account_analytic_line()
-

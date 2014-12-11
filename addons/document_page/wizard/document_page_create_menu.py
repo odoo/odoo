@@ -83,5 +83,3 @@ class document_page_create_menu(osv.osv_memory):
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
-
-

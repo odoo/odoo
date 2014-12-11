@@ -562,4 +562,3 @@ class account_invoice_line(osv.osv):
         return result
 
 account_invoice_line()
-

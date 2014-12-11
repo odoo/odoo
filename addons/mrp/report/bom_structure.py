@@ -59,5 +59,3 @@ class bom_structure(report_sxw.rml_parse):
         return children
 
 report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure,header='internal')
-
-

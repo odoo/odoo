@@ -317,5 +317,3 @@ class purchase_order_line(osv.osv):
         return {'value': result.get('value',{}), 'warning':warning}
 
 purchase_order_line()
-
-

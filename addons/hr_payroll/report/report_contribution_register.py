@@ -70,4 +70,3 @@ class contribution_register_report(report_sxw.rml_parse):
         return res
 
 report_sxw.report_sxw('report.contribution.register.lines', 'hr.contribution.register', 'hr_payroll/report/report_contribution_register.rml', parser=contribution_register_report)
-

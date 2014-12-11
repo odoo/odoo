@@ -23,4 +23,3 @@ import account_asset
 import account_asset_invoice
 import wizard
 import report
-

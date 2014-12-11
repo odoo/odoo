@@ -131,4 +131,3 @@ class account_bank_statement_line(osv.osv):
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
 account_bank_statement_line()
-

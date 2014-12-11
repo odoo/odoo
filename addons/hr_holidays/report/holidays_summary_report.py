@@ -255,5 +255,3 @@ class report_custom(report_rml):
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')
-
-

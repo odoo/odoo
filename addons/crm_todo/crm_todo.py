@@ -32,7 +32,3 @@ class crm_todo(osv.osv):
     _columns = {
         'task_ids': fields.one2many('project.task', 'lead_id', 'Tasks'),
     }
-
-
-
-

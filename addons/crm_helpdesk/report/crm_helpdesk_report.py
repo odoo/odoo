@@ -109,4 +109,3 @@ class crm_helpdesk_report(osv.osv):
             )""")
 
 crm_helpdesk_report()
-

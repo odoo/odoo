@@ -117,4 +117,3 @@ class hr_recruitment_report(osv.osv):
             )
         """)
 hr_recruitment_report()
-

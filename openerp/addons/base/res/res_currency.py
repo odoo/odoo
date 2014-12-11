@@ -260,5 +260,3 @@ class res_currency_rate(osv.osv):
     _order = "name desc"
 
 res_currency_rate()
-
-

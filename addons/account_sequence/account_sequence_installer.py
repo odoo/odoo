@@ -80,4 +80,3 @@ class account_sequence_installer(osv.osv_memory):
         return res
 
 account_sequence_installer()
-

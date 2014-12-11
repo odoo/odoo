@@ -51,5 +51,3 @@ class pos_confirm(osv.osv_memory):
                     self.pool.get('account.move.line').reconcile(cr, uid, data_lines, context=context)
         return {}
 pos_confirm()
-
-

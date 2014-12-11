@@ -100,4 +100,3 @@ class report_event_registration(osv.osv):
         """)
 
 report_event_registration()
-

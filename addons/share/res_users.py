@@ -49,5 +49,3 @@ class res_groups(osv.osv):
             domain = []
         domain.append(('share', '=', False))
         return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)
-
-

@@ -23,4 +23,3 @@ from . import test_account_followup
 checks = [
     test_account_followup,
 ]
-

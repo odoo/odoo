@@ -201,6 +201,3 @@ class report_custom(report_int):
         return ar
 
 report_custom('report.mrp.workcenter.load')
-
-
-

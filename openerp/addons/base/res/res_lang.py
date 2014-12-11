@@ -363,5 +363,3 @@ def _group_examples():
     assert intersperse("abc12", [3], '.') == ('abc12', 0)
     assert intersperse("abc12", [2], '.') == ('abc12', 0)
     assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
-
-

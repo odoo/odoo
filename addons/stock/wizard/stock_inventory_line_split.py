@@ -109,4 +109,3 @@ class stock_inventory_split_lines(osv.osv_memory):
         'wizard_id': fields.many2one('stock.inventory.line.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.inventory.line.split', 'Parent Wizard'),
     }
-

@@ -80,4 +80,3 @@ class WebKitHelper(object):
         img, type = self.get_logo_by_name(name)
         return self.embed_image(type, img, width, height)
         
-

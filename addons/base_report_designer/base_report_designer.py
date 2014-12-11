@@ -83,5 +83,3 @@ class report_xml(osv.osv):
         }
 
 report_xml()
-
-

@@ -38,5 +38,3 @@ class res_partner(osv.osv):
                 cr, uid, record_id, default=default, context=context)
 
 res_partner()
-
-

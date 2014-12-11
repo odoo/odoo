@@ -39,5 +39,3 @@ class account_central_journal(osv.osv_memory):
         }
 
 account_central_journal()
-
-

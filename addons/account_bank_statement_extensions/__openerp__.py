@@ -54,4 +54,3 @@ This module adds:
     'auto_install': False,
     'installable': True,
 }
-

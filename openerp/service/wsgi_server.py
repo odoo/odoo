@@ -452,4 +452,3 @@ def stop_service():
     if httpd:
         httpd.shutdown()
         openerp.netsvc.close_socket(httpd.socket)
-

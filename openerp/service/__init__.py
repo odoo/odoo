@@ -154,4 +154,3 @@ def restart_server():
         else:
             openerp.phoenix = True
             os.kill(os.getpid(), signal.SIGINT)
-

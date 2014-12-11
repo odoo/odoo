@@ -143,4 +143,3 @@ class ir_filters(osv.osv):
     }
 
 ir_filters()
-

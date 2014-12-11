@@ -22,5 +22,3 @@
 import order
 import request_quotation
 import purchase_report
-
-

@@ -92,4 +92,3 @@ report_sxw.report_sxw(
     'addons/account_voucher/report/account_voucher_print.rml',
     parser=report_voucher_print,header="external"
 )
-

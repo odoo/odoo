@@ -183,5 +183,3 @@ if not cr.fetchall():
 cr.commit()
 
 cr.close
-
-

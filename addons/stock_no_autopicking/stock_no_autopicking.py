@@ -36,4 +36,3 @@ class mrp_production(osv.osv):
     def _get_auto_picking(self, cr, uid, production):
         return production.product_id.auto_pick
 mrp_production()
-

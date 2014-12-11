@@ -115,4 +115,3 @@ class timesheet_report(osv.osv):
             )
         """)
 timesheet_report()
-

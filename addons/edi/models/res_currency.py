@@ -62,4 +62,3 @@ class res_currency(osv.osv, EDIMixin):
             self.pool.get('res.currency.rate').create(cr, SUPERUSER_ID, {'currency_id': currency_id,
                                                                          'rate': rate}, context=context)
         return currency_id
-

@@ -1399,4 +1399,3 @@ class product_product(osv.osv):
             'view_id': False,
             'context':context,
         }
-

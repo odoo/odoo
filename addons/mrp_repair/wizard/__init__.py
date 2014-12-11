@@ -21,4 +21,3 @@
 
 import cancel_repair
 import make_invoice
-

@@ -185,4 +185,3 @@ def attr_get(node, attrs, dict=None):
             elif dict[key] == 'float' :
                 res[key] = float(node.get(key))
     return res
-

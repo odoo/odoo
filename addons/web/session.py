@@ -191,4 +191,3 @@ class OpenERPSession(object):
             lang = babel.core.LOCALE_ALIASES[lang]
 
         context['lang'] = lang or 'en_US'
-

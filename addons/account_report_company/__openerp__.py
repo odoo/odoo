@@ -53,4 +53,3 @@ directly integrated in the core accounting.
     ],
     'auto_install': True,
 }
-

@@ -57,4 +57,3 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
         }
 
 asset_depreciation_confirmation_wizard()
-

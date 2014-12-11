@@ -182,4 +182,3 @@ class res_partner_bank(osv.osv):
     ]
 
 res_partner_bank()
-

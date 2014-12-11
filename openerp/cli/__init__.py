@@ -59,4 +59,3 @@ def main():
     if command in commands:
         o = commands[command]()
         o.run(args)
-

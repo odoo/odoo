@@ -21,4 +21,3 @@
 
 import document_page
 import wizard
-

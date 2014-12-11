@@ -36,4 +36,3 @@ class marketing_config_settings(osv.osv_memory):
             help="""Allows users to perform segmentation within partners.
                 This installs the module crm_profiling."""),
     }
-

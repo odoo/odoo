@@ -43,4 +43,3 @@ class account_cash_statement(osv.osv):
     }
 
 account_cash_statement()
-

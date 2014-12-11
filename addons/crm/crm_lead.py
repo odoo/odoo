@@ -1099,4 +1099,3 @@ class crm_lead(base_stage, format_address, osv.osv):
             country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
-

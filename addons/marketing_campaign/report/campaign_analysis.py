@@ -99,4 +99,3 @@ class campaign_analysis(osv.osv):
             )
         """)
 campaign_analysis()
-

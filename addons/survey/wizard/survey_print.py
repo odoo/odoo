@@ -65,4 +65,3 @@ class survey_print(osv.osv_memory):
             'datas': datas,
         }
 survey_print()
-

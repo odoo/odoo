@@ -108,4 +108,3 @@ You can use the demo data as follow:
     ],
     'auto_install': False,
 }
-

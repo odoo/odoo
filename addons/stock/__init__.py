@@ -25,4 +25,3 @@ import product
 import report
 import wizard
 import res_config
-

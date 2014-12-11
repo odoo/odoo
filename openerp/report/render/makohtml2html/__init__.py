@@ -22,5 +22,3 @@
 from makohtml2html import parseNode
 
 #.apidoc title: MAKO to HTML engine
-
-

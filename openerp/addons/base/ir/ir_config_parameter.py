@@ -96,4 +96,3 @@ class ir_config_parameter(osv.osv):
         else:
             self.create(cr, uid, {'key': key, 'value': value}, context=context)
             return False
-

@@ -42,5 +42,3 @@ class ir_exports_line(osv.osv):
         'export_id': fields.many2one('ir.exports', 'Export', select=True, ondelete='cascade'),
     }
 ir_exports_line()
-
-

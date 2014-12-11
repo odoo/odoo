@@ -22,4 +22,3 @@
 from odt2odt import parseNode
 
 #.apidoc title: ODT to ODT engine
-

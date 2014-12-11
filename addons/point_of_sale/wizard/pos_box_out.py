@@ -101,5 +101,3 @@ class pos_box_out(osv.osv_memory):
         return {}
 
 pos_box_out()
-
-

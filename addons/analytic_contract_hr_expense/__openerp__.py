@@ -37,4 +37,3 @@ This module is for modifying account analytic view to show some data related to 
     'installable': True,
     'auto_install': True,
 }
-

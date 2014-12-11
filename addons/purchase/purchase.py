@@ -1309,4 +1309,3 @@ class account_invoice(osv.Model):
                 self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
             wf_service.trg_write(uid, 'purchase.order', order.id, cr)
         return res
-

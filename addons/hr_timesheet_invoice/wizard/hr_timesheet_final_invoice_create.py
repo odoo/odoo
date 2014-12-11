@@ -59,4 +59,3 @@ class final_invoice_create(osv.osv_memory):
         return act_win
 
 final_invoice_create()
-

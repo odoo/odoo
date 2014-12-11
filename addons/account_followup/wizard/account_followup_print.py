@@ -316,4 +316,3 @@ class account_followup_print(osv.osv_memory):
         return {'partner_ids': partner_list, 'to_update': to_update}
 
 account_followup_print()
-

@@ -22,5 +22,3 @@
 
 import hr_recruitment_create_partner_job
 import hr_recruitment_employee_hired
-
-

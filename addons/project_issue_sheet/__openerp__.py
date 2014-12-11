@@ -45,4 +45,3 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     'installable': True,
     'auto_install': False,
 }
-

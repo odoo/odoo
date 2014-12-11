@@ -45,4 +45,3 @@ class purchase_config_settings(osv.osv_memory):
         waiting.write({'condition': 'amount_total >= %s' % config.limit_amount})
         confirm = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_confirmed_double_lt')
         confirm.write({'condition': 'amount_total < %s' % config.limit_amount})
-

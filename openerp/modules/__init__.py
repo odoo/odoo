@@ -36,5 +36,3 @@ from openerp.modules.module import \
     adapt_version
 
 from openerp.modules.loading import load_modules
-
-

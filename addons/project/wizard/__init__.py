@@ -21,5 +21,3 @@
 
 import project_task_delegate
 import project_task_reevaluate
-
-

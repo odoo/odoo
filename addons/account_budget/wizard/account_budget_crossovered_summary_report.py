@@ -54,5 +54,3 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
         }
 
 account_budget_crossvered_summary_report()
-
-

@@ -35,4 +35,3 @@ class crm_claim(base_stage, osv.osv):
             res['partner_id'] = self.pool['res.partner'].name_get(
                 cr, SUPERUSER_ID, [res['partner_id']], context=context)[0]
         return res
-

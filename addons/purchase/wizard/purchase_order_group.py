@@ -87,4 +87,3 @@ class purchase_order_group(osv.osv_memory):
         }
 
 purchase_order_group()
-

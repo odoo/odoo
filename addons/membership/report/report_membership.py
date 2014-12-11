@@ -140,4 +140,3 @@ class report_membership(osv.osv):
         )""")
 
 report_membership()
-

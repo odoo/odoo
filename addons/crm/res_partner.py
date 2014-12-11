@@ -93,5 +93,3 @@ class res_partner(osv.osv):
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
 res_partner()
-
-

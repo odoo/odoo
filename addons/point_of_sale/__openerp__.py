@@ -108,4 +108,3 @@ Main Features
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }
-

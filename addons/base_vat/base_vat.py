@@ -315,4 +315,3 @@ class res_partner(osv.osv):
             return False
         
 res_partner()
-

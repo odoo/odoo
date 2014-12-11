@@ -36,4 +36,3 @@ class res_users(osv.Model):
     def _signup_create_user(self, cr, uid, values, context=None):
     	values['share'] = True
     	return super(res_users, self)._signup_create_user(cr, uid, values, context=context)
-

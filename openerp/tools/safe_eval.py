@@ -288,4 +288,3 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except Exception:
         _logger.exception('Cannot eval %r', expr)
         raise
-

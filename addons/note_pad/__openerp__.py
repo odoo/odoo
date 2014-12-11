@@ -45,4 +45,3 @@ Use for update your text memo in real time with the following user that you invi
     'application': False,
     'auto_install': False,
 }
-

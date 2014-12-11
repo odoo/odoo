@@ -78,4 +78,3 @@ class hr_analytic_issue(osv.osv):
     }
 
 hr_analytic_issue()
-

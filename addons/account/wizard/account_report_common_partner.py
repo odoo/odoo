@@ -43,4 +43,3 @@ class account_common_partner_report(osv.osv_memory):
         return data
 
 account_common_partner_report()
-

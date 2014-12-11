@@ -83,4 +83,3 @@ class account_invoice(osv.osv):
     _defaults = {
         'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
     }
-

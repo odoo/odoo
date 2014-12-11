@@ -40,4 +40,3 @@ class crm_configuration(osv.osv_memory):
         
         
     }
-

@@ -39,5 +39,3 @@ import ir_config_parameter
 import osv_memory_autovacuum
 import ir_mail_server
 import ir_fields
-
-

@@ -85,5 +85,3 @@ class test_ir_attachment(openerp.tests.common.TransactionCase):
         self.assertTrue(os.path.isfile(a2_fn))
 
         # everybody applause
-
-

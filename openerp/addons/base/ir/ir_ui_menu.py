@@ -388,4 +388,3 @@ class ir_ui_menu(osv.osv):
     }
     _order = "sequence,id"
     _parent_store = True
-

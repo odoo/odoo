@@ -31,6 +31,3 @@ class expense(report_sxw.rml_parse):
         self.localcontext.update({'time': time, })
 
 report_sxw.report_sxw('report.hr.expense', 'hr.expense.expense', 'addons/hr_expense/report/expense.rml',parser=expense)
-
-
-

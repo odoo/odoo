@@ -37,4 +37,3 @@ Collects web application usage with Google Analytics.
     'active': False,
     'js': ['static/src/js/web_analytics.js'],
 }
-

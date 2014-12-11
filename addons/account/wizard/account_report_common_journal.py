@@ -51,4 +51,3 @@ class account_common_journal_report(osv.osv_memory):
         return data
 
 account_common_journal_report()
-

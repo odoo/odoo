@@ -99,4 +99,3 @@ class crm_phonecall_report(osv.osv):
                     crm_phonecall c
             )""")
 crm_phonecall_report()
-

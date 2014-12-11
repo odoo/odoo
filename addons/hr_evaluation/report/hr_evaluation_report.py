@@ -98,5 +98,3 @@ class hr_evaluation_report(osv.osv):
         """)
 
 hr_evaluation_report()
-
-

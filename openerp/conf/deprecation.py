@@ -33,4 +33,3 @@ by the user to check if her code is future proof.
 # same module.
 # Introduced around 2011.02.
 open_openerp_namespace = True
-

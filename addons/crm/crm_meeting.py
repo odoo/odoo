@@ -74,4 +74,3 @@ class calendar_attendee(osv.osv):
                         string='Event Type', type="many2one", \
                         relation="crm.case.categ", multi='categ_id'),
     }
-

@@ -95,4 +95,3 @@ class mysocket:
             raise res[0]
         else:
             return res[0]
-

@@ -21,5 +21,3 @@
 
 import account_analytic_analysis
 import res_config
-
-

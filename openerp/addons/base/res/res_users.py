@@ -877,4 +877,3 @@ class users_view(osv.osv):
                         'selectable': False,
                     }
         return res
-

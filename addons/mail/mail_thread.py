@@ -1463,4 +1463,3 @@ class mail_thread(osv.AbstractModel):
                 partner_id = %s
         ''', (ids, self._name, partner_id))
         return True
-

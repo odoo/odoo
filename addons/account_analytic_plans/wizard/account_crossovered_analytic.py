@@ -72,4 +72,3 @@ class account_crossovered_analytic(osv.osv_memory):
         }
 
 account_crossovered_analytic()
-

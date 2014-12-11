@@ -147,4 +147,3 @@ class RpcCase(unittest2.TestCase):
         else:
             cls._database_id = 0
         return '_fresh_name_' + str(cls._database_id) + '_'
-

@@ -54,4 +54,3 @@ class project_account_analytic_line(osv.osv_memory):
               }
 
 project_account_analytic_line()
-

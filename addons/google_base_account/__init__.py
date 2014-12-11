@@ -21,5 +21,3 @@
 
 import google_base_account
 import wizard
-
-

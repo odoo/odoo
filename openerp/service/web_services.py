@@ -769,5 +769,3 @@ def start_service():
     common()
     objects_proxy()
     report_spool()
-
-

@@ -56,4 +56,3 @@ class account_period_close(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_period_close()
-

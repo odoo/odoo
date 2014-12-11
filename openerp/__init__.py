@@ -60,5 +60,3 @@ wsgi.register_wsgi_handler = wsgi.wsgi_server.register_wsgi_handler
 # its own copy of the data structure and we don't need to care about
 # locks between threads.
 multi_process = False
-
-

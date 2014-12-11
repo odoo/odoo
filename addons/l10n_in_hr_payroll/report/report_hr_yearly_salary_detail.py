@@ -160,4 +160,3 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         return self.total
 
 report_sxw.report_sxw('report.salary.detail.byyear', 'yearly.salary.detail', 'hr_payroll/report/report_hr_yearly_salary_detail.rml', parser=employees_yearly_salary_report, header='internal landscape')
-

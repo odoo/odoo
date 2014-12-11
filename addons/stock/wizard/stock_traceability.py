@@ -63,5 +63,3 @@ class action_traceability(osv.osv_memory):
         return value
 
 action_traceability()
-
-

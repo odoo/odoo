@@ -51,4 +51,3 @@ class hired_employee(osv.osv_memory):
         return self.pool.get('hr.applicant').case_close_with_emp(cr, uid,context.get('active_ids', []))
 
 hired_employee()
-

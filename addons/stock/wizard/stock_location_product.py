@@ -58,4 +58,3 @@ class stock_location_product(osv.osv_memory):
             }
 
 stock_location_product()
-

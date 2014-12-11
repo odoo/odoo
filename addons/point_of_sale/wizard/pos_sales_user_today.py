@@ -53,5 +53,3 @@ class pos_sales_user_today(osv.osv_memory):
        }
 
 pos_sales_user_today()
-
-

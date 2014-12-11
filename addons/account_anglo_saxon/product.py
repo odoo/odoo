@@ -79,6 +79,3 @@ class product_template(osv.osv):
 
     }
 product_template()
-
-
-

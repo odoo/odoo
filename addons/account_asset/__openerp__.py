@@ -55,4 +55,3 @@ of the depreciation lines.
     'installable': True,
     'application': False,
 }
-

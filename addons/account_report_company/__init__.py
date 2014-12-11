@@ -21,4 +21,3 @@
 
 import account_report_company
 import report
-

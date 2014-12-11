@@ -52,4 +52,3 @@ class DeferredException(Exception):
     def __init__(self, msg, tb):
         self.message = msg
         self.traceback = tb
-

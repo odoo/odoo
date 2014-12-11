@@ -22,4 +22,3 @@
 import wizard
 import sale_crm
 import report
-

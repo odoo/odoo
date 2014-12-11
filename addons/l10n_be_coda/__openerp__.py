@@ -100,4 +100,3 @@ If required, you can manually adjust the descriptions via the CODA configuration
     'installable': True,
     'license': 'AGPL-3',
 }
-

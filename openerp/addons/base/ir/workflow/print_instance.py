@@ -220,5 +220,3 @@ class report_graph(report.interface.report_int):
         return self.obj.get(), 'pdf'
 
 report_graph('report.workflow.instance.graph', 'ir.workflow')
-
-

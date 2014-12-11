@@ -129,4 +129,3 @@ class product_product(osv.osv):
     }
 
 product_product()
-

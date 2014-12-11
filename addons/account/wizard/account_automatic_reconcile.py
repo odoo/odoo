@@ -247,4 +247,3 @@ class account_automatic_reconcile(osv.osv_memory):
         }
 
 account_automatic_reconcile()
-

@@ -30,5 +30,3 @@ class order(report_sxw.rml_parse):
         self.localcontext.update({'time': time})
 
 report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase/report/order.rml',parser=order)
-
-

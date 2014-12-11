@@ -67,4 +67,3 @@ class authorizer:
     def get_msg_quit(self, username):
         """Return the user's quitting message."""
         return 'Bye.'
-

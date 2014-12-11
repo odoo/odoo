@@ -136,4 +136,3 @@ class ReportXML(osv.osv):
     }
 
 ReportXML()
-

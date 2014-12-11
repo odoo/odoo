@@ -134,5 +134,3 @@ class purchase_report(osv.osv):
             )
         """)
 purchase_report()
-
-

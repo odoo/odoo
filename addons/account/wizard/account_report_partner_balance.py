@@ -51,4 +51,3 @@ class account_partner_balance(osv.osv_memory):
     }
 
 account_partner_balance()
-

@@ -102,4 +102,3 @@ class change_production_qty(osv.osv_memory):
         return {}
 
 change_production_qty()
-

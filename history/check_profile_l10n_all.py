@@ -113,8 +113,3 @@ for demo in demos:
                 except:
                     range -= 1
             time.sleep(2)
-
-
-
-
-

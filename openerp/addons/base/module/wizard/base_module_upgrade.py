@@ -107,5 +107,3 @@ class base_module_upgrade(osv.osv_memory):
 
     def config(self, cr, uid, ids, context=None):
         return self.pool.get('res.config').next(cr, uid, [], context=context)
-
-

@@ -56,4 +56,3 @@ class survey_browse_answer(osv.osv_memory):
          }
 
 survey_browse_answer()
-

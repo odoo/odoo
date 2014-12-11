@@ -106,4 +106,3 @@ class account_chart(osv.osv_memory):
     }
 
 account_chart()
-

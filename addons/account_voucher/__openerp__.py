@@ -78,4 +78,3 @@ This module manages:
     'application': True,
     'installable': True,
 }
-

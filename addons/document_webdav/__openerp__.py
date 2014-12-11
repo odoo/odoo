@@ -72,4 +72,3 @@ which needs explicit configuration in openerp-server.conf too.
     'installable': True,
     'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
-

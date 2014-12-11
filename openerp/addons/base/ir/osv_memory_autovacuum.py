@@ -30,5 +30,3 @@ class osv_memory_autovacuum(openerp.osv.osv.osv_memory):
             if model.is_transient():
                 model._transient_vacuum(cr, uid, force=True)
         return True
-
-

@@ -65,4 +65,3 @@ Key Features
     'installable': True,
     'application': True,
 }
-

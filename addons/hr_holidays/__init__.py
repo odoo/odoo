@@ -22,5 +22,3 @@
 import hr_holidays
 import report
 import wizard
-
-

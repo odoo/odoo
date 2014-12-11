@@ -140,4 +140,3 @@ class report_webkit_actions(osv.osv_memory):
                 }                   
 
 report_webkit_actions()
-

@@ -775,4 +775,3 @@ class module_dependency(osv.osv):
             ('unknown', 'Unknown'),
         ], string='Status', readonly=True, select=True),
     }
-

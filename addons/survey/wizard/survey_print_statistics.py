@@ -46,4 +46,3 @@ class survey_print_statistics(osv.osv_memory):
         }
 
 survey_print_statistics()
-

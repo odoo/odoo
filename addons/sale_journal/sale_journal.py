@@ -100,4 +100,3 @@ class sale(osv.osv):
         return result
 
 sale()
-

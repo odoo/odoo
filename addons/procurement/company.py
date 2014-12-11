@@ -34,4 +34,3 @@ class company(osv.osv):
     }
 
 company()
-

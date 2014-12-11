@@ -78,4 +78,3 @@ def option_handler(opts):
 if __name__ == '__main__':
     # Do with the service whatever option is passed in the command line
     win32serviceutil.HandleCommandLine(OpenERPServerService, customOptionHandler=option_handler)
-

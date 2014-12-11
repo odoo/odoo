@@ -22,4 +22,3 @@ from . import controllers
 from . import models
 from . import edi_service
 from .models.edi import EDIMixin, edi
-

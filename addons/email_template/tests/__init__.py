@@ -23,4 +23,3 @@ from . import test_mail
 checks = [
     test_mail,
 ]
-

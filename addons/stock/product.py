@@ -562,4 +562,3 @@ class product_category(osv.osv):
     }
 
 product_category()
-

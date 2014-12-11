@@ -104,5 +104,3 @@ class ir_action_window(osv.osv):
         return res
 
 ir_action_window()
-
-

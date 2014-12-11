@@ -46,4 +46,3 @@ class pos_sales_user_today(report_sxw.rml_parse):
         return data
 
 report_sxw.report_sxw('report.pos.sales.user.today', 'pos.order', 'addons/point_of_sale/report/pos_sales_user_today.rml', parser=pos_sales_user_today,header='internal')
-

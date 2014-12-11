@@ -57,4 +57,3 @@ class ir_sequence(osv.osv):
         return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
 
 ir_sequence()
-

@@ -189,7 +189,3 @@ class ir_property(osv.osv):
         return domain
 
 ir_property()
-
-
-
-

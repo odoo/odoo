@@ -21,4 +21,3 @@
 
 import project_long_term
 import wizard
-

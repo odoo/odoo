@@ -22,4 +22,3 @@
 import email_template
 import wizard
 import res_partner
-

@@ -493,4 +493,3 @@ class account_bank_statement_line(osv.osv):
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 account_bank_statement_line()
-

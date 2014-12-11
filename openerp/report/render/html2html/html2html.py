@@ -90,5 +90,3 @@ def parseString(node, localcontext = {}):
     root = r.render()
     root = r.url_modify(root)
     return root
-
-

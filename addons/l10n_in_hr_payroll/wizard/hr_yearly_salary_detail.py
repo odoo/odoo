@@ -62,4 +62,3 @@ class yearly_salary_detail(osv.osv_memory):
        }
 
 yearly_salary_detail()
-

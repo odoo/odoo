@@ -149,4 +149,3 @@ class stock_fill_inventory(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 stock_fill_inventory()
-

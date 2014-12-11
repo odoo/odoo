@@ -33,4 +33,3 @@ class cancel_statement_line(osv.osv_memory):
         return {}
 
 cancel_statement_line()
-

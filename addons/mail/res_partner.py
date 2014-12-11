@@ -68,4 +68,3 @@ class res_partner_mail(osv.Model):
             kwargs['partner_ids'] = partner_ids
             thread_id = False
         return super(res_partner_mail, self).message_post(cr, uid, thread_id, **kwargs)
-

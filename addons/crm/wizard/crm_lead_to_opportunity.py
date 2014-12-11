@@ -190,4 +190,3 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
 
     def mass_convert(self, cr, uid, ids, context=None):
         return self.action_apply(cr, uid, ids, context=context)
-

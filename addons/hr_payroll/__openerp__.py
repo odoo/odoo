@@ -69,4 +69,3 @@ Generic Payroll system.
     'auto_install': False,
     'application': False,
 }
-

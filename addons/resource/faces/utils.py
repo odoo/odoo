@@ -119,7 +119,3 @@ def progress_update(value, message=""):
 
 def progress_end():
     pass
-
-
-
-

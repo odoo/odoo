@@ -83,4 +83,3 @@ class payment_advice_report(osv.osv):
             )
         """)
 payment_advice_report()
-

@@ -23,4 +23,3 @@ import hr_department
 import hr
 
 import res_config
-

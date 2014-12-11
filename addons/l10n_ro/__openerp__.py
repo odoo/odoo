@@ -36,4 +36,3 @@ Romanian accounting chart and localization.
     "auto_install": False,
     "installable": True,
 }
-

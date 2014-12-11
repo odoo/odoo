@@ -53,4 +53,3 @@ class hr_payslip(osv.osv):
         'payment_mode': fields.char('Mode de paiement', size=64),
     }
 hr_payslip()
-

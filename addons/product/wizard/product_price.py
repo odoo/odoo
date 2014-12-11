@@ -61,4 +61,3 @@ class product_price_list(osv.osv_memory):
             'datas': datas,
        }
 product_price_list()
-

@@ -147,4 +147,3 @@ class base_report_rml_save(osv.osv_memory):
          }
 
 base_report_rml_save()
-

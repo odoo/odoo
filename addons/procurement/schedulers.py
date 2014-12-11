@@ -286,4 +286,3 @@ class procurement_order(osv.osv):
         return {}
 
 procurement_order()
-

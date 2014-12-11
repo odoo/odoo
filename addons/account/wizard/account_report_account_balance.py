@@ -39,4 +39,3 @@ class account_balance_report(osv.osv_memory):
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data}
 
 account_balance_report()
-

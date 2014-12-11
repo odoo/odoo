@@ -21,5 +21,3 @@
 
 import portal_wizard
 import share_wizard
-
-

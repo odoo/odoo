@@ -99,4 +99,3 @@ class account_partner_reconcile_process(osv.osv_memory):
     }
 
 account_partner_reconcile_process()
-
