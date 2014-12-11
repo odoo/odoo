@@ -3736,10 +3736,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250,
         });
-        var appendTo = this.$input.parents('.oe_view_manager_body');
-        if (appendTo.length === 0){
-            appendTo = self.view.ViewManager.$el;
-        }
+        var appendTo = this.$el.parent().parent();
         this.$input.autocomplete({
             appendTo: appendTo
         });
