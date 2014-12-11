@@ -130,7 +130,9 @@
             var self = this;
             var session_id = message.to_id[0];
             var uuid = message.to_id[1];
-            if (! this.get("window_focus")) {
+            var from_id = message['from_id'] ? message['from_id'][0] : false;
+            var current_user = openerp.session ? openerp.session.uid : false;
+            if (! this.get("window_focus") && from_id != current_user) {
                 this.set("waiting_messages", this.get("waiting_messages") + 1);
             }
             var conv = this.sessions[uuid];
@@ -414,12 +416,17 @@
         click_option_shortcut: function(){
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
+                name : 'Shortcode',
                 res_model: 'im_chat.shortcode',
                 view_mode: 'tree,form',
                 view_type: 'tree',
                 views: [[false, 'list'], [false, 'form']],
-                target: "current",
+                target: "new",
                 limit: 80,
+                flags: {
+                    action_buttons: true,
+                    pager: true,
+                }
             });
         },
         click_header: function(event){

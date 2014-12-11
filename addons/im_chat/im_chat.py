@@ -182,7 +182,7 @@ class im_chat_message(osv.Model):
         Messages are sent to a session not to users.
     """
     _name = 'im_chat.message'
-    _order = "id desc"
+    _order = "create_date asc"
     _columns = {
         'create_date': fields.datetime('Create Date', required=True, select=True),
         'from_id': fields.many2one('res.users', 'Author'),
@@ -279,7 +279,7 @@ class im_chat_message(osv.Model):
             domain = [("to_id.uuid", "=", uuid)]
             if last_id:
                 domain.append(("id", "<", last_id));
-            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, order="id desc", context=context)
         return False
 
 

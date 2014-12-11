@@ -8,7 +8,8 @@ class im_livechat_report(osv.Model):
     _auto = False
     _description = "Livechat Support Report"
     _columns = {
-        'uuid': fields.char('UUID', size=50, readonly=True),
+        'session_name': fields.char('Session Name', readonly=True),
+        'uuid': fields.char('UUID', readonly=True),
         'start_date': fields.datetime('Start Date of session', readonly=True, help="Start date of the conversation"),
         'start_date_hour': fields.char('Hour of start Date of session', readonly=True),
         'duration': fields.float('Average duration', digits=(16,2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)"),
@@ -22,7 +23,7 @@ class im_livechat_report(osv.Model):
         'session_id': fields.many2one('im_chat.session', 'Session', readonly=True),
         'channel_id': fields.many2one('im_livechat.channel', 'Channel', readonly=True),
     }
-    _order = 'start_date, uuid'
+    _order = 'start_date, session_name'
 
     def init(self, cr):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -32,6 +33,7 @@ class im_livechat_report(osv.Model):
                 SELECT
                     min(M.id) as id,
                     S.uuid as uuid,
+                    CONCAT(C.name, ' / ', S.id) as session_name,
                     S.create_date as start_date,
                     to_char(date_trunc('hour', S.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                     EXTRACT('epoch' from ((SELECT (max(create_date)-min(create_date)) FROM im_chat_message WHERE to_id=S.id AND from_id = U.id))) as time_in_session,
@@ -42,12 +44,14 @@ class im_livechat_report(osv.Model):
                     count(M.id) as nbr_user_messages,
                     CAST(S.feedback_rating AS INT) as rating,
                     U.id as user_id,
-                    S.channel_id as channel_id
+                    S.channel_id as channel_id,
+                    S.id as session_id
                 FROM im_chat_message M
                     LEFT JOIN im_chat_session S on (S.id = M.to_id)
                     LEFT JOIN res_users U on (U.id = M.from_id)
+                    LEFT JOIN im_livechat_channel C on (S.channel_id = C.id)
                 WHERE S.channel_id IS NOT NULL
-                GROUP BY U.id, M.to_id, S.id
+                GROUP BY U.id, M.to_id, S.id, C.name, S.uuid
             )
         """)
 
