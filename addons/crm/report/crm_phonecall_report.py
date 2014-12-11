@@ -86,4 +86,3 @@ class crm_phonecall_report(osv.osv):
                     crm_phonecall c
             )""")
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -202,5 +202,4 @@ class wkf_triggers(osv.osv):
 wkf_triggers()
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

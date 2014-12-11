@@ -76,4 +76,3 @@ configuration of their taxes and fiscal positions manually.
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

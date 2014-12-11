@@ -134,4 +134,3 @@ class wrapped_report_employee_salary_bymonth(osv.AbstractModel):
     _template = 'l10n_in_hr_payroll.report_hrsalarybymonth'
     _wrapped_report_class = report_hr_salary_employee_bymonth
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -45,4 +45,3 @@ are found in other modules that must be installed separately.
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

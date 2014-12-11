@@ -29,5 +29,4 @@ from rml2txt import parseString, parseNode
     printed in special (dot-matrix) printers.
 """
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -48,4 +48,3 @@ class payslip_lines_contribution_register(osv.osv_memory):
             cr, uid, [], 'hr_payroll.report_contributionregister', data=datas, context=context
         )
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -99,4 +99,3 @@ class change_production_qty(osv.osv_memory):
         return {}
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

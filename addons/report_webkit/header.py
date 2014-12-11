@@ -98,4 +98,3 @@ class HeaderImage(osv.osv):
         'type' : fields.char('Type', required =True, help="Image type(png,gif,jpeg)")
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

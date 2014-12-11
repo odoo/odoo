@@ -181,4 +181,3 @@ class report_crossoveredanalyticplans(osv.AbstractModel):
     _template = 'account_analytic_plans.report_crossoveredanalyticplans'
     _wrapped_report_class = crossovered_analytic
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

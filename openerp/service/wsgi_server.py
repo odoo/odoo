@@ -216,4 +216,3 @@ def application(environ, start_response):
         return application_unproxied(environ, start_response)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -475,4 +475,3 @@ def unwrap_suite(test):
             itertools.imap(unwrap_suite, subtests)):
         yield item
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

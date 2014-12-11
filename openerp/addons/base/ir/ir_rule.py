@@ -172,4 +172,3 @@ class ir_rule(osv.osv):
         self.clear_cache(cr,uid)
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

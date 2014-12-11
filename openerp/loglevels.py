@@ -103,4 +103,3 @@ def exception_to_unicode(e):
     except Exception:
         return u"Unknown message"
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

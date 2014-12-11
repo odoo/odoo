@@ -54,4 +54,3 @@ class pos_discount(osv.osv_memory):
             order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount':this.discount}, context=context)
         return {}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

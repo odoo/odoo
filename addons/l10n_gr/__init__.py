@@ -22,4 +22,3 @@
 
 #import sandwich_wizard
 #import order_create
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

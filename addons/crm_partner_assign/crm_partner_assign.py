@@ -230,4 +230,3 @@ class crm_lead(osv.osv):
         return res_partner_ids
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -311,4 +311,3 @@ class ir_cron(osv.osv):
 
         return self.try_write(cr, uid, ids, {'active': active}, context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

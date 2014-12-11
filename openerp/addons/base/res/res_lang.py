@@ -279,4 +279,3 @@ def intersperse(string, counts, separator=''):
     res = separator.join(map(reverse, reverse(splits)))
     return left + res + right, len(splits) > 0 and len(splits) -1 or 0
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

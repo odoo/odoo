@@ -72,4 +72,3 @@ class daughter(models.Model):
     # change the default value of an inherited field
     name = fields.Char(default='Baz')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -43,4 +43,3 @@ This module is the base module for other multi-company modules.
     'auto_install': False,
     'images': ['images/companies.jpeg','images/default_company_per_object_form.jpeg', 'images/default_company_per_object_list.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

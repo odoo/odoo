@@ -40,4 +40,3 @@ Using this application you can manage Sales Team  with CRM and/or Sales
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -456,4 +456,3 @@ if __name__ == "__main__":
     wrapwrite(html2text(data, baseurl))
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

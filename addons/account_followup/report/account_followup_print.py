@@ -114,4 +114,3 @@ class report_followup(osv.AbstractModel):
     _template = 'account_followup.report_followup'
     _wrapped_report_class = report_rappel
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

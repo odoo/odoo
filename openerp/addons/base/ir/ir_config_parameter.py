@@ -114,4 +114,3 @@ class ir_config_parameter(osv.osv):
             self.create(cr, uid, vals, context=context)
             return False
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

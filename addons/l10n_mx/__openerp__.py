@@ -59,5 +59,4 @@ With this module you will have:
     "installable": True,
     "certificate": False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

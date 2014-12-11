@@ -180,4 +180,3 @@ def convert_exception_to(to_type, with_message=False):
     except to_type, e:
         return e
 
-# vim:et:

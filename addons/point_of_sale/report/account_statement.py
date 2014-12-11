@@ -55,4 +55,3 @@ class report_account_statement(osv.AbstractModel):
     _template = 'point_of_sale.report_statement'
     _wrapped_report_class = account_statement
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

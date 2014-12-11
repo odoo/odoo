@@ -59,4 +59,3 @@ This is the base module to manage the accounting chart for Luxembourg.
     'images': ['images/config_chart_l10n_lu.jpeg','images/l10n_lu_chart.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

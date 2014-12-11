@@ -21,4 +21,3 @@
 import l10n_fr_hr_payroll
 import report
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

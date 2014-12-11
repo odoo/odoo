@@ -38,5 +38,4 @@ Adds a Claim link to the delivery order.
     'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

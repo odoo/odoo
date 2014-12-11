@@ -63,4 +63,3 @@ class hr_attendance_error(osv.osv_memory):
             cr, uid, [], 'hr_attendance.report_attendanceerrors', data=datas, context=context
         )
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

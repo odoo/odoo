@@ -108,5 +108,4 @@ class CountryState(osv.osv):
 
     name_search = location_name_search
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

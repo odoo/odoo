@@ -68,4 +68,3 @@ class base_update_translations(osv.osv_memory):
         'lang': fields.selection(_get_languages, 'Language', required=True),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

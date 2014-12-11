@@ -85,4 +85,3 @@ class email_template_preview(osv.osv_memory):
         vals['name'] = template.name
         return {'value': vals}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

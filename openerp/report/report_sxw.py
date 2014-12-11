@@ -635,4 +635,3 @@ class report_sxw(report_rml, preprocess.report):
         return html,'html'
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

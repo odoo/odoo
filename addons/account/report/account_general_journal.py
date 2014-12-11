@@ -165,4 +165,3 @@ class report_generaljournal(osv.AbstractModel):
     _template = 'account.report_generaljournal'
     _wrapped_report_class = journal_print
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

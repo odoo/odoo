@@ -94,4 +94,3 @@ from openerp.tools.translate import _
 import cli
 import http
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

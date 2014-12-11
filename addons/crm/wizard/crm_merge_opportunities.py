@@ -94,4 +94,3 @@ class crm_merge_opportunity(osv.osv_memory):
                     section_id = section_ids[0]
         return {'value': {'section_id': section_id}}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

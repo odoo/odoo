@@ -20,4 +20,3 @@ class test_xmlrpc(openerp.tests.common.HttpCase):
         ids = o.execute(DB, 1, 'admin', 'ir.model', 'search', [], {})
         self.assertIsInstance(ids, list)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

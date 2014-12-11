@@ -467,4 +467,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     finally:
         cr.close()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

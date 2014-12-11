@@ -1261,4 +1261,3 @@ class expression(object):
 
         return query, tools.flatten(params)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

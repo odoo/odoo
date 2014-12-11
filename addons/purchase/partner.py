@@ -50,5 +50,4 @@ class res_partner(osv.osv):
         'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Supplier Invoices', type='integer', multi="count"),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -124,4 +124,3 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         if not uid:
             raise SignupError(_('Authentification Failed.'))
 
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

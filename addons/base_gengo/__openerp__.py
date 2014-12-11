@@ -48,4 +48,3 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

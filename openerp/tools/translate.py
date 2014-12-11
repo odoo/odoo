@@ -1096,5 +1096,4 @@ def load_language(cr, lang):
     oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
     language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

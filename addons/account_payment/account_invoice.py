@@ -43,4 +43,3 @@ class Invoice(osv.osv):
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

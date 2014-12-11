@@ -38,4 +38,3 @@ Using this module you will be able to link analytic accounts to sales orders.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -243,4 +243,3 @@ class report_vat(osv.AbstractModel):
     _template = 'account.report_vat'
     _wrapped_report_class = tax_report
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

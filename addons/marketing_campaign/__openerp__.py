@@ -69,4 +69,3 @@ input segments, workflow.
     'auto_install': False,
     'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

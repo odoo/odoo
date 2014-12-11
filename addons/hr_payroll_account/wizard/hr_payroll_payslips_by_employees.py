@@ -38,4 +38,3 @@ class hr_payslip_employees(osv.osv_memory):
         return super(hr_payslip_employees, self).compute_sheet(cr, uid, ids, context=context)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

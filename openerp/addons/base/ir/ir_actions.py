@@ -1218,4 +1218,3 @@ class ir_actions_act_client(osv.osv):
 
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

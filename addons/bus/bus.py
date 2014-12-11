@@ -191,4 +191,3 @@ class Controller(openerp.http.Controller):
             raise Exception("bus.Bus only string channels are allowed.")
         return self._poll(request.db, channels, last, options)
 
-# vim:et:

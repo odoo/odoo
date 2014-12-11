@@ -48,4 +48,3 @@ exceeds minimum amount set by configuration wizard.
     'auto_install': False
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

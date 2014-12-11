@@ -72,4 +72,3 @@ class report_check(osv.AbstractModel):
     _template = 'account_check_writing.report_check'
     _wrapped_report_class = report_print_check
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

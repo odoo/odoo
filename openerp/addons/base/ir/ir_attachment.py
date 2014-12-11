@@ -355,4 +355,3 @@ class ir_attachment(osv.osv):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

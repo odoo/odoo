@@ -195,4 +195,3 @@ class report_budget(osv.AbstractModel):
     _template = 'account_budget.report_budget'
     _wrapped_report_class = budget_report
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

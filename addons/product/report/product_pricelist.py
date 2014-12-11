@@ -119,4 +119,3 @@ class report_product_pricelist(osv.AbstractModel):
     _template = 'product.report_pricelist'
     _wrapped_report_class = product_pricelist
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

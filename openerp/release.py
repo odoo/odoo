@@ -53,4 +53,3 @@ license = 'AGPL-3'
 
 nt_service_name = "odoo-server-" + series
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

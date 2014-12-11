@@ -545,4 +545,3 @@ class mrp_operations_operation(osv.osv):
         'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

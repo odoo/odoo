@@ -981,4 +981,3 @@ class change_password_user(osv.TransientModel):
         self.write(cr, uid, ids, {'new_passwd': False}, context=context)
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

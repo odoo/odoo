@@ -22,5 +22,4 @@
 import analytic_plan_create_model
 import account_crossovered_analytic
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

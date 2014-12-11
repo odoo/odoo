@@ -1270,4 +1270,3 @@ class wizard_model_menu(osv.osv_memory):
             }, context)
         return {'type':'ir.actions.act_window_close'}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

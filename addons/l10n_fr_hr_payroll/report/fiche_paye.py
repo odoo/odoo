@@ -77,4 +77,3 @@ class wrapped_report_fiche_paye(osv.AbstractModel):
     _template = 'l10n_fr_hr_payroll.report_l10nfrfichepaye'
     _wrapped_report_class = fiche_paye_parser
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

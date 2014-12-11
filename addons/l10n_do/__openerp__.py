@@ -69,4 +69,3 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

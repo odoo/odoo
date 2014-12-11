@@ -30,4 +30,3 @@ class hr_attendance_config_settings(osv.osv_memory):
             help="Allocates attendance group to all users."),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

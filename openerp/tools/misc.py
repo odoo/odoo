@@ -1277,4 +1277,3 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

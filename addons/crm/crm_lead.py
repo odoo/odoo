@@ -1090,4 +1090,3 @@ class crm_lead(format_address, osv.osv):
                     break
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

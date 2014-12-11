@@ -61,4 +61,3 @@ class report_bankstatementbalance(osv.AbstractModel):
     _template = 'account_bank_statement_extensions.report_bankstatementbalance'
     _wrapped_report_class = bank_statement_balance_report
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

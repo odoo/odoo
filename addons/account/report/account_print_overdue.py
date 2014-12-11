@@ -89,4 +89,3 @@ class report_overdue(osv.AbstractModel):
     _template = 'account.report_overdue'
     _wrapped_report_class = Overdue
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

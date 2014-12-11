@@ -44,4 +44,3 @@ class stock_config_settings(osv.osv_memory):
             return {'value': {'group_stock_inventory_valuation': True}}
         return {}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

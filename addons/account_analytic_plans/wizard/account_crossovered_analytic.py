@@ -68,4 +68,3 @@ class account_crossovered_analytic(osv.osv_memory):
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_analytic_plans.report_crossoveredanalyticplans', data=datas, context=context)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

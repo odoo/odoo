@@ -116,4 +116,3 @@ class hr_contract(osv.osv):
         (_check_dates, 'Error! Contract start-date must be less than contract end-date.', ['date_start', 'date_end'])
     ]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -58,4 +58,3 @@ allow_report_int_registration = True
 # but no warning was dispayed in the logs).
 openerp_pooler = True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

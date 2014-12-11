@@ -1534,4 +1534,3 @@ def rjsmin(script):
     ).strip()
     return result
 
-# vim:et:

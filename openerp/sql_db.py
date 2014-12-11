@@ -630,4 +630,3 @@ def close_all():
     if _Pool:
         _Pool.close_all()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

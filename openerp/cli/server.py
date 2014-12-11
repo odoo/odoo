@@ -173,4 +173,3 @@ class Server(Command):
     def run(self, args):
         main(args)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

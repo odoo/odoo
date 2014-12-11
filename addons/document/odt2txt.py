@@ -50,4 +50,3 @@ if __name__ == "__main__" :
     odt = OpenDocumentTextFile(s)
     print odt.toString().encode('ascii','replace')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

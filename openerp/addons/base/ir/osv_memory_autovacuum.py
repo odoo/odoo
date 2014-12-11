@@ -32,4 +32,3 @@ class osv_memory_autovacuum(openerp.osv.osv.osv_memory):
         return True
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

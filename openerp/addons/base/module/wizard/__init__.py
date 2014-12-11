@@ -27,5 +27,4 @@ import base_module_configuration
 import base_export_language
 import base_update_translations
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

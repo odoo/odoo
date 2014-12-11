@@ -37,4 +37,3 @@ class purchase_order(osv.osv):
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, acc_id)
         return account_id
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

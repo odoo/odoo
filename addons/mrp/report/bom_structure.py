@@ -62,4 +62,3 @@ class report_mrpbomstructure(osv.AbstractModel):
     _template = 'mrp.report_mrpbomstructure'
     _wrapped_report_class = bom_structure
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

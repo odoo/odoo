@@ -69,4 +69,3 @@ campaigns on any OpenERP document.
     'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

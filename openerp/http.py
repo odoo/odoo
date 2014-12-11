@@ -1545,4 +1545,3 @@ class CommonController(Controller):
 root = Root()
 openerp.service.wsgi_server.register_wsgi_handler(root)
 
-# vim:et:ts=4:sw=4:

@@ -55,4 +55,3 @@ class account_cdr_report(osv.osv_memory):
             cr, uid, ids, 'l10n_fr.report_l10nfrresultat', data=data, context=context
         )
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

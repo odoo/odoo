@@ -46,4 +46,3 @@ class account_analytic_chart(osv.osv_memory):
         result['context'] = str(result_context)
         return result
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

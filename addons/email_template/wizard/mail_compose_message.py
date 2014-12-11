@@ -206,4 +206,3 @@ class mail_compose_message(osv.TransientModel):
     def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
         return self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context)[res_id]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

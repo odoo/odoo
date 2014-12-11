@@ -154,4 +154,3 @@ class report_analyticbalance(osv.AbstractModel):
     _template = 'account.report_analyticbalance'
     _wrapped_report_class = account_analytic_balance
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

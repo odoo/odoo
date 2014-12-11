@@ -69,4 +69,3 @@ class account_analytic_profit(osv.osv_memory):
             cr, uid, [], 'hr_timesheet_invoice.report_analyticprofit', data=datas, context=context
         )
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

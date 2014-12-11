@@ -843,4 +843,3 @@ class website_seo_metadata(osv.Model):
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
 
-# vim:et:

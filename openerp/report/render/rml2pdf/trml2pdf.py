@@ -1082,4 +1082,3 @@ if __name__=="__main__":
         print 'Try \'trml2pdf --help\' for more information.'
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -217,4 +217,3 @@ class account_analytic_account(osv.osv):
             res['value']['use_timesheets'] = template.use_timesheets
         return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -65,4 +65,3 @@ for name in 'bcdefghijkl':
         _name = 'test.workflow.model.%s' % name
         _inherit = 'test.workflow.model.a'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

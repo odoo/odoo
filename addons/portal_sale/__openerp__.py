@@ -56,4 +56,3 @@ by default, you simply need to configure a Paypal account in the Accounting/Invo
     'category': 'Hidden',
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

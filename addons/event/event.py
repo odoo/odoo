@@ -394,4 +394,3 @@ class event_registration(models.Model):
                 self.email = contact.email
                 self.phone = contact.phone
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

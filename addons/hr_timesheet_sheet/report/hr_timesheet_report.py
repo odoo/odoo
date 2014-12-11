@@ -78,4 +78,3 @@ class hr_timesheet_report(osv.osv):
                         htss.department_id"""
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

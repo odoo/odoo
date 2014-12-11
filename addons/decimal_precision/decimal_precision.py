@@ -103,4 +103,3 @@ class DecimalPrecisionTestModel(orm.Model):
         'float_4': fields.float(digits=(16, 4)),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

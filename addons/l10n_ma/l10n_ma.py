@@ -47,4 +47,3 @@ class l10n_ma_line(osv.osv):
             ('code_uniq', 'unique (code)', 'The variable name must be unique !')
     ]
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

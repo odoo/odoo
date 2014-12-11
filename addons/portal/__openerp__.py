@@ -55,4 +55,3 @@ very handy when used in combination with the module 'share'.
     'installable': True,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

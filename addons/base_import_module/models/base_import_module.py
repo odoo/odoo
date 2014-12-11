@@ -52,4 +52,3 @@ class base_import_module(osv.TransientModel):
             'type': 'ir.actions.act_window',
         }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

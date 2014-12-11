@@ -182,4 +182,3 @@ def exec_workflow(db, uid, obj, signal, *args):
     with openerp.registry(db).cursor() as cr:
         return exec_workflow_cr(cr, uid, obj, signal, *args)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

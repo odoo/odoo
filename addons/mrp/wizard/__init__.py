@@ -26,5 +26,4 @@ import change_production_qty
 import stock_move
 #import mrp_change_standard_price
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

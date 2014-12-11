@@ -131,4 +131,3 @@ def attr_get(node, attrs, dict=None):
                 res[key] = unit_get(node.get(key))
     return res
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

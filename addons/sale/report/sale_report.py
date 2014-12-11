@@ -117,4 +117,3 @@ class sale_report(osv.osv):
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

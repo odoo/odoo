@@ -500,4 +500,3 @@ class account_config_settings(osv.TransientModel):
                  'view_mode': 'form,tree',
          }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

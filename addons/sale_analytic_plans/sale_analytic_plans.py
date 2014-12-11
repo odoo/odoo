@@ -38,4 +38,3 @@ class sale_order_line(osv.osv):
         return create_ids
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

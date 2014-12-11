@@ -134,4 +134,3 @@ This installs the module product_expiry."""),
         'company_id': _default_company,
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

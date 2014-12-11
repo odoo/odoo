@@ -153,4 +153,3 @@ class product_template(osv.Model):
         result['context'] = "{}"
         return result
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

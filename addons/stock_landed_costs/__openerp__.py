@@ -50,4 +50,3 @@ This module allows you to easily add extra costs on pickings and decide the spli
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

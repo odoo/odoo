@@ -221,5 +221,4 @@ class report_graph(report.interface.report_int):
 
 report_graph('report.workflow.instance.graph', 'ir.workflow')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

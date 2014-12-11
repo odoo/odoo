@@ -105,4 +105,3 @@ class crm_lead_report(osv.Model):
             )""")
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

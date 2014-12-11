@@ -80,4 +80,3 @@ class account_sequence_installer(osv.osv_memory):
         return res
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
