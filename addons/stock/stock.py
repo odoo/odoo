@@ -1271,7 +1271,7 @@ class stock_picking(osv.osv):
         #2) then, process the remaining part
         all_op_processed = True
         for ops, product_id, remaining_qty in still_to_do:
-            all_op_processed = all_op_processed and _create_link_for_product(ops.id, product_id, remaining_qty)
+            all_op_processed = _create_link_for_product(ops.id, product_id, remaining_qty) and all_op_processed
         return (need_rereserve, all_op_processed)
 
     def picking_recompute_remaining_quantities(self, cr, uid, picking, context=None):
