@@ -45,10 +45,9 @@ define([
      * get current style on cursor
      *
      * @param {WrappedRange} rng
-     * @param {Node} target - target element on event
      * @return {Object} - object contains style properties.
      */
-    this.current = function (rng, target) {
+    this.current = function (rng) {
       var $cont = $(dom.isText(rng.sc) ? rng.sc.parentNode : rng.sc);
       var properties = ['font-family', 'font-size', 'text-align', 'list-style-type', 'line-height'];
       var styleInfo = jQueryCSS($cont, properties) || {};
@@ -79,6 +78,8 @@ define([
         var lineHeight = parseInt(styleInfo['line-height'], 10) / parseInt(styleInfo['font-size'], 10);
         styleInfo['line-height'] = lineHeight.toFixed(1);
       }
+
+      var target = rng.sc.childNodes.length && rng.sc.childNodes[rng.so] || rng.sc;
 
       styleInfo.image = dom.isImg(target) && target;
       styleInfo.anchor = rng.isOnAnchor() && dom.ancestor(rng.sc, dom.isAnchor);
