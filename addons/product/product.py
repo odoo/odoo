@@ -938,6 +938,27 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
+    def _set_suppliers(self, cr, uid, id, name, value, args, context=None):
+        if not value:
+            return
+        product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
+        Supplierinfo = self.pool['product.supplierinfo']
+        for (code, supplierinfo_id, vals) in value:
+            if not supplierinfo_id and code == 0:
+                vals.update({'product_tmpl_id': product_tmpl_id, 'product_id': id})
+                Supplierinfo.create(cr, uid, vals, context=context)
+            elif supplierinfo_id and code == 1:
+                Supplierinfo.write(cr, uid, supplierinfo_id, vals, context=context)
+
+    def _get_suppliers(self, cr, uid, ids, name, args, context=None):
+        res = dict.fromkeys(ids, False)
+        Supplierinfo = self.pool['product.supplierinfo']
+        for id in ids:
+            product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
+            supplier_ids = Supplierinfo.search(cr, uid, ['|', ('product_id', '=', id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)], context=context)
+            res[id] = supplier_ids
+        return res
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -948,6 +969,8 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
+        'seller_ids': fields.function(_get_suppliers, fnct_inv=_set_suppliers, string="Seller", type="one2many", relation="product.supplierinfo"),
+        'seller_id': fields.related('seller_ids', 'name', type='many2one', relation='res.partner', string='Main Supplier', help="Main Supplier who has highest priority in Supplier List."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -1258,6 +1281,7 @@ class product_supplierinfo(osv.osv):
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
+        'product_id': fields.many2one('product.product', 'Product Variant', ondelete='cascade'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
         'company_id':fields.many2one('res.company', string='Company',select=1),
