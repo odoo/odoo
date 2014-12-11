@@ -86,8 +86,12 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         sign = cmp(normalized_value, 0)
         normalized_value -= sign*epsilon
         rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
-
-    result = rounded_value * rounding_factor # de-normalize
+    # de-normalize
+    if abs(rounding_factor) < 1.0:
+        # rounding factor is lower than 1
+        result = rounded_value / (1 / rounding_factor)
+    else:
+        result = rounded_value * rounding_factor
     return result
 
 def float_is_zero(value, precision_digits=None, precision_rounding=None):
