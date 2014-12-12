@@ -85,106 +85,6 @@ class account_bank_statement(models.Model):
         readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.')
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled', string='All lines reconciled')
 
-    @api.model
-    def _prepare_move(self, st_line, st_line_number):
-        """Prepare the dict of values to create the move from a
-           statement line. This method may be overridden to implement custom
-           move generation (making sure to call super() to establish
-           a clean extension chain).
-
-           :param browse_record st_line: account.bank.statement.line record to
-                  create the move from.
-           :param char st_line_number: will be used as the name of the generated account move
-           :return: dict of value to create() the account.move
-        """
-        return {
-            'journal_id': st_line.statement_id.journal_id.id,
-            'date': st_line.date,
-            'name': st_line_number,
-            'ref': st_line.ref,
-        }
-
-    @api.model
-    def _get_counter_part_account(self, st_line):
-        """Retrieve the account to use in the counterpart move.
-
-           :param browse_record st_line: account.bank.statement.line record to create the move from.
-           :return: int/long of the account.account to use as counterpart
-        """
-        if st_line.amount >= 0:
-            return st_line.statement_id.journal_id.default_credit_account_id.id
-        return st_line.statement_id.journal_id.default_debit_account_id.id
-
-    @api.model
-    def _get_counter_part_partner(self, st_line):
-        """Retrieve the partner to use in the counterpart move.
-
-           :param browse_record st_line: account.bank.statement.line record to create the move from.
-           :return: int/long of the res.partner to use as counterpart
-        """
-        return st_line.partner_id and st_line.partner_id.id or False
-
-    @api.model
-    def _prepare_bank_move_line(self, st_line, move_id, amount, company_currency_id):
-        """Compute the args to build the dict of values to create the counter part move line from a
-           statement line by calling the _prepare_move_line_vals. 
-
-           :param browse_record st_line: account.bank.statement.line record to create the move from.
-           :param int/long move_id: ID of the account.move to link the move line
-           :param float amount: amount of the move line
-           :param int/long company_currency_id: ID of currency of the concerned company
-           :return: dict of value to create() the bank account.move.line
-        """
-        account_id = self._get_counter_part_account(st_line)
-        partner_id = self._get_counter_part_partner(st_line)
-        debit = ((amount > 0) and amount) or 0.0
-        credit = ((amount < 0) and -amount) or 0.0
-        currency_id = False
-        amount_currency = False
-        if st_line.statement_id.currency.id != company_currency_id:
-            amount_currency = st_line.amount
-            currency_id = st_line.statement_id.currency.id
-        elif st_line.currency_id and st_line.amount_currency:
-            amount_currency = st_line.amount_currency
-            currency_id = st_line.currency_id.id
-        return self._prepare_move_line_vals(st_line, move_id, debit, credit,
-            amount_currency=amount_currency, currency_id=currency_id, account_id=account_id,
-            partner_id=partner_id)
-
-    @api.model
-    def _prepare_move_line_vals(self, st_line, move_id, debit, credit, currency_id=False,
-                amount_currency=False, account_id=False, partner_id=False):
-        """Prepare the dict of values to create the move line from a
-           statement line.
-
-           :param browse_record st_line: account.bank.statement.line record to
-                  create the move from.
-           :param int/long move_id: ID of the account.move to link the move line
-           :param float debit: debit amount of the move line
-           :param float credit: credit amount of the move line
-           :param int/long currency_id: ID of currency of the move line to create
-           :param float amount_currency: amount of the debit/credit expressed in the currency_id
-           :param int/long account_id: ID of the account to use in the move line if different
-                  from the statement line account ID
-           :param int/long partner_id: ID of the partner to put on the move line
-           :return: dict of value to create() the account.move.line
-        """
-        cur_id = currency_id or st_line.statement_id.currency.id
-        return {
-            'name': st_line.name,
-            'date': st_line.date,
-            'ref': st_line.ref,
-            'move_id': move_id,
-            'partner_id': partner_id or (((st_line.partner_id) and st_line.partner_id.id) or False),
-            'account_id': account_id or st_line.account_id.id,
-            'credit': credit,
-            'debit': debit,
-            'statement_id': st_line.statement_id.id,
-            'journal_id': st_line.statement_id.journal_id.id,
-            'currency_id': amount_currency and cur_id,
-            'amount_currency': amount_currency,
-        }
-
     @api.one
     @api.constrains('state', 'balance_end', 'balance_end_real')
     def _balance_check(self, journal_type='bank'):
@@ -199,8 +99,7 @@ class account_bank_statement(models.Model):
                 continue
             journal_type = statement.journal_id.type
 
-            if (not statement.journal_id.default_credit_account_id) \
-                    or (not statement.journal_id.default_debit_account_id):
+            if (not statement.journal_id.default_credit_account_id) or (not statement.journal_id.default_debit_account_id):
                 raise Warning(_('Please verify that a credit and a debit account is defined in the journal.'))
 
             for line in statement.move_line_ids:
@@ -234,9 +133,8 @@ class account_bank_statement(models.Model):
         for statement in self:
             if statement.state != 'open':
                 raise Warning(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
-            # Explicitly unlink bank statement lines
-            # so it will check that the related journal entries have
-            # been deleted first
+            # Explicitly unlink bank statement lines so it will check that
+            # the related journal entries have been deleted first
             statement.line_ids.unlink()
         return super(account_bank_statement, self).unlink()
 
@@ -352,18 +250,18 @@ class account_bank_statement_line(models.Model):
 
     @api.v8
     def get_data_for_reconciliations(self, excluded_ids=None):
-        """ Returns the data required to display a reconciliation, for each statement line id in ids """
+        """ Returns the data required to display a reconciliation widget, for each statement line in self """
         excluded_ids = excluded_ids or []
         ret = []
 
         for st_line in self:
-            data = {
-                'st_line': st_line.get_statement_line_for_reconciliation(),
-                'reconciliation_proposition': st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
-            }
-            for mv_line in data['reconciliation_proposition']:
-                excluded_ids.append(mv_line['id'])
-            ret.append(data)
+            sl = st_line.get_statement_line_for_reconciliation()
+            rp = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
+            excluded_ids += [move_line['id'] for move_line in rp]
+            ret.append({
+                'st_line': sl,
+                'reconciliation_proposition': rp
+            })
 
         return ret
 
@@ -410,7 +308,7 @@ class account_bank_statement_line(models.Model):
         return data
 
     def _get_domain_maker_move_line_amount(self):
-        """ Returns a function that can create the appropriate domain to search on move.line amount based on st_line currency/amount """
+        """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
         currency_id = self.currency_id
         field = currency_id and 'amount_residual_currency' or 'amount_residual'
 
@@ -421,7 +319,7 @@ class account_bank_statement_line(models.Model):
                 else:
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, comparator, amount)]
+                domain = [(f, '=', amount)]
             else:
                 raise osv.except_osv(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
             if c:
@@ -533,13 +431,10 @@ class account_bank_statement_line(models.Model):
     def get_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False):
         """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
         context = dict(self._context or {})
-        aml_obj = self.env['account.move.line']
+        context['bank_statement_line'] = self
         domain = self._domain_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, overlook_partner=overlook_partner)
-
-        # Fetch lines or lines number
-        # TODO : pass in context
-        # context['bank_statement_line'] = self
-        res = aml_obj.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count, additional_domain=domain)
+        res = self.env['account.move.line'].with_context(context).get_move_lines_for_reconciliation(excluded_ids, str, offset, limit, count, domain)
+        
         if count:
             return res
         else:
@@ -550,7 +445,65 @@ class account_bank_statement_line(models.Model):
                 line['has_no_partner'] = has_no_partner
             return mv_lines
 
-    @api.one
+    def _prepare_move(self, move_name):
+        """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
+            through model inheritance (make sure to call super() to establish a clean extension chain).
+
+           :param char st_line_number: will be used as the name of the generated account move
+           :return: dict of value to create() the account.move
+        """
+        return {
+            'journal_id': self.statement_id.journal_id.id,
+            'date': self.date,
+            'name': move_name,
+            'ref': self.ref,
+        }
+
+    def _prepare_move_line(self, move, company_currency):
+        """ Prepare the dict of values to create the move line from a statement line.
+
+            :param recordset move: the account.move to link the move line
+            :param float amount: amount of the move line
+            :param recordset company_currency: currency of the concerned company
+        """
+        if self.amount >= 0:
+            account_id = self.statement_id.journal_id.default_credit_account_id.id
+        else:
+            account_id = self.statement_id.journal_id.default_debit_account_id.id
+        partner_id = self.partner_id and self.partner_id.id or False
+        # TODO : can certainly be better formulated
+        amount = self.amount
+        amount_currency = False
+        currency_id = self.statement_id.currency.id
+        if self.statement_id.currency != company_currency:
+            amount_currency = self.amount
+            if self.currency_id == company_currency:
+                amount = self.amount_currency
+            else:
+                ctx = dict(self._context or {})
+                ctx['date'] = self.date
+                amount = self.statement_id.currency.with_context(ctx).compute(self.amount, company_currency)
+        elif self.currency_id and self.amount_currency:
+            amount_currency = self.amount_currency
+            currency_id = self.currency_id.id
+        debit = amount > 0 and amount or 0.0
+        credit = amount < 0 and -amount or 0.0
+
+        return {
+            'name': self.name,
+            'date': self.date,
+            'ref': self.ref,
+            'move_id': move.id,
+            'partner_id': partner_id,
+            'account_id': account_id,
+            'credit': credit,
+            'debit': debit,
+            'statement_id': self.statement_id.id,
+            'journal_id': self.statement_id.journal_id.id,
+            'currency_id': amount_currency and currency_id,
+            'amount_currency': amount_currency,
+        }
+
     def get_currency_rate_line(self, currency_diff, move_id):
         if currency_diff < 0:
             account_id = self.company_id.expense_currency_exchange_account_id.id
@@ -589,7 +542,7 @@ class account_bank_statement_line(models.Model):
         """ Create a move line for the statement line and for each item in mv_line_dicts. Reconcile a new move line with its counterpart_move_line_id if specified.
             Finally, mark the statement line as reconciled by putting the newly created move id in the field journal_entry_id.
 
-            :param dict[] mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it. The expected keys are :
+            :param dict[] mv_line_dicts: move lines to create. The expected keys are :
                 - 'name'
                 - 'debit'
                 - 'credit'
@@ -604,64 +557,54 @@ class account_bank_statement_line(models.Model):
         """
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency or company_currency
-        bs_obj = self.env['account.bank.statement']
         aml_obj = self.env['account.move.line']
 
-        # Checks
+        # Check and prepare data
         if self.journal_entry_id.id:
             raise Warning(_('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
-            for field in ['debit', 'credit', 'amount_currency']:
+            for field in ['debit', 'credit']:
                 if field not in mv_line_dict:
                     mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(mv_line_dict.get('counterpart_move_line_id'))
                 if mv_line.reconcile_id.id and mv_line.statement_id.id:
-                    raise Warning(_('A selected move line was already reconciled.'))
+                    raise Warning(_('A selected move line was already reconciled by a bank statement.'))
 
         # Particular use case : using reconciled move lines (fr: rapprochement bancaire)
-        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('is_reconciled') and x['is_reconciled'] == True]) > 0
+        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('is_reconciled') and x['is_reconciled'] == True])
         if num_already_reconciled_items > 0:
             # Check only using already reconciled move lines
             if len(mv_line_dicts) != num_already_reconciled_items:
                 raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
             # Check all move lines are from the same move
-            move_id = aml_obj.browse(mv_line_dicts[0].get('counterpart_move_line_id')).move_id.id
-            for mv_line_dict in mv_line_dicts:
-                if move_id != aml_obj.browse(mv_line_dict.get('counterpart_move_line_id')).move_id.id:
-                    raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
+            move_lines = aml_obj.browse([x['counterpart_move_line_id'] for x in mv_line_dicts])
+            move = move_lines[0].move_id
+            if any([move_line.move_id != move for move_line in move_lines]):
+                raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
             # Link move lines to the bank statement
-            move_lines = aml_obj.browse([x['counterpart_move_line_id'] for x in mv_line_dict])
-            move_lines.write({'statement_id': st_line.statement_id.id})
+            move_lines.write({'statement_id': self.statement_id.id})
             # Mark the statement line as reconciled
-            self.journal_entry_id = move_id
+            self.journal_entry_id = move
             return
 
         # Create the move
         move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
-        move_vals = bs_obj._prepare_move(self, move_name)
-        move_id = self.env['account.move'].create(move_vals)
+        move_vals = self._prepare_move(move_name)
+        move = self.env['account.move'].create(move_vals)
 
         # Create the move line for the statement line
-        if self.statement_id.currency != company_currency:
-            if self.currency_id == company_currency:
-                amount = self.amount_currency
-            else:
-                ctx = dict(self._context or {})
-                ctx['date'] = self.date
-                amount = self.statement_id.currency.with_context(ctx).compute(self.amount, company_currency)
-        else:
-            amount = self.amount
-        bank_st_move_vals = bs_obj._prepare_bank_move_line(self, move_id.id, amount, company_currency.id)
-        aml_obj.create(bank_st_move_vals)
+        st_line_move_line_vals = self._prepare_move_line(move, company_currency)
+        aml_obj.create(st_line_move_line_vals)
         
         # Complete the dicts
+        # TODO : factorize with aml.process_reconciliation
         st_line_currency = self.currency_id or statement_currency
         st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
         to_create = []
         for mv_line_dict in mv_line_dicts:
             mv_line_dict['ref'] = move_name
-            mv_line_dict['move_id'] = move_id.id
+            mv_line_dict['move_id'] = move.id
             mv_line_dict['date'] = self.statement_id.date
             mv_line_dict['journal_id'] = self.journal_id.id
             mv_line_dict['company_id'] = self.company_id.id
@@ -693,10 +636,10 @@ class account_bank_statement_line(models.Model):
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:
                         currency_diff = debit_at_current_rate - debit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(self, -currency_diff, move_id.id))
+                        to_create.append(self.get_currency_rate_line(self, -currency_diff, move.id))
                     if credit_at_old_rate - credit_at_current_rate:
                         currency_diff = credit_at_current_rate - credit_at_old_rate
-                        to_create.append(self.get_currency_rate_line(self, currency_diff, move_id.id))
+                        to_create.append(self.get_currency_rate_line(self, currency_diff, move.id))
                 else:
                     mv_line_dict['debit'] = debit_at_current_rate
                     mv_line_dict['credit'] = credit_at_current_rate
@@ -705,21 +648,19 @@ class account_bank_statement_line(models.Model):
                 prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / self.amount_currency
                 mv_line_dict['amount_currency'] = prorata_factor * self.amount
             to_create.append(mv_line_dict)
-        # Create move lines
-        move_line_pairs_to_reconcile = []
+        
+        # Create move lines and reconcile when relevant
         for mv_line_dict in to_create:
-            counterpart_move_line = None # NB : this attribute is irrelevant for aml_obj.create() and needs to be removed from the dict
             if mv_line_dict.get('counterpart_move_line_id'):
-                counterpart_move_line = 'counterpart_move_line_id' in mv_line_dict and aml_obj.browse(mv_line_dict['counterpart_move_line_id']) or None
+                counterpart_move_line = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
                 del mv_line_dict['counterpart_move_line_id']
-            new_aml = aml_obj.create(mv_line_dict)
-            if counterpart_move_line:
-                move_line_pairs_to_reconcile.append(new_aml|counterpart_move_line)
-        # Reconcile
-        for pair in move_line_pairs_to_reconcile:
-            pair.reconcile()
+                new_aml = aml_obj.create(mv_line_dict)
+                (new_aml|counterpart_move_line).reconcile()
+            else:
+                aml_obj.create(mv_line_dict)
+        
         # Mark the statement line as reconciled
-        self.journal_entry_id = move_id.id
+        self.journal_entry_id = move.id
 
     @api.model
     def _needaction_domain_get(self):

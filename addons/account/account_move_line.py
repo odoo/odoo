@@ -441,6 +441,13 @@ class account_move_line(models.Model):
                 '|', ('date_maturity', 'like', str),
                 '&', ('name', '!=', '/'), ('name', 'ilike', str)
             ]
+            try:
+                amount = float(str)
+                amount_domain = ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
+                str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
+
             # Warning : this is undue coupling. But building this domain is really tricky.
             # What follows means : "If building a domain for the bank statement reconciliation, id there's no partner
             # and a search string, we want to find the string in any of those fields including the partner name
@@ -448,12 +455,6 @@ class account_move_line(models.Model):
                 str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
 
             additional_domain = expression.AND([additional_domain, str_domain])
-            # TODO : store fields amount_residual and amount_residual_currency when migrating to new API
-            # try:
-            #     amount = float(str)
-            #     additional_domain += ['|', ('amount_residual', '=', amount), '|', ('amount_residual_currency', '=', amount), '|', ('amount_residual', '=', -amount), ('amount_residual_currency', '=', -amount)]
-            # except:
-            #     pass
 
         return additional_domain
 
@@ -465,6 +466,8 @@ class account_move_line(models.Model):
             :param str: search string
         """
         domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
+
+        # TODO : adapt
 
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_line_ids = []
@@ -513,7 +516,7 @@ class account_move_line(models.Model):
         ret = []
 
         for line in self:
-            partial_reconciliation_siblings = []
+            partial_reconciliation_siblings = [] # TODO : adapt
             if line.reconcile_partial_ids and not skip_partial_reconciliation_siblings:
                 siblings = line.reconcile_partial_ids - line # TODO : this might be extremely wrong
                 partial_reconciliation_siblings = siblings.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=target_date, skip_partial_reconciliation_siblings=True)
@@ -622,12 +625,10 @@ class account_move_line(models.Model):
             account_currency = account.currency_id or company_currency
 
             for mv_line_dict in new_mv_line_dicts:
-                if mv_line_dict.get('is_tax_line'):
-                    continue
                 writeoff_dicts = []
 
                 # Data for both writeoff lines
-                for field in ['debit', 'credit', 'amount_currency']:
+                for field in ['debit', 'credit']:
                     if field not in mv_line_dict:
                         mv_line_dict[field] = 0.0
                 if account_currency != company_currency:

@@ -448,36 +448,34 @@ class sale_order_line(osv.osv):
                     inv_line_obj.write(cr, uid, [line.id], {'analytics_id': rec.analytics_id.id}, context=context)
         return create_ids
 
+# TODO : migrate module to new API
+
+# class account_bank_statement(osv.osv):
+#     _inherit = "account.bank.statement"
+#     _name = "account.bank.statement"
+
+#     @api.multi
+#     def button_confirm_bank(self):
+#         super(account_bank_statement, self).button_confirm_bank()
+#         for st in self:
+#             for st_line in st.line_ids:
+#                 if st_line.analytics_id:
+#                     if not st.journal_id.analytic_journal_id:
+#                         raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
+#                 if not st_line.amount:
+#                     continue
+#         return True
 
 
-class account_bank_statement(osv.osv):
-    _inherit = "account.bank.statement"
-    _name = "account.bank.statement"
+# class account_bank_statement_line(osv.osv):
+#     _inherit = "account.bank.statement.line"
+#     _name = "account.bank.statement.line"
+    
+#     analytics_id = fields.Many2one('account.analytic.plan.instance', string='Analytic Distribution')
 
-    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
-        result = super(account_bank_statement,self)._prepare_bank_move_line(cr, uid, st_line, 
-            move_id, amount, company_currency_id, context=context)
-        result['analytics_id'] = st_line.analytics_id.id
-        return result
-
-    def button_confirm_bank(self, cr, uid, ids, context=None):
-        super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context=context):
-            for st_line in st.line_ids:
-                if st_line.analytics_id:
-                    if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
-                if not st_line.amount:
-                    continue
-        return True
-
-
-
-class account_bank_statement_line(osv.osv):
-    _inherit = "account.bank.statement.line"
-    _name = "account.bank.statement.line"
-    _columns = {
-        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
-    }
+#     def _prepare_move_line(self, move, amount, company_currency):
+#         result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount, company_currency)
+#         result['analytics_id'] = self.analytics_id.id
+#         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
