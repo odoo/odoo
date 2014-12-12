@@ -1057,18 +1057,20 @@ openerp.account = function (instance) {
         },
 
         // Returns an object that can be passed to process_reconciliation()
-        prepareCreatedMoveLineForPersisting: function(line) {
-            var dict = {
-                account_id: line.account_id,
-                name: line.label
-            };
-            var amount = line.tax_id ? line.amount_with_tax: line.amount;
-            if (amount > 0) dict['credit'] = amount;
-            if (amount < 0) dict['debit'] = -1 * amount;
-            if (line.tax_id) dict['account_tax_id'] = line.tax_id;
-            if (line.is_tax_line) dict['is_tax_line'] = line.is_tax_line;
-            if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
-            return dict;
+        prepareCreatedMoveLinesForPersisting: function(lines) {
+            lines = _.filter(lines, function(line) { return !line.is_tax_line });
+            return _.collect(lines, function(line) {
+                var dict = {
+                    account_id: line.account_id,
+                    name: line.label
+                };
+                var amount = line.tax_id ? line.amount_with_tax: line.amount;
+                if (amount > 0) dict['credit'] = amount;
+                if (amount < 0) dict['debit'] = -1 * amount;
+                if (line.tax_id) dict['account_tax_id'] = line.tax_id;
+                if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
+                return dict;
+            });
         },
 
         bowOut: function(speed, doPostMortemProcess) {
@@ -2017,14 +2019,16 @@ openerp.account = function (instance) {
         },
 
         // Returns an object that can be passed to process_reconciliation()
-        prepareSelectedMoveLineForPersisting: function(line) {
-            return {
-                name: line.name,
-                debit: line.debit,
-                credit: line.credit,
-                counterpart_move_line_id: line.id,
-                is_reconciled: line.is_reconciled,
-            };
+        prepareSelectedMoveLinesForPersisting: function(lines) {
+            return _.collect(lines, function(line) {
+                return {
+                    name: line.name,
+                    debit: line.debit,
+                    credit: line.credit,
+                    counterpart_move_line_id: line.id,
+                    is_reconciled: line.is_reconciled,
+                };
+            });
         },
     
         // idem
@@ -2043,8 +2047,8 @@ openerp.account = function (instance) {
         makeMoveLineDicts: function() {
             var self = this;
             var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
+            mv_line_dicts = mv_line_dicts.concat(self.prepareSelectedMoveLinesForPersisting(self.get("mv_lines_selected")));
+            mv_line_dicts = mv_line_dicts.concat(self.prepareCreatedMoveLinesForPersisting(self.getCreatedLines()));
             if (Math.abs(self.get("balance")).toFixed(4) !== "0.0000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },
@@ -2200,7 +2204,7 @@ openerp.account = function (instance) {
                     id: rec.data.reconciliation_type === 'partner' ? rec.data.partner_id : rec.data.account_id,
                     type: rec.data.reconciliation_type,
                     mv_line_ids: _.collect(rec.get("mv_lines_selected"), function(o){ return o.id }),
-                    new_mv_line_dicts: _.collect(rec.getCreatedLines(), function(o){ return rec.prepareCreatedMoveLineForPersisting(o) }),
+                    new_mv_line_dicts: rec.prepareCreatedMoveLinesForPersisting(rec.getCreatedLines()),
                 };
             });
             var deferred_animation = self.$(".reconciliation_lines_container").fadeOut(self.aestetic_animation_speed);
@@ -2503,17 +2507,18 @@ openerp.account = function (instance) {
                 });
         },
 
-        prepareCreatedMoveLineForPersisting: function(line) {
-            var dict = this._super(line);
-            dict['journal_id'] = line.journal_id;
-            return dict;
+        prepareCreatedMoveLinesForPersisting: function(lines) {
+            var dicts = this._super(lines);
+            for (var i=0; i<dicts.length; i++)
+                dicts[i]['journal_id'] = lines[i].journal_id;
+            return dicts;
         },
 
         processReconciliation: function() {
             var self = this;
             if (! self.is_consistent) return $.Deferred().rejectWith({reason: "Reconciliation widget is not in a consistent state."});
             var mv_line_ids = _.collect(self.get("mv_lines_selected"), function(o){ return o.id });
-            var new_mv_line_dicts = _.collect(self.getCreatedLines(), function(o){ return self.prepareCreatedMoveLineForPersisting(o) });
+            var new_mv_line_dicts = self.prepareCreatedMoveLinesForPersisting(self.getCreatedLines());
             self.$(".button_reconcile").attr("disabled", "disabled");
             return self.model_aml.call("process_reconciliation", [mv_line_ids, new_mv_line_dicts]).done(function() {
                 self.initializeCreateForm();

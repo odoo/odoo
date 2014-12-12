@@ -589,7 +589,18 @@ class account_bank_statement_line(models.Model):
         """ Create a move line for the statement line and for each item in mv_line_dicts. Reconcile a new move line with its counterpart_move_line_id if specified.
             Finally, mark the statement line as reconciled by putting the newly created move id in the field journal_entry_id.
 
-            :param dict[] mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it
+            :param dict[] mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it. The expected keys are :
+                - 'name'
+                - 'debit'
+                - 'credit'
+                # Only to reconcile existing move lines :
+                - 'counterpart_move_line_id'
+                    # ID of the move line to reconcile (partially if specified debit/credit is lower than move line's credit/debit)
+                # Only to create new journal items
+                - 'account_id'
+                - 'account_tax_id' # TODO : new tax design
+                - Possibly other account.move.line fields like analytic_account_id or analytics_id
+            }
         """
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency or company_currency
@@ -649,8 +660,6 @@ class account_bank_statement_line(models.Model):
         st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
         to_create = []
         for mv_line_dict in mv_line_dicts:
-            if mv_line_dict.get('is_tax_line'):
-                continue
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move_id.id
             mv_line_dict['date'] = self.statement_id.date
@@ -722,8 +731,8 @@ class account_bank_statement_line(models.Model):
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Communication', required=True, default=lambda self: self.env['ir.sequence'].get('account.bank.statement.line'))
-    date = fields.Date(string='Date', required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
-    amount = fields.Float(string='Amount', digits=dp.get_precision('Account'))
+    date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
+    amount = fields.Float(digits=dp.get_precision('Account'))
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
     account_id = fields.Many2one('account.account', string='Counterpart Account', domain=[('deprecated', '=', False)],
@@ -734,7 +743,7 @@ class account_bank_statement_line(models.Model):
         help="This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found).")
     ref = fields.Char(string='Reference')
     note = fields.Text(string='Notes')
-    sequence = fields.Integer(string='Sequence', index=True, help="Gives the sequence order when displaying a list of bank statement lines.")
+    sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.")
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
     journal_entry_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     amount_currency = fields.Float(string='Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.",
