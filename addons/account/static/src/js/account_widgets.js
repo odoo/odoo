@@ -196,7 +196,7 @@ openerp.account = function (instance) {
         fetchPresets: function() {
             var self = this;
             var deferred_last_update = self.model_presets.query(['write_date']).order_by('-write_date').first().then(function (data) {
-                self.presets_last_write_date = data.write_date;
+                self.presets_last_write_date = (data ? data.write_date : undefined);
             });
             var deferred_presets = self.model_presets.query().order_by('-sequence', '-id').all().then(function (data) {
                 self.presets = {};
@@ -238,11 +238,10 @@ openerp.account = function (instance) {
             var super_call = _.bind(this._super, this);
             // Reload presets if they were modified
             self.model_presets.query(['write_date']).order_by('-write_date').first().then(function (data) {
-                if (data.write_date != self.presets_last_write_date) {
-                    self.fetchPresets().then(function(){
-                        var presetsHTML = self.renderPresetsButtons(self.presets);
+                if (!data || data.write_date != self.presets_last_write_date) {
+                    self.fetchPresets().then(function() {
                         _.each(self.getChildren(), function(child) {
-                            child.$(".presets_container").html(presetsHTML);
+                            child.set("presets", self.presets);
                         });
                     });
                 }
@@ -426,7 +425,6 @@ openerp.account = function (instance) {
             this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
             this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.map_account_id_code = this.getParent().map_account_id_code;
-            this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
@@ -437,6 +435,8 @@ openerp.account = function (instance) {
             // to wait until move lines (in the "match" pannel) are loaded after you set("mode", "match") for instance.
             this.finishedLoadingMoveLines;
         
+            this.set("presets", this.getParent().presets);
+            this.on("change:presets", this, this.presetsChanged);
             this.set("mode", undefined);
             this.on("change:mode", this, this.modeChanged);
             this.set("balance", undefined); // Debit is +, credit is -
@@ -738,7 +738,7 @@ openerp.account = function (instance) {
 
         presetClickHandler: function(e) {
             var self = this;
-            var preset = this.presets[e.currentTarget.dataset.presetid];
+            var preset = this.get("presets")[e.currentTarget.dataset.presetid];
             for (var i=0; i<preset.lines.length; i++) {
                 self.addLineBeingEdited();
                 self.applyPresetLine(preset.lines[i]);
@@ -867,6 +867,15 @@ openerp.account = function (instance) {
     
         // Updates the validation button and the "open balance" line
         balanceChanged: function() {},
+
+        presetsChanged: function() {
+            if ($.isEmptyObject(this.get("presets"))) {
+                this.$(".quick_add").hide();
+            } else {
+                this.$(".presets_container").html(this.renderPresetsButtons(this.get("presets")));
+                this.$(".quick_add").show();
+            }
+        },
     
         modeChanged: function(o, val) {
             var self = this;
@@ -1612,7 +1621,7 @@ openerp.account = function (instance) {
             var self = this;
             self.$el.prepend(QWeb.render("bank_statement_reconciliation_line", {
                 line: self.st_line,
-                presets: self.renderPresetsButtons(self.presets),
+                presets: self.renderPresetsButtons(self.get("presets")),
             }));
             
             // Stuff that require the template to be rendered
@@ -2332,7 +2341,7 @@ openerp.account = function (instance) {
             var self = this;
             self.$el.prepend(QWeb.render("manual_reconciliation_line", {
                 data: self.data,
-                presets: self.renderPresetsButtons(self.presets),
+                presets: self.renderPresetsButtons(self.get("presets")),
             }));
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
