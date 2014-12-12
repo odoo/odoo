@@ -131,13 +131,9 @@ openerp.crm_voip = function(instance) {
                 //for each phonecall display it only if the date is lower than the current one
                 //if the refresh is done by the user, retrieve the phonecalls set as "done"
                 _.each(result.phonecalls, function(phonecall){
-
-                    date = new Date(phonecall.date);
+                    date = new Date(phonecall.date.split(" ")[0]);
                     date_now = new Date(Date.now());
-
                     if(date.getDate() <= date_now.getDate() && date.getMonth() <= date_now.getMonth()){
-                        
-                            console.log("DISPLAY PANEL")
                         phonecall_displayed = true;
                         if(refresh_by_user){
                             if(phonecall.state != "done"){
