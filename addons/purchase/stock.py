@@ -86,7 +86,8 @@ class stock_picking(osv.osv):
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.purchase_line_id:
-            if move_line.purchase_line_id.order_id.invoice_method == 'picking':
+            if (move_line.purchase_line_id.order_id.invoice_method == 'picking'
+                and move_line.price_currency_id == move_line.purchase_line_id.order_id.currency_id):
                 return move_line.price_unit
             else:
                 return move_line.purchase_line_id.price_unit
