@@ -76,7 +76,7 @@ class account_invoice(models.Model):
         return journal
 
     @api.one
-    @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
+    @api.depends('account_id', 'residual')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
 
@@ -587,12 +587,10 @@ class account_invoice(models.Model):
     @api.multi
     def test_paid(self):
         # check whether all corresponding account move lines are reconciled
-        line_ids = self.move_line_id_payment_get()
-        if not line_ids:
+        residual_amounts = [l.amount_residual for l in self.move_id.line_id if l.account_id.user_type.type in ('payable', 'receivable')]
+        if not residual_amounts:
             return False
-        query = "SELECT reconcile_id FROM account_move_line WHERE id IN %s"
-        self._cr.execute(query, (tuple(line_ids),))
-        return all(row[0] for row in self._cr.fetchall())
+        return not any(residual_amounts)
 
     # TODO : y so complex ?
     @api.multi
