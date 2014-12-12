@@ -101,6 +101,7 @@
                                     <t t-set="duration" t-value="widget.format_duration(activity.unit_amount)" />
                                     <t t-if="duration != undefined">
                                         <!-- <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration.split(':')[0] + 'h ' + (duration.split(':')[1] and duration.split(':')[1] + 'min' or '')"></t></span> --> <!-- call format_hour method of this screen -->
+                                        <span t-if="activity.fail_error" class="glyphicon glyphicon-info-sign pt_error" t-attf-data-toggle="popover" t-att-data-content="activity.fail_error"></span>
                                         <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration[0] + 'h ' + (duration[1] and duration[1] + 'min' or '0min' )"></t></span>
                                     </t>
                                     <t t-if="duration == undefined">

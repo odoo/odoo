@@ -239,6 +239,15 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
         start: function() {
             this._super.apply(this, arguments);
+            this.$(".pt_error").popover({
+                'placement': 'auto top',
+                'container': this.$el,
+                'html': true,
+                'trigger': 'hover',
+                'animation': false,
+                'toggle': 'popover',
+                'delay': {'show': 300, 'hide': 100}
+            });
         },
         renderElement: function() {
             this.activities = this.project_timesheet_db.get_activities();

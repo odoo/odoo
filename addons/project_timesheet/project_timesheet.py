@@ -548,10 +548,15 @@ class hr_analytic_timesheet(osv.Model):
                 #If record is missing we can not do anything with taht record, simply skip it
                 pass
             except AccessError, e:
-                #May be add to failed record
-                pass
+                current_record['fail_error'] = e
+                fail_records.append(current_record)
+            except ValueError, e:
+                #error = (_("Value Error"), _("Please check entered values, there is something missing in values."))
+                current_record['fail_error'] = e
+                fail_records.append(current_record)
             except Exception, e:
-                print "\n\nInside exception ::: ", e
+                current_record['fail_error'] = (_("Error"), _("Something went wrong with  this record, make sure you have all valid values."))
+                fail_records.append(current_record)
                 #import traceback
                 #traceback.print_exc()
                 #Here we can have except_orm, if there is ConcurrencyException, we will eiether simply pass or add those ids in concurrency_fail_ids because we need to re-read those records
