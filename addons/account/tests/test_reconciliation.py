@@ -159,4 +159,3 @@ class TestReconciliation(TransactionCase):
                 checked_line += 1
                 continue
         self.assertEquals(checked_line, 3)
-

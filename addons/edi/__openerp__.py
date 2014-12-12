@@ -43,5 +43,3 @@ documentation at http://doc.openerp.com.
     'qweb': ['static/src/xml/*.xml'],
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

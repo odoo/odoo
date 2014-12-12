@@ -28,4 +28,3 @@ class calendar_config_settings(osv.TransientModel):
         
         
     
-

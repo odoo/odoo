@@ -137,5 +137,3 @@ class wrapped_report_bilan(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_fr.report_l10nfrbilan'
     _wrapped_report_class = bilan
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

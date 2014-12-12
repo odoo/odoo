@@ -673,5 +673,3 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _defaults = {
         'to_invoice': lambda *a: True,
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

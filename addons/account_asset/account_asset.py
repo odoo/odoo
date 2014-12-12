@@ -477,6 +477,3 @@ class account_asset_history(osv.osv):
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, ctx: uid
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

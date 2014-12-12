@@ -175,5 +175,3 @@ class dummy_cache(object):
 
 # For backward compatibility
 cache = ormcache
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

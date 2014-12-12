@@ -82,5 +82,3 @@ class account_aged_trial_balance(osv.osv_memory):
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
         return self.pool['report'].get_action(cr, uid, [], 'account.report_agedpartnerbalance', data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

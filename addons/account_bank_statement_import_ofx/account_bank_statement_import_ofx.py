@@ -70,5 +70,3 @@ class account_bank_statement_import(osv.TransientModel):
         vals_bank_statement.update({'line_ids': line_ids})
         os.remove(path)
         return [vals_bank_statement]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

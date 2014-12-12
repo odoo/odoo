@@ -24,5 +24,3 @@ from . import test_purchase_to_invoice
 checks = [
     test_purchase_to_invoice,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

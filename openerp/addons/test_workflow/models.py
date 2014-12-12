@@ -64,5 +64,3 @@ for name in 'bcdefghijkl':
     class NewModel(openerp.osv.orm.Model):
         _name = 'test.workflow.model.%s' % name
         _inherit = 'test.workflow.model.a'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

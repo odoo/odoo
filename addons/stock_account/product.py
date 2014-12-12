@@ -182,4 +182,3 @@ class product_category(osv.osv):
             string="Stock Valuation Account",
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
-

@@ -21,5 +21,3 @@
 
 import account_asset_change_duration
 import wizard_asset_compute
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

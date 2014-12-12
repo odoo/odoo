@@ -41,4 +41,3 @@ This module adds issue menu and features to your portal if project_issue and por
     'auto_install': True,
     'category': 'Hidden',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

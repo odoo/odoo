@@ -595,4 +595,3 @@ class res_partner(osv.osv):
     _columns = {
         'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

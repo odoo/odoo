@@ -60,4 +60,3 @@ that have no counterpart in the general financial accounts.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -54,5 +54,3 @@ synchronization with other companies.
     'qweb' : ['static/src/xml/*.xml'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -54,6 +54,3 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
             'domain': "[('id','in',["+','.join(map(str,created_move_ids))+"])]",
             'type': 'ir.actions.act_window',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

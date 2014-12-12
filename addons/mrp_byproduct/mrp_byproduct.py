@@ -160,5 +160,3 @@ class change_production_qty(osv.osv_memory):
                         factor = prod_obj._get_subproduct_factor(cr, uid, prod.id, m.id, context=context)
                         subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty * factor or sub_product_line.product_qty
                         move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': subproduct_qty})
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

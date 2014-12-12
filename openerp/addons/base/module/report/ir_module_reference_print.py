@@ -87,7 +87,3 @@ class ir_module_reference_print(report_sxw.rml_parse):
 report_sxw.report_sxw('report.ir.module.reference', 'ir.module.module',
         'addons/base/module/report/ir_module_reference.rml',
         parser=ir_module_reference_print, header=False)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

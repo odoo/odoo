@@ -200,7 +200,3 @@ class wkf_triggers(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
 wkf_triggers()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

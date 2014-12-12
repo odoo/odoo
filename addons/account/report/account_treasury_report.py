@@ -78,5 +78,3 @@ class account_treasury_report(osv.osv):
             group by p.id, p.fiscalyear_id, p.date_start, am.company_id
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

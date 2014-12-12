@@ -66,6 +66,3 @@ class account_move_line_select(osv.osv_memory):
                 result['context'].update({'consolidate_children': True})
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

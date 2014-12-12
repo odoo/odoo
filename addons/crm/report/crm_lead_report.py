@@ -103,6 +103,3 @@ class crm_lead_report(osv.Model):
                 WHERE c.active = 'true'
                 GROUP BY c.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -84,6 +84,3 @@ class base_language_export(osv.osv_memory):
             'views': [(False, 'form')],
             'target': 'new',
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

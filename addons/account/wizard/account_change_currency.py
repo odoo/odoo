@@ -72,6 +72,3 @@ class account_change_currency(osv.osv_memory):
             obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
         obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

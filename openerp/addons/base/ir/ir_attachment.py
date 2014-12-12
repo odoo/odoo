@@ -453,5 +453,3 @@ class ir_attachment(osv.osv):
         ids = self.search(cr, uid, domain, context=context)
         if ids:
             self.unlink(cr, uid, ids, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

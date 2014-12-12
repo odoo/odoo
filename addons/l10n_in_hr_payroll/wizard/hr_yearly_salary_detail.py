@@ -56,5 +56,3 @@ class yearly_salary_detail(osv.osv_memory):
         res = res and res[0] or {}
         datas.update({'form':res})
         return self.pool['report'].get_action(cr, uid, ids, 'l10n_in_hr_payroll.report_hryearlysalary', data=datas, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

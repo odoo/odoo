@@ -1683,6 +1683,3 @@ class column_info(object):
         return '%s(%s, %s, %s, %s, %s)' % (
             self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

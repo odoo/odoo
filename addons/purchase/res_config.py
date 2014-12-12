@@ -96,5 +96,3 @@ class account_config_settings(osv.osv_memory):
         if not module_purchase_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

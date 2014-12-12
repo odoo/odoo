@@ -475,5 +475,3 @@ class account_move_line(osv.osv):
                     if new_status_is_paid:
                         expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

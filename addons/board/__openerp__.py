@@ -43,4 +43,3 @@ Allows users to create custom dashboard.
     'auto_install': False,
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

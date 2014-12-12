@@ -124,6 +124,3 @@ class report_membership(osv.osv):
             associate_member_id,
             membership_amount
         )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -96,6 +96,3 @@ class crm_helpdesk_report(osv.osv):
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
                      c.categ_id,c.channel_id,c.planned_cost,c.id
             )""")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

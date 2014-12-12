@@ -229,4 +229,3 @@ if __name__=="__main__":
     img = file(sys.argv[1],'rb').read().encode('base64')
     new = image_resize_image(img, (128,100))
     file(sys.argv[2], 'wb').write(new.decode('base64'))
-

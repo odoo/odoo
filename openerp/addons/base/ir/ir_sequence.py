@@ -399,5 +399,3 @@ class ir_sequence_date_range(models.Model):
                 if values.get('number_next'):
                     seq_date_id.sequence_main_id._alter_sequence(number_next=values.get('number_next'), seq_date_id=seq_date_id)
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

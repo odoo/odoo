@@ -98,4 +98,3 @@ The kernel of OpenERP, needed for all installation.
     'installable': True,
     'auto_install': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

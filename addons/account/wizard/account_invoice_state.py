@@ -64,6 +64,3 @@ class account_invoice_cancel(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
             record.signal_workflow('invoice_cancel')
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
