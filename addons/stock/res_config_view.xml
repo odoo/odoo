@@ -102,6 +102,10 @@
                                     <field name="module_stock_picking_wave" class="oe_inline"/>
                                     <label for="module_stock_picking_wave"/>
                                 </div>
+                                <div>
+                                    <field name="no_negative_stock" class="oe_inline"/>
+                                    <label for="no_negative_stock"/>
+                                </div>
                             </div>
                     </group>
                 </form>
@@ -118,6 +122,20 @@
 
         <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
             sequence="5" action="action_stock_config_settings"/>
+
+        <record id="stock_negative_inherited_company_view" model="ir.ui.view">
+            <field name="name">res.company.stock.negative</field>
+            <field name="model">res.company</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="stock_config" string="Warehouse">
+                        <field name="no_negative_stock"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>
