@@ -323,3 +323,10 @@ class stock_warehouse(osv.osv):
                         res.remove(product_id)
                         break
         return res
+
+class stock_quant(osv.Model):
+    _inherit = 'stock.quant'
+
+    def _get_account_move_ref(self, cr, uid, move, context=None):
+        return move.production_id.name or \
+            super(stock_quant, self)._get_account_move_ref(cr, uid, move, context=context)

@@ -209,7 +209,7 @@ class stock_quant(osv.osv):
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
-                    'name': move.name,
+                    'name': move.product_id.name or move.name,
                     'product_id': move.product_id.id,
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
@@ -221,7 +221,7 @@ class stock_quant(osv.osv):
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
-                    'name': move.name,
+                    'name': move.product_id.name or move.name,
                     'product_id': move.product_id.id,
                     'quantity': qty,
                     'product_uom_id': move.product_id.uom_id.id,
@@ -233,6 +233,9 @@ class stock_quant(osv.osv):
                     'account_id': credit_account_id,
         }
         return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+
+    def _get_account_move_ref(self, cr, uid, move, context=None):
+        return move.picking_id.name or move.name
 
     def _create_account_move_line(self, cr, uid, quants, move, credit_account_id, debit_account_id, journal_id, context=None):
         #group quants by cost
@@ -250,7 +253,7 @@ class stock_quant(osv.osv):
                                       'line_id': move_lines,
                                       'period_id': period_id,
                                       'date': move.date,
-                                      'ref': move.picking_id.name}, context=context)
+                                      'ref': self._get_account_move_ref(cr, uid, move, context=context)}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
