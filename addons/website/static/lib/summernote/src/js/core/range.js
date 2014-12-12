@@ -618,7 +618,25 @@ define([
        * @return {WrappedRange}
        */
       createFromNode: function (node) {
-        return this.create(node, 0, node, 1);
+        var sc = node;
+        var so = 0;
+        var ec = node;
+        var eo = dom.nodeLength(ec);
+
+        // browsers can't target a picture or void node
+        if (dom.isVoid(sc) || dom.isImg(sc)) {
+          so = dom.listPrev(sc).length-1;
+          sc = sc.parentNode;
+        }
+        if (dom.isBR(ec)) {
+          eo = dom.listPrev(ec).length-1;
+          ec = ec.parentNode;
+        } else if (dom.isVoid(ec) || dom.isImg(sc)) {
+          eo = dom.listPrev(ec).length;
+          ec = ec.parentNode;
+        }
+
+        return this.create(sc, so, ec, eo);
       },
 
       /**
