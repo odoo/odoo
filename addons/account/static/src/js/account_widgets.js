@@ -1238,7 +1238,7 @@ openerp.account = function (instance) {
                     self.$(".change_statement_name_container").hide();
                 }).always(function() {
                     self.$(".change_statement_name_button").removeAttr("disabled");
-                })
+                });
         },
 
         updateProgressbar: function() {
@@ -1255,7 +1255,10 @@ openerp.account = function (instance) {
             if (reconciliations.length === 0) return;
             var self = this;
             var data = _.collect(reconciliations, function(o) {
-                return [o.st_line_id, o.makeMoveLineDicts()];
+                return {
+                    'st_line_id': o.st_line_id,
+                    'mv_line_dicts': o.makeMoveLineDicts()
+                };
             });
             var deferred_animation = self.$(".reconciliation_lines_container").fadeOut(self.aestetic_animation_speed);
             var deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [data]);

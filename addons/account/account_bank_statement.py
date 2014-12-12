@@ -578,7 +578,7 @@ class account_bank_statement_line(models.Model):
     @api.model
     def process_reconciliations(self, data):
         for datum in data:
-            self.browse(datum[0]).process_reconciliation(datum[1])
+            self.browse(datum['st_line_id']).process_reconciliation(datum['mv_line_dicts'])
 
     @api.v7
     def process_reconciliation(self, cr, uid, st_line_id, mv_line_dicts, context=None):
@@ -586,9 +586,10 @@ class account_bank_statement_line(models.Model):
 
     @api.v8
     def process_reconciliation(self, mv_line_dicts):
-        """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified. Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
+        """ Create a move line for the statement line and for each item in mv_line_dicts. Reconcile a new move line with its counterpart_move_line_id if specified.
+            Finally, mark the statement line as reconciled by putting the newly created move id in the field journal_entry_id.
 
-            :param list of dicts mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it
+            :param dict[] mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it
         """
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency or company_currency
@@ -711,12 +712,9 @@ class account_bank_statement_line(models.Model):
         # Mark the statement line as reconciled
         self.journal_entry_id = move_id.id
 
-    # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
-    # return [('journal_entry_id', '=', False)]
-    # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     @api.model
     def _needaction_domain_get(self):
-        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [self.env.user.company_id.id]), ('journal_entry_id', '=', False)]
+        return [('journal_entry_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"

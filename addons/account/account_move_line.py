@@ -178,50 +178,49 @@ class account_move_line(models.Model):
         return journal_id
 
     name = fields.Char(required=True)
-    quantity = fields.Float(digits=(16,2), 
+    quantity = fields.Float(digits=(16,2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
-    product_id = fields.Many2one('product.product')
+    product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
     credit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
-    amount_currency = fields.Float(default=0.0,  digits=dp.get_precision('Account'),
+    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    currency_id = fields.Many2one('res.currency', default=_get_currency, 
+    currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
         help="The optional other currency if it is a multi-currency entry.")
     amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in the company currency.")
     amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
-    account_id = fields.Many2one('account.account', required=True, index=True,
-        ondelete="cascade", domain=[('deprecated', '=', False)],
-        default=lambda self: self._context.get('account_id', False))
-    move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
+    account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
+        ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
+    move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True)
-    statement_id = fields.Many2one('account.bank.statement', 
+    statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    reconcile_id = fields.Many2one('account.move.reconcile', 
+    reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
-    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with', help='Moves in which this move is involved for partial reconciliation')
-    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation', help='Moves involved in this move partial reconciliation')
+    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with',
+        help='Moves in which this move is involved for partial reconciliation')
+    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation',
+        help='Moves involved in this move partial reconciliation')
     reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
-    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', 
+    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due date', index=True ,
-        help="This field is used for payable and receivable journal entries. "\
-        "You can put the limit date for the payment of this line.")
-    date = fields.Date(related='move_id.date', string='Effective date', required=True,
-        index=True, default=fields.Date.context_today, store=True)
-    analytic_lines = fields.One2many('account.analytic.line', 'move_id')
+        help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
+    date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True)
+    analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True) # TODO : better string
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    company_id = fields.Many2one('res.company', related='account_id.company_id', store=True,
+    company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
 
     # TODO: put the invoice link and partner_id on the account_move
@@ -253,7 +252,7 @@ class account_move_line(models.Model):
     def _check_currency_and_amount(self):
         for line in self:
             if (line.amount_currency and not line.currency_id):
-                raise Warning(_("You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."))
+                raise Warning(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
 
     @api.multi
     @api.constrains('amount_currency')
@@ -304,12 +303,14 @@ class account_move_line(models.Model):
 
     @api.model
     def get_data_for_manual_reconciliation(self, res_type, res_id=None):
-        """ Returns the data required for the  manual reconciliation of a given partner/account.
-            If no id is passed, returns data for all partners/accounts that can be reconciled.
-            :param res_type: either 'partner' or 'account' """
+        """ Returns the data required for the  manual reconciliation of partners/accounts.
+            If no res_id is passed, returns data for all partners/accounts that can be reconciled.
 
+            :param res_type: either 'partner' or 'account'
+            :param res_id: id of the partner/account to reconcile
+        """
         is_partner = res_type == 'partner'
-        res_id_condition = res_id and 'AND r.id = '+str(res_id) or ''
+        res_alias = is_partner and 'p' or 'a'
         self.env.cr.execute(
             """ SELECT %s account_id, account_name, account_code, max_date, to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked FROM (
                     SELECT %s
@@ -344,15 +345,15 @@ class account_move_line(models.Model):
                 ) as s
                 WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
             """ % (
-                is_partner and "partner_id, partner_name," or ' ',
-                is_partner and "p.id AS partner_id, p.name AS partner_name," or ' ',
-                is_partner and "p" or "a",
-                is_partner and "RIGHT JOIN res_partner p ON (l.partner_id = p.id)" or ' ',
-                is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
-                res_id_condition,
-                is_partner and "l.partner_id, p.id," or ' ',
-                is_partner and "p" or "a",
-                is_partner and "p" or "a",
+                is_partner and 'partner_id, partner_name,' or ' ',
+                is_partner and 'p.id AS partner_id, p.name AS partner_name,' or ' ',
+                res_alias,
+                is_partner and 'RIGHT JOIN res_partner p ON (l.partner_id = p.id)' or ' ',
+                is_partner and ' ' or 'AND at.type <> "payable" AND at.type <> "receivable"',
+                res_id and 'AND '+res_alias+'.id = '+str(res_id) or '',
+                is_partner and 'l.partner_id, p.id,' or ' ',
+                res_alias,
+                res_alias,
             ))
 
         # Apply ir_rules by filtering out
@@ -698,12 +699,12 @@ class account_move_line(models.Model):
             account move lines that were not reconciled during the process
         """
         sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
-        #there is no more pair to reconcile so return what move_line are left 
+        #there is no more pair to reconcile so return what move_line are left
         if not sm_credit_move or not sm_debit_move:
             return self
 
         #Reconcile the pair together
-        amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual) 
+        amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual)
         #Remove from recordset the one(s) that will be totally reconciled
         if amount_reconcile == sm_debit_move.amount_residual:
             self -= sm_debit_move
@@ -727,7 +728,7 @@ class account_move_line(models.Model):
             if (move.account_id.user_type.type in ('receivable', 'payable')):
                 partners.append(move.partner_id.id)
             if move.reconciled:
-                raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))      
+                raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))
 
         if len(set(company_ids)) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries!'))
