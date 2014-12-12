@@ -80,7 +80,7 @@ class procurement_rule(osv.osv):
         return []
 
     _columns = {
-        'name': fields.char('Name', required=True,
+        'name': fields.char('Name', required=True, translate=True,
             help="This field will fill the packing origin and the name of its moves"),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
         'group_propagation_option': fields.selection([('none', 'Leave Empty'), ('propagate', 'Propagate'), ('fixed', 'Fixed')], string="Propagation of Procurement Group"),
