@@ -56,18 +56,14 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         ))
 
         # I manually assign tax on invoice
-        self.invoice_tax_obj = self.env['account.invoice.tax']
-        amt = self.invoice_tax_obj.amount_change(50.0, self.env.ref('base.EUR').id, self.env.ref('base.main_company').id, False)
-        base_amt = self.invoice_tax_obj.base_change(9000.0, self.env.ref('base.EUR').id, self.env.ref('base.main_company').id, False)
         invoice_tax_line = {
             'name':  'Test Tax for Customer Invoice',
             'manual': 1,
-            'base': base_amt['value']['base_amount'],
-            'amount': amt['value']['tax_amount'],
+            'amount': 9050,
             'account_id': self.env.ref('account.ova').id,
             'invoice_id': self.account_invoice_customer0.id,
         }
-        tax = self.invoice_tax_obj.create(invoice_tax_line)
+        tax = self.env['account.invoice.tax'].create(invoice_tax_line)
         assert tax, "Tax has not been assigned correctly"
 
         # I check that Initially customer invoice is in the "Draft" state
