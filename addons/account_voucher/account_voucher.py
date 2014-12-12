@@ -393,7 +393,7 @@ class account_voucher_line(models.Model):
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')
     def _compute_subtotal(self):
         taxes = self.tax_ids.compute_all(self.price_unit, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
-        self.price_subtotal = taxes['total']
+        self.price_subtotal = taxes['total_excluded']
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10,
