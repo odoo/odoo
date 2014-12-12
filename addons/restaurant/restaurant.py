@@ -21,35 +21,34 @@
 
 import logging
 
-import openerp
-from openerp import tools
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+
 
 class restaurant_printer(osv.osv):
     _name = 'restaurant.printer'
 
     _columns = {
-        'name' : fields.char('Printer Name', size=32, required=True, help='An internal identification of the printer'),
+        'name': fields.char('Printer Name', size=32, required=True, help='An internal identification of the printer'),
         'proxy_ip': fields.char('Proxy IP Address', size=32, help="The IP Address or hostname of the Printer's hardware proxy"),
-        'product_categories_ids': fields.many2many('pos.category','printer_category_rel', 'printer_id','category_id',string='Printed Product Categories'),
+        'product_categories_ids': fields.many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories'),
     }
 
     _defaults = {
-        'name' : 'Printer',
+        'name': 'Printer',
     }
+
 
 class pos_config(osv.osv):
     _inherit = 'pos.config'
     _columns = {
         'iface_splitbill': fields.boolean('Bill Splitting', help='Enables Bill Splitting in the Point of Sale'),
         'iface_printbill': fields.boolean('Bill Printing', help='Allows to print the Bill before payment'),
-        'printer_ids':     fields.many2many('restaurant.printer','pos_config_printer_rel', 'config_id','printer_id',string='Order Printers'),
+        'printer_ids':     fields.many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers'),
     }
     _defaults = {
         'iface_splitbill': False,
         'iface_printbill': False,
     }
-            
+
