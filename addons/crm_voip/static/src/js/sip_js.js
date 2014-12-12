@@ -3,6 +3,7 @@ openerp.sip_js = function(instance) {
     this.init = function() {
         var self = this;
         self.in_automatic_mode = false;
+        self.onCall = false;
         new openerp.web.Model("crm.phonecall").call("get_pbx_config").then(function(result){
             self.config = result;
             var ua_config = {};
@@ -33,13 +34,12 @@ openerp.sip_js = function(instance) {
             audio.loop = "true";
             audio.src = "/crm_voip/static/src/sounds/ringbacktone.wav";
             document.body.appendChild(audio);
-
-            
         });
     };
 
     //success callback function of the getUserMedia function
     function getUserMediaSuccess(stream) {
+        console.log('getUserMedia succeeded', stream);
         var self = this;
         self.mediaStream = stream;
         if(!self.session){
@@ -66,6 +66,8 @@ openerp.sip_js = function(instance) {
                 };    
                 //Make the call
                 self.session = self.ua.invite(number,call_options);
+                //self.session = self.ua.invite("2001",call_options);
+
                 //Select the current call if not already selected
                 if($(".oe_dial_selected_phonecall").data('id') !== self.current_phonecall.id ){
                     openerp.client.action_manager.do_action({
@@ -76,7 +78,6 @@ openerp.sip_js = function(instance) {
                 }
                 //Add the microhpone icon next to the current call
                 $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == self.current_phonecall.id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
-                //Bind action when we receive a call
                 self.ua.on('invite', function (invite_session){
                     console.log(invite_session.remoteIdentity.displayName);
                     var confirmation = confirm("Incomming call from " + invite_session.remoteIdentity.displayName);
@@ -128,11 +129,10 @@ openerp.sip_js = function(instance) {
                     var id = self.current_phonecall.id;
                     //Remove the microphone icon
                     $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
-                    if(self.in_automatic_mode === true){
+                    if(self.in_automatic_mode){
                         self.next_call();
                     }else{
-                        $('.oe_dial_big_callbutton').html("Call");
-                        $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+                        self.stop_automatic_call();
                     }
                 });
                 //Bind action when the call is transfered
@@ -147,13 +147,7 @@ openerp.sip_js = function(instance) {
                     var id = self.current_phonecall.id;
                     $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                     //TODO if the sale cancel one call, continue the automatic call or not ? 
-                    if(self.in_automatic_mode === true){
-                        self.next_call();
-                    }else{
-                        $('.oe_dial_big_callbutton').html("Call");
-                        $(".oe_dial_transferbutton").attr('disabled','disabled');
-                        $(".oe_dial_hangupbutton").attr('disabled','disabled');
-                    }
+                    self.stop_automatic_call();
                 });
                 //Bind action when the call is hanged up
                 self.session.on('bye',function(){
@@ -168,12 +162,8 @@ openerp.sip_js = function(instance) {
                         self.logCall(duration);
                         var id = self.current_phonecall.id;
                         $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
-                        if(self.in_automatic_mode === true){
-                            self.next_call();
-                        }else{
-                            $('.oe_dial_big_callbutton').html("Call");
-                            $(".oe_dial_transferbutton").attr('disabled','disabled');
-                            $(".oe_dial_hangupbutton").attr('disabled','disabled');
+                        if(!self.in_automatic_mode){
+                            self.stop_automatic_call();
                         }
                     });    
                 });
@@ -197,15 +187,16 @@ openerp.sip_js = function(instance) {
             self.phonecalls_ids = [];
             self.phonecalls = phonecalls_list;
             for (var phone in self.phonecalls){
+                console.log(self.phonecalls[phone]);
                 if(self.phonecalls[phone].state != "done"){
                     self.phonecalls_ids.push(phone);
                 }
             }
             if(self.phonecalls_ids.length){
-                current_call = self.phonecalls[self.phonecalls_ids.shift()];
-                call(current_call);
+                var current_call = self.phonecalls[self.phonecalls_ids.shift()];
+                self.call(current_call);
             }else{
-                stop_automatic_call();
+                self.stop_automatic_call();
             }
         }
     };
@@ -219,15 +210,15 @@ openerp.sip_js = function(instance) {
         };
         //if there is already a mediaStream, it is reused
         if (self.mediaStream) {
-            getUserMediaSuccess(self.mediaStream);
+            getUserMediaSuccess.call(self,self.mediaStream);
         } else {
             if (SIP.WebRTC.isSupported()) {
-                /*
-                    WebRTC method to get a mediastream
-                    The callbacks functions are getUserMediaSuccess, when the function succeed
-                    and getUserMediaFailure when the function failed
-                */
-                SIP.WebRTC.getUserMedia(mediaConstraints, _.bind(getUserMediaSuccess,this), _.bind(getUserMediaFailure,this));
+                /*      
+                    WebRTC method to get a mediastream      
+                    The callbacks functions are getUserMediaSuccess, when the function succeed      
+                    and getUserMediaFailure when the function failed        
+                */ 
+                SIP.WebRTC.getUserMedia(mediaConstraints, _.bind(getUserMediaSuccess,self), _.bind(getUserMediaFailure,self));
             }
         }
     };
@@ -236,11 +227,11 @@ openerp.sip_js = function(instance) {
         var self = this;
         if(self.phonecalls_ids.length){
             if(!self.session){
-                current_call = self.phonecalls[self.phonecalls_ids.shift()];
-                call(current_call);
+                var current_call = self.phonecalls[self.phonecalls_ids.shift()];
+                self.call(current_call);
             }
         }else{
-            stop_automatic_call();
+            self.stop_automatic_call();
         }
     }
 
@@ -315,7 +306,8 @@ openerp.sip_js = function(instance) {
                 'default_partner_name' : self.current_phonecall.partner_name,
                 'default_partner_phone' : self.current_phonecall.partner_phone,
                 'default_partner_email' : self.current_phonecall.partner_email,
-                'default_partner_image_small' : self.current_phonecall.partner_image_small,},
+                'default_partner_image_small' : self.current_phonecall.partner_image_small,
+                'default_in_automatic_mode': self.in_automatic_mode,},
                 views: [[false, 'form']],
                 flags: {
                     'headless': true,

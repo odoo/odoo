@@ -86,6 +86,7 @@ openerp.crm_voip = function(instance) {
             openerp.web.bus.on('reload_panel', this, this.search_phonecalls_status);
             openerp.web.bus.on('transfer_call',this,this.transfer_call);
             openerp.web.bus.on('select_call',this,this.select_call);
+            openerp.web.bus.on('next_call',this,this.next_call);
             return;
         },
 
@@ -130,10 +131,17 @@ openerp.crm_voip = function(instance) {
                 //for each phonecall display it only if the date is lower than the current one
                 //if the refresh is done by the user, retrieve the phonecalls set as "done"
                 _.each(result.phonecalls, function(phonecall){
-                    if(Date.parse(phonecall.date) <= Date.now()){
+
+                    date = new Date(phonecall.date);
+                    date_now = new Date(Date.now());
+
+                    if(date.getDate() <= date_now.getDate() && date.getMonth() <= date_now.getMonth()){
+                        
+                            console.log("DISPLAY PANEL")
                         phonecall_displayed = true;
                         if(refresh_by_user){
                             if(phonecall.state != "done"){
+
                                 self.display_in_queue(phonecall);
                             }else{
                                 new openerp.web.Model("crm.phonecall").call("remove_from_queue",[phonecall.id]);
@@ -450,6 +458,10 @@ openerp.crm_voip = function(instance) {
                 views: [[false, 'form']],
             });
         },
+
+        next_call: function(){
+            this.sip_js.next_call();
+        },
     });
     
     //Creation of the panel and binding of the display with the button in the top bar
@@ -495,6 +507,9 @@ openerp.crm_voip = function(instance) {
                     flags: {initial_mode: "edit",},
                 });
             });
+        }
+        if(params.in_automatic_mode){
+            openerp.web.bus.trigger('next_call');
         }
         openerp.web.bus.trigger('reload_panel');
         //Return an action to close the wizard after the reload of the panel
