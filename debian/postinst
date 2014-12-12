@@ -14,7 +14,7 @@ case "${1}" in
             adduser --system --home $ODOO_DATA_DIR --quiet --group $ODOO_USER
         fi
         # Register "openerp" as a postgres superuser 
-        su - postgres -c "createuser -s openerp" 2> /dev/null || true
+        su - postgres -c "createuser -d openerp" 2> /dev/null || true
         # Configuration file
         chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
         chmod 0640 $ODOO_CONFIGURATION_FILE

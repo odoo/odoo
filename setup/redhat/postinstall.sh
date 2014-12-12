@@ -14,7 +14,7 @@ if ! getent passwd | grep -q "^openerp:"; then
     adduser --system --no-create-home $ODOO_USER -g $ODOO_GROUP
 fi
 # Register "openerp" as a postgres superuser 
-su - postgres -c "createuser -s openerp" 2> /dev/null || true
+su - postgres -c "createuser -d openerp" 2> /dev/null || true
 # Configuration file
 mkdir -p $ODOO_CONFIGURATION_DIR
 echo "[options]
