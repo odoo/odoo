@@ -158,10 +158,6 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                 min = 0;
                 hour = hour + 1;
             }
-            console.log("FORMAT JS");
-            console.log("Value " + value);
-            console.log(descriptor);
-            console.log(_.str.sprintf(pattern, hour, min))
             return _.str.sprintf(pattern, hour, min);
         case 'many2one':
             // name_get value format

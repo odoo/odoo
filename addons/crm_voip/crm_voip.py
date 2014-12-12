@@ -228,6 +228,7 @@ class crm_phonecall_log_wizard(models.TransientModel):
     new_date_action = fields.Date()
     show_duration = fields.Boolean()
     custom_duration = fields.Float(default=0)
+    in_automatic_mode = fields.Boolean()
 
     def schedule_again(self):
         new_phonecall = self.env['crm.phonecall'].create({
@@ -277,12 +278,13 @@ class crm_phonecall_log_wizard(models.TransientModel):
             self.schedule_again()
 
     @api.multi
-    def save_keep(self):
+    def save(self):
         phonecall = self.env['crm.phonecall'].browse(self._context.get('phonecall_id'))
         self.modify_phonecall(phonecall)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
+            'params': {'in_automatic_mode': self.in_automatic_mode},
         }
 
     @api.multi
@@ -294,7 +296,8 @@ class crm_phonecall_log_wizard(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
             'params': {'go_to_opp': True,
-                       'opportunity_id': self.opportunity_id},
+                       'opportunity_id': self.opportunity_id,
+                       'in_automatic_mode': self.in_automatic_mode},
         }
 
 
