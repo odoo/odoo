@@ -130,7 +130,7 @@ class ReportController(Controller):
                 return response
             else:
                 return
-        except osv.except_osv, e:
+        except Exception, e:
             se = _serialize_exception(e)
             error = {
                 'code': 200,
