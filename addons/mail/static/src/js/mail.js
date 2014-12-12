@@ -1890,7 +1890,7 @@ openerp.mail = function (session) {
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
                 'emails_from_on_composer': false,
-                'fetch_limit': 1000   // allow inbox to load all children messages
+                'fetch_limit': 30   // allow inbox to load all children messages
             }, this.action.params);
         },
 
