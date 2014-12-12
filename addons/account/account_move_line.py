@@ -24,7 +24,7 @@ class account_partial_reconcile(models.Model):
 
 class account_move_line(models.Model):
     _name = "account.move.line"
-    _description = "Journal Items"
+    _description = "Journal Item"
     _order = "date desc, id desc"
 
     @api.model
@@ -81,25 +81,25 @@ class account_move_line(models.Model):
 
     @api.model
     def _prepare_analytic_line(self, obj_line):
-        """
-        Prepare the values given at the create() of account.analytic.line upon the validation of a journal item having
-        an analytic account. This method is intended to be extended in other modules.
+        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
+            an analytic account. This method is intended to be extended in other modules.
 
-        :param obj_line: browse record of the account.move.line that triggered the analytic line creation
+            :param obj_line: browse record of the account.move.line that triggered the analytic line creation
         """
-        return {'name': obj_line.name,
-                'date': obj_line.date,
-                'account_id': obj_line.analytic_account_id.id,
-                'unit_amount': obj_line.quantity,
-                'product_id': obj_line.product_id and obj_line.product_id.id or False,
-                'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
-                'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
-                'general_account_id': obj_line.account_id.id,
-                'journal_id': obj_line.journal_id.analytic_journal_id.id,
-                'ref': obj_line.ref,
-                'move_id': obj_line.id,
-                'user_id': self._uid,
-               }
+        return {
+            'name': obj_line.name,
+            'date': obj_line.date,
+            'account_id': obj_line.analytic_account_id.id,
+            'unit_amount': obj_line.quantity,
+            'product_id': obj_line.product_id and obj_line.product_id.id or False,
+            'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
+            'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
+            'general_account_id': obj_line.account_id.id,
+            'journal_id': obj_line.journal_id.analytic_journal_id.id,
+            'ref': obj_line.ref,
+            'move_id': obj_line.id,
+            'user_id': self._uid,
+        }
 
     @api.multi
     def create_analytic_lines(self):
@@ -128,7 +128,8 @@ class account_move_line(models.Model):
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
-            for unreconciled lines, and something in-between for partially reconciled lines. """
+            for unreconciled lines, and something in-between for partially reconciled lines.
+        """
         for line in self:
 
             amount = abs(line.debit - line.credit)
@@ -176,39 +177,38 @@ class account_move_line(models.Model):
             journal_id = recs[0].id
         return journal_id
 
-    name = fields.Char(string='Name', required=True)
-    quantity = fields.Float(string='Quantity', digits=(16,2), 
-        help="The optional quantity expressed by this line, eg: number of product sold. "\
-        "The quantity is not a legal requirement but is very useful for some reports.")
+    name = fields.Char(required=True)
+    quantity = fields.Float(digits=(16,2), 
+        help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
-    product_id = fields.Many2one('product.product', string='Product')
-    debit = fields.Float(string='Debit', digits=dp.get_precision('Account'), default=0.0)
-    credit = fields.Float(string='Credit', digits=dp.get_precision('Account'), default=0.0)
-    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=dp.get_precision('Account'),
+    product_id = fields.Many2one('product.product')
+    debit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
+    credit = fields.Float(digits=dp.get_precision('Account'), default=0.0)
+    amount_currency = fields.Float(default=0.0,  digits=dp.get_precision('Account'),
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency, 
+    currency_id = fields.Many2one('res.currency', default=_get_currency, 
         help="The optional other currency if it is a multi-currency entry.")
     amount_residual = fields.Float(compute='_amount_residual', string='Residual Amount', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in the company currency.")
     amount_residual_currency = fields.Float(compute='_amount_residual', string='Residual Amount in Currency', store=True, digits=dp.get_precision('Account'),
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
-    account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
+    account_id = fields.Many2one('account.account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)],
         default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade", 
         help="The move of this entry line.", index=True, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True)
-    statement_id = fields.Many2one('account.bank.statement', string='Statement', 
+    statement_id = fields.Many2one('account.bank.statement', 
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile', 
+    reconcile_id = fields.Many2one('account.move.reconcile', 
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
     reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with', help='Moves in which this move is involved for partial reconciliation')
     reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation', help='Moves involved in this move partial reconciliation')
     reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
         readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
-    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
+    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', 
         default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
@@ -217,12 +217,11 @@ class account_move_line(models.Model):
         "You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True,
         index=True, default=fields.Date.context_today, store=True)
-    analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
+    analytic_lines = fields.One2many('account.analytic.line', 'move_id')
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True) # TODO : better string
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
-    company_id = fields.Many2one('res.company', related='account_id.company_id',
-        string='Company', store=True,
+    company_id = fields.Many2one('res.company', related='account_id.company_id', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
 
     # TODO: put the invoice link and partner_id on the account_move
