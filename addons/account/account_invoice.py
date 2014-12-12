@@ -1419,6 +1419,11 @@ class account_invoice_line(osv.osv):
     _name = "account.invoice.line"
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
+
+    def _get_lines_from_invoice(self, cr, uid, ids, context=None):
+        invoices = self.pool.get('account.invoice').browse(cr, uid, ids, context=context)
+        return [l.id for st in invoices for l in st.invoice_line]
+
     _columns = {
         'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
@@ -1434,8 +1439,10 @@ class account_invoice_line(osv.osv):
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
-        'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
+        'company_id': fields.related('invoice_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True,
+                                     store={'account.invoice': (_get_lines_from_invoice, ['company_id'], 10)}),
+        'partner_id': fields.related('invoice_id', 'partner_id', type='many2one', relation='res.partner', string='Partner',
+                                     store={'account.invoice': (_get_lines_from_invoice, ['partner_id'], 10)})
     }
 
     def _default_account_id(self, cr, uid, context=None):
