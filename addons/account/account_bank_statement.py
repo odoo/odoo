@@ -670,16 +670,16 @@ class account_bank_statement_line(models.Model):
                     debit_at_current_rate = company_currency.round(mv_line_dict['debit'] / st_line_currency_rate)
                     credit_at_current_rate = company_currency.round(mv_line_dict['credit'] / st_line_currency_rate)
                 elif self.currency_id and st_line_currency_rate:
-                    debit_at_current_rate = statement_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['debit'] / st_line_currency_rate)
-                    credit_at_current_rate = statement_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['credit'] / st_line_currency_rate)
+                    debit_at_current_rate = statement_currency.with_context(ctx).compute(mv_line_dict['debit'] / st_line_currency_rate, company_currency)
+                    credit_at_current_rate = statement_currency.with_context(ctx).compute(mv_line_dict['credit'] / st_line_currency_rate, company_currency)
                 else:
-                    debit_at_current_rate = st_line_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['debit'])
-                    credit_at_current_rate = st_line_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['credit'])
+                    debit_at_current_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['debit'], company_currency)
+                    credit_at_current_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['credit'], company_currency)
                 if mv_line_dict.get('counterpart_move_line_id'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
-                    debit_at_old_rate = st_line_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['debit'])
-                    credit_at_old_rate = st_line_currency.with_context(ctx).compute(company_currency.id, mv_line_dict['credit'])
+                    debit_at_old_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['debit'], company_currency)
+                    credit_at_old_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['credit'], company_currency)
                     mv_line_dict['credit'] = credit_at_old_rate
                     mv_line_dict['debit'] = debit_at_old_rate
                     if debit_at_old_rate - debit_at_current_rate:

@@ -962,7 +962,7 @@ class account_move_line(models.Model):
                 if 'date' in vals:
                     ctx['date'] = vals['date']
                 vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(
-                    account.currency_id.id, vals.get('debit', 0.0) - vals.get('credit', 0.0))
+                    vals.get('debit', 0.0) - vals.get('credit', 0.0), account.currency_id)
         if not ok:
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
         result = super(account_move_line, self).create(vals)

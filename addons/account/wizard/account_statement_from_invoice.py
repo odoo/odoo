@@ -19,7 +19,6 @@ class account_statement_from_invoice_lines(models.TransientModel):
         if not self.line_ids:
             return {'type': 'ir.actions.act_window_close'}
 
-        CurrencyObj = self.env['res.currency']
         statement = self.env['account.bank.statement'].browse(statement_id)
 
         # for each selected move lines
@@ -35,11 +34,9 @@ class account_statement_from_invoice_lines(models.TransientModel):
                 amount = -line.credit
 
             if line.amount_currency:
-                amount = CurrencyObj.with_context(ctx).compute(line.currency_id.id,
-                    statement.currency.id, line.amount_currency)
+                amount = line.currency_id.with_context(ctx).compute(line.amount_currency, statement.currency)
             elif (line.invoice and line.invoice.currency_id.id != statement.currency.id):
-                amount = CurrencyObj.with_context(ctx).compute(line.invoice.currency_id.id,
-                    statement.currency.id, amount)
+                amount = line.invoice.currency_id.with_context(ctx).compute(amount, statement.currency)
 
             context.update({'move_line_ids': [line.id],
                             'invoice_id': line.invoice.id})
