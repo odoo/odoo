@@ -22,6 +22,7 @@
 from openerp.addons.web.http import Controller, route, request
 from openerp.addons.web.controllers.main import _serialize_exception
 from openerp.osv import osv
+from openerp.tools import html_escape
 
 import simplejson
 from werkzeug import exceptions, url_decode
@@ -137,7 +138,7 @@ class ReportController(Controller):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return request.make_response(simplejson.dumps(error))
+            return request.make_response(html_escape(simplejson.dumps(error)))
 
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):
