@@ -161,6 +161,9 @@ $sheet-padding: 16px
 .oe_systray
     margin-right: 0px !important
 
+.apps-client
+    border: 0
+
 // Notifications {{{
 .oe_notification
     z-index: 1600
@@ -1616,7 +1619,7 @@ $sheet-padding: 16px
             td.oe_form_group_cell_label
                 border-right: none
             .oe_subtotal_footer_separator
-                width: 108px
+                min-width: 108px
                 border-top: 1px solid #cacaca
                 margin-top: 4px
                 padding-top: 4px
@@ -2490,6 +2493,7 @@ div.ui-widget-overlay
         padding: 0
         a
             padding: 1px 16px
+            color: #404040
         a.ui-corner-all
             @include radius(0)
         a.ui-state-active

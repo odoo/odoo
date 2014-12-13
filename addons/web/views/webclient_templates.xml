@@ -250,7 +250,7 @@
                 <t t-set="body_classname" t-value="'oe_single_form'"/>
                 <div class="oe_single_form_container modal-content">
                     <div class="oe_single_form_logo">
-                        <img src="/web/binary/company_logo"/>
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
                     </div>
                     <hr/>
                     <t t-raw="0"/>

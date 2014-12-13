@@ -224,8 +224,8 @@
                         <group>
                             <field name="date_order"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
                             <field name="related_location_id" invisible="1"/>
                             <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id, context)"
                                 attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
@@ -240,7 +240,7 @@
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="name"/>
                                     <field name="date_planned"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
                                     <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>
@@ -377,7 +377,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a request for quotation.
               </p><p>
-                The quotation contains the history of the discussion/negociation
+                The quotation contains the history of the discussion/negotiation
                 you had with your supplier. Once confirmed, a request for
                 quotation is converted into a purchase order.
               </p><p>
@@ -431,7 +431,7 @@
                                 <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date"/>
                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -496,7 +496,7 @@
                                 <field name="taxes_id" widget="many2many_tags"
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting"/>
                                 <field name="invoiced"/>
                             </group>

@@ -80,7 +80,7 @@
                                 <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
                                     />
                             </td>
                         </tr><tr>
@@ -198,6 +198,7 @@
             <field name="name">account.analytic.account.list.contract</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <field name="date_start" position="before">
                     <field name="last_invoice_date"/>

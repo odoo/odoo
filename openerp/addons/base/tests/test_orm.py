@@ -111,6 +111,18 @@ class TestORM(common.TransactionCase):
         found = self.partner.search_read(self.cr, UID, [['name', '=', 'Does not exists']], ['name'])
         self.assertEqual(len(found), 0)
 
+    def test_exists(self):
+        partner = self.partner.browse(self.cr, UID, [])
+
+        # check that records obtained from search exist
+        recs = partner.search([])
+        self.assertTrue(recs)
+        self.assertEqual(recs.exists(), recs)
+
+        # check that there is no record with id 0
+        recs = partner.browse([0])
+        self.assertFalse(recs.exists())
+
     def test_groupby_date(self):
         partners = dict(
             A='2012-11-19',

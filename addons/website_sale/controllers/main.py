@@ -126,9 +126,10 @@ class website_sale(http.Controller):
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
-                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, price])
         else:
-            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
+            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, p.lst_price]
+                for p in product.product_variant_ids]
 
         return attribute_value_ids
 
@@ -145,7 +146,7 @@ class website_sale(http.Controller):
             domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
                 ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
         if category:
-            domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
+            domain += [('public_categ_ids', 'child_of', int(category))]
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
@@ -509,7 +510,12 @@ class website_sale(http.Controller):
         orm_user = registry.get('res.users')
         order_obj = request.registry.get('sale.order')
 
-        billing_info = self.checkout_parse('billing', checkout, True)
+        partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
+
+        billing_info = {}
+        if partner_lang:
+            billing_info['lang'] = partner_lang
+        billing_info.update(self.checkout_parse('billing', checkout, True))
 
         # set partner_id
         partner_id = None
@@ -530,7 +536,10 @@ class website_sale(http.Controller):
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
-            shipping_info = self.checkout_parse('shipping', checkout, True)
+            shipping_info = {}
+            if partner_lang:
+                shipping_info['lang'] = partner_lang
+            shipping_info.update(self.checkout_parse('shipping', checkout, True))
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)

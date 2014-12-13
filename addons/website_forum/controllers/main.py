@@ -211,6 +211,7 @@ class WebsiteForum(http.Controller):
     def question_create(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
         question_tag_ids = []
         tag_version = post.get('tag_type', 'texttext')
         if tag_version == "texttext":  # TODO Remove in master
@@ -222,20 +223,16 @@ class WebsiteForum(http.Controller):
                         question_tag_ids.append((4, tag_ids[0]))
                     else:
                         question_tag_ids.append((0, 0, {'name': tag, 'forum_id': forum.id}))
+                question_tag_ids = {forum.id: question_tag_ids}
         elif tag_version == "select2":
-            tags = filter(None, post.get('question_tags', '').split(','))
-            for tag in tags:
-                if tag.startswith('_'):  # it's a new tag
-                    question_tag_ids.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
-                else:
-                    question_tag_ids.append((4, int(tag)))
+            question_tag_ids = Forum._tag_to_write_vals(cr, uid, [forum.id], post.get('question_tags', ''), context)
 
         new_question_id = request.registry['forum.post'].create(
             request.cr, request.uid, {
                 'forum_id': forum.id,
                 'name': post.get('question_name'),
                 'content': post.get('content'),
-                'tag_ids': question_tag_ids,
+                'tag_ids': question_tag_ids[forum.id],
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
@@ -404,9 +401,14 @@ class WebsiteForum(http.Controller):
     def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         question_tags = []
-        User = request.registry['res.users']
         Tag = request.registry['forum.tag']
+        Forum = request.registry['forum.forum']
         tag_version = kwargs.get('tag_type', 'texttext')
+        
+        vals = {
+            'name': kwargs.get('question_name'),
+            'content': kwargs.get('content'),
+        }
         if tag_version == "texttext":  # old version - retro v8 - #TODO Remove in master
             if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
                 tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
@@ -417,27 +419,10 @@ class WebsiteForum(http.Controller):
                     else:
                         new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
                         question_tags.append(new_tag)
+                vals['tag_ids'] = [(6, 0, question_tags)]
         elif tag_version == "select2":  # new version
-            for tag in filter(None, kwargs.get('question_tag', '').split(',')):
-                if tag.startswith('_'):  # it's a new tag
-                # check if user have Karma needed to create need tag
-                    user = User.browse(cr, SUPERUSER_ID, uid, context=context)
-                    if user.exists() and user.karma >= forum.karma_retag:
-                        # check that not arleady created meanwhile and maybe excluded by the limit on the search
-                        tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
-                        if tag_ids:
-                            new_tag = tag_ids
-                        else:
-                            new_tag = Tag.create(cr, uid, {'name': tag[1:], 'forum_id': forum.id}, context=context)
-                        question_tags.append(new_tag)
-                else:
-                    question_tags += [int(tag)]
+            vals['tag_ids'] = Forum._tag_to_write_vals(cr, uid, [forum.id], kwargs.get('question_tag', ''), context)[forum.id]
 
-        vals = {
-            'tag_ids': [(6, 0, question_tags)],
-            'name': kwargs.get('question_name'),
-            'content': kwargs.get('content'),
-        }
         request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
@@ -522,18 +507,27 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or user.karma < 1:
+        current_user = User.browse(cr, SUPERUSER_ID, uid, context=context)
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user.exists() or
+               (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
-        if user_id != request.session.uid and not user.website_published:
-            return request.website.render("website_forum.private_profile", values)
+
         # questions and answers by user
-        user_questions, user_answers = [], []
         user_question_ids = Post.search(cr, uid, [
                 ('parent_id', '=', False),
                 ('forum_id', '=', forum.id), ('create_uid', '=', user.id),
             ], order='create_date desc', context=context)
         count_user_questions = len(user_question_ids)
+
+        if (user_id != request.session.uid and not
+                (user.website_published or
+                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+            return request.website.render("website_forum.private_profile", values)
+
         # displaying only the 20 most recent questions
         user_questions = Post.browse(cr, uid, user_question_ids[:20], context=context)
 

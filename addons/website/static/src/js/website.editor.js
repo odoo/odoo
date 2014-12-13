@@ -1785,7 +1785,8 @@
                         .attr('data-size', size)
                         .addClass(size)
                         .addClass(no_sizes);
-                if ((size && _.contains(classes, size)) || (classes[2] === "" && !selected)) {
+
+                if ((size && _.contains(classes, size)) || (size === "" && !selected)) {
                     this.$preview.append($p.clone());
                     this.$('#fa-size').val(size);
                     $p.addClass('font-icons-selected');

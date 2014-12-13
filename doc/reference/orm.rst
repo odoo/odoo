@@ -18,7 +18,7 @@ set of records of the same model.
 Methods defined on a model are executed on a recordset, and their ``self`` is
 a recordset::
 
-    class AModel(Model):
+    class AModel(models.Model):
         _name = 'a.model'
         def a_method(self):
             # self can be anywhere between 0 records and all records in the
@@ -279,7 +279,7 @@ Creating Models
 Model fields are defined as attributes on the model itself::
 
     from openerp import models, fields
-    class AModel(Model):
+    class AModel(models.Model):
         _name = 'a.model.name'
 
         field1 = fields.Char()

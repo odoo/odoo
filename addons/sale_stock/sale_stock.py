@@ -390,6 +390,8 @@ class stock_move(osv.osv):
                     sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
             else:
                 res['price_unit'] = sale_line.price_unit
+            uos_coeff = move.product_uom_qty and move.product_uos_qty / move.product_uom_qty or 1.0
+            res['price_unit'] = res['price_unit'] / uos_coeff
         return res
 
 
@@ -442,3 +444,16 @@ class stock_picking(osv.osv):
                     created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                     invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
+
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+        sale = move.picking_id.sale_id
+        if sale:
+            inv_vals.update({
+                'fiscal_position': sale.fiscal_position.id,
+                'payment_term': sale.payment_term.id,
+                'user_id': sale.user_id.id,
+                'section_id': sale.section_id.id,
+                'name': sale.client_order_ref or '',
+                })
+        return inv_vals

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP (<http://www.openerp.com>).
+#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -717,7 +717,7 @@ class Environment(object):
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = set()                  # set(record)
+        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self

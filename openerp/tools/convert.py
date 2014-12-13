@@ -798,8 +798,10 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
-        if el.get('active') in ("True", "False") and mode != "update":
-            record.append(Field(name='active', eval=el.get('active')))
+        if el.get('active') in ("True", "False"):
+            view_id = self.id_get(cr, tpl_id, raise_if_not_found=False)
+            if mode != "update" or not view_id:
+                record.append(Field(name='active', eval=el.get('active')))
         if el.get('customize_show') in ("True", "False"):
             record.append(Field(name='customize_show', eval=el.get('customize_show')))
         groups = el.attrib.pop('groups', None)
@@ -824,19 +826,21 @@ form: module.record_id""" % (xml_id,)
 
         return self._tag_record(cr, record, data_node)
 
-    def id_get(self, cr, id_str):
+    def id_get(self, cr, id_str, raise_if_not_found=True):
         if id_str in self.idref:
             return self.idref[id_str]
-        res = self.model_id_get(cr, id_str)
+        res = self.model_id_get(cr, id_str, raise_if_not_found)
         if res and len(res)>1: res = res[1]
         return res
 
-    def model_id_get(self, cr, id_str):
+    def model_id_get(self, cr, id_str, raise_if_not_found=True):
         model_data_obj = self.pool['ir.model.data']
         mod = self.module
-        if '.' in id_str:
-            mod,id_str = id_str.split('.')
-        return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
+        if '.' not in id_str:
+            id_str = '%s.%s' % (mod, id_str)
+        return model_data_obj.xmlid_to_res_model_res_id(
+            cr, self.uid, id_str,
+            raise_if_not_found=raise_if_not_found)
 
     def parse(self, de, mode=None):
         if de.tag != 'openerp':

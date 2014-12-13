@@ -8,14 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-29 10:29+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:14+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-30 06:52+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -37,22 +42,22 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "# Nbr munkaórabeosztás"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
 msgid "# Total Attendance"
-msgstr ""
+msgstr "# Összes résztvevő"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
 msgid "# Total Diff"
-msgstr ""
+msgstr "# Összes különbözet"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "# Összes munkaidő beosztás"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -206,13 +211,13 @@ msgstr "Jóváhagyott munkaidő kimutatások"
 #: field:hr.timesheet.current.open,create_uid:0
 #: field:hr_timesheet_sheet.sheet,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Készítette"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_date:0
 #: field:hr_timesheet_sheet.sheet,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
@@ -229,11 +234,6 @@ msgstr "Dátum"
 #: field:hr_timesheet_sheet.sheet,date_from:0
 msgid "Date from"
 msgstr "Dátumtól"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_last_post:0
-msgid "Date of the last message posted on the record."
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date_to:0
@@ -299,6 +299,8 @@ msgstr "Alkalmazottak"
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
+"Hiba! Bejelentkezést (v. Kijelentkezést) egy Kijelentkezésnek (v. "
+"Bejelentkezésnek)kell követnie."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -318,7 +320,7 @@ msgstr "Hiba!"
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr ""
+msgstr "Külső munkaidőbeosztás"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -328,7 +330,7 @@ msgstr "Követők"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr ""
+msgstr "Csoportosítás"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0
@@ -350,7 +352,7 @@ msgstr "Órák"
 #: field:hr_timesheet_sheet.sheet.account,id:0
 #: field:hr_timesheet_sheet.sheet.day,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
@@ -382,6 +384,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a "
 "user."
 msgstr ""
+"Ahhoz, hogy munkaidőbeosztás tudjon ennek a munkavállalónak készíteni, "
+"előszöz hozzá kell rendelnie egy felhasználóhoz."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -406,7 +410,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
+msgstr "Belső munkaidő beosztás"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -433,19 +437,19 @@ msgstr "Megnyitja az Ön aktuális munkaidő-kimutatását"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Utolsó üzenet időpontja"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,write_uid:0
 #: field:hr_timesheet_sheet.sheet,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Utoljára frissítve, által"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,write_date:0
 #: field:hr_timesheet_sheet.sheet,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Utoljára frissítve ekkor"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
@@ -793,12 +797,12 @@ msgstr "Figyelem!"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Weboldal üzenetek"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Weboldal  kommunikáció történet"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -818,6 +822,8 @@ msgstr "Hét "
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
+"Nem tud a munkaidőbeosztáson kívülre eső dátumhoz részvételi dátumot "
+"rögzíteni."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -826,6 +832,9 @@ msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
 msgstr ""
+"A rendelkezésre álló munkaidőbeosztásban nem tud részvételi időpontot "
+"rögzíteni. Kérje meg a főnökét, hogy állítsa az vissza mielőtt részvételi "
+"dátumot rögzítene."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258

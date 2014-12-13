@@ -62,7 +62,7 @@ $('.oe_website_sale').each(function () {
         return false;
     });
 
-    $('.a-submit', oe_website_sale).off('click').on('click', function () {
+    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function () {
         $(this).closest('form').submit();
     });
     $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function () {

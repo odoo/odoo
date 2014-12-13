@@ -14,6 +14,12 @@
 <!doctype html>
 {%- endblock -%}
 
+{%- block htmltitle -%}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ super() }}
+{%- endblock -%}
+
 {%- block extrahead -%}
   {%- if canonical -%}
     <link rel="canonical" href="{{ canonical }}"/>
@@ -87,7 +93,7 @@
           {%- if show_copyright %}
             <li>
               {%- if hasdoc('copyright') %}
-                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>{% endtrans %}
               {%- else %}
                 {% trans copyright=copyright|e %}&copy; Copyright <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
               {%- endif %}

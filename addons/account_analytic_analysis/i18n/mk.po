@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-07 14:47+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:55+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:21+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #. module: account_analytic_analysis
 #: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
@@ -86,6 +86,71 @@ msgid ""
 "\n"
 "            "
 msgstr ""
+"\n"
+"Здраво ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Клиент</th>\n"
+"        <th>Договор</th>\n"
+"        <th>Датуми</th>\n"
+"        <th>Однапред платени единици</th>\n"
+"        <th>Контакт</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>Следните договори тукушто истекоа: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>Следните истечени договори сеуште не се процесирани: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>Следните договори ќе истечат за помалку од еден месец: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    Можете да изберете сите договори да се обноват преку менито:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Продажба / Фактурирање / Договори за обновување</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Ви благодариме,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"Odoo Автоматски Е-маил\n"
+"</pre>\n"
+"\n"
+"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
@@ -130,6 +195,17 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Кликнете да креирате нов договор.\n"
+"                </p><p>\n"
+"                    Користете ги договорите за да следите задачи, проблеми, "
+"распореди или фактурирања \n"
+"                    базирани на завршената работа, трошоците и/или налозите "
+"за продажба. Odoo \n"
+"                    автоматски управува со известувањата за обновување на "
+"договорите со точниот продавач.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
@@ -144,6 +220,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да креирате понуда што ќе биде конвертирана во  "
+"налог за\n"
+"                продажба.\n"
+"              </p><p>\n"
+"                Користете ги налозите за продажба за да следите со што треба "
+"да биде\n"
+"                фактурирано со фиксна цена на договор.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -163,6 +249,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете да дефинирате нов договор.\n"
+"              </p><p>\n"
+"                Овде ке ги најдете договорите што треба да се обноват\n"
+"                бидејќи датумот на завршување е поминат или вложениот\n"
+"                труд е поголем од авторизираниот максимум.\n"
+"              </p><p>\n"
+"                Odoo автоматски ги подесува договорите што треба да се "
+"обноват со\n"
+"                „се чека“ статус. По преговорите, продавачот треба да ги "
+"затвори или\n"
+"                обнови договорите што се со статус на чекање.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -191,7 +291,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr ""
+msgstr "Ставки од аналитичко конто"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -251,6 +351,8 @@ msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
 msgstr ""
+"Се смета со формулата: Очекувано од распореди - Вкупно фактурирано од "
+"распореди"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -342,12 +444,12 @@ msgstr "Договори кои треба да се обноват"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -367,7 +469,7 @@ msgstr "Датум на последно фактуриран трошок"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Датум на следна фактура"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -377,17 +479,17 @@ msgstr "Датум на последната работа завршена на 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Ден(ови)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End Month"
-msgstr ""
+msgstr "Завршен месец"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -398,12 +500,13 @@ msgstr "Крајниот датум е во наредниот месец"
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "End date passed or prepaid unit consumed"
 msgstr ""
+"Завршниот датум е поминат или однапред платените единици се потрошени"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Грешка!"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
@@ -417,6 +520,9 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Очекувања за останат приход од овој договор. Пресметано како збир од "
+"останатите меѓузбирови, кои, се сметаат како максимум помеѓу '(Проценка - "
+"Фактурирано)' и 'Да се фактурира' сумите"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -441,12 +547,12 @@ msgstr "Фиксна цена"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoices:0
 msgid "Generate recurring invoices automatically"
-msgstr ""
+msgstr "Генерирај повторливи фактури автоматски"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -463,7 +569,7 @@ msgstr "Резиме на часови по месец"
 #: field:account_analytic_analysis.summary.month,id:0
 #: field:account_analytic_analysis.summary.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -498,12 +604,12 @@ msgstr "Во тек"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_invoice_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Ставки на фактура"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_rule_type:0
 msgid "Invoice automatically repeat at specified interval"
-msgstr ""
+msgstr "Фактурата автоматски се повторува во определениот интервал"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -533,12 +639,12 @@ msgstr "Датум на последна фактура"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
@@ -559,13 +665,13 @@ msgstr "Месец"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Месец(и)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
 #, python-format
 msgid "No Customer Defined!"
-msgstr ""
+msgstr "Не е дефиниран клиент!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -633,7 +739,7 @@ msgstr "Договори на чекање"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
 #, python-format
 msgid "Please define a sale journal for the company \"%s\"."
-msgstr ""
+msgstr "Ве молиме дефинирајте дневник на продажба за компанијата \"%s\"."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -643,12 +749,12 @@ msgstr "Ценовник"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Производ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Количина"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
@@ -663,12 +769,12 @@ msgstr "Реален процент на маржа (%)"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_rule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Повторливост"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Recurring Invoices"
-msgstr ""
+msgstr "Повторливи фактури"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -691,12 +797,12 @@ msgstr "Преостанато време"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Повторувај секои"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Повторувај секој (Ден/Недела/Месец/Година)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -707,7 +813,7 @@ msgstr "Приход по време (реално)"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
-msgstr ""
+msgstr "Ставки од налог за продажба за фактурирање на %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -718,7 +824,7 @@ msgstr "Налози за продажба"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Start Month"
-msgstr ""
+msgstr "Почетен месец"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -728,7 +834,7 @@ msgstr "Статус"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Вкупно"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -770,7 +876,7 @@ msgstr "Распореди"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:652
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr ""
+msgstr "Распореди за фактурирање на %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -850,12 +956,12 @@ msgstr "Нефактурирано време"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Единечна цена"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Единица мерка"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -876,7 +982,7 @@ msgstr "Корисник"
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Недела (и)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -890,13 +996,13 @@ msgstr ""
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Година (и)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr ""
+msgstr "Прво мора да изберете клиент за Договор %s!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -916,6 +1022,9 @@ msgid ""
 "[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
 "('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
 msgstr ""
+"{'required': "
+"[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_template_required
@@ -934,4 +1043,4 @@ msgstr "⇒ Фактура"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "⇒ create invoices"
-msgstr ""
+msgstr "⇒ креира фактури"

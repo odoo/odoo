@@ -1,5 +1,4 @@
-$(document).ready(function () {
-    if ($('.website_forum').length){
+    openerp.website.if_dom_contains('.website_forum', function () {
         $('.karma_required').on('click', function (ev) {
             var karma = $(ev.currentTarget).data('karma');
             if (karma) {
@@ -172,7 +171,7 @@ $(document).ready(function () {
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
-                _.each(JSON.parse(element.val()), function(x) {
+                _.each(element.data('init-value'), function(x) {
                     data.push({ id: x.id, text: x.name, isNew: false });
                 });
                 element.val('');
@@ -180,7 +179,6 @@ $(document).ready(function () {
             },
         });
 
-        //TODO Remove in master
         if($('input.load_tags').length){
             var tags = $("input.load_tags").val();
             $("input.load_tags").val("");
@@ -217,24 +215,21 @@ $(document).ready(function () {
             var editor = CKEDITOR.instances['content'];
             editor.on('instanceReady', CKEDITORLoadComplete);
         }
+
+        function CKEDITORLoadComplete(){
+            "use strict";
+            $('.cke_button__link').attr('onclick','website_forum_IsKarmaValid(33,30)');
+            $('.cke_button__unlink').attr('onclick','website_forum_IsKarmaValid(37,30)');
+            $('.cke_button__image').attr('onclick','website_forum_IsKarmaValid(41,30)');
+        }
+    });
+
+   function website_forum_IsKarmaValid(eventNumber, minKarma){
+        "use strict";
+        if(parseInt($("#karma").val()) >= minKarma){
+            CKEDITOR.tools.callFunction(eventNumber, this);
+            return false;
+        } else {
+            alert("Sorry you need more than " + minKarma + " Karma.");
+        }
     }
-});
-
-
-
-function IsKarmaValid(eventNumber,minKarma){
-    "use strict";
-    if(parseInt($("#karma").val()) >= minKarma){
-        CKEDITOR.tools.callFunction(eventNumber,this);
-        return false;
-    } else {
-        alert("Sorry you need more than " + minKarma + " Karma.");
-    }
-}
-
-function CKEDITORLoadComplete(){
-    "use strict";
-    $('.cke_button__link').attr('onclick','IsKarmaValid(33,30)');
-    $('.cke_button__unlink').attr('onclick','IsKarmaValid(37,30)');
-    $('.cke_button__image').attr('onclick','IsKarmaValid(41,30)');
-}

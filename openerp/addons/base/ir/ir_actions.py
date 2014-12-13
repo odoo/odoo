@@ -271,7 +271,7 @@ class ir_actions_act_window(osv.osv):
     _columns = {
         'name': fields.char('Action Name', translate=True),
         'type': fields.char('Action Type', required=True),
-        'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
+        'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='set null'),
         'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', required=True,
