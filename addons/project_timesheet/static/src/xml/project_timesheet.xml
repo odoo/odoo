@@ -148,9 +148,9 @@
                     <div class="pt_mt_5">
                       <button class="btn btn-default pt_btn pt_btn_add_activity">Add Activity</button>
                       <button class="btn btn-default pt_btn pt_btn_edit_activity o_hidden">Save Changes</button>
+                      <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
                       or
                       <a class="pt_btn_cancel">Cancel</a>
-                      <i class="btn glyphicon glyphicon-trash o_hidden pt_btn_remove_activity"></i>
                     </div>
                     <hr/>
                   </div>
@@ -278,7 +278,7 @@
                             </div>
                         </div>
                         <div class="pt_mt_5">
-                          <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize Now</button> 
+                          <button class="btn btn-default pt_btn pt_btn_synchronize">Synchronize</button> 
                           or
                           <a class="pt_btn_cancel">Cancel</a>
                         </div>
@@ -289,7 +289,7 @@
                         <h4 class="pt_loggedin_message">You are already login with <t t-esc="project_timesheet.session.origin" ></t> as <t t-esc="project_timesheet.session.display_username" ></t>, You can directly synchronize your data</h4>
                         <a class="pt_btn_logout pull-right">Logout</a>
                     </div>
-                    <button class="btn btn-default pt_btn pt_btn_synchronize_existing_account">Synchronize Now</button>
+                    <button class="btn btn-default pt_btn pt_btn_synchronize_existing_account">Synchronize</button>
                     or
                     <a class="pt_btn_cancel">Cancel</a>
                 </div>

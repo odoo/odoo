@@ -430,7 +430,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
             this.is_available_timer_activity();
             //When Cancel is clicked it should move user to Activity List screen
-            this.$el.find(".pt_add_activity").on("click", function() {
+            this.$el.find(".pt_add_activity").parent().on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
             });
             this.$el.find(".pt_stat").on("click", function() {
@@ -468,6 +468,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_row_click: function(event) {
             var activity_id = $(event.currentTarget).data("activity_id");
+            console.log("event is ::: ", event);
             if(activity_id) {
                 var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
                 this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
@@ -737,6 +738,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $form_data.removeData();
             if (this.project_timesheet_model.get("activities").length) {
                 if (!this.$el.find(".pt_quick_select").length) {
+                    this.$el.find(".pt_quick_select").removeClass("o_hidden");
                     this.$el.find(".pt_add_activity_form").after(QWeb.render("QuickSelect", {}));
                 }
                 this.$el.find(".pt_activity_body h4").removeClass("o_hidden");
@@ -816,6 +818,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self.$el.find(".pt_btn_remove_activity").removeClass("o_hidden");
             self.$el.find(".pt_btn_edit_activity,.pt_btn_add_activity").toggleClass("o_hidden");
             self.$el.find(".pt_add_activity_title,.pt_edit_activity_title").toggleClass("o_hidden");
+            this.$el.find(".pt_quick_select").addClass("o_hidden");
             //this.task_m2o.set({"effective_readonly": true});
             //this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
@@ -1072,13 +1075,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.map(date_groups, function(groups, key) {
                 _.each(groups, function(group) {
                     if (date_activities[key]) {
-                        if (group.task_id) {
+                        if (group.project_id) {
                             date_activities[key]['unit_amount'] += parseFloat((group.unit_amount).toFixed(2));
                         } else {
                             date_activities[key]['unallocated'] += parseFloat((group.unit_amount).toFixed(2));
                         }
                     } else {
-                        if (group.task_id) {
+                        if (group.project_id) {
                             group['unit_amount'] = parseFloat((group.unit_amount).toFixed(2));
                             group['unallocated'] = 0.0;
                         } else {
