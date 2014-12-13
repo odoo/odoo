@@ -336,8 +336,8 @@ class resource_calendar(osv.osv):
         working_intervals = []
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
             working_interval = (
-                work_dt.replace(hour=int(calendar_working_day.hour_from)),
-                work_dt.replace(hour=int(calendar_working_day.hour_to))
+                work_dt.replace(hour=int(calendar_working_day.hour_from), minute=int(round((calendar_working_day.hour_from - int(calendar_working_day.hour_from))*60.0))),
+                work_dt.replace(hour=int(calendar_working_day.hour_to), minute=int(round((calendar_working_day.hour_to - int(calendar_working_day.hour_to))*60.0)))
             )
             working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
@@ -372,7 +372,7 @@ class resource_calendar(osv.osv):
                           resource_id=None, default_interval=None, context=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0),
+                               until=end_dt,
                                byweekday=self.get_weekdays(cr, uid, id, context=context)):
             day_start_dt = day.replace(hour=0, minute=0, second=0)
             if start_dt and day.date() == start_dt.date():
