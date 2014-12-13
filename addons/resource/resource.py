@@ -23,6 +23,8 @@ import datetime
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from openerp import SUPERUSER_ID
+import pytz 
 
 from openerp import tools
 from openerp.osv import fields, osv
@@ -333,11 +335,20 @@ class resource_calendar(osv.osv):
             intervals = self.interval_remove_leaves(working_interval, work_limits)
             return intervals
 
+        #working hours shall be entered as timezone of superuser!
+        context_tz = pytz.timezone(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'])
+        work_dt = context_tz.localize(work_dt) #dst must not be set localize takes care of itself
         working_intervals = []
         for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
+            dt_from = work_dt.replace(hour=int(calendar_working_day.hour_from), minute=int(round((calendar_working_day.hour_from - int(calendar_working_day.hour_from))*60.0)))
+            dt_from = dt_from.astimezone(pytz.UTC)
+            #remove timezone as leaves have no timezone to allow comparison
+            dt_from = dt_from.replace(tzinfo=None) 
+            dt_to = work_dt.replace(hour=int(calendar_working_day.hour_to), minute=int(round((calendar_working_day.hour_to - int(calendar_working_day.hour_to))*60.0)))
+            dt_to = dt_to.astimezone(pytz.UTC)
+            dt_to = dt_to.replace(tzinfo=None)   
             working_interval = (
-                work_dt.replace(hour=int(calendar_working_day.hour_from), minute=int(round((calendar_working_day.hour_from - int(calendar_working_day.hour_from))*60.0))),
-                work_dt.replace(hour=int(calendar_working_day.hour_to), minute=int(round((calendar_working_day.hour_to - int(calendar_working_day.hour_to))*60.0)))
+               dt_from, dt_to,
             )
             working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
