@@ -243,8 +243,8 @@ class resource_calendar(osv.osv):
     def get_leave_intervals(self, cr, uid, id, resource_id=None,
                             start_datetime=None, end_datetime=None,
                             context=None):
-        """Get the leaves of the calendar. Leaves can be filtered on the resource,
-        the start datetime or the end datetime.
+        """Get the leaves of the calendar and the leaves for all calendars (leaves without calendar_id, leaves for resources are always calendar specifiec).
+         Leaves can be filtered on the resource, the start datetime or the end datetime.
 
         :param int resource_id: the id of the resource to take into account when
                                 computing the leaves. If not set, only general
@@ -258,19 +258,43 @@ class resource_calendar(osv.osv):
         :return list leaves: list of tuples (start_datetime, end_datetime) of
                              leave intervals
         """
-        resource_calendar = self.browse(cr, uid, id, context=context)
-        leaves = []
-        for leave in resource_calendar.leave_ids:
-            if leave.resource_id and not resource_id == leave.resource_id.id:
-                continue
+        """find leaves 
+         (without calendar_id 
+             or leaves with id=calendar_id and (leave.resource_id = none or =resource_id)
+         ) and within date
+         in order to use database engine instead of the original for loop 
+         largest date is 294276 AD for postgres use unix start 1970-01-01 00:00:00 for lowest """
+        leaves_obj = self.pool.get('resource.calendar.leaves')
+        if not start_datetime and not end_datetime:
+            leave_ids = leaves_obj.search(cr, uid, ['|',('calendar_id', '=', id),('calendar_id','=', False),
+                                                    '|',('resource_id','=',resource_id),('resource_id','=',False)
+                                                   ])
+        else:
+            #convert start_datetime and end_datetime to text
+            if start_datetime:
+                start_date = start_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                start_date = ('1970-01-01 00:00:00')
+                
+            if end_datetime:
+                end_date = end_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                #start_datetime existed! Add 100 years
+                end_date = (start_datetime + relativedelta(years=100)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                    
+            leave_ids = leaves_obj.search(cr, uid, ['|',('calendar_id', '=', id),('calendar_id','=', False),
+                                                    '|',('resource_id','=',resource_id),('resource_id','=',False),
+                                                    ('date_from','<=',end_date), ('date_to','>=',start_date)
+                                                   ])
+        leaves = leaves_obj.browse(cr, uid, leave_ids, context=context)
+        
+        #fill the leave intervals
+        leave_intervals = []
+        for leave in leaves:  
             date_from = datetime.datetime.strptime(leave.date_from, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            if end_datetime and date_from > end_datetime:
-                continue
             date_to = datetime.datetime.strptime(leave.date_to, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            if start_datetime and date_to < start_datetime:
-                continue
-            leaves.append((date_from, date_to))
-        return leaves
+            leave_intervals.append((date_from, date_to))
+        return leave_intervals
 
     def get_working_intervals_of_day(self, cr, uid, id, start_dt=None, end_dt=None,
                                      leaves=None, compute_leaves=False, resource_id=None,
@@ -354,7 +378,8 @@ class resource_calendar(osv.osv):
 
         # find leave intervals
         if leaves is None and compute_leaves:
-            leaves = self.get_leave_intervals(cr, uid, id, resource_id=resource_id, context=None)
+            #transfer also parameter start_datetime, end_datetime
+            leaves = self.get_leave_intervals(cr, uid, id, start_datetime = start_dt, end_datetime=end_dt, resource_id=resource_id, context=None)
 
         # filter according to leaves
         for interval in working_intervals:
@@ -734,12 +759,19 @@ class resource_resource(osv.osv):
         resource_calendar_leaves_pool = self.pool.get('resource.calendar.leaves')
         leave_list = []
         if resource_id:
-            leave_ids = resource_calendar_leaves_pool.search(cr, uid, ['|', ('calendar_id', '=', calendar_id),
+            #For resources any leaves that is in the calendar and for the ressource or non specific 
+            leave_ids = resource_calendar_leaves_pool.search(cr, uid, ['|', '|',('calendar_id', '=', False),
+                                                                        ('calendar_id', '=', calendar_id),
                                                                        ('calendar_id', '=', resource_calendar),
-                                                                       ('resource_id', '=', resource_id)
+                                                                       
+                                                                       '|',('resource_id', '=', resource_id),
+                                                                        ('resource_id', '=', False)
                                                                       ], context=context)
         else:
-            leave_ids = resource_calendar_leaves_pool.search(cr, uid, [('calendar_id', '=', calendar_id),
+            #only get the non resource specific leaves that are in the calendar_id or general calendar
+            leave_ids = resource_calendar_leaves_pool.search(cr, uid, ['|', ('calendar_id', '=', False),
+                                                                       ('calendar_id', '=', calendar_id),
+                                                                       
                                                                       ('resource_id', '=', False)
                                                                       ], context=context)
         leaves = resource_calendar_leaves_pool.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
