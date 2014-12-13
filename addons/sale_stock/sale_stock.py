@@ -453,6 +453,7 @@ class stock_picking(osv.osv):
                 'fiscal_position': sale.fiscal_position.id,
                 'payment_term': sale.payment_term.id,
                 'user_id': sale.user_id.id,
+                'section_id': sale.section_id.id,
                 'name': sale.client_order_ref or '',
                 })
         return inv_vals

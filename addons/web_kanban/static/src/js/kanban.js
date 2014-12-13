@@ -279,6 +279,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
+                if (self.dataset._sort) {
+                    dataset.set_sort(self.dataset._sort);
+                }
                 if (group.attributes.length >= 1) {
                     def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
                 }

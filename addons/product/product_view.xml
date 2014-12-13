@@ -250,6 +250,11 @@
                                 <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
+                        <p class="oe_grey">
+                            <strong>Warning</strong>: adding or deleting attributes
+                            will delete and recreate existing variants and lead
+                            to the loss of its eventual customizations.
+                        </p>
                         <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>

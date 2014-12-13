@@ -26,40 +26,50 @@
  'description':  """
 Swiss localization
 ==================
- **Multilang swiss STERCHI account chart and taxes**
-  **Author:** Camptocamp SA
 
-  **Financial contributors:** Prisme Solutions Informatique SA, Quod SA
+**Multilang Swiss PME/KMU 2015 account chart and taxes**
 
-  **Translation contributors:** brain-tec AG, Agile Business Group
+**Author:** Camptocamp SA
 
- **This release will introduce major changes to l10n_ch.**
+**Financial contributors:** Prisme Solutions Informatique SA, Quod SA
 
- Due to important refactoring needs and the Switzerland adoption of new international payment standard during 2013-2014. We have reorganised the swiss localization addons this way:
+**Translation contributors:** brain-tec AG, Agile Business Group
 
- - **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official addon)
- - **l10n_ch_base_bank**: Technical module that introduces a new and simplified version of bank type management
- - **l10n_ch_bank**: List of swiss banks
- - **l10n_ch_zip**: List of swiss postal zip
- - **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end 2014)
- - **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and reconciliation. Report refactored with easy element positioning.
- - **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support will be completed during 2013/2014
+The swiss localization addons are organized this way:
 
- The modules will be soon available on OpenERP swiss localization on launchpad:
- https://launchpad.net/openerp-swiss-localization
+``l10n_ch``
+  Multilang Swiss PME/KMU 2015 account chart and taxes (official addon)
+``l10n_ch_base_bank``
+  Technical module that introduces a new and simplified version of bank
+  type management
+``l10n_ch_bank``
+  List of swiss banks
+``l10n_ch_zip``
+  List of swiss postal zip
+``l10n_ch_dta``
+  Support of the DTA payment protocol (will be deprecated by the end of 2014)
+``l10n_ch_payment_slip``
+  Support of ESR/BVR payment slip report and reconciliation.
+
+``l10n_ch`` is located in the core Odoo modules. The other modules are in:
+https://github.com/OCA/l10n-switzerland
 """,
- 'version': '7.0',
+ 'version': '8.0',
  'author': 'Camptocamp',
  'category': 'Localization/Account Charts',
  'website': 'http://www.camptocamp.com',
  'depends': ['account', 'l10n_multilang'],
- 'data': ['sterchi_chart/account.xml',
-          'sterchi_chart/vat2011.xml',
-          'sterchi_chart/fiscal_position.xml' ],
+ 'data': ['report/balance_sheet.xml',
+          'report/profit_and_loss.xml',
+          'chart/account.xml',
+          'chart/vat2011.xml',
+          'chart/fiscal_position.xml',
+
+          ],
  'demo': [],
  'test': [],
  'auto_install': False,
  'installable': True,
- 'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg']
-}
+ 'images': ['images/config_chart_l10n_ch.jpeg', 'images/l10n_ch_chart.jpeg']
+ }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

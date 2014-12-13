@@ -471,11 +471,14 @@ class email_template(osv.osv):
         results = dict()
         for template, template_res_ids in templates_to_res_ids.iteritems():
             # generate fields value for all res_ids linked to the current template
+            ctx = context.copy()
+            if template.lang:
+                ctx['lang'] = template._context.get('lang')
             for field in fields:
                 generated_field_values = self.render_template_batch(
                     cr, uid, getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'),
-                    context=context)
+                    context=ctx)
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
@@ -503,13 +506,9 @@ class email_template(osv.osv):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
+                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=ctx)
                     report = report_xml_pool.browse(cr, uid, template.report_template.id, context)
                     report_service = report.report_name
-                    # Ensure report is rendered using template's language
-                    ctx = context.copy()
-                    if template.lang:
-                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
                         result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'

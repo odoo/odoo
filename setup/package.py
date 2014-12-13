@@ -52,6 +52,7 @@ PUBLISH_DIRS = {
 }
 EXTENSIONS = [
     '.tar.gz',
+    '.zip',
     '.deb',
     '.dsc',
     '.changes',
@@ -269,8 +270,9 @@ def _prepare_build_dir(o):
         shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
 def build_tgz(o):
-    system(['python2', 'setup.py', '--quiet', 'sdist'], o.build_dir)
+    system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
     system(['cp', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
+    system(['cp', glob('%s/dist/odoo-*.zip' % o.build_dir)[0], '%s/odoo.zip' % o.build_dir])
 
 def build_deb(o):
     deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
@@ -296,15 +298,27 @@ def build_exe(o):
 #----------------------------------------------------------
 # Stage: testing
 #----------------------------------------------------------
+def _prepare_testing(o):
+    if not o.no_tarball or not o.no_debian:
+        subprocess.call(["mkdir", "docker_debian"], cwd=o.build_dir)
+        subprocess.call(["cp", "package.dfdebian", os.path.join(o.build_dir, "docker_debian", "Dockerfile")],
+                        cwd=os.path.join(o.odoo_dir, "setup"))
+        # Use rsync to copy requirements.txt in order to keep original permissions
+        subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_debian")],
+                        cwd=os.path.join(o.odoo_dir))
+        subprocess.call(["docker", "build", "-t", "odoo-debian-nightly-tests", "."],
+                        cwd=os.path.join(o.build_dir, "docker_debian"))
+    if not o.no_rpm:
+        subprocess.call(["mkdir", "docker_centos"], cwd=o.build_dir)
+        subprocess.call(["cp", "package.dfcentos", os.path.join(o.build_dir, "docker_centos", "Dockerfile")],
+                        cwd=os.path.join(o.odoo_dir, "setup"))
+        subprocess.call(["docker", "build", "-t", "odoo-centos-nightly-tests", "."],
+                        cwd=os.path.join(o.build_dir, "docker_centos"))
+
 def test_tgz(o):
-    with docker('debian:stable', o.build_dir, o.pub) as wheezy:
+    with docker('odoo-debian-nightly-tests', o.build_dir, o.pub) as wheezy:
         wheezy.release = 'odoo.tar.gz'
-        wheezy.system('apt-get update -qq && apt-get upgrade -qq -y')
-        wheezy.system("apt-get install postgresql python-dev postgresql-server-dev-all python-pip build-essential libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev libssl-dev libjpeg-dev -y")
         wheezy.system("service postgresql start")
-        wheezy.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 9.1 main"')
-        wheezy.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 9.1 main"')
-        wheezy.system('pip install -r /opt/release/requirements.txt')
         wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
@@ -315,13 +329,9 @@ def test_tgz(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
 
 def test_deb(o):
-    with docker('debian:stable', o.build_dir, o.pub) as wheezy:
+    with docker('odoo-debian-nightly-tests', o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.deb'
-        wheezy.system('/usr/bin/apt-get update -qq && /usr/bin/apt-get upgrade -qq -y')
-        wheezy.system("apt-get install postgresql -y")
         wheezy.system("service postgresql start")
-        wheezy.system('su postgres -s /bin/bash -c "pg_dropcluster --stop 9.1 main"')
-        wheezy.system('su postgres -s /bin/bash -c "pg_createcluster --start -e UTF-8 9.1 main"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('/usr/bin/dpkg -i /opt/release/%s' % wheezy.release)
         wheezy.system('/usr/bin/apt-get install -f -y')
@@ -329,18 +339,9 @@ def test_deb(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('centos:centos7', o.build_dir, o.pub) as centos7:
+    with docker('odoo-centos-nightly-tests', o.build_dir, o.pub) as centos7:
         centos7.release = 'odoo.noarch.rpm'
-        # Dependencies
-        centos7.system('yum install -d 0 -e 0 epel-release -y')
-        centos7.system('yum update -d 0 -e 0 -y')
-        # Manual install/start of postgres
-        centos7.system('yum install -d 0 -e 0 postgresql postgresql-server postgresql-libs postgresql-contrib postgresql-devel -y')
-        centos7.system('mkdir -p /var/lib/postgres/data')
-        centos7.system('chown -R postgres:postgres /var/lib/postgres/data')
-        centos7.system('chmod 0700 /var/lib/postgres/data')
-        centos7.system('su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"')
-        centos7.system('cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf')
+        # Start postgresql
         centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
         centos7.system('sleep 5')
         centos7.system('su postgres -c "createdb mycompany"')
@@ -445,13 +446,15 @@ def options():
 def main():
     o = options()
     _prepare_build_dir(o)
+    if not o.no_testing:
+        _prepare_testing(o)
     try:
         if not o.no_tarball:
             build_tgz(o)
             try:
                 if not o.no_testing:
                     test_tgz(o)
-                published_files = publish(o, 'tarball', ['odoo.tar.gz'])
+                published_files = publish(o, 'tarball', ['odoo.tar.gz', 'odoo.zip'])
             except Exception, e:
                 print("Won't publish the tgz release.\n Exception: %s" % str(e))
         if not o.no_debian:
