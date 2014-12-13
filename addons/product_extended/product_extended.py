@@ -210,7 +210,6 @@ class stock_move(osv.Model):
         dummy_matching = account_move.search(cr, uid, [
                 ('ref', '=', stock_quant._get_account_move_ref(cr, uid, move, context=context)),
                 ('journal_id', '=', journal_id),
-                ('date', '=', move.date),
             ], context=context)
         if not dummy_matching:
             _logger.warning("No matching stock entries were found, could not correct the valuation")
