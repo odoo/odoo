@@ -95,7 +95,7 @@
     });
 
     website.ready().done(function() {
-        if (Date.now()-Date.parse($('.row .question').attr('date')) > 864*10e5) { //If the question is older than 864/10e5 seconds (=10 days)
+        if (Date.now()-Date.parse($('.question').attr('last-update')) > 864*10e5) { //If the question is older than 864/10e5 seconds (=10 days)
             console.log('>10days');
             var hashtag_list = ['question'];
             var social_list = ['facebook','twitter', 'linkedin', 'google-plus'];

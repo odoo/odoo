@@ -573,7 +573,7 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="question" t-att-date="question.write_date">
+        <div t-attf-class="question" t-att-last-update="question.write_date">
             <div class="pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
@@ -688,6 +688,11 @@
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
                                 Comment
+                            </a>
+                        </li>
+                        <li t-if="question.post_type == 'question'">
+                            <a href="javascript:void(0)" class="social_share fa fa-share-square-o" t-att-data-hashtag_list="['question']">
+                                 Share
                             </a>
                         </li>
                     </ul>
