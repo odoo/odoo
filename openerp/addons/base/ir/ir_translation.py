@@ -70,7 +70,7 @@ class ir_translation_import_cursor(object):
 
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
-         cr.execute('''CREATE TABLE IF NOT EXISTS %s(
+        cr.execute('''CREATE TABLE IF NOT EXISTS %s(
             imd_model VARCHAR(64),
             imd_name VARCHAR(128)
             ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
