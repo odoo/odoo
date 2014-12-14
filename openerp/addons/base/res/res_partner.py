@@ -524,6 +524,14 @@ class res_partner(osv.Model, format_address):
             if not parent.is_company:
                 parent.write({'is_company': True})
 
+    def unlink(self, cr, uid, ids, context=None):
+        orphan_contact_ids = self.search(cr, uid,
+            [('parent_id', 'in', ids), ('id', 'not in', ids), ('use_parent_address', '=', True)], context=context)
+        if orphan_contact_ids:
+            # no longer have a parent address
+            self.write(cr, uid, orphan_contact_ids, {'use_parent_address': False}, context=context)
+        return super(res_partner, self).unlink(cr, uid, ids, context=context)
+
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
         if not scheme:

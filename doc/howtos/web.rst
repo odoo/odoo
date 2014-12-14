@@ -1,6 +1,6 @@
-==========
-Web Client
-==========
+=============================
+Building Interface Extensions
+=============================
 
 .. highlight:: javascript
 

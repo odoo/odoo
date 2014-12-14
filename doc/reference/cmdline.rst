@@ -54,6 +54,12 @@ Running the server
 
     runs tests after installing modules
 
+.. option:: --debug
+
+    when an unexpected error is raised (not a warning or an access error),
+    automatically starts :mod:`python:pdb` before logging and returning the
+    error
+
 .. _reference/cmdline/scaffold:
 
 Scaffolding

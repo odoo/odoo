@@ -51,6 +51,7 @@ class actions(osv.osv):
         'name': fields.char('Name', required=True),
         'type': fields.char('Action Type', required=True),
         'usage': fields.char('Action Usage'),
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),

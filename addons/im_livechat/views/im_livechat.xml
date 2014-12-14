@@ -132,7 +132,9 @@
                         defaultMessage: "<t t-esc="defaultMessage"/>" || '',
                         auto: window.oe_im_livechat_auto || false,
                         defaultUsername: "<t t-esc="username"/>" || undefined,
-                    });
+                    },
+                    <t t-raw="rule"/>
+                );
             })();
         </template>
 

@@ -356,8 +356,7 @@
                             <field name="putaway_strategy_id"/>
                         </group>
                     </group>
-                    <separator string="Additional Information"/>
-                    <field name="comment"/>
+                    <field name="comment" placeholder="External note..."/>
                 </form>
             </field>
         </record>
@@ -385,6 +384,7 @@
                 <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -1046,7 +1046,7 @@
                             <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <field name="reserved_quant_ids"/>
+                            <field name="reserved_quant_ids" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -1552,7 +1552,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="do_view_pickings" string="Group's Pickings" type="object"/>
+                    <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>

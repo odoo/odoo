@@ -18,6 +18,7 @@ Reference
     reference/qweb
     reference/javascript
 
+    reference/translations
     reference/reports
     reference/workflows
     reference/cdn
