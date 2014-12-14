@@ -5,7 +5,7 @@
         <field name="name">PGC-PE Moçambique</field>
         <field name="code">0</field>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view" />
+        <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_1" model="account.account.template">
@@ -13,7 +13,7 @@
       <field name="name">Meios financeiros líquidos</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_11" model="account.account.template">
@@ -21,7 +21,7 @@
       <field name="name">Caixa</field>
       <field ref="chart_1" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_cash" />
+      <field name="user_type" ref="account.data_account_type_cash" />
     </record>
 
     <record id="chart_12" model="account.account.template">
@@ -29,7 +29,7 @@
       <field name="name">Bancos</field>
       <field ref="chart_1" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
  
     <record id="chart_121" model="account.account.template">
@@ -37,7 +37,7 @@
       <field name="name">Depósitos a ordem</field>
       <field ref="chart_12" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_cash" />
+      <field name="user_type" ref="account.data_account_type_cash" />
     </record>
     
     <record id="chart_122" model="account.account.template">
@@ -45,7 +45,7 @@
       <field name="name">Depósitos com pré-aviso</field>
       <field ref="chart_12" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_cash" />
+      <field name="user_type" ref="account.data_account_type_cash" />
     </record>
     
     <record id="chart_123" model="account.account.template">
@@ -53,7 +53,7 @@
       <field name="name">Depósitos a prazo</field>
       <field ref="chart_12" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_cash" />
+      <field name="user_type" ref="account.data_account_type_cash" />
     </record>           
      
    <record id="chart_2" model="account.account.template">
@@ -61,7 +61,7 @@
       <field name="name">Inventários e activos biológicos</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_21" model="account.account.template">
@@ -69,7 +69,7 @@
       <field name="name">Compras</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_211" model="account.account.template">
@@ -77,7 +77,7 @@
       <field name="name">Mercadorias</field>
       <field ref="chart_21" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_212" model="account.account.template">
@@ -85,7 +85,7 @@
       <field name="name">Matérias-primas, auxiliares e materiais</field>
       <field ref="chart_21" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_2121" model="account.account.template">
@@ -93,7 +93,7 @@
       <field name="name">Matérias-primas</field>
       <field ref="chart_212" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
    
      <record id="chart_2122" model="account.account.template">
@@ -101,7 +101,7 @@
       <field name="name">Matérias Auxiliares</field>
       <field ref="chart_212" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_2123" model="account.account.template">
@@ -109,7 +109,7 @@
       <field name="name">Materiais</field>
       <field ref="chart_212" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_21231" model="account.account.template">
@@ -117,7 +117,7 @@
       <field name="name">Combustíveis e lubrificantes</field>
       <field ref="chart_2123" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_21232" model="account.account.template">
@@ -125,7 +125,7 @@
       <field name="name">Embalagens comerciais</field>
       <field ref="chart_2123" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_21233" model="account.account.template">
@@ -133,7 +133,7 @@
       <field name="name">Peças e sobressalentes</field>
       <field ref="chart_2123" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_21239" model="account.account.template">
@@ -141,7 +141,7 @@
       <field name="name">Materiais diversos</field>
       <field ref="chart_2123" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
      
      <record id="chart_217" model="account.account.template">
@@ -149,7 +149,7 @@
       <field name="name">Devoluções de compras</field>
       <field ref="chart_21" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_218" model="account.account.template">
@@ -157,7 +157,7 @@
       <field name="name">Descontos e abatimentos em compras</field>
       <field ref="chart_21" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
   
     <record id="chart_22" model="account.account.template">
@@ -165,7 +165,7 @@
       <field name="name">Mercadorias</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_221" model="account.account.template">
@@ -173,7 +173,7 @@
       <field name="name">Mercadorias em trânsito</field>
       <field ref="chart_22" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_222" model="account.account.template">
@@ -181,7 +181,7 @@
       <field name="name">Mercadorias em poder de terceiros</field>
       <field ref="chart_22" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_23" model="account.account.template">
@@ -189,7 +189,7 @@
       <field name="name">Produtos acabados e intermédios</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_231" model="account.account.template">
@@ -197,7 +197,7 @@
       <field name="name">Produtos acabados em poder de terceiros</field>
       <field ref="chart_23" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_24" model="account.account.template">
@@ -205,7 +205,7 @@
       <field name="name">Subprodutos, desperdícios, resíduos e refugos</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_241" model="account.account.template">
@@ -213,7 +213,7 @@
       <field name="name">Subprodutos</field>
       <field ref="chart_24" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_242" model="account.account.template">
@@ -221,7 +221,7 @@
       <field name="name">Desperdícios, resíduos e refugos</field>
       <field ref="chart_24" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_25" model="account.account.template">
@@ -229,7 +229,7 @@
       <field name="name">Produtos e serviços em curso</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_26" model="account.account.template">
@@ -237,7 +237,7 @@
       <field name="name">Matériais-primas, auxiliares e materiais</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_261" model="account.account.template">
@@ -245,7 +245,7 @@
       <field name="name">Matérias-primas</field>
       <field ref="chart_26" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_262" model="account.account.template">
@@ -253,7 +253,7 @@
       <field name="name">Matérias auxiliares</field>
       <field ref="chart_26" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_263" model="account.account.template">
@@ -261,7 +261,7 @@
       <field name="name">Materiais</field>
       <field ref="chart_26" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_2631" model="account.account.template">
@@ -269,7 +269,7 @@
       <field name="name">Combustíveis e lubrificantes</field>
       <field ref="chart_263" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
    <record id="chart_2632" model="account.account.template">
@@ -277,7 +277,7 @@
       <field name="name">Embalagens comerciais</field>
       <field ref="chart_263" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
    
    <record id="chart_2633" model="account.account.template">
@@ -285,7 +285,7 @@
       <field name="name">Peças sobressalentes</field>
       <field ref="chart_263" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
    
    <record id="chart_2639" model="account.account.template">
@@ -293,7 +293,7 @@
       <field name="name">Materiais diversos</field>
       <field ref="chart_263" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
    
    <record id="chart_264" model="account.account.template">
@@ -301,7 +301,7 @@
       <field name="name">Matérias-primas, auxiliares e materiais em trânsito</field>
       <field ref="chart_26" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
    
     <record id="chart_27" model="account.account.template">
@@ -309,7 +309,7 @@
       <field name="name">Activos biológicos</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
      <record id="chart_271" model="account.account.template">
@@ -317,7 +317,7 @@
       <field name="name">De produção</field>
       <field ref="chart_27" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_2711" model="account.account.template">
@@ -325,7 +325,7 @@
       <field name="name">Animais</field>
       <field ref="chart_271" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_2712" model="account.account.template">
@@ -333,7 +333,7 @@
       <field name="name">Plantas</field>
       <field ref="chart_271" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_272" model="account.account.template">
@@ -341,7 +341,7 @@
       <field name="name">Consumíveis</field>
       <field ref="chart_27" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_2721" model="account.account.template">
@@ -349,7 +349,7 @@
       <field name="name">Animais</field>
       <field ref="chart_272" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_2722" model="account.account.template">
@@ -357,7 +357,7 @@
       <field name="name">Plantas</field>
       <field ref="chart_272" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_28" model="account.account.template">
@@ -365,7 +365,7 @@
       <field name="name">Regularização de inventários</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_282" model="account.account.template">
@@ -373,7 +373,7 @@
       <field name="name">Mercadorias</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_283" model="account.account.template">
@@ -381,7 +381,7 @@
       <field name="name">Produtos acabados e intermédios</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_284" model="account.account.template">
@@ -389,7 +389,7 @@
       <field name="name">Subprodutos, desperdícios, resíduos e refugos</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_285" model="account.account.template">
@@ -397,7 +397,7 @@
       <field name="name">Produtos e trabalhos em curso</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_286" model="account.account.template">
@@ -405,7 +405,7 @@
       <field name="name">Matérias-primas, auxiliares e de materiais</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_287" model="account.account.template">
@@ -413,7 +413,7 @@
       <field name="name">Activos biológicos</field>
       <field ref="chart_28" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record> 
     
     
@@ -422,7 +422,7 @@
       <field name="name">Ajustamentos para o valor realizável líquido</field>
       <field ref="chart_2" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
      <record id="chart_292" model="account.account.template">
@@ -430,7 +430,7 @@
       <field name="name">Mercadorias</field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_293" model="account.account.template">
@@ -438,7 +438,7 @@
       <field name="name">Produtos acabados e intermédios</field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
      
     <record id="chart_294" model="account.account.template">
@@ -446,7 +446,7 @@
       <field name="name">Subprodutos, desperdícios, resíduos ou refugos </field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_295" model="account.account.template">
@@ -454,7 +454,7 @@
       <field name="name">Produtos ou serviços em curso </field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_296" model="account.account.template">
@@ -462,7 +462,7 @@
       <field name="name">Matérias-primas, auxiliares e materiais </field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_297" model="account.account.template">
@@ -470,7 +470,7 @@
       <field name="name">Activos biológicos</field>
       <field ref="chart_29" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_3" model="account.account.template">
@@ -478,7 +478,7 @@
       <field name="name">Investimentos de capital</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_31" model="account.account.template">
@@ -486,7 +486,7 @@
       <field name="name">Investimentos financeiros</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_311" model="account.account.template">
@@ -494,7 +494,7 @@
       <field name="name">Investimentos em subsidiárias</field>
       <field ref="chart_31" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_312" model="account.account.template">
@@ -502,7 +502,7 @@
       <field name="name">Investimentos em associadas</field>
       <field ref="chart_31" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_313" model="account.account.template">
@@ -510,7 +510,7 @@
       <field name="name">Outros investimentos financeiros</field>
       <field ref="chart_31" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_32" model="account.account.template">
@@ -518,7 +518,7 @@
       <field name="name">Activo fixos tangíveis</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_321" model="account.account.template">
@@ -526,7 +526,7 @@
       <field name="name">Construções</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
 	<record id="chart_3211" model="account.account.template">
@@ -534,7 +534,7 @@
       <field name="name">Edifícios industriais</field>
       <field ref="chart_321" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 	
 	<record id="chart_3212" model="account.account.template">
@@ -542,7 +542,7 @@
       <field name="name">Edifícios administrativos e comerciais</field>
       <field ref="chart_321" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 	
 	<record id="chart_3213" model="account.account.template">
@@ -550,7 +550,7 @@
       <field name="name">Edifícios para habitação e outros fins sociais</field>
       <field ref="chart_321" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 	
 	<record id="chart_3216" model="account.account.template">
@@ -558,7 +558,7 @@
       <field name="name">Vias de comunicação e construções afins</field>
       <field ref="chart_321" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 	
     <record id="chart_322" model="account.account.template">
@@ -566,7 +566,7 @@
       <field name="name">Equipamento básico</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
 	<record id="chart_323" model="account.account.template">
@@ -574,7 +574,7 @@
       <field name="name">Mobiliários e equipamento administrativo social</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_324" model="account.account.template">
@@ -582,7 +582,7 @@
       <field name="name">Equipamento de transporte</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>   
     
 	<record id="chart_325" model="account.account.template">
@@ -590,7 +590,7 @@
       <field name="name">Taras e vasilhame</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>   
 	
 	<record id="chart_326" model="account.account.template">
@@ -598,7 +598,7 @@
       <field name="name">Ferramentas e utensílios</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>   
 	
 	<record id="chart_329" model="account.account.template">
@@ -606,7 +606,7 @@
       <field name="name">Outos activos tangíveis</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>   
 	
     <record id="chart_329" model="account.account.template">
@@ -614,7 +614,7 @@
       <field name="name">Outros activos tangíveis</field>
       <field ref="chart_32" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_33" model="account.account.template">
@@ -622,7 +622,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_331" model="account.account.template">
@@ -630,7 +630,7 @@
       <field name="name">Despesas de desenvolvimento</field>
       <field ref="chart_33" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_332" model="account.account.template">
@@ -638,7 +638,7 @@
       <field name="name">Propriedade industrial e outros direitos</field>
       <field ref="chart_33" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_333" model="account.account.template">
@@ -646,7 +646,7 @@
       <field name="name">Trespasse</field>
       <field ref="chart_33" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_334" model="account.account.template">
@@ -654,7 +654,7 @@
       <field name="name">Encargos de constituição ou de expansão</field>
       <field ref="chart_33" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_34" model="account.account.template">
@@ -662,7 +662,7 @@
       <field name="name">Investimentos em curso</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_342" model="account.account.template">
@@ -670,7 +670,7 @@
       <field name="name">Activos tangíveis</field>
       <field ref="chart_34" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_343" model="account.account.template">
@@ -678,7 +678,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_34" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 	
     <record id="chart_36" model="account.account.template">
@@ -686,7 +686,7 @@
       <field name="name">Activos tangíveis de investimento</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
 	<record id="chart_38" model="account.account.template">
@@ -694,7 +694,7 @@
       <field name="name">Depreciações acumuladas</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
 	<record id="chart_382" model="account.account.template">
@@ -702,7 +702,7 @@
       <field name="name">Activos tangíveis</field>
       <field ref="chart_38" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
 	<record id="chart_383" model="account.account.template">
@@ -710,7 +710,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_38" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
 	<record id="chart_386" model="account.account.template">
@@ -718,7 +718,7 @@
       <field name="name">Activos tangíveis de investimento</field>
       <field ref="chart_38" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_39" model="account.account.template">
@@ -726,7 +726,7 @@
       <field name="name">Ajustamentos por conta de investimentos</field>
       <field ref="chart_3" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
 
     <record id="chart_391" model="account.account.template">
@@ -734,7 +734,7 @@
       <field name="name">Investimentos financeiros</field>
       <field ref="chart_39" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_asset" />
+      <field name="user_type" ref="account.data_account_type_asset" />
     </record>
     
     <record id="chart_4" model="account.account.template">
@@ -742,7 +742,7 @@
       <field name="name">Contas a receber, contas a pagar, acréscimos e diferimentos</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_41" model="account.account.template">
@@ -750,7 +750,7 @@
       <field name="name">Clientes</field>
       <field ref="chart_4" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_receivable" />
+      <field name="user_type" ref="account.data_account_type_receivable" />
     </record>
 
     <record id="chart_411" model="account.account.template">
@@ -758,7 +758,7 @@
       <field name="name">Clientes c/c</field>
       <field ref="chart_41" name="parent_id" />
       <field name="type">receivable</field>
-      <field name="user_type" ref="user_type_receivable" />
+      <field name="user_type" ref="account.data_account_type_receivable" />
     </record>
 
     <record id="chart_412" model="account.account.template">
@@ -766,7 +766,7 @@
       <field name="name">Clientes - Títulos a receber</field>
       <field ref="chart_41" name="parent_id" />
       <field name="type">receivable</field>
-      <field name="user_type" ref="user_type_receivable" />
+      <field name="user_type" ref="account.data_account_type_receivable" />
     </record>
     
     <record id="chart_418" model="account.account.template">
@@ -774,7 +774,7 @@
       <field name="name">Clientes de cobrança duvidosa</field>
       <field ref="chart_41" name="parent_id" />
       <field name="type">receivable</field>
-      <field name="user_type" ref="user_type_receivable" />
+      <field name="user_type" ref="account.data_account_type_receivable" />
     </record>
     
     <record id="chart_419" model="account.account.template">
@@ -782,7 +782,7 @@
       <field name="name">Adiantamentos de clientes</field>
       <field ref="chart_41" name="parent_id" />
       <field name="type">receivable</field>
-      <field name="user_type" ref="user_type_receivable" />
+      <field name="user_type" ref="account.data_account_type_receivable" />
     </record>
         
     <record id="chart_42" model="account.account.template">
@@ -790,7 +790,7 @@
       <field name="name">Fornecedores</field>
       <field ref="chart_4" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
     <record id="chart_421" model="account.account.template">
@@ -798,7 +798,7 @@
       <field name="name">Fornecedores c/c</field>
       <field ref="chart_42" name="parent_id" />
       <field name="type">payable</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
    <record id="chart_422" model="account.account.template">
@@ -806,7 +806,7 @@
       <field name="name">Fornecedores - Títulos a pagar</field>
       <field ref="chart_42" name="parent_id" />
       <field name="type">payable</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
    <record id="chart_429" model="account.account.template">
@@ -814,7 +814,7 @@
       <field name="name">Adiantamentos a fornecedores</field>
       <field ref="chart_42" name="parent_id" />
       <field name="type">payable</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 	
     <record id="chart_43" model="account.account.template">
@@ -822,7 +822,7 @@
       <field name="name">Empréstimos obtidos</field>
       <field ref="chart_4" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 	
 	<record id="chart_431" model="account.account.template">
@@ -830,7 +830,7 @@
       <field name="name">Empréstimos bancários</field>
       <field ref="chart_43" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 	
 	<record id="chart_4311" model="account.account.template">
@@ -838,7 +838,7 @@
       <field name="name">de curto prazo</field>
       <field ref="chart_431" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 	
 	<record id="chart_4312" model="account.account.template">
@@ -846,7 +846,7 @@
       <field name="name">de médio e longo prazos</field>
       <field ref="chart_431" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 	
 	
@@ -1160,7 +1160,7 @@
       <field name="name">Outros Credores</field>
       <field ref="chart_4" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
      <record id="chart_461" model="account.account.template">
@@ -1168,7 +1168,7 @@
       <field name="name">Fornecedores de investimento de capital</field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
      
      <record id="chart_4611" model="account.account.template">
@@ -1176,7 +1176,7 @@
       <field name="name">Fornecedores de investimento de capital c/c</field>
       <field ref="chart_461" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
       <record id="chart_4612" model="account.account.template">
@@ -1184,7 +1184,7 @@
       <field name="name">Fornecedores de investimento de capital - Títulos a pagar</field>
       <field ref="chart_461" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
    
     <record id="chart_4613" model="account.account.template">
@@ -1192,7 +1192,7 @@
       <field name="name">Fornecedores de investimento de capital - Adiantamentos</field>
       <field ref="chart_461" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
     <record id="chart_4614" model="account.account.template">
@@ -1200,7 +1200,7 @@
       <field name="name">Fornecedores de investimento de capital - Locação Financeira</field>
       <field ref="chart_461" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
     <record id="chart_4619" model="account.account.template">
@@ -1208,7 +1208,7 @@
       <field name="name">Outras operações</field>
       <field ref="chart_461" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>    
     
      <record id="chart_462" model="account.account.template">
@@ -1216,7 +1216,7 @@
       <field name="name">Pessoal</field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
     <record id="chart_4621" model="account.account.template">
@@ -1224,7 +1224,7 @@
       <field name="name">Remunerações a pagar aos órgãos sociais</field>
       <field ref="chart_462" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
     <record id="chart_4622" model="account.account.template">
@@ -1232,7 +1232,7 @@
       <field name="name">Remunerações a pagar aos trabalhadores </field>
       <field ref="chart_462" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
     <record id="chart_4628" model="account.account.template">
@@ -1240,7 +1240,7 @@
       <field name="name">Outras operações com os orgãos sociais</field>
       <field ref="chart_462" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	
@@ -1249,7 +1249,7 @@
       <field name="name">Outras operações com os trabalhadores</field>
       <field ref="chart_462" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
 	<record id="chart_463" model="account.account.template">
@@ -1257,7 +1257,7 @@
       <field name="name">Sindicatos</field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_466" model="account.account.template">
@@ -1265,7 +1265,7 @@
       <field name="name">Consultores, assessores e intermediários</field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_467" model="account.account.template">
@@ -1273,7 +1273,7 @@
       <field name="name">Credores - sócios, accionistas ou proprietários </field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_4671" model="account.account.template">
@@ -1281,7 +1281,7 @@
       <field name="name">Empréstimos obtidos</field>
       <field ref="chart_467" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_4673" model="account.account.template">
@@ -1289,7 +1289,7 @@
       <field name="name">Resultados atribuídos</field>
       <field ref="chart_467" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_4674" model="account.account.template">
@@ -1297,7 +1297,7 @@
       <field name="name">Lucros disponíveis</field>
       <field ref="chart_467" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
 	<record id="chart_469" model="account.account.template">
@@ -1305,7 +1305,7 @@
       <field name="name">Credores diversos</field>
       <field ref="chart_46" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
 
     <record id="chart_47" model="account.account.template">
@@ -1313,7 +1313,7 @@
       <field name="name">Ajustamentos de contas a receber</field>
       <field ref="chart_4" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
       <record id="chart_471" model="account.account.template">
@@ -1321,7 +1321,7 @@
       <field name="name">Clientes</field>
       <field ref="chart_47" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
     
      <record id="chart_472" model="account.account.template">
@@ -1329,7 +1329,7 @@
       <field name="name">Outros devedores</field>
       <field ref="chart_47" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_payable" />
+      <field name="user_type" ref="account.data_account_type_payable" />
     </record>
         
      <record id="chart_48" model="account.account.template">
@@ -1529,7 +1529,7 @@
       <field name="name">Capital Próprio</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_51" model="account.account.template">
@@ -1537,14 +1537,14 @@
       <field name="name">Capital</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
     <record id="chart_52" model="account.account.template">
       <field name="code">52</field>
       <field name="name">Acções ou quotas próprias</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_521" model="account.account.template">
@@ -1552,7 +1552,7 @@
       <field name="name">Valor nominal</field>
       <field ref="chart_52" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_522" model="account.account.template">
@@ -1560,7 +1560,7 @@
       <field name="name">Descontos e prémios</field>
       <field ref="chart_52" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_53" model="account.account.template">
@@ -1568,7 +1568,7 @@
       <field name="name">Prestações Suplementares</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_54" model="account.account.template">
@@ -1576,7 +1576,7 @@
       <field name="name">Prémios de emissão de acções ou quotas</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_55" model="account.account.template">
@@ -1584,7 +1584,7 @@
       <field name="name">Reservas</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_551" model="account.account.template">
@@ -1592,7 +1592,7 @@
       <field name="name">Reservas legais</field>
       <field ref="chart_55" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_552" model="account.account.template">
@@ -1600,7 +1600,7 @@
       <field name="name">Reservas estatutárias</field>
       <field ref="chart_55" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_553" model="account.account.template">
@@ -1608,7 +1608,7 @@
       <field name="name">Reservas livres</field>
       <field ref="chart_55" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
     
     <record id="chart_56" model="account.account.template">
@@ -1616,7 +1616,7 @@
       <field name="name">Excedentes de revalor. de activos fixos tangíveis e int</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_561" model="account.account.template">
@@ -1624,7 +1624,7 @@
       <field name="name">Reavaliações decorrentes de diplomas legais</field>
       <field ref="chart_56" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_562" model="account.account.template">
@@ -1632,7 +1632,7 @@
       <field name="name">Outros excedentes</field>
       <field ref="chart_56" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
     
     <record id="chart_58" model="account.account.template">
@@ -1640,7 +1640,7 @@
       <field name="name">Outras variações no capital próprio</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_581" model="account.account.template">
@@ -1648,7 +1648,7 @@
       <field name="name">Diferenças de conversão de demonstrações financeiras</field>
       <field ref="chart_58" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_582" model="account.account.template">
@@ -1656,7 +1656,7 @@
       <field name="name">Ajustamentos por impostos diferidos</field>
       <field ref="chart_58" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_583" model="account.account.template">
@@ -1664,7 +1664,7 @@
       <field name="name">Subsídios</field>
       <field ref="chart_58" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_584" model="account.account.template">
@@ -1672,7 +1672,7 @@
       <field name="name">Doações</field>
       <field ref="chart_58" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_589" model="account.account.template">
@@ -1680,7 +1680,7 @@
       <field name="name">Outras</field>
       <field ref="chart_58" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
     
     <record id="chart_59" model="account.account.template">
@@ -1688,7 +1688,7 @@
       <field name="name">Resultados transitados</field>
       <field ref="chart_5" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>   
 
 	<record id="chart_6" model="account.account.template">
@@ -1696,7 +1696,7 @@
       <field name="name">Gastos e Perdas</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_61" model="account.account.template">
@@ -1704,7 +1704,7 @@
       <field name="name">Custo dos inventários</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_611" model="account.account.template">
@@ -1712,7 +1712,7 @@
       <field name="name">Custo dos inventários vendidos ou consumidos</field>
       <field ref="chart_61" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_6112" model="account.account.template">
@@ -1720,7 +1720,7 @@
       <field name="name">De mercadorias</field>
       <field ref="chart_611" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6116" model="account.account.template">
@@ -1728,7 +1728,7 @@
       <field name="name">Matérias-primas, auxiliares e materiais</field>
       <field ref="chart_611" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_61161" model="account.account.template">
@@ -1736,7 +1736,7 @@
       <field name="name">Matérias-primas</field>
       <field ref="chart_6116" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_61162" model="account.account.template">
@@ -1744,7 +1744,7 @@
       <field name="name">Matérias auxiliares</field>
       <field ref="chart_6116" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_61163" model="account.account.template">
@@ -1752,7 +1752,7 @@
       <field name="name">Materiais</field>
       <field ref="chart_6116" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6117" model="account.account.template">
@@ -1760,7 +1760,7 @@
       <field name="name">Activos biológicos</field>
       <field ref="chart_611" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_612" model="account.account.template">
@@ -1768,7 +1768,7 @@
       <field name="name">Variação da Produção</field>
       <field ref="chart_61" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6121" model="account.account.template">
@@ -1776,7 +1776,7 @@
       <field name="name">Produtos acabados e intermédios</field>
       <field ref="chart_612" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6122" model="account.account.template">
@@ -1784,7 +1784,7 @@
       <field name="name">Subprodutos, desperdícios, resíduos e refugos</field>
       <field ref="chart_612" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6123" model="account.account.template">
@@ -1792,7 +1792,7 @@
       <field name="name">Produtos e serviços em curso</field>
       <field ref="chart_612" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	 <record id="chart_62" model="account.account.template">
@@ -1800,7 +1800,7 @@
       <field name="name">Gastos com o pessoal</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_621" model="account.account.template">
@@ -1808,7 +1808,7 @@
       <field name="name">Remunerações dos órgãos sociais</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_622" model="account.account.template">
@@ -1816,7 +1816,7 @@
       <field name="name"> Remunerações dos trabalhadores</field>
       <field ref="chart_62" name="parent_id" />
 	  <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_623" model="account.account.template">
@@ -1824,7 +1824,7 @@
       <field name="name">Encargos sobre remunerações</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_625" model="account.account.template">
@@ -1832,7 +1832,7 @@
       <field name="name">Ajudas de custo</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6251" model="account.account.template">
@@ -1840,7 +1840,7 @@
       <field name="name">Ajudas de custo tributáveis</field>
       <field ref="chart_625" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6252" model="account.account.template">
@@ -1848,7 +1848,7 @@
       <field name="name">Ajudas de custo não tributáveis</field>
       <field ref="chart_625" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_626" model="account.account.template">
@@ -1856,7 +1856,7 @@
       <field name="name">Indemnizações</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6261" model="account.account.template">
@@ -1864,7 +1864,7 @@
       <field name="name">Indemnizações - Risco segurável</field>
       <field ref="chart_626" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6262" model="account.account.template">
@@ -1872,7 +1872,7 @@
       <field name="name">Indemnizações - Outras</field>
       <field ref="chart_626" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_627" model="account.account.template">
@@ -1880,7 +1880,7 @@
       <field name="name">Seguros de acidentes no trabalho e doenças profissionais</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_628" model="account.account.template">
@@ -1888,7 +1888,7 @@
       <field name="name">Gastos de acção social</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_629" model="account.account.template">
@@ -1896,7 +1896,7 @@
       <field name="name">Outros gastos com pessoal</field>
       <field ref="chart_62" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_63" model="account.account.template">
@@ -1904,7 +1904,7 @@
       <field name="name">Fornecimentos e serviços de terceiros</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_631" model="account.account.template">
@@ -1912,7 +1912,7 @@
       <field name="name">Subcontratos</field>
       <field ref="chart_63" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_632" model="account.account.template">
@@ -1920,7 +1920,7 @@
       <field name="name">Fornecimentos e serviços</field>
       <field ref="chart_63" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_63211" model="account.account.template">
@@ -1928,7 +1928,7 @@
       <field name="name">Água</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_63212" model="account.account.template">
@@ -1936,7 +1936,7 @@
       <field name="name">Electricidade</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_63213" model="account.account.template">
@@ -1944,7 +1944,7 @@
       <field name="name">Combustíveis</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_632131" model="account.account.template">
@@ -1952,7 +1952,7 @@
       <field name="name">Gasóleo</field>
       <field ref="chart_63213" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6321311" model="account.account.template">
@@ -1960,7 +1960,7 @@
       <field name="name">Gasóleo - viaturas ligeiras de passageiros</field>
       <field ref="chart_632131" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6321312" model="account.account.template">
@@ -1968,7 +1968,7 @@
       <field name="name">Gasóleo - outros</field>
 	  <field ref="chart_632131" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_632132" model="account.account.template">
@@ -1976,7 +1976,7 @@
       <field name="name">Restantes combustíveis</field>
       <field ref="chart_632131" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6321321" model="account.account.template">
@@ -1984,7 +1984,7 @@
       <field name="name">Restantes combustíveis - Viaturas ligeiras de passageiros</field>
       <field ref="chart_632132" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6321322" model="account.account.template">
@@ -1992,7 +1992,7 @@
       <field name="name">Restantes combustíveis - Outros</field>
       <field ref="chart_632132" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_632133" model="account.account.template">
@@ -2000,7 +2000,7 @@
       <field name="name">Lubrificantes</field>
       <field ref="chart_63213" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6321331" model="account.account.template">
@@ -2008,7 +2008,7 @@
       <field name="name">Lubrificantes - Viaturas ligeiras de passageiros</field>
       <field ref="chart_632133" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6321332" model="account.account.template">
@@ -2016,7 +2016,7 @@
       <field name="name">Lubrificantes - Outros</field>
       <field ref="chart_632133" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63214" model="account.account.template">
@@ -2024,7 +2024,7 @@
       <field name="name">Ferramentas e utensílios de desgaste rápido</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_63215" model="account.account.template">
@@ -2032,7 +2032,7 @@
       <field name="name">Material de manutenção e reparação</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_632151" model="account.account.template">
@@ -2040,7 +2040,7 @@
       <field name="name">Material de manutenção e reparação - Viatuas ligeiras de passageiros</field>
       <field ref="chart_63215" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_632152" model="account.account.template">
@@ -2048,7 +2048,7 @@
       <field name="name">Material de manutenção e reparação - Outros</field>
       <field ref="chart_63215" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63216" model="account.account.template">
@@ -2056,7 +2056,7 @@
       <field name="name">Material de escritório</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63217" model="account.account.template">
@@ -2064,7 +2064,7 @@
       <field name="name">Livros e documentação</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63218" model="account.account.template">
@@ -2072,7 +2072,7 @@
       <field name="name">Artigos para oferta</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63221" model="account.account.template">
@@ -2080,7 +2080,7 @@
       <field name="name">Manutenção e reparação</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63222" model="account.account.template">
@@ -2088,7 +2088,7 @@
       <field name="name">Transporte de cargas</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63223" model="account.account.template">
@@ -2096,7 +2096,7 @@
       <field name="name">Transporte de pessoal</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63224" model="account.account.template">
@@ -2104,7 +2104,7 @@
       <field name="name">Comunicações</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63225" model="account.account.template">
@@ -2112,7 +2112,7 @@
       <field name="name">Honorários</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_63226" model="account.account.template">
@@ -2120,7 +2120,7 @@
       <field name="name">Comissões e intermediários</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63227" model="account.account.template">
@@ -2128,7 +2128,7 @@
       <field name="name">Publicidade e propaganda</field>
 	  <field ref="chart_632" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632271" model="account.account.template">
@@ -2136,7 +2136,7 @@
       <field name="name">Publicidade e propaganda - Campanhas publicitárias</field>
       <field ref="chart_63227" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632272" model="account.account.template">
@@ -2144,7 +2144,7 @@
       <field name="name">Publicidade e propaganda - Outros</field>
       <field ref="chart_63227" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63228" model="account.account.template">
@@ -2152,7 +2152,7 @@
       <field name="name">Deslocações e estadias</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632281" model="account.account.template">
@@ -2160,7 +2160,7 @@
       <field name="name">Deslocações e estadias - Em serviço</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632282" model="account.account.template">
@@ -2168,7 +2168,7 @@
       <field name="name">Deslocações e estadias - Outras deslocações</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63229" model="account.account.template">
@@ -2176,7 +2176,7 @@
       <field name="name">Despesas de representação</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63231" model="account.account.template">
@@ -2184,7 +2184,7 @@
       <field name="name">Contencioso e notariado</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63232" model="account.account.template">
@@ -2192,7 +2192,7 @@
       <field name="name">Rendas e alugueres</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632321" model="account.account.template">
@@ -2200,7 +2200,7 @@
       <field name="name">Rendas e alugueres - Locação financeira</field>
       <field ref="chart_63232" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63233" model="account.account.template">
@@ -2208,7 +2208,7 @@
       <field name="name">Seguros</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_632331" model="account.account.template">
@@ -2216,7 +2216,7 @@
       <field name="name">Seguros de vida, acidentes pessoas e doença</field>
       <field ref="chart_63233" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63234" model="account.account.template">
@@ -2224,7 +2224,7 @@
       <field name="name">Royalties</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63235" model="account.account.template">
@@ -2232,7 +2232,7 @@
       <field name="name">Limpeza, higiene e conforto</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63236" model="account.account.template">
@@ -2240,7 +2240,7 @@
       <field name="name">Vigilância e segurança</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63237" model="account.account.template">
@@ -2248,7 +2248,7 @@
       <field name="name">Trabalhos especializados</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_63299" model="account.account.template">
@@ -2256,7 +2256,7 @@
       <field name="name">Outros fornecimentos e serviço</field>
       <field ref="chart_632" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>	
 	
     <record id="chart_64" model="account.account.template">
@@ -2264,7 +2264,7 @@
       <field name="name">Ajustamentos do período</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_641" model="account.account.template">
@@ -2272,7 +2272,7 @@
       <field name="name">Ajustamentos de inventários para p valo relizável líquido</field>
       <field ref="chart_64" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_642" model="account.account.template">
@@ -2280,7 +2280,7 @@
       <field name="name">Investimentos financeiros</field>
       <field ref="chart_64" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
 	<record id="chart_643" model="account.account.template">
@@ -2288,7 +2288,7 @@
       <field name="name">Activos tangíveis de investimenos</field>
       <field ref="chart_64" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_644" model="account.account.template">
@@ -2296,7 +2296,7 @@
       <field name="name">Contas a receber</field>
       <field ref="chart_64" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6441" model="account.account.template">
@@ -2304,7 +2304,7 @@
       <field name="name">Contas a receber - ajustamentos dentro dos limites fiscais</field>
       <field ref="chart_644" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6442" model="account.account.template">
@@ -2312,7 +2312,7 @@
       <field name="name">Contas a receber - ajustamentos para além dos limites fiscais</field>
       <field ref="chart_644" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_65" model="account.account.template">
@@ -2320,7 +2320,7 @@
       <field name="name">Amortizações do período</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_651" model="account.account.template">
@@ -2328,7 +2328,7 @@
       <field name="name">Activos tangíveis</field>
       <field ref="chart_65" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_652" model="account.account.template">
@@ -2336,7 +2336,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_65" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_653" model="account.account.template">
@@ -2344,7 +2344,7 @@
       <field name="name">Activos tangíveis de investimento</field>
       <field ref="chart_65" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 		
     
@@ -2353,7 +2353,7 @@
       <field name="name">Provisões do período</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>    
 
     <record id="chart_661" model="account.account.template">
@@ -2361,7 +2361,7 @@
       <field name="name">Processos judiciais em curso</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_662" model="account.account.template">
@@ -2369,7 +2369,7 @@
       <field name="name">Acidentes de trabalho e doenças profissionais</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_663" model="account.account.template">
@@ -2377,7 +2377,7 @@
       <field name="name">Impostos</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_664" model="account.account.template">
@@ -2385,7 +2385,7 @@
       <field name="name">Reestruturação de negócios</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_665" model="account.account.template">
@@ -2393,7 +2393,7 @@
       <field name="name">Contratos onerosos</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_666" model="account.account.template">
@@ -2401,7 +2401,7 @@
       <field name="name">Garantias a clientes</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_667" model="account.account.template">
@@ -2409,7 +2409,7 @@
       <field name="name">Perdas em contratos de construção</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_669" model="account.account.template">
@@ -2417,7 +2417,7 @@
       <field name="name">Outras provisões</field>
       <field ref="chart_66" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_68" model="account.account.template">
@@ -2425,7 +2425,7 @@
       <field name="name">Outros gastos e perdas operacionais</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_681" model="account.account.template">
@@ -2433,7 +2433,7 @@
       <field name="name">Despesas de investigação e pesquisa </field>
       <field ref="chart_68" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_682" model="account.account.template">
@@ -2441,7 +2441,7 @@
       <field name="name">Impostos e taxas</field>
       <field ref="chart_68" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6821" model="account.account.template">
@@ -2449,7 +2449,7 @@
       <field name="name">Direitos aduaneiros</field>
       <field ref="chart_682" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6822" model="account.account.template">
@@ -2457,7 +2457,7 @@
       <field name="name">Imposto sobre o Valor Acrescentado</field>
       <field ref="chart_682" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6823" model="account.account.template">
@@ -2465,7 +2465,7 @@
       <field name="name">Imposto de selo</field>
       <field ref="chart_682" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6824" model="account.account.template">
@@ -2473,7 +2473,7 @@
       <field name="name">Imposto sobre veículos</field>
       <field ref="chart_682" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6825" model="account.account.template">
@@ -2481,7 +2481,7 @@
       <field name="name">Imposto autárquicos</field>
       <field ref="chart_682" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_683" model="account.account.template">
@@ -2489,7 +2489,7 @@
       <field name="name">Perdas em investimentos de capital</field>
       <field ref="chart_68" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6831" model="account.account.template">
@@ -2497,7 +2497,7 @@
       <field name="name">Alienação</field>
       <field ref="chart_683" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6832" model="account.account.template">
@@ -2505,7 +2505,7 @@
       <field name="name">Abates</field>
       <field ref="chart_683" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6833" model="account.account.template">
@@ -2513,7 +2513,7 @@
       <field name="name">Sinistros</field>
       <field ref="chart_683" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_684" model="account.account.template">
@@ -2521,7 +2521,7 @@
       <field name="name">Perdas em inventários e activos biológicos</field>
       <field ref="chart_68" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6841" model="account.account.template">
@@ -2529,7 +2529,7 @@
       <field name="name">Sinistros</field>
       <field ref="chart_684" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6842" model="account.account.template">
@@ -2537,7 +2537,7 @@
       <field name="name">Quebras</field>
       <field ref="chart_684" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6843" model="account.account.template">
@@ -2545,7 +2545,7 @@
       <field name="name">Outras</field>
       <field ref="chart_684" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_689" model="account.account.template">
@@ -2553,7 +2553,7 @@
       <field name="name">Outros gastos operacionais</field>
       <field ref="chart_68" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6891" model="account.account.template">
@@ -2561,7 +2561,7 @@
       <field name="name">Quotizações</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6892" model="account.account.template">
@@ -2569,7 +2569,7 @@
       <field name="name">Despesas confidenciais</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6893" model="account.account.template">
@@ -2577,7 +2577,7 @@
       <field name="name">Ofertas e amostras de inventários</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6894" model="account.account.template">
@@ -2585,7 +2585,7 @@
       <field name="name">Programas de responsabilidade social</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6895" model="account.account.template">
@@ -2593,7 +2593,7 @@
       <field name="name">Donativos</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_68951" model="account.account.template">
@@ -2601,7 +2601,7 @@
       <field name="name">Donativos ao Estado</field>
       <field ref="chart_6895" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_68952" model="account.account.template">
@@ -2609,7 +2609,7 @@
       <field name="name">Outros donativos no âmbito do Mecenato</field>
       <field ref="chart_6895" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6896" model="account.account.template">
@@ -2617,7 +2617,7 @@
       <field name="name">Multas e penalidades</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
     
     <record id="chart_6899" model="account.account.template">
@@ -2625,7 +2625,7 @@
       <field name="name">Outros</field>
       <field ref="chart_689" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
         
     <record id="chart_69" model="account.account.template">
@@ -2633,7 +2633,7 @@
       <field name="name">Gastos e perdas financeiros</field>
       <field ref="chart_6" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_691" model="account.account.template">
@@ -2641,7 +2641,7 @@
       <field name="name">Juros suportados</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6911" model="account.account.template">
@@ -2649,7 +2649,7 @@
       <field name="name">Empréstimos bancários</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6913" model="account.account.template">
@@ -2657,7 +2657,7 @@
       <field name="name">Empréstimos de sócios, accionistas ou proprietários</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6914" model="account.account.template">
@@ -2665,7 +2665,7 @@
       <field name="name">Outros empréstimos</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6915" model="account.account.template">
@@ -2673,7 +2673,7 @@
       <field name="name">Descontos de títulos</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6916" model="account.account.template">
@@ -2681,7 +2681,7 @@
       <field name="name">Juros de mora e compensatorios</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_69161" model="account.account.template">
@@ -2689,7 +2689,7 @@
       <field name="name">Juros de mora</field>
       <field ref="chart_6916" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_69162" model="account.account.template">
@@ -2697,7 +2697,7 @@
       <field name="name">Juros compensatórios</field>
       <field ref="chart_6916" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6919" model="account.account.template">
@@ -2705,7 +2705,7 @@
       <field name="name">Outos juros</field>
       <field ref="chart_691" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_694" model="account.account.template">
@@ -2713,7 +2713,7 @@
       <field name="name">Diferenças de câmbio desfavoráveis</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
     <record id="chart_6941" model="account.account.template">
@@ -2721,7 +2721,7 @@
       <field name="name">Realizadas</field>
       <field ref="chart_694" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 
 	<record id="chart_6942" model="account.account.template">
@@ -2729,7 +2729,7 @@
       <field name="name">Não realizadas</field>
       <field ref="chart_694" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
     <record id="chart_695" model="account.account.template">
@@ -2737,7 +2737,7 @@
       <field name="name">Descontos de pronto pagamento concedidos</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_698" model="account.account.template">
@@ -2745,7 +2745,7 @@
       <field name="name">Ouros gatos e perdas financeiros</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6981" model="account.account.template">
@@ -2753,7 +2753,7 @@
       <field name="name">Serviços bancários</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>
 	
 	<record id="chart_6989" model="account.account.template">
@@ -2761,7 +2761,7 @@
       <field name="name">Diversos não especificados</field>
       <field ref="chart_69" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_expense" />
+      <field name="user_type" ref="account.data_account_type_expense" />
     </record>	    
 
 	
@@ -2770,7 +2770,7 @@
       <field name="name">Rendimentos e ganhos</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_71" model="account.account.template">
@@ -2778,7 +2778,7 @@
       <field name="name">Vendas</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_711" model="account.account.template">
@@ -2786,7 +2786,7 @@
       <field name="name">Mercadoria</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_712" model="account.account.template">
@@ -2794,7 +2794,7 @@
       <field name="name">Produtos acabados e intermédios</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_713" model="account.account.template">
@@ -2802,7 +2802,7 @@
       <field name="name">Subprodutos, desperdícios, resíduos e refugos</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_714" model="account.account.template">
@@ -2810,7 +2810,7 @@
       <field name="name">Activos biológicos</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_715" model="account.account.template">
@@ -2818,7 +2818,7 @@
       <field name="name">Iva das vendas com imposto incluído</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_716" model="account.account.template">
@@ -2826,7 +2826,7 @@
       <field name="name">Devolução de vendas</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_717" model="account.account.template">
@@ -2834,7 +2834,7 @@
       <field name="name">Descontos e abatimentos</field>
       <field ref="chart_71" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     
@@ -2843,7 +2843,7 @@
       <field name="name">Prestações de serviços</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_721" model="account.account.template">
@@ -2851,7 +2851,7 @@
       <field name="name">IVA da prestação de serviços com imposto incluído</field>
       <field ref="chart_72" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_726" model="account.account.template">
@@ -2859,7 +2859,7 @@
       <field name="name">Descontos e abatimentos</field>
       <field ref="chart_72" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record> 
     
     <record id="chart_73" model="account.account.template">
@@ -2867,7 +2867,7 @@
       <field name="name">Investimentos realizados pela própria empresa</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_731" model="account.account.template">
@@ -2875,7 +2875,7 @@
       <field name="name">Investimentos financeiros</field>
       <field ref="chart_73" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_732" model="account.account.template">
@@ -2883,7 +2883,7 @@
       <field name="name">Activos tangíveis</field>
       <field ref="chart_73" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_733" model="account.account.template">
@@ -2891,7 +2891,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_73" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_734" model="account.account.template">
@@ -2899,7 +2899,7 @@
       <field name="name">Investimentos em curso</field>
       <field ref="chart_73" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_74" model="account.account.template">
@@ -2907,7 +2907,7 @@
       <field name="name">Reversões do período</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_741" model="account.account.template">
@@ -2915,7 +2915,7 @@
       <field name="name">De ajustamentos</field>
       <field ref="chart_74" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7411" model="account.account.template">
@@ -2923,7 +2923,7 @@
       <field name="name">Ajustamentos de inventários para o valor realizável líquido</field>
       <field ref="chart_741" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7412" model="account.account.template">
@@ -2931,7 +2931,7 @@
       <field name="name">Investimentos financeiros</field>
       <field ref="chart_741" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7413" model="account.account.template">
@@ -2939,7 +2939,7 @@
       <field name="name">Activos tangíveis de investimento</field>
       <field ref="chart_741" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7414" model="account.account.template">
@@ -2947,7 +2947,7 @@
       <field name="name">Contas a receber</field>
       <field ref="chart_741" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_742" model="account.account.template">
@@ -2955,7 +2955,7 @@
       <field name="name">De amortizações</field>
       <field ref="chart_74" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7421" model="account.account.template">
@@ -2963,7 +2963,7 @@
       <field name="name">Activos tangíveis</field>
       <field ref="chart_742" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7422" model="account.account.template">
@@ -2971,7 +2971,7 @@
       <field name="name">Activos intangíveis</field>
       <field ref="chart_742" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7423" model="account.account.template">
@@ -2979,7 +2979,7 @@
       <field name="name">Activos tangíveis de investimento</field>
       <field ref="chart_742" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_743" model="account.account.template">
@@ -2987,7 +2987,7 @@
       <field name="name">De provisões</field>
       <field ref="chart_74" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7431" model="account.account.template">
@@ -2995,7 +2995,7 @@
       <field name="name">Processos judiciais em curso</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7432" model="account.account.template">
@@ -3003,7 +3003,7 @@
       <field name="name">Acidentes no trabalho e doenças profissionais</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7433" model="account.account.template">
@@ -3011,7 +3011,7 @@
       <field name="name">Impostos</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7434" model="account.account.template">
@@ -3019,7 +3019,7 @@
       <field name="name">Reestruturação de negócios</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7435" model="account.account.template">
@@ -3027,7 +3027,7 @@
       <field name="name">Contratos oneroso</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7436" model="account.account.template">
@@ -3035,7 +3035,7 @@
       <field name="name">Garantias a clientes</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7437" model="account.account.template">
@@ -3043,7 +3043,7 @@
       <field name="name">Perdas em contratos de construção</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_7439" model="account.account.template">
@@ -3051,7 +3051,7 @@
       <field name="name">Outras provisões</field>
       <field ref="chart_743" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
    
     <record id="chart_75" model="account.account.template">
@@ -3059,7 +3059,7 @@
       <field name="name">Rendimentos suplementares</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_76" model="account.account.template">
@@ -3067,7 +3067,7 @@
       <field name="name">Outros rendimentos e ganhos operacionais</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_761" model="account.account.template">
@@ -3075,7 +3075,7 @@
       <field name="name">Subsídios para investimentos</field>
       <field ref="chart_76" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7611" model="account.account.template">
@@ -3083,7 +3083,7 @@
       <field name="name">Do Estado e outros organismos públicos</field>
       <field ref="chart_761" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7619" model="account.account.template">
@@ -3091,7 +3091,7 @@
       <field name="name">De outras entidades</field>
       <field ref="chart_761" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_762" model="account.account.template">
@@ -3099,7 +3099,7 @@
       <field name="name">Subsídios à exploração</field>
       <field ref="chart_76" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7621" model="account.account.template">
@@ -3107,7 +3107,7 @@
       <field name="name">Do Estado e outras entidades públicas</field>
       <field ref="chart_762" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
     <record id="chart_7629" model="account.account.template">
@@ -3115,7 +3115,7 @@
       <field name="name">de outras entidades</field>
       <field ref="chart_762" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_763" model="account.account.template">
@@ -3123,7 +3123,7 @@
       <field name="name">Ganhos em investimentos de capital</field>
       <field ref="chart_76" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_7631" model="account.account.template">
@@ -3131,7 +3131,7 @@
       <field name="name">Alienação</field>
       <field ref="chart_763" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_7632" model="account.account.template">
@@ -3139,7 +3139,7 @@
       <field name="name">Sinistros</field>
       <field ref="chart_763" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     	
 	<record id="chart_764" model="account.account.template">
@@ -3147,7 +3147,7 @@
       <field name="name">Ganhos em inventários e activos biológicos</field>
       <field ref="chart_76" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_7641" model="account.account.template">
@@ -3155,7 +3155,7 @@
       <field name="name">Sinistros</field>
       <field ref="chart_764" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_7642" model="account.account.template">
@@ -3163,7 +3163,7 @@
       <field name="name">Sobras</field>
       <field ref="chart_764" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_7649" model="account.account.template">
@@ -3171,7 +3171,7 @@
       <field name="name">Outros</field>
       <field ref="chart_764" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_769" model="account.account.template">
@@ -3179,7 +3179,7 @@
       <field name="name">Outros rendimentos alheios ao valor acrescentado</field>
       <field ref="chart_76" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
     
 	<record id="chart_7691" model="account.account.template">
@@ -3187,7 +3187,7 @@
       <field name="name">Restituição de impostos</field>
       <field ref="chart_769" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_7692" model="account.account.template">
@@ -3195,7 +3195,7 @@
       <field name="name">Benefícíosos de penalidades constratuais</field>
       <field ref="chart_769" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_7693" model="account.account.template">
@@ -3203,7 +3203,7 @@
       <field name="name">Excesso de estimativa para impostos</field>
       <field ref="chart_769" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_7699" model="account.account.template">
@@ -3211,7 +3211,7 @@
       <field name="name">Outros</field>
       <field ref="chart_769" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 	
 	<record id="chart_78" model="account.account.template">
@@ -3219,7 +3219,7 @@
       <field name="name">Rendimentos e ganhos financeiros</field>
       <field ref="chart_7" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_781" model="account.account.template">
@@ -3227,7 +3227,7 @@
       <field name="name">Juros obtidos</field>
       <field ref="chart_78" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7811" model="account.account.template">
@@ -3235,7 +3235,7 @@
       <field name="name">Depósitos bancários</field>
       <field ref="chart_781" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7812" model="account.account.template">
@@ -3243,7 +3243,7 @@
       <field name="name">Empréstimos</field>
       <field ref="chart_781" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7814" model="account.account.template">
@@ -3251,7 +3251,7 @@
       <field name="name">Outras aplicações de tesouraria</field>
       <field ref="chart_781" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7819" model="account.account.template">
@@ -3259,7 +3259,7 @@
       <field name="name">Outros juros</field>
       <field ref="chart_781" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_782" model="account.account.template">
@@ -3267,7 +3267,7 @@
       <field name="name">Rendimentos de activos tangíveis de investimento</field>
       <field ref="chart_78" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_783" model="account.account.template">
@@ -3275,7 +3275,7 @@
       <field name="name">Rendimentos de investimentos financeiros</field>
       <field ref="chart_78" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_784" model="account.account.template">
@@ -3283,7 +3283,7 @@
       <field name="name">Diferenças de câmbio favoráveis</field>
       <field ref="chart_78" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7841" model="account.account.template">
@@ -3291,7 +3291,7 @@
       <field name="name">Realizadas</field>
       <field ref="chart_784" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_7842" model="account.account.template">
@@ -3299,7 +3299,7 @@
       <field name="name">Não realizadas</field>
       <field ref="chart_784" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>
 
     <record id="chart_785" model="account.account.template">
@@ -3307,7 +3307,7 @@
       <field name="name">Descontos de pronto pagamento obtidos</field>
       <field ref="chart_78" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_income" />
+      <field name="user_type" ref="account.data_account_type_income" />
     </record>    
     
     <record id="chart_8" model="account.account.template">
@@ -3315,7 +3315,7 @@
       <field name="name">Resultados</field>
       <field ref="chart_0" name="parent_id" />
       <field name="type">view</field>
-      <field name="user_type" ref="user_type_view" />
+      <field name="user_type" ref="account.data_account_type_view" />
     </record>
 
     <record id="chart_81" model="account.account.template">
@@ -3323,7 +3323,7 @@
       <field name="name">Resultado operacionais</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_82" model="account.account.template">
@@ -3331,7 +3331,7 @@
       <field name="name">Resultados financeiros</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_83" model="account.account.template">
@@ -3339,7 +3339,7 @@
       <field name="name">Resultados correntes</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_85" model="account.account.template">
@@ -3347,7 +3347,7 @@
       <field name="name">Impostos sobre o rendimento</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_88" model="account.account.template">
@@ -3355,7 +3355,7 @@
       <field name="name">Resultado liquido do período</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     <record id="chart_89" model="account.account.template">
@@ -3363,7 +3363,7 @@
       <field name="name">Dividendos antecipados</field>
       <field ref="chart_8" name="parent_id" />
       <field name="type">other</field>
-      <field name="user_type" ref="user_type_liability" />
+      <field name="user_type" ref="account.data_account_type_liability" />
     </record>
 
     </data>
