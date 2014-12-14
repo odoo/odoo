@@ -70,10 +70,11 @@ class ir_translation_import_cursor(object):
 
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
-        cr.execute('''CREATE TEMP TABLE %s(
+         cr.execute('''CREATE TABLE IF NOT EXISTS %s(
             imd_model VARCHAR(64),
             imd_name VARCHAR(128)
             ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
+        cr.execute('''TRUNCATE TABLE %s ''' % self._table_name)
 
     def push(self, trans_dict):
         """Feed a translation, as a dictionary, into the cursor
@@ -151,7 +152,7 @@ class ir_translation_import_cursor(object):
             _logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
 
         # Step 4: cleanup
-        cr.execute("DROP TABLE %s" % self._table_name)
+        # cr.execute("DROP TABLE %s" % self._table_name)
         return True
 
 class ir_translation(osv.osv):
