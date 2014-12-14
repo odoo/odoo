@@ -34,10 +34,9 @@
             $('.fa-google-plus').on('click', $.proxy(this.renderSocial, this, 'google-plus', this.hashtag_list));
         },
         renderElement: function() {
-            if (this.template == 'website.social_share_modal'){
-                $('body').append(qweb.render(this.template, {medias: this.social_list}));
-                $('#social_share_modal').modal('show');
-            } else {
+            if (this.template == 'website.social_alert') {
+                $('.row .question').before(qweb.render(this.template, {medias: this.social_list}));
+            } else if (this.template == 'website.social_hover') {
                 this.$el.append(qweb.render(this.template, {medias: this.social_list, id: this.target}));
                 //we need to re-render the element on each hover; popover has the nasty habit of not hiding but completely removing its code from the page
                 //so the binding is lost if we simply trigger on hover.
@@ -57,18 +56,14 @@
                         }
                     }, 200);
                 });
+            } else {
+                $('body').append(qweb.render(this.template, {medias: this.social_list}));
+                $('#social_share_modal').modal('show');
             }
         },
         renderSocial: function(social, hashtag_list){
             var url = document.URL.split(/[?#]/)[0] // get current url without query string
             var title = document.title.split(" | ")[0]; // get the page title without the company name
-            var content = $($(this.element).parents().find('.row').find('p')[0]).html(); // fetch the first paragraph in the parent 'row' div (norally related to the content we want to share)
-            if (!content) {
-                content = $("meta[property='og:description']").attr('content'); // if the content retrieval failed, fetch the og:description meta tag
-            }
-            if (!content) {
-                content = ''; //if all fails, default text is empty
-            }
             var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ',''); // company name without spaces (for hashtag)
             if (hashtag_list) {
                 for (var i=0; i<hashtag_list.length; i++) {
@@ -79,7 +74,7 @@
             var social_network = {
                 'facebook':'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
                 'twitter': 'https://twitter.com/intent/tweet?original_referer=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title + hashtags + ' - ' + url),
-                'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + '&summary=' + encodeURIComponent(content),
+                'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title),
                 'google-plus': 'https://plus.google.com/share?url=' + encodeURIComponent(url)
             };
             if (_.contains(_.keys(social_network), social)){
@@ -95,19 +90,30 @@
             var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
             var hashtag_list = eval($(this).data('hashtag_list'));
             var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
-            new website.social_share('social_share',$(this), social_list, hashtag_list);
+            new website.social_share('social_hover',$(this), social_list, hashtag_list);
         });
+    });
+
+    website.ready().done(function() {
+        if (Date.now()-Date.parse($('.row .question').attr('date')) > 864*10e5) { //If the question is older than 864/10e5 seconds (=10 days)
+            console.log('>10days');
+            var hashtag_list = ['question'];
+            var social_list = ['facebook','twitter', 'linkedin', 'google-plus'];
+            new website.social_share('social_alert',$(this), social_list, hashtag_list);
+        }
     });
 
     // Display modal after new question/answer
     $(document.body).on('click', '.social_share_call', function() {
         var default_social_list = ['facebook','twitter', 'linkedin', 'google-plus']
-        var hashtag_list = eval($(this).data('hashtag_list'));
+        var hashtag_list = eval($(this).data('hashtag-list'));
         var social_list = _.intersection(eval($(this).data('social')) || default_social_list, default_social_list);
+        var social_template = eval($(this).data('social-template'));
 
         var dataObject = {};
         dataObject_func('social_list', social_list);
         dataObject_func('hashtag_list', hashtag_list);
+        dataObject_func('social_template', social_template);
         function dataObject_func(propertyName, propertyValue)
         {
             if(propertyValue) dataObject[propertyName] = propertyValue;
@@ -122,7 +128,7 @@
             // Retrieve the object from storage
             var dataObject = JSON.parse(localStorage.getItem('social_share'));
             new website.social_share(
-                'social_share_modal',
+                'social_'+dataObject['social_template'],
                 $(this),
                 dataObject['social_list'],
                 dataObject['hashtag_list']
