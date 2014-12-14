@@ -500,6 +500,24 @@
                 element:        "button[data-action=save]"
             },
             {
+                title:          "wait...",
+                waitFor:        "html"
+            },
+            {
+                title:          "exit the admin mode 1/2",
+                waitFor:        "a.dropdown-toggle:has(span:contains('Administrator'))",
+                element:        "a.dropdown-toggle:has(span:contains('Administrator'))"
+            },
+            {
+                title:          "exit the admin mode 2/2",
+                waitFor:        "a[href='/web/session/logout?redirect=/']:visible",
+                element:        "a[href='/web/session/logout?redirect=/']"
+            },
+            {
+                title:          "wait for logout",
+                waitFor:        "a[href='/web/login']"
+            },
+            {
                 title:          "Try to send empty form",
                 waitFor:        "form[action='/website_form/mail.mail']" +
                                 "[data-model='mail.mail']" +
@@ -656,7 +674,7 @@
                 waitFor:        "form.o_send-success:has(.alert-success:visible):has(.alert-danger:hidden)"
             },
             {
-                title:          "Usless step",
+                title:          "Final Step",
                 waitFor:        "html"
             }
         ]
