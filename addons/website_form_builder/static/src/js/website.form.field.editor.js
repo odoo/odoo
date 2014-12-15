@@ -610,7 +610,7 @@
         },
         textareaLoadData: function() {
             this.wizard.find('.field_name').html(_t('Textarea'));
-            this.getFields(['char', 'text']);
+            this.getFields(['char', 'text', 'html']);
             this.wizard.find('.form-field-placeholder')  .val(this.$target.find('.form-data').prop('placeholder'));        // Load placeholder on wizard
         },
         inputfileLoadData: function() {

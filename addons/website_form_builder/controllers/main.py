@@ -11,7 +11,7 @@ class form_builder(http.Controller):
               
     def __init__(self):
         
-        self.filter = {'char': self.char, 'text': self.text, 'many2one': self.many2one, 
+        self.filter = {'char': self.char, 'text': self.text, 'html': self.html, 'many2one': self.many2one, 
                        'one2many': self.one2many, 'many2many':self.many2many, 'selection': self.selection, 
                        'boolean': self.boolean,'integer': self.integer,'float': self.float}
     
@@ -31,6 +31,9 @@ class form_builder(http.Controller):
         return input
     
     def text(self, label, input):
+        return input
+
+    def html(self, label, input):
         return input
     
     def many2one(self, label, input):
