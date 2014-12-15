@@ -33,7 +33,6 @@ Plan contable argentino e impuestos de acuerdo a disposiciones vigentes
     'category': 'Localization/Account Charts',
     'depends': ['account_chart'],
     'data':[
-        'account_tax_code.xml',
         'l10n_ar_chart.xml',
         'account_tax.xml',
         'l10n_ar_wizard.xml',

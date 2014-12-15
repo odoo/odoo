@@ -36,7 +36,6 @@
     'data': [
                    'account_types.xml',
                    'account_chart.xml',
-                   'account_tax_code_template.xml',
                    'account_chart_template.xml',
                    'fiscal_position_templates.xml',
                    'account_taxes.xml',

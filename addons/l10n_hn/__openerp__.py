@@ -49,7 +49,6 @@ and the Lempira currency.""",
     'data': [
         'account_types.xml',
         'account_chart.xml',
-        'account_tax.xml',
         'l10n_hn_base.xml',
     ],
     'demo': [],

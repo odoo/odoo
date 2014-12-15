@@ -66,7 +66,6 @@ come with any additional paid permission for online use of 'private modules'.
     'data': [
                 'data/account.account.type.csv',
                 'data/account.account.template.csv',
-                'data/account_tax_code_template.xml',
                 'data/account_chart_template.xml',
                 'data/account_tax_template.xml',
                 'account_view.xml',

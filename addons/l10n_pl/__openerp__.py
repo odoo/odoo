@@ -39,7 +39,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends' : ['account', 'base_iban', 'base_vat', 'account_chart'],
     'demo' : [],
-    'data' : ['account_tax_code.xml',
+    'data' : [
               'account_chart.xml',
               'account_tax.xml',
               'fiscal_position.xml',

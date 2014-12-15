@@ -64,7 +64,6 @@ Wizards provided by this module:
     'data': [
         'account_financial_report.xml',
         'account_pcmn_belgium.xml',
-        'account_tax_code_template.xml',
         'account_chart_template.xml',
         'account_chart_template.yml',
         'account_tax_template.xml',

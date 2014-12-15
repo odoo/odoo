@@ -27,7 +27,7 @@
     "description": "This is the module to manage the accounting chart for Norway in Open ERP.",
     "depends" : ["account", "base_iban", "base_vat", "account_chart"],
     "demo_xml" : [],
-    "data" : ['account_tax_code.xml',"account_chart.xml",
+    "data" : ["account_chart.xml",
                     'account_tax.xml','l10n_chart_no_wizard.xml'],
     "active": False,
     "installable": True

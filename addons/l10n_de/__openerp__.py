@@ -135,12 +135,10 @@ German accounting chart and localization.
     'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     'demo': [ ],
     'data': [
-        'account_tax_skr03.xml',
         'account_types_skr03.xml',
         'account_chart_skr03.xml',
         'account_chart_template_skr03.xml',
         'account_tax_fiscal_position_skr03.xml',
-        'account_tax_skr04.xml',
         'account_types_skr04.xml',
         'account_chart_skr04.xml',
         'account_chart_template_skr04.xml',

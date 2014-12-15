@@ -42,7 +42,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
     ],
     'demo': [],
     'data': [
-        'l10n_in_tax_code_template.xml',
         'l10n_in_standard_chart.xml',
         'l10n_in_standard_tax_template.xml',
         'l10n_in_schedule6_chart.xml',

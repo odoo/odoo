@@ -2,59 +2,6 @@
 <openerp>
 <data noupdate="False">
 
-    <!-- Tax definitions for VAT taxes -->
-    
-    <!-- VAT on income, codes -->
-    <record id="vat_code_ivat_307" model="account.tax.code.template">
-        <field name="code">307</field>
-        <field name="name">Σύνολο φορολ. Εκροών</field>
-        <field name="parent_id" ref="vat_code_ivat_311"/>
-    </record>
-    <record id="vat_code_ivat_303" model="account.tax.code.template">
-        <field name="code">303</field>
-        <field name="name">Πωλήσεις 19-23%</field>
-        <field name="parent_id" ref="vat_code_ivat_307"/>
-    </record>
-    <record id="vat_code_ivat_333" model="account.tax.code.template">
-        <field name="code">333</field>
-        <field name="name">ΦΠΑ 19-23%</field>
-        <field name="parent_id" ref="vat_code_ivat337"/>
-    </record>
-
-    <!-- return VAT for purchases -->
-    <record id="vat_code_evat_353" model="account.tax.code.template">
-        <field name="info">Αγορές παγίων και εμπορευμάτων με δικαίωμα έκπτωσης ΦΠΑ.</field>
-        <field name="code">353</field>
-        <field name="name">Αγορές ΦΠΑ 19-23%</field>
-        <field name="parent_id" ref="vat_code_evat_358"/>
-    </record>
-    <record id="vat_code_evat_357" model="account.tax.code.template">
-        <field name="info">Δαπάνες και έξoδα με δικαίωμα έκπτωσης ΦΠΑ</field>
-        <field name="code">357</field>
-        <field name="name">Δαπάνες/Έξοδα φορολ.</field>
-        <field name="parent_id" ref="vat_code_evat_358"/>
-    </record>
-
-    <record id="vat_code_evat_378" model="account.tax.code.template">
-        <field name="info">Σύνολο ΦΠΑ που εκπίπτει, από αγορές ή δαπάνες</field>
-        <field name="code">378</field>
-        <field name="name">Σύνολο Φορ. Αγορών</field>
-        <field name="parent_id" ref="vat_code_evat_420"/>
-    </record>
-    <record id="vat_code_evat_373" model="account.tax.code.template">
-        <field name="info">Φόρος εισροών που αντιστοιχεί στο 353, από αγορές με ΦΠΑ.</field>
-        <field name="code">373</field>
-        <field name="name">ΦΠΑ Αγορών 19-23%</field>
-        <field name="parent_id" ref="vat_code_evat_378"/>
-    </record>
-    <record id="vat_code_evat_377" model="account.tax.code.template">
-        <field name="info">Φόρος που αντιστοιχεί στο 357, για δαπάνες-έξοδα</field>
-        <field name="code">377</field>
-        <field name="name">ΦΠΑ Δαπανών</field>
-        <field name="parent_id" ref="vat_code_evat_378"/>
-    </record>
-
-
     <!-- tax definitions for VAT on sales (income) -->
     <record id="ivat19" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gr_chart_template"/>

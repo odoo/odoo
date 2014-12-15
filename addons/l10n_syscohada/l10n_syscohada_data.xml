@@ -1659,10 +1659,6 @@
     # 
     #
     -->
-       <record model="account.tax.code.template" id="vat_syscohada_tax_root">
-        <field name="parent_id" eval="False"/>
-        <field name="name">Plan de Taxes SYSCOHADA</field>
-    </record>
 
     <record id="syscohada_chart_template" model="account.chart.template">
         <field name="name">SYSCOHADA - Plan de compte</field>
@@ -1674,58 +1670,7 @@
         <field name="property_account_expense_categ" ref="pcg_6011" /> 
         <field name="property_account_income_categ" ref="pcg_7011" /> 
         <field name="currency_id" ref="base.XOF"/>
-    </record>    
-        
-    <record model="account.tax.code.template" id="tax_col_ht">
-      <field name="name">Base H.T. TVA collectée</field>
-      <field name="code">Base HT TVA collectée</field>
-      <field name="sign">1.00</field>
-      <field name="parent_id" ref="vat_syscohada_tax_root"/>
-    </record> 
-    <record model="account.tax.code.template" id="tax_col_18_ht">
-      <field name="name">Base H.T. 18.0%</field>
-      <field name="code">TVA collectée à 18.0% (Base H.T.)</field>
-      <field name="parent_id" ref="tax_col_ht"/>
-      <field name="sign">1.00</field>
     </record>
-    <record model="account.tax.code.template" id="tax_col">
-      <field name="name">TVA collectée</field>
-      <field name="code">TVA collectée</field>
-      <field name="sign">1.00</field>
-      <field name="parent_id" ref="vat_syscohada_tax_root"/>
-    </record> 
-    <record model="account.tax.code.template" id="tax_col_18">
-      <field name="name">TVA 18.0%</field>
-      <field name="code">TVA collectée à 18.0%</field>
-      <field name="parent_id" ref="tax_col"/>
-      <field name="sign">1.00</field>
-    </record>
-    
-    <record model="account.tax.code.template" id="tax_acq_ht">
-      <field name="name">Base H.T. TVA acquittée</field>
-      <field name="code">Base HT TVA acquittée</field>
-      <field name="sign">1.00</field>
-      <field name="parent_id" ref="vat_syscohada_tax_root"/>
-    </record> 
-    <record model="account.tax.code.template" id="tax_acq_18_ht">
-      <field name="name">Base H.T. 18.0%</field>
-      <field name="code">TVA acquittée à 18.0% (Base H.T.)</field>
-      <field name="parent_id" ref="tax_acq_ht"/>
-      <field name="sign">1.00</field>
-    </record>    
-
-    <record model="account.tax.code.template" id="tax_acq">
-      <field name="name">TVA acquittée</field>
-      <field name="code">TVA acquittée</field>
-      <field name="sign">1.00</field>
-      <field name="parent_id" ref="vat_syscohada_tax_root"/>
-    </record> 
-    <record model="account.tax.code.template" id="tax_acq_18">
-      <field name="name">TVA 18.0%</field>
-      <field name="code">TVA acquittée à 18.0%</field>
-      <field name="parent_id" ref="tax_acq"/>
-      <field name="sign">1.00</field>
-    </record>    
     
     <record model="account.tax.template" id="tva_sale_18">
         <field name="name">TVA 18% (vente)</field>
@@ -1742,8 +1687,7 @@
         <field name="ref_tax_code_id" ref="tax_col_18"/>
         <field name="ref_tax_sign" eval="-1"/>        
     </record>
-    
-    
+
     <record model="account.tax.template" id="tva_purchase_18">
         <field name="name">TVA 18% (achat)</field>
         <field name="chart_template_id" ref="syscohada_chart_template"/>
