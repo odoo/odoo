@@ -10,6 +10,7 @@ class TestPaymentTerm(TransactionCase):
         self.payment_term_model = self.registry('account.payment.term')
         self.payment_term_line_model = self.registry('account.payment.term.line')
         self.partner_agrolait_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "res_partner_2")[1]
+        self.currency_swiss_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "CHF")[1]
         self.account_rcv_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "account", "a_recv")[1]
 
     def test_free_month(self):
@@ -19,7 +20,7 @@ class TestPaymentTerm(TransactionCase):
                                                                     'line_ids' : [(0, 0, {'days' : 30,
                                                                                           'value' : 'balance',
                                                                                           'days2' : 0,
-                                                                                          'amount' : 0.0})]
+                                                                                          'value_amount' : 0.0})]
         })
 
         invoice_id = self.account_invoice_model.create(self.cr, self.uid, {'partner_id': self.partner_agrolait_id,
