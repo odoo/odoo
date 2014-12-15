@@ -83,6 +83,20 @@ td {
 .pos button:hover{
     background: default;
 }
+.pos textarea {
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+}
+.pos textarea:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+
 
 .pos .oe_hidden{
     display: none !important;
@@ -509,19 +523,21 @@ td {
     display: flex;
     flex-flow: row wrap;
     padding: 8px 13px 0px 11px;
+    margin-bottom: -6px;
 }
 .pos .control-button {
     flex: 1;
     background: #e2e2e2;
-    border: solid 1px #BEBEBE;
+    border: solid 1px #cacaca;
     display: inline-block;
     line-height: 38px;
-    min-width: 38px;
+    min-width: 80px;
     text-align: center;
     border-radius: 3px;
     padding: 0px 10px;
     font-size: 18px;
     margin-left: 6px;
+    margin-bottom: 6px;
     cursor: pointer;
     overflow: hidden;
 }

@@ -956,7 +956,7 @@
         <div class="modal-dialog">
             <div class="popup popup-textinput">
                 <p class="message"><t t-esc=" widget.message || '' " /></p>
-                <textarea rows="15" cols="50" t-att-value="widget.value || ''"></textarea>
+                <textarea rows="10" cols="40"><t t-esc="widget.value" /></textarea>
                 <div class="footer">
                     <div class="button confirm">
                         Ok 
