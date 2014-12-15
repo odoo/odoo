@@ -11,7 +11,7 @@ class TestFormBuilder(openerp.tests.HttpCase):
             [('body_html', 'like', 'My more usless message'),
              ('body_html', 'like', 'Service : S.F.'),
              ('body_html', 'like', 'State : be'),
-             ('body_html', 'like', 'Products : galaxy S, Xperia')])
+             ('body_html', 'like', 'Products : galaxy S,Xperia')])
 
         lead = self.registry('crm.lead').search_read(self.cr, SUPERUSER_ID,
             [('contact_name', '='   , 'John Smith'),
@@ -29,4 +29,3 @@ class TestFormBuilder(openerp.tests.HttpCase):
         self.assertNotEqual(mail, [], 'ERROR :: mail not inserted');
         self.assertNotEqual(lead, [], 'ERROR :: lead not inserted');
         self.assertNotEqual(appl, [], 'ERROR :: appl not inserted');
-

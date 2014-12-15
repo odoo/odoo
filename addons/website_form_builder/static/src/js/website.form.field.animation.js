@@ -14,6 +14,7 @@
             'input[type=hidden]':   function($field) {
                 return getDataForm['input[type=text]'].call(this,$field);
             },
+            'input[type=email]':    function($field) {return getDataForm['input[type=text]'].call(this,$field);},
             'textarea':             function($field) {return getDataForm['input[type=text]'].call(this,$field);},
             'select':               function($field) {return getDataForm['input[type=text]'].call(this,$field);},
             ':has(input:checkbox)': function($field) {
