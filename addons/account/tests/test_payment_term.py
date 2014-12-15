@@ -23,6 +23,7 @@ class TestPaymentTerm(TransactionCase):
                                                                     'line_ids' : [(0, 0, {'days' : 45,
                                                                                           'value' : 'balance',
                                                                                           'days2' : 0,
+                                                                                          'count_from_next_month' : True,
                                                                                           'value_amount' : 0.0})]
         })
 
