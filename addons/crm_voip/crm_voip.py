@@ -71,7 +71,7 @@ class crm_phonecall(models.Model):
                 "opportunity_date_action": self.opportunity_id.date_action,
                 "opportunity_company_currency": self.opportunity_id.company_currency.id,
                 "opportunity_probability": self.opportunity_id.probability,
-                "max_priority": self.opportunity_id._all_columns.get('priority').column.selection[-1][0]}
+                "max_priority": self.opportunity_id._columns['priority'].selection[-1][0]}
 
     @api.model
     def get_list(self):
