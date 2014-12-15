@@ -20,7 +20,7 @@
                         <button class="btn btn-primary pull-right pt_timer_stop o_hidden">STOP</button>
                     </div>
                 </div>
-                <div>
+                <div class="pt_header_m2os">
                     <div class="project_m2o"></div>
                     <div class="task_m2o"></div>
                 </div>
@@ -69,6 +69,20 @@
             </tbody>
         </table>
         -->
+    </t>
+
+    <t t-name="HeaderActivityLine">
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <div class="pt_header_activity">
+                    <strong><t t-if="activity.project_id and activity.project_id.length" t-esc="activity.project_id and activity.project_id[1]"></t></strong>
+                    <span class="disabled_text" t-if="!activity.project_id or !activity.project_id.length">Undefined Activity</span>
+                    <div class="disabled_text">
+                        <t t-if="activity.task_id and activity.task_id.length" t-esc="activity.task_id[1]"></t>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
     <t t-name="Footer">

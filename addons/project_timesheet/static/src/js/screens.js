@@ -483,8 +483,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var hours = this.format_duration(activity.unit_amount);
             var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
-            //TODO: We can set flag here, to identify running timer activity is existing one or newer one and intialize timer will have logic based on that flag
-            var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
+            //We will set flag is_new_activity here, to identify running timer activity is existing one or newer one and intialize timer will have logic based on that flag
+            var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id, is_new_activity: false};
             this.project_timesheet_db.set_current_timer_activity(data_to_set);
 
             //We do not use jquery UI for bounce
@@ -511,16 +511,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
             this.start_interval();
             this.initialize_timer();
-            if (activity.project_id) {
-                var field_val = activity['project_id'];
-                this.project_m2o.set({display_string: field_val[1], value: field_val[0]});
-                this.project_m2o.display_string(field_val);
-            }
-            if (activity.task_id) {
-                var field_val = activity['task_id'];
-                this.task_m2o.set({display_string: field_val[1], value: field_val[0]});
-                this.task_m2o.display_string(field_val);
-            }
         },
         format_duration: function(field_val) {
             return project_timesheet.format_duration(field_val);
@@ -561,34 +551,41 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(seconds)));
                 this.start_interval();
                 this.initialize_timer();
-                if (time_activity.project_id) {
-                    var field_val = time_activity['project_id'];
-                    this.project_m2o.set({display_string: field_val[1], value: field_val[0]});
-                    this.project_m2o.display_string(field_val);
-                }
-                if (time_activity.task_id) {
-                    var field_val = time_activity['task_id'];
-                    this.task_m2o.set({display_string: field_val[1], value: field_val[0]});
-                    this.task_m2o.display_string(field_val);
-                }
             }
         },
         initialize_timer: function() {
-            this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project", placeholder: "Select a project", id_for_input: "project_id"});
-            this.project_m2o.on("change:value", this, function() {
-                var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
-                this.project_timesheet_db.set_current_timer_activity({project_id: project});
-                this.task_m2o.set({display_string: false, value: false});
-                this.task_m2o.display_string(false);
-                this.set_project_model();
-            });
-            this.project_m2o.appendTo(this.$el.find(".project_m2o"));
-            this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", placeholder: "Select a task", id_for_input: "task_id"});
-            this.task_m2o.on("change:value", this, function() {
-                var task = [this.task_m2o.get('value'), this.task_m2o.get("display_string")];
-                this.project_timesheet_db.set_current_timer_activity({task_id: task});
-            });
-            this.task_m2o.appendTo(this.$el.find(".task_m2o"));
+            var timer_activity = this.project_timesheet_db.get_current_timer_activity();
+            if (timer_activity.is_new_activity) {
+                this.project_m2o = new project_timesheet.FieldMany2One(this, {model: this.project_timesheet_model , classname: "pt_input_project", placeholder: "Select a project", id_for_input: "project_id"});
+                this.project_m2o.on("change:value", this, function() {
+                    var project = [this.project_m2o.get("value"), this.project_m2o.get("display_string")];
+                    this.project_timesheet_db.set_current_timer_activity({project_id: project});
+                    this.task_m2o.set({display_string: false, value: false});
+                    this.task_m2o.display_string(false);
+                    this.set_project_model();
+                });
+                this.project_m2o.appendTo(this.$el.find(".project_m2o"));
+    
+                this.task_m2o = new project_timesheet.FieldMany2One(this, {model: false, search_model: 'task', classname: "pt_input_task", placeholder: "Select a task", id_for_input: "task_id"});
+                this.task_m2o.on("change:value", this, function() {
+                    var task = [this.task_m2o.get('value'), this.task_m2o.get("display_string")];
+                    this.project_timesheet_db.set_current_timer_activity({task_id: task});
+                });
+                this.task_m2o.appendTo(this.$el.find(".task_m2o"));
+    
+                var project_value = timer_activity['project_id'];
+                if (project_value && project_value.length) {
+                    this.project_m2o.set({display_string: project_value[1], value: project_value[0]});
+                    this.project_m2o.display_string(project_value);
+                }
+                var task_value = timer_activity['task_id'];
+                if (task_value && task_value.length) {
+                    this.task_m2o.set({display_string: task_value[1], value: task_value[0]});
+                    this.task_m2o.display_string(task_value);
+                }
+            } else {
+                this.$el.find(".pt_header_m2os").html(QWeb.render("HeaderActivityLine", {widget: this, activity: timer_activity}));
+            }
         },
         //Duplicate method same as Add Activity screen
         set_project_model: function() {
@@ -601,7 +598,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var self = this;
             if ($(e.target).hasClass("pt_timer_start")) {
                 var current_date = this.get_current_UTCDate();
-                this.project_timesheet_db.set_current_timer_activity({date: current_date, timer_date: current_date});
+                this.project_timesheet_db.set_current_timer_activity({date: current_date, timer_date: current_date, is_new_activity: true});
                 this.start_interval();
                 this.initialize_timer();
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
@@ -619,6 +616,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 } else {
                     activity['command'] = 1;
                 }
+                delete activity.is_new_activity;
                 this.project_timesheet_model.add_activity(activity);
                 this.project_timesheet_model.add_project(activity);
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
@@ -655,8 +653,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         reset_timer: function() {
             this.$el.find(".pt_duration .hours,.pt_duration .minutes,.pt_duration .seconds").text("00");
-            this.project_m2o.destroy();
-            this.task_m2o.destroy();
+            if (this.project_m2o)
+                this.project_m2o.destroy();
+            if (this.task_m2o)
+                this.task_m2o.destroy();
             this.project_timesheet_db.save('timer_activity', {});
         },
         reload_activity_list: function() {
