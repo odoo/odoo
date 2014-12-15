@@ -688,7 +688,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         var $oldel = this.$el;
         this.setElement($el);
         if ($oldel && !$oldel.is(this.$el)) {
-            $oldel.replaceWith(this.$el);
+            if ($oldel.length > 1) {
+                $oldel.wrapAll('<div/>');
+                $oldel.parent().replaceWith(this.$el);
+            } else {
+                $oldel.replaceWith(this.$el);
+            }
         }
         return this;
     },
