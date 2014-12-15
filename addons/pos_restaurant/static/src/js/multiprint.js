@@ -66,9 +66,8 @@ function openerp_restaurant_multiprint(instance,module){
 
     var _super_order = module.Order.prototype;
     module.Order = module.Order.extend({
-        lineResume: function(){
+        build_line_resume: function(){
             var resume = {};
-
             this.orderlines.each(function(line){
                 var line_hash = line.get_line_diff_hash();
                 var qty  = Number(line.get_quantity());
@@ -80,6 +79,7 @@ function openerp_restaurant_multiprint(instance,module){
                 } else {
                     resume[line_hash].qty += qty;
                 }
+
             });
             return resume;
         },
@@ -94,34 +94,42 @@ function openerp_restaurant_multiprint(instance,module){
             var add = [];
             var rem = [];
 
-            for( product in current){
-                if (typeof old[product] === 'undefined'){
+            for ( line_hash in current_res) {
+                var curr = current_res[line_hash];
+                var old  = old_res[line_hash];
+
+                if (typeof old === 'undefined') {
                     add.push({
-                        'id': product,
-                        'name': this.pos.db.get_product_by_id(product).display_name,
-                        'quantity': current[product],
+                        'id':       curr.product_id,
+                        'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                        'note':     curr.note,
+                        'qty':      curr.qty,
                     });
-                }else if( old[product] < current[product]){
+                } else if (old.qty < curr.qty) {
                     add.push({
-                        'id': product,
-                        'name': this.pos.db.get_product_by_id(product).display_name,
-                        'quantity': current[product] - old[product],
+                        'id':       curr.product_id,
+                        'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                        'note':     curr.note,
+                        'qty':      curr.qty - old.qty,
                     });
-                }else if( old[product] > current[product]){
+                } else if (old.qty > curr.qty) {
                     rem.push({
-                        'id': product,
-                        'name': this.pos.db.get_product_by_id(product).display_name,
-                        'quantity': old[product] - current[product],
+                        'id':       curr.product_id,
+                        'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                        'note':     curr.note,
+                        'qty':      old.qty - curr.qty,
                     });
                 }
             }
 
-            for( product in old){
-                if(typeof current[product] === 'undefined'){
+            for (line_hash in old_res) {
+                if (typeof current_res[line_hash] === 'undefined') {
+                    var old = old_res[line_hash];
                     rem.push({
-                        'id': product,
-                        'name': this.pos.db.get_product_by_id(product).display_name,
-                        'quantity': old[product], 
+                        'id':       old.product_id,
+                        'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
+                        'note':     old.note,
+                        'qty':      old.qty, 
                     });
                 }
             }
