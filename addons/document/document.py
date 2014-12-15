@@ -47,6 +47,15 @@ _logger = logging.getLogger(__name__)
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
 
+    def _index(self, cr, uid, bin_data, datas_fname, mimetype):
+        """
+            Override the parent method to use the indexer of document module to find the index_content.
+            It is called from _set_data, when the data changed.
+        """
+        mime, icont = cntIndex.doIndex(bin_data, datas_fname,  mimetype or None, None)
+        icont_u = ustr(icont)
+        return icont_u
+
     _columns = {
         # Columns from ir.attachment:
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -54,9 +63,7 @@ class document_file(osv.osv):
         # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, change_default=True),
-        'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'file_type': fields.char('Content Type'),
     }
     _order = "id desc"
 
@@ -74,7 +81,7 @@ class document_file(osv.osv):
             ids = [ids]
 
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
-        
+
         if ids:
             self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
 
@@ -124,21 +131,12 @@ class document_file(osv.osv):
         # take partner from uid
         if vals.get('res_id', False) and vals.get('res_model', False) and not vals.get('partner_id', False):
             vals['partner_id'] = self.__get_partner_id(cr, uid, vals['res_model'], vals['res_id'], context)
-        if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
         return super(document_file, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        if vals.get('datas', False):
-            vals['file_type'], vals['index_content'] = self._index(cr, uid, vals['datas'].decode('base64'), vals.get('datas_fname', False), None)
         return super(document_file, self).write(cr, uid, ids, vals, context)
-
-    def _index(self, cr, uid, data, datas_fname, file_type):
-        mime, icont = cntIndex.doIndex(data, datas_fname,  file_type or None, None)
-        icont_u = ustr(icont)
-        return mime, icont_u
 
     def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
         """ A helper to retrieve the associated partner from any res_model+id
@@ -395,7 +393,7 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', 
+        'include_name': fields.boolean('Include Record Name',
                 help="Check this field if you want that the name of the file to contain the record name." \
                     "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
@@ -405,17 +403,17 @@ class document_directory_content(osv.osv):
         'sequence': lambda *args: 1,
         'include_name': lambda *args: 1,
     }
-    
+
     def _file_get(self, cr, node, nodename, content, context=None):
         """ return the nodes of a <node> parent having a <content> content
             The return value MUST be false or a list of node_class objects.
         """
-    
+
         # TODO: respect the context!
         model = node.res_model
         if content.include_name and not model:
             return False
-        
+
         res2 = []
         tname = ''
         if content.include_name:
@@ -447,7 +445,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
-    
+
     def process_read(self, cr, uid, node, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
@@ -546,11 +544,11 @@ class document_storage(osv.osv):
         # 2nd phase: store the metadata
         try:
             icont = ''
-            mime = ira.file_type
+            mime = ira.mimetype
             if not mime:
                 mime = ""
             try:
-                mime, icont = cntIndex.doIndex(data, ira.datas_fname, ira.file_type or None, fname)
+                mime, icont = cntIndex.doIndex(data, ira.datas_fname, ira.mimetype or None, fname)
             except Exception:
                 _logger.debug('Cannot index file.', exc_info=True)
                 pass
@@ -561,8 +559,8 @@ class document_storage(osv.osv):
             # a hack: /assume/ that the calling write operation will not try
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
-            cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, file_type = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
-            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'file_type'], [file_node.file_id], context=context)
+            cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, mimetype = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
+            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'mimetype'], [file_node.file_id], context=context)
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
@@ -1650,8 +1648,8 @@ class node_file(node_class):
         super(node_file,self).__init__(path, parent,context)
         self.file_id = fil.id
         #todo: more info from ir_attachment
-        if fil.file_type and '/' in fil.file_type:
-            self.mimetype = str(fil.file_type)
+        if fil.mimetype and '/' in fil.mimetype:
+            self.mimetype = str(fil.mimetype)
         self.create_date = fil.create_date
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size

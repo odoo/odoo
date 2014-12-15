@@ -47,10 +47,10 @@ class WebsiteBlog(http.Controller):
     _blog_post_per_page = 20
     _post_comment_per_page = 10
 
-    def nav_list(self):
+    def nav_list(self, domain=[]):
         blog_post_obj = request.registry['blog.post']
         groups = blog_post_obj.read_group(
-            request.cr, request.uid, [], ['name', 'create_date'],
+            request.cr, request.uid, domain, ['name', 'create_date'],
             groupby="create_date", orderby="create_date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -116,6 +116,8 @@ class WebsiteBlog(http.Controller):
             domain += [('blog_id', '=', blog.id)]
         if tag:
             domain += [('tag_ids', 'in', tag.id)]
+        blogs_by_month = self.nav_list(domain)
+
         if date_begin and date_end:
             domain += [("create_date", ">=", date_begin), ("create_date", "<=", date_end)]
 
@@ -144,7 +146,7 @@ class WebsiteBlog(http.Controller):
             'tag': tag,
             'blog_posts': blog_posts,
             'pager': pager,
-            'nav_list': self.nav_list(),
+            'nav_list': blogs_by_month,
             'blog_url': blog_url,
             'post_url': post_url,
             'date': date_begin,
@@ -217,7 +219,7 @@ class WebsiteBlog(http.Controller):
             'blog': blog,
             'blog_post': blog_post,
             'main_object': blog_post,
-            'nav_list': self.nav_list(),
+            'nav_list': self.nav_list([('blog_id', '=', blog.id)]),
             'enable_editor': enable_editor,
             'next_post': next_post,
             'date': date_begin,
