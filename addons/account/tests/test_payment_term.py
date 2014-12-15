@@ -14,14 +14,12 @@ class TestPaymentTerm(TransactionCase):
 
     def test_free_month(self):
         today = date(year=2014, month=12, day=15)
-        payment_term_line = self.payment_term_line_model.create(self.cr, self.uid, {'days' : 30,
-                                                                                    'value' : 'balance',
-                                                                                    'days2' : 0,
-                                                                                    'amount' : 0.0})
-
         payment_term = self.payment_term_model.create(self.cr, self.uid, {'name' : 'free month + 30',
                                                                     'active' : True,
-                                                                    'line_ids' : [(4, payment_term_line)]
+                                                                    'line_ids' : [(0, 0, {'days' : 30,
+                                                                                          'value' : 'balance',
+                                                                                          'days2' : 0,
+                                                                                          'amount' : 0.0})]
         })
 
         invoice_id = self.account_invoice_model.create(self.cr, self.uid, {'partner_id': self.partner_agrolait_id,
