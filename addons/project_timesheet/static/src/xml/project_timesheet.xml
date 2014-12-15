@@ -100,12 +100,11 @@
                                     <span class="disabled_text" t-if="!activity.project_id or !activity.project_id.length">Undefined Activity</span>
                                     <t t-set="duration" t-value="widget.format_duration(activity.unit_amount)" />
                                     <t t-if="duration != undefined">
-                                        <!-- <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration.split(':')[0] + 'h ' + (duration.split(':')[1] and duration.split(':')[1] + 'min' or '')"></t></span> --> <!-- call format_hour method of this screen -->
                                         <span t-if="activity.fail_error" class="glyphicon glyphicon-info-sign pt_error" t-attf-data-toggle="popover" t-att-data-content="activity.fail_error"></span>
-                                        <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration[0] + 'h ' + (duration[1] and duration[1] + 'min' or '0min' )"></t></span>
+                                        <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id"><t t-esc="duration[0] + ':' + (duration[1] and _.str.sprintf('%02d', duration[1]) or '00' )"></t></span>
                                     </t>
                                     <t t-if="duration == undefined">
-                                        <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id">0h 0min</span>
+                                        <span class="pull-right pt_duration_line" t-att-data-activity_id="activity.id">0:00</span>
                                     </t>
                                 </div>
                                 <div class="disabled_text">
@@ -365,7 +364,7 @@
                     <tr t-if="project.project_name">
                         <td><t t-esc="project.project_name"></t></td>
                         <t t-set="duration" t-value="widget.format_duration(project.unit_amount)"></t>
-                        <td class="hours"><t t-esc="duration[0]"></t>h  <span t-if="duration[1]"><t t-esc="duration[1]"></t>min</span></td>
+                        <td class="hours"><t t-esc="duration[0]"></t>:<span t-if="duration[1]"><t t-esc="_.str.sprintf('%02d', duration[1])"></t></span></td>
                     </tr>
                 </t>
             </tbody>

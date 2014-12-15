@@ -340,7 +340,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             var activity_collection = this.get("activities");
             project_collection.reset();
             activity_collection.reset();
-            console.log("Inside reset collection ::: ",project_collection, activity_collection);
         },
         sync_complete: function(sync_result) {
             //This method will flush localstorage activities once it has been sync

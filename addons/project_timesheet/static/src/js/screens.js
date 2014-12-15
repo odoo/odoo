@@ -483,6 +483,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
             var hours = this.format_duration(activity.unit_amount);
             var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
+            //TODO: We can set flag here, to identify running timer activity is existing one or newer one and intialize timer will have logic based on that flag
             var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
             this.project_timesheet_db.set_current_timer_activity(data_to_set);
 
@@ -498,7 +499,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var $current_row = $(event.currentTarget).closest("tr");
             var $cloned_row = $next_row.clone(true);
             $current_row.remove();
-           $next_row.find("td").slideUp("fast", function() {
+            $next_row.find("td").slideUp("fast", function() {
                $next_row.remove();
                 $prev_row.after($cloned_row);
                bounce($cloned_row.find("div:first"), 2, '10px', 100);
@@ -532,7 +533,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 return;
             }
             var duration = this.activity_list.get_total();
-            return _.str.sprintf("%sh %smin", duration[0], (duration[1] || 0));
+            return _.str.sprintf("%s:%02d", duration[0], (duration[1] || 0));
         },
         get_current_UTCDate: function() {
             var d = new Date();
@@ -840,8 +841,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self.$el.find(".pt_btn_edit_activity,.pt_btn_add_activity").toggleClass("o_hidden");
             self.$el.find(".pt_add_activity_title,.pt_edit_activity_title").toggleClass("o_hidden");
             this.$el.find(".pt_quick_select").addClass("o_hidden");
-            //this.task_m2o.set({"effective_readonly": true});
-            //this.project_m2o.set({"effective_readonly": true});
             _.each(screen_data, function(field_val, field_key) {
                 switch(field_key) {
                     case "project_id":
@@ -1114,9 +1113,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     }
                 });
                 var formatted_unit_amount = self.format_duration(date_activities[key]['unit_amount']);
-                date_activities[key]['unit_amount_duration'] = formatted_unit_amount ? (formatted_unit_amount[0]+"h" +(formatted_unit_amount[1] && formatted_unit_amount[1]+"min" || "0min")) : 0;
+                date_activities[key]['unit_amount_duration'] = formatted_unit_amount ? (formatted_unit_amount[0]+":" +(formatted_unit_amount[1] && _.str.sprintf("%02d", formatted_unit_amount[1]) || "00")) : 0;
                 var formatted_unallocated = self.format_duration(date_activities[key]['unallocated']);
-                date_activities[key]['unallocated_duration'] = formatted_unallocated ? (formatted_unallocated[0]+"h" +(formatted_unallocated[1] && formatted_unallocated[1]+"min" || "0min")) : 0;
+                date_activities[key]['unallocated_duration'] = formatted_unallocated ? (formatted_unallocated[0]+":" +(formatted_unallocated[1] && _.str.sprintf("%02d", formatted_unallocated[1]) || "00")) : 0;
             });
             var week_groups = _.groupBy(_.toArray(date_activities), function(activity) {
                 return moment(activity.date).week();
@@ -1167,7 +1166,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var current_week_data = week_wise_activities[this.week_index];
             _.each(current_week_data, function(record) {week_total += record.unit_amount;});
             formatted_value = this.format_duration(week_total);
-            this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%sh %smin this week", formatted_value[0], (formatted_value[1] || 0)));
+            this.$el.find(".pt_stat_week_title").text(_.str.sprintf("%s:%02d this week", formatted_value[0], (formatted_value[1] || 0)));
             var project_groups = _.groupBy(current_week_data, function(record) {
                 return record.project_id ? record.project_id[0] : undefined;
             });
