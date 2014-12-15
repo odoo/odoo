@@ -12,11 +12,8 @@
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-    <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
     <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
     
 </template>
 
@@ -147,6 +144,8 @@
                 ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
                 ga('send','pageview');
             </script>
+            <!-- if you want to include a script with a specific page - be careful with bundles when moving this-->
+            <t t-raw="script_footer or ''" name='layout_script_footer'/>
         </body>
     </html>
 </template>

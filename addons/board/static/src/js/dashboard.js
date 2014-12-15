@@ -331,8 +331,12 @@ instance.web.search.FavoriteMenu.include({
         this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
         this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
         this.$add_dashboard_link = $add_to_dashboard.first().find('a');
-        var title = this.searchview.getParent().title;
-        this.$add_dashboard_input.val(title);
+        // in non-conform views (i.e. mail.js), the prefill causes errors
+        // because there is no parent view
+        if (this.searchview.getParent()) {
+            var title = this.searchview.getParent().title;
+            this.$add_dashboard_input.val(title);
+        }
         this.$add_dashboard_link.click(function () {
             self.toggle_dashboard_menu();
         });
