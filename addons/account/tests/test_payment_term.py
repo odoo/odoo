@@ -20,7 +20,7 @@ class TestPaymentTerm(TransactionCase):
         today = date(year=2014, month=12, day=15)
         payment_term = self.payment_term_model.create(self.cr, self.uid, {'name' : 'free month + 30',
                                                                     'active' : True,
-                                                                    'line_ids' : [(0, 0, {'days' : 30,
+                                                                    'line_ids' : [(0, 0, {'days' : 45,
                                                                                           'value' : 'balance',
                                                                                           'days2' : 0,
                                                                                           'value_amount' : 0.0})]
@@ -45,6 +45,6 @@ class TestPaymentTerm(TransactionCase):
         workflow.trg_validate(self.uid, 'account.invoice', invoice_id, 'invoice_open', self.cr)
         due_date = self.account_invoice_model.read(self.cr, self.uid, [invoice_id], ['date_due'])[0]
 
-        self.assertEquals('2015-01-31', due_date['due_date'])
+        self.assertEquals('2015-02-15', due_date['date_due'])
 
 
