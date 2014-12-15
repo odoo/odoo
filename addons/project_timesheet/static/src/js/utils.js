@@ -13,7 +13,7 @@ function odoo_project_timesheet_utils(project_timesheet) {
     };
 
     project_timesheet.get_sync_label = function() {
-        var label = "Sync Now";
+        var label = "Sync";
         if (project_timesheet.session && project_timesheet.session.display_username) {
             label = project_timesheet.session.display_username;
         }

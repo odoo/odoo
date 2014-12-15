@@ -556,7 +556,6 @@ class hr_analytic_timesheet(osv.Model):
                 fail_records.append(current_record)
             except Exception, e:
                 current_record['fail_error'] = (_("Error"), _("Something went wrong with  this record, make sure you have all valid values."))
-                fail_records.append(current_record)
                 #import traceback
                 #traceback.print_exc()
                 #Here we can have except_orm, if there is ConcurrencyException, we will eiether simply pass or add those ids in concurrency_fail_ids because we need to re-read those records

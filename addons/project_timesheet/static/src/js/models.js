@@ -197,7 +197,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                 }
                 this.get('projects').add(project);
             }
-            //this.project_timesheet_db.add_activity(data); //instead of data, use project.exportAsJson();
         },
         name_search: function(term) {
             /*

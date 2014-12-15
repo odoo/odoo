@@ -347,8 +347,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //TO Implement
         },
 
-        // this methods hides the screen. It's not a good place to put your cleanup stuff as it is called on the
-        // POS initialization.
+        // this methods hides the screen.
         hide: function(){
             this.hidden = true;
             if(this.$el){
@@ -486,6 +485,25 @@ function odoo_project_timesheet_screens(project_timesheet) {
             var current_date = project_timesheet.datetime_to_str(moment().subtract((hours[0] || 0), "hours").subtract((hours[1] || 0), "minutes").toDate());
             var data_to_set = {id: activity_id, date: activity.date, timer_date: current_date, project_id: activity.project_id, task_id: activity.task_id};
             this.project_timesheet_db.set_current_timer_activity(data_to_set);
+
+            //We do not use jquery UI for bounce
+            var bounce = function(element, times, distance, speed) {
+                for(var i = 0; i < times; i++) {
+                    element.animate({marginTop: '-='+distance}, speed)
+                        .animate({marginTop: '+='+distance}, speed);
+                }
+            };
+            var $next_row = $(event.currentTarget).closest("tr").next();
+            var $prev_row = $(event.currentTarget).closest("tr").prev();
+            var $current_row = $(event.currentTarget).closest("tr");
+            var $cloned_row = $next_row.clone(true);
+            $current_row.remove();
+           $next_row.find("td").slideUp("fast", function() {
+               $next_row.remove();
+                $prev_row.after($cloned_row);
+               bounce($cloned_row.find("div:first"), 2, '10px', 100);
+            });
+
             this.$el.find(".pt_duration span.hours").text(_.str.sprintf("%02d", parseInt((hours[0] || 0))));
             this.$el.find(".pt_duration span.minutes").text(_.str.sprintf("%02d", parseInt((hours[1] || 0))));
             this.$el.find(".pt_duration span.seconds").text(_.str.sprintf("%02d", parseInt(0)));
@@ -529,6 +547,10 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if (time_activity && time_activity['date']) {
                 this.$el.find(".pt_timer_start").addClass("o_hidden");
                 this.$el.find(".pt_timer_stop").removeClass("o_hidden");
+                //Remove runing timer activity from listview, do not render timer activity in activity list
+                activity_id = time_activity['id'];
+                this.activity_list.$el.find("tr[data-activity_id='"+activity_id+"']").remove();
+
                 var durationObj = moment.duration(moment(this.get_current_UTCDate()).diff(moment(time_activity['timer_date'])));
                 var hours = durationObj.asHours().toString().split('.')[0],
                     minutes = (durationObj.asMinutes() % 60).toString().split(".")[0],
@@ -598,7 +620,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
                 this.project_timesheet_model.add_activity(activity);
                 this.project_timesheet_model.add_project(activity);
-                //activity['id'] = _.uniqueId(this.project_timesheet_db.virtual_id_prefix);
                 this.$el.find(".pt_timer_start,.pt_timer_stop").toggleClass("o_hidden");
                 this.reset_timer();
                 this.reload_activity_list();

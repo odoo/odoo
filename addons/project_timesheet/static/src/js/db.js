@@ -49,9 +49,9 @@ function odoo_project_timesheet_db(project_timesheet) {
             // if the data was already stored, we overwrite its data
             for(var i = 0, len = activities.length; i < len; i++) {
                 if(activities[i].id === activity_id) {
-                    if (!activities[i].command)
-                        activities[i] = activity;
-                        this.save('activities',activities);
+                    //if (!activities[i].command)
+                        _.extend(activities[i], activity);
+                    this.save('activities',activities);
                     return activity_id;
                 }
             }
