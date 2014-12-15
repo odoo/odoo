@@ -157,7 +157,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                         self.fields[self.fields_view.arch.attrs.date_delay]);
                     if (!tmp)
                         return;
-                    task_stop = task_start.clone().addMilliseconds(tmp * 60 * 60 * 1000);
+                    task_stop = task_start.clone().addMilliseconds(instance.web.parse_value(tmp, {type:"float"}) * 60 * 60 * 1000);
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var id = _.uniqueId("gantt_task_");
