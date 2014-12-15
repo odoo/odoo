@@ -5,8 +5,6 @@ from openerp import SUPERUSER_ID
 class TestFormBuilder(openerp.tests.HttpCase):
     def test_tour(self):
         self.phantom_js("/", "openerp.Tour.run('website_form_builder_tour', 'test')", "openerp.Tour.tours.website_form_builder_tour", login="admin")
-
-    def test_data_inserted(self):
         mail = self.registry('mail.mail').search_read(self.cr, SUPERUSER_ID,
             [('body_html', 'like', 'My more usless message'),
              ('body_html', 'like', 'Service : S.F.'),
