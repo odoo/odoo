@@ -32,17 +32,17 @@ from openerp.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 TRANSLATION_TYPE = [
-    ('field', 'Field'),
+    ('field', 'Field'),                         # deprecated
     ('model', 'Object'),
-    ('rml', 'RML  (deprecated - use Report)'), # Pending deprecation - to be replaced by report!
+    ('rml', 'RML  (deprecated - use Report)'),  # deprecated
     ('report', 'Report/Template'),
     ('selection', 'Selection'),
-    ('view', 'View'),
-    ('wizard_button', 'Wizard Button'),
-    ('wizard_field', 'Wizard Field'),
-    ('wizard_view', 'Wizard View'),
+    ('view', 'View'),                           # deprecated
+    ('wizard_button', 'Wizard Button'),         # deprecated
+    ('wizard_field', 'Wizard Field'),           # deprecated
+    ('wizard_view', 'Wizard View'),             # deprecated
     ('xsl', 'XSL'),
-    ('help', 'Help'),
+    ('help', 'Help'),                           # deprecated
     ('code', 'Code'),
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
