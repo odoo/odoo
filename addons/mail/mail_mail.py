@@ -150,7 +150,7 @@ class mail_mail(osv.Model):
             - partner is an user and has read access to the document: direct link to document with model, res_id
         """
         if partner and partner.user_ids:
-            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            base_url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url')
             # the parameters to encode for the query and fragment part of url
             query = {'db': cr.dbname}
             fragment = {
