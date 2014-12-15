@@ -68,8 +68,8 @@
                 <filter string="Unposted" domain="[('move_state','=','draft')]" help = "entries"/>
                 <filter string="Posted" domain="[('move_state','=','posted')]" help = "Posted entries"/>
                 <separator/>
-                <filter string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
-                <filter string="Reconciled" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
+                <filter string="Unreconciled" domain="[('reconciled','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
+                <filter string="Reconciled" domain="[('reconciled','!=',False)]" help = "Reconciled entries"/>
                 <field name="account_id"/>
                 <field name="journal_id"/>
                 <group expand="0" string="Extended Filters...">

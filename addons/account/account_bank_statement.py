@@ -568,7 +568,7 @@ class account_bank_statement_line(models.Model):
                     mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(mv_line_dict.get('counterpart_move_line_id'))
-                if mv_line.reconcile_id.id and mv_line.statement_id.id:
+                if mv_line.reconciled and mv_line.statement_id.id:
                     raise Warning(_('A selected move line was already reconciled by a bank statement.'))
 
         # Particular use case : using reconciled move lines (fr: rapprochement bancaire)

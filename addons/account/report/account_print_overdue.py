@@ -30,7 +30,7 @@ class Overdue(models.AbstractModel):
         return self.env['account.move.line'].search(
                 [('partner_id', '=', partner.id),
                   ('account_id.user_type.type', 'in', ['receivable', 'payable']),
-                  ('reconcile_id', '=', False)])
+                  ('reconciled', '=', False)])
 
     @api.model
     def _message(self, obj, company):

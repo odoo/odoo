@@ -522,22 +522,6 @@ class account_move(models.Model):
             "of credits equals the sum of debits"
         return True
 
-#OBJECT TO BE REMOVED
-class account_move_reconcile(models.Model):
-    _name = "account.move.reconcile"
-    _description = "Account Reconciliation"
-
-    name = fields.Char(string='Reconciliation Ref', required=True, default=lambda self: self.env['ir.sequence'].get('account.reconcile') or '/')
-    line_id = fields.One2many('account.move.line', 'reconcile_id', string='Journal Items')
-
-    @api.one
-    @api.constrains('line_id')
-    def _check_same_partner(self):
-        first_partner = self.line_id and self.line_id[0].partner_id.id or False
-        if any([(line.partner_id.id != first_partner) for line in self.line_id]):
-            raise Warning(_('You can only reconcile journal items with the same partner.'))
-
-
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------

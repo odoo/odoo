@@ -52,7 +52,7 @@ class report_rappel(report_sxw.rml_parse):
         moveline_ids = moveline_obj.search(self.cr, self.uid, [
                             ('partner_id', '=', partner.id),
                             ('account_id.user_type.type', '=', 'receivable'),
-                            ('reconcile_id', '=', False),
+                            ('reconciled', '=', False),
                             ('company_id', '=', company_id),
                         ])
 
@@ -89,7 +89,7 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         a = {}
         #look into the lines of the partner that already have a followup level, and take the description of the higher level for which it is available
-        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconcile_id','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('state','!=','draft'),('debit','!=',False),('account_id.user_type.type','=','receivable'),('followup_line_id','!=',False)])
+        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconciled','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('state','!=','draft'),('debit','!=',False),('account_id.user_type.type','=','receivable'),('followup_line_id','!=',False)])
         partner_max_delay = 0
         partner_max_text = ''
         for i in self.pool['account.move.line'].browse(self.cr, self.uid, partner_line_ids, context=context):

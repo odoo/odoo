@@ -111,8 +111,8 @@ class account_invoice_refund(models.TransientModel):
                     for line in movelines:
                         if line.account_id.id == inv.account_id.id:
                             to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
-                        if line.reconcile_id:
-                            line.reconcile_id.unlink()
+                        if line.reconciled:
+                            line.remove_move_reconcile()
                     refund.signal_workflow('invoice_open')
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:

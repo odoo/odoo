@@ -201,14 +201,10 @@ class account_move_line(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    reconcile_id = fields.Many2one('account.move.reconcile', string='Reconcile',
-        readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
     reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with',
         help='Moves in which this move is involved for partial reconciliation')
     reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation',
         help='Moves involved in this move partial reconciliation')
-    reconcile_partial_id = fields.Many2one('account.move.line', string='Partial Reconcile',
-        readonly=True, ondelete='set null', index=True, copy=False) #TO BE REMOVED
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
@@ -410,7 +406,7 @@ class account_move_line(models.Model):
     def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
         # Complete domain
-        additional_domain = [('reconcile_id', '=', False), ('account_id','=',account_id)]
+        additional_domain = [('reconciled', '=', False), ('account_id','=',account_id)]
         if partner_id:
             additional_domain.append(('partner_id','=',partner_id))
 
@@ -671,7 +667,7 @@ class account_move_line(models.Model):
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
-                    AND l.reconcile_id IS NULL
+                    AND l.reconciled IS FALSE
                     GROUP BY l.partner_id, p.last_time_entries_checked
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
@@ -792,20 +788,14 @@ class account_move_line(models.Model):
         return False
 
     @api.multi
-    def _remove_move_reconcile(self):
-        # Function remove move rencocile ids related with moves
+    def remove_move_reconcile(self):
         if not self:
             return True
-        full_recs = []
-        partial_recs = []
+        rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
-            if account_move_line.reconcile_id:
-                full_recs.append(account_move_line.reconcile_id.id)
-            if account_move_line.reconcile_partial_id:
-                partial_recs.append(account_move_line.reconcile_partial_id.id)
-        self.env['account.move.reconcile'].browse(full_recs).unlink()
-        self.browse(partial_recs).write({'reconcile_partial_id': False})
-        return True
+            rec_move_ids += account_move_line.reconcile_partial_ids
+            rec_move_ids += account_move_line.reconcile_partial_with_ids
+        return rec_move_ids.unlink()
 
     @api.multi
     def unlink(self, check=True):
@@ -886,7 +876,7 @@ class account_move_line(models.Model):
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
                 raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
-            if line.reconcile_id:
+            if line.reconciled:
                 raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             t = (line.journal_id.id, line.date)
             if t not in done:

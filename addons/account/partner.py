@@ -174,7 +174,7 @@ class res_partner(models.Model):
                       LEFT JOIN account_account_type act ON (a.user_type=act.id)
                       WHERE act.type IN ('receivable','payable')
                       AND l.partner_id IN %s
-                      AND l.reconcile_id IS NULL
+                      AND l.reconciled IS FALSE
                       """ + query + """
                       GROUP BY l.partner_id, act.type
                       """,
@@ -205,7 +205,7 @@ class res_partner(models.Model):
                     'WHERE account_id IN ' \
                             '(SELECT id FROM account_account '\
                             'WHERE type=%s AND active) ' \
-                    'AND reconcile_id IS NULL ' \
+                    'AND reconciled IS FALSE ' \
                     'AND '+query+') AS l ' \
                     'RIGHT JOIN res_partner p ' \
                     'ON p.id = partner_id ) AS pl ' \
@@ -252,7 +252,7 @@ class res_partner(models.Model):
             RIGHT JOIN res_partner p ON (l.partner_id = p.id)
             WHERE a.reconcile IS TRUE
             AND p.id = %s
-            AND l.reconcile_id IS NULL
+            AND l.reconciled IS FALSE
             AND (p.last_time_entries_checked IS NULL OR l.date > p.last_time_entries_checked)
             GROUP BY l.partner_id''', (self.id,))
         res = self._cr.dictfetchone()

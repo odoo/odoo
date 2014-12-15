@@ -709,22 +709,6 @@
             </field>
         </record>
 
-        <!-- Reconcile -->
-        <record id="view_move_reconcile_form" model="ir.ui.view">
-            <field name="name">account.move.reconcile.form</field>
-            <field name="model">account.move.reconcile</field>
-            <field name="arch" type="xml">
-                <form string="Journal Entry Reconcile">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="create_date"/>
-                    </group>
-                    <separator string="Reconcile Entries"/>
-                    <field name="line_id"/>
-                </form>
-            </field>
-        </record>
-
         <!-- Tax -->
         <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="4"/>
         
@@ -870,8 +854,7 @@
                                         <field name="amount_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </group>
                                     <group string="Reconciliation">
-                                        <field name="reconcile_id"/>
-                                        <field name="reconcile_partial_id"/>
+                                        <field name="reconciled"/>
                                     </group>
                                     <group string="States">
                                         <field name="blocked"/>
@@ -924,8 +907,7 @@
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
-                                <field name="reconcile_id"/>
-                                <field name="reconcile_partial_id"/>
+                                <field name="reconciled"/>
                             </group>
                         </page>
                         <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
@@ -984,9 +966,9 @@
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                     <separator/>
-                    <filter string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items" name="unreconciled"/>
+                    <filter string="Unreconciled" domain="[('reconciled','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items" name="unreconciled"/>
                     <separator/>
-                    <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                    <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" domain="[('account_id.reconcile','=',True),('reconciled','=',False)]"/>
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
@@ -1108,8 +1090,7 @@
                                                 </group>
 
                                                 <group string="Reconciliation">
-                                                    <field name="reconcile_id"/>
-                                                    <field name="reconcile_partial_id"/>
+                                                    <field name="reconciled"/>
                                                 </group>
 
                                                 <group string="States">
@@ -1140,8 +1121,7 @@
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_ids"/>
                                     <field name="tax_line_id"/>
-                                    <field name="reconcile_id"/>
-                                    <field name="reconcile_partial_id"/>
+                                    <field name="reconciled"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
@@ -1215,13 +1195,6 @@
             context="{'search_default_move_id': active_id, 'default_move_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
-
-        <act_window
-            domain="[('reconcile_id', '=', active_id)]"
-            id="act_account_acount_move_line_reconcile_open"
-            name="Reconciled entries"
-            res_model="account.move.line"
-            src_model="account.move.reconcile"/>
 
         <!-- Payment Terms -->
         <record id="view_payment_term_line_tree" model="ir.ui.view">

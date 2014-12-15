@@ -9,7 +9,7 @@ class account_move_line_unreconcile_select(models.TransientModel):
     @api.multi
     def action_open_window(self):
         return {
-                'domain': "[('account_id', '=', %d), ('reconcile_id', '!=', False), ('state', '!=', 'draft')]" % self.account_id.id,
+                'domain': "[('account_id', '=', %d), ('reconciled', '!=', False), ('state', '!=', 'draft')]" % self.account_id.id,
                 'name': 'Unreconciliation',
                 'view_type': 'form',
                 'view_mode': 'tree,form',

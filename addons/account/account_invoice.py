@@ -88,9 +88,6 @@ class account_invoice(models.Model):
     @api.depends(
         'state', 'currency_id', 'invoice_line.price_subtotal',
         'move_id.line_id.amount_residual',
-        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
-        'move_id.line_id.reconcile_id',
-        'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
     )
     # An invoice's residual amount is the sum of its unreconciled move lines and,
@@ -113,32 +110,6 @@ class account_invoice(models.Model):
 
     @api.one
     @api.depends(
-        'move_id.line_id.account_id',
-        'move_id.line_id.reconcile_id.line_id',
-    )
-    def _compute_move_lines(self):
-        # Give Journal Items related to the payment reconciled to this invoice.
-        # Return partial and total payments related to the selected invoice.
-        self.move_lines = self.env['account.move.line']
-        if not self.move_id:
-            return
-        data_lines = self.move_id.line_id.filtered(lambda l: l.account_id == self.account_id)
-        partial_lines = self.env['account.move.line']
-        reconciled_lines = self.env['account.move.line']
-        for data_line in data_lines:
-            if data_line.reconcile_id:
-                lines = data_line.reconcile_id.line_id
-            elif data_line.reconcile_partial_id:
-                lines = data_line.reconcile_partial_id
-            else:
-                continue
-            partial_lines += data_line
-            reconciled_lines += lines
-        self.move_lines = reconciled_lines - partial_lines
-
-    @api.one
-    @api.depends(
-        'move_id.line_id.reconcile_id.line_id',
         'move_id.line_id.amount_residual',
     )
     def _compute_payments(self):
@@ -253,8 +224,6 @@ class account_invoice(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]})
 
-    move_lines = fields.Many2many('account.move.line', string='Entry Lines',
-        compute='_compute_move_lines')
     residual = fields.Float(string='Amount due', digits=dp.get_precision('Account'),
         compute='_compute_residual', store=True,
         help="Remaining amount due.")

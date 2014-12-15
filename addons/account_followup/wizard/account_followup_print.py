@@ -45,7 +45,7 @@ class account_followup_stat_by_partner(osv.osv):
     _depends = {
         'account.move.line': [
             'account_id', 'company_id', 'credit', 'date', 'debit',
-            'followup_date', 'followup_line_id', 'partner_id', 'reconcile_id',
+            'followup_date', 'followup_line_id', 'partner_id', 'reconciled',
         ],
         'account.account': ['deprecated', 'user_type'],
     }
@@ -75,7 +75,7 @@ class account_followup_stat_by_partner(osv.osv):
                 WHERE
                     a.deprecated='f' AND
                     act.type = 'receivable' AND
-                    l.reconcile_id is NULL AND
+                    l.reconciled is FALSE AND
                     l.partner_id IS NOT NULL
                     GROUP BY
                     l.partner_id, l.company_id
@@ -272,7 +272,7 @@ class account_followup_print(osv.osv_memory):
                 "ON (l.account_id=a.id) "\
                 "LEFT JOIN account_account_type AS act "\
                 "ON (a.user_type=act.id) "\
-            "WHERE (l.reconcile_id IS NULL) "\
+            "WHERE (l.reconciled IS FALSE) "\
                 "AND (act.type='receivable') "\
                 "AND (l.partner_id is NOT NULL) "\
                 "AND (a.deprecated='f') "\

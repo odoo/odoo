@@ -36,7 +36,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
         if self.reconcil:
             RECONCILE_TAG = " "
         else:
-            RECONCILE_TAG = "AND l.reconcile_id IS NULL"
+            RECONCILE_TAG = "AND l.reconciled IS FALSE"
         self._cr.execute(
             "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit, l.amount_currency,l.currency_id, c.symbol AS currency_code " \
             "FROM account_move_line l " \
@@ -70,7 +70,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
         if self.reconcil:
             RECONCILE_TAG = " "
         else:
-            RECONCILE_TAG = "AND l.reconcile_id IS NULL"
+            RECONCILE_TAG = "AND l.reconciled IS FALSE"
         self._cr.execute(
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
@@ -97,7 +97,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
         if self.reconcil:
             RECONCILE_TAG = " "
         else:
-            RECONCILE_TAG = "AND reconcile_id IS NULL"
+            RECONCILE_TAG = "AND reconciled IS FALSE"
         if self.initial_balance:
             self._cr.execute(
                     "SELECT sum(debit) " \
@@ -146,7 +146,7 @@ class PartnerLedgerReport(models.AbstractModel, common_report_header):
         if self.reconcil:
             RECONCILE_TAG = " "
         else:
-            RECONCILE_TAG = "AND reconcile_id IS NULL"
+            RECONCILE_TAG = "AND reconciled IS FALSE"
         if self.initial_balance:
             self._cr.execute(
                     "SELECT sum(credit) " \

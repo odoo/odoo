@@ -27,7 +27,7 @@ class account_entries_report(models.Model):
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure', readonly=True)
     move_state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status', readonly=True)
-    reconcile_id = fields.Many2one('account.move.reconcile', string='Reconciliation number', readonly=True)
+    reconciled = fields.Boolean('Is reconciled')
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', readonly=True)
     quantity = fields.Float(string='Products Quantity', digits=(16,2), readonly=True)  # TDE FIXME master: rename into product_quantity
@@ -86,7 +86,7 @@ class account_entries_report(models.Model):
                 l.date as date_created,
                 am.ref as ref,
                 am.state as move_state,
-                l.reconcile_id as reconcile_id,
+                l.reconciled as reconciled,
                 l.partner_id as partner_id,
                 l.product_id as product_id,
                 l.product_uom_id as product_uom_id,

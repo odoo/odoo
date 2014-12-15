@@ -89,7 +89,7 @@ class account_followup_stat(osv.osv):
                 WHERE
                     a.deprecated='f' AND
                     act.type = 'receivable' AND
-                    l.reconcile_id is NULL AND
+                    l.reconciled is FALSE AND
                     l.partner_id IS NOT NULL
                 GROUP BY
                     l.id, l.partner_id, l.company_id, l.blocked, l.date
