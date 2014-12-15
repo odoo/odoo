@@ -150,5 +150,3 @@ else:
 if __name__ == '__main__':
     from pprint import pprint as pp
     pp(listdir('../report', True))
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

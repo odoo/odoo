@@ -38,4 +38,3 @@ class res_partner(osv.osv):
         'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),
         'sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order')
     }
-

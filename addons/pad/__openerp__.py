@@ -24,5 +24,3 @@ pads (by default, http://ietherpad.com/).
     'qweb' : ['static/src/xml/*.xml'],
     'images': ['static/src/img/pad_link_companies.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

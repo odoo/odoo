@@ -395,5 +395,3 @@ class report_agedpartnerbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_agedpartnerbalance'
     _wrapped_report_class = aged_trial_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

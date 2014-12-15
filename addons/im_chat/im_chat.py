@@ -485,5 +485,3 @@ class Controller(openerp.addons.bus.bus.Controller):
     def history(self, uuid, last_id=False, limit=20):
         registry, cr, uid, context = request.registry, request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context
         return registry["im_chat.message"].get_messages(cr, uid, uuid, last_id, limit, context=context)
-
-# vim:et:

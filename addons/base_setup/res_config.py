@@ -96,5 +96,3 @@ class sale_config_settings(osv.osv_memory):
             'Manage mass mailing campaigns',
             help='Get access to statistics with your mass mailing, manage campaigns.'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -117,4 +117,3 @@ class pos_order(osv.osv):
     _columns = {
         'table_id': fields.many2one('restaurant.table','Table', help='The table where this order was served'),
     }
-

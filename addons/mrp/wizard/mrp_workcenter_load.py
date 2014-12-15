@@ -50,6 +50,3 @@ class mrp_workcenter_load(osv.osv_memory):
             'report_name':'mrp.workcenter.load',
             'datas' : datas,
        }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

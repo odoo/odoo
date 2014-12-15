@@ -345,6 +345,3 @@ class account_move_line(osv.osv):
                     'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False
                     }, context=context)
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

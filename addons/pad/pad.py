@@ -106,5 +106,3 @@ class pad_common(osv.osv_memory):
                 pad = self.pad_generate_url(cr, uid, context)
                 default[k] = pad.get('url')
         return super(pad_common, self).copy(cr, uid, id, default, context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

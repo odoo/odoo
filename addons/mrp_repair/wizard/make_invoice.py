@@ -67,7 +67,3 @@ class make_invoice(osv.osv_memory):
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

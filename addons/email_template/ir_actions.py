@@ -78,6 +78,3 @@ class actions_server(osv.Model):
         self.pool['email.template'].send_mail(cr, uid, action.template_id.id, context.get('active_id'),
                                               force_send=False, raise_exception=False, context=context)
         return False
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

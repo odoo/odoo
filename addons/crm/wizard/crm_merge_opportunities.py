@@ -93,5 +93,3 @@ class crm_merge_opportunity(osv.osv_memory):
                 if team_ids:
                     team_id = team_ids[0]
         return {'value': {'team_id': team_id}}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

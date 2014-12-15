@@ -65,4 +65,3 @@ class base_config_settings(osv.TransientModel):
         }
         self.pool.get('auth.oauth.provider').write(cr, uid, [google_id], rg)
         self.pool.get('auth.oauth.provider').write(cr, uid, [facebook_id], rf)
-

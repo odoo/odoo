@@ -74,4 +74,3 @@ So, that we can compare the theoretic delay and real delay.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

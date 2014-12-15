@@ -95,6 +95,3 @@ class crm_phonecall2phonecall(osv.osv_memory):
             if 'partner_id' in fields:
                 res.update({'partner_id': phonecall.partner_id and phonecall.partner_id.id or False})
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

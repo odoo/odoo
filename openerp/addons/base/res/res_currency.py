@@ -300,5 +300,3 @@ class res_currency_rate(osv.osv):
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
     }
     _order = "name desc"
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

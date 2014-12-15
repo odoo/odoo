@@ -261,5 +261,3 @@ class report_partnerbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_partnerbalance'
     _wrapped_report_class = partner_balance
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

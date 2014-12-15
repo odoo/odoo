@@ -255,5 +255,3 @@ class wizard_user(osv.osv_memory):
         }
         mail_id = mail_mail.create(cr, uid, mail_values, context=this_context)
         return mail_mail.send(cr, uid, [mail_id], context=this_context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

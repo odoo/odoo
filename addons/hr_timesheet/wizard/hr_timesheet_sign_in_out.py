@@ -166,6 +166,3 @@ class hr_si_project(osv.osv_memory):
             for employee in emp_obj.browse(cr, uid, emp_id, context=context):
                 res.update({'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

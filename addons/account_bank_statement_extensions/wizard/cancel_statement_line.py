@@ -31,6 +31,3 @@ class cancel_statement_line(osv.osv_memory):
         line_obj = self.pool.get('account.bank.statement.line')
         line_obj.write(cr, uid, line_ids, {'state': 'draft'}, context=context)
         return {}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

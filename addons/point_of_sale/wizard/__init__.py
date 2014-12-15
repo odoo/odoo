@@ -26,5 +26,3 @@ import pos_discount
 import pos_open_statement
 import pos_payment
 import pos_session_opening
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -89,6 +89,3 @@ class makohtml2html(render.render):
 
     def _render(self):
         return makohtml.parseNode(self.html,self.localcontext)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

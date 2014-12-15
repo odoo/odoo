@@ -468,4 +468,3 @@ class res_users(osv.osv):
                     employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
                     employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
         return result
-

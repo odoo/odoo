@@ -60,5 +60,3 @@ class report_lunch_order(osv.osv):
                    lo.date,lo.user_id,lo.note
             )
             """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -36,6 +36,3 @@ class sale_order_line(osv.osv):
             line_obj.write(cr, uid, [create_ids[i]], {'analytics_id': line.analytics_id.id})
             i = i + 1
         return create_ids
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

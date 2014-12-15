@@ -133,6 +133,3 @@ class account_bank_statement_line(osv.osv):
             raise osv.except_osv(_('Warning!'), _('Delete operation not allowed. \
             Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

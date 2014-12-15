@@ -1280,5 +1280,3 @@ class product_template(osv.Model):
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

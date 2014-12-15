@@ -150,5 +150,3 @@ German accounting chart and localization.
     'installable': True,
     'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -585,5 +585,3 @@ class email_template(osv.osv):
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
         return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

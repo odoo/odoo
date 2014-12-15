@@ -296,5 +296,3 @@ class wrapped_vat_intra_print(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_be.report_l10nvatintraprint'
     _wrapped_report_class = vat_intra_print
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

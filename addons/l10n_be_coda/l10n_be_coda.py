@@ -26,6 +26,3 @@ class account_bank_statement(osv.osv):
     _columns = {
         'coda_note': fields.text('CODA Notes'),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

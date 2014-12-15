@@ -50,5 +50,3 @@ class wrapped_report_payslip(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'hr_payroll.report_payslip'
     _wrapped_report_class = payslip_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

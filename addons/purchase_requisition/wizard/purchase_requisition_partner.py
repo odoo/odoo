@@ -44,6 +44,3 @@ class purchase_requisition_partner(osv.osv_memory):
         data =  self.browse(cr, uid, ids, context=context)[0]
         self.pool.get('purchase.requisition').make_purchase_order(cr, uid, active_ids, data.partner_id.id, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

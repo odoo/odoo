@@ -467,5 +467,3 @@ class ir_ui_menu(osv.osv):
     }
     _order = "sequence,id"
     _parent_store = True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

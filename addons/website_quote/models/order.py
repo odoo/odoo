@@ -321,4 +321,3 @@ class product_template(osv.Model):
         'website_description': fields.html('Description for the website'), # hack, if website_sale is not installed
         'quote_description': fields.html('Description for the quote'),
     }
-

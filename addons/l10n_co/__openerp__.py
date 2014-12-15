@@ -47,5 +47,3 @@
     'installable': True,
     'images': [],
 }
-
-

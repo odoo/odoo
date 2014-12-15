@@ -56,5 +56,3 @@ to an appropriate local partner, based on the distance and the weight that was a
     'auto_install': False,
     'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

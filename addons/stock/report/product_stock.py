@@ -122,7 +122,3 @@ class report_stock(report_int):
         self.obj.render()
         return (self.obj.pdf, 'pdf')
 report_stock('report.stock.product.history')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
