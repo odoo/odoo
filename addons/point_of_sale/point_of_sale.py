@@ -622,7 +622,10 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
-                    raise Warning(_('No cash statement found with cash control enabled for this session. Unable to record returned cash.'))
+                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
+                    if not len(cash_journal_ids):
+                        raise Warning(_("No cash statement found for this session. Unable to record returned cash."))
+                    cash_journal = cash_journal_ids[0].journal_id
                 self.add_payment(cr, uid, order_id, {
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
