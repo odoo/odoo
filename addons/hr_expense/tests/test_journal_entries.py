@@ -1,6 +1,6 @@
-from openerp.tests.common import TransactionCase
-from openerp import workflow
+# -*- coding: utf-8 -*-
 
+from openerp.tests.common import TransactionCase
 
 class TestCheckJournalEntry(TransactionCase):
     """
@@ -9,49 +9,39 @@ class TestCheckJournalEntry(TransactionCase):
 
     def setUp(self):
         super(TestCheckJournalEntry, self).setUp()
-        cr, uid = self.cr, self.uid
-        self.expense_obj = self.registry('hr.expense.expense')
-        self.exp_line_obj = self.registry('hr.expense.line')
-        self.product_obj = self.registry('product.product')
-        self.tax_obj = self.registry('account.tax')
-        self.code_obj = self.registry('account.tax.code')
-        _, self.product_id = self.registry("ir.model.data").get_object_reference(cr, uid, "hr_expense", "air_ticket")
-        self.employee = self.registry("ir.model.data").xmlid_to_object(cr, uid, "hr.employee_mit")
-        self.base_code_id = self.code_obj.create(cr, uid, {'name': 'Expense Base Code'})
-        self.tax_id = self.tax_obj.create(cr, uid, {
+
+    def test_journal_entry(self):
+        base_code = self.env['account.tax.code'].create({'name': 'Expense Base Code'})
+
+        tax = self.env['account.tax'].create({
             'name': 'Expense 10%',
             'amount': 0.10,
             'type': 'percent',
             'type_tax_use': 'purchase',
             'price_include': True,
-            'base_code_id': self.base_code_id,
+            'base_code_id': base_code.id,
             'base_sign': -1,
         })
-        self.product_obj.write(cr, uid, self.product_id, {'supplier_taxes_id': [(6, 0, [self.tax_id])]})
-        self.expense_id = self.expense_obj.create(cr, uid, {
-            'name': 'Expense for Minh Tran',
-            'employee_id': self.employee.id,
-            'employee_payable_account_id': self.employee.address_home_id.property_account_payable.id,
-        })
-        self.exp_line_obj.create(cr, uid, {
+
+        expense = self.env['hr.expense'].create({
             'name': 'Car Travel Expenses',
-            'product_id': self.product_id,
+            'product_id': self.env.ref('hr_expense.air_ticket').id,
             'unit_amount': 700.00,
-            'expense_id': self.expense_id
+            'expense_tax_id': [(6, 0, tax.ids)],
         })
 
-    def test_journal_entry(self):
-        cr, uid = self.cr, self.uid
+        expense.submit_expenses()
+        self.assertEquals(expense.state, 'confirm', "Expense should be in Confirm state.")
+
         #Submit to Manager
-        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'confirm', cr)
+        expense.approve_expenses()
         #Approve
-        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'validate', cr)
+        expense.expense_id.signal_workflow('validate')
         #Create Expense Entries
-        workflow.trg_validate(uid, 'hr.expense.expense', self.expense_id, 'done', cr)
-        self.expense = self.expense_obj.browse(cr, uid, self.expense_id)
-        self.assertEquals(self.expense.state, 'done', 'Expense is not in Waiting Payment state')
-        self.assertTrue(self.expense.account_move_id.id, 'Expense Journal Entry is not created')
-        for line in self.expense.account_move_id.line_id:
+        expense.expense_id.signal_workflow('done')
+        self.assertEquals(expense.expense_id.state, 'done', 'Expense is not in Waiting Payment state')
+        self.assertTrue(expense.expense_id.account_move_id.id, 'Expense Journal Entry is not created')
+        for line in expense.expense_id.account_move_id.line_id:
             if line.credit:
                 self.assertEquals(line.credit, 700.00, 'Expense Payable Amount is not matched for journal item')
             else:

@@ -532,6 +532,9 @@ var KanbanRecord = Widget.extend({
         }
         return url;
     },
+    kanban_image_saveas: function(model, field, filename_field, id) {
+        return this.session.url('/web/binary/saveas', {model: model, field: field, filename_field: filename_field, id: id});
+    },
     kanban_text_ellipsis: function(s, size) {
         size = size || 160;
         if (!s) {

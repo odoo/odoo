@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_expense_cancel_reason" model="ir.ui.view">
+        <field name="name">expense.cancel.resson.form</field>
+        <field name="model">expense.cancel.resson</field>
+        <field name="arch" type="xml">
+            <form string="Expense cancel reason">                     
+                 <separator string="Reason for cancel expense."/>
+                <group>
+                    <field name="description"/>
+                </group>
+                <footer>
+                    <button string='Cancel Expense' name="expense_cancel_reason" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_expense_cancel_reason" model="ir.actions.act_window">
+        <field name="name">Cancel Reason</field>
+        <field name="res_model">expense.cancel.resson</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+       <field name="view_id" ref="view_expense_cancel_reason"/>
+       <field name="target">new</field>
+    </record>
+</odoo>
