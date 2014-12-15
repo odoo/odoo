@@ -13,7 +13,7 @@ class TestFormBuilder(openerp.tests.HttpCase):
              ('body_html', 'like', 'State : be'),
              ('body_html', 'like', 'Products : galaxy S,Xperia')])
 
-        print mail;
+        print '\n[WEBSITE_FORM_BUILDER] ', mail,'\n'
 
         lead = self.registry('crm.lead').search_read(self.cr, SUPERUSER_ID,
             [('contact_name', '='   , 'John Smith'),
@@ -22,7 +22,7 @@ class TestFormBuilder(openerp.tests.HttpCase):
              ('name'        , '='   , 'Usless Message'),
              ('description' , 'like', 'The complete usless Message')])
 
-        print lead;
+        print '\n[WEBSITE_FORM_BUILDER] ', lead,'\n'
 
         appl = self.registry('hr.applicant').search_read(self.cr, SUPERUSER_ID,
             [('partner_name'    , '='   , 'John Smith'),
@@ -30,8 +30,9 @@ class TestFormBuilder(openerp.tests.HttpCase):
              ('email_from'      , '='   , 'john@smith.com'),
              ('description'     , 'like', 'The complete usless Message')])
 
-        print appl;
+        print '\n[WEBSITE_FORM_BUILDER] ', appl,'\n'
+
         
-        self.assertNotEqual(mail, [], 'ERROR :: mail not inserted');
-        self.assertNotEqual(lead, [], 'ERROR :: lead not inserted');
-        self.assertNotEqual(appl, [], 'ERROR :: appl not inserted');
+        self.assertNotEqual(lead, [], 'ERROR :: lead not inserted')
+        self.assertNotEqual(appl, [], 'ERROR :: appl not inserted')
+        self.assertNotEqual(mail, [], 'ERROR :: mail not inserted')
