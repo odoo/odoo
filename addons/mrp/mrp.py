@@ -24,7 +24,7 @@ from datetime import datetime
 
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, orm
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import netsvc
@@ -298,8 +298,8 @@ class mrp_bom(osv.osv):
         if properties is None:
             properties = []
         domain = [('product_id', '=', product_id), ('bom_id', '=', False),
-                   '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-                   '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+                   '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+                   '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         ids = self.search(cr, uid, domain)
         max_prop = 0
         result = False
@@ -367,6 +367,9 @@ class mrp_bom(osv.osv):
                         'hour': float(wc_use.hour_nbr*mult + ((wc.time_start or 0.0)+(wc.time_stop or 0.0)+cycle*(wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
+                if (bom2.date_start and bom2.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT)) or \
+                    (bom2.date_stop and bom2.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT)):
+                    continue
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
                 result = result + res[0]
                 result2 = result2 + res[1]
