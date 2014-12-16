@@ -381,7 +381,7 @@ class account_move_line(models.Model):
             """ SELECT a.id, b.id
                 FROM account_move_line a, account_move_line b
                 WHERE a.amount_residual = - b.amount_residual
-                AND a.reconciled IS NULL AND b.reconciled IS NULL
+                AND NOT a.reconciled AND NOT b.reconciled
                 AND a.account_id = %d AND b.account_id = %d
                 %s
                 ORDER BY a.date asc
@@ -463,8 +463,6 @@ class account_move_line(models.Model):
         """
         domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
 
-        # TODO : adapt
-
         # Get move lines ; in case of a partial reconciliation, only consider one line
         filtered_line_ids = []
         reconcile_partial_ids = []
@@ -479,8 +477,8 @@ class account_move_line(models.Model):
                     make_one_more_loop = True
                     continue
                 filtered_line_ids.append(line.id)
-                if line.reconcile_partial_ids:
-                    reconcile_partial_ids.append(line.reconcile_partial_ids.ids)
+                reconcile_partial_ids.append(line.reconcile_partial_ids.ids) # TOCHECK logical ?
+                reconcile_partial_ids.append(line.reconcile_partial_with_ids.ids)
 
             if not limit or not make_one_more_loop or len(filtered_line_ids) >= limit:
                 break
@@ -512,9 +510,9 @@ class account_move_line(models.Model):
         ret = []
 
         for line in self:
-            partial_reconciliation_siblings = [] # TODO : adapt
+            partial_reconciliation_siblings = []
             if line.reconcile_partial_ids and not skip_partial_reconciliation_siblings:
-                siblings = line.reconcile_partial_ids - line # TODO : this might be extremely wrong
+                siblings = (line.reconcile_partial_ids + line.reconcile_partial_with_ids) - line # # TOCHECK logical ?
                 partial_reconciliation_siblings = siblings.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=target_date, skip_partial_reconciliation_siblings=True)
 
             ret_line = {
@@ -658,28 +656,6 @@ class account_move_line(models.Model):
 
         (self|writeoff_lines).reconcile()
 
-    @api.model
-    def list_partners_to_reconcile(self):
-        self._cr.execute(
-             """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_time_entries_checked, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
-                FROM account_move_line l
-                RIGHT JOIN account_account a ON (a.id = l.account_id)
-                RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-                    WHERE a.reconcile IS TRUE
-                    AND l.reconciled IS FALSE
-                    GROUP BY l.partner_id, p.last_time_entries_checked
-                ) AS s
-                WHERE debit > 0 AND credit > 0 AND (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-                ORDER BY last_time_entries_checked""")
-        ids = [x[0] for x in self._cr.fetchall()]
-        if not ids:
-            return []
-
-        # To apply the ir_rules
-        partners = self.env['res.partner'].search([('id', 'in', ids)])
-        return partners.name_get()
-        
     def _get_pair_to_reconcile(self):
         #target the pair of move in self with smallest debit, credit
         smallest_debit = smallest_credit = False
@@ -744,13 +720,8 @@ class account_move_line(models.Model):
             writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_acc_id, writeoff_journal_id)
             #add writeoff line to reconcile algo and finish the reconciliation
             remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
-            
-        if not remaining_moves:
-            #write last date of reconciliation on partner
-            partner = self[0].partner_id
-            if partner and not partner.has_something_to_reconcile():
-                partner.mark_as_reconciled()
-        return True
+
+        return True # TOCHECK : why ?
 
     def _create_writeoff(self, writeoff_acc_id, writeoff_journal_id):
         writeoff_amount = sum([r.amount_residual for r in self])

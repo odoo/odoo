@@ -233,24 +233,6 @@ class account_account(models.Model):
             raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return super(account_account, self).unlink()
 
-    @api.one
-    def has_something_to_reconcile(self):
-        ''' at least a debit, a credit and a line older than the last reconciliation date of the account '''
-        self.env.cr.execute('''
-            SELECT l.account_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
-            FROM account_move_line l
-            RIGHT JOIN account_account a ON (a.id = l.account_id)
-            WHERE a.reconcile IS TRUE
-            AND a.id = %s
-            AND l.reconciled IS FALSE
-            AND (a.last_time_entries_checked IS NULL OR l.date > a.last_time_entries_checked)
-            AND l.state <> 'draft'
-            GROUP BY l.account_id''', (self.id,))
-        res = self.env.cr.dictfetchone()
-        if res:
-            return bool(res['debit'] and res['credit'])
-        return False
-
     @api.multi
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})

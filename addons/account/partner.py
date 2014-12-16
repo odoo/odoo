@@ -240,26 +240,6 @@ class res_partner(models.Model):
             partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
-    @api.one
-    def has_something_to_reconcile(self):
-        '''
-        at least a debit, a credit and a line older than the last reconciliation date of the partner
-        '''
-        self._cr.execute('''
-            SELECT l.partner_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
-            FROM account_move_line l
-            RIGHT JOIN account_account a ON (a.id = l.account_id)
-            RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-            WHERE a.reconcile IS TRUE
-            AND p.id = %s
-            AND l.reconciled IS FALSE
-            AND (p.last_time_entries_checked IS NULL OR l.date > p.last_time_entries_checked)
-            GROUP BY l.partner_id''', (self.id,))
-        res = self._cr.dictfetchone()
-        if res:
-            return bool(res['debit'] and res['credit'])
-        return False
-
     @api.multi
     def mark_as_reconciled(self):
         return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
