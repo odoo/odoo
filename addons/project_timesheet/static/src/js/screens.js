@@ -886,9 +886,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.$el.find(".pt_select_protocol").on("click", function() {
                 self.$el.find(".pt_button_protocol span:first").text($(this).text());
             });
-            this.$el.find("#pt_new_user,#pt_existing_user").on("click", function() {
-                self.$el.find(".o_new_account").toggleClass("o_active");
-                self.$el.find(".o_existing_account").toggleClass("o_active");
+            this.$el.find("#pt_new_user").on("click", function() {
+                self.$el.find(".o_new_account").addClass("o_active");
+                self.$el.find(".o_existing_account").removeClass("o_active");
+            });
+            this.$el.find("#pt_existing_user").on("click", function() {
+                self.$el.find(".o_new_account").removeClass("o_active");
+                self.$el.find(".o_existing_account").addClass("o_active");
             });
         },
         on_cancel: function() {
