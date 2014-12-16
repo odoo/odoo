@@ -74,7 +74,7 @@ var DataExport = Widget.extend({
         this.$el.find("#import_compat").on('change',function(){
             if($(this).is(":checked")){
                 self.$el.find('#field-tree-structure').remove();
-                var import_comp = self.$el.find("#import_compat").val();
+                var import_comp = self.$el.find("#import_compat").prop("checked");
                 self.rpc("/web/export/get_fields", {
                     model: self.action.params.model,
                     import_compat: !!import_comp,
@@ -227,7 +227,7 @@ var DataExport = Widget.extend({
         }
 
         if (!record.loaded) {
-            var import_comp = self.$el.find("#import_compat").val();
+            var import_comp = self.$el.find("#import_compat").prop("checked");
             self.rpc("/web/export/get_fields", {
                 model: model,
                 prefix: prefix,
@@ -442,7 +442,7 @@ var DataExport = Widget.extend({
                 ids: this.ids_to_export,
                 domain: this.domain,
                 context: this.action.context,
-                import_compat: !!this.$el.find("#import_compat").val(),
+                import_compat: !!this.$el.find("#import_compat").prop("checked"),
             })},
             complete: framework.unblockUI,
             error: crash_manager.rpc_error.bind(crash_manager),
