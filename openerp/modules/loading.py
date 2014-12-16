@@ -360,10 +360,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module)
 
-        # load custom models
-        cr.execute('select model from ir_model where state=%s', ('manual',))
-        for model in cr.dictfetchall():
-            registry['ir.model'].instanciate(cr, SUPERUSER_ID, model['model'], {})
         registry.setup_models(cr)
 
         # STEP 4: Finish and cleanup installations
