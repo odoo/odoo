@@ -41,7 +41,6 @@ This module consists :
     'depends': ['account','account_chart'],
     'data': [
         'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',

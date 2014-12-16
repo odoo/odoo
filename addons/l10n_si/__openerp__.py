@@ -31,7 +31,6 @@
     "data" : [
         "data/account.account.type.csv", 
         "data/account.account.template.csv",
-        "data/account.tax.code.template.csv",
         "data/account.chart.template.csv",
         "data/account.tax.template.csv",
         "data/account.fiscal.position.template.csv",

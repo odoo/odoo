@@ -52,13 +52,6 @@ class account_tax_template(osv.osv):
     }
 
 
-class account_tax_code_template(osv.osv):
-    _inherit = 'account.tax.code.template'
-    _columns = {
-        'name': fields.char('Tax Case Name', required=True, translate=True),
-    }
-
-
 class account_chart_template(osv.osv):
     _inherit = 'account.chart.template'
     _columns={

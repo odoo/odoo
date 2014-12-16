@@ -48,7 +48,6 @@ Includes:
     * account.type
     * account.account.template
     * account.tax.template
-    * account.tax.code.template
     * account.chart.template
 
 Everything is in English with Spanish translation. Further translations are welcome,
