@@ -404,7 +404,8 @@ class sale_order(osv.osv):
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False,
-            'team_id' : order.team_id.id
+            'team_id' : order.team_id.id,
+            'incoterms_id' : order.incoterm.id or False,
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1

@@ -442,3 +442,15 @@ class stock_picking(osv.osv):
                     created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                     invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    _columns = {
+        'incoterms_id': fields.many2one(
+            'stock.incoterms',
+            "Incoterms",
+            help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
+            readonly=True, 
+            states={'draft': [('readonly', False)]}),
+    }
