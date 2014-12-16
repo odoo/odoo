@@ -1515,53 +1515,37 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     process_notebook: function($notebook) {
         var self = this;
         var pages = [];
+
+        // Extract useful info from the notebook xml declaration
         $notebook.find('> page').each(function() {
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
-            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
-            $page.contents().appendTo($new_page);
-            $page.before($new_page).remove();
-            var ic = self.handle_common_properties($new_page, $page).invisibility_changer;
-            page_attrs.__page = $new_page;
-            page_attrs.__ic = ic;
+            page_attrs.contents = $page.html();
+            page_attrs.ref = $page;
             pages.push(page_attrs);
-
-            $new_page.children().each(function() {
-                self.process($(this));
-            });
         });
-        var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
-        $notebook.contents().appendTo($new_notebook.find('.tab-content'));
-        $notebook.before($new_notebook).remove();
-        self.process($($new_notebook.children()[0]));
 
-        var autofocus_found = false;
-        _.each(pages, function(page, i) {
-            if (!autofocus_found && page.autofocus) {
-                autofocus_found = true;
-                $new_notebook.find("#" + page.id).addClass('active');
-                $new_notebook.find("[href=#" + page.id + "]").tab('show');
+        var $new_notebook = self.render_element('FormRenderingNotebook', {'pages': pages});
+
+        // Invisibility changer logic
+        _.each(pages, function(page) {
+            // Case: <page attrs="{'invisible': domain}">;
+            self.handle_common_properties($new_notebook.find("a[href=#" + page.id + "]").parent(), page.ref);
+            self.handle_common_properties($new_notebook.find("#" + page.id), page.ref);
+
+            if (page.autofocus) {
+                // Case: <page autofocus="autofocus">;
+                // fucking fuck fuck bootstrap doesn't trigger active on associated content
+                $new_notebook.find("a[href=#" + page.id + "]").tab('show');
             }
-
-            if (!page.__ic)
-                return;
-            page.__ic.on("change:effective_invisible", null, function() {
-                if (!page.__ic.get('effective_invisible') && page.autofocus) {
-                $new_notebook.find("#" + page.id).addClass('active');
-                    $new_notebook.find("[href=#" + page.id + "]").tab('show');
-                    return;
-                }
-            });
         });
 
-        if (!autofocus_found) {
-            var first_tab = $new_notebook.find('li:not(.oe_form_invisible) a').first();
-            first_tab.parent().addClass('active');
-            $new_notebook.find(first_tab.attr('href')).addClass('active');
-        }
+        $notebook.before($new_notebook).remove();
 
-        this.handle_common_properties($new_notebook, $notebook);
+        self.process($new_notebook.children());
+        self.handle_common_properties($new_notebook, $notebook);
+
         return $new_notebook;
     },
     process_separator: function($separator) {
