@@ -327,6 +327,7 @@ define([
       var linkUrl = linkInfo.url;
       var linkText = linkInfo.text;
       var isNewWindow = linkInfo.newWindow;
+      var className = linkInfo.className || null;
       var rng = linkInfo.range;
 
       if (options.onCreateLink) {
@@ -338,8 +339,9 @@ define([
       // Create a new link when there is no anchor on range.
       var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0], true);
       $(anchor).attr({
-        href: linkUrl,
-        target: isNewWindow ? '_blank' : ''
+        'href': linkUrl,
+        'target': isNewWindow ? '_blank' : null,
+        'class': className
       });
 
       range.createFromNode(anchor).select();
