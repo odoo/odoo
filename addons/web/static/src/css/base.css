@@ -532,7 +532,7 @@
   background-image: -webkit-radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
   background-image: -moz-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
   background-image: -ms-radial-gradient(#eee 0%, #ccc 40%, #bbb 100%);
-  background-image: radial-gradient(circle, #eee 0%, #ccc 40%, #bbb 100%);
+  background-image: radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
 }
 .openerp .oe_kanban_status_green {
   background: green;
@@ -615,79 +615,6 @@
 .openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;
   text-decoration: none;
-}
-.openerp .oe_notebook {
-  margin: 8px 0;
-  padding: 0 16px;
-  list-style: none;
-  zoom: 1;
-}
-.openerp .oe_notebook.ui-corner-all {
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-}
-.openerp .oe_notebook:before, .openerp .oe_notebook:after {
-  display: table;
-  content: "";
-  zoom: 1;
-}
-.openerp .oe_notebook:after {
-  clear: both;
-}
-.openerp .oe_notebook > li {
-  float: left;
-}
-.openerp .oe_notebook > li > a {
-  display: block;
-  color: #808080;
-}
-.openerp .oe_notebook > li.ui-tabs-active > a {
-  color: #4c4c4c;
-}
-.openerp .oe_notebook {
-  border-color: #ddd;
-  border-style: solid;
-  border-width: 0 0 1px;
-}
-.openerp .oe_notebook > li {
-  position: relative;
-}
-.openerp .oe_notebook > li > a {
-  padding: 0 12px;
-  margin-right: 2px;
-  line-height: 30px;
-  border: 1px solid transparent;
-  -moz-border-radius: 4px 4px 0 0;
-  -webkit-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-}
-.openerp .oe_notebook > li > a:hover {
-  text-decoration: none;
-  background-color: #eee;
-  border-color: #eee #eee #ddd;
-}
-.openerp .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active {
-  border-bottom: none;
-  padding-bottom: 1px;
-}
-.openerp .oe_notebook > li.ui-state-active > a, .openerp .oe_notebook > li.ui-state-active > a:hover {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-bottom-color: transparent;
-  cursor: default;
-}
-.openerp .oe_notebook_page {
-  padding: 0;
-}
-.openerp .oe_notebook_page > label:not([for]) {
-  font-weight: normal !important;
-}
-.openerp div.ui-tabs {
-  padding: 3px 0px 3px 0px;
-}
-.openerp .ui-tabs-hide {
-  display: none;
 }
 .openerp .oe_dropdown, .openerp .oe_dropdown_hover, .openerp .oe_dropdown_toggle {
   position: relative;
