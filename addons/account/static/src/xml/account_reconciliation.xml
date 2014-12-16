@@ -226,6 +226,7 @@
     <t t-name="bank_statement_reconciliation_line" t-extend="reconciliation_line">
         <t t-jquery=".accounting_view caption" t-operation="inner">
             <button class="button_ok btn btn-default btn-sm"></button>
+            <span class="tip_reconciliation_not_balanced">You must balance the reconciliation</span>
             <span t-if="! line.has_no_partner" class="partner_name">
                 <t t-esc="line.partner_name"/>
                 <span class="change_partner glyphicon glyphicon-pencil"></span>

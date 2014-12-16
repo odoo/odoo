@@ -7,6 +7,7 @@ from openerp.osv import expression
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
+from openerp.tools import float_compare, float_round
 
 
 class account_bank_statement(models.Model):
@@ -309,21 +310,21 @@ class account_bank_statement_line(models.Model):
 
     def _get_domain_maker_move_line_amount(self):
         """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
-        currency_id = self.currency_id
-        field = currency_id and 'amount_residual_currency' or 'amount_residual'
+        currency = self.currency_id or self.journal_id.currency
+        field = currency and 'amount_residual_currency' or 'amount_residual'
+        precision = currency and currency.rounding or self.journal_id.company_id.currency_id.rounding
 
-        def ret(comparator, amount, f=field, c=currency_id):
+        def ret(comparator, amount, p=precision, f=field, c=currency.id):
             if comparator == '<':
                 if amount < 0:
                     domain = [(f, '<', 0), (f, '>', amount)]
                 else:
                     domain = [(f, '>', 0), (f, '<', amount)]
             elif comparator == '=':
-                domain = [(f, '=', amount)]
+                domain = [(f, '=', float_round(amount, precision_digits=p))]
             else:
                 raise osv.except_osv(_("Programmation error : domain_maker_move_line_amount requires comparator '=' or '<'"))
-            if c:
-                domain += [('currency_id', '=', c)]
+            domain += [('currency_id', '=', c)]
             return domain
 
         return ret
@@ -333,7 +334,7 @@ class account_bank_statement_line(models.Model):
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()
-        equal_amount_domain = amount_domain_maker('=', self.amount)
+        equal_amount_domain = amount_domain_maker('=', self.amount_currency or self.amount)
 
         # Look for structured communication match
         if self.name:
@@ -369,9 +370,10 @@ class account_bank_statement_line(models.Model):
 
         # How to compare statement line amount and move lines amount
         amount_domain_maker = self._get_domain_maker_move_line_amount()
+        amount = self.amount_currency or self.amount
 
         # Look for a single move line with the same amount
-        match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=amount_domain_maker('=', self.amount))
+        match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=amount_domain_maker('=', amount))
         if match_ids:
             return match_ids
 
@@ -380,19 +382,18 @@ class account_bank_statement_line(models.Model):
 
         # Look for a set of move line whose amount is <= to the line's amount
         domain = [('reconciled', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
-        if self.amount > 0: # Make sure we can't mix receivable and payable
-            domain += [('account_id.user_type.type', '=', 'receivable')]
-        else:
-            domain += [('account_id.user_type.type', '=', 'payable')]
-        domain += amount_domain_maker('<', self.amount) # Will also enforce > 0
+        domain += [('account_id.user_type.type', '=', amount > 0 and 'receivable' or 'payable')] # Make sure we can't mix receivable and payable
+        domain += amount_domain_maker('<', amount) # Will also enforce > 0
         mv_lines = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
+        currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
+        precision = currency.rounding
         ret = []
         total = 0
         for line in mv_lines:
-            if total + abs(line['debit'] - line['credit']) <= abs(self.amount):
+            total += abs(line['debit'] - line['credit'])
+            if float_compare(total, abs(amount), precision_digits=precision) != 1:
                 ret.append(line)
-                total += abs(line['debit'] - line['credit'])
-            if total >= abs(self.amount):
+            else:
                 break
         return ret
 

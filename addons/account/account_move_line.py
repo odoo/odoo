@@ -345,7 +345,7 @@ class account_move_line(models.Model):
                 is_partner and 'p.id AS partner_id, p.name AS partner_name,' or ' ',
                 res_alias,
                 is_partner and 'RIGHT JOIN res_partner p ON (l.partner_id = p.id)' or ' ',
-                is_partner and ' ' or 'AND at.type <> "payable" AND at.type <> "receivable"',
+                is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 res_id and 'AND '+res_alias+'.id = '+str(res_id) or '',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias,
