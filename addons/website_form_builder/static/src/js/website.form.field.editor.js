@@ -456,7 +456,67 @@
             this.getModel = getModel;
             this.removeWizard = removeWizard;
         },
-        clean_for_save: function () {},
+
+        check_for_save: function () {
+
+            var associatedField = function (type) {
+                switch(type) {
+                    case 'char':
+                    case 'text':            return _t('Input Text, Input Hidden, Textarea, Select or Radios');
+                    case 'binary':
+                    case 'manyBinary2many':
+                    case 'oneBinary2many':  return _t('Upload Field');
+                    case 'one2many':
+                    case 'many2many':       return _t('Select or Checkbox');
+                    case 'many2one':
+                    case 'selection':       return _t('Select or Radios');
+                    default:                return _t('Input Text, Hidden Field, Select or Radios');
+                }
+            };
+            $('#oe_snippets')   .addClass('hidden')
+                                .find('.active')
+                                .removeClass('active');
+
+            var form = $('form[action*="/website_form/"]:not(.oe_snippet_body)');
+            var field;
+            form.removeClass('o_send-failed o_send-success');
+            form.find('.o_form-success').hide(0);
+            form.find('.o_form-danger').hide(0);
+            form.find('.form-group').show(0);
+
+            form.find('.form-builder-error-message').remove();
+            var required_error = '';
+            if(!form.data('model')) {
+                return true;
+            }
+            if(!form.data('fields')) {
+                return true;
+            }
+
+            form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
+            console.log(form.data('fields').required);
+            $.each(form.data('fields').required,function(i,name){
+                var present = 0;
+                form.find('.form-data').each(function(j,elem){
+                    present = present || ($(elem).prop('name') == name);
+                    console.log($(elem).prop('name'), name,($(elem).prop('name') == name));
+                });
+                if(required_error !== '') {
+                    required_error += ', ';
+                }
+                if(!present){
+                    field = form.data('fields').all[name];
+                    required_error += '<li><strong>'+field.label+' ('+field.name+') :: '+associatedField(field.type)+'</li></strong>';
+                }
+            });
+            if(required_error) {
+                var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ')  + '<ul>' + required_error + '</ul>';
+                form.prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));
+                return false;
+            }
+            return true;
+
+        }
     });
     
     //////////////////////////
@@ -920,69 +980,6 @@
             if(type == 'search') {
                   this.$target.find('.form-data').html('<textarea class="o_form-input-search" name="'+name+'" rows="1"></textarea>');
             }
-        }
-    });
-
-    website.EditorBar.include({
-        save: function () {
-
-            var associatedField = function (type) {
-                switch(type) {
-                    case 'char':
-                    case 'text':            return _t('Input Text, Input Hidden, Textarea, Select or Radios');
-                    case 'binary':
-                    case 'manyBinary2many':
-                    case 'oneBinary2many':  return _t('Upload Field');
-                    case 'one2many':
-                    case 'many2many':       return _t('Select or Checkbox');
-                    case 'many2one':
-                    case 'selection':       return _t('Select or Radios');
-                    default:                return _t('Input Text, Hidden Field, Select or Radios');
-                }
-            };
-            $('#oe_snippets')   .addClass('hidden')
-                                .find('.active')
-                                .removeClass('active');
-
-            var form = $('form[action*="/website_form/"]:not(.oe_snippet_body)');
-            var field;
-            form.removeClass('o_send-failed o_send-success');
-            form.find('.o_form-success').hide(0);
-            form.find('.o_form-danger').hide(0);
-            form.find('.form-group').show(0);
-
-            form.find('.form-builder-error-message').remove();
-            var required_error = '';
-            if(!form.data('model')) {
-                return this._super();
-            }
-            if(!form.data('fields')) {
-                return this._super();
-            }
-
-            form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
-            console.log(form.data('fields').required);
-            $.each(form.data('fields').required,function(i,name){
-                var present = 0;
-                form.find('.form-data').each(function(j,elem){
-                    present = present || ($(elem).prop('name') == name);
-                    console.log($(elem).prop('name'), name,($(elem).prop('name') == name));
-                });
-                if(required_error !== '') {
-                    required_error += ', ';
-                }
-                if(!present){
-                    field = form.data('fields').all[name];
-                    required_error += '<li><strong>'+field.label+' ('+field.name+') :: '+associatedField(field.type)+'</li></strong>';
-                }
-            });
-            if(required_error) {
-                var message = _t('Some required fields are not present on your form. Please add the following fields on your form : ')  + '<ul>' + required_error + '</ul>';
-                form.prepend($(openerp.qweb.render('website.form.editor.error',{'message':message})));
-                return;
-            }
-            this._super();
-
         }
     });
 })();
