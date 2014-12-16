@@ -90,7 +90,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
     var opened_modal = [];
     project_timesheet.Dialog = openerp.Widget.extend({
-        //template: "ProjectTimesheetDialog",
         init: function(parent, options, content) {
             this._super();
             this.content_to_set = content;
@@ -347,8 +346,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //TO Implement
         },
 
-        // this methods hides the screen.
-        hide: function(){
+        hide: function() {
+            //this methods hides the screen.
             this.hidden = true;
             if(this.$el){
                 this.$el.addClass('o_hidden');
@@ -428,7 +427,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.pad_table_to(10);
 
             this.is_available_timer_activity();
-            //When Cancel is clicked it should move user to Activity List screen
             this.$el.find(".pt_add_activity").parent().on("click", function() {
                 self.project_timesheet_widget.screen_selector.set_current_screen("add_activity");
             });
@@ -467,7 +465,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_row_click: function(event) {
             var activity_id = $(event.currentTarget).data("activity_id");
-            console.log("event is ::: ", event);
             if(activity_id) {
                 var activity = this.project_timesheet_db.get_activity_by_id(activity_id);
                 this.project_timesheet_widget.screen_selector.set_current_screen("add_activity", activity);
@@ -915,26 +912,22 @@ function odoo_project_timesheet_screens(project_timesheet) {
             //TODO: Check whether we already having session, if yes then use it by just reloading session
             var session = new openerp.Session(undefined, origin, {use_cors: true});
             project_timesheet.session = session;
-            //if (!openerp.get_cookie("session_id")) { //use check_session_id
-                def = session.session_authenticate(db, username, password).done(function() {
-                    //TODO: Create generic method set_cookie
-                    document.cookie = ["session_id="+session.session_id,'path='+origin,
-                        'max-age=' + (24*60*60*365),
-                        'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';');
+            def = session.session_authenticate(db, username, password).done(function() {
+                //TODO: Create generic method set_cookie
+                document.cookie = ["session_id="+session.session_id,'path='+origin,
+                    'max-age=' + (24*60*60*365),
+                    'expires=' + new Date(new Date().getTime() + 300*1000).toGMTString()].join(';');
 
-                        //Store session object in local storage, we need it, so that user don't have to enter login detail each time while sync
-                        //Note that, session_id is created new each time for cross domain policy
-                        self.project_timesheet_db.save("session", session);
-                }).fail(function(error, event) {
-                    if (error) {
-                        self.rpc_error(error);
-                    } else {
-                        alert("Something went wrong, please check your username or password");
-                    }
-                });
-            //} else {
-            //    def.resolve();
-            //}
+                    //Store session object in local storage, we need it, so that user don't have to enter login detail each time while sync
+                    //Note that, session_id is created new each time for cross domain policy
+                    self.project_timesheet_db.save("session", session);
+            }).fail(function(error, event) {
+                if (error) {
+                    self.rpc_error(error);
+                } else {
+                    alert("Something went wrong, please check your username or password");
+                }
+            });
             $.when(def).done(function() {
                 console.log("You can go ahead to sync data and retrieve data");
                 //Get Model data and sync with Server and then Retrieve data and store in localstorage
@@ -1039,21 +1032,13 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 label: "#unit_amount_duration#",
                 color: "#a24689",
                 width: 25,
-                //gradient:"falling",
                 tooltip: {
                     template:"#unit_amount_duration#",
                 },
                 xAxis: {
-                    //title: "Days",
                     template: "#day#",
                     lines: false
                 },
-                //yAxis: {
-                //    title: "Hours",
-                //    start: 0,
-                    // step:5,
-                    // end:24
-                //},
                 legend: {
                     values: [{text:"Validated Activities",color:"#a24689"},{text:"Undefined activities",color:"#ffcc00"}],
                     valign: "top",
@@ -1184,7 +1169,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             });
             this.$el.find(".pt_stat_table").html(QWeb.render('StatisticTable', {widget: this, projects: _.toArray(table_data)}));
             chart.parse(graph_data,"json");
-            //To Fix this issue of x-axis lable partially hidden, It seems issue with DHTMLX Chart
+            //To Fix issue of x-axis lable partially hidden, It seems issue with DHTMLX Chart
             this.$el.find("#pt_chart").height(
                 this.$el.find("#pt_chart").height()+20);
         },

@@ -2,9 +2,6 @@ project_timesheet = _.clone(openerp);;
 (function() {
 'use strict';
 
-    //openerp.project_timesheet = project_timesheet;
-
-    //project_timesheet.qweb = new QWeb2.Engine();
     odoo_project_timesheet_db(project_timesheet); //Import db.js
     odoo_project_timesheet_models(project_timesheet); //Import model.js
     odoo_project_timesheet_screens(project_timesheet); // Import screens.js
@@ -44,7 +41,6 @@ project_timesheet = _.clone(openerp);;
             // Place the response in an XML document.
             var xml = Connect.responseXML;
     
-            //project_timesheet.qweb.add_template(xml);
             this.add_template_file(xml);
             this.pt_widget = new project_timesheet.project_timesheet_widget(null, {});
             this.pt_widget.appendTo($element);
@@ -53,7 +49,6 @@ project_timesheet = _.clone(openerp);;
     })();
 
     jQuery(document).ready(function() {
-        //var project_timesheet = {};
         var app = new project_timesheet.App($(".odoo_project_timesheet"));
     });
 })();

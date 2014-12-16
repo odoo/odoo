@@ -34,8 +34,6 @@ function odoo_project_timesheet_models(project_timesheet) {
         model: project_timesheet.task_activity_model,
     });
 
-
-    //Note: Regarding project already connected or not ? state: "connecting", //There will be two state, connecting and connected, if record is modified then again state will be changed and localstorage will be updated
     project_timesheet.task_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
@@ -231,39 +229,15 @@ function odoo_project_timesheet_models(project_timesheet) {
             var momObj = new moment();
             var end_date = project_timesheet.datetime_to_str(momObj._d);
             var start_date = project_timesheet.datetime_to_str(momObj.subtract(30, "days")._d);
-            /*
-            return new project_timesheet.Model(project_timesheet.session, "project.task.work").call("search_read", {
+            return new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("load_data", {
                 domain: [["date", ">=", start_date], ["date", "<=", end_date]],
-                fields: ["id", "task_id", "name", "hours", "date"]
+                fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id', '__last_update']
             }).then(function(work_activities) {
-                var tasks = _.pluck(work_activities, "task_id");
-                tasks = _.pluck(_.groupBy(tasks), 0);
-                return new project_timesheet.Model(project_timesheet.session, "project.task").call("search_read", {
-                    domain: [["id", "in", _.map(tasks, function(task) {return task[0];})]],
-                    fields: ['id', 'project_id', "priority"]
-                }).then(function(tasks_read) {
-                    var projects = [];
-                    //set project_id in activities, where task_id is projects.id
-                    _.each(tasks_read, function(task) {
-                        var activities = _.filter(work_activities, function(activity) {return activity.task_id[0] == task.id;});
-                        _.each(activities, function(activity) {
-                            activity['project_id'] = task['project_id'];
-                            activity['priority'] = task['priority'];
-                        });
-                    });
-                    self.project_timesheet_db.add_activities(work_activities);
+                self.project_timesheet_db.add_activities(work_activities);
+                return new project_timesheet.Model(project_timesheet.session, "res.users").call("name_get", [project_timesheet.session.uid]).then(function(result) {
+                    project_timesheet.session.display_username = result ? result[0][1] : project_timesheet.session.username;
                 });
-            })
-            */
-           return new project_timesheet.Model(project_timesheet.session, "hr.analytic.timesheet").call("load_data", {
-               domain: [["date", ">=", start_date], ["date", "<=", end_date]],
-               fields: ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id', '__last_update']
-           }).then(function(work_activities) {
-               self.project_timesheet_db.add_activities(work_activities);
-               return new project_timesheet.Model(project_timesheet.session, "res.users").call("name_get", [project_timesheet.session.uid]).then(function(result) {
-                   project_timesheet.session.display_username = result ? result[0][1] : project_timesheet.session.username;
-               });
-           }).promise();
+            }).promise();
         },
         //TO REMOVE: If not necessary
         set_screen_data: function(key,value){
@@ -276,8 +250,8 @@ function odoo_project_timesheet_models(project_timesheet) {
             }
         },
         //TO REMOVE: If not necessary
-        //return screen data based on key passed
         get_screen_data: function(key){
+            //this method returns screen data based on key passed
             return this.screen_data[key];
         },
         check_session: function(){
@@ -309,7 +283,6 @@ function odoo_project_timesheet_models(project_timesheet) {
                     if (!_.isUndefined(json_data.command)) {
                         //If reference_id is not there then create unique Reference ID
                         if (!json_data.reference_id) {
-                            //json_data['reference_id'] = json_data.user_id.toString() + json_data.project_id[0].toString() + json_data.date;
                             reference_id = generate_reference_id();
                             _.extend(activity_models[i], {'reference_id': reference_id});
                             json_data['reference_id'] = reference_id;
@@ -344,7 +317,6 @@ function odoo_project_timesheet_models(project_timesheet) {
         sync_complete: function(sync_result) {
             //This method will flush localstorage activities once it has been sync
             //TODO: Remove project_timesheet_session and reload with new fetched session, if session is new then we should also start sequence from 0
-            //Set fail records with error and show error icon besides that record in activity listview
             this.project_timesheet_db.flush_activities();
             this.reset_collections();
             //this.project_timesheet_db.clear('session');

@@ -34,41 +34,6 @@
                 <t t-call="Footer"></t>
             </div>
         </div>
-        <!--
-        <table class="table table-responsive activity_screen" style="height: 100%;">
-            <tbody>
-            <tr>
-                <td class="pt_activity_header">
-                    <div class="row">
-                        <div class="pt_duration col-md-8 col-xs-8">
-                            <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
-                        </div>
-                        <div class="pt_timer_button col-md-4 col-xs-4">
-                            <button class="btn btn-primary pull-right pt_timer_start">START</button>
-                            <button class="btn btn-primary pull-right pt_timer_stop o_hidden">STOP</button>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="project_m2o"></div>
-                        <div class="task_m2o"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="pt_activity_col">
-                    <div class="pt_activity_body">
-                        
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="pt_footer">
-                    <t t-call="Footer"></t>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        -->
     </t>
 
     <t t-name="HeaderActivityLine">
@@ -167,13 +132,6 @@
                     </div>
                     <hr/>
                   </div>
-                  <!--
-                  <div class="pt_quick_select">
-                      <div class="pt_activity_body">
-                        <h4 class="o_hidden">Quick Select</h4>
-                      </div>
-                  </div>
-                  -->
               </div>
             </div>
         </div>
@@ -198,21 +156,13 @@
     <t t-name="FieldMany2One">
         <t>
             <div class="pt_m2o">
-                <!-- <t t-if="!widget.get('effective_readonly')"> -->
-                    <div t-if="widget.label">
-                        <t t-esc="widget.label"></t>
-                    </div>
-                    <textarea rows="1"
-                        t-att-id="widget.id_for_input"
-                        t-attf-class="form-control #{widget.classname}"
-                        t-att-placeholder="widget.placeholder"></textarea>
-                <!-- </t>
-                <t t-if="widget.get('effective_readonly')">
-                    <span t-att-id="widget.id_for_input"
-                          t-attf-class="form-control #{widget.classname}"
-                          t-att-placeholder="widget.placeholder"></span>
-                </t>
-                -->
+                <div t-if="widget.label">
+                    <t t-esc="widget.label"></t>
+                </div>
+                <textarea rows="1"
+                    t-att-id="widget.id_for_input"
+                    t-attf-class="form-control #{widget.classname}"
+                    t-att-placeholder="widget.placeholder"></textarea>
              </div>
          </t>
     </t>
@@ -328,7 +278,6 @@
                     </tr>
                     <tr>
                         <td class="pt_stat_body">
-                            <!-- <div class="pt_chart" id="pt_chart" style="width:310px;height:430px;border:0px solid #000000;"></div> -->
                             <div class="pt_chart" id="pt_chart" style="min-width:90%; min-height:78%; position:relative;"></div>
                             <div class="pt_stat_table" style="padding-top: 10px;"></div>
                         </td>
@@ -368,12 +317,6 @@
           <!-- Table -->
           <table classs="table table-responsive" width="100%">
             <tbody>
-                <!--
-                <tr>
-                    <td>Project</td>
-                    <td class="hours">Hours</td>
-                </tr>
-                -->
                 <t t-foreach="projects" t-as="project">
                     <tr t-if="project.project_name">
                         <td><t t-esc="project.project_name"></t></td>

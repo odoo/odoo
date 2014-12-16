@@ -7,9 +7,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         template: "ProjectTimesheet",
         init: function() {
             this._super.apply(this, arguments);
-            /** Setup default session */
-            //openerp.session = new instance.web.Session(); //May be store in this object, no need to store in openerp global
-            //project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model(openerp.session, {project_timesheet_widget: this}); //May be store in this
             project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model({project_timesheet_widget: this}); //May be store in this, we'll not have session initially, need to discuss how to manage session
         },
         start: function() {
@@ -51,7 +48,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         },
     });
 
-    //TODO: Allow tab key creation, when user enters text and press tab key, it should create many2one record
     project_timesheet.FieldMany2One = openerp.Widget.extend({
         template: "FieldMany2One",
         init: function(parent, options) {
@@ -161,11 +157,6 @@ function odoo_project_timesheet_widgets(project_timesheet) {
                 data = this.model.name_search(term);
             }
             var search_data = data;
-            //if (!term) {
-            //    var search_data = data;
-            //} else {
-            //    var search_data = _.compact(_(data).map(function(x) {if (x[1].toLowerCase().contains(term.toLowerCase())) {return x;}}));
-            //}
             var values = _.map(search_data, function(x) {
                 var label = _.str.escapeHTML(x[1].split("\n")[0]);
                 if (self.search_model == "task") {
