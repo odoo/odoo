@@ -35,7 +35,7 @@
             {
                 title:          "Check if the snippet is drop and if the pop-up is popped",
                 waitFor:        "body:has(form[action*='/website_form/'])"          +
-                                ":has(.modal-body:has(select.form-select-action)"   +
+                                ":has(.modal-body:has(select.o_form-select-action)"   +
                                     ":has(input[name=success]))"
             },
             {
@@ -85,38 +85,38 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Text Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Text Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "display_name"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Name"
             },
             {
                 title:          "Change the placeholder",
-                element:        ".modal-body .form-field-placeholder",
+                element:        ".modal-body .o_form-field-placeholder",
                 sampleText:     "John Smith"
             },
             {
                 title:          "Change the prefix",
-                element:        ".modal-body .form-field-prepend",
+                element:        ".modal-body .o_form-field-prepend",
                 sampleText:     "Mr."
             },
             {
                 title:          "Change the sufix",
-                element:        ".modal-body .form-field-append",
+                element:        ".modal-body .o_form-field-append",
                 sampleText:     "."
             },
             {
                 title:          "Change the help text",
-                element:        ".modal-body .form-field-help",
+                element:        ".modal-body .o_form-field-help",
                 sampleText:     "Read the word witch following 'name' on your IDCard and write it on the input"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-required",
+                element:        ".modal-body .o_form-field-required",
                 sampleText:     "checked"
             },
             {
@@ -146,18 +146,18 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Hidden Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Hidden Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "record_name"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Name"
             },
             {
                 title:          "Change the value",
-                element:        ".modal-body .form-field-value",
+                element:        ".modal-body .o_form-field-value",
                 sampleText:     "John Smith's Message"
             },
             {
@@ -185,28 +185,28 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Textarea')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Textarea')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "body_html"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Your Message"
             },
             {
                 title:          "Change the placeholder",
-                element:        ".modal-body .form-field-placeholder",
+                element:        ".modal-body .o_form-field-placeholder",
                 sampleText:     "This is my usless e-mail"
             },
             {
                 title:          "Change the help text",
-                element:        ".modal-body .form-field-help",
+                element:        ".modal-body .o_form-field-help",
                 sampleText:     "Write what you want to say"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-required",
+                element:        ".modal-body .o_form-field-required",
                 sampleText:     "checked"
             },
             {
@@ -235,23 +235,23 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Checkbox Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Checkbox Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "custom"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Products"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(0)",
+                element:        ".modal-body .o_option-label:eq(0)",
                 sampleText:     "Iphone"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(0)",
+                element:        ".modal-body .o_option-value:eq(0)",
                 sampleText:     "iphone"
             },
             {
@@ -260,12 +260,12 @@
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(1)",
+                element:        ".modal-body .o_option-label:eq(1)",
                 sampleText:     "Galaxy S"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(1)",
+                element:        ".modal-body .o_option-value:eq(1)",
                 sampleText:     "galaxy S"
             },
             {
@@ -274,22 +274,22 @@
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(2)",
+                element:        ".modal-body .o_option-label:eq(2)",
                 sampleText:     "Xperia"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(2)",
+                element:        ".modal-body .o_option-value:eq(2)",
                 sampleText:     "Xperia"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-inline",
+                element:        ".modal-body .o_form-field-inline",
                 sampleText:     "checked"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-required",
+                element:        ".modal-body .o_form-field-required",
                 sampleText:     "checked"
             },
             {
@@ -325,23 +325,23 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Radio Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Radio Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "custom"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Service"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(0)",
+                element:        ".modal-body .o_option-label:eq(0)",
                 sampleText:     "Service Après Vente"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(0)",
+                element:        ".modal-body .o_option-value:eq(0)",
                 sampleText:     "S.A.V."
             },
             {
@@ -350,17 +350,17 @@
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(1)",
+                element:        ".modal-body .o_option-label:eq(1)",
                 sampleText:     "Service Facturation"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(1)",
+                element:        ".modal-body .o_option-value:eq(1)",
                 sampleText:     "S.F."
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-inline",
+                element:        ".modal-body .o_form-field-inline",
                 sampleText:     "checked"
             },
             {
@@ -393,23 +393,23 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Select Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Select Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "custom"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "State"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(0)",
+                element:        ".modal-body .o_option-label:eq(0)",
                 sampleText:     "Belgium"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(0)",
+                element:        ".modal-body .o_option-value:eq(0)",
                 sampleText:     "be"
             },
             {
@@ -418,22 +418,22 @@
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-label:eq(1)",
+                element:        ".modal-body .o_option-label:eq(1)",
                 sampleText:     "France"
             },
             {
                 title:          "Create Product List",
-                element:        ".modal-body .option-value:eq(1)",
+                element:        ".modal-body .o_option-value:eq(1)",
                 sampleText:     "fr"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-multiple",
+                element:        ".modal-body .o_form-field-multiple",
                 sampleText:     "checked"
             },
             {
                 title:          "Make this input required",
-                element:        ".modal-body .form-field-autocomplete",
+                element:        ".modal-body .o_form-field-autocomplete",
                 sampleText:     "checked"
             },
             {
@@ -463,23 +463,23 @@
             },
             {
                 title:          "Select a DB field for this input snippet",
-                waitFor:        ".modal-title .field_name:contains('Upload Field')",
-                element:        ".modal-body .form-select-field",
+                waitFor:        ".modal-title .o_field_name:contains('Upload Field')",
+                element:        ".modal-body .o_form-select-field",
                 sampleText:     "attachment_ids"
             },
             {
                 title:          "Change the label",
-                element:        ".modal-body .form-field-label",
+                element:        ".modal-body .o_form-field-label",
                 sampleText:     "Invoice Scan"
             },
             {
                 title:          "Change the Button Label",
-                element:        ".modal-body .form-button-label",
+                element:        ".modal-body .o_form-button-label",
                 sampleText:     "Select an Invoice"
             },
             {
                 title:          "Change the help text",
-                element:        ".modal-body .form-field-help",
+                element:        ".modal-body .o_form-field-help",
                 sampleText:     "Upload a scan of your invoice"
             },
             {

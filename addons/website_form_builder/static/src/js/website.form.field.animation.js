@@ -56,34 +56,27 @@
         indicateRequired: function(fail_required,empty_fields) {
             console.log('required', fail_required);
             console.log('empty', empty_fields);
-            var i = 0, j=0;
-            var field_required = null;
-            var empty_field = null;
-            var name = null;
-            var len = (fail_required) ? fail_required.length:0;
+
             this.$target.find('.form-field').each(function(k,elem){
 
-                name            = $(elem).find('.form-data').attr('name');
-                field_required  = fail_required.indexOf(name);
-                empty_field     = empty_fields.indexOf(name);
-                fail_required   = _.without(fail_required,name);
-                empty_fields    = _.without(empty_fields,name);
-
+                var name = $(elem).find('.form-data').attr('name');
+                
                 $(elem)    .removeClass('has-error has-warning has-success has-feedback')
                            .find('i').remove();
 
-                if(field_required >= 0){
+                if(fail_required.indexOf(name) >= 0){
                     $(elem) .addClass('has-error has-feedback').children('div')
                             .append('<i class="fa fa-close form-control-feedback"></i>');
-                    i= i+1;
                 }
-                else if(empty_field >= 0){
+                else if(empty_fields.indexOf(name) >= 0){
                     $(elem) .addClass('has-warning has-feedback').children('div')
                             .append('<i class="fa fa-exclamation-triangle form-control-feedback"></i>');
-                    j= j+1;
                 }
                 else $(elem).addClass('has-success has-feedback').children('div')
                             .append('<i class="fa fa-check form-control-feedback"></i>');
+
+                fail_required   = _.without(fail_required,name);
+                empty_fields    = _.without(empty_fields,name);
                                     
             });
         },

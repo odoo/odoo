@@ -16,7 +16,7 @@
                             <div class="form-group">
                                 <label for="formEditor-select-action" class="col-md-3 col-sm-4 control-label">Action : </label>
                                 <div class="col-md-9 col-sm-8">
-                                    <select class="form-control form-select-action" id="formEditor-select-action">
+                                    <select class="form-control o_form-select-action" id="formEditor-select-action">
                                         <t t-raw="options" />
                                     </select>
                                 </div>
@@ -24,7 +24,7 @@
                             <div class="form-group o_form-action-mailto hidden">
                                 <label for="formEditor-select-email" class="col-md-3 col-sm-4 control-label">E-mail :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <input type="hidden" id="formEditor-select-email" class="form-control form-select-email" />
+                                    <input type="hidden" id="formEditor-select-email" class="form-control o_form-select-email" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -60,34 +60,34 @@
                             <span aria-hidden="true">&amp;times;</span>
                             <span class="sr-only">Close</span>
                         </button>
-                        <h4 class="modal-title">Configure a New <span class="field_name">Field</span></h4>
+                        <h4 class="modal-title">Configure a New <span class="o_field_name">Field</span></h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label for="formFieldEditor-select-action" class="col-md-3 col-sm-4 control-label">Field :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <select tabindex="1" class="form-control form-select-field" id="formFieldEditor-select-action">
+                                    <select tabindex="1" class="form-control o_form-select-field" id="formFieldEditor-select-action">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="formFieldEditor-label" class="col-md-3 col-sm-4 control-label">Label :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <input tabindex="2" type="text" class="form-control form-field-label" required="true" id="formFieldEditor-label" />
+                                    <input tabindex="2" type="text" class="form-control o_form-field-label" required="true" id="formFieldEditor-label" />
                                 </div>
                             </div>
                             <t t-raw="subTemplate" />
                             <div class="form-group">
                                 <label for="formFieldEditor-help" class="col-md-3 col-sm-4 control-label">Help :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <input type="text" class="form-control form-field-help" id="formFieldEditor-help" />
+                                    <input type="text" class="form-control o_form-field-help" id="formFieldEditor-help" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="formFieldEditor-required" class="col-md-3 col-sm-4 control-label">Required :</label>
                                 <div class="col-md-9 col-sm-8">
-                                    <input type="checkbox" class="form-field-required" id="formFieldEditor-required" />
+                                    <input type="checkbox" class="o_form-field-required" id="formFieldEditor-required" />
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -108,20 +108,20 @@
                 <div class="form-group">
                     <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
                     <div class="col-md-9 col-sm-8">
-                        <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                        <input type="text" class="form-control o_form-field-placeholder" id="formFieldEditor-placeholder" />
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Prefix :</label>
                     <div class="col-md-9 col-sm-8">
-                        <input type="text"  class="form-control form-field-prepend" id="formFieldEditor-prepend" />
+                        <input type="text"  class="form-control o_form-field-prepend" id="formFieldEditor-prepend" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="formFieldEditor-ap-pre-pend" class="col-md-3 col-sm-4 control-label">Suffix :</label>
                     <div class="col-md-9 col-sm-8">
-                        <input type="text"  class="form-control form-field-append" id="formFieldEditor-append" />
+                        <input type="text"  class="form-control o_form-field-append" id="formFieldEditor-append" />
                     </div>
                 </div>
                 
@@ -134,7 +134,7 @@
             <div class="form-group">
                 <label for="formFieldEditor-placeholder" class="col-md-3 col-sm-4 control-label">Placeholder :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="text" class="form-control form-field-placeholder" id="formFieldEditor-placeholder" />
+                    <input type="text" class="form-control o_form-field-placeholder" id="formFieldEditor-placeholder" />
                 </div>
             </div>
         </div>
@@ -147,9 +147,9 @@
                 <label for="formFieldEditor-value" class="col-md-3 col-sm-4 control-label">Value :</label>
                 <div class="col-md-9 col-sm-8">
                     <!--<div class="form-control form-data">
-                        <textarea class="form-field-value" id="formFieldEditor-value" row="1"></textarea>
+                        <textarea class="o_form-field-value" id="formFieldEditor-value" row="1"></textarea>
                     </div>-->
-                    <input type="text" class="form-control form-field-value" id="formFieldEditor-value" />
+                    <input type="text" class="form-control o_form-field-value" id="formFieldEditor-value" />
                 </div> 
             </div> 
         </div>
@@ -175,7 +175,7 @@
             <div class="form-group">
                 <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Display Horizontal :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
+                    <input type="checkbox" class="o_form-field-inline" id="formFieldEditor-inline" />
                 </div>
             </div>
         </div>
@@ -202,7 +202,7 @@
             <div class="form-group">
                 <label for="formFieldEditor-inline" class="col-md-3 col-sm-4 control-label">Display Horizontal :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="checkbox" class="form-field-inline" id="formFieldEditor-inline" />
+                    <input type="checkbox" class="o_form-field-inline" id="formFieldEditor-inline" />
                 </div>
             </div>
         </div>
@@ -228,13 +228,13 @@
             <div class="form-group">
                 <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+                    <input type="checkbox" class="o_form-field-multiple" id="formFieldEditor-multiple" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="formFieldEditor-autocomplete" class="col-md-3 col-sm-4 control-label">Autocomplete :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="checkbox" class="form-field-autocomplete" id="formFieldEditor-autocomplete" />
+                    <input type="checkbox" class="o_form-field-autocomplete" id="formFieldEditor-autocomplete" />
                 </div>
             </div>
         </div>
@@ -246,13 +246,13 @@
             <div class="form-group">
                 <label for="formFieldEditor-button-label" class="col-md-3 col-sm-4 control-label">Button label :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="text" class="form-control form-button-label" id="formFieldEditor-button-label" />
+                    <input type="text" class="form-control o_form-button-label" id="formFieldEditor-button-label" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="formFieldEditor-multiple" class="col-md-3 col-sm-4 control-label">Allow Multiple Value :</label>
                 <div class="col-md-9 col-sm-8">
-                    <input type="checkbox" class="form-field-multiple" id="formFieldEditor-multiple" />
+                    <input type="checkbox" class="o_form-field-multiple" id="formFieldEditor-multiple" />
                 </div>
             </div>
         </div>
@@ -293,10 +293,10 @@
     
         <!-- OPTION TEMPLATE FOR OPTION WIZARD -->
     <t t-name="webiste.form.editor.wizard.option.template">
-        <tr class="last">
-            <td contenteditable="true" class="option-label">New Option Label</td>
-            <td contenteditable="true" class="option-value"></td>
-            <td class="option-trash">
+        <tr class="o_last">
+            <td contenteditable="true" class="o_option-label">New Option Label</td>
+            <td contenteditable="true" class="o_option-value"></td>
+            <td class="o_option-trash">
                 <a class="delete" href="#"><i class="fa fa-trash-o"></i></a>
                 <input type="checkbox" class="delete" />
             </td>

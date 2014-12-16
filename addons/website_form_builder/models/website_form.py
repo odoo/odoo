@@ -45,8 +45,8 @@ class website_form(osv.Model):
     @tools.ormcache(skiparg=3)
     def get_required(self, cr, uid, model, context=None):
         output = []
-        filter = [('model', '=', model),('required','=',True),]  
-        ids = self.pool['ir.model.fields'].search(cr,uid,filter,context=context)
+        domain = [('model', '=', model),('required','=',True)]  
+        ids = self.pool['ir.model.fields'].search(cr,uid,domain,context=context)
         for elem in self.pool['ir.model.fields'].browse(cr,uid,ids):
             output.append(elem.name)
         for key, val in self.pool[model]._inherits.iteritems():

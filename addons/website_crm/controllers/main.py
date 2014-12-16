@@ -14,7 +14,3 @@ class contactus(http.Controller):
             '%s, %s %s, %s' % (street, city, city_zip, country_name)
         )
         return url
-
-    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True)
-    def contact(self, **kwargs):
-        return request.website.render("website.contactus")

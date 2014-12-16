@@ -11,8 +11,8 @@ class form_builder(http.Controller):
               
     def __init__(self):
         
-        self.filter = {'char': self.char, 'text': self.text, 'html': self.html, 'many2one': self.many2one, 
-                       'one2many': self.one2many, 'many2many':self.many2many, 'selection': self.selection, 
+        self.filter = {'char': self.char, 'text': self.text, 'html': self.html, 'many2one': self.many2one,
+                       'one2many': self.one2many, 'many2many':self.many2many, 'selection': self.selection,
                        'boolean': self.boolean,'integer': self.integer,'float': self.float}
     
         self.custom_label    = "%s\n________________________________________________\n\n" % _("Custom infos")   # Extra data from custom fields
@@ -50,7 +50,8 @@ class form_builder(http.Controller):
     
     def many2many(self, label, input, *args):
         op = (6,0)
-        if len(args) == 1: op = args[0]
+        if len(args) == 1:
+            op = args[0]
         output = self.one2many(label,input)
         return [op + (output,)]
     
@@ -116,15 +117,18 @@ class form_builder(http.Controller):
         return data
     
     def insertMessage(self, model, data, id_record):
-        if model['name'] == 'mail.mail': return True
-        if not data['message']['attachment_ids']: return True
+        if model['name'] == 'mail.mail':
+            return True
+        if not data['message']['attachment_ids']:
+            return True
         data['message']['res_id'] = id_record
         print data['message']
         return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context)
 
     def insertRecord(self, model, data):
         values = data['post']
-        if model['default_field'] not in values : values[model['default_field']] = ''
+        if model['default_field'] not in values :
+            values[model['default_field']] = ''
         values[model['default_field']] += "\n\n" + (self.custom_label if (data['custom'] != '') else '') + data['custom'] #+ "\n\n" + data['meta']
         print 'INSERT :: ', values
         return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context)
@@ -168,16 +172,21 @@ class form_builder(http.Controller):
     def thanks_page(self, template):
         template    = ('website.' if template.split('.',1)[0] != 'website' else '')+template
 
-        try:                request.website.get_template(template)
-        except ValueError:  return request.redirect('/page/'+template)
+        try:
+            request.website.get_template(template)
+        except ValueError:
+            return request.redirect('/page/'+template)
 
-        if 'form_builder_model'     not in request.session: return False
-        if 'form_builder_id_record' not in request.session: return False
+        if 'form_builder_model'     not in request.session:
+            return False
+        if 'form_builder_id_record' not in request.session:
+            return False
 
         model       = request.session['form_builder_model']
         id_record   = request.session['form_builder_id_record']
 
-        if not model or not id_record: return False
+        if not model or not id_record:
+            return False
 
         record = request.registry[model].read(request.cr,SUPERUSER_ID,[id_record],[], context=request.context)
         return request.website.render(template, {"record":record[0]})
@@ -189,7 +198,8 @@ class form_builder(http.Controller):
         id_model = obj_form.search(request.cr,SUPERUSER_ID,[('model_id', '=', model),],context=request.context)
         
         #if not authorized model
-        if not id_model: return None
+        if not id_model:
+            return None
 
         # return all meta-fields of the selected model
         formModel = obj_form.browse(request.cr, SUPERUSER_ID, id_model)
@@ -201,18 +211,22 @@ class form_builder(http.Controller):
             'required'          : obj_form.get_required(request.cr, SUPERUSER_ID, model),
         }
 
-        data = self.extractData(model, **kwargs) 
+        data = self.extractData(model, **kwargs)
 
         try:     
-            if(any(data['error'])) :    success = 0
-            else :                      success = self.insert(model, data)
+            if(any(data['error'])) :
+                success = 0
+            else :
+                success = self.insert(model, data)
         except ValueError:
             print ValueError
             success = 0
 
         if request.httprequest.is_xhr:
-            if data['error'] : return json.dumps({'id': success, 'fail_required' : data['error']})
+            if data['error'] :
+                return json.dumps({'id': success, 'fail_required' : data['error']})
             return json.dumps({'id': success, 'fail_required': None})
         else:
-            if data['error'] : return self.thanks_page('default.fail.'+model['name'])
+            if data['error'] :
+                return self.thanks_page('default.fail.'+model['name'])
             return self.thanks_page('default.thanks.'+model['name'])
