@@ -734,7 +734,9 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
+            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                         self.pid, self.request_count,
+                         len(openerp.modules.registry.RegistryManager.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
