@@ -6,7 +6,6 @@
                 <link id="jquery_textext_css" rel='stylesheet' href='/web/static/lib/jquery.textext/jquery.textext.css'/>
                 <link id="website_form_builder_css" rel='stylesheet' href='/website_form_builder/static/src/css/website.form.builder.css'/>
                 <script type="text/javascript" src="/website_form_builder/static/src/js/website.form.field.animation.js"></script>
-                <script type="text/javascript" src="/website_form_builder/static/src/js/form.builder.tour.js"></script>
                 <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
                 <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
             </xpath>
@@ -18,6 +17,11 @@
             </xpath>
         </template>
         
+        <template id="website.form_builder_assets_common" name="Form Builder Assets Common" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">  
+                <script type="text/javascript" src="/website_form_builder/static/src/js/form.builder.tour.js"></script>
+            </xpath>
+        </template>
         <template id="xmlresponse" name="XML Response">
             <div id="xmlresponse" t-att-data-json="response"></div>
         </template>

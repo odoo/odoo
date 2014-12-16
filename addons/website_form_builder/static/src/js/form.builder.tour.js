@@ -693,6 +693,7 @@
             },
             {
                 title:          "Check results on the DB",
+                waitFor:        "a[href='/web#menu_id=129&action=129']",
                 onload: function (tour) {
                     var success = function(v1, v2, v3) {
                         console.log(v1, v2, v3);
@@ -700,18 +701,18 @@
                             $('body').append('<div id="website_form_builder_success_test_tour"></div>');
                         }
                     };
-
-                    var mailDef =   new openerp.Model(openerp.website.session,"mail.mail")
+                    var Session = new openerp.Session();
+                    debugger;
+                    var mailDef =   new openerp.Model(Session,"mail.mail")
                                     .call(  "search_read",
                                             [[
                                                 ['body_html', 'like', 'My more usless message'],
                                                 ['body_html', 'like', 'Service : S.F.'],
                                                 ['body_html', 'like', 'State : be'],
                                                 ['body_html', 'like', 'Products : galaxy S,Xperia']
-                                            ],[]],
-                                            {context: openerp.website.get_context()});
+                                            ],[]]);
 
-                    var leadDef =   new openerp.Model(openerp.website.session,"crm.lead")
+                    var leadDef =   new openerp.Model(Session,"crm.lead")
                                     .call(  "search_read",
                                             [[
                                                 ['contact_name', '='   , 'John Smith'],
@@ -719,19 +720,17 @@
                                                 ['email_from'  , '='   , 'john@smith.com'],
                                                 ['name'        , '='   , 'Usless Message'],
                                                 ['description' , 'like', 'The complete usless Message']
-                                            ],[]],
-                                            {context: openerp.website.get_context()});
+                                            ],[]]);
 
-                    var hrDef   =   new openerp.Model(openerp.website.session,"hr.applicant")
+                    var hrDef   =   new openerp.Model(Session,"hr.applicant")
                                     .call(  "search_read",
                                             [[
                                                 ['partner_name'    , '='   , 'John Smith'],
                                                 ['partner_phone'   , '='   , '118.218'],
                                                 ['email_from'      , '='   , 'john@smith.com'],
                                                 ['description'     , 'like', 'The complete usless Message']
-                                            ],[]],
-                                            {context: openerp.website.get_context()});
-
+                                            ],[]]);
+                    debugger;
                     $.when(mailDef,leadDef,hrDef).then(success);
                 }
             },
