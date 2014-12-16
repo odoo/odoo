@@ -49,14 +49,13 @@ class purchase_config_settings(osv.osv_memory):
         'module_purchase_double_validation': fields.boolean("Force two levels of approvals",
             help='Provide a double validation mechanism for purchases exceeding minimum amount.\n'
                  '-This installs the module purchase_double_validation.'),
-        'module_purchase_requisition': fields.boolean("Manage calls for bids",
-            help="""Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.
+        'module_purchase_requisition': fields.boolean("Manage calls for tenders",
+            help="""Calls for tenders are used when you want to generate requests for quotations to several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
-            to one supplier or if you want a Call for Bids to compare offers from several suppliers."""),
-        'group_advance_purchase_requisition': fields.boolean("Choose from several bids in a call for bids",
+            to one supplier or if you want a Call for Tenders to compare offers from several suppliers."""),
+        'group_advance_purchase_requisition': fields.boolean("Choose from several bids in a call for tenders",
             implied_group='purchase.group_advance_bidding',
-            help="""In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you
-            buy which quantity"""),
+            help="""In the process of a public tendering, you can compare the tender lines and choose for each requested product which quantity you will buy from each bid."""),
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on purchase orders',
             help='Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n'
                  '-This installs the module purchase_analytic_plans.'),

@@ -32,5 +32,5 @@ class bid_line_qty(osv.osv_memory):
     def change_qty(self, cr, uid, ids, context=None):
         active_ids = context and context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
-        self.pool.get('purchase.order.line').write(cr, uid, active_ids, {'quantity_bid': data.qty})
+        self.pool.get('purchase.order.line').write(cr, uid, active_ids, {'quantity_tendered': data.qty})
         return {'type': 'ir.actions.act_window_close'}

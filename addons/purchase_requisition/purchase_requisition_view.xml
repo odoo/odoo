@@ -28,10 +28,10 @@
         <field name="name">purchase.requisition.form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Call for Bids">
+            <form string="Call for Tenders">
             <header>              
                 <button name="sent_suppliers" states="draft" string="Confirm Call" class="oe_highlight"/>
-                <button name="open_bid" states="in_progress" string="Close Call for Bids" class="oe_highlight"/>
+                <button name="open_bid" states="in_progress" string="Close Call for Tenders" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
                 <button name="generate_po" states="open" string="Done" type="object" class="oe_highlight"/>
@@ -127,7 +127,7 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Call for Bids">
+            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Call for Tenders">
                 <field name="message_unread" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
@@ -144,12 +144,12 @@
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
             <field name="arch" type="xml">
-                <search string="Search Call for Bids">
-                    <field name="name" string="Call for Bids"/>
+                <search string="Search Call for Tenders">
+                    <field name="name" string="Call for Tenders"/>
                     <field name="exclusive" />
-                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Bids"/>
-                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Bids in negotiation"/>
-                    <filter icon="terp-dialog-close" string="Closed Bids" domain="[('state','=','open')]" help="Call for Bids where bids are closed"/>
+                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
+                    <filter icon="terp-dialog-close" string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
                     <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
@@ -166,7 +166,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Calls for Bids</field>
+        <field name="name">Calls for Tenders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
@@ -175,12 +175,12 @@
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new Call for Bids process. 
+            Click to start a new Call for Tenders process. 
           </p><p>
-            A Call for Bids is a procedure for generating competing offers from
-            different bidders. In the call for bids, you can record the
+            A Call for Tenders is a procedure for generating competing offers from
+            different bidders. In the call for tenders, you can record the
             products you need to buy and generate the creation of RfQs to
-            suppliers. Once the bids have been registered, you can review and
+            suppliers. Once the tenders have been registered, you can review and
             compare them and you can validate some and cancel others.
           </p>
         </field>
@@ -233,7 +233,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="quantity_bid"/>
+                    <field name="quantity_tendered"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="price_subtotal"/>
                     <field name="state" invisible="1"/>
@@ -246,7 +246,7 @@
     </record>
 
     <record id="purchase_line_tree" model="ir.actions.act_window">
-            <field name="name">Bid Lines</field>
+            <field name="name">Tender Lines</field>
             <field name="res_model">purchase.order.line</field>
             <field name="context">{"search_default_groupby_product" : True,}</field>
             <field name="view_type">form</field>

@@ -39,13 +39,13 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Bids Reference', required=True, copy=False),
+        'name': fields.char('Call for Tenders Reference', required=True, copy=False),
         'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
-        'date_end': fields.datetime('Bid Submission Deadline'),
-        'schedule_date': fields.date('Scheduled Delivery Date', select=True, help="The expected and scheduled delivery date where all the products are received"),
+        'date_end': fields.datetime('Tender Closing Deadline'),
+        'schedule_date': fields.date('Scheduled Date', select=True, help="The expected and scheduled delivery date where all the products are received"),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Bid Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
+        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Tender Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
@@ -123,7 +123,7 @@ class purchase_requisition(osv.osv):
         return res
 
     def open_rfq(self, cr, uid, ids, context=None):
-        """ This opens rfq view to view all quotations associated to the call for bids
+        """ This opens rfq view to view all quotations associated to the call for tenders
             @return: the RFQ tree view
         """
         if context is None:
@@ -200,12 +200,12 @@ class purchase_requisition(osv.osv):
     def check_valid_quotation(self, cr, uid, quotation, context=None):
         """
         Check if a quotation has all his order lines bid in order to confirm it if its the case
-        return True if all order line have been selected during bidding process, else return False
+        return True if all order line have been selected during tendering process, else return False
 
         args : 'quotation' must be a browse record
         """
         for line in quotation.order_line:
-            if line.state != 'confirmed' or line.product_qty != line.quantity_bid:
+            if line.state != 'confirmed' or line.product_qty != line.quantity_tendered:
                 return False
         return True
 
@@ -227,7 +227,7 @@ class purchase_requisition(osv.osv):
         :param line: the source tender's line from which we generate a line
         :param purchase_id: the id of the new purchase
         """
-        return {'product_qty': line.quantity_bid,
+        return {'product_qty': line.quantity_tendered,
                 'order_id': purchase_id}
 
     def generate_po(self, cr, uid, ids, context=None):
@@ -292,7 +292,7 @@ class purchase_requisition(osv.osv):
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
                 self.pool.get('purchase.order').signal_workflow(cr, uid, [quotation.id], 'purchase_cancel')
-                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the call for bids associated to this request for quotation.'), context=context)
+                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the call for tenders associated to this request for quotation.'), context=context)
         return True
 
 
@@ -305,7 +305,7 @@ class purchase_requisition_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', ondelete='cascade'),
+        'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
         'schedule_date': fields.date('Scheduled Date'),
@@ -335,7 +335,7 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
     _columns = {
-        'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', copy=False),
+        'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', copy=False),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -364,7 +364,7 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
 
     _columns = {
-        'quantity_bid': fields.float('Quantity Bid', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the bid"),
+        'quantity_tendered': fields.float('Quantity Tendered', digits_compute=dp.get_precision('Product Unit of Measure'), help="Technical field for not loosing the initial information about the quantity proposed in the tender", oldname='quantity_bid'),
     }
 
     def action_draft(self, cr, uid, ids, context=None):
@@ -373,8 +373,8 @@ class purchase_order_line(osv.osv):
     def action_confirm(self, cr, uid, ids, context=None):
         super(purchase_order_line, self).action_confirm(cr, uid, ids, context=context)
         for element in self.browse(cr, uid, ids, context=context):
-            if not element.quantity_bid:
-                self.write(cr, uid, ids, {'quantity_bid': element.product_qty}, context=context)
+            if not element.quantity_tendered:
+                self.write(cr, uid, ids, {'quantity_tendered': element.product_qty}, context=context)
         return True
 
     def generate_po(self, cr, uid, tender_id, context=None):
@@ -386,7 +386,7 @@ class product_template(osv.osv):
     _inherit = 'product.template'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Call for Bids', help="Check this box to generate Call for Bids instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.boolean('Call for Tenders', help="Check this box to generate Call for Tenders instead of generating requests for quotation from procurement.")
     }
 
 
