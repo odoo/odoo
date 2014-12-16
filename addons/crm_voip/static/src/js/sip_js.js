@@ -15,6 +15,11 @@ openerp.sip_js = function(instance) {
                     password: result.password,
                     hackIpInContact: true,
                     log: {level: "error"},
+                    turnServers: {
+                      urls:"turn:numb.viagenie.ca",
+                      username:"renod2002@yahoo.fr",
+                      password:"odoo"
+                    }
                 };
                 self.always_transfert = result.always_transfert;
                 self.physical_phone = result.physical_phone;
