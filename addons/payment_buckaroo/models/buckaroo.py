@@ -76,6 +76,8 @@ class AcquirerBuckaroo(osv.Model):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         buckaroo_tx_values = dict(tx_values)
+        import pudb
+        pu.db
         buckaroo_tx_values.update({
             'Brq_websitekey': acquirer.brq_websitekey,
             'Brq_amount': tx_values['amount'],
@@ -86,7 +88,7 @@ class AcquirerBuckaroo(osv.Model):
             'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
             'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
-            'Brq_culture': partner_values.get('lang', 'en_US').replace('_', '-'),
+            'Brq_culture': (partner_values.get('lang') or 'en_US').replace('_', '-'),
         })
         if buckaroo_tx_values.get('return_url'):
             buckaroo_tx_values['add_returndata'] = {'return_url': '%s' % buckaroo_tx_values.pop('return_url')}
