@@ -309,7 +309,7 @@ class audittrail_objects_proxy(object_proxy):
         self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
         return res
 
-    def get_data(self, cr, uid, pool, res_ids, model, method):
+    def get_data(self, cr, uid, pool, res_ids, model, method, args=None):
         """
         This function simply read all the fields of the given res_ids, and also recurisvely on
         all records of a x2m fields read that need to be logged. Then it returns the result in
@@ -328,6 +328,7 @@ class audittrail_objects_proxy(object_proxy):
                                            },
                 }
         """
+        if args is None: args = {}
         data = {}
         resource_pool = pool.get(model.model)
         # read all the fields of the given resources in super admin mode
@@ -357,12 +358,17 @@ class audittrail_objects_proxy(object_proxy):
                             # we need to remove current resource_id from the many2many to prevent an infinit loop
                             if resource_id in field_resource_ids:
                                 field_resource_ids.remove(resource_id)
-                        data.update(self.get_data(cr, SUPERUSER_ID, pool, field_resource_ids, x2m_model, method))
+                            if args.get('old_resource_id') in field_resource_ids:
+                                field_resource_ids.remove(args['old_resource_id'])
+                            # To avoid infinite loop when two partners are in each other's many2many list, we need to pass the current
+                            # resource_id in args to get_data(...) so that we can check for it and skip adding it in data dictionary.
+                            args['old_resource_id'] = resource_id
+                        data.update(self.get_data(cr, SUPERUSER_ID, pool, field_resource_ids, x2m_model, method, args))
     
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
-    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
+    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None, args=None):
         """
         This function compares the old data (i.e before the method was executed) and the new data
         (after the method was executed) and returns a structure with all the needed information to
@@ -391,6 +397,7 @@ class audittrail_objects_proxy(object_proxy):
         The reason why the structure returned is build as above is because when modifying an existing
         record, we may have to log a change done in a x2many field of that object
         """
+        if args is None: args = {}
         if field_list is None:
             field_list = []
         key = (model.id, resource_id)
@@ -423,8 +430,13 @@ class audittrail_objects_proxy(object_proxy):
                         # we need to remove current resource_id from the many2many to prevent an infinit loop
                         if resource_id in res_ids:
                             res_ids.remove(resource_id)
+                        if args.get('old_resource_id') in res_ids:
+                            res_ids.remove(args['old_resource_id'])
+                        # To avoid infinite loop when two partners are in each other's many2many list, we need to pass the current
+                        # resource_id in args to get_data(...) so that we can check for it and skip adding it in data dictionary.
+                        args['old_resource_id'] = resource_id
                     for res_id in res_ids:
-                        lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
+                        lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list, args))
             # if the value value is different than the old value: record the change
             if key not in old_values or key not in new_values or old_values[key]['value'][field_name] != new_values[key]['value'][field_name]:
                 data = {
