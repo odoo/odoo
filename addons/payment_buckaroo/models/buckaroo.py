@@ -86,7 +86,7 @@ class AcquirerBuckaroo(osv.Model):
             'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
             'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
-            'Brq_culture': partner_values.get('lang', 'en_US'),
+            'Brq_culture': partner_values.get('lang', 'en_US').replace('_', '-'),
         })
         if buckaroo_tx_values.get('return_url'):
             buckaroo_tx_values['add_returndata'] = {'return_url': '%s' % buckaroo_tx_values.pop('return_url')}
