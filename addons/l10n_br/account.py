@@ -1,11 +1,19 @@
 # -*- encoding: utf-8 -*-
 
+import openerp
 from openerp.osv import fields, osv
 
 TAX_DEFAULTS = {
                 'base_reduction': 0,
                 'amount_mva': 0,
                 }
+
+def get_precision_tax():
+    def change_digit_tax(cr):
+        decimal_precision = openerp.registry(cr.dbname)['decimal.precision']
+        res = decimal_precision.precision_get(cr, 1, 'Account')
+        return (16, res+2)
+    return change_digit_tax
 
 class account_tax_template(osv.osv):
     """ Add fields used to define some brazilian taxes """
