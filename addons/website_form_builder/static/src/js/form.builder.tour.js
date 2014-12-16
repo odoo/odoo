@@ -693,7 +693,7 @@
             },
             {
                 title:          "Check results on the DB",
-                waitFor:        "a[href='/web#menu_id=129&action=129']",
+                waitFor:        ".oe-view-manager",
                 onload: function (tour) {
                     var success = function(v1, v2, v3) {
                         console.log(v1, v2, v3);
@@ -702,7 +702,7 @@
                         }
                     };
                     var Session = new openerp.Session();
-                    debugger;
+
                     var mailDef =   new openerp.Model(Session,"mail.mail")
                                     .call(  "search_read",
                                             [[
@@ -730,7 +730,7 @@
                                                 ['email_from'      , '='   , 'john@smith.com'],
                                                 ['description'     , 'like', 'The complete usless Message']
                                             ],[]]);
-                    debugger;
+
                     $.when(mailDef,leadDef,hrDef).then(success);
                 }
             },
