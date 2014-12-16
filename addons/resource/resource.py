@@ -86,7 +86,7 @@ class resource_calendar(osv.osv):
             cleaned.append(tuple(working_interval))
         return cleaned
 
-    def interval_remove_leaves(self, interval, leave_intervals):
+    def interval_remove_leaves(self, cr, uid, interval, leave_intervals, context=None):
         """ Utility method that remove leave intervals from a base interval:
 
          - clean the leave intervals, to have an ordered list of not-overlapping
@@ -339,7 +339,7 @@ class resource_calendar(osv.osv):
             if default_interval:
                 working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
                                     start_dt.replace(hour=default_interval[1], minute=0, second=0))
-            intervals = self.interval_remove_leaves(working_interval, work_limits)
+            intervals = self.interval_remove_leaves(cr, uid, working_interval, work_limits, context=context)
             return intervals
 
         working_intervals = []
@@ -359,7 +359,7 @@ class resource_calendar(osv.osv):
                     calendar_working_day.id,
                 )
 
-            working_intervals += self.interval_remove_leaves(working_interval, work_limits)
+            working_intervals += self.interval_remove_leaves(cr, uid, working_interval, work_limits, context=context)
 
         # find leave intervals
         if leaves is None and compute_leaves:
@@ -367,7 +367,7 @@ class resource_calendar(osv.osv):
 
         # filter according to leaves
         for interval in working_intervals:
-            work_intervals = self.interval_remove_leaves(interval, leaves)
+            work_intervals = self.interval_remove_leaves(cr, uid, interval, leaves, context=context)
             intervals += work_intervals
 
         return intervals
