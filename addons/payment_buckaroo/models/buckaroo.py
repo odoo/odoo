@@ -76,8 +76,6 @@ class AcquirerBuckaroo(osv.Model):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         buckaroo_tx_values = dict(tx_values)
-        import pudb
-        pu.db
         buckaroo_tx_values.update({
             'Brq_websitekey': acquirer.brq_websitekey,
             'Brq_amount': tx_values['amount'],
