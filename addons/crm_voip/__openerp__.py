@@ -31,7 +31,6 @@
         'views/crm_voip_tip.xml',
         'views/res_config_view.xml',
         'views/res_users_view.xml',
-        'templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
