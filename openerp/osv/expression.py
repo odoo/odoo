@@ -928,7 +928,9 @@ class expression(object):
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_model._table)), working_model))
+                    relational_model_ids = relational_model.search(cr, uid, [], context=context, limit=None)
+                    model_ids = list(set(record[field._fields_id] for record in relational_model.read(cr, uid, relational_model_ids, [field._fields_id], context=context)))
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, model_ids), working_model))
 
             elif field._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field._sql_names(working_model)
