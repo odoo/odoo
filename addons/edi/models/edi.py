@@ -567,7 +567,7 @@ class EDIMixin(object):
                 continue
             field = field_info.column
             # skip function/related fields
-            if isinstance(field, fields.function):
+            if isinstance(field, fields.function) and not field._fnct_inv:
                 _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
                 continue
             relation_model = field._obj
