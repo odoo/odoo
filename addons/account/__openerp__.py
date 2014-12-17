@@ -92,6 +92,7 @@ You could use this simplified accounting in case you work with an (external) acc
     ],
     'qweb' : [
         "static/src/xml/account_reconciliation.xml",
+        "static/src/xml/account_payment.xml",
     ],
     'demo': [
         'demo/account_demo.xml',

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools
+import json
 from lxml import etree
 
 from openerp import api, fields, models, _
@@ -107,6 +108,35 @@ class account_invoice(models.Model):
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     self.residual += from_currency.compute(line.amount_residual, self.currency_id)
         self.residual = max(self.residual, 0.0)
+
+    @api.one
+    def _get_outstanding_info_JSON(self):
+        self.outstanding_credits_debits_widget = json.dumps(False)
+        if self.state == 'open':
+            domain = [('journal_id.type', 'in', ('bank','cash')),('account_id', '=', self.account_id.id),('partner_id', '=', self.partner_id.id),('reconciled', '=', False),('amount_residual', '!=', 0.0)]
+            if self.type in ('out_invoice', 'in_refund'):
+                domain.extend([('credit', '>', 0), ('debit', '=', 0)])
+                type_payment = 'Outstanding credit'
+            elif self.type in ('in_invoice', 'out_refund'):
+                domain.extend([('credit', '=', 0), ('debit', '>', 0)])
+                type_payment = 'Outstanding debit'
+            info = {'title': '', 'outstanding': True, 'content': [], 'invoice_id': self.id}
+            lines = self.env['account.move.line'].search(domain)
+            if len(lines) != 0:
+                for line in lines:
+                    info['content'].append({
+                        'ref': line.ref or line.move_id.name,
+                        'amount': abs(line.amount_residual),
+                        'currency': line.company_id.currency_id.symbol,
+                        'id': line.id,
+                        'digits': False,
+                        })
+                info['title'] = type_payment + ' from ' + line.partner_id.name + ' (click to add)'
+                self.outstanding_credits_debits_widget = json.dumps(info)
+
+    @api.one
+    def _get_payment_info_JSON(self):
+        return False
 
     @api.one
     @api.depends(
@@ -239,6 +269,9 @@ class account_invoice(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
+
+    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON')
+    payments_widget = fields.Text(compute='_get_payment_info_JSON')
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)',
@@ -615,6 +648,25 @@ class account_invoice(models.Model):
                     'ref': ref,
                 })]
         return iml
+
+    @api.one
+    def register_payment(self, payment_id):
+        #get line with which we will try to reconcile
+        reconcile_line = self.env['account.move.line']
+        for aml in self.move_id.line_id:
+            if aml.reconciled:
+                continue
+            elif (aml.debit > 0 and payment_id.debit > 0) or (aml.credit > 0 and payment_id.credit > 0):
+                #can't reconcile if both account move line are debit or credit
+                continue
+            else:
+                reconcile_line += aml
+        return (reconcile_line + payment_id).reconcile()
+
+    @api.v7
+    def assign_outstanding_credit(self, cr, uid, id, payment_id, context=None):
+        return self.browse(cr, uid, id, context).register_payment(self.pool.get('account.move.line').browse(cr, uid, payment_id, context))
+
 
     @api.multi
     def action_date_assign(self):
