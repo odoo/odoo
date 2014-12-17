@@ -21,7 +21,7 @@
                             <field name="date_stop"/>
                             <field name="freeze_date"/>
                         </group>
-                    </group>
+                    </group>   
                 </form>
             </field>
         </record>
@@ -111,6 +111,79 @@
                     </group>
                     <label for="note"/>
                     <field name="note"/>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <group>
+                                <group>
+                                    <field name="code" string="Account code"/> -
+                                    <field name="name" string="Account name"/>
+                                    <field name="user_type"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                    <field name="deprecated"/>
+                                </group>
+                               
+                            </group>
+                        </div> 
+                            <p style='font-size: 17px;font-weight: bold;margin-left: 50%;'>How account type affects your report</p>
+                            <div class="col-md-4">
+                                <div class="oe_account_help" style='height: 400px;'>
+                                    <p class ="oe_account_font_help" style='font-size: 18px;text-align: center;color: grey;'> Profit <![CDATA[&amp;]]> Loss</p>
+                                     <p class ="oe_account_font_help oe_account_font_title">Income</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Revenue</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Sales</p> 
+                                     <p class ="oe_account_font_help oe_account_font_title">Less Cost of Sales</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Direct Costs</p>
+                                     <p class ="oe_account_font_help" style='font-size: 18px;color: grey;margin-top: 9px;border-top: 2px solid;border-bottom: 2px solid;'>GROSS PROFIT</p>
+                                     <p class ="oe_account_font_help oe_account_font_title">Plus Other Income</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Other Income</p>
+                                     <p class ="oe_account_font_help oe_account_font_title">Less Expenses</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Expenses</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Depriciation</p>
+                                     <p class ="oe_account_font_help oe_account_font_content">Over Heads</p>
+                                     <p class ="oe_account_font_help" style='font-size: 18px;color: grey;margin-top: 9px;border-top: 2px solid;border-bottom: 2px solid;'>NET PROFIT</p>
+                                     <div style="position: relative; width: 250px; height: 277px;" id="layer">
+                                        <div style="position: relative; left: 0px; top: 0px; visibility: visible; width: 250px; height: 277px;">
+                                          <svg pointer-events="none" overflow="auto" width="712.5" height="265" viewBox="-4 -4 712.5 265" style="position: relative; top: -4px; left: -4px; overflow: auto; visibility: visible; width: 400.5px; height: 265px;">
+                                            <defs>
+                                              <marker id="arrow" markerWidth="70" markerHeight="70" refx="10" refy="6" orient="auto">
+                                                  <path d="M2,1 L2,12 L10,6 L2,1" stroke="rgb(173,216,230)" fill="rgb(173,216,230)" />
+                                              </marker>
+                                            </defs>
+                                            <path pointer-events="visiblePainted" shape-rendering="auto" d="M 150 -110 q 270 100 150 150 t 160 120" fill="none" stroke-dasharray="8,3" stroke="rgb(173,216,230)" stroke-linecap="butt" stroke-width="4" stroke-opacity="1" stroke-linejoin="round" transform="matrix(1,0,0,1,0,0)" fill-opacity="1" style="marker-end: url(#arrow);">
+                                            </path>
+                                          </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="oe_account_help"  style='height: 580px;'>
+                                    <p class ="oe_account_font_help" style='font-size: 18px;text-align: center;color: grey;'>Balance Sheet</p>
+                                    <p class ="oe_account_font_help oe_account_font_title" style='font-size: 15px;color: grey;margin-top: 7px;'>Current Assets</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Current Assets</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Prepayments</p>    
+                                    <p class ="oe_account_font_help oe_account_font_title">Plus Bank</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Bank Accounts</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Plus Fixed Assets</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Fixed Assets</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Plus None-current Assets</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">None-current Assets</p>
+                                    <p class ="oe_account_font_help" style='font-size: 18px;color: grey;margin-top: 9px;border-top: 2px solid;border-bottom: 2px solid;'>TOTAL ASSETS</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Less Current Liabilities</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Current Liabilities</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Less None-current Liabilities</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Liabilities</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">None-current Liabilities</p>
+                                    <p class ="oe_account_font_help" style='font-size: 18px;color: grey;margin-top: 9px;border-top: 2px solid;border-bottom: 2px solid;'>NET ASSETS</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Equity</p>
+                                    <p class ="oe_account_font_help oe_account_font_content">Equity</p>
+                                    <p class ="oe_account_font_help oe_account_font_title">Plus Net Profit</p>
+                                    <p class ="oe_account_font_help" style='font-size: 18px;color: grey;margin-top: 9px;border-top: 2px solid;border-bottom: 2px solid;'>TOTAL EQUITY</p>
+                                </div>
+                            </div>
+                    </div>
                 </form>
             </field>
         </record>
