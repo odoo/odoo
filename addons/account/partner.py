@@ -82,6 +82,18 @@ class account_fiscal_position(models.Model):
                 return pos.account_dest_id
         return account
 
+    @api.v8
+    def map_accounts(self, accounts):
+        """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
+        """
+        ref_dict = {}
+        for line in self.account_ids:
+            ref_dict[line.account_src_id] = line.account_dest_id
+        for key, acc in accounts.items():
+            if acc in ref_dict:
+                accounts[key] = ref_dict[acc]
+        return accounts
+
     @api.model
     def get_fiscal_position(self, company_id, partner_id, delivery_id=None):
         if not partner_id:

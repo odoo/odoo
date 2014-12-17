@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.fields import Many2one
-
+from openerp import api
 
 
 class product_template(osv.osv):
@@ -60,42 +60,19 @@ class product_template(osv.osv):
         'valuation': 'manual_periodic',
     }
 
-
-    def get_product_accounts(self, cr, uid, product_id, context=None):
+    @api.one
+    def _get_product_accounts(self):
         """ To get the stock input account, stock output account and stock journal related to product.
         @param product_id: product id
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """
-        if context is None:
-            context = {}
-        product_obj = self.browse(cr, uid, product_id, context=context)
-
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
-        if not stock_input_acc:
-            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
-
-        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
-        if not stock_output_acc:
-            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
-
-        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
-
-        if not all([stock_input_acc, stock_output_acc, account_valuation, journal_id]):
-            raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
-    Product: %s
-    Stock Input Account: %s
-    Stock Output Account: %s
-    Stock Valuation Account: %s
-    Stock Journal: %s
-    ''') % (product_obj.name, stock_input_acc, stock_output_acc, account_valuation, journal_id))
-        return {
-            'stock_account_input': stock_input_acc,
-            'stock_account_output': stock_output_acc,
-            'stock_journal': journal_id,
-            'property_stock_valuation_account_id': account_valuation
-        }
-
+        accounts = super(product_template, self)._get_product.accounts()
+        accounts.extend({
+            'stock_input': self.property_stock_account_input or self.categ_id.property_stock_account_input_categ,
+            'stock_output': self.property_stock_account_output or self.categ_id.property_stock_account_output_categ,
+            'stock_valuation': self.categ_id.property_stock_valuation_account_id or False,
+        })
+        return accounts
 
     def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly."""

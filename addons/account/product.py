@@ -45,3 +45,19 @@ class product_template(models.Model):
             if self.env['account.move.line'].search([('product_id', 'in', products.ids)], limit=1):
                 raise Warning(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
         return super(product_template, self).write(vals)
+
+
+class product_product(models.Model):
+    _inherit = "product.product"
+
+    @api.v8
+    def _get_product_accounts(self):
+        return {
+            'income': self.property_account_income or self.categ_id.property_account_income_categ,
+            'expense': self.property_account_expense or self.categ_id.property_account_expense_categ
+        }
+
+    @api.v8
+    def get_product_accounts(self, fiscal_pos):
+        accounts = self._get_product_accounts()
+        return fiscal_pos.map_accounts(accounts)

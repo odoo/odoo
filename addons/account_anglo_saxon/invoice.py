@@ -23,6 +23,7 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_round as round
+from openerp import api
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -42,28 +43,6 @@ class account_invoice_line(osv.osv):
                 res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
         return res
 
-
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
-        fiscal_pool = self.pool.get('account.fiscal.position')
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, company_id, context)
-        if not product:
-            return res
-        if type in ('in_invoice','in_refund'):
-            product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            if type == 'in_invoice':
-                oa = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id
-                if not oa:
-                    oa = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id
-            else:
-                oa = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id
-                if not oa:
-                    oa = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id
-            if oa:
-                fpos = fposition_id and fiscal_pool.browse(cr, uid, fposition_id, context=context) or False
-                a = fiscal_pool.map_account(cr, uid, fpos, oa)
-                res['value'].update({'account_id':a})
-        return res
-
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
             cur_obj = self.pool.get('res.currency')
             decimal_precision = self.pool.get('decimal.precision')
@@ -72,6 +51,15 @@ class account_invoice_line(osv.osv):
             else:
                 price = price_unit * i_line.quantity
             return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
+
+    @api.one
+    def get_invoice_line_account(self, product, fpos):
+        if self.company_id.anglo_saxon_accounting and self.invoice_id.type in ('in_invoice', 'in_refund'):
+            accounts = product.get_product_accounts(fpos)
+            if self.invoice_id.type == 'in_invoice':
+                return accounts['stock_input']
+            return accounts['stock_ouput']
+        return super(account_invoice_line, self).get_invoice_line_account(product, fpos)
 
     def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for sales invoices and refunds.

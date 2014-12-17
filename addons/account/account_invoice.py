@@ -1263,6 +1263,13 @@ class account_invoice_line(models.Model):
             res['arch'] = etree.tostring(doc)
         return res
 
+    @api.v8
+    def get_invoice_line_account(self, product, fpos):
+        accounts = product.get_product_accounts(fpos)
+        if self.invoice_id.type in ('out_invoice', 'out_refund'):
+            return accounts['income']
+        return accounts['expense']
+
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
@@ -1289,13 +1296,8 @@ class account_invoice_line(models.Model):
         product = self.env['product.product'].browse(product)
 
         values['name'] = product.partner_ref
-        if type in ('out_invoice', 'out_refund'):
-            account = product.property_account_income or product.categ_id.property_account_income_categ
-        else:
-            account = product.property_account_expense or product.categ_id.property_account_expense_categ
-        account = fpos.map_account(account)
-        if account:
-            values['account_id'] = account.id
+        account = self.get_invoice_line_account(product, fpos)
+        values['account_id'] = account
 
         if type in ('out_invoice', 'out_refund'):
             taxes = product.taxes_id or account.tax_ids
