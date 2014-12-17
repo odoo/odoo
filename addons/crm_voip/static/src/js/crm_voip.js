@@ -18,7 +18,7 @@ openerp.crm_voip = function(instance) {
             if(phonecall.partner_name){
                 this.set("partner",_.str.truncate(phonecall.partner_name,19));
             }else{
-                this.set("partner", "Unknown");
+                this.set("partner", _t("Unknown"));
             }
             this.set("state",phonecall.state);
             this.set("image_small", phonecall.partner_image_small);
@@ -185,7 +185,7 @@ openerp.crm_voip = function(instance) {
             }
             display_opp_name = true;
             if(!phonecall.opportunity_name){
-                phonecall.opportunity_name = "No opportunity linked";
+                phonecall.opportunity_name = _t("No opportunity linked");
             }else if(phonecall.opportunity_name == phonecall.name){
                 display_opp_name = false;
             }
@@ -325,14 +325,6 @@ openerp.crm_voip = function(instance) {
             var phonecall_id;
             if(this.$(".oe_dial_selected_phonecall").length){
                 phonecall_id = this.$(".oe_dial_selected_phonecall").data('id');
-                /*
-                //JS Ari lib
-                this.ari_client.call(this.phonecalls[phonecall_id],function(channel){
-                    console.log("after the call")
-                    self.phonecall_channel = channel;
-                    console.log(self.phonecall_channel);
-                });
-                */
                 this.sip_js.call(this.phonecalls[phonecall_id]);
             }else{
                 this.$(".oe_dial_phonecalls > .oe_dial_phonecall")
@@ -342,16 +334,6 @@ openerp.crm_voip = function(instance) {
                             return false;
                         }
                     });
-                if(phonecall_id){
-                    /*
-                    //JS Ari lib
-                    this.ari_client.call(this.phonecalls[phonecall_id],function(channel){
-                        console.log("after the call")
-                        self.phonecall_channel = channel;
-                    });
-                    */
-                    
-                }
             }
         },
 
@@ -369,29 +351,10 @@ openerp.crm_voip = function(instance) {
         hangup_button: function(){
             this.sip_js.hangup();
             self.$(".popover").remove();
-            /*
-            var phonecall_model = new openerp.web.Model("crm.phonecall");
-            if(this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text() != ''){
-                var phonecall_id = this.$el.find(".oe_dial_selected_phonecall").find(".phonecall_id").text();
-                phonecall_model.call("hangup_call", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
-                    openerp.web.bus.trigger('reload_panel');
-                });
-                //this.ari_client.hangup(this.phonecall_channel);
-                this.sip_js.hangup();
-            }else if(this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text()){
-                var phonecall_id = this.$el.find(".oe_dial_phonecalls > div:first-child").find(".phonecall_id").text();
-                phonecall_model.call("hangup_call", [this.phonecalls[phonecall_id].id]).then(function(phonecall){
-                    openerp.web.bus.trigger('reload_panel');
-                });
-                //this.ari_client.hangup(this.phonecall_channel);
-                this.sip_js.hangup();
-            }*/
         },
 
         //action done when the button "Transfer" is clicked
         transfer_button: function(){
-            //this.sip_js.transfer();
-
             //Launch the transfer wizard
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',

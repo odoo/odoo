@@ -14,7 +14,8 @@ openerp.sip_js = function(instance) {
                     authorizationUser: result.login,
                     password: result.password,
                     hackIpInContact: true,
-                    log: {level: "error"},
+                    log: {level: "debug"},
+                    traceSip: true,
                     turnServers: {
                       urls:"turn:numb.viagenie.ca",
                       username:"renod2002@yahoo.fr",
@@ -112,7 +113,7 @@ openerp.sip_js = function(instance) {
                     if(response.reason_phrase == "Ringing"){
                         ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.play();
-                        $('.oe_dial_big_callbutton').html("Calling...");
+                        $('.oe_dial_big_callbutton').html(_t("Calling..."));
                         $('.oe_dial_hangupbutton').removeAttr('disabled');
                         //set the timer to stop the call if ringing too long
                         self.timer = setTimeout(function(){
@@ -173,7 +174,7 @@ openerp.sip_js = function(instance) {
                     });    
                 });
             }catch(err){
-                $('.oe_dial_big_callbutton').html("Call");
+                $('.oe_dial_big_callbutton').html(_t("Call"));
                 $(".oe_dial_transferbutton").attr('disabled','disabled');
                 $(".oe_dial_hangupbutton").attr('disabled','disabled');
                 new openerp.web.Model("crm.phonecall").call("error_config");
@@ -246,10 +247,10 @@ openerp.sip_js = function(instance) {
         $(".oe_dial_split_callbutton").show();
         $(".oe_dial_stop_autocall_button").hide();
         if(!self.session){
-            $('.oe_dial_big_callbutton').html("Call");
+            $('.oe_dial_big_callbutton').html(_t("Call"));
             $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
         }else{
-            $('.oe_dial_big_callbutton').html("Calling...");
+            $('.oe_dial_big_callbutton').html(_t("Calling..."));
         }
     };
 
