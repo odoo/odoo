@@ -51,7 +51,7 @@
             {
                 title:     "click in modal on 'Proceed to checkout' button",
                 waitFor:   '.js_product:contains(Warranty) a:contains(Add to Cart):hidden',
-                element:   '.modal a:contains("Proceed to checkout")',
+                element:   '.modal-dialog a:contains("Proceed to checkout")',
             },
             {
                 title:     "check quantity",

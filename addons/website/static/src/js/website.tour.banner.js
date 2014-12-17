@@ -6,7 +6,7 @@
     openerp.Tour.register({
         id:   'banner',
         name: _t("Build a page"),
-        path: '/page/website.homepage',
+        path: '/page/homepage',
         steps: [
             {
                 title:     _t("Welcome to your website!"),
@@ -37,7 +37,7 @@
             },
             {
                 waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   '#wrap .carousel:first div.carousel-content',
+                element:   '#wrapwrap .carousel:first div.carousel-content',
                 placement: 'top',
                 title:     _t("Customize banner's text"),
                 content:   _t("Click in the text and start editing it."),
@@ -98,14 +98,14 @@
                 popover:   { fixed: true },
             },
             {
-                element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
+                element:   '.modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]',
                 placement: 'right',
                 title:     _t("Check Mobile Preview"),
                 content:   _t("Scroll to check rendering and then close the mobile preview."),
                 popover:   { next: _t("Continue") },
             },
             {
-                waitNot:   '.modal',
+                waitNot:   '.modal-dialog:has(#mobile-viewport)',
                 element:   '#content-menu-button',
                 placement: 'left',
                 title:     _t("Add new pages and menus"),

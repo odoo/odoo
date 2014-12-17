@@ -221,6 +221,7 @@ class TestConvertBack(common.TransactionCase):
 
         Sub = self.registry('website.converter.test.sub')
         sub_id = Sub.create(self.cr, self.uid, {'name': "Foo"})
+        sub2_id = Sub.create(self.cr, self.uid, {'name': "Bar"})
 
         Model = self.registry(model)
         id = Model.create(self.cr, self.uid, {field: sub_id})
@@ -237,6 +238,7 @@ class TestConvertBack(common.TransactionCase):
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
         # emulate edition
+        element.set('data-oe-many2one-id', str(sub2_id))
         element.text = "New content"
 
         converter = self.registry('website.qweb').get_converter_for(
@@ -251,8 +253,13 @@ class TestConvertBack(common.TransactionCase):
 
         self.assertEqual(
             Sub.browse(self.cr, self.uid, sub_id).name,
-            "New content",
-            "element edition should have been written directly to the m2o record"
+            "Foo",
+            "element edition can't change directly the m2o record"
+        )
+        self.assertEqual(
+            Model.browse(self.cr, self.uid, id).many2one.name,
+            "Bar",
+            "element edition should have been change the m2o id"
         )
 
 class TestTitleToSlug(unittest2.TestCase):

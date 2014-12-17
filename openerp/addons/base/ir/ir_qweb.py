@@ -546,19 +546,23 @@ class FieldConverter(osv.AbstractModel):
           ``type``, may not be any Field subclass name)
         * ``translate``, a boolean flag (``0`` or ``1``) denoting whether the
           field is translatable
+        * ``readonly``, has this attribute if the field is readonly
         * ``expression``, the original expression
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
         field = record._fields[field_name]
         field_type = get_field_type(field, options)
-        return [
+        data = [
             ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
+        if record._all_columns[field_name].column.readonly:
+            data.append(('data-oe-readonly', 1))
+        return data
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         """ value_to_html(cr, uid, value, field, options=None, context=None)

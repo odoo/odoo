@@ -190,7 +190,6 @@
                     return { results: ret };
                 }
             },
-
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
@@ -209,6 +208,24 @@
                 }
             });
         }
+
+        $('textarea[name="content"]').each(function () {
+            var $textarea = $(this);
+            var $form = $textarea.closest('form');
+            $textarea.summernote({
+                    height: 150,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture']]
+                    ]
+                });
+            $form.on('click', 'button, .a-submit', function () {
+                $textarea.html($form.find('.note-editable').code());
+            });
+        });
         
         function CKEDITORLoadComplete(){
             "use strict";
