@@ -1,5 +1,7 @@
 openerp.sip_js = function(instance) {
 
+    var _t = openerp._t;
+
     this.init = function() {
         var self = this;
         self.in_automatic_mode = false;
