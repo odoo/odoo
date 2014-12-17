@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<template id="contactus_form" name="Contact Form" inherit_id="website.contactus">
-			<xpath expr="//div[@name='mail_button']" position="replace">
+    <data>
+        <template id="contactus_form" name="Contact Form" inherit_id="website.contactus">
+            <xpath expr="//div[@name='mail_button']" position="replace">
                 <div>
-						<form action="/website_form/crm.lead/" method="post" class="editForm form-horizontal mt32" data-model="crm.lead" enctype="multipart/form-data" data-success="">
-							<div class="container o_form-success">
-	                            <div class="alert alert-success">
-	                                Your message has been sent successfully.
-	                                <button type="button" class="close" data-dismiss="alert">×</button>
-	                            </div>
-	                        </div>
-	                        <div class="container o_form-danger">
-	                            <div class="alert alert-danger">
-	                                Your message has not been sent.
-	                                <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
-	                            </div>
-	                        </div>
-							<div class="form-group form-field form-init" data-form="input">
-								<label for="contact_name" class="o_light col-md-3 col-sm-4 control-label">Your Name</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="wrap-unwrap">
-										<input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
-									</div>
-								</div>
-							</div>
-							<div class="form-group form-field form-init" data-form="input">
-								<label for="phone" class="o_light col-md-3 col-sm-4 control-label">Phone Number</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="wrap-unwrap">
-										<input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
-									</div>
-								</div>
-							</div>
-							<div class="form-group form-field form-init" data-form="input">
-								<label for="email_from" class="o_light col-md-3 col-sm-4 control-label">Email</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="wrap-unwrap">
-										<input type="text" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
-									</div>
-								</div>
-							</div>
-							<div class="form-group form-field form-init" data-form="input">
-								<label for="name" class="o_light col-md-3 col-sm-4 control-label">Subject</label>
-								<div class="col-md-7 col-sm-8">
-									<div class="wrap-unwrap">
-										<input type="text" class="form-control form-data" name="name" id="name" placeholder="" required="True" />
-									</div>
-								</div>
-							</div>
-							<div class="form-group form-field form-init" data-form="textarea">
-								<label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
-								<div class="col-md-7 col-sm-8">
-									<textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-									<button class="btn btn-primary btn-lg o_send_button">Send</button>
-								</div>
-							</div>
-						</form>
+                    <form action="/website_form/crm.lead/" method="post" class="editForm form-horizontal mt32" data-model="crm.lead" enctype="multipart/form-data" data-success="">
+                        <div class="container o_form-success">
+                            <div class="alert alert-success">
+                                Your message has been sent successfully.
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                            </div>
+                        </div>
+                        <div class="container o_form-danger">
+                            <div class="alert alert-danger">
+                                Your message has not been sent.
+                                <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                            </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label for="contact_name" class="o_light col-md-3 col-sm-4 control-label">Your Name</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="wrap-unwrap">
+                                    <input type="text" class="form-control form-data" id="contact_name" name="contact_name" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label for="phone" class="o_light col-md-3 col-sm-4 control-label">Phone Number</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="wrap-unwrap">
+                                    <input type="text" class="form-control form-data" name="phone" placeholder="e.g. (+32).81.81.37.00" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label for="email_from" class="o_light col-md-3 col-sm-4 control-label">Email</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="wrap-unwrap">
+                                    <input type="email" class="form-control form-data" id="email_from" name="email_from" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="input">
+                            <label for="name" class="o_light col-md-3 col-sm-4 control-label">Subject</label>
+                            <div class="col-md-7 col-sm-8">
+                                <div class="wrap-unwrap">
+                                    <input type="text" class="form-control form-data" name="name" id="name" placeholder="" required="True" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group form-field form-init" data-form="textarea">
+                            <label for="" class="col-md-3 col-sm-4 control-label">Your Question</label>
+                            <div class="col-md-7 col-sm-8">
+                                <textarea  class="form-control form-data" name="description" style="min-height: 120px" required="True"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                <button class="btn btn-primary btn-lg o_send_button">Send</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-			</xpath>
-		</template>
+            </xpath>
+        </template>
 
-	</data>
+    </data>
 </openerp>

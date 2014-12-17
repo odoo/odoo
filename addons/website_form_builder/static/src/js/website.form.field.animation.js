@@ -10,39 +10,40 @@
     */
 
     var getDataForm = {
-            'input[type=text]':     function($field) {return $field.attr('value') ? _.object([$field.attr('name')], [$field.attr('value')]) : null;},
-            'input[type=hidden]':   function($field) {
-                return getDataForm['input[type=text]'].call(this,$field);
-            },
-            'input[type=email]':    function($field) {return getDataForm['input[type=text]'].call(this,$field);},
-            'textarea':             function($field) {return getDataForm['input[type=text]'].call(this,$field);},
-            'select':               function($field) {return getDataForm['input[type=text]'].call(this,$field);},
-            ':has(input:checkbox)': function($field) {
-                var n,args = [];
-                $field.find('input').each(function (j,subelem) {
-                    n = $(subelem).prop('name');
-                    if($(subelem).is(':checked')) args.push($(subelem).val());
-                });
-                return (args.length) ? _.object([n],[args]):null;
-                    
-            },
-            ':has(input:radio)': function($field) {
-                var subelem = $field.find('input[type=radio]:checked');
-                return subelem.val() ? _.object([$(subelem).prop('name')],[subelem.val()]): null;
-            },
-            'input[type=file]': function($field) {
-                var args = {};
-                var size = $field.prop('files').length;
-                var self = this;
-                $.each($field.prop('files'), function (i, val) {
-                    args[$field.attr('name')+(($field.prop('files').length > 1)? '['+i+']':'')] = val;
-                    self.file += 1;
-                });
-                console.log('really no files ????? ', self.file);
-                return ($.isEmptyObject(args)) ? null:args;
+        'input[type=text]':     function($field) {return $field.attr('value') ? _.object([$field.attr('name')], [$field.attr('value')]) : null;},
+        'input[type=hidden]':   function($field) {
+            return getDataForm['input[type=text]'].call(this,$field);
+        },
+        'input[type=email]':    function($field) {return getDataForm['input[type=text]'].call(this,$field);},
+        'textarea':             function($field) {return getDataForm['input[type=text]'].call(this,$field);},
+        'select':               function($field) {return getDataForm['input[type=text]'].call(this,$field);},
+        ':has(input:checkbox)': function($field) {
+            var n,args = [];
+            $field.find('input').each(function (j,subelem) {
+                n = $(subelem).prop('name');
+                if($(subelem).is(':checked')) {
+                    args.push($(subelem).val());
+                }
+            });
+            return (args.length) ? _.object([n],[args]):null;
                 
-            }
-        };
+        },
+        ':has(input:radio)': function($field) {
+            var subelem = $field.find('input[type=radio]:checked');
+            return subelem.val() ? _.object([$(subelem).prop('name')],[subelem.val()]): null;
+        },
+        'input[type=file]': function($field) {
+            var args = {};
+            var size = $field.prop('files').length;
+            var self = this;
+            $.each($field.prop('files'), function (i, val) {
+                args[$field.attr('name')+(($field.prop('files').length > 1)? '['+i+']':'')] = val;
+                self.file += 1;
+            });
+            console.log('really no files ????? ', self.file);
+            return ($.isEmptyObject(args)) ? null:args;
+        }
+    };
 
     website.snippet.animationRegistry.form_builder_send = website.snippet.Animation.extend({
         selector: 'form[action*="/website_form/"]',
@@ -72,8 +73,10 @@
                     $(elem) .addClass('has-warning has-feedback').children('div')
                             .append('<i class="fa fa-exclamation-triangle form-control-feedback"></i>');
                 }
-                else $(elem).addClass('has-success has-feedback').children('div')
+                else {
+                    $(elem) .addClass('has-success has-feedback').children('div')
                             .append('<i class="fa fa-check form-control-feedback"></i>');
+                }
 
                 fail_required   = _.without(fail_required,name);
                 empty_fields    = _.without(empty_fields,name);
@@ -121,7 +124,9 @@
                                 .appendTo('body')
                                 .modal({"keyboard" :true});
 
-            if(!this.file) progress.addClass('hidden');
+            if(!this.file) {
+                progress.addClass('hidden');
+            }
 
             var success_page = this.$target.data('success');
             var redirect     = this.$target.data('redirect');
@@ -193,8 +198,10 @@
                 labels = '';
                   
                 $.each(input.get(0).files, function(index, value) {
-                    if(labels.length) labels += ', ';
-                        labels += value.name.replace(/\\/g, '/').replace(/.*\//, '');
+                    if(labels.length) {
+                        labels += ', ';
+                    }
+                    labels += value.name.replace(/\\/g, '/').replace(/.*\//, '');
                 });
                 self.$target.find(':text').val(labels);
             });
@@ -208,7 +215,9 @@
     website.snippet.animationRegistry.form_builder_autocomplete =  website.snippet.Animation.extend({
         selector:'select[autocomplete=on]',
         start: function() {
-            if(this.$target.closest('[contenteditable=true]').length) return;
+            if(this.$target.closest('[contenteditable=true]').length) {
+                return;
+            }
 
             this.$target.select2({
                 'enable': true
