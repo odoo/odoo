@@ -478,7 +478,7 @@ class hr_analytic_timesheet(osv.Model):
                 vals_line['name'] = record['name']
                 vals_line['reference_id'] = record['reference_id']
                 vals_line['task_id'] = record.get('task_id', False)
-                vals_line['user_id'] = record['user_id']
+                vals_line['user_id'] = record['user_id'][0] if isinstance(record['user_id'], tuple) else record['user_id']
                 vals_line['product_id'] = user_related_details['product_id']
                 vals_line['date'] = record['date'][:10]
                 # Calculate quantity based on employee's product's uom
