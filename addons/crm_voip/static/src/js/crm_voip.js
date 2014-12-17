@@ -1,4 +1,3 @@
-
 openerp.crm_voip = function(instance) {
 
     var _t = openerp._t;
