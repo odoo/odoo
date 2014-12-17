@@ -19,6 +19,24 @@
         start  : function() {
             this._super();
             this.bind_change();
+            var index = Math.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; }));
+            this.$target.find("img:not([data-index])").each(function () {
+                index++;
+                $(this).attr('data-index', index).data('index', index);
+            });
+            this.$target.attr("contentEditable", false);
+
+            this._temp_mode = this.$el.find("data-mode").data("mode");
+            this._temp_col = this.$el.find("data-columns").data("columns");
+        },
+        drop_and_build_snippet: function() {
+            var uuid = 0;
+            $(".carousel").each(function () {
+                var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+                if (id > uuid) uuid = id;
+            });
+            this.$target.find('.carousel').attr('id', 'slideshow_'+ (uuid+1));
+            this.$target.find('[data-target]').attr('data-target', '#slideshow_'+ (uuid+1));
         },
         styling  : function(type, value) {
             var classes = this.$el.find('li[data-styling]').map(function () {
@@ -33,13 +51,15 @@
             var self    = this,
                 modes   = [ 'o_nomode', 'o_grid', 'o_masonry', 'o_slideshow' ],
                 classes = this.$target.attr("class").split(/\s+/);
-            if (this.block) return;
+            this.cancel_masonry();
+
             modes.forEach(function(mode) {
                 if (classes.indexOf(mode) != -1) {
-                    self.mode("reapply", mode);
+                    self.mode("reapply", mode.slice(2, Infinity));
                     return;
                 }
             });
+            this.$target.attr("contentEditable", false);
         },
         bind_change: function () {
             var self = this;
@@ -52,12 +72,20 @@
                 });
         },
         get_imgs: function () {
-            return this.$target.find("img").addClass("img img-thumbnail img-responsive mb8 mt8").detach();
+            var imgs = this.$target.find("img").addClass("img img-thumbnail img-responsive mb8 mt8").detach().get();
+            imgs.sort(function (a,b) { return $(a).data('index')-$(b).data('index'); });
+            return imgs;
         },
-        mode: function (type, value) {
-            if (this.block) return;
+        mode: function (type, value, $li) {
+            if (type !== "reapply" && type !== "click" && this._temp_mode === value) {
+                return;
+            }
+            this._temp_mode = value;
+
+            this.cancel_masonry();
+
             if (!value) value = 'nomode';
-            this[value]();
+            this[value](type);
             this.$target.removeClass('o_nomode o_masonry o_grid o_slideshow').addClass("o_"+value);
             this.bind_change();
         },
@@ -66,29 +94,37 @@
             $container.empty().append($content);
             return $container;
         },
-        nomode : function() {
+        nomode : function(type) {
+            if (type !== "reapply" && !this.$target.attr('class').match(/o_grid|o_masonry|o_slideshow/)) return;
+
             var self = this,
                 $row     = $('<div class="row"></div>'),
-                $imgs = this.get_imgs().wrap('<div>').parent();
+                $imgs = $(this.get_imgs());
 
             this.replace($row);
 
             $imgs.each(function () {
-                var img = this.childNodes[0];
+                var $wrap = $(this).wrap('<div>').parent();
+                var img = this;
                 if (img.width >= img.height * 2) {
-                    $(this).addClass("col-md-6");
+                    $wrap.addClass("col-md-6");
                 } else if (img.width > 600) {
-                    $(this).addClass("col-md-6");
+                    $wrap.addClass("col-md-6");
                 } else {
-                    $(this).addClass("col-md-3");
+                    $wrap.addClass("col-md-3");
                 }
+                $row.append($wrap);
             });
-            $row.append($imgs);
             this.$target.css("height", "");
         },
-        masonry : function() {
+        cancel_masonry: function () {
+            clearTimeout(this.timer);
+            $(this.masonry_imgs).appendTo(this.$target);
+            this.masonry_imgs = [];
+        },
+        masonry : function(type) {
             var self     = this,
-                $imgs    = this.get_imgs(),
+                imgs    = this.get_imgs(),
                 columns  = this.get_columns(),
                 colClass = undefined,
                 $cols    = [];
@@ -105,34 +141,35 @@
 
             // create columns
             for (var c = 0; c < columns; c++) {
-                var $col = $('<div class="col"></div>').addClass(colClass);
+                var $col = $('<div class="col o_snippet_not_selectable"></div>').addClass(colClass);
                 $row.append($col);
                 $cols.push($col.get()[0]);
             }
 
-            this.block = true;
+            imgs.reverse();
             $cols = $($cols);
-            var imgs = $imgs.get();
             function add() {
                 self.lowest($cols).append(imgs.pop());
-                if (imgs.length) setTimeout(add, 0);
-                else self.block = false;
+                if (imgs.length) self.timer = setTimeout(add, 0);
             }
+            this.masonry_imgs = imgs;
             if (imgs.length) add();
             this.$target.css("height", "");
         },
-        grid : function() {
+        grid : function(type) {
+            if (type !== "reapply" && this.$target.hasClass('o_grid')) return;
+
             var self     = this,
-                $cols    = this.get_imgs().wrap('<div>').parent(),
+                $imgs    = $(this.get_imgs()),
                 $col, $img,
                 $row     = $('<div class="row"></div>'),
                 columns  = this.get_columns() || 3,
                 colClass = "col-md-"+(12/columns),
                 $container = this.replace($row);
 
-            $cols.each(function(index) { // 0 based index
-                $col = $(this);
-                $img = $col.find('img');
+            $imgs.each(function(index) { // 0 based index
+                $img = $(this);
+                $col = $img.wrap('<div>').parent();
                 self.img_preserve_styles($img);
                 self.img_responsive($img);
                 $col.addClass(colClass);
@@ -144,119 +181,62 @@
             });
             this.$target.css("height", "");
         },
-        slideshow :function () {
-            var self = this;
-            var $imgs = this.$target.find("img").detach(),
+        slideshow :function (type) {
+            if (type !== "reapply" && this.$target.hasClass('o_slideshow')) return;
+
+            var self = this,
+                $imgs    = $(this.get_imgs()),
                 urls = $imgs.map(function() { return $(this).attr("src"); } ).get(),
-                params = {
-                        srcs : urls,
-                        index: 1,
-                        title: "",
-                        interval : this.$target.data("interval") || false,
-                        id: _.uniqueId("slideshow_")
+                uuid = 0;
+            $(".carousel").each(function () {
+                var id = parseInt(($(this).attr('id') || '0').replace(/[^0-9]/, ''));
+                if (id > uuid) uuid = id;
+            });
+            var params = {
+                    srcs : urls,
+                    index: 1,
+                    title: "",
+                    interval : this.$target.data("interval") || false,
+                    id: "slideshow_" + (uuid+1)
                 },
                 $slideshow = $(openerp.qweb.render('website.gallery.slideshow', params));
             this.replace($slideshow);
+            this.$target.find(".item img").each(function (index) {
+                $(this).attr('data-index', index).data('index', index);
+            });
             this.$target.css("height", Math.round(window.innerHeight*0.7));
         },
         columns : function(type, value) {
-            if (this.block) return;
             this.$target.attr("data-columns", value);
-            this.reapply();
+            if (this._temp_col !== value) {
+                this._temp_col = value;
+                this.reapply();
+            }
         },
-        albumimages : function(type, value) {
-            if(type === "click") this[value]();
-        },
-        images_add : function() {
-            /* will be moved in ImageDialog from MediaManager */
-            var self = this,
-                $container = this.$target.find(".container:first"),
-                $upload_form = $(openerp.qweb.render('website.gallery.dialog.upload')),
-                $progress = $upload_form.find(".fa");
-
-            $upload_form.appendTo(document.body);
-            
-            $upload_form.on('modal.bs.hide', function() { $(this).remove(); } );
-            
-            $upload_form.find(".alert-success").hide();
-            $upload_form.find(".alert-danger").hide();
-
-            $upload_form.on("change", 'input[name="upload"]', function(event) {
-                $upload_form.find('input[type="submit"]').parent().removeClass("hidden");
-                $upload_form.find(".alert").hide();
-            });
-
-            $upload_form.find("form").on("submit", function(event) {
-                event.preventDefault();
-                var files = $(this).find('input[type="file"]')[0].files;
-                var formData = new FormData();
-                for (var i = 0; i < files.length; i++ ) {
-                    var file = files[i];
-                    formData.append('upload', file, file.name);
+        images_add : function(type) {
+            if(type !== "click") return;
+            var self = this;
+            var $container = this.$target.find(".container:first");
+            var editor = new website.editor.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
+            editor.appendTo(document.body);
+            var index = Math.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1;
+            editor.on('saved', this, function (attachments) {
+                for (var i = 0 ; i < attachments.length; i++) {
+                    var img = $('<img class="img img-responsive mb8 mt8"/>')
+                        .attr("src", attachments[i].url)
+                        .attr('data-index', index+i)
+                        .data('index', index+i)
+                        .appendTo($container);
                 }
-
-                /* 
-                 * hide submit button
-                 */
-                $('input[name="upload"], input[type="submit"]', this).parent().addClass("hidden");
-
-                /* 
-                 * show progress
-                 */
-                $progress.removeClass("hidden");
-
-                /* 
-                 * Images upload callback
-                 */
-                var callback = _.uniqueId('func_');
-                formData.append("func", callback);
-                window[callback] = function (attachments, error) {
-                    delete window[callback];
-
-                    $('input[name="upload"]', this).parent().removeClass("hidden");
-
-                    if (error) { /* failure */
-
-                        $upload_form.find(".alert-danger").show();
-
-                    } else { /* success */
-
-                        $upload_form.find(".alert-success").show();
-                        for (var i = 0 ; i < attachments.length; i++) {
-                            $('<img class="img img-thumbnail img-responsive mb8 mt8"/>')
-                                .attr("src", attachments[i].website_url)
-                                .appendTo($container);
-                        }
-                        $progress.addClass("hidden");
-                        $upload_form.remove();
-                        self.reapply(); // refresh the $target
-                    }
-                };
-
-                /* 
-                 * Images upload : don't change order of contentType & processData
-                 * and don't change their values, otherwise the XHR will be 
-                 * wrongly conceived by jQuery. 
-                 * 
-                 * (missing boundary in the content-type header field)
-                 * Leading to an upload failure.
-                 */
-                $.ajax('/website/attach', {
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,  /* multipart/form-data for files */
-                    processData: false,
-                    dataType: 'text'
-                    }).done(function (script) {
-                        $(script).appendTo('head').remove();
-                    });
+                self.reapply(); // refresh the $target
+                setTimeout(function () {
+                    self.BuildingBlock.make_active(self.$target);
+                },0);
             });
-            $upload_form.modal({ backdrop : false });
-
-            $upload_form.find('input[name="upload"]').click();
         },
-        images_rm   : function() {
-            this.replace($('<div class="alert alert-info css_editable_mode_display" style="display: none;"/>').text(_t("Add Images from the 'Customize' menu")));
+        images_rm   : function(type) {
+            if(type !== "click") return;
+            this.replace($('<div class="alert alert-info css_editable_mode_display"/>').text(_t("Add Images from the 'Customize' menu")));
         },
         sizing : function() { // done via css, keep it to avoid undefined error
         },
@@ -278,11 +258,6 @@
             var classes = this.styles_to_preserve($img);
             $img.removeAttr("class");
             $img.addClass(classes);
-            return $img;
-        },
-        img_from_src : function(src) {
-            var self = this;
-            var $img = $("<img/>").attr("src", src);
             return $img;
         },
         img_responsive : function(img) {
@@ -344,5 +319,48 @@
             this.$el.find('[data-interval]:first').parent().parent().toggle(mode === "slideshow");
         },
     }); // website.snippet.Option.extend
+
+
+    website.snippet.options.gallery_img = website.snippet.Option.extend({
+        position: function (type, value) {
+            if (type !== "click") return;
+
+            var $parent = this.$target.closest("section");
+            this.BuildingBlock.create_overlay($parent);
+            var editor = $parent.data('snippet-editor').styles.gallery;
+            var imgs = $parent.find('img').get();
+            imgs.sort(function (a,b) { return $(a).data('index')-$(b).data('index'); });
+
+            var index = imgs.indexOf(this.$target[0]);
+
+            switch (value) {
+                case 'first': index = $(imgs.shift()).data('index')-1; break;
+                case 'prev': index = index <= 1  ? $(imgs.shift()).data('index')-1 : ($(imgs[index-2]).data('index') + $(imgs[index-1]).data('index'))/2; break;
+                case 'next': index = index >= imgs.length-2  ? $(imgs.pop()).data('index')+1 : ($(imgs[index+2]).data('index') + $(imgs[index+1]).data('index'))/2; break;
+                case 'last': index = $(imgs.pop()).data('index')+1; break;
+            }
+
+            this.$target.data('index',index);
+
+            this.BuildingBlock.make_active(false);
+            setTimeout(function () {
+                editor.reapply();
+            },0);
+        },
+        remove: function (type) {
+            if (type !== "click") return;
+
+            var self = this;
+            var $parent = website.snippet.globalSelector.closest(this.$target.parent());
+            this.BuildingBlock.make_active(false);
+            this.$target.remove();
+            setTimeout(function () {
+                self.BuildingBlock.make_active($parent);
+                var gallery = $parent.data('snippet-editor').styles.gallery;
+                gallery.reapply();
+            }, 0);
+        }
+    });
+
 
 })(); // anonymous function

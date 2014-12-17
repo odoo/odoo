@@ -133,10 +133,10 @@
                 </div>
 
                 <div t-foreach="blog_posts" t-as="blog_post" class="mb32">
-                  <span t-field="blog_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
-                  <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }">
-                      <h2 t-field="blog_post.name" class="mb4"/>
-                  </a>
+                  <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle pull-right mt16 media-object"}' />
+                  <h2>
+                    <a t-attf-href="/blog/#{ slug(blog_post.blog_id) }/post/#{ slug(blog_post) }" t-field="blog_post.name" class="mb4"/>
+                  </h2>
 
                   <div class="text-muted">
                       <h4
@@ -189,17 +189,9 @@
 <template id="blog_post_complete" name="Blog Post">
   <t t-call="website_blog.index">
 
-    <div class="cover js_fullheight" id="title" t-attf-style="background-image: url(#{blog_post.background_image})" t-ignore="True">
+    <div class="cover js_fullheight" id="title" t-attf-style="min-height:600px; #{blog_post.background_image and ('background-image: url(%s)' % blog_post.background_image)}" t-ignore="True">
         <div class="container">
           <div class="container text-right mt16">
-            <div class="btn-group css_non_editable_mode_hidden">
-                <a id="change_cover" class="btn btn-primary">
-                    Change Cover
-                </a>
-                <a id="clear_cover" class="btn btn-danger">
-                    <span class="fa fa-times"/>
-                </a>
-            </div>
             <div class="cover-storage oe_hidden"></div>
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
@@ -218,7 +210,7 @@
             <h2 t-field="blog_post.subtitle"/>
             <p class="post-meta text-muted text-center" name="blog_post_data"/>
             <div>
-                <span t-field="blog_post.author_avatar" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "img-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
                 <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
                     "widget": "contact",
                     "fields": ["name"]

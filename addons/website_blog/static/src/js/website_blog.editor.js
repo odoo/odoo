@@ -1,4 +1,4 @@
-$(document).ready(function() {
+(function() {
     "use strict";
 
     var website = openerp.website;
@@ -26,8 +26,6 @@ $(document).ready(function() {
                 $('.popover').remove();
                 this._super();
                 var vHeight = $(window).height();
-                $('body').on('click','#change_cover',_.bind(this.change_bg, self.rte.editor, vHeight));
-                $('body').on('click', '#clear_cover',_.bind(this.clean_bg, self.rte.editor, vHeight));
             },
             save : function() {
                 var res = this._super();
@@ -39,20 +37,48 @@ $(document).ready(function() {
                 }
                 return res;
             },
-            clean_bg : function(vHeight) {
-                $('.js_fullheight').css({"background-image":'none', 'min-height': vHeight});
-            },
-            change_bg : function(vHeight) {
-                var self  = this;
-                var element = new CKEDITOR.dom.element(self.element.find('.cover-storage').$[0]);
-                var editor  = new website.editor.MediaDialog(self, element);
-                $(document.body).on('media-saved', self, function (o) {
-                    var url = $('.cover-storage').attr('src');
-                    $('.js_fullheight').css({"background-image": !_.isUndefined(url) ? 'url(' + url + ')' : "", 'min-height': vHeight});
-                    $('.cover-storage').hide();
-                });
-                editor.appendTo('body');
-            },
+        });
+        
+        website.snippet.options.many2one.include({
+            select_record: function (li) {
+                var self = this;
+                this._super(li);
+                if (this.$target.data('oe-field') === "author_id") {
+                    var $nodes = $('[data-oe-model="blog.post"][data-oe-id="'+this.$target.data('oe-id')+'"][data-oe-field="author_avatar"]');
+                    $nodes.each(function () {
+                        var $img = $(this).find("img");
+                        var css = window.getComputedStyle($img[0]);
+                        $img.css({ width: css.width, height: css.height });
+                        $img.attr("src", "/website/image/res.partner/"+self.ID+"/image");
+                    });
+                    setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
+                }
+            }
         });
     }
-});
+
+    website.snippet.options.website_blog = website.snippet.Option.extend({
+        start : function(type, value, $li) {
+            this._super();
+            this.src = this.$target.css("background-image").replace(/url\(|\)|"|'/g,'').replace(/.*none$/,'');
+            this.$image = $('<image src="'+this.src+'">');
+        },
+        clear : function(type, value, $li) {
+            if (type !== 'click') return;
+            this.src = null;
+            this.$target.css({"background-image": '', 'min-height': $(window).height()});
+            this.$image.removeAttr("src");
+        },
+        change : function(type, value, $li) {
+            if (type !== 'click') return;
+            var self = this;
+            var editor  = new website.editor.MediaDialog(this.$image, this.$image[0]);
+            editor.appendTo('body');
+            editor.on('saved', self, function (event, img) {
+                var url = self.$image.attr('src');
+                self.$target.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()});
+            });
+        },
+    });
+
+})();

@@ -13,7 +13,7 @@
                 ev.preventDefault();
                 var $content_item = $(this);
                 self[$content_item.data('action')]();
-            })
+            });
             
             return this._super();
         },
@@ -102,13 +102,13 @@
         },
         add_menu: function () {
             var self = this;
-            var dialog = new website.contentMenu.MenuEntryDialog();
-            dialog.on('add-menu', this, function (link) {
+            var dialog = new website.contentMenu.MenuEntryDialog(undefined, {});
+            dialog.on('save', this, function (link) {
                 var new_menu = {
                     id: _.uniqueId('new-'),
-                    name: link[2] || link[0],
-                    url: link[0],
-                    new_window: link[1],
+                    name: link.text,
+                    url: link.url,
+                    new_window: link.newWindow,
                     parent_id: false,
                     sequence: 0,
                     children: [],
@@ -125,13 +125,13 @@
             var menu = self.flat[menu_id];
             if (menu) {
                 var dialog = new website.contentMenu.MenuEntryDialog(undefined, menu);
-                dialog.on('update-menu', this, function (link) {
-                    var id = link.shift();
+                dialog.on('save', this, function (link) {
+                    var id = link.id;
                     var menu_obj = self.flat[id];
                     _.extend(menu_obj, {
-                        name: link[2],
-                        url: link[0],
-                        new_window: link[1],
+                        'name': link.text,
+                        'url': link.url,
+                        'new_window': link.newWindow,
                     });
                     var $menu = self.$('[data-menu-id="' + id + '"]');
                     $menu.find('.js_menu_label').first().text(menu_obj.name);
@@ -184,6 +184,8 @@
     website.contentMenu.MenuEntryDialog = website.editor.LinkDialog.extend({
         template: 'website.contentMenu.dialog.add',
         init: function (editor, data) {
+            data.text = data.name || '';
+            data.newWindow = data.new_window;
             this.data = data;
             return this._super.apply(this, arguments);
         },
@@ -191,7 +193,7 @@
             var self = this;
             var result = $.when(this._super.apply(this, arguments)).then(function () {
                 if (self.data) {
-                    self.bind_data(self.data.name, self.data.url, self.data.new_window);
+                    self.bind_data();
                 }
                 var $link_text = self.$('#link-text').focus();
                 self.$('#link-page').change(function (e) {
@@ -211,14 +213,6 @@
                 return;
             }
             return this._super.apply(this, arguments);
-        },
-        make_link: function (url, new_window, label) {
-            var menu_label = this.$('input#link-text').val() || label;
-            if (this.data) {
-                this.trigger('update-menu', [this.data.id, url, new_window, menu_label]);
-            } else {
-                this.trigger('add-menu', [url, new_window, menu_label]);
-            }
         },
         destroy: function () {
             this._super.apply(this, arguments);

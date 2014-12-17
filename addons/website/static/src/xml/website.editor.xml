@@ -2,7 +2,7 @@
     <t t-name="website.editorbar">
         <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top hidden-xs" style="display: none;">
             <div class="navbar-header" id="website-top-edit">
-                <ul class="nav navbar-nav js_editor_placeholder pull-right">
+                <ul class="nav navbar-nav js_editor_placeholder" style="position: absolute; right: 600px;">
                 </ul>
                 <form class="navbar-form text-muted">
                     <button type="button" data-action="save"
@@ -15,7 +15,7 @@
     </t>
 
     <t t-name="website.editor.dialog">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal note-link-dialog" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -40,6 +40,16 @@
         <t t-call="website.editor.dialog">
             <t t-set="title">Link to</t>
             <form>
+                <div class="list-group">
+                    <div class="form-group list-group-item active">
+                        <h3 class="list-group-item-heading">
+                            <label for="link-new" class="control-label">
+                                Link Label
+                            </label>
+                        </h3>
+                        <input type="text" class="form-control" id="link-text" required="required"/>
+                    </div>
+                </div>
                 <ul class="list-group">
                     <li class="list-group-item form-group active">
                         <h4 class="list-group-item-heading">
@@ -66,16 +76,6 @@
                                id="link-external" placeholder="http://openerp.com"/>
                     </li>
                 </ul>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="link-text" class="col-sm-2 control-label">
-                            Link text
-                        </label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="link-text"/>
-                        </div>
-                    </div>
-                </div>
                 <div class="form-horizontal link-style">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">
@@ -136,7 +136,9 @@
                             Preview
                         </label>
                         <div class="col-sm-10" style="line-height: 2em;">
-                            <a id="link-preview" href="#"></a>
+                            <div style="overflow: auto; max-width: 100%; max-height: 200px;">
+                                <a id="link-preview" href="#"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -144,7 +146,7 @@
         </t>
     </t>
     <t t-name="website.editor.dialog.media">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal note-image-dialog" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog select-media">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -174,13 +176,10 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="editor-media-image">
-                                
                             </div>
                             <div class="tab-pane fade" id="editor-media-icon">
-                                
                             </div>
                             <div class="tab-pane fade" id="editor-media-video">
-                                
                             </div>
                         </div>
                     </div>
@@ -228,7 +227,9 @@
                 </div>
                 <input type="hidden" name="func"/>
                 <div class="help-block"/>
-                <div class="existing-attachments"/>
+                <div class="existing-attachments">
+                    <t t-call="website.editor.dialog.image.existing"/>
+                </div>
             </form>
         </div>
         <iframe src="about:blank" name="fileframe" class="hidden"/>
@@ -258,7 +259,7 @@
                 <div class="col-sm-2 existing-attachment-cell"
                      t-foreach="row" t-as="attachment">
                     <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
-                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" t-att-title="attachment.name" class="img img-responsive"/>
+                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" class="img img-responsive"/>
                 </div>
             </div>
         </div>
@@ -315,7 +316,7 @@
     </t>
 
     <t t-name="website.editor.hoverbutton.link">
-        <button contentEditable="false" type="button" class="btn btn-primary hover-edition-button btn-xs">Change</button>
+        <button contentEditable="false" type="button" data-event="showLinkDialog" tabindex="-1" class="btn btn-primary hover-edition-button btn-xs">Change</button>
     </t>
 
     <t t-name="website.editor.hoverbutton.media">
@@ -337,10 +338,26 @@
         </div>
     </t>
 
+    <t t-name="website.editor.dialog.alt">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Change media Alt and Title</t>
+            <form action="#" class="form-horizontal">
+                <div class="form-group">
+                    <label for="alt" class="col-sm-2 control-label">Alt:</label>
+                    <div class="col-sm-9"><input id="alt" type="text" class="form-control" required="required" t-att-value="widget.alt"/></div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title:</label>
+                    <div class="col-sm-9"><input id="title" type="text" class="form-control" required="required" t-att-value="widget.title"/></div>
+                </div>
+            </form>
+        </t>
+    </t>
+
     <t t-name="website.editor.dialog.font-icons">
         <form action="#">
             <input type="hidden" id="fa-icon"/>
-            <input type="hidden" id="fa-size"/>
+            <input type="hidden" id="fa-size" value="fa-1x"/>
             <div class="font-icons-icons">
                 <t t-call="website.editor.dialog.font-icons.icons">
                     <t t-set="icons" t-value="widget.icons"/>
@@ -353,10 +370,8 @@
     </t>
     <t t-name="website.editor.dialog.font-icons.icons">
         <span t-foreach="icons" t-as="icon"
-              class="fa font-icons-icon"
-              t-att-data-id="icon.id">
-            <t t-esc="icon.text"/>
-        </span>
+              t-attf-class="fa font-icons-icon #{icon}"
+              t-att-data-id="icon"/>
     </t>
 
     <t t-name="website.editor.dialog.video">
@@ -389,15 +404,13 @@
             
             <div id="video-preview" style="width: 450px; margin: 0 auto;">
                 <div class="media_iframe_video">
+                    <div class="media_iframe_video_size"></div>
                     <iframe
                         src=""
                         frameborder="0"
                         allowfullscreen="allowfullscreen"></iframe>
                 </div>
             </div>
-
-            <input type="hidden" id="video_id" value=""/>
-            <input type="hidden" id="video_type" value=""/>
 
             <div class="text-center mt32">
                 <div class="checkbox">
@@ -406,5 +419,183 @@
             </div>
         </form>
     </t>
+    <t t-name="website.editor.insert.inline.media">
+        <p class="inline-media-link" contenteditable="false">
+            <a class="editor-insert-media fa fa-plus-circle"></a>
+        </p>
+    </t>
+    <t t-name="website.editor.tplButton">
+        <button type="button" t-att-class="'btn btn-default btn-sm btn-small ' +
+                (options.className ? options.className : '') +
+                (options.dropdown ? 'dropdown-toggle' : '') "
+                t-att-data-toggle= "options.dropdown ? 'dropdown' : ''"
+                t-att-title="options.title ? options.title : ''"
+                t-att-data-event="options.event ? options.event : ''"
+                t-att-data-value="options.value ? options.value : ''"
+                t-att-tabindex="-1"><t t-raw="options.sLabel"/>
+                <t t-if="options.dropdown">
+                    <span class="caret"></span>
+                </t>
+        </button>
+        <t t-raw="options.dropdown or ''"/>
+    </t>
+    <t t-name="website.editor.tplAirPopover">
+        <div class="popover bottom in note-air-popover" style="display: none;">
+            <div class="arrow"></div>
+            <div class="popover-content">
+                <t t-foreach="options.airPopover" t-as="group">
+                    <div t-attf-class="note-#{group[0]} btn-group">
+                        <t t-foreach="group[1]" t-as="g">
+                            <t t-call="website.editor.tplButton">
+                                <t t-set="options" t-value="buttonInfo[g](lang ,options)"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.tplLinkPopover">
+        <div class="note-link-popover popover bottom in'" style="display: none;">
+            <div class="arrow"></div>
+            <div class="popover-content">
+                <a href="http://www.google.com" target="_blank">www.google.com</a>
+                <div class="note-insert btn-group">
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.link.edit}" data-event="showLinkDialog" tabindex="-1">
+                        <i class="fa fa-edit icon-edit"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.link.unlink}" data-event="unlink" tabindex="-1">
+                         <i class="fa fa-unlink icon-unlink"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.tplLinkImagePopover">
+        <div class="note-link-image-popover popover bottom in'" style="display: none;">
+            <div class="arrow"></div>
+            <div class="popover-content">
+                <a href="http://www.google.com" target="_blank">www.google.com</a>
+                <div class="note-insert btn-group">
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.image}" data-event="showImageDialog" tabindex="-1">
+                        <i class="fa fa-picture-o icon-picture"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.tplImagePopover">
+        <div class="note-image-popover popover bottom in'" style="display: none;">
+            <div class="arrow"></div>
+            <div class="popover-content">
+                <a href="http://www.google.com" target="_blank">www.google.com</a>
+                <div class="note-insert btn-group">
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.resizeFull}" data-event="resize" data-value="1" tabindex="-1">
+                        <span class="note-fontsize-10">100%</span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.resizeHalf}" data-event="resize" data-value="0.5" tabindex="-1">
+                        <span class="note-fontsize-10">50%</span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.resizeQuarter}" data-event="resize" data-value="0.25" tabindex="-1">
+                        <span class="note-fontsize-10">25%</span>
+                    </button>
+                </div>
+                <div class="note-insert btn-group">
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.floatLeft}" data-event="floatMe" data-value="left" tabindex="-1">
+                        <i class="fa fa-align-left icon-align-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.floatRight}" data-event="floatMe" data-value="right" tabindex="-1">
+                        <i class="fa fa-align-right icon-align-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.floatNone}" data-event="floatMe" data-value="none" tabindex="-1">
+                        <i class="fa fa-align-justify icon-align-justify"></i>
+                    </button>
+                </div>
+                <div class="note-insert btn-group">
+                    <button type="button" class="btn btn-default btn-sm btn-small" t-attf-title="#{lang.image.remove}" data-event="removeMedia" data-value="none" tabindex="-1">
+                        <i class="fa fa-trash-o icon-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.tplPopovers">
+        <div class="note-popover">
+            <t t-call="website.editor.tplLinkPopover"/>
+            <t t-call="website.editor.tplLinkImagePopover"/>
+            <t t-call="website.editor.tplImagePopover"/>
+            <t t-if="options.airMode">
+                <t t-call="website.editor.tplAirPopover"/>
+            </t>
+        </div>
+    </t>
 
+    <t t-name="website.editor.tplHandles">
+        <div class="note-handle">
+            <div class="note-control-selection">
+                <div class="note-control-selection-bg"></div>
+                <div class="note-control-holder note-control-nw"></div>
+                <div class="note-control-holder note-control-ne"></div>
+                <div class="note-control-holder note-control-sw"></div>
+                <div class="note-control-sizing note-control-se"></div>
+                <div class="note-control-selection-info"></div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.table">
+        <ul class="dropdown-menu">
+            <div class="note-dimension-picker">
+                <div class="note-dimension-picker-mousecatcher" data-event="insertTable" data-value="1x1"></div>
+                <div class="note-dimension-picker-highlighted"></div>
+                <div class="note-dimension-picker-unhighlighted"></div>
+            </div>
+            <div class="note-dimension-display"> 1 x 1 </div>
+        </ul>
+    </t>
+    <t t-name="website.editor.color">
+        <ul class="dropdown-menu">
+            <li>
+                <div class="btn-group">
+                    <div class="note-palette-title"><t t-raw="lang.color.background"/></div>
+                    <div class="note-color-reset" data-event="backColor" data-value="inherit" t-att-title="lang.color.transparent">
+                        <t t-raw="lang.color.setTransparent"/>
+                    </div>
+                    <div class="note-color-palette" data-target-event="backColor"></div>
+                </div>
+                <div class="btn-group">
+                    <div class="note-palette-title"><t t-raw="lang.color.foreground"/></div>
+                    <div class="note-color-reset" data-event="foreColor" data-value="inherit" t-att-title="lang.color.reset">
+                        <t t-raw="lang.color.resetToDefault"/>
+                    </div>
+                    <div class="note-color-palette" data-target-event="foreColor"></div>
+                </div>
+            </li>
+        </ul>
+    </t>
+    <t t-name="website.editor.paragraph">
+        <div class="dropdown-menu">
+            <div class="note-align btn-group">
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="leftButton"/>
+                </t>
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="centerButton"/>
+                </t>
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="rightButton"/>
+                </t>
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="justifyButton"/>
+                </t>
+            </div>
+            <div class="note-list btn-group">
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="indentButton"/>
+                </t>
+                <t t-call="website.editor.tplButton">
+                    <t t-set="options" t-value="outdentButton"/>
+                </t>
+            </div>
+        </div>
+    </t>
 </templates>

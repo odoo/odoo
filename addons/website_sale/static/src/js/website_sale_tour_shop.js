@@ -27,15 +27,15 @@
                 popover:   { fixed: true },
             },
             {
-                element:   '.modal #editor_new_product input[type=text]',
+                element:   '.modal-dialog #editor_new_product input[type=text]',
                 sampleText: 'New Product',
                 placement: 'right',
                 title:     _t("Choose name"),
                 content:   _t("Enter a name for your new product then click 'Continue'."),
             },
             {
-                waitNot:   '.modal input[type=text]:not([value!=""])',
-                element:   '.modal button.btn-primary',
+                waitNot:   '.modal-dialog #editor_new_product input[type=text]:not([value!=""])',
+                element:   '.modal-dialog button.btn-primary',
                 placement: 'right',
                 title:     _t("Create Product"),
                 content:   _t("Click <em>Continue</em> to create the product."),

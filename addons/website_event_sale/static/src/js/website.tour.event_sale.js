@@ -64,7 +64,7 @@
             {
                 title:     "Complete the checkout",
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                autoComplete: function (tour) {
+                onload: function (tour) {
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
