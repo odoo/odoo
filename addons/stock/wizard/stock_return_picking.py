@@ -158,7 +158,7 @@ class stock_return_picking(osv.osv_memory):
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
-        set_invoice_state_to_none = True
+        set_invoice_state_to_none = False
         returned_lines = 0
         
 #        Create new picking for returned products
