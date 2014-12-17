@@ -369,8 +369,6 @@ define([
 
         var layoutInfo = makeLayoutInfo(event.target);
 
-        event.preventDefault();
-
         // before command: detect control selection element($target)
         var $target;
         if ($.inArray(eventName, ['resize', 'floatMe', 'removeMedia', 'imageShape']) !== -1) {
@@ -384,14 +382,16 @@ define([
           $btn.parents('.popover').hide();
         }
 
-        if (editor[eventName]) { // on command
+        if ($.isFunction($.summernote.pluginEvents[eventName])) {
+          $.summernote.pluginEvents[eventName](event, editor, layoutInfo, value);
+        } else if (editor[eventName]) { // on command
           var $editable = layoutInfo.editable();
           $editable.trigger('focus');
           editor[eventName]($editable, value, $target);
+          event.preventDefault();
         } else if (commands[eventName]) {
           commands[eventName].call(this, layoutInfo);
-        } else if ($.isFunction($.summernote.pluginEvents[eventName])) {
-          $.summernote.pluginEvents[eventName](layoutInfo, value, $target);
+          event.preventDefault();
         }
 
         // after command
@@ -585,17 +585,17 @@ define([
           eventName = 'visible';
         }
         if (eventName) {
-          event.preventDefault();
-
-          if (editor[eventName]) {
+          if ($.summernote.pluginEvents[eventName]) {
+            var plugin = $.summernote.pluginEvents[eventName];
+            if ($.isFunction(plugin)) {
+              plugin(event, editor, layoutInfo);
+            }
+          } else if (editor[eventName]) {
             editor[eventName]($editable, $editor.data('options'));
+            event.preventDefault();
           } else if (commands[eventName]) {
             commands[eventName].call(this, layoutInfo);
-          } else if ($.summernote.plugins[eventName]) {
-            var plugin = $.summernote.plugins[eventName];
-            if ($.isFunction(plugin.event)) {
-              plugin.event(event, editor, layoutInfo);
-            }
+            event.preventDefault();
           }
         } else if (key.isEdit(event.keyCode)) {
           editor.afterCommand($editable);
