@@ -69,10 +69,10 @@ class stock_return_picking(osv.osv_memory):
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         if pick:
             if 'invoice_state' in fields:
-                if pick.invoice_state=='invoiced':
-                    res.update({'invoice_state': '2binvoiced'})
+                if pick.invoice_state in ['invoiced','2binvoiced']:
+                    res['invoice_state'] = '2binvoiced'
                 else:
-                    res.update({'invoice_state': 'none'})
+                    res['invoice_state'] = 'none'
             return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
                 qty = line.product_qty - return_history.get(line.id, 0)
