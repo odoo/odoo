@@ -1514,44 +1514,45 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     process_notebook: function($notebook) {
         var self = this;
-        var pages = [];
 
         // Extract useful info from the notebook xml declaration
+        var pages = [];
         $notebook.find('> page').each(function() {
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
             page_attrs.contents = $page.html();
-            page_attrs.ref = $page;
+            page_attrs.ref = $page;  // keep a reference to the page node in the xml declaration
             pages.push(page_attrs);
         });
 
+        // Render the notebook and replace $notebook with it
         var $new_notebook = self.render_element('FormRenderingNotebook', {'pages': pages});
         $notebook.before($new_notebook).remove();
 
-        self.process($new_notebook.children());
-        self.handle_common_properties($new_notebook, $notebook);
-        debugger;
-        // Invisibility changer logic
-        var displayed_page = false;
+        // Bind the invisibility changers and find the page to display
+        var pageid_to_display;
         _.each(pages, function(page) {
             // Case: <page attrs="{'invisible': domain}">;
-            self.handle_common_properties($new_notebook.find("a[href=#" + page.id + "]").parent(), page.ref);
-            self.handle_common_properties($new_notebook.find("#" + page.id), page.ref);
+            self.handle_common_properties($new_notebook.find('a[href=#' + page.id + ']').parent(), page.ref);
+            self.handle_common_properties($new_notebook.find('#' + page.id), page.ref);
 
+            // Case: <page autofocus="autofocus">;
             if (page.autofocus) {
-                // Case: <page autofocus="autofocus">;
-                displayed_page = "#" + page.id;
+                pageid_to_display = page.id;
             }
         });
-
-        if (!displayed_page) {
-            displayed_page = $new_notebook.find('li:not(.oe_form_invisible) a').first().attr('href');
+        if (!pageid_to_display) {
+            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.oe_form_invisible):first').attr('id');
         }
 
-        $new_notebook.find(displayed_page).addClass('active in'); // in is required for fade
-        $new_notebook.find("a[href=" + displayed_page + "]").parent('li').addClass("active");
+        // Display page. Note: we can't use bootstrap's show function because it is looking for
+        // document attached DOM, and the form view is only attaching when everything is processed
+        $new_notebook.find('a[href=#' + pageid_to_display + ']').parent().addClass('active');
+        $new_notebook.find('#' + pageid_to_display).addClass('active in'); // in is required for fade
 
+        self.process($new_notebook.children());
+        self.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
     process_separator: function($separator) {
