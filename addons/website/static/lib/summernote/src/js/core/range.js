@@ -353,42 +353,42 @@ define([
        * delete contents on range
        * @return {WrappedRange}
        */
-      this.deleteContents = function () {
-        if (this.isCollapsed()) {
-          return this;
-        }
+      // this.deleteContents = function () {
+      //   if (this.isCollapsed()) {
+      //     return this;
+      //   }
 
-        var rng = this.splitText();
-        var nodes = rng.nodes(null, {
-          fullyContains: true
-        });
+      //   var rng = this.splitText();
+      //   var nodes = rng.nodes(null, {
+      //     fullyContains: true
+      //   });
 
-        var point = dom.prevPointUntil(rng.getStartPoint(), function (point) {
-          return !list.contains(nodes, point.node);
-        });
+      //   var point = dom.prevPointUntil(rng.getStartPoint(), function (point) {
+      //     return !list.contains(nodes, point.node);
+      //   });
 
-        var emptyParents = [];
-        $.each(nodes, function (idx, node) {
-          // find empty parents
-          var parent = node.parentNode;
-          if (point.node !== parent && dom.nodeLength(parent) === 1) {
-            emptyParents.push(parent);
-          }
-          dom.remove(node, false);
-        });
+      //   var emptyParents = [];
+      //   $.each(nodes, function (idx, node) {
+      //     // find empty parents
+      //     var parent = node.parentNode;
+      //     if (point.node !== parent && dom.nodeLength(parent) === 1) {
+      //       emptyParents.push(parent);
+      //     }
+      //     dom.remove(node, false);
+      //   });
 
-        // remove empty parents
-        $.each(emptyParents, function (idx, node) {
-          dom.remove(node, false);
-        });
+      //   // remove empty parents
+      //   $.each(emptyParents, function (idx, node) {
+      //     dom.remove(node, false);
+      //   });
 
-        return new WrappedRange(
-          point.node,
-          point.offset,
-          point.node,
-          point.offset
-        );
-      };
+      //   return new WrappedRange(
+      //     point.node,
+      //     point.offset,
+      //     point.node,
+      //     point.offset
+      //   );
+      // };
       
       /**
        * makeIsOn: return isOn(pred) function
@@ -545,6 +545,9 @@ define([
     };
   
     return {
+
+      WrappedRange: WrappedRange, // odoo change for overwrite
+
       /**
        * create Range Object From arguments or Browser Selection
        *
@@ -563,7 +566,7 @@ define([
               // Firefox: returns entire body as range on initialization. We won't never need it.
               return null;
             }
-  
+
             var nativeRng = selection.getRangeAt(0);
             sc = nativeRng.startContainer;
             so = nativeRng.startOffset;
@@ -591,6 +594,16 @@ define([
             ec = endPoint.cont;
             eo = endPoint.offset;
           }
+
+          /* fir for some browser like PhantomJS
+           * if you select a span with PhantomJS put the carret on the last char of the previous text node
+           * instead of put the caret on the parent node with the the ofset to target the node
+           */
+          if (sc.nodeType === 3 && sc.nextSibling && sc.nextSibling.tagName && dom.nodeLength(sc) === so) {
+            so = dom.listPrev(ec).length-1;
+            sc = sc.parentNode;
+          }
+
         } else if (arguments.length === 2) { //collapsed
           ec = sc;
           eo = so;

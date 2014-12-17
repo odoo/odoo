@@ -248,6 +248,13 @@ define([
       }
     };
 
+    this.commands = commands; // odoo change for overwrite
+    this.editor = editor;     // odoo change for overwrite
+    this.toolbar = toolbar;   // odoo change for overwrite
+    this.popover = popover;   // odoo change for overwrite
+    this.handle = handle;     // odoo change for overwrite
+    this.dialog = dialog;     // odoo change for overwrite
+
     var hMousedown = function (event) {
       //preventDefault Selection for FF, IE8+
       if (dom.isImg(event.target)) {
@@ -564,6 +571,19 @@ define([
         if (keyName) { aKey.push(keyName); }
 
         var eventName = keyMap[aKey.join('+')];
+
+        // odoo change: add visible event to overwrite the browser comportment
+        var keycode = event.keyCode;
+        if (!eventName &&
+            !event.ctrlKey && !event.metaKey && ( // special code/command
+            (keycode > 47 && keycode < 58)   || // number keys
+            keycode == 32 || keycode == 13   || // spacebar & return
+            (keycode > 64 && keycode < 91)   || // letter keys
+            (keycode > 95 && keycode < 112)  || // numpad keys
+            (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+            (keycode > 218 && keycode < 223))) {   // [\]' (in order))
+          eventName = 'visible';
+        }
         if (eventName) {
           event.preventDefault();
 

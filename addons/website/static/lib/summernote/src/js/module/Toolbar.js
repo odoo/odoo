@@ -8,6 +8,8 @@ define([
   var Toolbar = function () {
     var button = new Button();
 
+    this.button = button; // odoo change for overwrite
+
     this.update = function ($toolbar, styleInfo) {
       button.update($toolbar, styleInfo);
     };

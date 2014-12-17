@@ -22,6 +22,11 @@ define([
     var typing = new Typing();
     var bullet = new Bullet();
 
+    this.style = style;   // odoo change for overwrite
+    this.table = table;   // odoo change for overwrite
+    this.typing = typing; // odoo change for overwrite
+    this.bullet = bullet; // odoo change for overwrite
+
     /**
      * create range
      */

@@ -9,6 +9,8 @@ define([
   var Popover = function () {
     var button = new Button();
 
+    this.button = button; // odoo change for overwrite
+
     /**
      * returns position from placeholder
      * @param {Node} placeholder
