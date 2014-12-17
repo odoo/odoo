@@ -127,12 +127,14 @@ function odoo_project_timesheet_db(project_timesheet) {
         },
         initialize_reference_sequence: function() {
             var self = this;
+            console.log("Inside initialize_reference_sequence ::: ");
             this.sequence = 0;
             var activities = this.load("activities");
             var activity_id_list = _.map(
                                 _.filter(_.pluck(activities, 'reference_id'), function(reference_id) {
                                     return !_.isUndefined(reference_id);
                                 }), function(reference_id) {
+                                    console.log("reference_id is ;:: ", reference_id, typeof reference_id);
                                     var splitted_values = reference_id.split("-");
                                     return parseInt(splitted_values[splitted_values.length-1]) || 0;
                                 });

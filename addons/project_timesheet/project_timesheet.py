@@ -514,8 +514,8 @@ class hr_analytic_timesheet(osv.Model):
                     if amount_unit and 'amount' in amount_unit.get('value',{}):
                         updv = { 'amount': amount_unit['value']['amount'] }
                         self.write(cr, uid, [timeline_id], updv, context=context)
-                elif record.get('command') == 1 or is_submitted_id:
-                    if record.get('command') != 1:
+                elif record.get('command') == 1:
+                    if record.get('command') != 1 and is_submitted_id:
                         id = is_submitted_id[0]
                     else:
                         id = record.get('id')
@@ -536,7 +536,7 @@ class hr_analytic_timesheet(osv.Model):
                     print "\n\ncontext in write ::: ", context
                     self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
                 elif record.get('command') == 2:
-                    self.delete(cr, uid, record.get('id'), context=context) #Handle fail and MissingError, if fail add into failed record
+                    self.unlink(cr, uid, record.get('id'), context=context) #Handle fail and MissingError, if fail add into failed record
 
                 #Replace virtual_id(project_id and task_id) in other records, so other records do not create new project and task
                 if new_project_id:
