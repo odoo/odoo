@@ -190,8 +190,9 @@ def get_pg_type(f, type_override=None):
     elif issubclass(field_type, (fields.char, fields.reference)):
         pg_type = ('varchar', pg_varchar(f.size))
     elif issubclass(field_type, fields.selection):
-        if (isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
-                or getattr(f, 'size', None) == -1:
+        if (isinstance(f.selection, list) and f.selection and\
+		        isinstance(f.selection[0][0], int))\
+				or getattr(f, 'size', None) == -1:
             pg_type = ('int4', 'INTEGER')
         else:
             pg_type = ('varchar', pg_varchar(getattr(f, 'size', None)))
