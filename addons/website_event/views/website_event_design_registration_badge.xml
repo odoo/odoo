@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_design_registration_badge">
+            <t t-call="report.html_container">
+                <div class="page">
+                    <div class='container'>
+                        <div groups="base.group_website_publisher" t-ignore="true" class="pull-right mt16 css_editable_mode_hidden">
+                            <a class="btn btn-info hidden-print" t-att-href="'/web#id=%s&amp;view_type=form&amp;model=%s&amp;action=%s' % (event_obj.id, event_obj._name, action)">Back to Event</a>
+                        </div>
+                    </div>
+                    <div t-if='event_obj' class="row" style="border-bottom:1px dashed black;">
+                        <!-- Front -->
+                        <div class="col-xs-6 text-center" style="padding-right:7mm; border-right:1px dashed black; height: 147mm; padding-top: 7mm">
+                            <div class="row" t-ignore="true">
+                                <div class="col-xs-12">
+                                    <span t-if="event_obj.organizer_id.is_company and event_obj.organizer_id.company_id.logo_web">
+                                        <div t-field="event_obj.event_logo">
+                                            <img t-att-src="'data:image/png;base64,%s' % event_obj.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
+                                        </div>
+                                    </span>
+                                    <h4>Event Name</h4>
+                                    <h5>( <i class="fa fa-clock-o"></i> Event start date <i>to</i> Event end date )</h5>
+                                </div>
+                            </div>
+                            <div class="row" t-ignore="true">
+                                <div class="col-xs-12 text-center">
+                                    <small><h3>Partner Name</h3><h5>Attendee Name</h5></small>
+                                </div>
+                            </div>
+                            <div class="row" t-ignore="true">
+                                <div class="col-xs-12 mt32 text-center" style="background: lightgrey; height: 65px;">
+                                    <h3>FREE TICKET</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div t-field="event_obj.badge_front"></div>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="col-xs-6 text-center" style="padding-left:7mm; height: 149mm; padding-top: 2mm;">
+                            <div t-field="event_obj.badge_back"></div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>

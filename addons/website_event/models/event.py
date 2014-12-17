@@ -93,3 +93,11 @@ class event(models.Model):
         elif 'website_published' in init_values and not self.website_published:
             return 'website_event.mt_event_unpublished'
         return super(event, self)._track_subtype(init_values)
+
+    @api.multi
+    def open_event_badge_designer(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/event/registration_badge_designer/%s' % (self.id),
+        }

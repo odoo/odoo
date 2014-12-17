@@ -275,3 +275,16 @@ class website_event(http.Controller):
             'attendees': attendees,
             'event': event,
         })
+
+    @http.route([
+        "/event/registration_badge_designer/<int:event_id>"
+    ], type='http', auth="user", website=True)
+    def view_designer(self, event_id, **post):
+        dummy, action = request.registry.get('ir.model.data').get_object_reference(
+            request.cr, request.uid, 'event', 'action_event_view')
+        values = {
+            'event_obj': request.registry.get('event.event').browse(
+                request.cr, request.uid, event_id),
+            'action': action
+        }
+        return request.website.render('website_event.report_design_registration_badge', values)
