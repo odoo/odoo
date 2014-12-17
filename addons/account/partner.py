@@ -249,13 +249,17 @@ class res_partner(osv.osv):
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
         MoveLine = self.pool('account.move.line')
         AnalyticAccount = self.pool('account.analytic.account')
-        return {
-            partner_id: {
-                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
-            }
-            for partner_id in ids
-        }
+        res = dict(map(lambda x: (x, {'journal_item_count': 0, 'contracts_count': 0}), ids))
+        # the current user may not have read access on account.move.line
+        try:
+            for partner_id in ids:
+                res[partner_id] = {
+                    'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                    'contracts_count': AnalyticAccount.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                }
+        except:
+            pass
+        return res
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
