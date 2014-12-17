@@ -398,13 +398,7 @@ class account_bank_statement_line(models.Model):
         return ret
 
     def _domain_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, additional_domain=None, overlook_partner=False):
-        """ Create domain criteria that are relevant to bank statement reconciliation. It is typically AND'ed with _domain_move_lines_for_reconciliation """
-        if excluded_ids is None:
-            excluded_ids = []
-        if additional_domain is None:
-            additional_domain = []
-        else:
-            additional_domain = expression.normalize_domain(additional_domain)
+        """ Create domain criteria that are relevant to bank statement reconciliation. """
 
         # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
         domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id])]
@@ -421,30 +415,36 @@ class account_bank_statement_line(models.Model):
         if self.partner_id.id and not overlook_partner:
             domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
 
-        return expression.AND([additional_domain, domain])
+        # Domain factorized for all reconciliation use cases
+        ctx = dict(self._context or {})
+        ctx['bank_statement_line'] = self
+        generic_domain = self.env['account.move.line'].with_context(ctx).domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
+        domain = expression.AND([domain, generic_domain])
+
+        # Domain from caller
+        if additional_domain is None:
+            additional_domain = []
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
+        domain = expression.AND([domain, additional_domain])
+
+        return domain
 
     @api.v7
-    def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, count=False, context=None):
-        """ Bridge between the web client reconciliation widget and get_move_lines_for_bank_reconciliation (which expects a browse record) """
-        return self.browse(cr, uid, st_line_id, context).get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, count=count)
+    def get_move_lines_for_bank_reconciliation(self, cr, uid, st_line_id, excluded_ids=None, str=False, offset=0, limit=None, context=None):
+        return self.browse(cr, uid, st_line_id, context).get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit)
 
     @api.v8
-    def get_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, overlook_partner=False):
+    def get_move_lines_for_bank_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, additional_domain=None, overlook_partner=False):
         """ Returns move lines for the bank statement reconciliation, prepared as a list of dicts """
-        context = dict(self._context or {})
-        context['bank_statement_line'] = self
         domain = self._domain_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain, overlook_partner=overlook_partner)
-        res = self.env['account.move.line'].with_context(context).get_move_lines_for_reconciliation(excluded_ids, str, offset, limit, count, domain)
-        
-        if count:
-            return res
-        else:
-            target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
-            mv_lines = res.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
-            has_no_partner = not bool(self.partner_id.id)
-            for line in mv_lines:
-                line['has_no_partner'] = has_no_partner
-            return mv_lines
+        move_lines = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
+        target_currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
+        ret_data = move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=self.date)
+        has_no_partner = not bool(self.partner_id.id)
+        for line in ret_data:
+            line['has_no_partner'] = has_no_partner
+        return ret_data
 
     def _prepare_move(self, move_name):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
@@ -607,12 +607,13 @@ class account_bank_statement_line(models.Model):
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move.id
             mv_line_dict['date'] = self.statement_id.date
+            mv_line_dict['partner_id'] = self.partner_id.id
             mv_line_dict['journal_id'] = self.journal_id.id
             mv_line_dict['company_id'] = self.company_id.id
             mv_line_dict['statement_id'] = self.statement_id.id
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
-                mv_line_dict['partner_id'] = mv_line.partner_id.id or self.partner_id.id
+                if mv_line.partner_id.id: mv_line_dict['partner_id'] = mv_line.partner_id.id
                 mv_line_dict['account_id'] = mv_line.account_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = self._context.copy()

@@ -372,7 +372,7 @@ openerp.account = function (instance) {
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line_details") ? this.template_prefix : "") + "reconciliation_move_line_details";
             line.q_popover = QWeb.render(template_name, {line: line});
             if (line.has_no_partner)
-                line.q_label = line.partner_name + " : " + line.q_label
+                line.q_label = line.partner_name + " : " + line.q_label;
             if (line.ref && line.ref !== line.name)
                 line.q_label = line.q_label + " : " + line.ref;
         },
@@ -1340,7 +1340,6 @@ openerp.account = function (instance) {
 
         // Adds move line ids to the list of move lines not to fetch for a given partner
         // This is required because the same move line cannot be selected for multiple reconciliation
-        // and because for a partial reconciliation only one line can be fetched)
         excludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
             var line_ids = _.collect(lines, function(o) { return o.id });
@@ -1869,16 +1868,6 @@ openerp.account = function (instance) {
                 self.$(".tbody_open_balance").empty().append($line);
             }
         },
-        
-        mvLinesChanged: function(elt, val) {
-            var self = this;
-            this._super(elt, val);
-            _.each(self.get("mv_lines"), function(line) {
-                if (line.partial_reconciliation_siblings.length > 0) {
-                    self.getParent().excludeMoveLines(self, self.partner_id, line.partial_reconciliation_siblings);
-                }
-            });
-        },
 
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
@@ -2333,8 +2322,6 @@ openerp.account = function (instance) {
             _.each(context.data.reconciliation_proposition, function(line) {
                 this.decorateMoveLine(line);
             }, this);
-            // Make sure a partial reconciliation will appear only once by excluding siblings of a selected partially reconciled move line
-            this.excluded_move_lines_ids = [];
             this.set("mv_lines_selected", context.data.reconciliation_proposition);
         },
 
@@ -2385,13 +2372,6 @@ openerp.account = function (instance) {
                     self.markAsReconciled();
                 }
             }
-
-            // Make sure to display only one "summary line" per partial reconciliation
-            _.each(self.get("mv_lines"), function(line) {
-                for (var i=0; i<line.partial_reconciliation_siblings.length; i++)
-                    if (self.excluded_move_lines_ids.indexOf(line.partial_reconciliation_siblings[i].id) === -1)
-                        self.excluded_move_lines_ids.push(line.partial_reconciliation_siblings[i].id);
-            });
         },
 
         headerClickHandler: function() {
@@ -2495,7 +2475,6 @@ openerp.account = function (instance) {
 
         updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
             var self = this;
-            excluded_ids = excluded_ids.concat(self.excluded_move_lines_ids);
             return self.model_aml
                 .call("get_move_lines_for_manual_reconciliation", [self.data.account_id, self.data.partner_id || undefined, excluded_ids, self.filter, offset, limit, self.get("currency_id")])
                 .then(function (lines) {

@@ -328,13 +328,15 @@ class account_move_line(models.Model):
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
+                            %s
                             AND l.amount_residual > 0
                         )
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
                             WHERE l.account_id = a.id
-                            AND l.amount_residual > 0
+                            %s
+                            AND l.amount_residual < 0
                         )
                     GROUP BY %s a.id, a.name, a.code, %s.last_time_entries_checked
                     ORDER BY %s.last_time_entries_checked
@@ -347,6 +349,8 @@ class account_move_line(models.Model):
                 is_partner and 'RIGHT JOIN res_partner p ON (l.partner_id = p.id)' or ' ',
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 res_id and 'AND '+res_alias+'.id = '+str(res_id) or '',
+                is_partner and 'AND l.partner_id = p.id' or ' ',
+                is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias,
                 res_alias,
@@ -403,33 +407,19 @@ class account_move_line(models.Model):
             return []
 
     @api.model
-    def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False):
-        """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
-        # Complete domain
-        additional_domain = [('reconciled', '=', False), ('account_id','=',account_id)]
-        if partner_id:
-            additional_domain.append(('partner_id','=',partner_id))
+    def domain_move_lines_for_reconciliation(self, excluded_ids=None, str=False):
+        """ Returns the domain which is common to both manual and bank statement reconciliation.
 
-        # Fetch lines
-        lines = self.get_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, offset=offset, limit=limit, additional_domain=additional_domain)
-        if target_currency_id:
-            target_currency = self.env['res.currency'].browse(target_currency_id)
-        else:
-            account = self.env['account.account'].browse(account_id)
-            target_currency = account.currency_id or account.company_currency_id
-        return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
-
-    def _domain_move_lines_for_reconciliation(self, excluded_ids=None, str=False, additional_domain=None):
+            :param excluded_ids: list of ids of move lines that should not be fetched
+            :param str: search string
+        """
         context = (self._context or {})
         if excluded_ids is None:
             excluded_ids = []
-        if additional_domain is None:
-            additional_domain = []
-        else:
-            additional_domain = expression.normalize_domain(additional_domain)
+        domain = []
 
         if excluded_ids:
-            additional_domain = expression.AND([additional_domain, [('id', 'not in', excluded_ids)]])
+            domain = expression.AND([domain, [('id', 'not in', excluded_ids)]])
         if str:
             str_domain = [
                 '|', ('move_id.name', 'ilike', str),
@@ -450,46 +440,30 @@ class account_move_line(models.Model):
             if 'bank_statement_line' in context and not context['bank_statement_line'].partner_id.id:
                 str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
 
-            additional_domain = expression.AND([additional_domain, str_domain])
+            domain = expression.AND([domain, str_domain])
 
-        return additional_domain
+        return domain
 
-    def get_move_lines_for_reconciliation(self, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None):
-        """ Find the move lines that could be used in a reconciliation. If count is true, only returns the number of lines.
-            This function is used for bank statement reconciliation and manual reconciliation ; each use case's domain logic is expressed through additional_domain.
+    def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
+        """ Create domain criteria that are relevant to manual reconciliation. """
+        domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
+        if partner_id:
+            domain = expression.AND([domain, [('partner_id','=',partner_id)]])
+        generic_domain = self.domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
 
-            :param excluded_ids: list of ids of move lines that should not be fetched
-            :param str: search string
-        """
-        domain = self._domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str, additional_domain=additional_domain)
+        return expression.AND([generic_domain, domain])
 
-        # Get move lines ; in case of a partial reconciliation, only consider one line
-        filtered_line_ids = []
-        reconcile_partial_ids = []
-        actual_offset = offset
-        while True:
-            lines = self.search(domain, offset=actual_offset, limit=limit, order="date_maturity asc, id asc")
-            make_one_more_loop = False
-            for line in lines:
-                if line.id in reconcile_partial_ids:
-                    #if we filtered a line because it is partially reconciled with an already selected line, we must do one more loop
-                    #in order to get the right number of items in the pager
-                    make_one_more_loop = True
-                    continue
-                filtered_line_ids.append(line.id)
-                reconcile_partial_ids.append(line.reconcile_partial_ids.ids) # TOCHECK logical ?
-                reconcile_partial_ids.append(line.reconcile_partial_with_ids.ids)
-
-            if not limit or not make_one_more_loop or len(filtered_line_ids) >= limit:
-                break
-            actual_offset = actual_offset + limit
-        lines_ids = limit and filtered_line_ids[:limit] or filtered_line_ids
-
-        # Return count or lines
-        if count:
-            return len(lines_ids)
+    @api.model
+    def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False):
+        """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
+        domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, str)
+        lines = self.search(domain, offset=offset, limit=limit, order="date_maturity asc, id asc")
+        if target_currency_id:
+            target_currency = self.env['res.currency'].browse(target_currency_id)
         else:
-            return self.browse(lines_ids)
+            account = self.env['account.account'].browse(account_id)
+            target_currency = account.currency_id or account.company_currency_id
+        return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
 
     @api.v7
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, line_ids, target_currency_id=False, context=None):
@@ -497,12 +471,11 @@ class account_move_line(models.Model):
         return self.browse(cr, uid, line_ids, context).prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
 
     @api.v8
-    def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False, skip_partial_reconciliation_siblings=False):
+    def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
-            :param skip_partial_reconciliation_siblings: do not construct the list of partial_reconciliation_siblings
         """
         context = dict(self._context or {})
         company_currency = self.env.user.company_id.currency_id
@@ -510,11 +483,6 @@ class account_move_line(models.Model):
         ret = []
 
         for line in self:
-            partial_reconciliation_siblings = []
-            if line.reconcile_partial_ids and not skip_partial_reconciliation_siblings:
-                siblings = (line.reconcile_partial_ids + line.reconcile_partial_with_ids) - line # # TOCHECK logical ?
-                partial_reconciliation_siblings = siblings.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=target_date, skip_partial_reconciliation_siblings=True)
-
             ret_line = {
                 'id': line.id,
                 'name': line.name if line.name != '/' else line.move_id.name,
@@ -531,7 +499,6 @@ class account_move_line(models.Model):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'is_partially_reconciled': bool(line.reconcile_partial_ids),
-                'partial_reconciliation_siblings': partial_reconciliation_siblings,
                 'currency_id': line.currency_id.id or False,
             }
 
@@ -542,7 +509,7 @@ class account_move_line(models.Model):
 
             # For already reconciled lines, don't use amount_residual(_currency)
             if not line.account_id.reconcile:
-                amount = abs(debit - credit)
+                amount = debit - credit
                 amount_currency = line.amount_currency
 
             # Get right debit / credit:
