@@ -1527,8 +1527,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         });
 
         var $new_notebook = self.render_element('FormRenderingNotebook', {'pages': pages});
+        $notebook.before($new_notebook).remove();
 
+        self.process($new_notebook.children());
+        self.handle_common_properties($new_notebook, $notebook);
+        debugger;
         // Invisibility changer logic
+        var displayed_page = false;
         _.each(pages, function(page) {
             // Case: <page attrs="{'invisible': domain}">;
             self.handle_common_properties($new_notebook.find("a[href=#" + page.id + "]").parent(), page.ref);
@@ -1536,15 +1541,16 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
             if (page.autofocus) {
                 // Case: <page autofocus="autofocus">;
-                // fucking fuck fuck bootstrap doesn't trigger active on associated content
-                $new_notebook.find("a[href=#" + page.id + "]").tab('show');
+                displayed_page = "#" + page.id;
             }
         });
 
-        $notebook.before($new_notebook).remove();
+        if (!displayed_page) {
+            displayed_page = $new_notebook.find('li:not(.oe_form_invisible) a').first().attr('href');
+        }
 
-        self.process($new_notebook.children());
-        self.handle_common_properties($new_notebook, $notebook);
+        $new_notebook.find(displayed_page).addClass('active in'); // in is required for fade
+        $new_notebook.find("a[href=" + displayed_page + "]").parent('li').addClass("active");
 
         return $new_notebook;
     },

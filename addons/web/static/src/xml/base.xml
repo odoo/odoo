@@ -889,16 +889,16 @@
 <t t-name="FormRenderingNotebook">
     <div class="oe_clear">
         <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
-            <!-- <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers" t-att-class="page_first ? 'active' : ''"> -->
-            <li t-foreach="pages" t-as="page" t-att-class="page_first ? 'active' : ''">
+            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
+            <!--<li t-foreach="pages" t-as="page" t-att-class="page_first ? 'active' : ''"> -->
                 <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab">
                     <t t-esc="page.string"/>
                 </a>
             </li>
         </ul>
         <div class="tab-content">
-            <!-- #{classnames} -->
-            <div role="tabpanel" t-foreach="pages" t-as="page" t-att-class="page_first ? 'tab-pane fade active' : 'tab-pane fade'" t-att-id="id">
+            <!-- <div role="tabpanel" t-foreach="pages" t-as="page" t-att-class="page_first ? 'tab-pane fade active' : 'tab-pane fade'" t-att-id="id"> -->
+            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane fade #{classnames}"  t-att-id="id">
                 <t t-raw="page.contents"/>
             </div>
         </div>
