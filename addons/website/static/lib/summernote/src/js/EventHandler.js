@@ -268,9 +268,7 @@ define([
       setTimeout(function () {
         var layoutInfo = makeLayoutInfo(event.target);
         var $editable = layoutInfo.editable();
-        if (!event.isDefaultPrevented()) {
-          editor.saveRange($editable);
-        }
+        editor.saveRange($editable);
         var styleInfo = editor.currentStyle();
         if (!styleInfo) { return; }
 
@@ -364,7 +362,6 @@ define([
       }
     };
 
-
     var hToolbarAndPopoverClick = function (event) {
       var $btn = $(event.target).closest('[data-event]');
 
@@ -374,6 +371,9 @@ define([
             hide = $btn.attr('data-hide');
 
         var layoutInfo = makeLayoutInfo(event.target);
+
+        var $editable = layoutInfo.editable();
+        editor.restoreRange($editable);
 
         // before command: detect control selection element($target)
         var $target;
@@ -391,7 +391,6 @@ define([
         if ($.isFunction($.summernote.pluginEvents[eventName])) {
           $.summernote.pluginEvents[eventName](event, editor, layoutInfo, value);
         } else if (editor[eventName]) { // on command
-          var $editable = layoutInfo.editable();
           $editable.trigger('focus');
           editor[eventName]($editable, value, $target);
           event.preventDefault();
@@ -588,7 +587,10 @@ define([
             (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
             (keycode > 218 && keycode < 223))) {   // [\]' (in order))
           eventName = 'visible';
+        } else if (!keycode) {
+          editor.restoreRange($editable);
         }
+
         if (eventName) {
           if ($.summernote.pluginEvents[eventName]) {
             var plugin = $.summernote.pluginEvents[eventName];
@@ -601,6 +603,9 @@ define([
           } else if (commands[eventName]) {
             commands[eventName].call(this, layoutInfo);
             event.preventDefault();
+          }
+          if (keycode) {
+            editor.saveRange($editable);
           }
         } else if (key.isEdit(event.keyCode)) {
           editor.afterCommand($editable);
