@@ -434,6 +434,9 @@ define([
              '</div>';
     };
 
+    this.tplButtonInfo = tplButtonInfo; // odoo change for overwrite
+    this.tplPopovers = tplPopovers; // odoo change for overwrite
+
     var tplHandles = function () {
       return '<div class="note-handle">' +
                '<div class="note-control-selection">' +
@@ -691,6 +694,8 @@ define([
       });
     };
 
+    this.createPalette = createPalette; // odoo change for overwrite
+
     /**
      * create summernote layout (air mode)
      *
@@ -711,12 +716,12 @@ define([
       var body = document.body;
 
       // create Popover
-      var $popover = $(tplPopovers(langInfo, options));
+      var $popover = $(this.tplPopovers(langInfo, options)); // odoo change for overwrite
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
       $popover.appendTo(body);
       createTooltip($popover, keyMap);
-      createPalette($popover, options);
+      this.createPalette($popover, options); // odoo change for overwrite
 
       // create Handle
       var $handle = $(tplHandles());
@@ -793,12 +798,12 @@ define([
 
       var $toolbar = $(toolbarHTML).prependTo($editor);
       var keyMap = options.keyMap[agent.isMac ? 'mac' : 'pc'];
-      createPalette($toolbar, options);
+      this.createPalette($toolbar, options); // odoo change for overwrite
       createTooltip($toolbar, keyMap, 'bottom');
 
       //05. create Popover
-      var $popover = $(tplPopovers(langInfo, options)).prependTo($editor);
-      createPalette($popover, options);
+      var $popover = $(this.tplPopovers(langInfo, options)).prependTo($editor); // odoo change for overwrite
+      this.createPalette($popover, options); // odoo change for overwrite
       createTooltip($popover, keyMap);
 
       //06. handle(control selection, ...)

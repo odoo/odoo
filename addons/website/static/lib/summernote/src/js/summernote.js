@@ -2,8 +2,10 @@ define([
   'summernote/core/agent', 'summernote/core/dom',
   'summernote/core/range',
   'summernote/settings',
-  'summernote/EventHandler', 'summernote/Renderer'
-], function (agent, dom, range, settings, EventHandler, Renderer) {
+  'summernote/EventHandler', 'summernote/Renderer',
+  'summernote/core/list', // odoo change for overwrite
+  'summernote/core/key' // odoo change for overwrite
+], function (agent, dom, range, settings, EventHandler, Renderer, list, key) { // odoo change for overwrite
   // jQuery namespace for summernote
   $.summernote = $.summernote || {};
 
@@ -19,7 +21,9 @@ define([
     core: {
       agent: agent,
       dom: dom,
-      range: range
+      range: range,
+      list: list, // odoo change for overwrite
+      key: key // odoo change for overwrite
     },
     pluginEvents: {}
   });
