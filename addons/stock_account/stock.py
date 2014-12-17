@@ -290,6 +290,10 @@ class stock_picking(osv.osv):
                 invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
                 invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
                 invoices[key] = invoice_id
+            else:
+                invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
+                invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+                invoice.write({'origin': '%s, %s' % (invoice.origin, invoice_vals['origin'],)})
 
             invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
