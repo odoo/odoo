@@ -1632,7 +1632,7 @@ openerp.account = function (instance) {
             var dict = {};
     
             dict['account_id'] = this.st_line.open_balance_account_id;
-            dict['name'] = _t("Open balance");
+            dict['name'] = this.st_line.name + ' : ' + _t("Open balance");
             if (balance > 0) dict['debit'] = balance;
             if (balance < 0) dict['credit'] = -1*balance;
     
