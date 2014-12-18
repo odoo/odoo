@@ -6,6 +6,8 @@ from . import test_account_validate_account_move
 from . import test_tax
 from . import test_search
 from . import test_reconciliation
+from . import test_manual_reconciliation
+from . import test_bank_statement_reconciliation
 
 fast_suite = [
     account_test_users,
@@ -16,4 +18,6 @@ fast_suite = [
     test_tax,
     test_search,
     test_reconciliation,
+    test_manual_reconciliation,
+    test_bank_statement_reconciliation,
 ]
