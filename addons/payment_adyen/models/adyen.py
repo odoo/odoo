@@ -14,6 +14,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_adyen.controllers.main import AdyenController
 from openerp.osv import osv, fields
 from openerp.tools import float_round
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -114,26 +115,26 @@ class TxAdyen(osv.Model):
     def _adyen_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, pspReference = data.get('merchantReference'), data.get('pspReference')
         if not reference or not pspReference:
-            error_msg = 'Adyen: received data with missing reference (%s) or missing pspReference (%s)' % (reference, pspReference)
-            _logger.error(error_msg)
+            error_msg = _('Adyen: received data with missing reference (%s) or missing pspReference (%s)') % (reference, pspReference)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use pspReference ?
         tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'Adyen: received data for reference %s' % (reference)
+            error_msg = _('Adyen: received data for reference %s') % (reference)
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
         shasign_check = self.pool['payment.acquirer']._adyen_generate_merchant_sig(tx.acquirer_id, 'out', data)
         if shasign_check != data.get('merchantSig'):
-            error_msg = 'Adyen: invalid merchantSig, received %s, computed %s' % (data.get('merchantSig'), shasign_check)
+            error_msg = _('Adyen: invalid merchantSig, received %s, computed %s') % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
             # raise ValidationError(error_msg)
 
@@ -171,7 +172,7 @@ class TxAdyen(osv.Model):
             })
             return True
         else:
-            error = 'Paypal: feedback error'
+            error = _('Paypal: feedback error')
             _logger.info(error)
             tx.write({
                 'state': 'error',

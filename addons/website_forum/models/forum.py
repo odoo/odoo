@@ -13,7 +13,7 @@ from openerp import modules
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -297,7 +297,7 @@ class Post(models.Model):
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise Warning(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
+            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
@@ -574,7 +574,7 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise Warning('Not allowed to vote for its own post')
+            raise UserError(_('Not allowed to vote for its own post'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
             raise KarmaError('Not enough karma to upvote.')
@@ -594,7 +594,7 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise Warning('Not allowed to vote for its own post')
+                    raise UserError(_('Not allowed to vote for its own post'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
                     raise KarmaError('Not enough karma to upvote.')

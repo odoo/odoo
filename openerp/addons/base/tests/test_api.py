@@ -1,8 +1,8 @@
 
 from openerp import models
 from openerp.tools import mute_logger
-from openerp.osv.orm import except_orm
 from openerp.tests import common
+from openerp.exceptions import AccessError
 
 
 class TestAPI(common.TransactionCase):
@@ -237,14 +237,14 @@ class TestAPI(common.TransactionCase):
 
         # demo user can read but not modify company data
         demo_partners[0].company_id.name
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             demo_partners[0].company_id.write({'name': 'Pricks'})
 
         # remove demo user from all groups
         demo.write({'groups_id': [(5,)]})
 
         # demo user can no longer access partner data
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             demo_partners[0].company_id.name
 
     @mute_logger('openerp.models')
@@ -334,7 +334,7 @@ class TestAPI(common.TransactionCase):
         # check with many records
         ps = self.env['res.partner'].search([('name', 'ilike', 'a')])
         self.assertTrue(len(ps) > 1)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             ps.ensure_one()
 
         p1 = ps[0]
@@ -343,7 +343,7 @@ class TestAPI(common.TransactionCase):
 
         p0 = self.env['res.partner'].browse()
         self.assertEqual(len(p0), 0)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValueError):
             p0.ensure_one()
 
     @mute_logger('openerp.models')
@@ -389,21 +389,21 @@ class TestAPI(common.TransactionCase):
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps + ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps - ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps & ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps | ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps < ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps <= ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps > ms
-        with self.assertRaises(except_orm):
+        with self.assertRaises(TypeError):
             res = ps >= ms
 
     @mute_logger('openerp.models')

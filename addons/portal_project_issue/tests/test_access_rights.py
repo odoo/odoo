@@ -21,7 +21,6 @@
 
 from openerp.addons.portal_project.tests.test_access_rights import TestPortalProjectBase
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 

@@ -28,6 +28,7 @@ from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 import re
 import time
@@ -288,10 +289,7 @@ class Report(osv.Model):
         try:
             report = report_obj.browse(cr, uid, idreport[0], context=context)
         except IndexError:
-            raise osv.except_osv(
-                _('Bad Report Reference'),
-                _('This report is not loaded into the database: %s.' % report_name)
-            )
+            raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
         return {
             'context': context,
@@ -443,9 +441,8 @@ class Report(osv.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise osv.except_osv(_('Report (PDF)'),
-                                         _('Wkhtmltopdf failed (error code: %s). '
-                                           'Message: %s') % (str(process.returncode), err))
+                    raise UserError(_('Wkhtmltopdf failed (error code: %s). '
+                                        'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -460,7 +457,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.warning("Cannot save PDF report %r as attachment",
+                            _logger.info("Cannot save PDF report %r as attachment",
                                             attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',

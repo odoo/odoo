@@ -25,6 +25,7 @@ from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
 import openerp
+from openerp.exceptions import UserError
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -155,7 +156,7 @@ class hr_analytic_timesheet(osv.osv):
         if emp.journal_id:
             return emp.journal_id.id
         else :
-            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.')%(emp.name))
+            raise UserError(_('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.') % (emp.name,))
 
 
     _defaults = {
@@ -186,9 +187,9 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
         if not vals.get('journal_id',False):
-           raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
+           raise UserError(_('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!') % (ename,))
         if not vals.get('account_id',False):
-           raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
+           raise UserError(_('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):

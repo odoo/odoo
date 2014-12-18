@@ -293,7 +293,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         loop += 1
         # This part tries to emulate the loop of the Gtk client
         if loop > 100:
-            _logger.error("Passed %d loops, giving up", loop)
+            _logger.info("Passed %d loops, giving up", loop)
             raise Exception("Too many loops at action")
         log_test("it is an %s action at loop #%d", action.get('type', 'unknown'), loop)
         result = _exec_action(action, datas, context)

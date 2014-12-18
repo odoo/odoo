@@ -5,6 +5,7 @@ import base64
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -252,7 +253,7 @@ class account_bank_statement_import(osv.TransientModel):
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(bs_obj.create(cr, uid, st_vals, context=context))
         if len(statement_ids) == 0:
-            raise osv.except_osv(_('Error'), _('You have already imported that file.'))
+            raise UserError(_('You have already imported that file.'))
 
         # Prepare import feedback
         notifications = []
@@ -269,3 +270,4 @@ class account_bank_statement_import(osv.TransientModel):
             }]
 
         return statement_ids, notifications
+

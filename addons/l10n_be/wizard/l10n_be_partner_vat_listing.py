@@ -29,6 +29,7 @@ import base64
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp.report import report_sxw
+from openerp.exceptions import UserError
 
 class vat_listing_clients(osv.osv_memory):
     _name = 'vat.listing.clients'
@@ -60,12 +61,12 @@ class partner_vat(osv.osv_memory):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
         if not period_ids:
-             raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
+             raise UserError(_('No data for the selected year.'))
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
         if not partner_ids:
-             raise osv.except_osv(_('Error'),_('No belgium contact with a VAT number in your database.'))
+             raise UserError(_('No belgium contact with a VAT number in your database.'))
         cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
                 FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
                       FROM account_move_line l
@@ -90,7 +91,7 @@ class partner_vat(osv.osv_memory):
                 partners.append(id_client)
         
         if not partners:
-            raise osv.except_osv(_('Insufficient Data!'), _('No data found for the selected year.'))
+            raise UserError(_('No data found for the selected year.'))
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
         model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
@@ -179,7 +180,7 @@ class partner_vat_list(osv.osv_memory):
         company_vat = obj_cmpny.partner_id.vat
 
         if not company_vat:
-            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with the company.'))
+            raise UserError(_('No VAT number associated with the company.'))
 
         company_vat = company_vat.replace(' ','').upper()
         SenderId = company_vat[2:]
@@ -208,9 +209,9 @@ class partner_vat_list(osv.osv_memory):
         comp_name = obj_cmpny.name
 
         if not email:
-            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
+            raise UserError(_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
+            raise UserError(_('No phone associated with the company.'))
         annual_listing_data = {
             'issued_by': issued_by,
             'company_vat': company_vat,
@@ -259,7 +260,7 @@ class partner_vat_list(osv.osv_memory):
         # Turnover and Farmer tags are not included
         client_datas = self._get_datas(cr, uid, ids, context=context)
         if not client_datas:
-            raise osv.except_osv(_('Data Insufficient!'),_('No data available for the client.'))
+            raise UserError(_('No data available for the client.'))
         data_client_info = ''
         for amount_data in client_datas:
             data_client_info += """
@@ -310,7 +311,7 @@ class partner_vat_list(osv.osv_memory):
         datas['limit_amount'] = context['limit_amount']
         datas['client_datas'] = self._get_datas(cr, uid, ids, context=context)
         if not datas['client_datas']:
-            raise osv.except_osv(_('Error!'), _('No record to print.'))
+            raise UserError(_('No record to print.'))
         return self.pool['report'].get_action(
             cr, uid, [], 'l10n_be.report_l10nvatpartnerlisting', data=datas, context=context
         )

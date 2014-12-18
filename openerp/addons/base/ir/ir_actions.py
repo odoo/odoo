@@ -39,6 +39,7 @@ from openerp.report.report_sxw import report_sxw, report_rml
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import openerp.workflow
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -855,12 +856,12 @@ class ir_actions_server(osv.osv):
                 try:
                     self.pool.get('ir.values').unlink(cr, SUPERUSER_ID, action.menu_ir_values_id.id, context)
                 except Exception:
-                    raise osv.except_osv(_('Warning'), _('Deletion of the action record failed.'))
+                    raise UserError(_('Deletion of the action record failed.'))
         return True
 
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
-            raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
+            raise UserError(_("Please specify an action to launch!"))
         return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):

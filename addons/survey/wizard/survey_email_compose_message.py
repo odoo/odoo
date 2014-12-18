@@ -23,6 +23,7 @@ from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.translate import _
 from datetime import datetime
+from openerp.exceptions import UserError
 
 import re
 import uuid
@@ -92,7 +93,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 else:
                     emails_checked.append(email)
         if error_message:
-            raise osv.except_osv(_('Warning!'), _("One email at least is incorrect: %s" % error_message))
+            raise UserError(_("One email at least is incorrect: %s" % error_message))
 
         emails_checked.sort()
         values = {'multi_email': '\n'.join(emails_checked)}
@@ -185,7 +186,7 @@ class survey_mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             # check if __URL__ is in the text
             if wizard.body.find("__URL__") < 0:
-                raise osv.except_osv(_('Warning!'), _("The content of the text don't contain '__URL__'. \
+                raise UserError(_("The content of the text don't contain '__URL__'. \
                     __URL__ is automaticaly converted into the special url of the survey."))
 
             if not wizard.multi_email and not wizard.partner_ids and (context.get('default_partner_ids') or context.get('default_multi_email')):
@@ -210,7 +211,7 @@ class survey_mail_compose_message(osv.TransientModel):
             if not len(emails_list) and not len(partner_list):
                 if wizard.model == 'res.partner' and wizard.res_id:
                     return False
-                raise osv.except_osv(_('Warning!'), _("Please enter at least one valid recipient."))
+                raise UserError(_("Please enter at least one valid recipient."))
 
             for email in emails_list:
                 partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)

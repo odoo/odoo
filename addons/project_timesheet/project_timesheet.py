@@ -24,6 +24,7 @@ import datetime
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class project_project(osv.osv):
     _inherit = 'project.project'
@@ -79,23 +80,19 @@ class project_work(osv.osv):
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
         if not emp_id:
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
-            raise osv.except_osv(_('Bad Configuration!'),
-                 _('Please define employee for user "%s". You must create one.')% (user_name,))
+            raise UserError(_('Please define employee for user "%s". You must create one.')% (user_name,))
         emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
-            raise osv.except_osv(_('Bad Configuration!'),
-                 _('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
+            raise UserError(_('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
 
         if not emp.journal_id:
-            raise osv.except_osv(_('Bad Configuration!'),
-                 _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
+            raise UserError(_('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
 
         acc_id = emp.product_id.property_account_expense.id
         if not acc_id:
             acc_id = emp.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise osv.except_osv(_('Bad Configuration!'),
-                        _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
+                raise UserError(_('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
 
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
@@ -291,7 +288,7 @@ class res_partner(osv.osv):
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
-            raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
+            raise UserError(_('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 
@@ -318,5 +315,5 @@ class account_analytic_line(osv.osv):
        st = acc.to_invoice.id
        res['value']['to_invoice'] = st or False
        if acc.state == 'close' or acc.state == 'cancelled':
-           raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+           raise UserError(_('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res

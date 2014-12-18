@@ -34,7 +34,7 @@ import openerp
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.osv.orm import except_orm
+from openerp.exceptions import UserError, AccessError, ValidationError
 import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
@@ -290,7 +290,7 @@ class document_directory(osv.osv):
             try:
                 self.check_access_rule(cr, uid, ids, pperms[0], context=context)
                 res |= pperms[1]
-            except except_orm:
+            except AccessError:
                 pass
         return res
 
@@ -334,17 +334,17 @@ class document_directory(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if not self._check_duplication(cr, uid, vals, ids, op='write'):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if not self._check_duplication(cr, uid, vals):
-            raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
+            raise ValidationError(_('Directory name must be unique!'))
         newname = vals.get('name',False)
         if newname:
             for illeg in ('/', '@', '$', '#'):
                 if illeg in newname:
-                    raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+                    raise ValidationError(_('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
 class document_directory_dctx(osv.osv):
@@ -567,10 +567,10 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            _logger.warning("Cannot save data.", exc_info=True)
+            _logger.info("Cannot save data.", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
-            raise except_orm(_('Error at doc write!'), str(e))
+            raise UserError(ustr(e))
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -862,13 +862,13 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        _logger.warning("Attempted to create a file under %r, not possible.", self)
+        _logger.info("Attempted to create a file under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create file(s) here.")
 
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        _logger.warning("Attempted to create a collection under %r, not possible.", self)
+        _logger.info("Attempted to create a collection under %r, not possible.", self)
         raise IOError(errno.EPERM, "Not allowed to create folder(s) here.")
 
     def rm(self, cr):
@@ -1477,7 +1477,7 @@ class node_res_obj(node_class):
     def get_dav_eprop_DEPR(self, cr, ns, prop):
         # Deprecated!
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            _logger.warning("Who asks for %s:%s?" % (ns, prop))
+            _logger.info("Who asks for %s:%s?", ns, prop)
             return None
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
@@ -1980,7 +1980,7 @@ class nodefd_content(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
@@ -2006,7 +2006,7 @@ class nodefd_content(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -2033,7 +2033,7 @@ class nodefd_static(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 
@@ -2058,7 +2058,7 @@ class nodefd_static(StringIO, node_descriptor):
                 raise NotImplementedError
             cr.commit()
         except Exception:
-            _logger.exception('Cannot update db content #%d for close.', par.cnt_id)
+            _logger.info('Cannot update db content #%d for close.', par.cnt_id)
             raise
         finally:
             cr.close()
@@ -2086,7 +2086,7 @@ class nodefd_db(StringIO, node_descriptor):
         elif mode == 'a':
             StringIO.__init__(self, None)
         else:
-            _logger.error("Incorrect mode %s is specified.", mode)
+            _logger.info("Incorrect mode %s is specified.", mode)
             raise IOError(errno.EINVAL, "Invalid file mode.")
         self.mode = mode
 

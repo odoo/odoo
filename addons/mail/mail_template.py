@@ -33,6 +33,7 @@ from openerp.osv import osv, fields
 from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -183,7 +184,7 @@ class mail_template(osv.osv):
         try:
             template = mako_template_env.from_string(tools.ustr(template))
         except Exception:
-            _logger.exception("Failed to load template %r", template)
+            _logger.info("Failed to load template %r", template, exc_info=True)
             return results
 
         # prepare template variables
@@ -200,7 +201,8 @@ class mail_template(osv.osv):
             try:
                 render_result = template.render(variables)
             except Exception:
-                _logger.exception("Failed to render template %r using values %r" % (template, variables))
+                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
+                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
                 render_result = u""
             if render_result == u"False":
                 render_result = u""
@@ -353,7 +355,7 @@ class mail_template(osv.osv):
                     ir_values_obj = self.pool.get('ir.values')
                     ir_values_obj.unlink(cr, SUPERUSER_ID, template.ref_ir_value.id, context)
             except Exception:
-                raise osv.except_osv(_("Warning"), _("Deletion of the action record failed."))
+                raise UserError(_("Deletion of the action record failed."))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -549,7 +551,7 @@ class mail_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         if not values.get('email_from'):
-            raise osv.except_osv(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+            raise UserError(_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])

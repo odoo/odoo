@@ -21,7 +21,6 @@
 
 from openerp.addons.web.http import Controller, route, request
 from openerp.addons.web.controllers.main import _serialize_exception
-from openerp.osv import osv
 from openerp.tools import html_escape
 
 import simplejson

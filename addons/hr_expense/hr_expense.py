@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -114,7 +115,7 @@ class hr_expense_expense(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state != 'draft':
-                raise osv.except_osv(_('Warning!'),_('You can only delete draft expenses!'))
+                raise UserError(_('You can only delete draft expenses!'))
         return super(hr_expense_expense, self).unlink(cr, uid, ids, context)
 
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
@@ -140,7 +141,7 @@ class hr_expense_expense(osv.osv):
     def expense_confirm(self, cr, uid, ids, context=None):
         for expense in self.browse(cr, uid, ids):
             if not expense.line_ids:
-                raise osv.except_osv(_('Error!'), _('You cannot submit expense which has no expense line.'))
+                raise UserError(_('You cannot submit expense which has no expense line.'))
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         return self.write(cr, uid, ids, {'state': 'confirm', 'date_confirm': time.strftime('%Y-%m-%d')}, context=context)
@@ -170,7 +171,7 @@ class hr_expense_expense(osv.osv):
         else:
             journal_id = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', company_id)])
             if not journal_id:
-                raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
+                raise UserError(_("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             journal_id = journal_id[0]
         return self.pool.get('account.move').account_move_prepare(cr, uid, journal_id, date=date, ref=ref, company_id=company_id, context=context)
 
@@ -233,7 +234,7 @@ class hr_expense_expense(osv.osv):
         move_obj = self.pool.get('account.move')
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_payable_account_id:
-                raise osv.except_osv(_('Error!'), _('No employee account payable found for the expense '))
+                raise UserError(_('No employee account payable found for the expense '))
 
             company_currency = exp.company_id.currency_id.id
             diff_currency_p = exp.currency_id.id != company_currency
@@ -347,11 +348,11 @@ class hr_expense_expense(osv.osv):
             if not acc:
                 acc = line.product_id.categ_id.property_account_expense_categ
             if not acc:
-                raise osv.except_osv(_('Error!'), _('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
+                raise UserError(_('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
             acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
             if not acc:
-                raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+                raise UserError(_('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
         return {
             'type':'src',
             'name': line.name.split('\n')[0][:64],

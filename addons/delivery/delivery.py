@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -62,9 +63,9 @@ class delivery_carrier(osv.osv):
                   try:
                     price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
                     available = True
-                  except osv.except_osv, e:
+                  except UserError, e:
                     # no suitable delivery method found, probably configuration error
-                    _logger.error("Carrier %s: %s\n%s" % (carrier.name, e.name, e.value))
+                    _logger.info("Carrier %s: %s", carrier.name, e.name)
                     price = 0.0
               else:
                   price = 0.0
@@ -234,7 +235,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_("Unable to fetch delivery method!"), _("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
+            raise UserError(_("Selected product in the delivery method doesn't fulfill any of the delivery grid(s) criteria."))
 
         return price
 

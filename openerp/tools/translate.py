@@ -964,7 +964,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     pass
 
         else:
-            _logger.error('Bad file format: %s', fileformat)
+            _logger.info('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # Read the POT references, and keep them indexed by source string.

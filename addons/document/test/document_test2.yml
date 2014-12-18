@@ -73,7 +73,7 @@
             new_dir_id = self.create(cr, demo_uid, dir_vals, context=None)
             self.unlink(cr, uid, [new_dir_id], context=None)
         except except_osv, e:
-            duplicate_detected = e.value == u'Directory name must be unique!'
+            duplicate_detected = e.name == u'Directory name must be unique!'
         assert duplicate_detected is True, 'Failed to detect duplicate directory'
 -
     I delete the attachments

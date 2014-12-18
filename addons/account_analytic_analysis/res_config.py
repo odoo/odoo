@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
@@ -54,7 +55,8 @@ class sale_configuration(osv.osv_memory):
             if product and product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
             else:
-                _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
+                _logger.info("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
+                raise UserError(_("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!"))
 
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)

@@ -214,16 +214,16 @@ class Cursor(object):
                 msg += "Cursor was created at %s:%s" % self.__caller
             else:
                 msg += "Please enable sql debugging to trace the caller."
-            _logger.warning(msg)
+            _logger.info(msg)
             self._close(True)
 
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
-            _logger.warning(query)
-            _logger.warning("SQL queries cannot contain %d or %f anymore. Use only %s")
+            _logger.info("SQL queries cannot contain %%d or %%f anymore. Use only %%s:\n%s" % query, 
+                exc_info=_logger.isEnabledFor(logging.DEBUG))
         if params and not isinstance(params, (tuple, list, dict)):
-            _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
+            _logger.info("SQL query parameters should be a tuple, list or dict; got %r", params)
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
@@ -234,11 +234,11 @@ class Cursor(object):
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("Programming error: %s, in query %s", pe, query)
+                _logger.info("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception("bad query: %s", self._obj.query or query)
+                _logger.info("bad query: %s", self._obj.query or query)
             raise
 
         # simple query count is always computed
@@ -487,7 +487,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                _logger.warning('%r: Free leaked connection to %r', self, cnx.dsn)
+                _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and cnx._original_dsn == dsn:
@@ -521,7 +521,7 @@ class ConnectionPool(object):
         try:
             result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
         except psycopg2.Error:
-            _logger.exception('Connection to the database failed')
+            _logger.info('Connection to the database failed')
             raise
         result._original_dsn = dsn
         self._connections.append((result, True))
@@ -581,7 +581,7 @@ class Connection(object):
     def __nonzero__(self):
         """Check if connection is possible"""
         try:
-            _logger.warning("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
+            _logger.info("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
             cr = self.cursor()
             cr.close()
             return True

@@ -36,6 +36,8 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
+from openerp.exceptions import UserError
+from openerp.exceptions import except_orm
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -45,7 +47,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-class MailDeliveryException(osv.except_osv):
+class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
@@ -205,14 +207,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
+        raise UserError(_("Connection Test Succeeded! Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -229,10 +231,8 @@ class ir_mail_server(osv.osv):
         """
         if encryption == 'ssl':
             if not 'SMTP_SSL' in smtplib.__all__:
-                raise osv.except_osv(
-                             _("SMTP-over-SSL mode unavailable"),
-                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
-                               "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
+                raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                                    "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
             connection = smtplib.SMTP_SSL(host, port)
         else:
             connection = smtplib.SMTP(host, port)
@@ -444,9 +444,7 @@ class ir_mail_server(osv.osv):
                 smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
 
         if not smtp_server:
-            raise osv.except_osv(
-                         _("Missing SMTP Server"),
-                         _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
+            raise UserError(_("Missing SMTP Server")+ "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
             message_id = message['Message-Id']
@@ -470,7 +468,7 @@ class ir_mail_server(osv.osv):
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.error(msg)
+            _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 

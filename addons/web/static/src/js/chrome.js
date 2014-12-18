@@ -7,7 +7,8 @@ var instance = openerp;
 openerp.web.chrome = {};
 
 var QWeb = instance.web.qweb,
-    _t = instance.web._t;
+    _t = instance.web._t,
+    _lt = instance.web._lt;
 
 instance.web.Notification =  instance.web.Widget.extend({
     template: 'Notification',
@@ -260,8 +261,52 @@ instance.web.CrashManager = instance.web.Class.extend({
             this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
-        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
+        var map_title ={
+            user_error: _lt('Warning'),
+            warning: _lt('Warning'),
+            access_error: _lt('Access Error'),
+            missing_error: _lt('Missing Record'),
+            validation_error: _lt('Validation Error'),
+            except_orm: _lt('Global Business Error'),
+            access_denied: _lt('Access Denied'),
+        };
+        if (_.has(map_title, error.data.exception_type)) {
+            if(error.data.exception_type == 'except_orm'){
+                if(error.data.arguments[1]) {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[1],
+                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
+                                        })
+                                });
+                }
+                else {
+                    error = _.extend({}, error,
+                                {
+                                    data: _.extend({}, error.data,
+                                        {
+                                            message: error.data.arguments[0],
+                                            title:  '',
+                                        })
+                                });
+                }
+            }
+            else {
+                error = _.extend({}, error,
+                            {
+                                data: _.extend({}, error.data,
+                                    {
+                                        message: error.data.arguments[0],
+                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                                    })
+                            });
+            }
+
             this.show_warning(error);
+        //InternalError    
+
         } else {
             this.show_error(error);
         }
@@ -270,12 +315,10 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        if (error.data.exception_type === "except_osv") {
-            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
-        }
         new instance.web.Dialog(this, {
             size: 'medium',
-            title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
+            title: "Odoo " + (_.str.capitalize(error.type) || _t("Warning")),
+            subtitle: error.data.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
             ],
