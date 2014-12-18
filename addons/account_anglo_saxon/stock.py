@@ -21,21 +21,24 @@
 
 from openerp.osv import osv
 
-#----------------------------------------------------------
-# Stock Picking
-#----------------------------------------------------------
+class stock_move(osv.Model):
+    _inherit = "stock.move"
+
+    def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
+        """ Add a reference to the stock.move in the invoice line
+
+        In anglo-saxon the price for COGS should be taken from stock.move
+        if possible (fallback on standard_price)
+        """
+        res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
+        res.update({
+            'move_id': move.id,
+        })
+        return res
+
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _description = "Picking List"
-
-    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
-        invoice_vals, context=None):
-        """Overwrite to add move_id reference"""
-        res = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
-        res.update({
-            'move_id': move_line.id,
-        })
-        return res
 
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
