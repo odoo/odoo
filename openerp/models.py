@@ -1268,10 +1268,7 @@ class BaseModel(object):
                     res_msg = trans._get_source(self._name, 'constraint', self.env.lang, msg)
                 if extra_error:
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
-                errors.append(
-                    _("Field(s) `%s` failed against a constraint: %s") %
-                        (', '.join(names), res_msg)
-                )
+                errors.append(_(res_msg))
         if errors:
             raise ValidationError('\n'.join(errors))
 
