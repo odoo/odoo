@@ -5,6 +5,7 @@ from urllib2 import URLError, HTTPError
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -52,15 +53,16 @@ class twitter_config_settings(osv.TransientModel):
         website_config = self.browse(cr, uid, config_id, context=context)
         try:
             website_obj.fetch_favorite_tweets(cr, uid, [website_config.website_id.id], context=context)
+
         except HTTPError, e:
-            _logger.warning("%s - %s" % (e.code, e.reason), exc_info=True)
-            raise osv.except_osv("%s - %s" % (e.code, e.reason), self._get_twitter_exception_message(e.code, context))
+            _logger.info("%s - %s" % (e.code, e.reason), exc_info=True)
+            raise UserError("%s - %s" % (e.code, e.reason) + ':' + self._get_twitter_exception_message(e.code, context))
         except URLError, e:
-            _logger.warning(_('We failed to reach a twitter server.'), exc_info=True)
-            raise osv.except_osv(_('Internet connection refused'), _('We failed to reach a twitter server.'))
+            _logger.info(_('We failed to reach a twitter server.'), exc_info=True)
+            raise UserError(_('Internet connection refused') + ' ' + _('We failed to reach a twitter server.'))
         except Exception, e:
-            _logger.warning(_('Please double-check your Twitter API Key and Secret!'), exc_info=True)
-            raise osv.except_osv(_('Twitter authorization error!'), _('Please double-check your Twitter API Key and Secret!'))
+            _logger.info(_('Please double-check your Twitter API Key and Secret!'), exc_info=True)
+            raise UserError(_('Twitter authorization error!') + ' ' + _('Please double-check your Twitter API Key and Secret!'))
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(twitter_config_settings, self).create(cr, uid, vals, context=context)

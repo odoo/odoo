@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_open_closed_fiscalyear(osv.osv_memory):
     _name = "account.open.closed.fiscalyear"
@@ -36,7 +37,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         period_journal = data.fyear_id.end_journal_period_id or False
         if not period_journal:
-            raise osv.except_osv(_('Error!'), _("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
+            raise UserError(_("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
 
         ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:

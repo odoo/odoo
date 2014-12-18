@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.fields import Many2one
+from openerp.exceptions import UserError
 
 
 
@@ -80,7 +81,7 @@ class product_template(osv.osv):
         account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
 
         if not all([stock_input_acc, stock_output_acc, account_valuation, journal_id]):
-            raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
+            raise UserError(_('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
     Product: %s
     Stock Input Account: %s
     Stock Output Account: %s
@@ -113,7 +114,7 @@ class product_template(osv.osv):
 
                 diff = product.standard_price - new_price
                 if not diff:
-                    raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
+                    raise UserError(_("No difference between standard price and new price!"))
                 for prod_variant in product.product_variant_ids:
                     qty = prod_variant.qty_available
                     if qty:

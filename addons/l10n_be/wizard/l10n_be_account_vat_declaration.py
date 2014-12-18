@@ -28,6 +28,7 @@ import base64
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class l10n_be_vat_declaration(osv.osv_memory):
     """ Vat Declaration """
@@ -84,7 +85,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            raise osv.except_osv(_('Insufficient Data!'), _('No VAT number associated with your company.'))
+            raise UserError(_('No VAT number associated with your company.'))
         vat_no = vat_no.replace(' ','').upper()
         vat = vat_no[2:]
 
@@ -109,9 +110,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         quarter = str(((int(starting_month) - 1) / 3) + 1)
 
         if not address_id.email:
-            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
+            raise UserError(_('No email address associated with the company.'))
         if not address_id.phone:
-            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
+            raise UserError(_('No phone associated with the company.'))
         file_data = {
                         'issued_by': issued_by,
                         'vat_no': vat_no,

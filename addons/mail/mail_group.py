@@ -26,6 +26,7 @@ from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -171,7 +172,7 @@ class mail_group(osv.Model):
         except ValueError:
             all_emp_group = None
         if all_emp_group and all_emp_group in ids:
-            raise osv.except_osv(_('Warning!'), _('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+            raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
         # Cascade-delete mail aliases as well, as they should not exist without the mail group.
         self.pool.get('mail.alias').unlink(cr, SUPERUSER_ID, alias_ids, context=context)

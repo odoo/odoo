@@ -8,7 +8,7 @@ from openerp import tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
-from openerp.osv import osv
+from openerp.exceptions import UserError
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
@@ -257,7 +257,7 @@ class WebsiteBlog(http.Controller):
         User = request.registry['res.users']
         # for now, only portal and user can post comment on blog post.
         if uid == request.website.user_id.id:
-            raise osv.except_osv(_('Error!'), _('Public user cannot post comments on blog post.'))
+            raise UserError(_('Public user cannot post comments on blog post.'))
         # get the partner of the current user
         user = User.browse(cr, uid, uid, context=context)
         partner_id = user.partner_id.id

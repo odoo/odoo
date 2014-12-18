@@ -32,6 +32,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 class hr_payroll_structure(osv.osv):
     """
@@ -350,7 +351,7 @@ class hr_payslip(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for payslip in self.browse(cr, uid, ids, context=context):
             if payslip.state not in  ['draft','cancel']:
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a payslip which is not draft or cancelled!'))
+                raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
         return super(hr_payslip, self).unlink(cr, uid, ids, context)
 
     #TODO move this function into hr_contract module, on hr.employee object
@@ -848,18 +849,18 @@ result = rules.NET > categories.NET * 0.10''',
             try:
                 return rule.amount_fix, eval(rule.quantity, localdict), 100.0
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
                 return eval(rule.amount_percentage_base, localdict), eval(rule.quantity, localdict), rule.amount_percentage
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong percentage base or quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong python code defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (rule.name, rule.code))
 
     def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -876,13 +877,13 @@ result = rules.NET > categories.NET * 0.10''',
                 result = eval(rule.condition_range, localdict)
                 return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong range condition defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong range condition defined for salary rule %s (%s).') % (rule.name, rule.code))
         else: #python code
             try:
                 eval(rule.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
-                raise osv.except_osv(_('Error!'), _('Wrong python condition defined for salary rule %s (%s).')% (rule.name, rule.code))
+                raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (rule.name, rule.code))
 
 
 class hr_rule_input(osv.osv):

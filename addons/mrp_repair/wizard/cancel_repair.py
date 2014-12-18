@@ -21,6 +21,7 @@
 
 from openerp.osv import osv,fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class repair_cancel(osv.osv_memory):
     _name = 'mrp.repair.cancel'
@@ -46,7 +47,7 @@ class repair_cancel(osv.osv_memory):
         if repair_order.invoiced or repair_order.invoice_method == 'none':
             repair_order_obj.action_cancel(cr, uid, [record_id], context=context)
         else:
-            raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
+            raise UserError(_('Repair order is not invoiced.'))
 
         return {'type': 'ir.actions.act_window_close'}
 

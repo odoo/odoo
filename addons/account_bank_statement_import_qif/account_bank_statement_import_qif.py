@@ -5,6 +5,7 @@ from tempfile import TemporaryFile
 
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
+from openerp.exceptions import UserError
 
 class account_bank_statement_import(osv.TransientModel):
     _inherit = "account.bank.statement.import"
@@ -54,7 +55,7 @@ class account_bank_statement_import(osv.TransientModel):
             header = data_list[0].strip()
             header = header.split(":")[1]
         except:
-            raise osv.except_osv(_('Import Error!'), _('Could not decipher the QIF file.'))
+            raise UserError(_('Could not decipher the QIF file.'))
         transactions = []
         vals_line = {}
         total = 0
@@ -89,10 +90,11 @@ class account_bank_statement_import(osv.TransientModel):
                 else:
                     pass
         else:
-            raise osv.except_osv(_('Error!'), _('This file is either not a bank statement or is not correctly formed.'))
+            raise UserError(_('This file is either not a bank statement or is not correctly formed.'))
         
         vals_bank_statement.update({
             'balance_end_real': total,
             'transactions': transactions
         })
         return None, None, [vals_bank_statement]
+

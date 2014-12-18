@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-from openerp.exceptions import except_orm
+from openerp.exceptions import UserError
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -51,7 +51,7 @@ class wizard_price(osv.osv):
             context = {}
         model = context.get('active_model')
         if model != 'product.template':
-            raise except_orm(_('Wrong model!'), _('This wizard is build for product templates, while you are currently running it from a product variant.'))
+            raise UserError(_('This wizard is build for product templates, while you are currently running it from a product variant.'))
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context.')
         prod_obj = self.pool.get('product.template')

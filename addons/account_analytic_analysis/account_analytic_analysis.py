@@ -26,6 +26,7 @@ import time
 from openerp.osv import osv, fields
 import openerp.tools
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 from openerp.addons.decimal_precision import decimal_precision as dp
 
@@ -660,13 +661,12 @@ class account_analytic_account(osv.osv):
         journal_obj = self.pool.get('account.journal')
 
         if not contract.partner_id:
-            raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
+            raise UserError(_("You must first select a Customer for Contract %s!") % contract.name )
 
         fpos = contract.partner_id.property_account_position or False
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error!'),
-            _('Please define a sale journal for the company "%s".') % (contract.company_id.name or '', ))
+            raise UserError(_('Please define a sale journal for the company "%s".') % (contract.company_id.name or '', ))
 
         partner_payment_term = contract.partner_id.property_payment_term and contract.partner_id.property_payment_term.id or False
 

@@ -8,6 +8,7 @@ import threading
 import openerp
 import openerp.report
 from openerp import tools
+from openerp.exceptions import UserError
 
 import security
 
@@ -116,7 +117,7 @@ def _check_report(report_id):
     result = self_reports[report_id]
     exc = result['exception']
     if exc:
-        raise openerp.osv.orm.except_orm(exc.message, exc.traceback)
+        raise UserError('%s: %s' % (exc.message, exc.traceback))
     res = {'state': result['state']}
     if res['state']:
         if tools.config['reportgz']:

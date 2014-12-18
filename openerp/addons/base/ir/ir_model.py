@@ -30,7 +30,8 @@ from openerp import SUPERUSER_ID
 from openerp import models, tools, api
 from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
-from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS, except_orm
+from openerp.osv.orm import BaseModel, Model, MAGIC_COLUMNS
+from openerp.exceptions import UserError, AccessError
 from openerp.tools import config
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -89,7 +90,7 @@ class ir_model(osv.osv):
             return []
         __, operator, value = domain[0]
         if operator not in ['=', '!=']:
-            raise osv.except_osv(_("Invalid Search Criteria"), _('The osv_memory field can only be compared with = and != operator.'))
+            raise UserError(_("Invalid Search Criteria") + ": " + _("The osv_memory field can only be compared with = and != operator."))
         value = bool(value) if operator == '=' else not bool(value)
         all_model_ids = self.search(cr, uid, [], context=context)
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
@@ -180,7 +181,7 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             for model in self.browse(cr, user, ids, context):
                 if model.state != 'manual':
-                    raise except_orm(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
+                    raise UserError(_("Model '%s' contains module data and cannot be removed!") % (model.name,))
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
@@ -295,10 +296,9 @@ class ir_model_fields(osv.osv):
         try:
             selection_list = eval(selection)
         except Exception:
-            _logger.warning('Invalid selection list definition for fields.selection', exc_info=True)
-            raise except_orm(_('Error'),
-                    _("The Selection Options expression is not a valid Pythonic expression."
-                      "Please provide an expression in the [('key','Label'), ...] format."))
+            _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
+            raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
+                                "Please provide an expression in the [('key','Label'), ...] format."))
 
         check = True
         if not (isinstance(selection_list, list) and selection_list):
@@ -310,8 +310,7 @@ class ir_model_fields(osv.osv):
                     break
 
         if not check:
-                raise except_orm(_('Error'),
-                    _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
+                raise UserError(_("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
@@ -350,7 +349,7 @@ class ir_model_fields(osv.osv):
             ids = [ids]
         if not context.get(MODULE_UNINSTALL_FLAG) and \
                 any(field.state != 'manual' for field in self.browse(cr, user, ids, context)):
-            raise except_orm(_('Error'), _("This column contains module data and cannot be removed!"))
+            raise UserError(_("This column contains module data and cannot be removed!"))
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
@@ -373,15 +372,15 @@ class ir_model_fields(osv.osv):
             vals['state'] = 'manual'
         if vals.get('ttype', False) == 'selection':
             if not vals.get('selection',False):
-                raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
+                raise UserError(_('For selection fields, the Selection Options must be given!'))
             self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
-                raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
+                raise UserError(_("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
-                raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
+                raise UserError(_("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
                 model = self.pool[vals['model']]
@@ -418,9 +417,9 @@ class ir_model_fields(osv.osv):
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise except_orm(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.')%field.name)
+                    raise UserError(_('Changing the storing system for field "%s" is not allowed.') % field.name)
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
+                    raise UserError(_('Renaming sparse field "%s" is not allowed') % field.name)
 
         # if set, *one* column can be renamed here
         column_rename = None
@@ -449,10 +448,9 @@ class ir_model_fields(osv.osv):
                 field = getattr(obj, '_fields', {}).get(item.name)
 
                 if item.state != 'manual':
-                    raise except_orm(_('Error!'),
-                        _('Properties of base fields cannot be altered in this manner! '
-                          'Please modify them through Python code, '
-                          'preferably through a custom addon!'))
+                    raise UserError(_('Properties of base fields cannot be altered in this manner! '
+                                        'Please modify them through Python code, '
+                                        'preferably through a custom addon!'))
 
                 if item.ttype == 'selection' and 'selection' in vals \
                         and not checked_selection:
@@ -463,22 +461,21 @@ class ir_model_fields(osv.osv):
                 if 'name' in vals and vals['name'] != item.name:
                     # We need to rename the column
                     if column_rename:
-                        raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
+                        raise UserError(_('Can only rename one column at a time!'))
                     if vals['name'] in obj._columns:
-                        raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
+                        raise UserError(_('Cannot rename column to %s, because that column already exists!') % vals['name'])
                     if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
-                        raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
+                        raise UserError(_('New column name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')
                     column_rename = (obj, (obj._table, item.name, vals['name']))
                     final_name = vals['name']
 
                 if 'model_id' in vals and vals['model_id'] != item.model_id.id:
-                    raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
+                    raise UserError(_("Changing the model of a field is forbidden!"))
 
                 if 'ttype' in vals and vals['ttype'] != item.ttype:
-                    raise except_orm(_("Error!"), _("Changing the type of a column is not yet supported. "
-                                "Please drop it and create it again!"))
+                    raise UserError(_("Changing the type of a column is not yet supported. " "Please drop it and create it again!"))
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
@@ -566,7 +563,7 @@ class ir_model_constraint(Model):
         """ 
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         context = dict(context or {})
 
@@ -627,7 +624,7 @@ class ir_model_relation(Model):
         """ 
 
         if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         ids_set = set(ids)
         to_drop_table = []
@@ -794,7 +791,7 @@ class ir_model_access(osv.osv):
             else:
                 msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
                 msg_params = (model_name,)
-            _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
+            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise openerp.exceptions.AccessError(msg % msg_params)
         return bool(r)
@@ -975,7 +972,7 @@ class ir_model_data(osv.osv):
         if check_right:
             return model, res_id
         if raise_on_access_error:
-            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+            raise AccessError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
         return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):
@@ -1134,7 +1131,7 @@ class ir_model_data(osv.osv):
         ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
 
         if uid != 1 and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
-            raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+            raise AccessError(_('Administrator access is required to uninstall a module'))
 
         context = dict(context or {})
         context[MODULE_UNINSTALL_FLAG] = True # enable model/field deletion

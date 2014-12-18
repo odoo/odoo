@@ -24,9 +24,9 @@ import time
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.exceptions import except_orm
 
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 
 class price_type(osv.osv):
@@ -212,7 +212,7 @@ class product_pricelist(osv.osv):
                 version = v
                 break
         if not version:
-            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            raise UserError(_("At least one pricelist has no active version !\nPlease create or activate one."))
         categ_ids = {}
         for p in products:
             categ = p.categ_id

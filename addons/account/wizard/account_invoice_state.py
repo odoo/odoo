@@ -21,6 +21,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_invoice_confirm(osv.osv_memory):
     """
@@ -38,7 +39,7 @@ class account_invoice_confirm(osv.osv_memory):
         proxy = self.pool['account.invoice']
         for record in proxy.browse(cr, uid, active_ids, context=context):
             if record.state not in ('draft', 'proforma', 'proforma2'):
-                raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
+                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
             record.signal_workflow('invoice_open')
             
         return {'type': 'ir.actions.act_window_close'}
@@ -61,6 +62,6 @@ class account_invoice_cancel(osv.osv_memory):
 
         for record in proxy.browse(cr, uid, active_ids, context=context):
             if record.state in ('cancel','paid'):
-                raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
+                raise UserError(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
             record.signal_workflow('invoice_cancel')
         return {'type': 'ir.actions.act_window_close'}

@@ -9,6 +9,7 @@ from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -49,8 +50,7 @@ class pad_common(osv.osv_memory):
             try:
                 myPad.createPad(path)
             except urllib2.URLError:
-                raise osv.except_osv(_("Error"), _("Pad creation failed, \
-                either there is a problem with your pad server URL or with your connection."))
+                raise UserError(_("Pad creation failed, either there is a problem with your pad server URL or with your connection."))
 
             #get attr on the field model
             model = self.pool[context["model"]]

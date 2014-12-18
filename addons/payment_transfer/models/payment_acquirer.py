@@ -61,12 +61,12 @@ class TransferPaymentTransaction(osv.Model):
             ], context=context)
 
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'received data for reference %s' % (pprint.pformat(reference))
+            error_msg = _('received data for reference %s') % (pprint.pformat(reference))
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         return self.browse(cr, uid, tx_ids[0], context=context)

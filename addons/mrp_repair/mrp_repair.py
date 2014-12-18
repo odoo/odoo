@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from datetime import datetime
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
@@ -286,7 +287,7 @@ class mrp_repair(osv.osv):
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
                 for line in o.operations:
                     if line.product_id.track_production:
-                        raise osv.except_osv(_('Warning!'), _("Serial number is required for operation line with product '%s'") % (line.product_id.name))
+                        raise UserError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
 
@@ -299,7 +300,7 @@ class mrp_repair(osv.osv):
             if not repair.invoiced:
                 mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('Repair order is already invoiced.'))
+                raise UserError(_('Repair order is already invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
@@ -322,7 +323,7 @@ class mrp_repair(osv.osv):
             if repair.state in ('draft', 'cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner!'), _('You have to select a Partner Invoice Address in the repair form!'))
+                raise UserError(_('You have to select a Partner Invoice Address in the repair form!'))
             comment = repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -336,7 +337,7 @@ class mrp_repair(osv.osv):
                     inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
-                        raise osv.except_osv(_('Error!'), _('No account defined for partner "%s".') % repair.partner_id.name)
+                        raise UserError(_('No account defined for partner "%s".') % repair.partner_id.name)
                     account_id = repair.partner_id.property_account_receivable.id
                     inv = {
                         'name': repair.name,
@@ -364,7 +365,7 @@ class mrp_repair(osv.osv):
                         elif operation.product_id.categ_id.property_account_income_categ:
                             account_id = operation.product_id.categ_id.property_account_income_categ.id
                         else:
-                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % operation.product_id.name)
+                            raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
 
                         invoice_line_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
@@ -386,14 +387,14 @@ class mrp_repair(osv.osv):
                         else:
                             name = fee.name
                         if not fee.product_id:
-                            raise osv.except_osv(_('Warning!'), _('No product defined on Fees!'))
+                            raise UserError(_('No product defined on Fees!'))
 
                         if fee.product_id.property_account_income:
                             account_id = fee.product_id.property_account_income.id
                         elif fee.product_id.categ_id.property_account_income_categ:
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:
-                            raise osv.except_osv(_('Error!'), _('No account defined for product "%s".') % fee.product_id.name)
+                            raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
 
                         invoice_fee_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,

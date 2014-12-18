@@ -20,6 +20,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"
@@ -39,7 +40,7 @@ class sale_make_invoice(osv.osv_memory):
         record_id = context and context.get('active_id', False)
         order = self.pool.get('sale.order').browse(cr, uid, record_id, context=context)
         if order.state == 'draft':
-            raise osv.except_osv(_('Warning!'), _('You cannot create invoice when sales order is not confirmed.'))
+            raise UserError(_('You cannot create invoice when sales order is not confirmed.'))
         return False
 
     def make_invoices(self, cr, uid, ids, context=None):
@@ -52,7 +53,7 @@ class sale_make_invoice(osv.osv_memory):
         data = self.read(cr, uid, ids)[0]
         for sale_order in order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context):
             if sale_order.state != 'manual':
-                raise osv.except_osv(_('Warning!'), _("You shouldn't manually invoice the following sale order %s") % (sale_order.name))
+                raise UserError(_("You shouldn't manually invoice the following sale order %s") % (sale_order.name))
 
         order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_invoice=data['invoice_date'])
         orders = order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context)
