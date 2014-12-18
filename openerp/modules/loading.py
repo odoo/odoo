@@ -258,12 +258,15 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     while True:
         cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
+        if not module_list:
+            break
         graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules, perform_checks=perform_checks)
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
-        if not processed: break
+        if not processed:
+            break
     return processed_modules
 
 def load_modules(db, force_demo=False, status=None, update_module=False):

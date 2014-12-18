@@ -211,7 +211,7 @@ class MetaModel(api.Meta):
     """ Metaclass for the models.
 
     This class is used as the metaclass for the class :class:`BaseModel` to
-    discover the models defined in a module (without instanciating them).
+    discover the models defined in a module (without instantiating them).
     If the automatic discovery is not needed, it is possible to set the model's
     ``_register`` attribute to False.
 
@@ -276,7 +276,7 @@ class BaseModel(object):
     *   :class:`Model` for regular database-persisted models
 
     *   :class:`TransientModel` for temporary data, stored in the database but
-        automatically vaccuumed every so often
+        automatically vacuumed every so often
 
     *   :class:`AbstractModel` for abstract super classes meant to be shared by
         multiple inheriting model
@@ -559,14 +559,14 @@ class BaseModel(object):
             datetime.datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     #
-    # Goal: try to apply inheritance at the instanciation level and
+    # Goal: try to apply inheritance at the instantiation level and
     #       put objects in the pool var
     #
     @classmethod
     def _build_model(cls, pool, cr):
-        """ Instanciate a given model.
+        """ Instantiate a given model.
 
-        This class method instanciates the class of some model (i.e. a class
+        This class method instantiates the class of some model (i.e. a class
         deriving from osv or osv_memory). The class might be the class passed
         in argument or, if it inherits from another class, a class constructed
         by combining the two classes.
@@ -1483,7 +1483,7 @@ class BaseModel(object):
         Get the detailed composition of the requested view like fields, model, view architecture
 
         :param view_id: id of the view or None
-        :param view_type: type of the view to return if view_id is None ('form', tree', ...)
+        :param view_type: type of the view to return if view_id is None ('form', 'tree', ...)
         :param toolbar: true to include contextual actions
         :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
@@ -1532,7 +1532,7 @@ class BaseModel(object):
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
-            # override context fro postprocessing
+            # override context from postprocessing
             if root_view.get('model') != self._name:
                 ctx = dict(context, base_model_name=root_view.get('model'))
         else:
@@ -1609,7 +1609,7 @@ class BaseModel(object):
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
 
-        :paramt int id: id of the document to open
+        :param int id: id of the document to open
         """
         return self.get_formview_action(cr, uid, id, context=context)
 
@@ -1942,7 +1942,7 @@ class BaseModel(object):
     def _read_group_process_groupby(self, gb, query, context):
         """
             Helper method to collect important information about groupbys: raw
-            field name, type, time informations, qualified name, ...
+            field name, type, time information, qualified name, ...
         """
         split = gb.split(':')
         field_type = self._fields[split[0]].type
@@ -2025,7 +2025,7 @@ class BaseModel(object):
 
     def _read_group_format_result(self, data, annotated_groupbys, groupby, groupby_dict, domain, context):
         """
-            Helper method to format the data contained in the dictianary data by 
+            Helper method to format the data contained in the dictionary data by 
             adding the domain corresponding to its values, the groupbys in the 
             context and by properly formatting the date/datetime values. 
         """
@@ -4490,7 +4490,7 @@ class BaseModel(object):
 
     def _generate_order_by(self, order_spec, query):
         """
-        Attempt to consruct an appropriate ORDER BY clause based on order_spec, which must be
+        Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
         a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
 
         :raise" except_orm in case order_spec is malformed
@@ -4554,7 +4554,7 @@ class BaseModel(object):
             context = {}
         self.check_access_rights(cr, access_rights_uid or user, 'read')
 
-        # For transient models, restrict acces to the current user, except for the super-user
+        # For transient models, restrict access to the current user, except for the super-user
         if self.is_transient() and self._log_access and user != SUPERUSER_ID:
             args = expression.AND(([('create_uid', '=', user)], args or []))
 
@@ -4749,7 +4749,7 @@ class BaseModel(object):
         Duplicate record with given id updating it with default values
 
         :param dict default: dictionary of field values to override in the
-               original values of the copied record, e.g: ``{'field_name': overriden_value, ...}``
+               original values of the copied record, e.g: ``{'field_name': overridden_value, ...}``
         :returns: new record
 
         """
@@ -5266,7 +5266,7 @@ class BaseModel(object):
     def mapped(self, func):
         """ Apply `func` on all records in `self`, and return the result as a
             list or a recordset (if `func` return recordsets). In the latter
-            case, the order of the returned recordset is arbritrary.
+            case, the order of the returned recordset is arbitrary.
 
             :param func: a function or a dot-separated sequence of field names
         """
@@ -5881,7 +5881,7 @@ class Model(BaseModel):
 
 class TransientModel(BaseModel):
     """Model super-class for transient records, meant to be temporarily
-       persisted, and regularly vaccuum-cleaned.
+       persisted, and regularly vacuum-cleaned.
 
        A TransientModel has a simplified access rights management,
        all users can create new records, and may only access the

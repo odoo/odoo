@@ -850,7 +850,15 @@ class pos_order(osv.osv):
             'name': order.name + ': ' + (data.get('payment_name', '') or ''),
             'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
         }
-        account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+
+        journal_id = data.get('journal', False)
+        statement_id = data.get('statement_id', False)
+        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
+
+        journal = self.pool['account.journal'].browse(cr, uid, journal_id, context=context)
+        # use the company of the journal and not of the current user
+        company_cxt = dict(context, force_company=journal.company_id.id)
+        account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=company_cxt)
         args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
                              and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
 
@@ -862,10 +870,6 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Configuration Error!'), msg)
 
         context.pop('pos_session_id', False)
-
-        journal_id = data.get('journal', False)
-        statement_id = data.get('statement_id', False)
-        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
 
         for statement in order.session_id.statement_ids:
             if statement.id == statement_id:

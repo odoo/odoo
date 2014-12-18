@@ -4,15 +4,13 @@
 #
 # To install your odoo development environement type:
 #
-# wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
+# wget -O- https://raw.githubusercontent.com/odoo/odoo/8.0/odoo.py | python
 #
 # The setup_* subcommands used to boostrap odoo are defined here inline and may
 # only depends on the python 2.7 stdlib
 #
 # The rest of subcommands are defined in odoo/cli or in <module>/cli by
 # subclassing the Command object
-#
-# https://raw.githubusercontent.com/odoo-dev/odoo/master-odoo-cmd-fme/odoo.py
 #
 #----------------------------------------------------------
 import os
@@ -89,10 +87,10 @@ def cmd_setup_git():
         run('git','config','remote.odoo-dev.url','https://github.com/odoo-dev/odoo.git')
         run('git','config','remote.odoo-dev.pushurl','git@github.com:odoo-dev/odoo.git')
         run('git','remote','update')
-        # setup master branch
-        run('git','config','branch.master.remote','odoo')
-        run('git','config','branch.master.merge','refs/heads/master')
-        run('git','checkout','master')
+        # setup 8.0 branch
+        run('git','config','branch.8.0.remote','odoo')
+        run('git','config','branch.8.0.merge','refs/heads/8.0')
+        run('git','checkout','8.0')
     else:
         printf('no git repo found')
 
