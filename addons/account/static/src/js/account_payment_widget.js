@@ -12,7 +12,7 @@
             var self = this;
             var info = JSON.parse(this.get('value'));
             var invoice_id = info.invoice_id;
-            if (info !== false){
+            if (info !== false) {
                 _.each(info.content, function(k,v){
                     k.amount = openerp.web.format_value(k.amount, {type: "float", digits: k.digits});
                     if (k.date){
@@ -32,6 +32,9 @@
                             self.view.reload();
                         });
                 });
+            }
+            else {
+                this.$el.html('');
             }
         },
     });
