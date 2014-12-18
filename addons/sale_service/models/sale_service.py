@@ -107,7 +107,7 @@ class ProjectTaskStageMrp(osv.Model):
     _inherit = 'project.task.type'
 
     _columns = {
-        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
+        'closed': fields.boolean('Is a close stage', help="Tasks in this stage are considered as closed."),
     }
 
     _defaults = {
