@@ -85,10 +85,8 @@
         display: none
         .oe_tag
             position: relative
-            top: +8px
+            top: +0px
             font-weight: bold
-    .oe_kanban_header:hover .oe_kanban_group_length
-        display: none
     .ui-sortable-placeholder
         border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
@@ -124,10 +122,7 @@
         .oe_dropdown_kanban
             float: right
         .oe_dropdown_kanban > span
-            visibility: hidden
-        &:hover
-            .oe_dropdown_kanban > span
-                visibility: visible
+            visibility: visible
         .oe_dropdown_menu
             font-weight: normal
             font-size: 13px
@@ -146,11 +141,11 @@
             text-overflow: ellipsis
     .oe_fold_column
         .oe_kanban_group_length
-            position: absolute
             top: -1px
             right: -14px
-            float: right
+            float: left
             display: block
+            margin-left: 5px
     &.oe_kanban_grouped
         .oe_kanban_column, .oe_kanban_group_header
             width: 185px
@@ -209,14 +204,13 @@
         display: none
         position: relative
         opacity: 0.75
-        top: 26px
+        top: 40px
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
         margin-left: 4px
         cursor: pointer
         position: relative
-        z-index: 1
     .oe_kanban_add
         top: -8px
     .oe_kanban_header .oe_dropdown_toggle
@@ -416,6 +410,7 @@
             top: 28px
             min-width: 160px
             padding: 2px
+            z-index: 10
             > li
                 padding: 3px
     .oe_dropdown_kanban
