@@ -44,7 +44,7 @@ class stock_picking(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
                 for ol in inv.invoice_line:
-                    if ol.product_id:
+                    if ol.product_id.type != 'service':
                         oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
                         if not oa:
                             oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
