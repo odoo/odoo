@@ -104,10 +104,7 @@ class crm_phonecall(osv.osv):
         return True
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
-                    user_id=False, team_id=False, categ_id=False, action='schedule', context=None):
-        """
-        action :('schedule','Schedule a call'), ('log','Log a call')
-        """
+                    user_id=False, team_id=False, categ_id=False, context=None):
         model_data = self.pool.get('ir.model.data')
         phonecall_dict = {}
         if not categ_id:
@@ -140,8 +137,6 @@ class crm_phonecall(osv.osv):
                     'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
             }
             new_id = self.create(cr, uid, vals, context=context)
-            if action == 'log':
-                self.write(cr, uid, [new_id], {'state': 'done'}, context=context)
             phonecall_dict[call.id] = new_id
         return phonecall_dict
 
@@ -283,8 +278,6 @@ class crm_phonecall(osv.osv):
         :param list ids: list of calls ids to convert (typically contains a single id)
         :return dict: containing view information
         """
-        print("TEST PHONECALL")
-        print(ids)
         if len(ids) != 1:
             raise UserError(_('It\'s only possible to convert one phonecall at a time.'))
 

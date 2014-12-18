@@ -153,7 +153,7 @@
                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                 <field name="categ_id" widget="selection"
                     invisible="1"/>
-                <field name="state" invisible="1"/>
+                <field name="state"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
                 <button string="Schedule Other Call"

@@ -36,7 +36,6 @@ class crm_phonecall2phonecall(osv.osv_memory):
         'categ_id': fields.many2one('crm.phonecall.category', 'Category'), 
         'date': fields.datetime('Date', required=True),
         'team_id':fields.many2one('crm.team','Sales Team', oldname='section_id'),
-        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
         'partner_id' : fields.many2one('res.partner', "Partner"),
         'note':fields.text('Note')
     }
@@ -59,9 +58,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                     this.user_id and this.user_id.id or False, \
                     this.team_id and this.team_id.id or False, \
                     this.categ_id and this.categ_id.id or False, \
-                    action=this.action, context=context)
-        #redirect to the new phonecall
-        #return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
+                    context=context)
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
