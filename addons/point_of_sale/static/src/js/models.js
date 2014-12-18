@@ -833,11 +833,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax: function(){
             return this.get_all_prices().tax;
         },
-        get_tax_objects: function(){
-            var taxes_ids = this.get_product().taxes_id;
+        get_applicable_taxes: function(){
+            // Shenaningans because we need
+            // to keep the taxes ordering.
+            var ptaxes_ids = this.get_product().taxes_id;
+            var ptaxes_set = {};
+            for (var i = 0; i < ptaxes_ids.length; i++) {
+                ptaxes_set[ptaxes_ids[i]] = true;
+            }
             var taxes = [];
-            for (var i = 0; i < taxes_ids.length; i++) {
-                taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            for (var i = 0; i < this.pos.taxes.length; i++) {
+                if (ptaxes_set[this.pos.taxes[i].id]) {
+                    taxes.push(this.pos.taxes[i]);
+                }
             }
             return taxes;
         },
@@ -852,7 +860,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var totalNoTax = base;
             
             var product =  this.get_product(); 
-            var taxes = this.get_tax_objects();
+            var taxes = this.get_applicable_taxes();
             var taxtotal = 0;
             var taxdetail = {};
             _.each(taxes, function(tax) {
@@ -878,7 +886,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
+
                     tmp = round_pr(tmp,currency_rounding);
+                    
+                    if (tax.include_base_amount) {
+                        base += tmp;
+                    }
+
                     taxtotal += tmp;
                     totalTax += tmp;
                     taxdetail[tax.id] = tmp;
