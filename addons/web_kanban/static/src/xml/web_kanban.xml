@@ -36,11 +36,7 @@
                     <div class="oe_kanban_add oe_e" title="Quick create">]</div>
                 </t>
                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                    <div class="oe_kanban_group_length">
-                        <span class="oe_tag">
-                            <t t-if="widget.group.get('length') &gt; 99"> 99+ </t><t t-if="widget.group.get('length') &lt;= 99"> <t t-esc="widget.group.get('length')"/> </t>
-                        </span>
-                    </div>
+                    
                     <span class="oe_e">i</span>
                     <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
                         <li><a data-action="toggle_fold" href="#">Fold</a></li>
@@ -49,6 +45,11 @@
                             <li t-if="parent &amp;&amp; parent.is_action_enabled('group_delete')"><a data-action="delete" href="#">Delete</a></li>
                         </t>
                     </ul>
+                </div>
+                <div class="oe_kanban_group_length">
+                    <span class="oe_tag">
+                        <t t-if="widget.group.get('length') &gt; 99"> 99+ </t><t t-if="widget.group.get('length') &lt;= 99"> <t t-esc="widget.group.get('length')"/> </t>
+                    </span>
                 </div>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
