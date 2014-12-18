@@ -52,7 +52,7 @@ class account_invoice_line(osv.osv):
                 price = price_unit * i_line.quantity
             return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
 
-    @api.one
+    @api.v8
     def get_invoice_line_account(self, product, fpos):
         if self.company_id.anglo_saxon_accounting and self.invoice_id.type in ('in_invoice', 'in_refund'):
             accounts = product.get_product_accounts(fpos)
@@ -111,7 +111,6 @@ class account_invoice_line(osv.osv):
                     },
                 ]
         return []
-
 
     def _anglo_saxon_purchase_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for purchase invoices and refunds.
