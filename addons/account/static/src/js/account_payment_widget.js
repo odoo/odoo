@@ -15,6 +15,9 @@
             if (info !== false){
                 _.each(info.content, function(k,v){
                     k.amount = openerp.web.format_value(k.amount, {type: "float", digits: k.digits});
+                    if (k.date){
+                        k.date = openerp.web.format_value(k.date, {type: "date"});
+                    }
                 });
                 this.$el.html(QWeb.render('ShowPaymentInfo', {
                     'lines': info.content, 

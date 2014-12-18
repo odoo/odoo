@@ -4,25 +4,30 @@
 
     <t t-name="ShowPaymentInfo">
         <div>
-            <t t-if="outstanding">
-                <div>
-                    <strong class="pull-left" style="color:darkgrey;"><t t-esc="title"></t></strong>
-                </div>
-            </t>
-            <table style="width:80%; margin-left:20%;">
-            <t t-foreach="lines" t-as="line">
-                <tr>
-                    <td style="text-align:right;">
-                        <a title="assign to invoice" class="oe_form_field outstanding_credit_assign" t-att-data-id="line.id"><i class="fa fa-check"></i></a>
-                    </td>
-                    <td style="text-align:right;">
-                        <span class="oe_form_field"><t t-esc="line.ref"></t></span>
-                    </td>
-                    <td style="text-align:right;">
-                        <span class="oe_form_field oe_form_field_float oe_form_field_monetary"><t t-esc="line.amount"></t> <t t-esc="line.currency"></t></span>
-                    </td>
-                </tr>
-            </t>
+            <div>
+                <strong class="pull-left" style="color:lightslategray;"><t t-esc="title"></t></strong>
+            </div>
+            <table style="width:100%;">
+                <t t-foreach="lines" t-as="line">
+                    <tr>
+                    <t t-if="outstanding">
+                        <td>
+                            <a title="assign to invoice" class="oe_form_field outstanding_credit_assign" t-att-data-id="line.id">Add</a>
+                        </td>
+                        <td>
+                            <span class="oe_form_field"><t t-esc="line.ref"></t></span>
+                        </td>
+                    </t>
+                    <t t-if="!outstanding">
+                        <td>
+                            <span class="oe_form_field" t-att-title="line.name + '\n'+ line.ref"><t t-esc="line.date"></t></span>
+                        </td>
+                    </t>
+                        <td style="text-align:right;">
+                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary"><t t-esc="line.amount"></t> <t t-esc="line.currency"></t></span>
+                        </td>
+                    </tr>
+                </t>
             </table>
         </div>
     </t>

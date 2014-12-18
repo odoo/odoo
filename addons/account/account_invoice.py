@@ -127,18 +127,35 @@ class account_invoice(models.Model):
                 for line in lines:
                     info['content'].append({
                         'ref': line.ref or line.move_id.name,
-                        'amount': abs(line.amount_residual),
-                        'currency': line.company_id.currency_id.symbol,
+                        'amount': abs(line.amount_residual) if line.currency_id != self.currency_id else abs(line.amount_residual_currency),
+                        'currency': line.company_id.currency_id.symbol if line.currency_id != self.currency_id else line.currency_id.symbol,
                         'id': line.id,
-                        'digits': False,
+                        'digits': [69,line.company_id.currency_id.decimal_places if line.currency_id != self.currency_id else line.currency_id.decimal_places],
                         })
-                info['title'] = type_payment + ' from ' + line.partner_id.name + ' (click to add)'
+                info['title'] = type_payment + ' from ' + line.partner_id.name
                 self.outstanding_credits_debits_widget = json.dumps(info)
 
     @api.one
     def _get_payment_info_JSON(self):
-        return False
-
+        self.payments_widget = json.dumps(False)
+        if self.payment_ids:
+            info = {'title': 'Less Payment', 'outstanding': False, 'content': []}
+            for payment in self.payment_ids:
+                if self.type in ('out_invoice', 'in_refund'):
+                    amount = sum([p.amount for p in payment.reconcile_partial_with_ids if p.source_move_id in self.move_id.line_id])
+                    amount_currency = sum([p.amount_currency for p in payment.reconcile_partial_with_ids if p.source_move_id in self.move_id.line_id])
+                elif self.type in ('in_invoice', 'out_refund'):
+                    amount = sum([p.amount for p in payment.reconcile_partial_ids if p.rec_move_id in self.move_id.line_id])
+                    amount_currency = sum([p.amount_currency for p in payment.reconcile_partial_ids if p.rec_move_id in self.move_id.line_id])
+                info['content'].append({
+                    'name': payment.name,
+                    'ref': payment.journal_id.name,
+                    'amount': -amount if payment.currency_id != self.currency_id else -amount_currency,
+                    'currency': payment.company_id.currency_id.symbol if payment.currency_id != self.currency_id else payment.currency_id.symbol,
+                    'digits': [69,payment.company_id.currency_id.decimal_places if payment.currency_id != self.currency_id else payment.currency_id.decimal_places],
+                    'date': payment.date,
+                    })
+            self.payments_widget = json.dumps(info)
     @api.one
     @api.depends(
         'move_id.line_id.amount_residual',

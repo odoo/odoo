@@ -215,8 +215,8 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-
-                                <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
@@ -249,20 +249,6 @@
                                     <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
                             </group>
-                        </page>
-                        <page string="Payments">
-                            <field name="payment_ids">
-                                <tree string="Payments">
-                                    <field name="date" string="Payment Date"/>
-                                    <field name="ref"/>
-                                    <field name="name"/>
-                                    <field name="journal_id"/>
-                                    <field name="debit"/>
-                                    <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id" groups="base.group_multi_currency"/>
-                                </tree>
-                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -362,7 +348,8 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
                                 <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1" widget="payment" attrs="{'invisible': [('state', 'not in', 'open')]}"/>
                             </group>
@@ -397,20 +384,6 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Payments" groups="base.group_user">
-                            <field name="payment_ids">
-                                <tree string="Payments">
-                                    <field name="date"/>
-                                    <field name="ref"/>
-                                    <field name="name"/>
-                                    <field name="journal_id" groups="base.group_user"/>
-                                    <field name="debit"/>
-                                    <field name="credit"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency"/>
-                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </tree>
                             </field>
                         </page>
