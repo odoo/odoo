@@ -22,6 +22,7 @@
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class analytic_user_funct_grid(osv.osv):
     _name="analytic.user.funct.grid"
@@ -105,10 +106,7 @@ class hr_analytic_timesheet(osv.osv):
             if not a:
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error!'),
-                        _('There is no expense account defined ' \
-                                'for this product: "%s" (id:%d)') % \
-                                (r.product_id.name, r.product_id.id,))
+                raise UserError(_('There is no expense account defined for this product: "%s" (id:%d)') % (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
             if unit_amount:
                 amount_unit = self.on_change_unit_amount(cr, uid, ids,
@@ -134,7 +132,7 @@ class hr_analytic_timesheet(osv.osv):
                 if not a:
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:
-                    raise osv.except_osv(_('Error!'),
+                    raise UserError(
                             _('There is no expense account defined ' \
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))

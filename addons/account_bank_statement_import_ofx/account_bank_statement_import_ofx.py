@@ -5,6 +5,7 @@ import os
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ class account_bank_statement_import(osv.TransientModel):
             pathname = os.path.dirname('temp.ofx')
             path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
         except:
-            raise osv.except_osv(_('Import Error!'), _('File handling error.'))
+            raise UserError(_('File handling error.'))
         
         ofx = self._check_ofx(cr, uid, file(path), context=context)
         if not ofx:
@@ -65,7 +66,7 @@ class account_bank_statement_import(osv.TransientModel):
                 transactions.append(vals_line)
         except Exception, e:
             os.remove(path)
-            raise osv.except_osv(_('Error!'), _("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
+            raise UserError(_("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
 
         vals_bank_statement = {
             'name': ofx.account.routing_number,

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
@@ -87,10 +88,7 @@ class stock_picking(osv.osv):
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
                 picking.partner_id.id, context=context)
         if not grid_id:
-            raise osv.except_osv(_('Warning!'),
-                    _('The carrier %s (id: %d) has no delivery grid!') \
-                            % (picking.carrier_id.name,
-                                picking.carrier_id.id))
+            raise UserError(_('The carrier %s (id: %d) has no delivery grid!') % (picking.carrier_id.name,picking.carrier_id.id))
         quantity = sum([line.product_uom_qty for line in picking.move_lines])
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
                 invoice.amount_untaxed, picking.weight, picking.volume,

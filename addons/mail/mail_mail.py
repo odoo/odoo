@@ -313,7 +313,7 @@ class mail_mail(osv.Model):
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is
                             # the only recipient, the mail will show as failed.
-                            _logger.warning("Ignoring invalid recipients for mail.mail %s: %s",
+                            _logger.info("Ignoring invalid recipients for mail.mail %s: %s",
                                             mail.message_id, email.get('email_to'))
                         else:
                             raise

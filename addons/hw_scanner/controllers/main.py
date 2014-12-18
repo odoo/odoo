@@ -107,7 +107,7 @@ class Scanner(Thread):
         if status == 'error' and message:
             _logger.error('Barcode Scanner Error: '+message)
         elif status == 'disconnected' and message:
-            _logger.warning('Disconnected Barcode Scanner: '+message)
+            _logger.info('Disconnected Barcode Scanner: %s', message)
 
     def get_device(self):
         try:

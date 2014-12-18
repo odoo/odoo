@@ -22,6 +22,7 @@
 import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class sale_order_line(osv.Model):
@@ -68,10 +69,10 @@ class sale_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
-                raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
+                raise UserError(_('No grid matching for this carrier!'))
 
             if order.state not in ('draft', 'sent'):
-                raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
+                raise UserError(_('The order state have to be draft to add delivery lines.'))
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 

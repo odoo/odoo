@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_fiscalyear_close_state(osv.osv_memory):
     """
@@ -51,7 +52,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
 
             account_move_ids = account_move_obj.search(cr, uid, [('period_id.fiscalyear_id', '=', fy_id), ('state', '=', "draft")], context=context)
             if account_move_ids:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to close a fiscalyear, you must first post related journal entries.'))
+                raise UserError(_('In order to close a fiscalyear, you must first post related journal entries.'))
 
             cr.execute('UPDATE account_journal_period ' \
                         'SET state = %s ' \

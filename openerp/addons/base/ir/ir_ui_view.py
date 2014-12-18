@@ -426,7 +426,7 @@ class view(osv.osv):
                           'parent': view.inherit_id.id or not_avail,
                           'msg': message,
                         }
-        _logger.error(message)
+        _logger.info(message)
         raise AttributeError(message)
 
     def locate_node(self, arch, spec):

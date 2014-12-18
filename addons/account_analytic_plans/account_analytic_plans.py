@@ -25,6 +25,7 @@ from lxml import etree
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -215,7 +216,7 @@ class account_analytic_plan_instance(osv.osv):
 
             pids = ana_plan_instance_obj.search(cr, uid, [('name','=',vals['name']), ('code','=',vals['code']), ('plan_id','<>',False)], context=context)
             if pids:
-                raise osv.except_osv(_('Error!'), _('A model with this name and code already exists.'))
+                raise UserError(_('A model with this name and code already exists.'))
 
             res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)], context=context)
             for i in res:
@@ -228,7 +229,7 @@ class account_analytic_plan_instance(osv.osv):
                             if acct_anal_acct.search(cr, uid, [('parent_id', 'child_of', [item.root_analytic_id.id]), ('id', '=', tempo[2]['analytic_account_id'])], context=context):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                    raise osv.except_osv(_('Error!'),_('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
+                    raise UserError(_('The total should be between %s and %s.') % (str(item.min_required), str(item.max_required)))
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
@@ -332,7 +333,7 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
            if line.analytics_id:
                if not line.journal_id.analytic_journal_id:
-                   raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
+                   raise UserError(_("You have to define an analytic journal on the '%s' journal.") % (line.journal_id.name,))
 
                toremove = analytic_line_obj.search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
@@ -468,7 +469,7 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
+                        raise UserError(_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
         return True

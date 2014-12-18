@@ -7,6 +7,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_buckaroo.controllers.main import BuckarooController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -125,26 +126,26 @@ class TxBuckaroo(osv.Model):
         transaction record. """
         reference, pay_id, shasign = data.get('BRQ_INVOICENUMBER'), data.get('BRQ_PAYMENT'), data.get('BRQ_SIGNATURE')
         if not reference or not pay_id or not shasign:
-            error_msg = 'Buckaroo: received data with missing reference (%s) or pay_id (%s) or shashign (%s)' % (reference, pay_id, shasign)
-            _logger.error(error_msg)
+            error_msg = _('Buckaroo: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         tx_ids = self.search(cr, uid, [('reference', '=', reference)], context=context)
         if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'Buckaroo: received data for reference %s' % (reference)
+            error_msg = _('Buckaroo: received data for reference %s') % (reference)
             if not tx_ids:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
             else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
+                error_msg += _('; multiple order found')
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         #verify shasign
         shasign_check = self.pool['payment.acquirer']._buckaroo_generate_digital_sign(tx.acquirer_id, 'out' ,data)
         if shasign_check.upper() != shasign.upper():
-            error_msg = 'Buckaroo: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
-            _logger.error(error_msg)
+            error_msg = _('Buckaroo: invalid shasign, received %s, computed %s, for data %s') % (shasign, shasign_check, data)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
 
         return tx 

@@ -26,6 +26,7 @@ from openerp import tools
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -400,7 +401,7 @@ class ir_translation(osv.osv):
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
         langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
         if not langs_ids:
-            raise osv.except_osv(_('Error'), _("Translation features are unavailable until you install an extra OpenERP translation."))
+            raise UserError(_("Translation features are unavailable until you install an extra OpenERP translation."))
         langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
         main_lang = 'en_US'
         translatable_fields = []

@@ -28,6 +28,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -190,11 +191,11 @@ class lang(osv.osv):
         for language in languages:
             ctx_lang = context.get('lang')
             if language['code']=='en_US':
-                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted!"))
+                raise UserError(_("Base Language 'en_US' can not be deleted!"))
             if ctx_lang and (language['code']==ctx_lang):
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language!"))
+                raise UserError(_("You cannot delete the language which is User's Preferred Language!"))
             if language['active']:
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+                raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)

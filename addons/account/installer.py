@@ -35,6 +35,7 @@ except ImportError:
 from openerp.release import serie
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -111,7 +112,7 @@ class account_installer(osv.osv_memory):
     def check_unconfigured_cmp(self, cr, uid, context=None):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp(cr, uid, context=context):
-            raise osv.except_osv(_('No Unconfigured Company!'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
+            raise UserError(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None: context = {}

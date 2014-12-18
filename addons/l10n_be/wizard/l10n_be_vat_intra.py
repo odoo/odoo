@@ -28,6 +28,7 @@ import base64
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
+from openerp.exceptions import UserError
 
 
 class partner_vat_intra(osv.osv_memory):
@@ -109,19 +110,19 @@ class partner_vat_intra(osv.osv_memory):
         # Get Company vat
         company_vat = data_company.partner_id.vat
         if not company_vat:
-            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with your company.'))
+            raise UserError(_('No VAT number associated with your company.'))
         company_vat = company_vat.replace(' ','').upper()
         issued_by = company_vat[:2]
 
         if len(wiz_data.period_code) != 6:
-            raise osv.except_osv(_('Error!'), _('Period code is not valid.'))
+            raise UserError(_('Period code is not valid.'))
 
         if not wiz_data.period_ids:
-            raise osv.except_osv(_('Insufficient Data!'),_('Please select at least one Period.'))
+            raise UserError(_('Please select at least one Period.'))
 
         p_id_list = obj_partner.search(cr, uid, [('vat','!=',False)], context=context)
         if not p_id_list:
-            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number associated with him.'))
+            raise UserError(_('No partner has a VAT number associated with him.'))
 
         seq_declarantnum = obj_sequence.next_by_code(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
@@ -145,9 +146,9 @@ class partner_vat_intra(osv.osv_memory):
         if not country:
             country = company_vat[:2]
         if not email:
-            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
+            raise UserError(_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
+            raise UserError(_('No phone associated with the company.'))
         xmldict.update({
                         'company_name': data_company.name,
                         'company_vat': company_vat,
@@ -247,7 +248,7 @@ class partner_vat_intra(osv.osv_memory):
         data_clientinfo = ''
         for client in xml_data['clientlist']:
             if not client['vatnum']:
-                raise osv.except_osv(_('Insufficient Data!'),_('No vat number defined for %s.') % client['partner_name'])
+                raise UserError(_('No vat number defined for %s.') % client['partner_name'])
             data_clientinfo +='\n\t\t<ns2:IntraClient SequenceNumber="%(seq)s">\n\t\t\t<ns2:CompanyVATNumber issuedBy="%(country)s">%(vatnum)s</ns2:CompanyVATNumber>\n\t\t\t<ns2:Code>%(code)s</ns2:Code>\n\t\t\t<ns2:Amount>%(amount).2f</ns2:Amount>\n\t\t</ns2:IntraClient>' % (client)
 
         data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum).2f">' % (xml_data)

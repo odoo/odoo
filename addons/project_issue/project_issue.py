@@ -31,6 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp.exceptions import UserError, AccessError
 
 
 class project_issue_version(osv.Model):
@@ -408,7 +409,7 @@ class project_issue(osv.Model):
             data = {}
             esc_proj = issue.project_id.project_escalation_id
             if not esc_proj:
-                raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
 
             data['project_id'] = esc_proj.id
             if esc_proj.user_id:
@@ -438,7 +439,7 @@ class project_issue(osv.Model):
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
-        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 
@@ -544,7 +545,7 @@ class account_analytic_account(osv.Model):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_issues:
-            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing issues in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 

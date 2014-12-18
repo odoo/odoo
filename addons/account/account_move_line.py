@@ -29,6 +29,7 @@ import openerp.addons.decimal_precision as dp
 from openerp import tools
 from openerp.report import report_sxw
 import openerp
+from openerp.exceptions import UserError
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
@@ -92,7 +93,7 @@ class account_move_line(osv.osv):
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
-            raise osv.except_osv(_('Warning!'),_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+            raise UserError(("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
 
 
         if context.get('journal_ids', False):
@@ -191,7 +192,7 @@ class account_move_line(osv.osv):
                 acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
-                    raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                    raise UserError(("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -596,7 +597,7 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'closed':
-                raise osv.except_osv(_('Error!'), _('You cannot create journal items on a closed account %s %s.') % (l.account_id.code, l.account_id.name))
+                raise UserError(('You cannot create journal items on a closed account %s %s.') % (l.account_id.code, l.account_id.name))
         return True
 
     def _check_company_id(self, cr, uid, ids, context=None):
@@ -876,7 +877,7 @@ class account_move_line(osv.osv):
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
+                raise UserError(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context=context):
@@ -885,11 +886,11 @@ class account_move_line(osv.osv):
             else:
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
+                raise UserError(_("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if line2.state != 'valid':
-                        raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
+                        raise UserError(_("Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not balanced!") % (line2.name, line2.id))
                     if not line2.reconcile_id:
                         if line2.id not in merges:
                             merges.append(line2.id)
@@ -934,12 +935,11 @@ class account_move_line(osv.osv):
         company_list = []
         for line in self.browse(cr, uid, ids, context=context):
             if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
+                raise UserError(_('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
         for line in unrec_lines:
             if line.state <> 'valid':
-                raise osv.except_osv(_('Error!'),
-                        _('Entry "%s" is not valid !') % line.name)
+                raise UserError(_('Entry "%s" is not valid !') % line.name)
             credit += line['credit']
             debit += line['debit']
             currency += line['amount_currency'] or 0.0
@@ -961,19 +961,19 @@ class account_move_line(osv.osv):
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if len(r) != 1:
-            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
+            raise UserError(_('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
-            raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
+            raise UserError(_('Entry is already reconciled.'))
         account = account_obj.browse(cr, uid, account_id, context=context)
         if not account.reconcile:
-            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
+            raise UserError(_('The account is not defined to be reconciled !'))
         if r[0][1] != None:
-            raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
+            raise UserError(_('Some entries are already reconciled.'))
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
+                raise UserError(_('You have to provide an account for the write off/exchange difference entry.'))
             if writeoff > 0:
                 debit = writeoff
                 credit = 0.0
@@ -1111,9 +1111,7 @@ class account_move_line(osv.osv):
         res = cr.fetchone()
         if res:
             if res[1] != 'draft':
-                raise osv.except_osv(_('User Error!'),
-                       _('The account move (%s) for centralisation ' \
-                                'has been confirmed.') % res[2])
+                raise UserError(_('The account move (%s) for centralisation has been confirmed.') % res[2])
         return res
 
     def _remove_move_reconcile(self, cr, uid, move_ids=None, opening_reconciliation=False, context=None):
@@ -1134,8 +1132,7 @@ class account_move_line(osv.osv):
         all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
-                raise osv.except_osv(_('Warning!'),
-                    _('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
+                raise UserError(_('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
             if len(all_moves) >= 2:
@@ -1168,9 +1165,9 @@ class account_move_line(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('account_tax_id', False):
-            raise osv.except_osv(_('Unable to change tax!'), _('You cannot change the tax, you should remove and recreate lines.'))
+            raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
+            raise UserError(_('You cannot use an inactive account.'))
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
                 self._update_check(cr, uid, ids, context)
@@ -1217,7 +1214,7 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
+                raise UserError(_('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
@@ -1231,9 +1228,9 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
-                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+                raise UserError(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconcile_id:
-                raise osv.except_osv(_('Error!'), _('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+                raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             t = (line.journal_id.id, line.period_id.id)
             if t not in done:
                 self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)
@@ -1254,7 +1251,7 @@ class account_move_line(osv.osv):
             if move.date and not vals.get('date'):
                 vals['date'] = move.date
         if ('account_id' in vals) and not account_obj.read(cr, uid, [vals['account_id']], ['active'])[0]['active']:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
+            raise UserError(_('You cannot use an inactive account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
         if 'period_id' in vals and vals['period_id']:
@@ -1267,7 +1264,7 @@ class account_move_line(osv.osv):
         if 'period_id' in context and not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
-                raise osv.except_osv(_('Error!'), _('No period found or more than one period found for the given date.'))
+                raise UserError(_('No period found or more than one period found for the given date.'))
             context['period_id'] = period_candidate_ids[0][0]
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
@@ -1296,7 +1293,7 @@ class account_move_line(osv.osv):
                     move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
-                    raise osv.except_osv(_('No Piece Number!'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise UserError(_('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'], context=context)
@@ -1321,7 +1318,7 @@ class account_move_line(osv.osv):
                 vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
-            raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+            raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
         result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes

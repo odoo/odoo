@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -130,6 +131,5 @@ class account_bank_statement_line(osv.osv):
         if context is None:
             context = {}
         if context.get('block_statement_line_delete', False):
-            raise osv.except_osv(_('Warning!'), _('Delete operation not allowed. \
-            Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
+            raise UserError(_('Delete operation not allowed. Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
