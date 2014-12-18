@@ -20,9 +20,9 @@
                         <strong>Journals:</strong>
                         <p t-esc="', '.join([ lt or '' for lt in get_journal(data) ])"/>
                     </div>
-                    <div class="col-xs-3" t-if="get_partners()">
+                    <div class="col-xs-3" t-if="get_partners(data)">
                         <strong>Partner's</strong>
-                        <p t-esc="get_partners()"/>
+                        <p t-esc="get_partners(data)"/>
                     </div>
                 </div>
                 <div class="row">
@@ -30,15 +30,10 @@
                         <strong>Filter By:</strong>
                         <p>
                             <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
-                            <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
                             <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
-                            <p t-if="data['form']['filter'] == 'filter_period'">
-                                Start Period: <span t-esc="get_start_period(data)"/>
-                                End Period: <span t-esc="get_end_period(data)"/>
-                            </p>
                             <p t-if="data['form']['filter'] == 'filter_date'">
-                                Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
-                                Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                                Date from : <span t-esc="get_start_date(data)"/><br />
+                                Date to : <span t-esc="get_end_date"/>
                             </p>
                         </p>
                     </div>
@@ -64,19 +59,19 @@
                             <td><strong>Total:</strong></td>
                             <td></td>
                             <td class="text-right">
-                                <strong t-esc="formatLang(sum_debit())"/>
+                                <strong t-esc="sum_debit(data)"/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="formatLang(sum_credit())"/>
+                                <strong t-esc="sum_credit(data)"/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="formatLang(sum_debit()-sum_credit(), currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="sum_debit(data) - sum_credit(data)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <strong t-esc="formatLang(sum_litige(), currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="sum_litige(data)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
-                        <tr t-foreach="lines()" t-as="line">
+                        <tr t-foreach="lines(data)" t-as="line">
                             <td t-if="line['type'] == 3">
                                 <strong t-esc="line['ref']"/>
                                 <span t-esc="line['code']"/>
@@ -91,28 +86,28 @@
                                 <span t-esc="line['name']"/>
                             </td>
                             <td t-if="line['type'] == 3" class="text-right">
-                                <strong t-esc="formatLang(line['debit'])"/>
+                                <strong t-esc="line['debit']"/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="formatLang(line['debit'])"/>
+                                <span t-esc="line['debit']"/>
                             </td>
                             <td t-if="line['type']==3" class="text-right">
-                                <strong t-esc="formatLang(line['credit'])"/>
+                                <strong t-esc="line['credit']"/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="formatLang(line['credit'])"/>
+                                <span t-esc="line['credit']"/>
                             </td>
                             <td t-if="line['type']==3" class="text-right">
-                                <strong t-esc="formatLang(line['balance'], currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="formatLang(line['balance'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type'] == 3" class="text-right">
-                                <strong t-esc="formatLang(line['enlitige'] or 0.0, currency_obj=res_company.currency_id)"/>
+                                <strong t-esc="line['enlitige'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td t-if="line['type']!=3" class="text-right">
-                                <span t-esc="formatLang(line['enlitige'] or 0.0, currency_obj=res_company.currency_id)"/>
+                                <span t-esc="line['enlitige'] or 0.0" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                     </tbody>

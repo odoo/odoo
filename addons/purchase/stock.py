@@ -100,7 +100,7 @@ class stock_move(osv.osv):
             # If partner given, search price in its purchase pricelist
             if partner and partner.property_product_pricelist_purchase:
                 pricelist_obj = self.pool.get("product.pricelist")
-                pricelist = partner.property_product_pricelist.id
+                pricelist = partner.property_product_pricelist_purchase.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist],
                                     move.product_id.id, move.product_uom_qty, partner, {
                                                                                 'uom': move.product_uom.id,

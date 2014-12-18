@@ -48,7 +48,6 @@ Includes:
     * account.type
     * account.account.template
     * account.tax.template
-    * account.tax.code.template
     * account.chart.template
 
 Everything is in English with Spanish translation. Further translations are welcome,
@@ -60,7 +59,6 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'l10n_cr_base_data.xml',
         'data/account_account_type.xml',
         'data/account_account_template.xml',
-        'data/account_tax_code_template.xml',
         'data/account_chart_template.xml',
         'data/account_tax_template.xml',
         'l10n_wizard.xml',

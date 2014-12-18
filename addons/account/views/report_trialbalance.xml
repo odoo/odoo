@@ -18,25 +18,16 @@
                     </div>
                     <div class="col-xs-3">
                         <strong>Display Account:</strong>
-                        <p>
-                            <span t-if="data['form']['display_account'] == 'all'">All accounts</span>
-                            <span t-if="data['form']['display_account'] == 'movement'">With movements</span>
-                            <span t-if="data['form']['display_account'] == 'not_zero'">With balance not equal to zero</span>
-                        </p>
+                        <p t-esc="get_display_account(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Filter By:</strong>
                         <p>
                             <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
-                            <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
                             <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
-                            <p t-if="data['form']['filter'] == 'filter_period'">
-                                Start Period: <span t-esc="get_start_period(data)"/>
-                                End Period: <span t-esc="get_end_period(data)"/>
-                            </p>
                             <p t-if="data['form']['filter'] == 'filter_date'">
-                                Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
-                                Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                                Date from : <span t-esc="get_start_date(data)"/><br />
+                                Date to : <span t-esc="get_end_date(data)"/>
                             </p>
                         </p>
                     </div>
@@ -68,7 +59,7 @@
                             </t>
 
                             <td>
-                                <span t-att-style="style" t-esc="childrenaccount['code']"/>                                     
+                                <span t-att-style="style" t-esc="childrenaccount['code']"/>
                             </td>
                             <td>
                                 <span style="color: white;" t-esc="'.' * (childrenaccount['level'] - 1)"/>
@@ -81,7 +72,7 @@
                                 <span t-att-style="style" t-esc="childrenaccount['credit']"/>
                             </td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="formatLang(childrenaccount['balance'], currency_obj=res_company.currency_id)"/>
+                                <span t-att-style="style" t-esc="childrenaccount['balance']" t-esc-options="{'widget': 'monetary', 'display_currency': 'res_company.currency_id'}"/>
                             </td>  
                         </tr>
                     </tbody>

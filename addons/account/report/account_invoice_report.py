@@ -1,101 +1,72 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import tools
 import openerp.addons.decimal_precision as dp
-from openerp.osv import fields,osv
+from openerp import models, fields, api
 
-class account_invoice_report(osv.osv):
+class account_invoice_report(models.Model):
     _name = "account.invoice.report"
     _description = "Invoices Statistics"
     _auto = False
     _rec_name = 'date'
 
-    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
+    @api.multi
+    @api.depends('currency_id', 'date', 'price_total', 'price_average', 'residual')
+    def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        if context is None:
-            context={}
-        currency_obj = self.pool.get('res.currency')
-        currency_rate_obj = self.pool.get('res.currency.rate')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
-        base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
-        res = {}
+        context = dict(self._context or {})
+        user_currency_id = self.env.user.company_id.currency_id
+        currency_rate_id = self.env['res.currency.rate'].search([('rate', '=', 1)], limit=1)
+        base_currency_id = currency_rate_id.currency_id
         ctx = context.copy()
-        for item in self.browse(cr, uid, ids, context=context):
-            ctx['date'] = item.date
-            price_total = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_total, context=ctx)
-            price_average = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_average, context=ctx)
-            residual = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.residual, context=ctx)
-            res[item.id] = {
-                'user_currency_price_total': price_total,
-                'user_currency_price_average': price_average,
-                'user_currency_residual': residual,
-            }
-        return res
+        for record in self:
+            ctx['date'] = record.date
+            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
+            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
+            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
 
-    _columns = {
-        'date': fields.date('Date', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_qty':fields.float('Product Quantity', readonly=True),
-        'uom_name': fields.char('Reference Unit of Measure', size=128, readonly=True),
-        'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'price_total': fields.float('Total Without Tax', readonly=True),
-        'user_currency_price_total': fields.function(_compute_amounts_in_user_currency, string="Total Without Tax", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
-        'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
-        'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
-        'currency_rate': fields.float('Currency Rate', readonly=True),
-        'nbr': fields.integer('# of Invoices', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'type': fields.selection([
-            ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Invoice'),
-            ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True),
-        'state': fields.selection([
-            ('draft','Draft'),
-            ('proforma','Pro-forma'),
-            ('proforma2','Pro-forma'),
-            ('open','Open'),
-            ('paid','Done'),
-            ('cancel','Cancelled')
-            ], 'Invoice Status', readonly=True),
-        'date_due': fields.date('Due Date', readonly=True),
-        'account_id': fields.many2one('account.account', 'Account',readonly=True),
-        'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
-        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
-        'residual': fields.float('Total Residual', readonly=True),
-        'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
-        'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
-    }
+    date = fields.Date(string='Date', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    product_qty = fields.Float(string='Product Quantity', readonly=True)
+    uom_name = fields.Char(string='Reference Unit of Measure', readonly=True)
+    payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
+    fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    price_total = fields.Float(string='Total Without Tax', readonly=True)
+    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    currency_rate = fields.Float(string='Currency Rate', readonly=True)
+    nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    type = fields.Selection([
+        ('out_invoice', 'Customer Invoice'),
+        ('in_invoice', 'Supplier Invoice'),
+        ('out_refund', 'Customer Refund'),
+        ('in_refund', 'Supplier Refund'),
+        ],'Type', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('proforma', 'Pro-forma'),
+        ('proforma2', 'Pro-forma'),
+        ('open', 'Open'),
+        ('paid', 'Done'),
+        ('cancel', 'Cancelled')
+        ], string='Invoice Status', readonly=True)
+    date_due = fields.Date(string='Due Date', readonly=True)
+    account_id = fields.Many2one('account.account', string='Account',readonly=True, domain=[('deprecated', '=', False)])
+    account_line_id = fields.Many2one('account.account', string='Account Line', readonly=True, domain=[('deprecated', '=', False)])
+    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
+    residual = fields.Float(string='Total Residual', readonly=True)
+    user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=dp.get_precision('Account'))
+    country_id = fields.Many2one('res.country', string='Country of the Partner Company')
+
     _order = 'date desc'
 
     _depends = {
@@ -103,11 +74,11 @@ class account_invoice_report(osv.osv):
             'account_id', 'amount_total', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term',
-            'period_id', 'residual', 'state', 'type', 'user_id',
+            'residual', 'state', 'type', 'user_id',
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
-            'quantity', 'uos_id',
+            'quantity', 'uos_id', 'account_analytic_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
@@ -118,8 +89,8 @@ class account_invoice_report(osv.osv):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
-                sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
+            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
+                sub.payment_term, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
@@ -131,7 +102,7 @@ class account_invoice_report(osv.osv):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    ail.product_id, ai.partner_id, ai.payment_term, ai.period_id,
+                    ail.product_id, ai.partner_id, ai.payment_term, ail.account_analytic_id,
                     CASE
                      WHEN u.uom_type::text <> 'reference'::text
                         THEN ( SELECT product_uom.name
@@ -201,8 +172,8 @@ class account_invoice_report(osv.osv):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, ai.date_invoice, ai.id,
-                    ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
+                GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
+                    ai.partner_id, ai.payment_term, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
                     ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id
@@ -229,5 +200,3 @@ class account_invoice_report(osv.osv):
                     self._table,
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

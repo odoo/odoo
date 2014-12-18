@@ -908,6 +908,8 @@ $sheet-padding: 16px
         -webkit-user-select: none
         -moz-user-select: none
         user-select: none
+        .oe-button-column
+            height: 30px
         .dropdown-menu
             li
                 position: relative
@@ -952,6 +954,8 @@ $sheet-padding: 16px
         .oe-view-manager-search-view
             padding-top: 5px
         .oe-view-manager-switch
+            button
+                width: 34px
             .oe-vm-switch-kanban:before
                 content: "\f009"
             .oe-vm-switch-list:before
@@ -1424,7 +1428,7 @@ $sheet-padding: 16px
             td.oe_form_group_cell_label
                 border-right: none
             .oe_subtotal_footer_separator
-                width: 108px
+                min-width: 108px
                 border-top: 1px solid #cacaca
                 margin-top: 4px
                 padding-top: 4px
@@ -1691,6 +1695,9 @@ $sheet-padding: 16px
                 @include box-sizing(border)
             &:hover .oe_form_field_image_controls
                 display: block
+            img
+                max-width: 256px
+                max-height: 256px
     .oe_fileupload
         display: inline-block
         clear: both

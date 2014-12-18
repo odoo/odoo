@@ -28,6 +28,7 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
+from openerp import api
 from openerp import SUPERUSER_ID, models
 from openerp import tools
 import openerp.exceptions
@@ -91,7 +92,7 @@ class res_groups(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
-        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
+        'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls', copy=True),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
@@ -540,6 +541,10 @@ class res_users(osv.osv):
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
+
+    @api.v7
+    def get_company_currency_id(self, cr, uid, context=None):
+        return self.browse(uid).company_id.currency_id.id    
 
 #----------------------------------------------------------
 # Implied groups

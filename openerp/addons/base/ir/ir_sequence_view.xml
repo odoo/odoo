@@ -7,22 +7,38 @@
             <field name="arch" type="xml">
                 <form string="Sequences">
                   <sheet>
-                    <group col="4">
+                    <group>
+                      <group>
                         <field name="name"/>
+                        <field name="implementation"/>
+                      </group>
+                      <group>
                         <field name="code"/>
+                        <field name="active"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="active" groups="base.group_no_one"/>
+                      </group>
                     </group>
                     <notebook>
                     <page string="Sequence">
-                        <group col="4">
+                        <group>
+                          <group>
                             <field name="prefix"/>
                             <field name="suffix"/>
+                            <field name="use_date_range"/>
+                          </group>
+                          <group>
                             <field name="padding"/>
                             <field name="number_increment"/>
-                            <field name="number_next_actual"/>
-                            <field name="implementation"/>
+                            <field name="number_next_actual" attrs="{'invisible': [('use_date_range', '=', True)]}"/>
+                          </group>
                         </group>
+                        <field name="date_range_ids" attrs="{'invisible': [('use_date_range', '=', False)]}">
+                            <tree string="Sequences" editable="top">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="number_next_actual"/>
+                            </tree>
+                        </field>
                         <group col="3" string="Legend (for prefix, suffix)">
                             <group>
                                 <label colspan="2" string="Current Year with Century: %%(year)s"/>
@@ -82,49 +98,6 @@
             <field name="context">{'active_test': False}</field>
         </record>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
-
-        <!-- Sequences Types -->
-        <record id="sequence_type_form_view" model="ir.ui.view">
-            <field name="model">ir.sequence.type</field>
-            <field name="arch" type="xml">
-                <form string="Sequence Type">
-                  <sheet>
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="code"/>
-                    </group>
-                   </sheet> 
-                </form>
-            </field>
-        </record>
-        <record id="sequence_type_tree_view" model="ir.ui.view">
-            <field name="model">ir.sequence.type</field>
-            <field name="arch" type="xml">
-                <tree string="Sequence Type">
-                    <field name="name"/>
-                    <field name="code"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_sequence_type_search" model="ir.ui.view">
-            <field name="model">ir.sequence.type</field>
-            <field name="arch" type="xml">
-                <search string="Sequences Type">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Sequence Type"/>
-                </search>
-            </field>
-        </record>
-        <record id="ir_sequence_type" model="ir.actions.act_window">
-            <field name="name">Sequence Codes</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.sequence.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field eval="False" name="view_id"/>
-        </record>
-        <menuitem action="ir_sequence_type" id="menu_ir_sequence_type"
-            groups="base.group_no_one"
-            parent="base.next_id_5"/>
 
     </data>
 </openerp>

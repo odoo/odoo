@@ -65,7 +65,6 @@ Izvori podataka:
                 ],
     'data': [
                 'data/account.account.type.csv',
-                'data/account.tax.code.template.csv',
                 'data/account.account.template.csv',
                 'l10n_hr_chart_template.xml',
                 'l10n_hr_wizard.xml',

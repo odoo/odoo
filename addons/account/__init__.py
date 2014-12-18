@@ -29,12 +29,11 @@ import account_cash_statement
 import account_move_line
 import account_analytic_line
 import account_financial_report
-import wizard
-import report
 import product
 import company
-import res_currency
-import edi
 import res_config
+
+import wizard
+import report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

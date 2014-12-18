@@ -41,7 +41,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'data': [
         'account_code_template.xml',
         'account_tdhp_turkey.xml',
-        'account_tax_code_template.xml',
         'account_chart_template.xml',
         'account_tax_template.xml',
         'l10n_tr_wizard.xml',

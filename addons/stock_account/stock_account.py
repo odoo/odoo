@@ -29,15 +29,14 @@ _logger = logging.getLogger(__name__)
 class stock_inventory(osv.osv):
     _inherit = "stock.inventory"
     _columns = {
-        'period_id': fields.many2one('account.period', 'Force Valuation Period', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
+        'date_account': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
     }
-
     def post_inventory(self, cr, uid, inv, context=None):
         if context is None:
             context = {}
         ctx = context.copy()
-        if inv.period_id:
-            ctx['force_period'] = inv.period_id.id
+        if inv.date:
+            ctx['force_period_date'] = inv.date
         return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
 
@@ -49,12 +48,12 @@ class stock_location(osv.osv):
     _inherit = "stock.location"
 
     _columns = {
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain=[('type', '=', 'other')],
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)],
                                                    help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
                                                         "this account will be used to hold the value of products being moved from an internal location "
                                                         "into this location, instead of the generic Stock Output Account set on the product. "
                                                         "This has no effect for internal locations."),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain=[('type', '=', 'other')],
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)],
                                                    help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
                                                         "this account will be used to hold the value of products being moved out of this location "
                                                         "and into an internal location, instead of the generic Stock Output Account set on the product. "
@@ -236,10 +235,10 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, move.date, context=context)[0])
+            date= context.get('force_period_date', move.date)
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
-                                      'period_id': period_id,
+                                      'date': date,
                                       'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 
@@ -267,7 +266,6 @@ class stock_move(osv.osv):
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
@@ -282,17 +280,25 @@ class stock_move(osv.osv):
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
+        tmpl_dict = {}
         for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                product_avail = product.qty_available
-                if product.qty_available <= 0:
+                prod_tmpl_id = move.product_id.product_tmpl_id.id
+                qty_available = move.product_id.product_tmpl_id.qty_available
+                if tmpl_dict.get(prod_tmpl_id):
+                    product_avail = qty_available + tmpl_dict[prod_tmpl_id]
+                else:
+                    tmpl_dict[prod_tmpl_id] = 0
+                    product_avail = qty_available
+                if product_avail <= 0:
                     new_std_price = move.price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                tmpl_dict[prod_tmpl_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
 

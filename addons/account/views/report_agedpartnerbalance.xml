@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-xs-3">
                         <strong>Start Date:</strong>
-                        <p t-esc="formatLang(data['form']['date_from'], date=True)"/>
+                        <p t-esc="get_start_date(data)"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>Period Length (days)</strong>
@@ -61,13 +61,13 @@
                         </tr>
                         <tr t-if="get_lines(data['form']) or get_lines_with_out_partner(data['form'])">
                             <th>Account Total</th>
-                            <th class="text-right"><span t-esc="formatLang(get_direction(6), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(4), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(3), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(2), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(1), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(0), currency_obj=res_company.currency_id)"/></th>
-                            <th class="text-right"><span t-esc="formatLang(get_for_period(5), currency_obj=res_company.currency_id)"/></th>
+                            <th class="text-right"><span t-esc="get_direction(6)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(4)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(3)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(2)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(1)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(0)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_for_period(5)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,25 +76,25 @@
                                 <span t-esc="partner['name']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['direction'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['direction']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['4'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['4']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['3'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['3']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['2'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['2']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['1'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['1']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['0'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['0']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(partner['total'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="partner['total']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                         <tr t-foreach="get_lines_with_out_partner(data['form'])" t-as="not_partner">
@@ -102,25 +102,25 @@
                                 <span t-esc="not_partner['name']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['direction'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['direction']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['4'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['4']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['3'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['3']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['2'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['2']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['1'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['1']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['0'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['0']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(not_partner['total'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="not_partner['total']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                     </tbody>

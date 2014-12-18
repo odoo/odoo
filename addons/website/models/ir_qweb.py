@@ -290,7 +290,6 @@ class HTML(orm.AbstractModel):
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
 
-
 class Image(orm.AbstractModel):
     """
     Widget options:

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- QWeb Reports -->
+        <report 
+            id="account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+        <report 
+            id="action_report_trial_balance"
+            model="account.balance.report"
+            string="Trial Balance"
+            report_type="qweb-pdf"
+            name="account.report_trialbalance" 
+            file="account.report_trialbalance"
+        />
+
+        <report 
+            id="action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+        />
+
+        <report 
+            id="action_account_3rdparty_account_balance" 
+            model="account.account" 
+            string="Partner Balance"
+            report_type="qweb-pdf" 
+            name="account.report_partnerbalance" 
+            file="account.report_partnerbalance" 
+            menu="False" 
+        />
+
+        <report 
+            id="action_report_aged_partner_balance"
+            model="res.partner"
+            string="Aged Partner Balance"
+            report_type="qweb-pdf"
+            name="account.report_agedpartnerbalance"
+            file="account.report_agedpartnerbalance"
+            menu="False"
+        />
+
+        <report
+            id="action_report_partner_ledger"
+            model="res.partner"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_financial"
+            model="account.financial.report"
+            string="Financial report"
+            report_type="qweb-pdf"
+            name="account.report_financial"
+            file="account.report_financial"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_general_ledger" 
+            model="account.report.general.ledger" 
+            string="General Ledger"
+            report_type="qweb-pdf"
+            name="account.report_generalledger" 
+            file="account.report_generalledger"
+            menu="False"
+            auto="False"
+        />
+
+        <!-- Menu items -->
+        <menuitem
+            id="menu_tax_report"
+            name="Taxes"
+            groups="group_account_user,group_account_manager"
+            parent="account.menu_finance_generic_reporting"
+            sequence="3"
+        />
+    </data>
+</openerp>

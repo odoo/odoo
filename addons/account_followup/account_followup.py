@@ -305,9 +305,8 @@ class res_partner(osv.osv):
         #psql view the report is based on, so we need to stop the user here.
         if not self.pool.get('account.move.line').search(cr, uid, [
                                                                    ('partner_id', '=', ids[0]),
-                                                                   ('account_id.type', '=', 'receivable'),
-                                                                   ('reconcile_id', '=', False),
-                                                                   ('state', '!=', 'draft'),
+                                                                   ('account_id.user_type.type', '=', 'receivable'),
+                                                                   ('reconciled', '=', False),
                                                                    ('company_id', '=', company_id),
                                                                   ], context=context):
             raise osv.except_osv(_('Error!'),_("The partner does not have any accounting entries to print in the overdue report for the current company."))
@@ -373,12 +372,13 @@ class res_partner(osv.osv):
                     (SELECT (debit-credit) AS bal, partner_id
                     FROM account_move_line l
                     WHERE account_id IN
-                            (SELECT id FROM account_account
-                            WHERE type=\'receivable\' AND active)
+                            (SELECT a.id FROM account_account a
+                                LEFT JOIN account_account_type act ON (a.user_type=act.id)
+                            WHERE act.type=\'receivable\' AND deprecated='f')
                     ''' + overdue_only_str + '''
-                    AND reconcile_id IS NULL
+                    AND reconciled IS FALSE
                     AND company_id = %s
-                    AND ''' + query + ''') AS l
+                    ''' + query + ''') AS l
                     RIGHT JOIN res_partner p
                     ON p.id = partner_id ) AS pl
                     GROUP BY pid HAVING ''' + having_where_clause, [company_id] + having_values)
@@ -402,10 +402,11 @@ class res_partner(osv.osv):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute('SELECT partner_id FROM account_move_line l '\
                     'WHERE account_id IN '\
-                        '(SELECT id FROM account_account '\
-                        'WHERE type=\'receivable\' AND active) '\
+                        '(SELECT a.id FROM account_account a'\
+                        'LEFT JOIN account_account_type act ON (a.user_type=act.id)'\
+                        'WHERE act.type=\'receivable\' AND deprecated=False) '\
                     'AND l.company_id = %s '
-                    'AND reconcile_id IS NULL '\
+                    'AND reconciled IS FALSE '\
                     'AND '+query+' '\
                     'AND partner_id IS NOT NULL '\
                     'GROUP BY partner_id HAVING '+ having_where_clause,
@@ -448,8 +449,8 @@ class res_partner(osv.osv):
                                          "gets a follow-up level that requires a manual action. "
                                          "Can be practical to set manually e.g. to see if he keeps "
                                          "his promises."),
-        'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
-                            ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
+        'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconciled', '=', False), '&', 
+                            ('account_id.deprecated','=', False), '&', ('account_id.user_type.type', '=', 'receivable')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
                             help="Latest date that the follow-up level of the partner was changed", 
                             store=False, multi="latest"), 

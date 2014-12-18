@@ -218,7 +218,7 @@ openerp.mail = function (session) {
 
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
-            this.display_date = moment(this.date).format('ddd MMM DD YYYY LT');
+            this.display_date = moment(new Date(this.date)).format('ddd MMM DD YYYY LT');
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
             }
@@ -2045,5 +2045,44 @@ openerp.mail = function (session) {
      */
 
     openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
+    /**
+     * ------------------------------------------------------------
+     * UserMenu
+     * ------------------------------------------------------------
+     *
+     * Add a link on the top user bar for write a full mail
+     */
+    session.web.ComposeMessageTopButton = session.web.Widget.extend({
+        template:'mail.ComposeMessageTopButton',
 
+        start: function () {
+            this.$('button').on('click', this.on_compose_message );
+            this._super();
+        },
+
+        on_compose_message: function (event) {
+            event.stopPropagation();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {},
+            };
+            session.client.action_manager.do_action(action);
+        },
+    });
+
+    session.web.UserMenu.include({
+        do_update: function(){
+            var self = this;
+            this._super.apply(this, arguments);
+            this.update_promise.then(function() {
+                var mail_button = new session.web.ComposeMessageTopButton();
+                mail_button.appendTo(session.webclient.$el.find('.oe_systray'));
+            });
+        },
+    });
 };

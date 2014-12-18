@@ -45,9 +45,9 @@ class account_followup_stat_by_partner(osv.osv):
     _depends = {
         'account.move.line': [
             'account_id', 'company_id', 'credit', 'date', 'debit',
-            'followup_date', 'followup_line_id', 'partner_id', 'reconcile_id',
+            'followup_date', 'followup_line_id', 'partner_id', 'reconciled',
         ],
-        'account.account': ['active', 'type'],
+        'account.account': ['deprecated', 'user_type'],
     }
 
     def init(self, cr):
@@ -71,10 +71,11 @@ class account_followup_stat_by_partner(osv.osv):
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
+                    LEFT JOIN account_account_type act ON (a.user_type = act.id)
                 WHERE
-                    a.active AND
-                    a.type = 'receivable' AND
-                    l.reconcile_id is NULL AND
+                    a.deprecated='f' AND
+                    act.type = 'receivable' AND
+                    l.reconciled is FALSE AND
                     l.partner_id IS NOT NULL
                     GROUP BY
                     l.partner_id, l.company_id
@@ -269,11 +270,12 @@ class account_followup_print(osv.osv_memory):
             "FROM account_move_line AS l "\
                 "LEFT JOIN account_account AS a "\
                 "ON (l.account_id=a.id) "\
-            "WHERE (l.reconcile_id IS NULL) "\
-                "AND (a.type='receivable') "\
-                "AND (l.state<>'draft') "\
+                "LEFT JOIN account_account_type AS act "\
+                "ON (a.user_type=act.id) "\
+            "WHERE (l.reconciled IS FALSE) "\
+                "AND (act.type='receivable') "\
                 "AND (l.partner_id is NOT NULL) "\
-                "AND (a.active) "\
+                "AND (a.deprecated='f') "\
                 "AND (l.debit > 0) "\
                 "AND (l.company_id = %s) " \
                 "AND (l.blocked = False)" \

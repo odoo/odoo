@@ -38,7 +38,7 @@
                         <field name="name"/>
                         <field name="journal"/>
                         <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
-                        <field name="company_id" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         <field name="partner_id" invisible="1"/>
                     </group>
                 </form>
@@ -81,7 +81,7 @@
                         <group>
                             <field name="date_prefered"/>
                             <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
-                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <field name="line_ids" context="{'order_id': active_id or False}" >
@@ -89,11 +89,11 @@
                             <notebook>
                                 <page string="Payment">
                                     <group col="4">
-                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)] "/>
+                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconciled','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)] "/>
                                         <separator colspan="4" string="Transaction Information"/>
                                         <field name="date"/>
-                                        <label for="amount_currency" groups="base.group_multi_currency"/>
-                                        <div groups="base.group_multi_currency">
+                                        <label for="amount_currency" string="Amount"/>
+                                        <div>
                                             <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
                                             <field name="currency" nolabel="1" class="oe_inline"/>
                                         </div>
@@ -107,7 +107,7 @@
                                         <field colspan="4" name="communication2"/>
                                         <field name="name"/>
                                         <field name="state"/>
-                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
                                 </page>
                                 <page string="Information">
@@ -215,7 +215,7 @@
                         <page string="Payment">
                             <group col="4">
                                 <field name="order_id"/>
-                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)]"/>
+                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconciled','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)]"/>
                                 <separator colspan="4" string="Transaction Information"/>
                                 <field name="date"/>
                                 <label for="amount_currency" groups="base.group_multi_currency"/>

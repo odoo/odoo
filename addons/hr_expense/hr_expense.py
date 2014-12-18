@@ -69,7 +69,7 @@ class hr_expense_expense(osv.osv):
         'id': fields.integer('Sheet ID', readonly=True),
         'date': fields.date('Date', select=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is done."),
-        'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account"),
+        'employee_payable_account_id': fields.many2one('account.account', 'Employee Account', help="Employee payable account", domain=[('deprecated', '=', False)]),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Confirmation Date', select=True, copy=False,
@@ -162,7 +162,6 @@ class hr_expense_expense(osv.osv):
         journal_obj = self.pool.get('account.journal')
         expense = self.browse(cr, uid, expense_id, context=context)
         company_id = expense.company_id.id
-        date = expense.date_confirm
         ref = expense.name
         journal_id = False
         if expense.journal_id:
@@ -172,7 +171,13 @@ class hr_expense_expense(osv.osv):
             if not journal_id:
                 raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             journal_id = journal_id[0]
-        return self.pool.get('account.move').account_move_prepare(cr, uid, journal_id, date=date, ref=ref, company_id=company_id, context=context)
+
+        return {
+            'journal_id': journal_id,
+            'date': expense.date_confirm,
+            'ref': ref,
+            'company_id': company_id,
+        }
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         partner_id  = self.pool.get('res.partner')._find_accounting_partner(part).id
@@ -457,8 +462,8 @@ class hr_expense_line(osv.osv):
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
-        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id, context=context)
+    def reconcile(self, cr, uid, ids, writeoff_acc_id=False, writeoff_journal_id=False, context=None):
+        res = super(account_move_line, self).reconcile(cr, uid, ids, writeoff_acc_id=writeoff_acc_id, writeoff_journal_id=writeoff_journal_id, context=context)
         #when making a full reconciliation of account move lines 'ids', we may need to recompute the state of some hr.expense
         account_move_ids = [aml.move_id.id for aml in self.browse(cr, uid, ids, context=context)]
         expense_obj = self.pool.get('hr.expense.expense')
@@ -470,7 +475,7 @@ class account_move_line(osv.osv):
                     #making the postulate it has to be set paid, then trying to invalidate it
                     new_status_is_paid = True
                     for aml in expense.account_move_id.line_id:
-                        if aml.account_id.type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
+                        if aml.account_id.user_type.type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
                             new_status_is_paid = False
                     if new_status_is_paid:
                         expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)

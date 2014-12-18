@@ -66,8 +66,11 @@ _logger = logging.getLogger(__name__)
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def find_in_path(name):
+    path = os.environ.get('PATH', os.defpath).split(os.pathsep)
+    if config.get('bin_path') and config['bin_path'] != 'None':
+        path.append(config['bin_path'])
     try:
-        return which(name)
+        return which(name, path=os.pathsep.join(path))
     except IOError:
         return None
 
@@ -424,27 +427,6 @@ class UpdateableDict(local):
 
     def __ne__(self, y):
         return self.dict.__ne__(y)
-
-class currency(float):
-    """ Deprecate
-    
-    .. warning::
-    
-    Don't use ! Use res.currency.round()
-    """
-
-    def __init__(self, value, accuracy=2, rounding=None):
-        if rounding is None:
-            rounding=10**-accuracy
-        self.rounding=rounding
-        self.accuracy=accuracy
-
-    def __new__(cls, value, accuracy=2, rounding=None):
-        return float.__new__(cls, round(value, accuracy))
-
-    #def __str__(self):
-    #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
-    #   return str(display_value)
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')

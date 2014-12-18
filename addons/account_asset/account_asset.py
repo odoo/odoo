@@ -35,9 +35,9 @@ class account_asset_category(osv.osv):
         'name': fields.char('Name', required=True, select=1),
         'note': fields.text('Note'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
-        'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('type','=','other')]),
-        'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True, domain=[('type','=','other')]),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('type','=','other')]),
+        'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('user_type.type','=','other'), ('deprecated', '=', False)]),
+        'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True, domain=[('user_type.type','=','other'), ('deprecated', '=', False)]),
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('user_type.type','=','other'), ('deprecated', '=', False)]),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'method': fields.selection([('linear','Linear: Computed on basis of Gross Value / Number of Depreciations'),('degressive','Degressive: Computed on basis of Residual Value * Degressive Factor')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
@@ -80,13 +80,6 @@ class account_asset_asset(osv.osv):
             if asset.account_move_line_ids: 
                 raise osv.except_osv(_('Error!'), _('You cannot delete an asset that contains posted depreciation lines.'))
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
-
-    def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid, context=context)
-        if periods:
-            return periods[0]
-        else:
-            return False
 
     def _get_last_depreciation_date(self, cr, uid, ids, context=None):
         """
@@ -329,13 +322,11 @@ class account_asset_asset(osv.osv):
             res['value'] = {'prorata': False}
         return res
 
-    def _compute_entries(self, cr, uid, ids, period_id, context=None):
+    def _compute_entries(self, cr, uid, ids, date, context=None):
         result = []
-        period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
-        period = period_obj.browse(cr, uid, period_id, context=context)
-        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', period.date_stop), ('depreciation_date', '>=', period.date_start), ('move_check', '=', False)], context=context)
-        context = dict(context or {}, depreciation_date=period.date_stop)
+        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', date), ('move_check', '=', False)], context=context)
+        context = dict(context or {}, depreciation_date=time.strftime('%Y-%m-%d'))
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -383,7 +374,6 @@ class account_asset_depreciation_line(osv.osv):
         context = dict(context or {})
         can_close = False
         asset_obj = self.pool.get('account.asset.asset')
-        period_obj = self.pool.get('account.period')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
@@ -391,7 +381,6 @@ class account_asset_depreciation_line(osv.osv):
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
             depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
-            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
             context.update({'date': depreciation_date})
@@ -399,38 +388,26 @@ class account_asset_depreciation_line(osv.osv):
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = line.asset_id.name
             reference = line.name
-            move_vals = {
-                'name': asset_name,
-                'date': depreciation_date,
-                'ref': reference,
-                'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                }
-            move_id = move_obj.create(cr, uid, move_vals, context=context)
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
-            move_line_obj.create(cr, uid, {
+            move_line_1 = {
                 'name': asset_name,
                 'ref': reference,
-                'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': amount,
-                'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
-            })
-            move_line_obj.create(cr, uid, {
+            }
+            move_line_2 = {
                 'name': asset_name,
                 'ref': reference,
-                'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
                 'debit': amount,
-                'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
@@ -438,7 +415,15 @@ class account_asset_depreciation_line(osv.osv):
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
                 'asset_id': line.asset_id.id
-            })
+            }
+            move_vals = {
+                'name': asset_name,
+                'ref': reference,
+                'date': depreciation_date or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'line_id': [(0, 0, move_line_1), (0, 0, move_line_2)],
+                }
+            move_id = move_obj.create(cr, uid, move_vals, context=context)
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
             asset_ids.append(line.asset_id.id)

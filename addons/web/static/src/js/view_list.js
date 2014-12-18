@@ -511,6 +511,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
+        reloaded.then(function () {
+            if (!self.grouped) self.$pager.show();
+        });
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
@@ -535,6 +538,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     reload_record: function (record) {
         var self = this;
+        var fields = this.fields_view.fields;
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
@@ -547,8 +551,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 self.records.remove(record);
                 return;
             }
-            _(_.keys(values)).each(function(key){
-                record.set(key, values[key], {silent: true});
+            _.each(values, function (value, key) {
+                if (fields[key] && fields[key].type === 'many2many')
+                    record.set(key + '__display', false, {silent: true});
+                record.set(key, value, {silent: true});            
             });
             record.trigger('change', record);
         });

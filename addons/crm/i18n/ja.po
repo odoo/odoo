@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-12 11:50+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:01+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-13 07:23+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: crm
 #: field:crm.lead,meeting_count:0
@@ -260,7 +260,7 @@ msgstr ""
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,exclude_contact:0
 msgid "A user associated to the contact"
-msgstr ""
+msgstr "連絡先に関連付けたユーザー"
 
 #. module: crm
 #: view:crm.case.section:crm.sales_team_form_view_in_crm
@@ -704,7 +704,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
-msgstr ""
+msgstr "変換オプション"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
@@ -904,7 +904,7 @@ msgstr "期限切れ"
 #: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
 #: model:ir.ui.menu,name:crm.partner_merge_automatic_menu
 msgid "Deduplicate Contacts"
-msgstr ""
+msgstr "コンタクトの重複排除"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -1064,7 +1064,7 @@ msgstr ""
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr ""
+msgstr "除外するコンタクト"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
@@ -1332,7 +1332,7 @@ msgstr "内部メモ"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,group_by_is_company:0
 msgid "Is Company"
-msgstr ""
+msgstr "会社"
 
 #. module: crm
 #: field:crm.lead,message_is_follower:0
@@ -1349,7 +1349,7 @@ msgstr ""
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
 msgid "Journal Items associated to the contact"
-msgstr ""
+msgstr "連絡先に関連付けた仕訳項目"
 
 #. module: crm
 #: field:crm.lead,date_action_last:0
@@ -1682,7 +1682,7 @@ msgstr "パートナIDが処理される最大"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,maximum_group:0
 msgid "Maximum of Group of Contacts"
-msgstr ""
+msgstr "連絡先グループの最大値"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
@@ -1714,12 +1714,12 @@ msgstr ""
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr ""
+msgstr "自動的にマージ"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr ""
+msgstr "すべてのプロセスを自動的にマージ"
 
 #. module: crm
 #: view:crm.merge.opportunity:crm.merge_opportunity_form
@@ -1750,7 +1750,7 @@ msgstr ""
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr ""
+msgstr "手動チェックでマージ"
 
 #. module: crm
 #: help:crm.lead2opportunity.partner.mass,deduplicate:0
@@ -2126,7 +2126,7 @@ msgstr "オプションの式"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr ""
+msgstr "オプション"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
@@ -2153,7 +2153,7 @@ msgstr "締切超過"
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
 msgid "Parent Company"
-msgstr ""
+msgstr "親会社"
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
@@ -2615,7 +2615,7 @@ msgstr "通話の検索"
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr ""
+msgstr "複製されたデータに基づく重複を検索"
 
 #. module: crm
 #: model:crm.tracking.source,name:crm.crm_source_search_engine
@@ -2675,6 +2675,8 @@ msgid ""
 "                            all these fields in common. (not one of the "
 "fields)."
 msgstr ""
+"重複した記録の検索で使用するために、項目のリストを選択します。\n"
+"複数の項目を選択した場合、Odooはすべてに共通して含まれる(ひとつではない)項目のマージを提案します。"
 
 #. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -3037,7 +3039,7 @@ msgstr "ToDo"
 #. module: crm
 #: model:ir.ui.menu,name:crm.root_menu
 msgid "Tools"
-msgstr ""
+msgstr "ツール"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_top_opportunities

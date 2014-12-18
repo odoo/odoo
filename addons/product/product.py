@@ -32,7 +32,7 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round, float_compare
 
 def ean_checksum(eancode):
     """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
@@ -54,18 +54,6 @@ def ean_checksum(eancode):
 
     check = int(10 - math.ceil(total % 10.0)) %10
     return check
-
-def check_ean(eancode):
-    """returns True if eancode is a valid ean13 string, or null"""
-    if not eancode:
-        return True
-    if len(eancode) != 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
-    return ean_checksum(eancode) == int(eancode[-1])
 
 def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
@@ -142,7 +130,7 @@ class product_uom(osv.osv):
             string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'rounding': fields.float('Rounding Precision', digits=0, required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
@@ -154,14 +142,16 @@ class product_uom(osv.osv):
     _defaults = {
         'active': 1,
         'rounding': 0.01,
+        'factor': 1,
         'uom_type': 'reference',
+        'factor': 1.0,
     }
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True):
+    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
         uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
@@ -169,9 +159,9 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round)
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round, rounding_method=rounding_method)
 
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, context=None):
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, rounding_method='UP', context=None):
         if context is None:
             context = {}
         if from_unit.category_id.id != to_unit.category_id.id:
@@ -179,14 +169,11 @@ class product_uom(osv.osv):
                 raise osv.except_osv(_('Error!'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
-        # First round to the precision of the original unit, so that
-        # float representation errors do not bias the following ceil()
-        # e.g. with 1 / (1/12) we could get 12.0000048, ceiling to 13! 
-        amount = float_round(qty/from_unit.factor, precision_rounding=from_unit.rounding)
+        amount = qty/from_unit.factor
         if to_unit:
             amount = amount * to_unit.factor
             if round:
-                amount = ceiling(amount, to_unit.rounding)
+                amount = float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -495,6 +482,7 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
+        'sequence': fields.integer('Sequence', help='Gives the sequence order when displaying a product list'),
         'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True,
             help="A precise description of the Product, used only for internal information purposes."),
@@ -572,7 +560,7 @@ class product_template(osv.osv):
         'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
-        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='EAN13 Barcode'),
+        'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
     }
 
@@ -649,14 +637,25 @@ class product_template(osv.osv):
         for tmpl_id in tmpl_ids:
 
             # list of values combination
+            variant_alone = []
             all_variants = [[]]
             for variant_id in tmpl_id.attribute_line_ids:
-                if len(variant_id.value_ids) > 1:
-                    temp_variants = []
+                if len(variant_id.value_ids) == 1:
+                    variant_alone.append(variant_id.value_ids[0])
+                temp_variants = []
+                for variant in all_variants:
                     for value_id in variant_id.value_ids:
-                        for variant in all_variants:
-                            temp_variants.append(variant + [int(value_id)])
-                    all_variants = temp_variants
+                        temp_variants.append(variant + [int(value_id)])
+                all_variants = temp_variants
+
+            # adding an attribute with only one value should not recreate product
+            # write this attribute on every product to make sure we don't lose them
+            for variant_id in variant_alone:
+                product_ids = []
+                for product_id in tmpl_id.product_variant_ids:
+                    if variant_id.id not in map(int, product_id.attribute_value_ids):
+                        product_ids.append(product_id.id)
+                product_obj.write(cr, uid, product_ids, {'attribute_value_ids': [(4, variant_id.id)]}, context=ctx)
 
             # check product
             variant_ids_to_active = []
@@ -703,8 +702,8 @@ class product_template(osv.osv):
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
         related_vals = {}
-        if vals.get('ean13'):
-            related_vals['ean13'] = vals['ean13']
+        if vals.get('barcode'):
+            related_vals['barcode'] = vals['barcode']
         if vals.get('default_code'):
             related_vals['default_code'] = vals['default_code']
         if related_vals:
@@ -716,6 +715,13 @@ class product_template(osv.osv):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if 'uom_id' in vals:
+            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_id'], context=context)
+            for product in self.browse(cr, uid, ids, context=context):
+                old_uom = product.uom_id
+                if old_uom != new_uom:
+                    if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids]), ('state', '!=', 'cancel')], context=context):
+                        raise osv.except_osv(_('Unit of Measure can not be changed anymore!'), _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
@@ -750,6 +756,7 @@ class product_template(osv.osv):
         'categ_id' : _default_category,
         'type' : 'consu',
         'active': True,
+        'sequence': 1,
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -767,7 +774,7 @@ class product_template(osv.osv):
         return True
 
     _constraints = [
-        (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id']),
+        (_check_uom, 'Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.', ['uom_id', 'uom_po_id']),
     ]
 
     def name_get(self, cr, user, ids, context=None):
@@ -847,7 +854,7 @@ class product_product(osv.osv):
                     context['uom'], value, uom.id)
         value =  value - product.price_extra
         
-        return product.write({'list_price': value}, context=context)
+        return product.write({'list_price': value})
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -898,8 +905,8 @@ class product_product(osv.osv):
         res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
         product = self.browse(cr, uid, id, context=context)
         if not product.product_tmpl_id.image:
-            product.write({'image_variant': None}, context=context)
-            product.product_tmpl_id.write({'image': image}, context=context)
+            product.write({'image_variant': None})
+            product.product_tmpl_id.write({'image': image})
         return res
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
@@ -922,7 +929,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
-        'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
+        'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -978,14 +985,6 @@ class product_product(osv.osv):
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
-
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.read(cr, uid, ids, ['ean13'], context=context):
-            if not check_ean(product['ean13']):
-                return False
-        return True
-
-    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
@@ -1052,7 +1051,7 @@ class product_product(osv.osv):
             if operator in positive_operators:
                 ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
                 if not ids:
-                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+                    ids = self.search(cr, user, [('barcode','=',name)]+ args, limit=limit, context=context)
             if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
@@ -1062,7 +1061,7 @@ class product_product(osv.osv):
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     limit2 = (limit - len(ids)) if limit else False
-                    ids.update(self.search(cr, user, args + [('name', operator, name)], limit=limit2, context=context))
+                    ids.update(self.search(cr, user, args + [('name', operator, name), ('id', 'not in', list(ids))], limit=limit2, context=context))
                 ids = list(ids)
             elif not ids and operator in expression.NEGATIVE_TERM_OPERATORS:
                 ids = self.search(cr, user, args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit, context=context)
@@ -1166,7 +1165,7 @@ class product_product(osv.osv):
 class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
-    _rec_name = 'ean'
+    _rec_name = 'barcode'
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
@@ -1179,26 +1178,18 @@ class product_packaging(osv.osv):
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
-        'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
+        'barcode' : fields.char('Barcode', help="The Barcode of the package unit.", oldname="ean"),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
     }
-
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for pack in self.browse(cr, uid, ids, context=context):
-            if not check_ean(pack.ean):
-                return False
-        return True
-
-    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         res = []
         for pckg in self.browse(cr, uid, ids, context=context):
-            p_name = pckg.ean and '[' + pckg.ean + '] ' or ''
+            p_name = pckg.barcode and '[' + pckg.barcode + '] ' or ''
             p_name += pckg.ul.name
             res.append((pckg.id,p_name))
         return res
@@ -1280,7 +1271,7 @@ class res_currency(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for currency_id in ids:
                 if currency_id == main_currency.id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 
@@ -1299,7 +1290,7 @@ class decimal_precision(osv.osv):
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for decimal_precision in ids:
                 if decimal_precision == account_precision_id:
-                    if main_currency.rounding < 10 ** -digits:
+                    if float_compare(main_currency.rounding, 10 ** -digits, precision_digits=6) == -1:
                         return False
         return True
 

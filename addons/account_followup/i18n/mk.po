@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-24 09:31+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:55+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-10-25 07:01+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -53,6 +53,38 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Драги ${object.name},</p>\n"
+"    <p>\n"
+"    Ќе се направи исклучок ако е наша грешка, но изгледа дека следната сума "
+"е неподмирена. Ве молиме да преземете\n"
+"соодветни мерки со цел да се изврши уплатата во следните 8 дена.\n"
+"\n"
+"Ако вашата уплата е направена по праќањето на овој е-маил, ве молиме "
+"игнорирајте ја оваа порака. Слободно \n"
+"контактирајте го нашиот оддел за сметководство.  \n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Со почит,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -89,6 +121,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Драги ${object.name},</p>\n"
+"    <p>\n"
+"    И покрај неколку потсетувања, Вашиот долг сеуште не е подмирен.\n"
+"Доколку целосна уплата не се изврши во следните 8 дена, ќе се преземат "
+"правни дејствија за подмирување на долгот\n"
+"без понатамошно предупредување.\n"
+"Веруваме дека оваа дејство ќе биде непотребно и деталите за долгот се "
+"наведени подолу.\n"
+"Во случај на било какви прашања поврзани со ова, слободно контактирајте го "
+"нашиот оддел за сметководство.\n"
+"</p>\n"
+"<br/>\n"
+"Со почит,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
@@ -121,6 +184,33 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Драги ${object.name},</p>\n"
+"    <p>\n"
+"    Ќе се направи исклучок ако е наша грешка, но изгледа дека следната сума "
+"е неподмирена. Ве молиме да преземете\n"
+"соодветни мерки со цел да се изврши уплатата во следните 8 дена.\n"
+"Ако вашата уплата е направена по праќањето на овој е-маил, ве молиме "
+"игнорирајте ја оваа порака. Слободно \n"
+"контактирајте го нашиот оддел за сметководство.\n"
+"    </p>\n"
+"<br/>\n"
+"Со почит,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -182,6 +272,21 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Драги %(partner_name)s,\n"
+"\n"
+"И покрај неколку потсетувања, Вашиот долг сеуште не е подмирен.\n"
+"\n"
+"Доколку целосна уплата не се изврши во следните 8 дена, ќе се преземат "
+"правни дејствија за подмирување на долгот без понатамошно предупредување.\n"
+"\n"
+"Веруваме дека оваа дејство ќе биде непотребно и деталите за долгот се "
+"наведени подолу.\n"
+"\n"
+"Во случај на било какви прашања поврзани со ова, слободно контактирајте го "
+"нашиот оддел за сметководство.\n"
+"\n"
+"Со почит,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -204,6 +309,22 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Драги %(partner_name)s,\n"
+"\n"
+"И покрај неколку потсетувања, Вашиот долг сеуште не е подмирен.\n"
+"\n"
+"Доколку целосна уплата не се изврши во следните 8 дена, ќе се преземат "
+"правни дејствија за подмирување на долгот без понатамошно предупредување.\n"
+"\n"
+"Веруваме дека оваа дејство ќе биде непотребно и деталите за долгот се "
+"наведени подолу.\n"
+"\n"
+"Во случај на било какви прашања поврзани со ова, слободно контактирајте го "
+"нашиот оддел за сметководство.\n"
+"\n"
+"Со почит,\n"
+"            "
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -221,6 +342,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Драги %(partner_name)s,\n"
+"\n"
+"Ќе се направи исклучок ако е наша грешка, но изгледа дека следната сума е "
+"неподмирена. Ве молиме да преземете соодветни мерки со цел да се изврши "
+"уплатата во следните 8 дена.\n"
+"\n"
+"Ако вашата уплата е направена по праќањето на овој е-маил, ве молиме "
+"игнорирајте ја оваа порака. Слободно контактирајте го нашиот оддел за "
+"сметководство.  \n"
+"\n"
+"Со почит,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -268,7 +401,7 @@ msgstr " има непозната адреса(и) на е-пошта"
 #: code:addons/account_followup/wizard/account_followup_print.py:177
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr " писмо(а) во извештај"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:177
@@ -489,7 +622,7 @@ msgstr ""
 #: field:account_followup.print,create_uid:0
 #: field:account_followup.sending.results,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Креирано од"
 
 #. module: account_followup
 #: field:account_followup.followup,create_date:0
@@ -497,7 +630,7 @@ msgstr ""
 #: field:account_followup.print,create_date:0
 #: field:account_followup.sending.results,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Креирано на"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -517,12 +650,12 @@ msgstr "Ветување за плаќање на клиент"
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Customer ref:"
-msgstr ""
+msgstr "Референца на клиент:"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Date:"
-msgstr ""
+msgstr "Датум:"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
@@ -553,11 +686,13 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Не го менувајте текстот на пораката доколку сакате да исшратите е-маил на "
+"јазикот на пртнерот, или конфигурирајте од компанија"
 
 #. module: account_followup
 #: view:website:account_followup.report_followup
 msgid "Document: Customer account statement"
-msgstr ""
+msgstr "Документ: Извод од сметка на купувач"
 
 #. module: account_followup
 #: view:account_followup.sending.results:account_followup.view_account_followup_sending_results
@@ -733,7 +868,7 @@ msgstr ""
 #: view:account_followup.stat:account_followup.view_account_followup_stat_search
 #: view:res.partner:account_followup.customer_followup_search_view
 msgid "Group By"
-msgstr ""
+msgstr "Групирање според"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -753,7 +888,7 @@ msgstr ""
 #: field:account_followup.stat.by.partner,id:0
 #: field:report.account_followup.report_followup,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -791,7 +926,7 @@ msgstr "Ставки на дневник"
 #: field:account_followup.print,write_uid:0
 #: field:account_followup.sending.results,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно ажурирање од"
 
 #. module: account_followup
 #: field:account_followup.followup,write_date:0
@@ -799,7 +934,7 @@ msgstr ""
 #: field:account_followup.print,write_date:0
 #: field:account_followup.sending.results,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно ажурирање на"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -1122,7 +1257,7 @@ msgstr "Резиме на акции"
 #. module: account_followup
 #: field:account_followup.print,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Тестно печатење"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -1158,6 +1293,9 @@ msgid ""
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
 msgstr ""
+"Број на денови што ќе се чека по рокот за плаќање на фактурата пред да се "
+"испрати потсетување.  Може да биде негативен ако сакате да испратите љубезно "
+"предупредување предвреме."
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
@@ -1256,6 +1394,8 @@ msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
 msgstr ""
+"При процесирање, ќе ја подеси рачната акција што ќе се преземе за тој "
+"клиент. "
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0

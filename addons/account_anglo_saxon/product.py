@@ -27,6 +27,7 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Price Difference Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used to value price difference between purchase price and cost price."),
 
         #Redefine fields to change help text for anglo saxon methodology.            
@@ -34,11 +35,13 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used to value outgoing stock using sale price."),
         'property_account_expense_categ': fields.property(
             type='many2one',
             relation='account.account',
             string="Expense Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used to value outgoing stock using cost price."),
 
     }
@@ -49,6 +52,7 @@ class product_template(osv.osv):
         'property_account_creditor_price_difference': fields.property(
             type='many2one',
             relation='account.account',
+            domain=[('deprecated', '=', False)],
             string="Price Difference Account",
             help="This account will be used to value price difference between purchase price and cost price."),
             
@@ -57,11 +61,13 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used to value outgoing stock using sale price."),
         'property_account_expense': fields.property(
             type='many2one',
             relation='account.account',
             string="Expense Account",
+            domain=[('deprecated', '=', False)],
             help="This account will be used to value outgoing stock using cost price."),
 
     }

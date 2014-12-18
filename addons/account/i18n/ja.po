@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-13 11:55+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:44+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-14 06:37+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -189,13 +189,13 @@ msgstr "(勘定/取引先)名称"
 msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
-msgstr ""
+msgstr "(特定の会計年度を選択しない場合、すべての事業年度が対象になります)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
-msgstr ""
+msgstr "(特定の期間を選択しない場合、すべての期間が対象になります)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -223,7 +223,7 @@ msgstr "(更新)"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ 入金額"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -371,6 +371,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"クリックして顧客返金を作成してください。\n"
+"</p><p>\n"
+"返金とは請求を完全または部分的に貸方記入するドキュメントです。\n"
+"</p><p>\n"
+"マニュアルで顧客返金する代わりに関連する顧客請求書から直接生成することもできます。\n"
+"</p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -575,6 +583,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"記入したい期間と仕訳帳を選択してください。\n"
+"</p><p>\n"
+"このビューは会計士がOdooの入力を素早く実行するために使用できます。\n"
+"あなたが仕入先の請求書を記録する場合、費用勘定の行を入力することから始めます。\n"
+"Odooは、この勘定に対する税と相手方の買掛金勘定を自動的に提案します。\n"
+"</p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -591,6 +607,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"クリックして新しい銀行口座を設定します。\n"
+"</p><p>\n"
+"あなたの会社の銀行口座を設定して、レポートフッターに表示すべき内容を選択します。\n"
+"</p><p>\n"
+"Odooの会計アプリケーションは、これらのデータに基づいて仕訳帳や口座を自動的に作成します。\n"
+"</p>\n"
+"        "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -629,7 +653,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "= 理論終了残高"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1275,6 +1299,9 @@ msgid ""
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
 msgstr ""
+"年数を経た取引先の債権残高は、期間によってより詳細にレポートします。\r\n"
+"そのレポートを開くと、Odooは会社名、会計期間および分析する間隔(日数)を尋ね、その期間の残高を計算します。\r\n"
+"あなたが30日間隔を指定した場合、Odooは1ヶ月前、2ヶ月前といったように分析します。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -1488,7 +1515,7 @@ msgstr "支払金額"
 #. module: account
 #: field:account.statement.operation.template,amount_type:0
 msgid "Amount type"
-msgstr ""
+msgstr "金額タイプ"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
@@ -1922,7 +1949,7 @@ msgstr "貸借対照表（負債勘定）"
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr ""
+msgstr "開始残高と取引に基づいて計算された口座残高"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -2040,7 +2067,7 @@ msgstr "銀行取引明細書"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:8
 #, python-format
 msgid "Bank statements are fully reconciled."
-msgstr ""
+msgstr "銀行取引明細書は完全に一致しています。"
 
 #. module: account
 #: field:account.invoice.tax,base:0
@@ -2103,7 +2130,7 @@ msgstr "予算"
 #. module: account
 #: field:account.statement.operation.template,name:0
 msgid "Button Label"
-msgstr ""
+msgstr "ボタンラベル"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
@@ -4785,6 +4812,9 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"請求書が支払いとして考慮されるには、請求項目が相手方(通常は支払い)と一致しなければなりません。\r\n"
+"自動一致機能により、Odooは一連の科目について項目を一致させるための検索を行います。\r\n"
+"これによって、それぞれの総額が一致する項目を見つけます。"
 
 #. module: account
 #: help:account.journal,with_last_closing_balance:0
@@ -5416,12 +5446,12 @@ msgstr "即時払い"
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
 #: model:ir.actions.act_window,name:account.action_view_account_statement_from_invoice_lines
 msgid "Import Entries"
-msgstr ""
+msgstr "取り込み登録"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Import Invoice"
-msgstr ""
+msgstr "請求データ取り込み"
 
 #. module: account
 #: view:website:account.report_partnerbalance
@@ -5441,7 +5471,7 @@ msgstr "期間を閉じるためには、まず、関連する仕訳帳エント
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete "
 "related journal items."
-msgstr ""
+msgstr "銀行取引明細書行を削除するには、最初に関連する仕訳項目の削除をキャンセルしなければなりません。"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:390
@@ -7537,7 +7567,7 @@ msgstr "買掛金上限"
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
 msgid "Payable and Receivables"
-msgstr ""
+msgstr "買掛金と売掛金"
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -7788,7 +7818,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "銀行取引明細書の仕訳欄が設定されていることを確認"
 
 #. module: account
 #: code:addons/account/account_invoice.py:787
@@ -7874,7 +7904,7 @@ msgstr "残高符号の維持"
 #: model:ir.model,name:account.model_account_statement_operation_template
 msgid ""
 "Preset for the lines that can be created in a bank statement reconciliation"
-msgstr ""
+msgstr "銀行勘定調整表の行を作成するための初期設定"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -8290,7 +8320,7 @@ msgstr "償却の消し込み"
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "デモ銀行取引明細書を調整"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -8342,7 +8372,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 #: model:ir.ui.menu,name:account.menu_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "銀行取引明細書の調整"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
@@ -9319,7 +9349,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_statement_operation_template
 #: model:ir.ui.menu,name:account.menu_action_account_statement_operation_template
 msgid "Statement Operation Templates"
-msgstr ""
+msgstr "損益計算書テンプレート"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -9931,7 +9961,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:686
 #, python-format
 msgid "The bank statement line was already reconciled."
-msgstr ""
+msgstr "銀行取引明細書は一致しています。"
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -10474,7 +10504,7 @@ msgid ""
 "This field is used to record the third party name when importing bank "
 "statement in electronic format, when the partner doesn't exist yet in the "
 "database (or cannot be found)."
-msgstr ""
+msgstr "この欄は、電子形式で銀行取引明細書を取り込む場合やデータベースに取引先が存在しない(または見つからない)場合に第三者名を記録します。"
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -10560,6 +10590,11 @@ msgid ""
 "because it enables you to preview at any time the tax that you owe at the "
 "start and end of the month or quarter."
 msgstr ""
+"このメニューは請求や支払いに基づいた税務申告書を印刷します。\r\n"
+"会計年度のひとつ、または複数の期間を選択してください。\r\n"
+"Odooは請求(一部の国では支払い)から申告に必要な情報を自動で生成します。\r\n"
+"このデータはリアルタイムで更新されます。\r\n"
+"これによって月または四半期の始めと終わりの税金をいつでもプレビューできるため、非常に便利です。"
 
 #. module: account
 #: help:account.tax,name:0
@@ -10849,7 +10884,7 @@ msgstr "借方合計"
 #. module: account
 #: help:account.bank.statement,total_entry_encoding:0
 msgid "Total of cash transaction lines."
-msgstr ""
+msgstr "現金取引行の合計"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -10880,7 +10915,7 @@ msgstr "取引"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Transactions"
-msgstr ""
+msgstr "取引"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers

@@ -19,75 +19,21 @@
 #
 ##############################################################################
 
-import time
-from openerp.osv import osv
+from openerp import models, api
 from openerp.tools.translate import _
-from openerp.report import report_sxw
 from common_report_header import common_report_header
 
+class PartnerBalanceReport(models.AbstractModel, common_report_header):
+    _name = 'report.account.report_partnerbalance'
 
-class partner_balance(report_sxw.rml_parse, common_report_header):
-
-    def __init__(self, cr, uid, name, context=None):
-        super(partner_balance, self).__init__(cr, uid, name, context=context)
-        self.account_ids = []
-        self.localcontext.update( {
-            'time': time,
-            'get_fiscalyear': self._get_fiscalyear,
-            'get_journal': self._get_journal,
-            'get_filter': self._get_filter,
-            'get_account': self._get_account,
-            'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
-            'get_start_period': self.get_start_period,
-            'get_end_period': self.get_end_period,
-            'get_partners':self._get_partners,
-            'get_target_move': self._get_target_move,
-        })
-
-    def set_context(self, objects, data, ids, report_type=None):
-        self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
-        obj_move = self.pool.get('account.move.line')
-        self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
-        self.result_selection = data['form'].get('result_selection')
-        self.target_move = data['form'].get('target_move', 'all')
-
-        if (self.result_selection == 'customer' ):
-            self.ACCOUNT_TYPE = ('receivable',)
-        elif (self.result_selection == 'supplier'):
-            self.ACCOUNT_TYPE = ('payable',)
-        else:
-            self.ACCOUNT_TYPE = ('payable', 'receivable')
-
-        self.cr.execute("SELECT a.id " \
-                "FROM account_account a " \
-                "LEFT JOIN account_account_type t " \
-                    "ON (a.type = t.code) " \
-                    "WHERE a.type IN %s " \
-                    "AND a.active", (self.ACCOUNT_TYPE,))
-        self.account_ids = [a for (a,) in self.cr.fetchall()]
-        res = super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
-        lines = self.lines()
-        sum_debit = sum_credit = sum_litige = 0
-        for line in filter(lambda x: x['type'] == 3, lines):
-            sum_debit += line['debit'] or 0
-            sum_credit += line['credit'] or 0
-            sum_litige += line['enlitige'] or 0
-        self.localcontext.update({
-            'lines': lambda: lines,
-            'sum_debit': lambda: sum_debit,
-            'sum_credit': lambda: sum_credit,
-            'sum_litige': lambda: sum_litige,
-        })
-        return res
-
-    def lines(self):
+    @api.model
+    def _lines(self, data):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
 
         full_account = []
-        self.cr.execute(
+        self._cr.execute(
             "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
@@ -100,20 +46,20 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "(SELECT sum(debit-credit) " \
                         "FROM account_move_line l " \
                         "WHERE partner_id = p.id " \
-                            "AND " + self.query + " " \
+                            "" + self.query + " " \
                             "AND blocked = TRUE " \
                     ") AS enlitige " \
             "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
             "JOIN account_account ac ON (l.account_id = ac.id)" \
+            "JOIN account_account_type at ON (ac.user_type = at.id)" \
             "JOIN account_move am ON (am.id = l.move_id)" \
-            "WHERE ac.type IN %s " \
+            "WHERE at.type IN %s " \
             "AND am.state IN %s " \
-            "AND " + self.query + "" \
+            "" + self.query + "" \
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name",
             (self.ACCOUNT_TYPE, tuple(move_state)))
-        res = self.cr.dictfetchall()
-
+        res = self._cr.dictfetchall()
 
         if self.display_partner == 'non-zero_balance':
             full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
@@ -122,12 +68,13 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         for rec in full_account:
             if not rec.get('name', False):
-                rec.update({'name': _('Unknown Partner')})
+                rec['name'] = _('Unknown Partner')
 
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         return subtotal_row
 
+    @api.model
     def _add_subtotal(self, cleanarray):
         i = 0
         completearray = []
@@ -245,8 +192,65 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             i = i + 1
         return completearray
 
-    def _get_partners(self):
+    @api.model
+    def _sum_debit(self, data):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(debit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s"  \
+                    "AND am.state IN %s" \
+                    "" + self.query + "",
+                    (tuple(self.account_ids), tuple(move_state)))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
 
+    @api.model
+    def _sum_credit(self, data):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(credit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
+                    "" + self.query + "",
+                    (tuple(self.account_ids), tuple(move_state)))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
+
+    @api.model
+    def _sum_litige(self, data):
+        #gives the total of move lines with blocked boolean set to TRUE for the report selection
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
+        if not data.get('form', False) and data['form'].get('ids'):
+            return 0.0
+        self._cr.execute(
+                "SELECT sum(debit-credit) " \
+                "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
+                "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
+                    "" + self.query + " " \
+                    "AND l.blocked=TRUE ",
+                    (tuple(self.account_ids), tuple(move_state), ))
+        temp_res = float(self._cr.fetchone()[0] or 0.0)
+        return temp_res
+
+    @api.model
+    def _get_partners(self, data):
         if self.result_selection == 'customer':
             return _('Receivable Accounts')
         elif self.result_selection == 'supplier':
@@ -255,11 +259,45 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             return _('Receivable and Payable Accounts')
         return ''
 
+    @api.multi
+    def render_html(self, data=None):
+        self.target_move = data['form'].get('target_move', 'all')
+        self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
+        self.result_selection = data['form'].get('result_selection')
+        self.query = self.env['account.move.line']._query_get(obj='l')
+        if (self.result_selection == 'customer'):
+            self.ACCOUNT_TYPE = ('receivable',)
+        elif (self.result_selection == 'supplier'):
+            self.ACCOUNT_TYPE = ('payable',)
+        else:
+            self.ACCOUNT_TYPE = ('payable', 'receivable')
+        self._cr.execute("SELECT a.id " \
+                "FROM account_account a " \
+                "LEFT JOIN account_account_type t " \
+                    "ON (a.user_type = t.id) " \
+                    "WHERE t.type IN (%s) " \
+                    "AND a.deprecated = 'f'", (self.ACCOUNT_TYPE))
+        self.account_ids = [a for (a,) in self._cr.fetchall()]
 
-class report_partnerbalance(osv.AbstractModel):
-    _name = 'report.account.report_partnerbalance'
-    _inherit = 'report.abstract_report'
-    _template = 'account.report_partnerbalance'
-    _wrapped_report_class = partner_balance
+        report_obj = self.env['report']
+        module_report = report_obj._get_report_from_name('account.report_partnerbalance')
+        docargs = {
+            'doc_ids': self.ids,
+            'doc_model': module_report.model,
+            'docs': self,
+            'data': data,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
+            'get_account': self._get_account,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_journal': self._get_journal,
+            'get_target_move': self._get_target_move,
+            'get_partners':self._get_partners,
+            'sum_debit': self._sum_debit,
+            'sum_credit': self._sum_credit,
+            'sum_litige': self._sum_litige,
+            'lines': self._lines
+        }
+        return report_obj.render('account.report_partnerbalance', docargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

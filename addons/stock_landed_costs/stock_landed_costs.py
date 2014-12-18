@@ -159,7 +159,6 @@ class stock_landed_cost(osv.osv):
     def _create_account_move(self, cr, uid, cost, context=None):
         vals = {
             'journal_id': cost.account_journal_id.id,
-            'period_id': self.pool.get('account.period').find(cr, uid, cost.date, context=context)[0],
             'date': cost.date,
             'ref': cost.name
         }
@@ -295,7 +294,7 @@ class stock_landed_cost_lines(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Cost', required=True, digits_compute=dp.get_precision('Product Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
-        'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
+        'account_id': fields.many2one('account.account', 'Account', domain=[('user_type.type', '!=', 'view'), ('user_type.type', '!=', 'closed'), ('deprecated', '=', False)]),
     }
 
 class stock_valuation_adjustment_lines(osv.osv):

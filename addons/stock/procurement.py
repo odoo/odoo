@@ -273,7 +273,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
-        super(procurement_order, self).run_scheduler(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        super(procurement_order, self).run_scheduler(cr, uid, use_new_cursor=use_new_cursor, company_id=company_id, context=context)
         if context is None:
             context = {}
         try:
@@ -283,7 +283,7 @@ class procurement_order(osv.osv):
             move_obj = self.pool.get('stock.move')
 
             #Minimum stock rules
-            self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=False, company_id=company_id, context=context)
+            self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=use_new_cursor, company_id=company_id, context=context)
 
             #Search all confirmed stock_moves and try to assign them
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc', context=context)

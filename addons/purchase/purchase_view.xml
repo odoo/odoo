@@ -369,7 +369,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a request for quotation.
               </p><p>
-                The quotation contains the history of the discussion/negociation
+                The quotation contains the history of the discussion/negotiation
                 you had with your supplier. Once confirmed, a request for
                 quotation is converted into a purchase order.
               </p><p>
@@ -611,7 +611,7 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="property_account_expense" position="replace" >
-                     <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
+                     <field name="property_account_expense" domain="[('user_type.type', '!=', 'consolidation')]" attrs="{'readonly': [('purchase_ok', '=', 0)]}" groups="account.group_account_user"/>
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>

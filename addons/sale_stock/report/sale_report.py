@@ -26,7 +26,7 @@ class sale_report(osv.osv):
     _inherit = "sale.report"
     _columns = {
         'shipped': fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1': fields.integer('Shipped', readonly=True),
+        'shipped_qty_1': fields.integer('# of Shipped Lines', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',readonly=True),
         'state': fields.selection([
             ('draft', 'Quotation'),

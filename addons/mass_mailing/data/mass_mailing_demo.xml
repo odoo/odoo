@@ -97,6 +97,9 @@
             <field name="stage_id" ref="mass_mailing.campaign_stage_1"/>
             <field name="user_id" eval="ref('base.user_root')"/>
             <field name="category_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_category_1')])]"/>
+            <field name="campaign_id" eval="ref('utm.utm_campaign_email_campaign_products')"/>
+            <field name="medium_id" eval="ref('utm.utm_medium_email')"/>
+            <field name="source_id" eval="ref('utm.utm_source_mailing')"/> 
         </record>
 
         <record id="mass_mail_1" model="mail.mass_mailing">

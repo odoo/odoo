@@ -1,68 +1,28 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp.osv import fields
-from openerp.osv import osv
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
+from openerp.exceptions import Warning
 
-class account_analytic_line(osv.osv):
+
+class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
-    _columns = {
-        'product_uom_id': fields.many2one('product.uom', 'Unit of Measure'),
-        'product_id': fields.many2one('product.product', 'Product'),
-        'general_account_id': fields.many2one('account.account', 'Financial Account', required=True, ondelete='restrict'),
-        'move_id': fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='restrict', select=True),
-        'code': fields.char('Code', size=8),
-        'ref': fields.char('Ref.'),
-        'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
-        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
-    }
-
-    _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-    }
     _order = 'date desc'
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        if context.get('from_date',False):
-            args.append(['date', '>=', context['from_date']])
-        if context.get('to_date',False):
-            args.append(['date','<=', context['to_date']])
-        return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
-                order, context=context, count=count)
-
-    def _check_company(self, cr, uid, ids, context=None):
-        lines = self.browse(cr, uid, ids, context=context)
-        for l in lines:
-            if l.move_id and not l.account_id.company_id.id == l.move_id.account_id.company_id.id:
-                return False
-        return True
+    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    product_id = fields.Many2one('product.product', string='Product')
+    general_account_id = fields.Many2one('account.account', string='Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)])
+    move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
+    journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True)
+    code = fields.Char(string='Code', size=8)
+    ref = fields.Char(string='Ref.')
+    currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
+    amount_currency = fields.Float(related='move_id.amount_currency', string='Amount Currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
+    partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
+    @api.v7
     def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
             unit=False, journal_id=False, context=None):
         if context==None:
@@ -93,8 +53,7 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error!'),
-                        _('There is no expense account defined ' \
+                raise Warning(_('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod.id,))
         else:
@@ -102,11 +61,10 @@ class account_analytic_line(osv.osv):
             if not a:
                 a = prod.categ_id.property_account_income_categ.id
             if not a:
-                raise osv.except_osv(_('Error!'),
-                        _('There is no income account defined ' \
+                raise Warning(_('There is no income account defined ' \
                                 'for this product: "%s" (id:%d).') % \
                                 (prod.name, prod_id,))
-
+ 
         flag = False
         # Compute based on pricetype
         product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
@@ -138,27 +96,71 @@ class account_analytic_line(osv.osv):
             }
         }
 
-    def view_header_get(self, cr, user, view_id, view_type, context=None):
-        if context is None:
-            context = {}
+    @api.v8
+    @api.onchange('product_id', 'product_uom_id')
+    def on_change_unit_amount(self):
+        product_price_type_obj = self.env['product.price.type']
+
+        journal_id = self.journal_id
+        if not journal_id:
+            journal_id = self.env['account.analytic.journal'].search([('type', '=', 'purchase')], limit=1)
+        if not journal_id or not self.product_id:
+            return {}
+
+        result = 0.0
+        if self.product_id:
+            unit = self.product_uom_id.id
+            if not self.product_uom_id or self.product_id.uom_id.category_id.id != self.product_uom_id.category_id.id:
+                unit = self.product_id.uom_id.id
+            if journal_id.type == 'purchase':
+                if not self.product_uom_id or self.product_id.uom_po_id.category_id.id != self.product_uom_id.category_id.id:
+                    unit = self.product_id.uom_po_id.id
+        if journal_id.type != 'sale':
+            account = self.product_id.property_account_expense.id or self.product_id.categ_id.property_account_expense_categ.id
+            if not account:
+                raise Warning(_('There is no expense account defined ' \
+                                'for this product: "%s" (id:%d).') % \
+                                (self.product_id.name, self.product_id.id,))
+        else:
+            account = self.product_id.property_account_income.id or self.product_id.categ_id.property_account_income_categ.id
+            if not account:
+                raise Warning(_('There is no income account defined ' \
+                                'for this product: "%s" (id:%d).') % \
+                                (self.product_id.name, self.product_id.id,))
+
+        # Compute based on pricetype
+        if journal_id.type == 'sale':
+            pricetype = product_price_type_obj.search([('field','=','list_price')], limit=1)
+        else:
+            pricetype = product_price_type_obj.search([('field','=','standard_price')], limit=1)
+
+        ctx = dict(self._context or {})
+        if unit:
+            # price_get() will respect a 'uom' in its context, in order
+            # to return a default price for those units
+            ctx['uom'] = unit
+        amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
+        prec = self.env['decimal.precision'].precision_get('Account')
+        amount = amount_unit * self.unit_amount or 0.0
+        result = round(amount, prec)
+        if pricetype.field != 'list_price':
+            result *= -1
+        self.amount = result
+        self.general_account_id = account
+        self.product_uom_id = unit
+
+    @api.model
+    def view_header_get(self, view_id, view_type):
+        context = (self._context or {})
+        header = False
         if context.get('account_id', False):
-            # account_id in context may also be pointing to an account.account.id
-            cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))
-            res = cr.fetchone()
-            if res:
-                res = _('Entries: ')+ (res[0] or '')
-            return res
-        return False
+            analytic_account = self.env['account.analytic.account'].search([('id', '=', context['account_id'])], limit=1)
+            header = _('Entries: ') + (analytic_account.name or '')
+        return header
 
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
     """ Inherits partner and adds contract information in the partner form """
     _inherit = 'res.partner'
 
-    _columns = {
-        'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts', readonly=True),
-    }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)

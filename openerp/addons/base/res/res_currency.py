@@ -59,6 +59,14 @@ class res_currency(osv.osv):
                 raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
         return res
 
+    def _decimal_places(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for id in ids:
+            rounding = self.browse(cr, uid, id, context=context).rounding
+            rounding = (0 < rounding < 1) and rounding or 1
+            res[id] = int(math.ceil(math.log10(1 / rounding)))
+        return res
+
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -72,8 +80,8 @@ class res_currency(osv.osv):
         'rate_silent': fields.function(_current_rate_silent, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1 (0 if no rate defined).'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
-        'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
+        'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
         'base': fields.boolean('Base'),
@@ -83,7 +91,6 @@ class res_currency(osv.osv):
         'active': 1,
         'position' : 'after',
         'rounding': 0.01,
-        'accuracy': 4,
         'company_id': False,
     }
     _sql_constraints = [
@@ -275,11 +282,9 @@ class res_currency(osv.osv):
         """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
             That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
         function = ""
-        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
-            digits = int(math.log10(1 / row['rounding']))
+        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
             symbol = row['symbol'] or row['name']
-
-            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
+            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(row['decimal_places']) + "]}, 0.00)"
             if row['position'] == 'after':
                 return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
             else:

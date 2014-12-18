@@ -123,6 +123,14 @@
             <field name="parent_id" eval="ref('mt_task_stage')"/>
             <field name="relation_field">project_id</field>
         </record>
+        <record id="mt_project_task_ready" model="mail.message.subtype">
+            <field name="name">Task Ready</field>
+            <field name="sequence">14</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_task_ready')"/>
+            <field name="relation_field">project_id</field>
+            <field name="default" eval="False" />
+        </record>
 
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">

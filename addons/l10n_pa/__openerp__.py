@@ -37,7 +37,6 @@ Con la Colaboración de
 			"account_chart",
 			],
 	"data":[
-        "account_tax_code.xml",
         "l10n_pa_chart.xml",
         "account_tax.xml",
         "l10n_pa_wizard.xml",

@@ -47,24 +47,9 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="journal_period_comp_rule" model="ir.rule">
-        <field name="name">Journal Period</field>
-        <field name="model_id" ref="model_account_journal_period"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-
     <record id="journal_comp_rule" model="ir.rule">
         <field name="name">Journal multi-company</field>
         <field name="model_id" ref="model_account_journal"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="period_comp_rule" model="ir.rule">
-        <field name="name">Period multi-company</field>
-        <field name="model_id" ref="model_account_period"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
@@ -86,13 +71,6 @@
     <record id="tax_comp_rule" model="ir.rule">
         <field name="name">Tax multi-company</field>
         <field name="model_id" ref="model_account_tax"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="tax_code_comp_rule" model="ir.rule">
-        <field name="name">Tax code multi-company</field>
-        <field name="model_id" ref="model_account_tax_code"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
@@ -132,20 +110,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record id="account_model_comp_rule" model="ir.rule">
-        <field name="name">Account model company rule</field>
-        <field name="model_id" ref="model_account_model"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
-    <record id="account_subscription_line_comp_rule" model="ir.rule">
-        <field name="name">Account subscription line company rule</field>
-        <field name="model_id" ref="model_account_subscription_line"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('subscription_id.model_id.company_id','=',False),('subscription_id.model_id.company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <record model="ir.rule" id="account_invoice_line_comp_rule">
         <field name="name">Invoice Line company rule</field>
         <field name="model_id" ref="model_account_invoice_line"/>
@@ -163,6 +127,13 @@
     <record model="ir.rule" id="account_bank_statement_line_comp_rule">
         <field name="name">Account bank statement line company rule</field>
         <field name="model_id" ref="model_account_bank_statement_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="account_operation_template_comp_rule">
+        <field name="name">Account operation template company rule</field>
+        <field name="model_id" ref="model_account_operation_template"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>

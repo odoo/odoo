@@ -62,12 +62,10 @@ position.
     ],
     'data': [
         'account_chart_en.xml',
-        'account_tax_code_en.xml',
         'account_chart_template_en.xml',
         'account_tax_en.xml',
         'fiscal_templates_en.xml',
         'account_chart_fr.xml',
-        'account_tax_code_fr.xml',
         'account_chart_template_fr.xml',
         'account_tax_fr.xml',
         'fiscal_templates_fr.xml',

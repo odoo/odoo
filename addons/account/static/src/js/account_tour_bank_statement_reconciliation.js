@@ -8,7 +8,6 @@
         name: _t("Reconcile the demo bank statement"),
         path: '/web',
         mode: 'test',
-        // TODO : identify menu by data-menu attr or text node ?
         steps: [
             // Go to the first statement reconciliation
             {

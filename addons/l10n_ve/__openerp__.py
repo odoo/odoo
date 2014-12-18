@@ -63,7 +63,7 @@ but you will need set manually account defaults for taxes.
                 'account_chart'
     ],
     'demo': [],
-    'data': ['data/account_tax_code.xml',
+    'data': [
              'data/account_user_types.xml',
              'data/account_chart.xml',
              'data/account_tax.xml',

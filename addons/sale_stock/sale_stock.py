@@ -263,15 +263,15 @@ class sale_order_line(osv.osv):
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
             if qty and (q and not (qty % q) == 0):
-                ean = pack.ean or _('(n/a)')
+                barcode = pack.barcode or _('(n/a)')
                 qty_pack = pack.qty
                 type_ul = pack.ul
                 if not warning_msgs:
                     warn_msg = _("You selected a quantity of %d Units.\n"
                                 "But it's not compatible with the selected packaging.\n"
                                 "Here is a proposition of quantities according to the packaging:\n"
-                                "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
+                                "Barcode: %s Quantity: %s Type of ul: %s") % \
+                                    (qty, barcode, qty_pack, type_ul.name)
                     warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
                 warning = {
                        'title': _('Configuration Error!'),

@@ -287,7 +287,7 @@ class payment_line(osv.osv):
         res = {}
         for id in self.browse(cr, uid, ids):
             if id.move_line_id:
-                res[id.id] = id.move_line_id.date_created
+                res[id.id] = id.move_line_id.date
             else:
                 res[id.id] = False
         return res
@@ -296,7 +296,7 @@ class payment_line(osv.osv):
         'name': fields.char('Your Reference', required=True),
         'communication': fields.char('Communication', required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
         'communication2': fields.char('Communication 2', help='The successor message of Communication.'),
-        'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
+        'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconciled', '=', False), ('account_id.user_type.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
