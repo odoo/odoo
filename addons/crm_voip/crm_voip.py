@@ -101,7 +101,7 @@ class crm_lead(models.Model):
 
     @api.one
     def compute_is_call_center(self):
-        phonecall = self.env['crm.phonecall'].search([('opportunity_id','=',self.id),('in_queue','=',True),('user_id','=',self.env.user[0].id)])
+        phonecall = self.env['crm.phonecall'].search([('opportunity_id','=',self.id),('in_queue','=',True),('state','!=','done'),('user_id','=',self.env.user[0].id)])
         if phonecall:
             self.in_call_center_queue = True
         else:
