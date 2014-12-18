@@ -1065,8 +1065,8 @@ openerp.account = function (instance) {
                     name: line.label
                 };
                 var amount = line.tax_id ? line.amount_with_tax: line.amount;
-                if (amount > 0) dict['credit'] = amount;
-                if (amount < 0) dict['debit'] = -1 * amount;
+                dict['credit'] = (amount > 0 ? amount : 0);
+                dict['debit'] = (amount < 0 ? -1 * amount : 0);
                 if (line.tax_id) dict['account_tax_id'] = line.tax_id;
                 if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
                 return dict;
@@ -1265,12 +1265,7 @@ openerp.account = function (instance) {
         processReconciliations: function(reconciliations) {
             if (reconciliations.length === 0) return;
             var self = this;
-            var data = _.collect(reconciliations, function(o) {
-                return {
-                    'st_line_id': o.st_line_id,
-                    'mv_line_dicts': o.makeMoveLineDicts()
-                };
-            });
+            var data = _.collect(reconciliations, function(o) { return o.prepareDataForPersisting() });
             var deferred_animation = self.$(".reconciliation_lines_container").fadeOut(self.aestetic_animation_speed);
             var deferred_rpc = self.model_bank_statement_line.call("process_reconciliations", [data]);
             return $.when(deferred_animation, deferred_rpc)
@@ -1485,7 +1480,7 @@ openerp.account = function (instance) {
                     achievements.push({
                         title: _t("Efficiency at its finest"),
                         desc: _t("Only use the ctrl-enter shortcut to validate reconciliations."),
-                        icon: "fa-⌨-o"}
+                        icon: "fa-keyboard-o"}
                     );
         
                 if (sec_per_item < 5)
@@ -1878,11 +1873,9 @@ openerp.account = function (instance) {
             self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
 
-            // Warning : this could be tricky, remove this comment if you don't run into a bug after thorough testing
-            if (added_lines.length > 0 && added_lines[0].is_reconciled)
-                self.is_rapprochement = true;
-            else
-                self.is_rapprochement = false;
+            self.is_rapprochement = added_lines.length > 0 && added_lines[0].is_reconciled;
+            if (self.is_rapprochement)
+                self.set("lines_created", []);
             
             self._super(elt, val);
         },
@@ -2012,7 +2005,6 @@ openerp.account = function (instance) {
                     debit: line.debit,
                     credit: line.credit,
                     counterpart_move_line_id: line.id,
-                    is_reconciled: line.is_reconciled,
                 };
             });
         },
@@ -2024,19 +2016,30 @@ openerp.account = function (instance) {
     
             dict['account_id'] = this.st_line.open_balance_account_id;
             dict['name'] = _t("Open balance");
-            if (balance > 0) dict['debit'] = balance;
-            if (balance < 0) dict['credit'] = -1*balance;
+            dict['debit'] = (balance > 0 ? balance : 0);
+            dict['credit'] = (balance < 0 ? -1*balance : 0);
     
             return dict;
         },
 
-        makeMoveLineDicts: function() {
-            var self = this;
-            var mv_line_dicts = [];
-            mv_line_dicts = mv_line_dicts.concat(self.prepareSelectedMoveLinesForPersisting(self.get("mv_lines_selected")));
-            mv_line_dicts = mv_line_dicts.concat(self.prepareCreatedMoveLinesForPersisting(self.getCreatedLines()));
-            if (Math.abs(self.get("balance")).toFixed(4) !== "0.0000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
-            return mv_line_dicts;
+        prepareDataForPersisting: function() {
+            if (this.is_rapprochement) {
+                return {
+                    'type': 'rapprochement',
+                    'st_line_id': this.st_line_id,
+                    'mv_line_ids': _.collect(this.get("mv_lines_selected"), function(o){ return o.id }),
+                };
+            } else {
+                var mv_line_dicts = [];
+                mv_line_dicts = mv_line_dicts.concat(this.prepareSelectedMoveLinesForPersisting(this.get("mv_lines_selected")));
+                mv_line_dicts = mv_line_dicts.concat(this.prepareCreatedMoveLinesForPersisting(this.getCreatedLines()));
+                if (Math.abs(this.get("balance")).toFixed(4) !== "0.0000") mv_line_dicts.push(this.prepareOpenBalanceForPersisting());
+                return {
+                    'type': 'reconciliation',
+                    'st_line_id': this.st_line_id,
+                    'mv_line_dicts': mv_line_dicts,
+                };
+            }
         },
     
         // Persist data, notify parent view and terminate widget
@@ -2044,7 +2047,7 @@ openerp.account = function (instance) {
             var self = this;
             if (! this.is_consistent) return;
             self.$(".button_ok").attr("disabled", "disabled");
-            this.model_bank_statement_line.call("process_reconciliation", [this.st_line_id, this.makeMoveLineDicts()]).done(function() {
+            this.model_bank_statement_line.call("process_reconciliations", [[this.prepareDataForPersisting()]]).done(function() {
                 self.bowOut(self.animation_speed, true);
             }).always(function() {
                 self.$(".button_ok").removeAttr("disabled");

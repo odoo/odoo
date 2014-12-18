@@ -36,7 +36,8 @@
     counterpart_line_dict = {
         'account_id': self.pool.get('res.partner').browse(cr, uid, ref('base.res_partner_4')).property_account_receivable.id,
         'name': "EXT001",
-        'credit': 1000.0
+        'credit': 1000.0,
+        'debit': 0.0,
     }
     self.process_reconciliation(cr, uid, ref("account_bank_statement_line_0"), [counterpart_line_dict])
 -

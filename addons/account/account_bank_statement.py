@@ -189,7 +189,6 @@ class account_bank_statement(models.Model):
                     'name': l['name'],
                     'debit': l['credit'],
                     'credit': l['debit'],
-                    'is_reconciled': l['is_reconciled'],
                     'counterpart_move_line_id': l['id'],
                 }, counterpart)
                 try:
@@ -446,6 +445,31 @@ class account_bank_statement_line(models.Model):
             line['has_no_partner'] = has_no_partner
         return ret_data
 
+    @api.v7
+    def process_reconciliations(self, cr, uid, data, context=None):
+        """ Handles data sent from the bank statement reconciliation widget """
+        for datum in data:
+            st_line = self.browse(cr, uid, datum['st_line_id'], context)
+            if datum['type'] == 'reconciliation':
+                st_line.process_reconciliation(datum['mv_line_dicts'])
+            elif datum['type'] == 'rapprochement':
+                st_line.process_rapprochement(datum['mv_line_ids'])
+
+    def process_rapprochement(self, mv_line_ids):
+        """ Reconcile the statement.line with already reconciled move.line (fr: rapprochement bancaire) """
+        move_lines = self.env['account.move.line'].browse(mv_line_ids)
+        # Check only using already reconciled move lines
+        if any([move_line.reconciled == False for move_line in move_lines]):
+            raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+        # Check all move lines are from the same move
+        move = move_lines[0].move_id
+        if any([move_line.move_id != move for move_line in move_lines]):
+            raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
+        # Link move lines to the bank statement
+        move_lines.write({'statement_id': self.statement_id.id})
+        # Mark the statement line as reconciled
+        self.journal_entry_id = move
+
     def _prepare_move(self, move_name):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
             through model inheritance (make sure to call super() to establish a clean extension chain).
@@ -527,18 +551,8 @@ class account_bank_statement_line(models.Model):
             'amount_currency': 0.0,
             'date': self.date,
             'account_id': account_id
-            }
+        }
 
-    @api.model
-    def process_reconciliations(self, data):
-        for datum in data:
-            self.browse(datum['st_line_id']).process_reconciliation(datum['mv_line_dicts'])
-
-    @api.v7
-    def process_reconciliation(self, cr, uid, st_line_id, mv_line_dicts, context=None):
-        return self.browse(cr, uid, st_line_id, context).process_reconciliation(mv_line_dicts)
-
-    @api.v8
     def process_reconciliation(self, mv_line_dicts):
         """ Create a move line for the statement line and for each item in mv_line_dicts. Reconcile a new move line with its counterpart_move_line_id if specified.
             Finally, mark the statement line as reconciled by putting the newly created move id in the field journal_entry_id.
@@ -560,34 +574,15 @@ class account_bank_statement_line(models.Model):
         statement_currency = self.journal_id.currency or company_currency
         aml_obj = self.env['account.move.line']
 
-        # Check and prepare data
+        # Check and prepare received data
         if self.journal_entry_id.id:
             raise Warning(_('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
-            for field in ['debit', 'credit']:
-                if field not in mv_line_dict:
-                    mv_line_dict[field] = 0.0
             if mv_line_dict.get('counterpart_move_line_id'):
-                mv_line = aml_obj.browse(mv_line_dict.get('counterpart_move_line_id'))
-                if mv_line.reconciled and mv_line.statement_id.id:
-                    raise Warning(_('A selected move line was already reconciled by a bank statement.'))
-
-        # Particular use case : using reconciled move lines (fr: rapprochement bancaire)
-        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('is_reconciled') and x['is_reconciled'] == True])
-        if num_already_reconciled_items > 0:
-            # Check only using already reconciled move lines
-            if len(mv_line_dicts) != num_already_reconciled_items:
-                raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
-            # Check all move lines are from the same move
-            move_lines = aml_obj.browse([x['counterpart_move_line_id'] for x in mv_line_dicts])
-            move = move_lines[0].move_id
-            if any([move_line.move_id != move for move_line in move_lines]):
-                raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
-            # Link move lines to the bank statement
-            move_lines.write({'statement_id': self.statement_id.id})
-            # Mark the statement line as reconciled
-            self.journal_entry_id = move
-            return
+                mv_line_dict['move_line'] = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
+                del mv_line_dict['counterpart_move_line_id']
+                if mv_line_dict['move_line'].reconciled:
+                    raise Warning(_('A selected move line was already reconciled.'))
 
         # Create the move
         move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
@@ -611,10 +606,9 @@ class account_bank_statement_line(models.Model):
             mv_line_dict['journal_id'] = self.journal_id.id
             mv_line_dict['company_id'] = self.company_id.id
             mv_line_dict['statement_id'] = self.statement_id.id
-            if mv_line_dict.get('counterpart_move_line_id'):
-                mv_line = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
-                if mv_line.partner_id.id: mv_line_dict['partner_id'] = mv_line.partner_id.id
-                mv_line_dict['account_id'] = mv_line.account_id.id
+            if mv_line_dict.get('move_line'):
+                if mv_line_dict['move_line'].partner_id.id: mv_line_dict['partner_id'] = mv_line_dict['move_line'].partner_id.id
+                mv_line_dict['account_id'] = mv_line_dict['move_line'].account_id.id
             if st_line_currency.id != company_currency.id:
                 ctx = self._context.copy()
                 ctx['date'] = self.date
@@ -629,7 +623,7 @@ class account_bank_statement_line(models.Model):
                 else:
                     debit_at_current_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['debit'], company_currency)
                     credit_at_current_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['credit'], company_currency)
-                if mv_line_dict.get('counterpart_move_line_id'):
+                if mv_line_dict.get('move_line'):
                     #post an account line that use the same currency rate than the counterpart (to balance the account) and post the difference in another line
                     ctx['date'] = mv_line.date
                     debit_at_old_rate = st_line_currency.with_context(ctx).compute(mv_line_dict['debit'], company_currency)
@@ -653,9 +647,9 @@ class account_bank_statement_line(models.Model):
         
         # Create move lines and reconcile when relevant
         for mv_line_dict in to_create:
-            if mv_line_dict.get('counterpart_move_line_id'):
-                counterpart_move_line = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
-                del mv_line_dict['counterpart_move_line_id']
+            if mv_line_dict.get('move_line'):
+                counterpart_move_line = mv_line_dict['move_line']
+                del mv_line_dict['move_line']
                 new_aml = aml_obj.create(mv_line_dict)
                 (new_aml|counterpart_move_line).reconcile()
             else:

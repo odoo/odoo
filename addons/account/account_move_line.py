@@ -509,8 +509,8 @@ class account_move_line(models.Model):
             ret.append(ret_line)
         return ret
 
-    @api.model
-    def process_reconciliations(self, data):
+    @api.v7
+    def process_reconciliations(self, cr, uid, data, context=None):
         """ Used to validate a batch of reconciliations in a single call """
         for datum in data:
             id = datum['id']
@@ -535,7 +535,7 @@ class account_move_line(models.Model):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on mv_line_ids and new move lines """
 
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
-            raise osv.except_osv(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
+            raise Warning(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
         
         # Create writeoff move lines
         writeoff_lines = []
@@ -550,9 +550,6 @@ class account_move_line(models.Model):
                 writeoff_dicts = []
 
                 # Data for both writeoff lines
-                for field in ['debit', 'credit']:
-                    if field not in mv_line_dict:
-                        mv_line_dict[field] = 0.0
                 if account_currency != company_currency:
                     mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
                     mv_line_dict['currency_id'] = account_currency
