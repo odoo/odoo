@@ -41,19 +41,7 @@ class stock_picking(osv.osv):
             group=False, type='out_invoice', context=None):
         '''Return ids of created invoices for the pickings'''
         res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type, context=context)
-        if type == 'in_refund':
-            for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
-                for ol in inv.invoice_line:
-                    if ol.product_id:
-                        oa = ol.product_id.property_stock_account_output and ol.product_id.property_stock_account_output.id
-                        if not oa:
-                            oa = ol.product_id.categ_id.property_stock_account_output_categ and ol.product_id.categ_id.property_stock_account_output_categ.id
-                        if oa:
-                            fpos = ol.invoice_id.fiscal_position or False
-                            a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                            self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
-                            
-        elif type == 'in_invoice':
+        if type in ('in_invoice', 'in_refund'):
             for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
                 for ol in inv.invoice_line:
                     if ol.product_id:
