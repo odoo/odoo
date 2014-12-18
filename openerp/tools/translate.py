@@ -981,10 +981,13 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
+                    # (Sometimes we have 'i18n_extra' instead of just 'i18n')
                     head, _ = os.path.split(fileobj.name)
-                    head2, _ = os.path.split(head)
-                    head3, tail3 = os.path.split(head2)
-                    pot_handle = misc.file_open(os.path.join(head3, tail3, 'i18n', tail3 + '.pot'))
+                    head2, i18n_dir = os.path.split(head)
+                    head3, module_dir = os.path.split(head2)
+                    pot_path = os.path.join(
+                        head3, module_dir, i18n_dir, module_dir + '.pot')
+                    pot_handle = misc.file_open(pot_path)
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass
