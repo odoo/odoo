@@ -475,7 +475,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             raise werkzeug.exceptions.NotFound()
 
         try:
-            idsha = id.split('_')
+            idsha = str(id).split('_')
             id = idsha[0]
             response = werkzeug.wrappers.Response()
             return request.registry['website']._image(
