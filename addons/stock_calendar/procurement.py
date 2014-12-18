@@ -224,7 +224,7 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         dom = company_id and [('company_id', '=', company_id)] or []
-        orderpoint_ids = orderpoint_obj.search(cr, uid, dom, order="location_id, purchase_calendar_id, calendar_id")
+        orderpoint_ids = orderpoint_obj.search(cr, uid, dom, order="sequence, location_id, purchase_calendar_id, calendar_id")
         prev_ids = []
         tot_procs = []
         while orderpoint_ids:
