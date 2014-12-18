@@ -17,6 +17,7 @@
                             <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                            <field name="mimetype"/>
                         </group>
                         <group string="Attached To">
                             <field name="res_model"/>
@@ -27,12 +28,15 @@
                         <group groups="base.group_no_one" string="History">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
-                                <field name="create_uid" readonly="1" class="oe_inline"/> on 
+                                <field name="create_uid" readonly="1" class="oe_inline"/> on
                                 <field name="create_date" readonly="1" class="oe_inline"/>
                             </div>
                         </group>
                         <group name="description_group" string="Description" colspan="4">
                             <field name="description" nolabel="1"/>
+                        </group>
+                        <group string="Indexed Content" colspan="4">
+                            <field name="index_content" nolabel="1"/>
                         </group>
                     </group>
                   </sheet>
@@ -67,7 +71,7 @@
                         string="Binary"
                         domain="[('type','=','binary')]"/>
                     <separator/>
-                    <filter name="my_documents_filter" 
+                    <filter name="my_documents_filter"
                         string="My Document(s)"
                         icon="terp-personal"
                         domain="[('create_uid','=',uid)]"

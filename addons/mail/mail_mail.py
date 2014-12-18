@@ -181,7 +181,7 @@ class mail_mail(osv.Model):
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
-        body = mail.body_html
+        body = mail.body_html or ''
 
         # generate access links for notifications or emails linked to a specific document with auto threading
         link = None

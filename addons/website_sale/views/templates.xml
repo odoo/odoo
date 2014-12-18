@@ -588,14 +588,13 @@
 
           <ul class="wizard pull-right">
               <li class="text-primary">Review Order<span class="chevron"></span></li>
-              <li class="text-muted">Shipping &amp; Billing<span class="chevron"></span></li>
+              <li class="text-muted"><t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
               <li class="text-muted">Payment<span class="chevron"></span></li>
               <li class="text-muted">Confirmation<span class="chevron"></span></li>
           </ul>
           <h1 class="mb32">Shopping Cart</h1>
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_cart">
-                  <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
                   <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
                       Your cart is empty!
                   </div>
@@ -775,7 +774,7 @@
       <div class="container oe_website_sale">
           <ul class="wizard pull-right">
               <li><a href="/shop/cart" class="text-success">Review Order<span class="chevron"></span></a></li>
-              <li class="text-primary">Shipping &amp; Billing<span class="chevron"></span></li>
+              <li class="text-primary"><t t-if="not only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
               <li class="text-muted">Payment<span class="chevron"></span></li>
               <li class="text-muted">Confirmation<span class="chevron"></span></li>
           </ul>
@@ -847,7 +846,7 @@
 
                   <div class="clearfix"/>
 
-                  <div class="form-group col-lg-12">
+                  <div t-if="not only_services" class="form-group col-lg-12">
                       <label>Shipping</label>
                       <select name="shipping_id" class="form-control">
                           <option value="0">Ship to the same address</option>
@@ -866,7 +865,7 @@
                       </select>
                   </div>
               </div>
-              <div class="js_shipping row mb16" t-att-style="not shipping_id and 'display:none' or ''">
+              <div t-if="not only_services" class="js_shipping row mb16" t-att-style="not shipping_id and 'display:none' or ''">
                   <h3 class="oe_shipping col-lg-12 mt16">Shipping Information</h3>
 
                   <div t-attf-class="form-group #{error.get('shipping_name') and 'has-error' or ''} col-lg-6">
@@ -952,7 +951,7 @@
 
           <ul class="wizard pull-right">
               <li><a href="/shop/cart" class="text-success">Review Order<span class="chevron"></span></a></li>
-              <li><a href="/shop/checkout" class="text-success">Shipping &amp; Billing<span class="chevron"></span></a></li>
+              <li><a href="/shop/checkout" class="text-success"><t t-if="not website_sale_order or not website_sale_order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></a></li>
               <li class="text-primary">Payment<span class="chevron"></span></li>
               <li class="text-muted">Confirmation<span class="chevron"></span></li>
           </ul>
@@ -967,7 +966,6 @@
             </t>
           </div>
           <div class="col-lg-8 col-sm-9 oe_cart">
-              <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
               <table class='table table-striped table-condensed' id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                   <thead>
                       <tr>
@@ -1013,7 +1011,7 @@
                 <div>
                   <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                 </div>
-                <t>
+                <t t-if="website_sale_order and not website_sale_order.only_services">
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{
@@ -1056,8 +1054,9 @@
           <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
-                  <a style="width:100px;" class="btn btn-primary a-submit">
-                    <span>Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                  <a style="width:127px;" class="btn btn-primary a-submit">
+                    <span t-if="order.amount_total > 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
+                    <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
                   </a>
               </form>
             </div>
@@ -1078,14 +1077,13 @@
 
           <ul class="wizard pull-right">
               <li class="text-muted">Review Order<span class="chevron"></span></li>
-              <li class="text-muted">Shipping &amp; Billing<span class="chevron"></span></li>
+              <li class="text-muted"><t t-if="not order.only_services">Shipping &amp;</t> Billing<span class="chevron"></span></li>
               <li class="text-muted">Payment<span class="chevron"></span></li>
               <li class="text-primary">Confirmation<span class="chevron"></span></li>
           </ul>
           <h1 class="mb32">Order <em t-field="order.name"/> Confirmed</h1>
           <div class="row">
               <div class="col-md-8 oe_cart">
-                  <h2>Thank you for your order.</h2>
                   <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
                   </div>
                   <h3 class="mt32"><strong>Order Details:</strong></h3>
@@ -1145,7 +1143,7 @@
                     "widget": "contact",
                     "fields": ["address", "name", "phone", "email"]
                     }'/>
-                <t>
+                <t t-if="not order.only_services">
                     <h4 class="mt32">Ship To:</h4>
                     <t t-if="order.partner_shipping_id and order.partner_shipping_id.id != order.partner_invoice_id.id">
                       <div t-field="order.partner_shipping_id" t-field-options='{

@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- Partners with EAN13s -->
-        <record id='base.res_partner_1'  model='res.partner'> <field name='ean13'>0420100000005</field> </record>
-        <record id='base.res_partner_2'  model='res.partner'> <field name='ean13'>0420200000004</field> </record>
-        <record id='base.res_partner_3'  model='res.partner'> <field name='ean13'>0420300000003</field> </record>
-        <record id='base.res_partner_4'  model='res.partner'> <field name='ean13'>0420400000002</field> </record>
-        <record id='base.res_partner_5'  model='res.partner'> <field name='ean13'>0420500000001</field> </record>
-        <record id='base.res_partner_6'  model='res.partner'> <field name='ean13'>0420600000000</field> </record>
-        <record id='base.res_partner_7'  model='res.partner'> <field name='ean13'>0420700000009</field> </record>
-        <record id='base.res_partner_8'  model='res.partner'> <field name='ean13'>0420800000008</field> </record>
-        <record id='base.res_partner_9'  model='res.partner'> <field name='ean13'>0420900000007</field> </record>
-        <record id='base.res_partner_10' model='res.partner'> <field name='ean13'>0421000000003</field> </record>
-        <record id='base.res_partner_11' model='res.partner'> <field name='ean13'>0421100000002</field> </record>
-        <record id='base.res_partner_12' model='res.partner'> <field name='ean13'>0421200000001</field> </record>
-        <record id='base.res_partner_13' model='res.partner'> <field name='ean13'>0421300000000</field> </record>
-        <record id='base.res_partner_14' model='res.partner'> <field name='ean13'>0421400000009</field> </record>
-        <record id='base.res_partner_15' model='res.partner'> <field name='ean13'>0421500000008</field> </record>
-        <record id='base.res_partner_16' model='res.partner'> <field name='ean13'>0421600000007</field> </record>
-        <record id='base.res_partner_17' model='res.partner'> <field name='ean13'>0421700000006</field> </record>
-        <record id='base.res_partner_18' model='res.partner'> <field name='ean13'>0421800000005</field> </record>
-        <record id='base.res_partner_19' model='res.partner'> <field name='ean13'>0421900000004</field> </record>
-        <record id='base.res_partner_20' model='res.partner'> <field name='ean13'>0422000000000</field> </record>
-        <record id='base.res_partner_21' model='res.partner'> <field name='ean13'>0422100000009</field> </record>
+        <!-- Partners with Barcodes -->
+        <record id='base.res_partner_1'  model='res.partner'> <field name='barcode'>0420100000005</field> </record>
+        <record id='base.res_partner_2'  model='res.partner'> <field name='barcode'>0420200000004</field> </record>
+        <record id='base.res_partner_3'  model='res.partner'> <field name='barcode'>0420300000003</field> </record>
+        <record id='base.res_partner_4'  model='res.partner'> <field name='barcode'>0420400000002</field> </record>
+        <record id='base.res_partner_5'  model='res.partner'> <field name='barcode'>0420500000001</field> </record>
+        <record id='base.res_partner_6'  model='res.partner'> <field name='barcode'>0420600000000</field> </record>
+        <record id='base.res_partner_7'  model='res.partner'> <field name='barcode'>0420700000009</field> </record>
+        <record id='base.res_partner_8'  model='res.partner'> <field name='barcode'>0420800000008</field> </record>
+        <record id='base.res_partner_9'  model='res.partner'> <field name='barcode'>0420900000007</field> </record>
+        <record id='base.res_partner_10' model='res.partner'> <field name='barcode'>0421000000003</field> </record>
+        <record id='base.res_partner_11' model='res.partner'> <field name='barcode'>0421100000002</field> </record>
+        <record id='base.res_partner_12' model='res.partner'> <field name='barcode'>0421200000001</field> </record>
+        <record id='base.res_partner_13' model='res.partner'> <field name='barcode'>0421300000000</field> </record>
+        <record id='base.res_partner_14' model='res.partner'> <field name='barcode'>0421400000009</field> </record>
+        <record id='base.res_partner_15' model='res.partner'> <field name='barcode'>0421500000008</field> </record>
+        <record id='base.res_partner_16' model='res.partner'> <field name='barcode'>0421600000007</field> </record>
+        <record id='base.res_partner_17' model='res.partner'> <field name='barcode'>0421700000006</field> </record>
+        <record id='base.res_partner_18' model='res.partner'> <field name='barcode'>0421800000005</field> </record>
+        <record id='base.res_partner_19' model='res.partner'> <field name='barcode'>0421900000004</field> </record>
+        <record id='base.res_partner_20' model='res.partner'> <field name='barcode'>0422000000000</field> </record>
+        <record id='base.res_partner_21' model='res.partner'> <field name='barcode'>0422100000009</field> </record>
 
         <record id="base.user_root" model="res.users">
-            <field name="ean13">0410100000006</field>
+            <field name="barcode">0410100000006</field>
         </record>
         <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
         </record>
         <record id="base.user_root" model="res.users">
-            <field name="ean13">0410100000006</field>
+            <field name="barcode">0410100000006</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
         </record>
 
@@ -191,7 +191,7 @@
           <field name="list_price">1.98</field>
           <field name="name">Boni Oranges</field>
           <field name="to_weight">True</field>
-          <field name="ean13">2100002000003</field>
+          <field name="barcode">2100002000003</field>
           <field name="pos_categ_id" ref="oranges"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -212,7 +212,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">1.98</field>
           <field name="name">Lemon</field>
-          <field name="ean13">2301000000006</field>
+          <field name="barcode">2301000000006</field>
           <field name="to_weight">True</field>
           <field name="pos_categ_id" ref="autres_agrumes"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
@@ -297,7 +297,7 @@
           <field name="list_price">5.10</field>
           <field name="name">Peaches</field>
           <field name="to_weight">True</field>
-          <field name="ean13">2300001000008</field>
+          <field name="barcode">2300001000008</field>
           <field name="pos_categ_id" ref="rouges_noyau_fruits"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -373,7 +373,7 @@
           <field name="list_price">1.28</field>
           <field name="name">Onions</field>
           <field name="to_weight">True</field>
-          <field name="ean13">2100001000004</field>
+          <field name="barcode">2100001000004</field>
           <field name="pos_categ_id" ref="oignons_ail_echalotes"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -435,7 +435,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">1.49</field>
           <field name="name">Coca-Cola Regular 1L</field>
-          <field name="ean13">5449000054227</field>
+          <field name="barcode">5449000054227</field>
           <field name="pos_categ_id" ref="coke"/>
           <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_1l-image.jpg"/>
         </record>
@@ -457,7 +457,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">0.51</field>
           <field name="name">Coca-Cola Regular 33cl</field>
-          <field name="ean13">5449000000996</field>
+          <field name="barcode">5449000000996</field>
           <field name="pos_categ_id" ref="coke"/>
           <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_33cl-image.jpg"/>
         </record>
@@ -722,7 +722,7 @@
         <record id="chaudfontaine_50cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.44</field>
-          <field name="ean13">5449000111715</field>
+          <field name="barcode">5449000111715</field>
           <field name="name">Chaudfontaine 50cl</field>
           <field name="pos_categ_id" ref="plain_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_50cl-image.jpg"/>
@@ -837,7 +837,7 @@
         <record id="jupiler_33cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.77</field>
-          <field name="ean13">5410228142027</field>
+          <field name="barcode">5410228142027</field>
           <field name="name">Jupiler 33cl</field>
           <field name="pos_categ_id" ref="pils"/>
           <field name="image" type="base64" file="point_of_sale/static/img/jupiler_33cl-image.jpg"/>
@@ -896,7 +896,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">0.83</field>
           <field name="name">Belle-Vue Kriek 25cl</field>
-          <field name='ean13'>5410228193449</field>
+          <field name='barcode'>5410228193449</field>
           <field name="pos_categ_id" ref="fruity_beers"/>
           <field name="image" type="base64" file="point_of_sale/static/img/belle_vue_kriek_25cl-image.jpg"/>
         </record>
@@ -905,7 +905,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">1.00</field>
           <field name="name">Leffe Brune 33cl</field>
-          <field name='ean13'>5410228142164</field>
+          <field name='barcode'>5410228142164</field>
           <field name="pos_categ_id" ref="special_beers"/>
           <field name="image" type="base64" file="point_of_sale/static/img/leffe_brune_33cl-image.jpg"/>
         </record>
@@ -913,7 +913,7 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">1.00</field>
           <field name="name">Leffe Blonde 33cl</field>
-          <field name='ean13'>5410228142218</field>
+          <field name='barcode'>5410228142218</field>
           <field name="pos_categ_id" ref="special_beers"/>
           <field name="image" type="base64" file="point_of_sale/static/img/leffe_blonde_33cl-image.jpg"/>
         </record>

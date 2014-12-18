@@ -32,7 +32,8 @@ openerp.account = function (instance) {
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
             this.formatCurrency; // Method that formats the currency ; loaded from the server
-    
+            this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
+
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
@@ -120,6 +121,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
+                        domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
                     },
                 },
             };
@@ -278,12 +280,15 @@ openerp.account = function (instance) {
             if (! self.single_statement) return;
             var name = self.$(".change_statement_name_field").val();
             if (name === "") return;
+            self.$(".change_statement_name_button").attr("disabled", "disabled");
             return self.model_bank_statement
                 .call("write", [[self.statement_ids[0]], {'name': name}])
-                .then(function () {
+                .done(function () {
                     self.title = name;
                     self.$(".statement_name span").text(name).show();
                     self.$(".change_statement_name_container").hide();
+                }).always(function() {
+                    self.$(".change_statement_name_button").removeAttr("disabled");
                 });
         },
     
@@ -475,23 +480,17 @@ openerp.account = function (instance) {
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
+                    var breadcrumbs = self.action_manager.get_widgets();
+                    var widget = _.find(breadcrumbs, function(widget){
+                        return widget.action && widget.action.id === action_id;
+                    });
+                    if (widget) {
+                        self.action_manager.select_widget(widget, 0);
+                    } else {
+                        self.action_manager.do_action(action_id, {
+                            clear_breadcrumbs: true
+                        });
                     }
-                    if (!found)
-                        instance.web.Home(self);
                 });
         },
     
@@ -1250,12 +1249,12 @@ openerp.account = function (instance) {
             // Special case hack : no identified partner
             if (self.st_line.has_no_partner) {
                 if (Math.abs(balance).toFixed(3) === "0.000") {
-                    self.$(".button_ok").addClass("oe_highlight");
+                    self.$(".button_ok").addClass("btn-primary");
                     self.$(".button_ok").removeAttr("disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = true;
                 } else {
-                    self.$(".button_ok").removeClass("oe_highlight");
+                    self.$(".button_ok").removeClass("btn-primary");
                     self.$(".button_ok").attr("disabled", "disabled");
                     self.$(".button_ok").text("OK");
                     self.is_valid = false;
@@ -1273,10 +1272,10 @@ openerp.account = function (instance) {
             }
     
             if (Math.abs(balance).toFixed(3) === "0.000") {
-                self.$(".button_ok").addClass("oe_highlight");
+                self.$(".button_ok").addClass("btn-primary");
                 self.$(".button_ok").text("OK");
             } else {
-                self.$(".button_ok").removeClass("oe_highlight");
+                self.$(".button_ok").removeClass("btn-primary");
                 self.$(".button_ok").text("Keep open");
                 var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
                 var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
@@ -1660,9 +1659,10 @@ openerp.account = function (instance) {
             var deferred_animation = self.$el.parent().slideUp(speed*height/150);
     
             // RPC
+            self.$(".button_ok").attr("disabled", "disabled");
             return self.model_bank_statement_line
                 .call("process_reconciliation", [self.st_line_id, self.makeMoveLineDicts()])
-                .then(function () {
+                .done(function () {
                     self.getParent().unexcludeMoveLines(self, self.partner_id, self.get("mv_lines_selected"));
                     $.each(self.$(".bootstrap_popover"), function(){ $(this).popover('destroy') });
                     return $.when(deferred_animation).then(function(){
@@ -1672,10 +1672,12 @@ openerp.account = function (instance) {
                             parent.childValidated(self);
                         });
                     });
-                }, function(){
+                }).fail(function(){
                     self.$el.parent().slideDown(speed*height/150, function(){
                         self.$el.unwrap();
                     });
+                }).always(function() {
+                    self.$(".button_ok").removeAttr("disabled");
                 });
         },
     });

@@ -77,7 +77,7 @@ $(function () {
         var sheet = findSheet(/style\.css$/);
         if (!sheet) { return; }
         // build PL switcher UI and hook toggle event
-        $(buildSwitcher(Object.keys(languages)))
+        var $switcher = $(buildSwitcher(Object.keys(languages)))
             .prependTo('div.documentwrapper')
             .on('click', 'li', function (e) {
                 $(e.target).addClass('active')
@@ -93,7 +93,8 @@ $(function () {
                 ].join('');
                 sheet.deleteRule(lastIndex);
                 sheet.insertRule(sel + '{' + content + '}', lastIndex);
-        });
+            });
+        $switcher.affix();
     })(); }
 
 

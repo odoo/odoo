@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'odoo'
-copyright = u'OpenERP S.A.'
+copyright = u'Odoo S.A.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -165,6 +165,12 @@ html_sidebars = {
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
+
+latex_elements = {
+    'papersize': r'a4paper',
+    'preamble': u'''\\setcounter{tocdepth}{2}
+''',
+}
 
 # default must be set otherwise ifconfig blows up
 todo_include_todos = False

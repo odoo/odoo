@@ -28,8 +28,6 @@
                     <filter string="Open" domain="[('state','=','open')]" />
                     <filter string="Closed" domain="[('state','=','cancel')]" />
                     <separator/>
-                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                    <separator/>
                     <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter string="My Company" context="{'invisible_team': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>

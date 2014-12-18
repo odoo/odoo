@@ -126,9 +126,10 @@ class website_sale(http.Controller):
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
-                attribute_value_ids.append([p.id, map(int, p.attribute_value_ids), p.price, price])
+                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, price])
         else:
-            attribute_value_ids = [[p.id, map(int, p.attribute_value_ids), p.price, p.lst_price] for p in product.product_variant_ids]
+            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, p.lst_price]
+                for p in product.product_variant_ids]
 
         return attribute_value_ids
 
@@ -145,7 +146,7 @@ class website_sale(http.Controller):
             domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
                 ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
         if category:
-            domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
+            domain += [('public_categ_ids', 'child_of', int(category))]
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
@@ -179,6 +180,7 @@ class website_sale(http.Controller):
         if search:
             post["search"] = search
         if category:
+            category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
 
         style_obj = pool['product.style']
@@ -190,7 +192,7 @@ class website_sale(http.Controller):
         categories = category_obj.browse(cr, uid, category_ids, context=context)
         categs = filter(lambda x: not x.parent_id, categories)
 
-        domain += [('public_categ_ids', 'in', category_ids)]
+        domain += ['|', ('public_categ_ids', 'in', category_ids), ('public_categ_ids', '=', False)]
         product_obj = pool.get('product.template')
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -302,7 +304,7 @@ class website_sale(http.Controller):
             compute_currency = lambda price: price
 
         values = {
-            'order': order,
+            'website_sale_order': order,
             'compute_currency': compute_currency,
             'suggested_products': [],
         }
@@ -365,7 +367,7 @@ class website_sale(http.Controller):
 
         order = None
 
-        shipping_id = None
+        shipping_id = data and data.get('shipping_id') or None
         shipping_ids = []
         checkout = {}
         if not data:
@@ -382,8 +384,8 @@ class website_sale(http.Controller):
         else:
             checkout = self.checkout_parse('billing', data)
             try: 
-                shipping_id = int(data["shipping_id"])
-            except ValueError:
+                shipping_id = int(shipping_id)
+            except (ValueError, TypeError):
                 pass
             if shipping_id == -1:
                 checkout.update(self.checkout_parse('shipping', data))
@@ -428,7 +430,8 @@ class website_sale(http.Controller):
             'shipping_id': partner.id != shipping_id and shipping_id or 0,
             'shippings': shippings,
             'error': {},
-            'has_check_vat': hasattr(registry['res.partner'], 'check_vat')
+            'has_check_vat': hasattr(registry['res.partner'], 'check_vat'),
+            'only_services': order and order.only_services or False
         }
 
         return values
@@ -628,7 +631,7 @@ class website_sale(http.Controller):
                 shipping_partner_id = order.partner_invoice_id.id
 
         values = {
-            'order': request.registry['sale.order'].browse(cr, SUPERUSER_ID, order.id, context=context)
+            'website_sale_order': order
         }
         values['errors'] = sale_order_obj._get_errors(cr, uid, order, context=context)
         values.update(sale_order_obj._get_website_data(cr, uid, order, context))
@@ -735,21 +738,22 @@ class website_sale(http.Controller):
                 }
             else:
                 state = 'done'
-                message = ""
+                message = '<h2>%s</h2>' % _('Your order has been confirmed, thank you for your loyalty.')
                 validation = None
         else:
             tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
+            message = '<h2>%s</h2>' % _('Thank you for your order.')
             if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
+                message += '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
+                message += '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {

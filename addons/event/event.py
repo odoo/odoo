@@ -113,13 +113,6 @@ class event_event(models.Model):
     registration_ids = fields.One2many(
         'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
-    count_registrations = fields.Integer(string='Registrations', compute='_count_registrations')
-
-    @api.one
-    @api.depends('registration_ids')
-    def _count_registrations(self):
-        self.count_registrations = len(self.registration_ids)
-
     # Date fields
     date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
@@ -332,3 +325,13 @@ class event_registration(models.Model):
                 self.name = self.name or contact.name
                 self.email = self.email or contact.email
                 self.phone = self.phone or contact.phone
+
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(event_registration, self).message_get_suggested_recipients()
+        for attendee in self:
+            if attendee.email:
+                self._message_add_suggested_recipient(recipients, attendee, email=attendee.email, reason=_('Customer Email'))
+            if attendee.partner_id:
+                self._message_add_suggested_recipient(recipients, attendee, partner=attendee.partner_id, reason=_('Customer'))
+        return recipients

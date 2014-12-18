@@ -133,7 +133,7 @@ Index: addons/openacademy/templates.xml
 +        <!-- <template id="listing"> -->
 +        <!--   <ul> -->
 +        <!--     <li t-foreach="objects" t-as="object"> -->
-+        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
++        <!--       <a t-attf-href="{{ root }}/objects/{{ object.id }}"> -->
 +        <!--         <t t-esc="object.display_name"/> -->
 +        <!--       </a> -->
 +        <!--     </li> -->

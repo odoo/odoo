@@ -11,11 +11,7 @@
                     <span class="placeholder-UsernameWidget"></span>
                 </div>
                 <div class="pos-rightheader">
-                    <div class="order-selector">
-                        <span class="orders"></span>
-                        <span class="order-button square neworder-button"><i class='fa fa-plus' /></span>
-                        <span class="order-button square deleteorder-button"><i class='fa fa-minus' /></span>
-                    </div>
+                    <span class="placeholder-OrderSelectorWidget"></span>
                     <!-- here goes header buttons -->
                 </div>
             </div>
@@ -90,13 +86,13 @@
         <div class="oe_status js_synch">
             <span class='js_msg oe_hidden'>0</span>
             <div class="js_connected oe_icon oe_green">
-                <i class='fa fa-fw fa-rss'></i>
+                <i class='fa fa-fw fa-wifi'></i>
             </div>
             <div class="js_connecting oe_icon oe_hidden">
                 <i class='fa fa-fw fa-spin fa-spinner'></i>
             </div>
             <div class="js_disconnected oe_icon oe_red oe_hidden">
-                <i class='fa fa-fw fa-rss'></i>
+                <i class='fa fa-fw fa-wifi'></i>
             </div>
         </div>
     </t>
@@ -130,11 +126,11 @@
     </t>
 
     <t t-name="ActionpadWidget">
-        <div class='actionpad'>
+        <div class="actionpad">
             <button class='button set-customer'>
-                <i class='fa fa-user' /> Set Customer
+                <i class='fa fa-user' /> Customer
             </button>
-            <button class="button pay">
+            <button class='button pay'>
                 <i class='fa fa-chevron-right' /> Payment
             </button>
         </div>
@@ -338,7 +334,7 @@
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <input class='detail barcode'       name='ean13'    t-att-value='partner.ean13 || ""'></input>
+                        <input class='detail barcode'       name='barcode'    t-att-value='partner.barcode || ""'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Tax ID</span>
@@ -380,10 +376,10 @@
                 <div class='client-details-right'>
                     <div class='client-detail'>
                         <span class='label'>Barcode</span>
-                        <t t-if='partner.ean13'>
-                            <span class='detail client-id'><t t-esc='partner.ean13'/></span>
+                        <t t-if='partner.barcode'>
+                            <span class='detail client-id'><t t-esc='partner.barcode'/></span>
                         </t>
-                        <t t-if='!partner.ean13'>
+                        <t t-if='!partner.barcode'>
                             <span class='detail client-id empty'>N/A</span>
                         </t>
                     </div>
@@ -458,7 +454,7 @@
         <t t-if="!paymentlines.length">
             <div class='paymentlines-empty'>
                 <div class='total'>
-                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                 </div>
                 <div class='message'>
                     Please select a payment method. 
@@ -488,17 +484,17 @@
                     <t t-foreach='paymentlines' t-as='line'>
                         <t t-if='line.selected'>
                             <tr class='paymentline selected'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered edit'> 
                                     <t t-esc='widget.inputbuffer' />
                                     <!-- <t t-esc='line.get_amount()' /> -->
                                 </td>
-                                <t t-if='order.getChange(line)'>
+                                <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' > 
-                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                     </td>
                                 </t>
-                                <t t-if='!order.getChange(line)'>
+                                <t t-if='!order.get_change(line)'>
                                     <td class='col-change' ></td>
                                 </t>
                                     
@@ -508,11 +504,11 @@
                         </t>
                         <t t-if='!line.selected'>
                             <tr class='paymentline' t-att-data-cid='line.cid'>
-                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.getDueLeft(line))' /> </td>
+                                <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered'> <t t-esc='widget.format_currency_no_symbol(line.get_amount())' /> </td>
                                 <td class='col-change'> 
-                                    <t t-if='order.getChange(line)'>
-                                        <t t-esc='widget.format_currency_no_symbol(order.getChange(line))' />
+                                    <t t-if='order.get_change(line)'>
+                                        <t t-esc='widget.format_currency_no_symbol(order.get_change(line))' />
                                      </t>
                                 </td>
                                 <td class='col-name'> <t t-esc='line.name' /> </td>
@@ -556,13 +552,14 @@
     <t t-name="PaymentScreen-Paymentmethods">
         <div class='paymentmethods'>
             <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
-                <div class="paymentmethod" t-att-data-id="cashregister.journal_id[0]">
+                <div class="button paymentmethod" t-att-data-id="cashregister.journal_id[0]">
                     <t t-esc="cashregister.journal_id[1]" />
                 </div>
             </t>
         </div>
+
     </t>
-        
+
     <t t-name="PaymentScreenWidget">
         <div class='payment-screen screen'>
             <div class='screen-content'>
@@ -592,25 +589,27 @@
                     </section>
 
                     <div class='payment-buttons'>
+                        <div class='button js_set_customer'>
+                            <i class='fa fa-user' />Customer
+                        </div>
                         <t t-if='widget.pos.config.iface_invoicing'>
-                            <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                <i class='fa fa-file-text-o' /> Invoice
-                            </div>
+                            <t t-if='widget.pos.get_order()'>
+                                <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
+                                    <i class='fa fa-file-text-o' /> Invoice
+                                </div>
+                            </t>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_invoice'>
                                 <i class='fa fa-archive' /> Open Cashbox
                             </div>
                         </t>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-
-    </t>
-
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </t>
+        
     <t t-name="ReceiptScreenWidget">
         <div class='receipt-screen screen'>
             <div class='screen-content'>
@@ -661,19 +660,24 @@
                 <t t-if='receipt.company.website'>
                     <div><t t-esc='receipt.company.website' /></div>
                 </t>
-                <t t-if='receipt.header'>
+                <t t-if='receipt.header_xml'>
+                    <t t-raw='receipt.header_xml' />
+                </t>
+                <t t-if='!receipt.header_xml and receipt.header'>
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
-                    <div>--------------------------------</div>
-                    <div>Served by <t t-esc='receipt.cashier' /></div>
+                    <div class='cashier'>
+                        <div>--------------------------------</div>
+                        <div>Served by <t t-esc='receipt.cashier' /></div>
+                    </div>
                 </t>
             </div>
             <br /><br />
 
             <!-- Orderlines -->
 
-            <div line-ratio='0.6'>
+            <div class='orderlines' line-ratio='0.6'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                     <t t-if='simple'>
@@ -725,7 +729,7 @@
             <!-- Total -->
 
             <line><right>--------</right></line>
-            <line size='double-height'>
+            <line class='total' size='double-height'>
                 <left><pre>        TOTAL</pre></left>
                 <right><value><t t-esc='receipt.total_with_tax' /></value></right>
             </line>
@@ -762,15 +766,27 @@
                         <right><value><t t-esc='tax.amount' /></value></right>
                     </line>
                 </t>
+                <line>
+                    <left>Total Taxes</left>
+                    <right><value><t t-esc='receipt.total_tax'/></value></right>
+                </line>
             </t>
 
+            <div class='before-footer' />
+
             <!-- Footer -->
-            <t t-if='receipt.footer'>
+            <t t-if='receipt.footer_xml'>
+                <t t-raw='receipt.footer_xml' />
+            </t>
+
+            <t t-if='!receipt.footer_xml and receipt.footer'>
                 <br/>
-                <pre><t t-esc='receipt.footer' /></pre>
+                <t t-esc='receipt.footer' />
                 <br/>
                 <br/>
             </t>
+
+            <div class='after-footer' />
 
             <br/>
             <div font='b'>
@@ -919,6 +935,40 @@
         </div>
     </t>
 
+    <t t-name="TextInputPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <input type='text' t-att-value="widget.value || ''"></input>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="TextAreaPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <textarea rows="10" cols="40"><t t-esc="widget.value" /></textarea>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok 
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="UnsentOrdersPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-unsent-orders">
@@ -936,6 +986,92 @@
                 <div class="footer">
                     <div class="button confirm">
                         Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="UnpaidOrdersPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-unpaid-orders">
+                <p class="message">Unpaid Orders</p>
+                <t t-if='widget.pos.db.get_unpaid_orders().length === 0'>
+                    <p class='comment'>
+                        There are no unpaid orders
+                    </p>
+                </t>
+                <t t-if='widget.pos.db.get_unpaid_orders().length > 0'>
+                    <p class='comment traceback'>
+                        <t t-esc='JSON.stringify(widget.pos.db.get_unpaid_orders(),null,2)' />
+                    </p>
+                </t>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="SelectionPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-selection">
+                <p class="message"><t t-esc=" widget.message || 'Select' " /></p>
+                <div class='selection scrollable-y touch-scrollable'>
+                    <t t-foreach="widget.list || []" t-as="item">
+                        <div class='selection-item' t-att-data-item-index='item_index'>
+                            <t t-esc='item.label'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button cancel">
+                        Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="NumberPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-number">
+                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <div class='popup-input value active'>
+                    <t t-esc='widget.inputbuffer' />
+                </div>
+                <div class='popup-numpad'>
+                    <button class="input-button number-char" data-action='1'>1</button>
+                    <button class="input-button number-char" data-action='2'>2</button>
+                    <button class="input-button number-char" data-action='3'>3</button>
+                    <button class="mode-button add" data-action='+10'>+10</button>
+                    <br />
+                    <button class="input-button number-char" data-action='4'>4</button>
+                    <button class="input-button number-char" data-action='5'>5</button>
+                    <button class="input-button number-char" data-action='6'>6</button>
+                    <button class="mode-button add" data-action='+20'>+20</button>
+                    <br />
+                    <button class="input-button number-char" data-action='7'>7</button>
+                    <button class="input-button number-char" data-action='8'>8</button>
+                    <button class="input-button number-char" data-action='9'>9</button>
+                    <button class="mode-button add" data-action='+50'>+50</button>
+                    <br />
+                    <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+                    <button class="input-button number-char" data-action='0'>0</button>
+                    <button class="input-button number-char dot" data-action='.'>.</button>
+                    <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                        <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                    </button>
+                    <br />
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel 
                     </div>
                 </div>
             </div>
@@ -979,7 +1115,7 @@
                         </em>
                         <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>
@@ -1054,6 +1190,11 @@
                     <li class="button show_orders">Show All Unsent Orders</li>
                     <li class="button delete_orders">Delete All Unsent Orders</li>
                 </ul>
+                <p class="category">Unpaid Orders</p>
+                <ul>
+                    <li class="button show_unpaid_orders">Show All Unpaid Orders</li>
+                    <li class="button delete_unpaid_orders">Delete All Unpaid Orders</li>
+                </ul>
 
                 <p class="category">Hardware Status</p>
                 <ul>
@@ -1094,23 +1235,39 @@
         </tr>
     </t>
 
-    <t t-name="OrderButtonWidget">
-        <span class="order-button select-order">
-            <t t-if='widget.selected'>
-                <span class='order-sequence'>
-                    <t t-esc='widget.order.sequence_number' />
-                </span>
-                <t t-if="widget.order.get_client()">
-                    <i class='fa fa-user'/>
+    <t t-name="OrderSelectorWidget">
+        <div class="order-selector">
+            <span class="orders touch-scrollable">
+
+                <t t-foreach="widget.pos.get_order_list()" t-as="order">
+                    <t t-if='order === widget.pos.get_order()'>
+                        <span class="order-button select-order selected" t-att-data-uid="order.uid">
+                            <span class='order-sequence'>
+                                <t t-esc='order.sequence_number' />
+                            </span>
+                            <t t-if="order.get_client()">
+                                <i class='fa fa-user'/>
+                            </t>
+                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + moment(order.creation_date).format('hh:mm')"/>
+                        </span>
+                    </t>
+                    <t t-if='order !== widget.pos.get_order()'>
+                        <span class="order-button select-order" t-att-data-uid="order.uid">
+                            <span class='order-sequence'>
+                                <t t-esc='order.sequence_number' />
+                            </span>
+                        </span>
+                    </t>
                 </t>
-                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + moment(widget.order.get('creationDate')).format('LT')"/>
-            </t>
-            <t t-if='!widget.selected'>
-                <span class='order-sequence'>
-                    <t t-esc='widget.order.sequence_number' />
-                </span>
-            </t>
-        </span>
+            
+            </span>
+            <span class="order-button square neworder-button">
+                <i class='fa fa-plus' />
+            </span>
+            <span class="order-button square deleteorder-button">
+                <i class='fa fa-minus' />
+            </span>
+        </div>
     </t>
 
     <t t-name="UsernameWidget">
@@ -1122,16 +1279,16 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.get('name')"/></div>
+            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
-            <t t-if="widget.pos.config.receipt_header">
+            <t t-if="receipt.header">
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_header" />
+                    <t t-esc="receipt.header" />
                 </div>
                 <br />
             </t>
@@ -1163,10 +1320,10 @@
                 <tr>
                     <td>Subtotal:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                        <t t-esc="widget.format_currency(order.get_subtotal())"/>
                     </td>
                 </tr>
-                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
                     <tr>
                         <td><t t-esc="taxdetail.name" /></td>
                         <td class="pos-right-align">
@@ -1177,13 +1334,13 @@
                 <tr>
                     <td>Discount:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                        <t t-esc="widget.format_currency(order.get_total_discount())"/>
                     </td>
                 </tr>
                 <tr class="emph">
                     <td>Total:</td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
                     </td>
                 </tr>
             </table>
@@ -1201,13 +1358,13 @@
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getChange())"/>
+                    <t t-esc="widget.format_currency(order.get_change())"/>
                     </td></tr>
             </table>
-            <t t-if="widget.pos.config.receipt_footer">
+            <t t-if="receipt.footer">
                 <br />
                 <div style='text-align:center'>
-                    <t t-esc="widget.pos.config.receipt_footer" />
+                    <t t-esc="receipt.footer" />
                 </div>
             </t>
         </div>

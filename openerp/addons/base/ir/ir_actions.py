@@ -51,6 +51,7 @@ class actions(osv.osv):
         'name': fields.char('Name', required=True),
         'type': fields.char('Action Type', required=True),
         'usage': fields.char('Action Usage'),
+        'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
@@ -271,7 +272,7 @@ class ir_actions_act_window(osv.osv):
     _columns = {
         'name': fields.char('Action Name', translate=True),
         'type': fields.char('Action Type', required=True),
-        'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
+        'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='set null'),
         'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', required=True,

@@ -15,7 +15,9 @@
 // that only one screen is shown at the same time and that show() is called after all
 // hide()s
 
-function openerp_pos_screens(instance, module){ //module is instance.point_of_sale
+openerp.point_of_sale.load_screens = function load_screens(instance, module){ //module is instance.point_of_sale
+    "use strict";
+
     var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
@@ -24,30 +26,27 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
             this.pos = options.pos;
-
-            this.screen_set = options.screen_set || {};
-
-            this.popup_set = options.popup_set || {};
-
+            this.screen_set     = options.screen_set || {};
+            this.popup_set      = options.popup_set || {};
             this.default_screen = options.default_screen;
-
-            this.current_popup = null;
-
-            this.current_mode = options.default_mode || 'cashier';
-
+            this.startup_screen = options.startup_screen;
+            this.current_popup  = null;
+            this.current_mode   = options.default_mode || 'cashier';
             this.current_screen = null; 
 
-            for(screen_name in this.screen_set){
+            for (var screen_name in this.screen_set) {
                 this.screen_set[screen_name].hide();
             }
             
-            for(popup_name in this.popup_set){
+            for (var popup_name in this.popup_set) {
                 this.popup_set[popup_name].hide();
             }
 
-            this.pos.get('selectedOrder').set_screen_data({
-                'screen': this.default_screen,
-            });
+            if (this.pos.get_order()) {
+                this.pos.get_order().set_screen_data({
+                    'screen': this.default_screen,
+                });
+            }
 
             this.pos.bind('change:selectedOrder', this.load_saved_screen, this);
         },
@@ -70,11 +69,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.current_popup = null;
             }
         },
-        load_saved_screen:  function(){
+        load_saved_screen:  function(options){
+            options = options || {};
             this.close_popup();
-            var selectedOrder = this.pos.get('selectedOrder');
+            var selectedOrder = this.pos.get_order();
             // FIXME : this changing screen behaviour is sometimes confusing ... 
-            this.set_current_screen(selectedOrder.get_screen_data('screen') || this.default_screen,null,'refresh');
+            this.set_current_screen(selectedOrder.get_screen_data('screen') || options.default_screen || this.default_screen,null,'refresh');
             //this.set_current_screen(this.default_screen,null,'refresh');
             
         },
@@ -96,17 +96,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.close_popup();
 
-            var order = this.pos.get('selectedOrder');
-            var old_screen_name = order.get_screen_data('screen');
+            var order = this.pos.get_order();
+            if (order) {
+                var old_screen_name = order.get_screen_data('screen');
 
-            order.set_screen_data('screen',screen_name);
+                order.set_screen_data('screen',screen_name);
 
-            if(params){
-                order.set_screen_data('params',params);
-            }
+                if(params){
+                    order.set_screen_data('params',params);
+                }
 
-            if( screen_name !== old_screen_name ){
-                order.set_screen_data('previous-screen',old_screen_name);
+                if( screen_name !== old_screen_name ){
+                    order.set_screen_data('previous-screen',old_screen_name);
+                }
             }
 
             if ( refresh || screen !== this.current_screen){
@@ -119,20 +121,23 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         get_current_screen: function(){
-            return this.pos.get('selectedOrder').get_screen_data('screen') || this.default_screen;
+            return this.pos.get_order().get_screen_data('screen') || this.default_screen;
         },
         back: function(){
-            var previous = this.pos.get('selectedOrder').get_screen_data('previous-screen');
+            var previous = this.pos.get_order().get_screen_data('previous-screen');
             if(previous){
                 this.set_current_screen(previous);
             }
         },
         get_current_screen_param: function(param){
-            var params = this.pos.get('selectedOrder').get_screen_data('params');
+            var params = this.pos.get_order().get_screen_data('params');
             return params ? params[param] : undefined;
         },
         set_default_screen: function(){
             this.set_current_screen(this.default_screen);
+        },
+        change_default_screen: function(screen){ 
+            this.default_screen = screen;
         },
     });
 
@@ -169,14 +174,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         // what happens when a cashier id barcode is scanned.
         // the default behavior is the following : 
-        // - if there's a user with a matching ean, put it as the active 'cashier', go to cashier mode, and return true
+        // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
         // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
         barcode_cashier_action: function(code){
             var users = this.pos.users;
             for(var i = 0, len = users.length; i < len; i++){
-                if(users[i].ean13 === code.code){
-                    this.pos.cashier = users[i];
-                    this.pos_widget.username.refresh();
+                if(users[i].barcode === code.code){
+                    this.pos.set_cashier(users[i]);
+                    this.pos_widget.username.renderElement();
                     return true;
                 }
             }
@@ -186,13 +191,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         
         // what happens when a client id barcode is scanned.
         // the default behavior is the following : 
-        // - if there's a user with a matching ean, put it as the active 'client' and return true
+        // - if there's a user with a matching barcode, put it as the active 'client' and return true
         // - else : return false. 
         barcode_client_action: function(code){
-            var partner = this.pos.db.get_partner_by_ean13(code.code);
+            var partner = this.pos.db.get_partner_by_barcode(code.code);
             if(partner){
-                this.pos.get('selectedOrder').set_client(partner);
-                this.pos_widget.username.refresh();
+                this.pos.get_order().set_client(partner);
                 return true;
             }
             this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
@@ -202,7 +206,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // what happens when a discount barcode is scanned : the default behavior
         // is to set the discount on the last order.
         barcode_discount_action: function(code){
-            var last_orderline = this.pos.get('selectedOrder').getLastOrderline();
+            var last_orderline = this.pos.get_order().get_last_orderline();
             if(last_orderline){
                 last_orderline.set_discount(code.value)
             }
@@ -228,7 +232,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_leftpane_visible(this.show_leftpane);
 
             this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
-
             this.pos.barcode_reader.set_action_callback({
                 'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
                 'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
@@ -352,6 +355,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     module.ConfirmPopupWidget = module.PopUpWidget.extend({
         template: 'ConfirmPopupWidget',
         show: function(options){
+            options = options || {};
             var self = this;
             this._super();
 
@@ -375,20 +379,185 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    /**
+     * A popup that allows the user to select one item from a list. 
+     *
+     * show_popup('selection',{
+     *  message: 'Pick an Option',
+     *      message: "Popup Title",
+     *      list: [
+     *          { label: 'foobar',  item: 45 },
+     *          { label: 'bar foo', item: 'stuff' },
+     *      ],
+     *      confirm: function(item) {
+     *          // get the item selected by the user.
+     *      },
+     *      cancel: function(){
+     *          // user chose nothing
+     *      }
+     *  });
+     */
+
+    module.SelectionPopupWidget = module.PopUpWidget.extend({
+        template: 'SelectionPopupWidget',
+        show: function(options){
+            options = options || {};
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.list    = options.list    || [];
+            this.renderElement();
+
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if (options.cancel){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.selection-item').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if (options.confirm) {
+                    var item = self.list[parseInt($(this).data('item-index'))];
+                    item = item ? item.item : item;
+                    options.confirm.call(self,item);
+                }
+            });
+        },
+    });
+
+    module.TextInputPopupWidget = module.PopUpWidget.extend({
+        template: 'TextInputPopupWidget',
+        show: function(options){
+            options = options || {};
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.comment = options.comment || '';
+            this.value   = options.value   || '';
+            this.renderElement();
+            this.$('input,textarea').focus();
+            
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.cancel ){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                var value = self.$('input,textarea').val();
+                if( options.confirm ){
+                    options.confirm.call(self,value);
+                }
+            });
+        },
+    });
+
+    module.TextAreaPopupWidget = module.TextInputPopupWidget.extend({
+        template: 'TextAreaPopupWidget',
+    });
+
+    module.NumberPopupWidget = module.PopUpWidget.extend({
+        template: 'NumberPopupWidget',
+        click_numpad_button: function($el,event){
+            this.numpad_input($el.data('action'));
+        },
+        numpad_input: function(input) { //FIXME -> Deduplicate code
+            var oldbuf = this.inputbuffer.slice(0);
+
+            if (input === '.') {
+                if (this.firstinput) {
+                    this.inputbuffer = "0.";
+                }else if (!this.inputbuffer.length || this.inputbuffer === '-') {
+                    this.inputbuffer += "0.";
+                } else if (this.inputbuffer.indexOf('.') < 0){
+                    this.inputbuffer = this.inputbuffer + '.';
+                }
+            } else if (input === 'CLEAR') {
+                this.inputbuffer = ""; 
+            } else if (input === 'BACKSPACE') { 
+                this.inputbuffer = this.inputbuffer.substring(0,this.inputbuffer.length - 1);
+            } else if (input === '+') {
+                if ( this.inputbuffer[0] === '-' ) {
+                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
+                }
+            } else if (input === '-') {
+                if ( this.inputbuffer[0] === '-' ) {
+                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
+                } else {
+                    this.inputbuffer = '-' + this.inputbuffer;
+                }
+            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
+                this.inputbuffer = '' + ((parseFloat(this.inputbuffer) || 0) + parseFloat(input));
+            } else if (!isNaN(parseInt(input))) {
+                if (this.firstinput) {
+                    this.inputbuffer = '' + input;
+                } else {
+                    this.inputbuffer += input;
+                }
+            }
+
+            this.firstinput = this.inputbuffer.length === 0;
+
+            if (this.inputbuffer !== oldbuf) {
+                this.$('.value').text(this.inputbuffer);
+            }
+        },
+        show: function(options){
+            options = options || {};
+            var self = this;
+            this._super();
+
+            this.message = options.message || '';
+            this.comment = options.comment || '';
+            this.inputbuffer = options.value   || '';
+            this.renderElement();
+            this.firstinput = true;
+            
+            this.$('.input-button,.mode-button').click(function(event){
+                self.click_numpad_button($(this),event);
+            });
+            this.$('.button.cancel').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.cancel ){
+                    options.cancel.call(self);
+                }
+            });
+
+            this.$('.button.confirm').click(function(){
+                self.pos_widget.screen_selector.close_popup();
+                if( options.confirm ){
+                    options.confirm.call(self,self.inputbuffer);
+                }
+            });
+        },
+    });
+
+    module.PasswordPopupWidget = module.NumberPopupWidget.extend({
+        renderElement: function(){
+            this._super();
+            this.$('.popup').addClass('popup-password');    // HELLO HACK !
+        },
+    });
+
+    module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
+        template: 'ErrorNoClientPopupWidget',
+    });
+
     module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
         template: 'ErrorInvoiceTransferPopupWidget',
     });
 
-    module.UnsentOrdersPopupWidget = module.PopUpWidget.extend({
+    module.UnsentOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnsentOrdersPopupWidget',
-        show: function(options){
-            var self = this;
-            this._super(options);
-            this.renderElement();
-            this.$('.button.confirm').click(function(){
-                self.pos_widget.screen_selector.close_popup();
-            });
-        },
+    });
+
+    module.UnpaidOrdersPopupWidget = module.ConfirmPopupWidget.extend({
+        template: 'UnpaidOrdersPopupWidget',
     });
 
     module.ScaleScreenWidget = module.ScreenWidget.extend({
@@ -443,7 +612,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         order_product: function(){
-            this.pos.get('selectedOrder').addProduct(this.get_product(),{ quantity: this.weight });
+            this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
         },
         get_product_name: function(){
             var product = this.get_product();
@@ -464,7 +633,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(!product || !this.pos){
                 return defaultstr;
             }
-            var unit_id = product.uos_id || product.uom_id;
+            var unit_id = product.uom_id;
             if(!unit_id){
                 return defaultstr;
             }
@@ -500,7 +669,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     if(product.to_weight && self.pos.config.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen('scale',{product: product});
                     }else{
-                        self.pos.get('selectedOrder').addProduct(product);
+                        self.pos.get_order().add_product(product);
                     }
                 },
                 product_list: this.pos.db.get_product_by_category(0)
@@ -551,7 +720,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.renderElement();
             this.details_visible = false;
-            this.old_client = this.pos.get('selectedOrder').get('client');
+            this.old_client = this.pos.get_order().get_client()
             this.new_client = this.old_client;
 
             this.$('.back').click(function(){
@@ -605,8 +774,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         barcode_client_action: function(code){
             if (this.editing_client) {
                 this.$('.detail.barcode').val(code.code);
-            } else if (this.pos.db.get_partner_by_ean13(code.code)) {
-                this.display_client_details('show',this.pos.db.get_partner_by_ean13(code.code));
+            } else if (this.pos.db.get_partner_by_barcode(code.code)) {
+                this.display_client_details('show',this.pos.db.get_partner_by_barcode(code.code));
             }
         },
         perform_search: function(query, associate_result){
@@ -653,7 +822,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         save_changes: function(){
             if( this.has_client_changed() ){
-                this.pos.get('selectedOrder').set_client(this.new_client);
+                this.pos.get_order().set_client(this.new_client);
             }
         },
         has_client_changed: function(){
@@ -739,10 +908,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             fields.id           = partner.id || false;
             fields.country_id   = fields.country_id || false;
-            fields.ean13        = fields.ean13 ? this.pos.barcode_reader.sanitize_ean(fields.ean13) : false; 
+            fields.barcode        = fields.barcode ? this.pos.barcode_reader.sanitize_ean(fields.barcode) : false; 
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.pos_widget.screen_selector.show_popup('error',{
+                    'message':_t('Error: Could not Save Changes'),
+                    'comment':_t('Your Internet connection is probably down.'),
+                });
             });
         },
         
@@ -919,7 +1094,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.refresh();
 
-            if (!this.pos.get('selectedOrder')._printed) {
+            if (!this.pos.get_order()._printed && this.pos.config.iface_print_auto) {
                 this.print();
             }
 
@@ -939,9 +1114,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             // 2 seconds is the same as the default timeout for sending orders and so the dialog
             // should have appeared before the timeout... so yeah that's not ultra reliable. 
 
-            this.lock_screen(true);  
+            this.lock_screen(true);
             setTimeout(function(){
-                self.lock_screen(false);  
+                self.lock_screen(false);
             }, 2000);
         },
         lock_screen: function(locked) {
@@ -953,7 +1128,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         print: function() {
-            this.pos.get('selectedOrder')._printed = true;
+            this.pos.get_order()._printed = true;
             window.print();
         },
         finish_order: function() {
@@ -976,8 +1151,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
                     widget:this,
                     order: order,
-                    orderlines: order.get('orderLines').models,
-                    paymentlines: order.get('paymentLines').models,
+                    receipt: order.export_for_printing(),
+                    orderlines: order.get_orderlines(),
+                    paymentlines: order.get_paymentlines(),
                 }));
         },
     });
@@ -1072,7 +1248,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             }
 
-            this.firstinput = false;
+            this.firstinput = this.inputbuffer.length === 0;
 
             if (this.inputbuffer !== oldbuf) {
                 var order = this.pos.get_order();
@@ -1096,10 +1272,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             return numpad;
         },
         click_delete_paymentline: function(cid){
-            var lines = this.pos.get_order().get('paymentLines').models;
+            var lines = this.pos.get_order().get_paymentlines();
             for ( var i = 0; i < lines.length; i++ ) {
                 if (lines[i].cid === cid) {
-                    this.pos.get_order().removePaymentline(lines[i]);
+                    this.pos.get_order().remove_paymentline(lines[i]);
                     this.reset_input();
                     this.render_paymentlines();
                     return;
@@ -1107,10 +1283,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
         },
         click_paymentline: function(cid){
-            var lines = this.pos.get_order().get('paymentLines').models;
+            var lines = this.pos.get_order().get_paymentlines();
             for ( var i = 0; i < lines.length; i++ ) {
                 if (lines[i].cid === cid) {
-                    this.pos.get_order().selectPaymentline(lines[i]);
+                    this.pos.get_order().select_paymentline(lines[i]);
                     this.reset_input();
                     this.render_paymentlines();
                     return;
@@ -1120,7 +1296,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         render_paymentlines: function() {
             var self  = this;
             var order = this.pos.get_order();
-            var lines = order.get('paymentLines').models;
+            if (!order) {
+                return;
+            }
+
+            var lines = order.get_paymentlines();
 
             this.$('.paymentlines-container').empty();
             var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
@@ -1147,7 +1327,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     break;
                 }
             }
-            this.pos.get_order().addPaymentline( cashregister );
+            this.pos.get_order().add_paymentline( cashregister );
             this.reset_input();
             this.render_paymentlines();
         },
@@ -1168,6 +1348,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.$('.js_invoice').removeClass('highlight');
             }
         },
+        click_set_customer: function(){
+            this.pos_widget.screen_selector.set_current_screen('clientlist');
+        },
+        click_back: function(){
+            this.pos_widget.screen_selector.set_current_screen('products');
+        },
         renderElement: function() {
             var self = this;
             this._super();
@@ -1181,13 +1367,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.render_paymentlines();
 
             this.$('.back').click(function(){
-                self.pos_widget.screen_selector.back();
+                self.click_back();
             });
 
             this.$('.next').click(function(){
                 self.validate_order();
             });
 
+            this.$('.js_set_customer').click(function(){
+                self.click_set_customer();
+            });
             this.$('.js_invoice').click(function(){
                 self.click_invoice();
             });
@@ -1209,6 +1398,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         watch_order_changes: function() {
             var self = this;
             var order = this.pos.get_order();
+            if (!order) {
+                return;
+            }
             if(this.old_order){
                 this.old_order.unbind(null,null,this);
             }
@@ -1222,12 +1414,25 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         order_changes: function(){
             var self = this;
             var order = this.pos.get_order();
-            if (order.isPaid()) {
+            if (!order) {
+                return;
+            } else if (order.is_paid()) {
                 self.$('.next').addClass('highlight');
             }else{
                 self.$('.next').removeClass('highlight');
             }
         },
+        print_escpos_receipt: function(){
+            var env = {
+                widget:  this,
+                pos:     this.pos,
+                order:   this.pos.get_order(),
+                receipt: this.pos.get_order().export_for_printing(),
+            };
+
+            this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',env));
+        },
+
         // Check if the order is paid, then sends it to the backend,
         // and complete the sale process
         validate_order: function() {
@@ -1235,7 +1440,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             var order = this.pos.get_order();
 
-            if(order.get('orderLines').models.length === 0){
+            // FIXME: this check is there because the backend is unable to
+            // process empty orders. This is not the right place to fix it.
+            if (order.get_orderlines().length === 0) {
                 this.pos_widget.screen_selector.show_popup('error',{
                     'message': _t('Empty Order'),
                     'comment': _t('There must be at least one product in your order before it can be validated'),
@@ -1243,12 +1450,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 return;
             }
 
-            if (!order.isPaid() || this.invoicing) {
+            if (!order.is_paid() || this.invoicing) {
                 return;
             }
 
             // The exact amount must be paid if there is no cash payment method defined.
-            if (Math.abs(order.getTotalTaxIncluded() - order.getPaidTotal()) > 0.00001) {
+            if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
                 var cash = false;
                 for (var i = 0; i < this.pos.cashregisters.length; i++) {
                     cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
@@ -1262,8 +1469,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             }
 
-            if (order.isPaidWithCash() && this.pos.config.iface_cashdrawer) { 
-            
+            if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+
                     this.pos.proxy.open_cashbox();
             }
 
@@ -1296,10 +1503,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             } else {
                 this.pos.push_order(order) 
                 if (this.pos.config.iface_print_via_proxy) {
-                    var receipt = currentOrder.export_for_printing();
-                    this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',{
-                        receipt: receipt, widget: self,
-                    }));
+                    this.print_escpos_receipt();
                     order.finalize();    //finish order and go back to scan screen
                 } else {
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);
@@ -1309,3 +1513,4 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     });
 
 }
+

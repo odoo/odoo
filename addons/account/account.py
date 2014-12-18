@@ -752,6 +752,7 @@ class account_journal(osv.osv):
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
         'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
+        'sequence': fields.integer('Sequence',help='Used to order Journals'),
     }
 
     _defaults = {
@@ -759,13 +760,14 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : True,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'sequence': 1,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
         ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
     ]
 
-    _order = 'code'
+    _order = 'sequence,code'
 
     def _check_currency(self, cr, uid, ids, context=None):
         for journal in self.browse(cr, uid, ids, context=context):
@@ -1154,6 +1156,19 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            WHERE       state = 'valid'
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
 
     def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
         '''
@@ -2024,7 +2039,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount

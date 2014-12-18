@@ -6,11 +6,8 @@
 @license: GPL
 '''
 
-try: 
-    import qrcode
-except ImportError:
-    qrcode = None
 
+import logging
 import time
 import copy
 import io
@@ -24,12 +21,19 @@ import xml.dom.minidom as minidom
 
 from PIL import Image
 
+_logger = logging.getLogger(__name__)
+
 try:
     import jcconv
 except ImportError:
     jcconv = None
-    print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
-    print ' # pip install jcconv'
+    _logger.warning('ESC/POS: please install jcconv for improved Japanese receipt printing:\n  # pip install jcconv')
+
+try: 
+    import qrcode
+except ImportError:
+    qrcode = None
+    _logger.warning('ESC/POS: please install the qrcode python module for qrcode printing in point of sale receipts:\n  # pip install qrcode')
 
 from constants import *
 from exceptions import *
@@ -438,7 +442,12 @@ class Escpos:
             f.seek(0)
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
-            img.paste(img_rgba, mask=img_rgba.split()[3]) 
+            channels = img_rgba.split()
+            if len(channels) > 1:
+                # use alpha channel as mask
+                img.paste(img_rgba, mask=channels[3])
+            else:
+                img.paste(img_rgba)
 
             print 'convert image'
         

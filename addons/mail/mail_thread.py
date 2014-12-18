@@ -1785,6 +1785,26 @@ class mail_thread(osv.AbstractModel):
                 user_field_lst.append(name)
         return user_field_lst
 
+    def _message_auto_subscribe_notify(self, cr, uid, ids, partner_ids, context=None):
+        """ Send notifications to the partners automatically subscribed to the thread
+            Override this method if a custom behavior is needed about partners
+            that should be notified or messages that should be sent
+        """
+        # find first email message, set it as unread for auto_subscribe fields for them to have a notification
+        if partner_ids:
+            for record_id in ids:
+                message_obj = self.pool.get('mail.message')
+                msg_ids = message_obj.search(cr, SUPERUSER_ID, [
+                    ('model', '=', self._name),
+                    ('res_id', '=', record_id),
+                    ('type', '=', 'email')], limit=1, context=context)
+                if not msg_ids:
+                    msg_ids = message_obj.search(cr, SUPERUSER_ID, [
+                        ('model', '=', self._name),
+                        ('res_id', '=', record_id)], limit=1, context=context)
+                if msg_ids:
+                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=partner_ids, context=context)
+
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None, values=None):
         """ Handle auto subscription. Two methods for auto subscription exist:
 
@@ -1863,20 +1883,7 @@ class mail_thread(osv.AbstractModel):
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(cr, uid, ids, [pid], subtypes, context=context)
 
-        # find first email message, set it as unread for auto_subscribe fields for them to have a notification
-        if user_pids:
-            for record_id in ids:
-                message_obj = self.pool.get('mail.message')
-                msg_ids = message_obj.search(cr, SUPERUSER_ID, [
-                    ('model', '=', self._name),
-                    ('res_id', '=', record_id),
-                    ('type', '=', 'email')], limit=1, context=context)
-                if not msg_ids:
-                    msg_ids = message_obj.search(cr, SUPERUSER_ID, [
-                        ('model', '=', self._name),
-                        ('res_id', '=', record_id)], limit=1, context=context)
-                if msg_ids:
-                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=user_pids, context=context)
+        self._message_auto_subscribe_notify(cr, uid, ids, user_pids, context=context)
 
         return True
 

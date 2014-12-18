@@ -11,5 +11,12 @@
             <field name="users" eval="[(4, ref('base.user_demo'))]"/>
         </record>
 
+        <record id="channel_rule" model="im_livechat.channel.rule">
+            <field name="regex_url">/im_livechat/</field>
+            <field name="action">auto_popup</field>
+            <field name="auto_popup_timer">3</field>
+            <field name="channel_id" ref="channel_website" />
+        </record>
+
     </data>
 </openerp>

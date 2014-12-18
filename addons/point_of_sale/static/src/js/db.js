@@ -1,4 +1,5 @@
-function openerp_pos_db(instance, module){ 
+openerp.point_of_sale.load_db = function load_db(instance, module){ 
+    "use strict";
 
     /* The PosDB holds reference to data that is either
      * - static: does not change between pos reloads
@@ -12,18 +13,21 @@ function openerp_pos_db(instance, module){
             options = options || {};
             this.name = options.name || this.name;
             this.limit = options.limit || this.limit;
+            
+            if (options.uuid) {
+                this.name = this.name + '_' + options.uuid;
+            }
 
             //cache the data in memory to avoid roundtrips to the localstorage
             this.cache = {};
 
             this.product_by_id = {};
-            this.product_by_ean13 = {};
+            this.product_by_barcode = {};
             this.product_by_category_id = {};
-            this.product_by_reference = {};
 
             this.partner_sorted = [];
             this.partner_by_id = {};
-            this.partner_by_ean13 = {};
+            this.partner_by_barcode = {};
             this.partner_search_string = "";
             this.partner_write_date = null;
 
@@ -36,8 +40,17 @@ function openerp_pos_db(instance, module){
             this.category_search_string = {};
             this.packagings_by_id = {};
             this.packagings_by_product_tmpl_id = {};
-            this.packagings_by_ean13 = {};
+            this.packagings_by_barcode = {};
         },
+
+        /* 
+         * sets an uuid to prevent conflict in locally stored data between multiple databases running
+         * in the same browser at the same origin (Doing this is not advised !)
+         */
+        set_uuid: function(uuid){
+            this.name = this.name + '_' + uuid;
+        },
+
         /* returns the category object from its id. If you pass a list of id as parameters, you get
          * a list of category objects. 
          */  
@@ -108,6 +121,17 @@ function openerp_pos_db(instance, module){
             }
             make_ancestors(this.root_category_id, []);
         },
+        category_contains: function(categ_id, product_id) {
+            var product = this.product_by_id[product_id];
+            if (product) {
+                var cid = product.pos_categ_id[0];
+                while (cid && cid !== categ_id){
+                    cid = this.category_parent[cid];
+                }
+                return !!cid;
+            }
+            return false;
+        },
         /* loads a record store from the database. returns default if nothing is found */
         load: function(store,deft){
             if(this.cache[store] !== undefined){
@@ -130,8 +154,8 @@ function openerp_pos_db(instance, module){
         },
         _product_search_string: function(product){
             var str = '' + product.id + ':' + product.display_name;
-            if (product.ean13) {
-                str += '|' + product.ean13;
+            if (product.barcode) {
+                str += '|' + product.barcode;
             }
             if (product.default_code) {
                 str += '|' + product.default_code.replace(':','');
@@ -144,7 +168,7 @@ function openerp_pos_db(instance, module){
             }
             var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
             for (var i = 0; i < packagings.length; i++) {
-                str += '|' + packagings[i].ean;
+                str += '|' + packagings[i].barcode;
             }
             return str + '\n';
         },
@@ -184,11 +208,8 @@ function openerp_pos_db(instance, module){
                     this.category_search_string[ancestor] += search_string; 
                 }
                 this.product_by_id[product.id] = product;
-                if(product.ean13){
-                    this.product_by_ean13[product.ean13] = product;
-                }
-                if(product.default_code){
-                    this.product_by_reference[product.default_code] = product;
+                if(product.barcode){
+                    this.product_by_barcode[product.barcode] = product;
                 }
             }
         },
@@ -200,15 +221,15 @@ function openerp_pos_db(instance, module){
                     this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]] = [];
                 }
                 this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]].push(pack);
-                if(pack.ean){
-                    this.packagings_by_ean13[pack.ean] = pack;
+                if(pack.barcode){
+                    this.packagings_by_barcode[pack.barcode] = pack;
                 }
             }
         },
         _partner_search_string: function(partner){
             var str = '' + partner.id + ':' + partner.name;
-            if(partner.ean13){
-                str += '|' + partner.ean13;
+            if(partner.barcode){
+                str += '|' + partner.barcode;
             }
             if(partner.address){
                 str += '|' + partner.address;
@@ -254,16 +275,16 @@ function openerp_pos_db(instance, module){
 
             if (updated_count) {
                 // If there were updates, we need to completely 
-                // rebuild the search string and the ean13 indexing
+                // rebuild the search string and the barcode indexing
 
                 this.partner_search_string = "";
-                this.partner_by_ean13 = {};
+                this.partner_by_barcode = {};
 
                 for (var id in this.partner_by_id) {
                     var partner = this.partner_by_id[id];
 
-                    if(partner.ean13){
-                        this.partner_by_ean13[partner.ean13] = partner;
+                    if(partner.barcode){
+                        this.partner_by_barcode[partner.barcode] = partner;
                     }
                     partner.address = (partner.street || '') +', '+ 
                                       (partner.zip || '')    +' '+
@@ -280,8 +301,8 @@ function openerp_pos_db(instance, module){
         get_partner_by_id: function(id){
             return this.partner_by_id[id];
         },
-        get_partner_by_ean13: function(ean13){
-            return this.partner_by_ean13[ean13];
+        get_partner_by_barcode: function(barcode){
+            return this.partner_by_barcode[barcode];
         },
         get_partners_sorted: function(max_count){
             max_count = max_count ? Math.min(this.partner_sorted.length, max_count) : this.partner_sorted.length;
@@ -301,7 +322,7 @@ function openerp_pos_db(instance, module){
             }
             var results = [];
             for(var i = 0; i < this.limit; i++){
-                r = re.exec(this.partner_search_string);
+                var r = re.exec(this.partner_search_string);
                 if(r){
                     var id = Number(r[1]);
                     results.push(this.get_partner_by_id(id));
@@ -330,18 +351,15 @@ function openerp_pos_db(instance, module){
         get_product_by_id: function(id){
             return this.product_by_id[id];
         },
-        get_product_by_ean13: function(ean13){
-            if(this.product_by_ean13[ean13]){
-                return this.product_by_ean13[ean13];
+        get_product_by_barcode: function(barcode){
+            if(this.product_by_barcode[barcode]){
+                return this.product_by_barcode[barcode];
             }
-            var pack = this.packagings_by_ean13[ean13];
+            var pack = this.packagings_by_barcode[barcode];
             if(pack){
                 return this.product_by_id[pack.product_tmpl_id[0]];
             }
             return undefined;
-        },
-        get_product_by_reference: function(ref){
-            return this.product_by_reference[ref];
         },
         get_product_by_category: function(category_id){
             var product_ids  = this.product_by_category_id[category_id];
@@ -355,7 +373,7 @@ function openerp_pos_db(instance, module){
         },
         /* returns a list of products with :
          * - a category that is or is a child of category_id,
-         * - a name, package or ean13 containing the query (case insensitive) 
+         * - a name, package or barcode containing the query (case insensitive) 
          */
         search_product_in_category: function(category_id, query){
             try {
@@ -367,7 +385,7 @@ function openerp_pos_db(instance, module){
             }
             var results = [];
             for(var i = 0; i < this.limit; i++){
-                r = re.exec(this.category_search_string[category_id]);
+                var r = re.exec(this.category_search_string[category_id]);
                 if(r){
                     var id = Number(r[1]);
                     results.push(this.get_product_by_id(id));
@@ -377,6 +395,8 @@ function openerp_pos_db(instance, module){
             }
             return results;
         },
+
+        /* paid orders */
         add_order: function(order){
             var order_id = order.uid;
             var orders  = this.load('orders',[]);
@@ -415,6 +435,43 @@ function openerp_pos_db(instance, module){
                 }
             }
             return undefined;
+        },
+
+        /* working orders */
+        save_unpaid_order: function(order){
+            var order_id = order.uid;
+            var orders = this.load('unpaid_orders',[]);
+            var serialized = order.export_as_JSON();
+
+            for (var i = 0; i < orders.length; i++) {
+                if (orders[i].id === order_id){
+                    orders[i].data = serialized;
+                    this.save('unpaid_orders',orders);
+                    return order_id;
+                }
+            }
+
+            orders.push({id: order_id, data: serialized});
+            this.save('unpaid_orders',orders);
+            return order_id;
+        },
+        remove_unpaid_order: function(order){
+            var orders = this.load('unpaid_orders',[]);
+            orders = _.filter(orders, function(o){
+                return o.id !== order.uid;
+            });
+            this.save('unpaid_orders',orders);
+        },
+        remove_all_unpaid_orders: function(){
+            this.save('unpaid_orders',[]);
+        },
+        get_unpaid_orders: function(){
+            var saved = this.load('unpaid_orders',[]);
+            var orders = [];
+            for (var i = 0; i < saved.length; i++) {
+                orders.push(saved[i].data);
+            }
+            return orders;
         },
     });
 }

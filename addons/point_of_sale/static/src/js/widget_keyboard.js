@@ -1,7 +1,7 @@
-
-function openerp_pos_keyboard(instance, module){ //module is instance.point_of_sale
-// ---------- OnScreen Keyboard Widget ----------
-
+openerp.point_of_sale.load_keyboard = function load_keyboard(instance, module){ //module is instance.point_of_sale
+    "use strict";
+    
+    // ---------- OnScreen Keyboard Widget ----------
     // A Widget that displays an onscreen keyboard.
     // There are two options when creating the widget :
     // 

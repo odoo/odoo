@@ -9,10 +9,6 @@ import os.path
 import platform
 import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -23,11 +19,17 @@ import time
 import unittest2
 
 import werkzeug.serving
+from werkzeug.debug import DebuggedApplication
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -628,8 +630,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -863,10 +863,11 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                if test_file.endswith('yml'):
-                    load_test_file_yml(registry, test_file)
-                elif test_file.endswith('py'):
-                    load_test_file_py(registry, test_file)
+                with openerp.api.Environment.manage():
+                    if test_file.endswith('yml'):
+                        load_test_file_yml(registry, test_file)
+                    elif test_file.endswith('py'):
+                        load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1
@@ -894,6 +895,7 @@ def start(preload=None, stop=False):
             watcher.start()
         else:
             _logger.warning("'watchdog' module not installed. Code autoreload feature is disabled")
+        server.app = DebuggedApplication(server.app, evalex=True)
 
     rc = server.run(preload, stop)
 

@@ -698,8 +698,11 @@ class website_menu(osv.osv):
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True
 
+
 class ir_attachment(osv.osv):
+
     _inherit = "ir.attachment"
+
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
@@ -708,21 +711,6 @@ class ir_attachment(osv.osv):
             else:
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
-    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
-
-    def _compute_checksum(self, attachment_dict):
-        if attachment_dict.get('res_model') == 'ir.ui.view'\
-                and not attachment_dict.get('res_id') and not attachment_dict.get('url')\
-                and attachment_dict.get('type', 'binary') == 'binary'\
-                and attachment_dict.get('datas'):
-            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
-        return None
 
     def _datas_big(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, False)
@@ -730,7 +718,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises
@@ -739,31 +727,10 @@ class ir_attachment(osv.osv):
         return result
 
     _columns = {
-        'datas_checksum': fields.function(_datas_checksum, size=40,
-              string="Datas checksum", type='char', store=True, select=True),
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
         'datas_big': fields.function (_datas_big, type='binary', store=True,
                                       string="Resized file content"),
-        'mimetype': fields.char('Mime Type', readonly=True),
     }
-
-    def _add_mimetype_if_needed(self, values):
-        if values.get('datas_fname'):
-            values['mimetype'] = mimetypes.guess_type(values.get('datas_fname'))[0] or 'application/octet-stream'
-
-    def create(self, cr, uid, values, context=None):
-        chk = self._compute_checksum(values)
-        if chk:
-            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
-            if match:
-                return match[0]
-        self._add_mimetype_if_needed(values)
-        return super(ir_attachment, self).create(
-            cr, uid, values, context=context)
-
-    def write(self, cr, uid, ids, values, context=None):
-        self._add_mimetype_if_needed(values)
-        return super(ir_attachment, self).write(cr, uid, ids, values, context=context)
 
     def try_remove(self, cr, uid, ids, context=None):
         """ Removes a web-based image attachment if it is used by no view

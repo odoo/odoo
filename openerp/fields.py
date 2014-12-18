@@ -426,6 +426,7 @@ class Field(object):
         # put invalidation triggers on model dependencies
         for dep_model_name, field_names in model._depends.iteritems():
             dep_model = env[dep_model_name]
+            dep_model._setup_fields()
             for field_name in field_names:
                 field = dep_model._fields[field_name]
                 field._triggers.add((self, None))
@@ -444,8 +445,8 @@ class Field(object):
         recs = env[self.model_name]
         fields = []
         for name in self.related:
+            recs._setup_fields()
             field = recs._fields[name]
-            field.setup(env)
             recs = recs[name]
             fields.append(field)
 
@@ -472,6 +473,10 @@ class Field(object):
             if attr not in self._free_attrs:
                 self._free_attrs.append(attr)
                 setattr(self, attr, getattr(field, attr))
+
+        # special case for states: copy it only for inherited fields
+        if not self.states and self.inherited:
+            self.states = field.states
 
         # special case for required: check if all fields are required
         if not self.store and not self.required:
@@ -551,6 +556,7 @@ class Field(object):
         env = model.env
         head, tail = path1[0], path1[1:]
 
+        model._setup_fields()
         if head == '*':
             # special case: add triggers on all fields of model (except self)
             fields = set(model._fields.itervalues()) - set([self])
@@ -562,8 +568,6 @@ class Field(object):
                 _logger.debug("Field %s is recursively defined", self)
                 self.recursive = True
                 continue
-
-            field.setup(env)
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
@@ -791,7 +795,7 @@ class Field(object):
             if env.in_onchange:
                 for invf in self.inverse_fields:
                     invf._update(value, record)
-                record._dirty = True
+                record._set_dirty(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -1057,8 +1061,8 @@ class Char(_String):
         return ustr(value)[:self.size]
 
 class Text(_String):
-    """ Text field. Very similar to :class:`~.Char` but used for longer
-     contents and displayed as a multiline text box
+    """ Very similar to :class:`~.Char` but used for longer contents, does not
+    have a size and usually displayed as a multiline text box.
 
     :param translate: whether the value of this field can be translated
     """
@@ -1451,7 +1455,7 @@ class Many2one(_Relational):
         records._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
-        if isinstance(value, (NoneType, int)):
+        if isinstance(value, (NoneType, int, long)):
             return record.env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
@@ -1462,7 +1466,7 @@ class Many2one(_Relational):
         elif isinstance(value, dict):
             return record.env[self.comodel_name].new(value)
         else:
-            return record.env[self.comodel_name].browse(value)
+            return self.null(record.env)
 
     def convert_to_read(self, value, use_name_get=True):
         if use_name_get and value:
@@ -1577,13 +1581,14 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
-            if not record.id or record._dirty:
-                values = dict((k, v) for k, v in record._cache.iteritems() if k in fnames)
+            if not record.id:
+                values = {k: v for k, v in record._cache.iteritems() if k in fnames}
                 values = record._convert_to_write(values)
-                if not record.id:
-                    result.append((0, 0, values))
-                else:
-                    result.append((1, record.id, values))
+                result.append((0, 0, values))
+            elif record._is_dirty():
+                values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
+                values = record._convert_to_write(values)
+                result.append((1, record.id, values))
             else:
                 add_existing(record.id)
 
@@ -1648,7 +1653,9 @@ class One2many(_RelationalMulti):
 
         if self.inverse_name:
             # link self to its inverse field and vice-versa
-            invf = env[self.comodel_name]._fields[self.inverse_name]
+            comodel = env[self.comodel_name]
+            comodel._setup_fields()
+            invf = comodel._fields[self.inverse_name]
             # In some rare cases, a `One2many` field can link to `Int` field
             # (res_model/res_id pattern). Only inverse the field if this is
             # a `Many2one` field.

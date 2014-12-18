@@ -48,17 +48,14 @@
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="Todo" name="todo" domain="[('state','in',('draft','open'))]"
-                        help="Phone calls which are in draft and open state"/>
                     <filter string="Held" name="held" domain="[('state','=','done')]"
                         help="Phone calls which are in closed state"/>
                     <filter string="Not Held" domain="[('state','=','pending')]"
                         help="Phone calls which are in pending state"/>
                     <separator/>
-                    <filter string="My Sales Team(s)" context="{'invisibteamion': False}" domain="[('team_id.user_id','=',uid)]"
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]"
                             help="Phone calls that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
-                    <filter string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
                     <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
                             groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
