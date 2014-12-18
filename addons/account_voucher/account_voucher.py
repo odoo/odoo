@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from lxml import etree
 
 from openerp import netsvc
@@ -427,7 +426,7 @@ class account_voucher(osv.osv):
         'state': 'draft',
         'pay_now': 'pay_now',
         'name': '',
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
         'payment_option': 'without_writeoff',
@@ -579,7 +578,10 @@ class account_voucher(osv.osv):
         default['value']['account_id'] = account_id
         default['value']['type'] = ttype or tr_type
 
-        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, time.strftime('%Y-%m-%d'), price, ttype, company_id, context)
+        vals = self.onchange_journal(
+            cr, uid, ids, journal_id, line_ids, tax_id, partner_id,
+            fields.date.context_today(self, cr, uid, context=context),
+            price, ttype, company_id, context)
         default['value'].update(vals.get('value'))
 
         return default
@@ -1465,7 +1467,7 @@ class account_voucher(osv.osv):
             'reference': False
         })
         if 'date' not in default:
-            default['date'] = time.strftime('%Y-%m-%d')
+            default['date'] = fields.date.context_today(self, cr, uid, context=context)
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
 
