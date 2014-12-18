@@ -231,7 +231,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
 
     openerp.website.ready().done(function() {
 
-        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/src/js/ZeroClipboard.swf" });
+        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
         // UTMS selects widgets
         var campaign_select = new openerp.website_links.SelectBox('utm.campaign');
