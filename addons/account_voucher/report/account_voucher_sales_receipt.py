@@ -38,8 +38,6 @@ class sale_receipt_report(models.Model):
     type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase'),
-        ('payment', 'Payment'),
-        ('receipt', 'Receipt'),
     ], string='Type', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -95,7 +93,7 @@ class sale_receipt_report(models.Model):
                 left join account_voucher as av on (av.id=avl.voucher_id)
                 left join res_partner as rp ON (rp.id=av.partner_id)
                 left join account_journal as aj ON (aj.id=av.journal_id)
-                where av.voucher_type='sale' and aj.type in ('sale','sale_refund')
+                where av.voucher_type='sale' and aj.type='sale'
                 group by
                     av.date,
                     av.id,

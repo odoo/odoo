@@ -7,10 +7,10 @@
             <field name="arch" type="xml">
               <form string="Create invoice">
                   <h1>
-                      <field name="journal_type" readonly="1"/>
+                      <field name="invoice_type" readonly="1"/>
                   </h1>
                   <group>
-                      <field name="journal_id" domain="[('type','=',journal_type)]"/>
+                      <field name="journal_id" domain="[('type','=', invoice_type in ['in_refund', 'in_invoice'] and 'purchase' or 'sale')]"/>
                       <field name="group"/>
                       <field name="invoice_date" />
                   </group>

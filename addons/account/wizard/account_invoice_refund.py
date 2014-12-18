@@ -12,22 +12,9 @@ class account_invoice_refund(models.TransientModel):
     _description = "Invoice Refund"
 
     date = fields.Date(string='Account Date', default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', string='Refund Journal', default=lambda self: self._get_journal(),
-        help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.')
     description = fields.Char(string='Reason', required=True, default=lambda self: self._get_reason())
     filter_refund = fields.Selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'), ('modify', 'Modify: create refund, reconcile and create a new draft invoice')],
         default='refund', string='Refund Method', required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled')
-
-    @api.model
-    def _get_journal(self):
-        context = dict(self._context or {})
-        inv_type = context.get('type', 'out_invoice')
-        type = (inv_type == 'out_invoice') and 'sale_refund' or \
-               (inv_type == 'out_refund') and 'sale' or \
-               (inv_type == 'in_invoice') and 'purchase_refund' or \
-               (inv_type == 'in_refund') and 'purchase'
-        journal = self.env['account.journal'].search([('type', '=', type), ('company_id', '=', self.env.user.company_id.id)], limit=1)
-        return journal
 
     @api.model
     def _get_reason(self):
@@ -38,25 +25,6 @@ class account_invoice_refund(models.TransientModel):
             return inv.name
         else:
             return ''
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
-        journal_obj = self.env['account.journal']
-        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
-        context = dict(self._context or {})
-        context.pop('form_view_ref', None)
-        res = super(account_invoice_refund, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        type = context.get('type', 'out_invoice')
-        company_id = self.env.user.company_id.id
-        journal_type = (type == 'out_invoice') and 'sale_refund' or \
-                       (type == 'out_refund') and 'sale' or \
-                       (type == 'in_invoice') and 'purchase_refund' or \
-                       (type == 'in_refund') and 'purchase'
-        for field in res['fields']:
-            if field == 'journal_id':
-                journal_select = journal_obj._name_search('', [('type', '=', journal_type), ('company_id', 'child_of', [company_id])])
-                res['fields'][field]['selection'] = journal_select
-        return res
 
     @api.multi
     def compute_refund(self, mode='refund'):
@@ -74,7 +42,6 @@ class account_invoice_refund(models.TransientModel):
             date = False
             description = False
             company = self.env.user.company_id
-            journal_id = form.journal_id.id
             for inv in inv_obj.browse(context.get('active_ids')):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise Warning(_('Cannot %s draft/proforma/cancel invoice.') % (mode))
@@ -85,8 +52,7 @@ class account_invoice_refund(models.TransientModel):
                 else:
                     date = inv.date or False
 
-                if not journal_id:
-                    journal_id = inv.journal_id.id
+                journal_id = inv.journal_id.id
 
                 if form.date:
                     date = form.date

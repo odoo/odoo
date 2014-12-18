@@ -247,9 +247,7 @@ class account_journal(models.Model):
     code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
     type = fields.Selection([
             ('sale', 'Sale'),
-            ('sale_refund','Sale Refund'),
             ('purchase', 'Purchase'),
-            ('purchase_refund','Purchase Refund'),
             ('cash', 'Cash'),
             ('bank', 'Bank and Checks'),
             ('general', 'General'),
@@ -273,7 +271,7 @@ class account_journal(models.Model):
         help="If this box is checked, the system will try to group the accounting lines when generating them from invoices.")
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
-    sequence_refund_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
+    refund_sequence_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
         help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
     sequence= fields.Integer(string='Sequence', help='Used to order Journals')
 
@@ -285,6 +283,7 @@ class account_journal(models.Model):
         help="Company related to this journal")
 
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
+    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -316,31 +315,32 @@ class account_journal(models.Model):
         return super(account_journal, self).write(vals)
 
     @api.model
-    def _create_sequence(self, vals, prefix=False):
+    def _create_sequence(self, vals, refund=False):
         """ Create new no_gap entry sequence for every new Joural
         """
-        prefix = prefix or vals['code'].upper()
+        prefix = vals['code'].upper()
+        if refund:
+            prefix = 'R' + prefix
         seq = {
             'name': vals['name'],
-            'implementation':'no_gap',
-            'prefix': prefix + "/%(year)s/",
+            'implementation': 'no_gap',
+            'prefix': prefix + '/%(year)s/',
             'padding': 4,
             'number_increment': 1,
             'use_date_range': True,
         }
+
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
         return self.env['ir.sequence'].create(seq)
 
     @api.model
     def create(self, vals):
-        if not vals.get('sequence_id', False):
+        # We just need to create the relevant sequences according to the chosen options
+        if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if type in ('sale','sale_refund','purchase','purchase_refund'):
-            # If False, accepted has this field is not required
-            if 'sequence_refund_id' not in vals:
-                prefix = 'RF/'+vals.get('code', '')
-                vals.update({'sequence_refund_id': self.sudo()._create_sequence(vals, prefix=prefix).id})
+        if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
+            vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         return super(account_journal, self).create(vals)
 
     @api.multi
@@ -421,7 +421,6 @@ class account_move(models.Model):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
 
-    # TODO: improve and use a refund sequence according to context
     @api.multi
     def post(self):
         invoice = self._context.get('invoice', False)
@@ -437,7 +436,11 @@ class account_move(models.Model):
                     new_name = invoice.internal_number
                 else:
                     if journal.sequence_id:
-                        new_name = journal.sequence_id.next_by_id()
+                        # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
+                        sequence = journal.sequence_id
+                        if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                            sequence = journal.refund_sequence_id
+                        new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise Warning(_('Please define a sequence on the journal.'))
 
@@ -1152,9 +1155,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
             # Get the analytic journal
             data = False
             try:
-                if journal_type in ('sale', 'sale_refund'):
+                if journal_type == 'sale':
                     data = self.env.ref('account.analytic_journal_sale')
-                elif journal_type in ('purchase', 'purchase_refund'):
+                elif journal_type == 'purchase':
                     data = self.env.ref('account.exp')
                 elif journal_type == 'general':
                     pass
@@ -1165,9 +1168,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
         def _get_default_account(journal_type, type='debit'):
             # Get the default accounts
             default_account = False
-            if journal_type in ('sale', 'sale_refund'):
+            if journal_type == 'sale':
                 default_account = acc_template_ref.get(template.property_account_income_categ.id)
-            elif journal_type in ('purchase', 'purchase_refund'):
+            elif journal_type == 'purchase':
                 default_account = acc_template_ref.get(template.property_account_expense_categ.id)
             elif journal_type == 'situation':
                 if type == 'debit':
@@ -1179,16 +1182,12 @@ class wizard_multi_charts_accounts(models.TransientModel):
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
-            'sale_refund': _('Sales Refund Journal'),
-            'purchase_refund': _('Purchase Refund Journal'),
             'general': _('Miscellaneous Journal'),
             'situation': _('Opening Entries Journal'),
         }
         journal_codes = {
             'sale': _('SAJ'),
             'purchase': _('EXJ'),
-            'sale_refund': _('SCNJ'),
-            'purchase_refund': _('ECNJ'),
             'general': _('MISC'),
             'situation': _('OPEJ'),
         }
@@ -1196,7 +1195,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         template = self.env['account.chart.template'].browse(chart_template_id)
 
         journal_data = []
-        for journal_type in ['sale', 'purchase', 'sale_refund', 'purchase_refund', 'general', 'situation']:
+        for journal_type in ['sale', 'purchase', 'general', 'situation']:
             vals = {
                 'type': journal_type,
                 'name': journal_names[journal_type],
@@ -1205,6 +1204,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
+                'refund_sequence': True,
             }
             journal_data.append(vals)
         return journal_data

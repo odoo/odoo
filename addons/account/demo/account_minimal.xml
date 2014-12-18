@@ -248,45 +248,26 @@
             <field name="name">Sales Journal - (test)</field>
             <field name="code">TSAJ</field>
             <field name="type">sale</field>
-            <field name="sequence_id" ref="sequence_sale_journal"/>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
-        </record>
-        <record id="refund_sales_journal" model="account.journal">
-            <field name="name">Sales Credit Note Journal - (test)</field>
-            <field name="code">TSCNJ</field>
-            <field name="type">sale_refund</field>
-            <field name="sequence_id" ref="sequence_refund_sales_journal"/>
-            <field name="default_credit_account_id" ref="a_sale"/>
-            <field name="default_debit_account_id" ref="a_sale"/>
-            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
+            <field name="refund_sequence" eval="True"/>
         </record>
 
         <record id="expenses_journal" model="account.journal">
             <field name="name">Expenses Journal - (test)</field>
             <field name="code">TEXJ</field>
             <field name="type">purchase</field>
-            <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
-        </record>
-        <record id="refund_expenses_journal" model="account.journal">
-            <field name="name">Expenses Credit Notes Journal - (test)</field>
-            <field name="code">TECNJ</field>
-            <field name="type">purchase_refund</field>
-            <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
-            <field name="default_debit_account_id" ref="a_expense"/>
-            <field name="default_credit_account_id" ref="a_expense"/>
-            <field name="analytic_journal_id" ref="exp"/>
+            <field name="refund_sequence" eval="True"/>
         </record>
 
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank Journal - (test)</field>
             <field name="code">TBNK</field>
             <field name="type">bank</field>
-            <field name="sequence_id" ref="sequence_bank_journal"/>
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
@@ -295,7 +276,6 @@
             <field name="name">Checks Journal - (test)</field>
             <field name="code">TCHK</field>
             <field name="type">bank</field>
-            <field name="sequence_id" ref="sequence_check_journal"/>
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
@@ -308,12 +288,6 @@
             <field name="loss_account_id" ref="rsa" />
             <field name="internal_account_id" ref="rsa" />
             <field name="with_last_closing_balance" eval="True" />
-            <!--
-                 Usually, cash payment methods requires a control at opening and closing.
-                 Bot for demo data, it's better to avoid the control step so that people
-                 that test Odoo arrive directly in the touchscreen UI.
-            -->
-            <field name="sequence_id" ref="sequence_cash_journal"/>
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
@@ -322,14 +296,12 @@
             <field name="name">Miscellaneous Journal - (test)</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
-            <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
         </record>
         <record id="opening_journal" model="account.journal">
             <field name="name">Opening Entries Journal - (test)</field>
             <field name="code">TOEJ</field>
             <field name="type">situation</field>
-            <field name="sequence_id" ref="sequence_opening_journal"/>
             <field name="default_debit_account_id" ref="o_income"/>
             <field name="default_credit_account_id" ref="o_expense"/>
         </record>

@@ -258,45 +258,6 @@ class account_move_line(models.Model):
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise Warning(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        self.date_maturity = False
-        if self.partner_id:
-            date = self.date or datetime.now().strftime('%Y-%m-%d')
-            journal_type = self.journal_id.type
-    
-            payment_term_id = False
-            if journal_type in ('purchase', 'purchase_refund') and self.partner_id.property_supplier_payment_term:
-                payment_term_id = self.partner_id.property_supplier_payment_term.id
-            elif self.partner_id.property_payment_term:
-                payment_term_id = self.partner_id.property_payment_term.id
-            if payment_term_id:
-                res = self.env['account.payment.term'].compute(payment_term_id, 100, date)
-                if res:
-                    self.date_maturity = res[0][0]
-            if not self.account_id:
-                account_payable = self.partner_id.property_account_payable.id
-                account_receivable =  self.partner_id.property_account_receivable.id
-                if journal_type in ('sale', 'purchase_refund'):
-                    self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_receivable)
-                elif journal_type in ('purchase', 'sale_refund'):
-                    self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_payable)
-                elif journal_type in ('general', 'bank', 'cash'):
-                    if self.partner_id.customer:
-                        self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_receivable)
-                    elif self.partner_id.supplier:
-                        self.account_id = self.partner_id and self.partner_id.property_account_position.map_account(account_payable)
-                if self.account_id:
-                    self.onchange_account_id()
-
-    @api.onchange('account_id')
-    def onchange_account_id(self):
-        if self.account_id:
-            if self.account_id.tax_ids and self.partner_id:
-                self.account_tax_id = self.env['account.fiscal.position'].map_tax(self.partner_id and self.partner_id.property_account_position or False, self.account_id.tax_ids)
-            else:
-                self.account_tax_id = self.account_id.tax_ids or False
-
     @api.model
     def get_data_for_manual_reconciliation(self, res_type, res_id=None):
         """ Returns the data required for the  manual reconciliation of partners/accounts.

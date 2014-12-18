@@ -132,9 +132,9 @@ class account_voucher(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        if self.journal_id.type in ('sale', 'sale_refund'):
+        if self.journal_id.type == 'sale':
             account_id = self.partner_id.property_account_receivable.id
-        elif self.journal_id.type in ('purchase', 'purchase_refund','expense'):
+        elif self.journal_id.type == 'purchase':
             account_id = self.partner_id.property_account_payable.id
         else:
             account_id = self.journal_id.default_credit_account_id.id or self.journal_id.default_debit_account_id.id
@@ -174,9 +174,9 @@ class account_voucher(models.Model):
         if self.pay_now == 'pay_later':
             partner = self.partner_id
             journal = self.journal_id
-            if journal.type in ('sale','sale_refund'):
+            if journal.type == 'sale':
                 account_id = partner.property_account_receivable.id
-            elif journal.type in ('purchase', 'purchase_refund','expense'):
+            elif journal.type == 'purchase':
                 account_id = partner.property_account_payable.id
             else:
                 account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
@@ -186,14 +186,10 @@ class account_voucher(models.Model):
     def first_move_line_get(self, move_id, company_currency, current_currency):
         for voucher in self:
             debit = credit = 0.0
-            # TODO: is there any other alternative then the voucher type ??
-            # ANSWER: We can have payment and receipt "In Advance".
-            # TODO: Make this logic available.
-            # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
-            if voucher.type in ('purchase', 'payment'):
-                credit = voucher.paid_amount_in_company_currency
-            elif voucher.type in ('sale', 'receipt'):
-                debit = voucher.paid_amount_in_company_currency
+            if voucher.voucher_type == 'purchase':
+                credit = voucher._convert_amount(amount)
+            elif voucher.voucher_type == 'sale':
+                debit = voucher._convert_amount(amount)
             if debit < 0.0: debit = 0.0
             if credit < 0.0: credit = 0.0
             sign = debit - credit < 0 and -1 or 1
