@@ -182,6 +182,12 @@
                 .then(function (html) {
                     var $html = $(html);
 
+                    // t-snippet
+                    $html.find('> .tab-content > div > [data-oe-type="snippet"]').each(function () {
+                        var $div = $('<div/>').insertAfter(this).append(this).attr('name', $(this).data('oe-name'));
+                    });
+                    // end
+
                     var selector = [];
                     var $styles = $html.find("[data-js], [data-selector]");
                     $styles.each(function () {
@@ -214,9 +220,27 @@
                                     '</div>');
                                 $div.find('span').text($(this).attr("name"));
                                 $(this).prepend($div);
+
+                                // from t-snippet
+                                var thumbnail = $("[data-oe-thumbnail]", this).data("oe-thumbnail");
+                                if (thumbnail) {
+                                    $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
+                                }
+                                // end
                             }
                             $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
                         });
+
+                    // clean t-oe
+                    $html.find('[data-oe-model]').each(function () {
+                        for (var k=0; k<this.attributes.length; k++) {
+                            if (this.attributes[k].name.indexOf('data-oe-') === 0) {
+                                $(this).removeAttr(this.attributes[k].name);
+                                k--;
+                            }
+                        }
+                    });
+                    // end
 
                     self.$el.append($html);
 
