@@ -164,7 +164,6 @@ class hr_analytic_timesheet(osv.osv):
         'general_account_id': _getGeneralAccount,
         'journal_id': _getAnalyticJournal,
         'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self,cr,uid,context=ctx)),
-        'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id') or uid,
     }
     def on_change_account_id(self, cr, uid, ids, account_id, context=None):
         return {'value':{}}

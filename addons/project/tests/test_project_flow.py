@@ -82,25 +82,6 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(project.state, 'open', 'project: resetted project should be in open state')
         self.assertEqual(len(project.tasks), 2, 'project: reset_project: project tasks should have been set active')
 
-        # Put as pending
-        self.project_project.set_pending(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'pending', 'project: should be in pending state')
-
-        # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'open', 'project: reopened project should be in open state')
-
-        # Close project
-        self.project_project.set_done(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'close', 'project: closed project should be in close state')
-
-        # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-
         # Re-convert into a template and schedule tasks
         self.project_project.set_template(cr, user_projectmanager_id, [project_pigs_id])
         self.project_project.schedule_tasks(cr, user_projectmanager_id, [project_pigs_id])
@@ -109,10 +90,6 @@ class TestProjectFlow(TestProjectBase):
         new_project_id = self.project_project.copy(cr, user_projectmanager_id, project_pigs_id)
         new_project = self.project_project.browse(cr, user_projectmanager_id, new_project_id)
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
-
-        # Cancel the project
-        self.project_project.set_cancel(cr, user_projectmanager_id, [project_pigs_id])
-        self.assertEqual(project.state, 'cancelled', 'project: cancelled project should be in cancel state')
 
     def test_10_task_process(self):
         """ Testing task creation and management """

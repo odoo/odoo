@@ -13,7 +13,7 @@
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="create_date"/>
-                    <field name="categ_ids"/>
+                    <field name="tag_ids"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
@@ -24,7 +24,7 @@
                                             <field name="partner_id" context="{'portal':1}"/> <br/>
                                             <field name="version_id"/>                                            
                                         </div>
-                                        <div><field name="categ_ids" widget="many2many_tags" class="oe_left"/></div>
+                                        <div><field name="tag_ids" widget="many2many_tags" class="oe_left"/></div>
                                         <div class="oe_text_right">
                                             <h1><field name="stage_id" readonly="1"/></h1>
                                         </div>
@@ -35,7 +35,7 @@
                                         <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <field name="categ_ids"/>
+                                        <field name="tag_ids"/>
                                         <div class="oe_right">
                                             Creation: <field name="create_date"/>
                                             <field name="priority" widget="priority"/>

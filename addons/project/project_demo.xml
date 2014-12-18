@@ -8,16 +8,16 @@
         </record>
 
         <!-- Categories -->
-        <record id="project_category_01" model="project.category">
+        <record id="project_category_01" model="project.tags">
             <field name="name">Contact's suggestion</field>
         </record>
-        <record id="project_category_02" model="project.category">
+        <record id="project_category_02" model="project.tags">
             <field name="name">Feature request</field>
         </record>
-        <record id="project_category_03" model="project.category">
+        <record id="project_category_03" model="project.tags">
             <field name="name">Experiment</field>
         </record>
-        <record id="project_category_04" model="project.category">
+        <record id="project_category_04" model="project.tags">
             <field name="name">Usability</field>
         </record>
 
@@ -150,7 +150,7 @@
             <field name="date_deadline" eval="time.strftime('%Y-%m-19')"/>
             <field name="color">5</field>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_02')])]"/>
         </record>
         <record id="project_task_5" model="project.task">
@@ -164,7 +164,7 @@
             <field name="priority">0</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-%d')"/>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_02')])]"/>
         </record>
         <record id="project_task_6" model="project.task">
@@ -194,7 +194,7 @@
             <field name="name">New portal system</field>
             <field name="priority">0</field>
             <field name="stage_id" ref="project_stage_2"/>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project.project_category_03')])]"/>
         </record>
         <record id="project_task_9" model="project.task">
@@ -223,7 +223,7 @@
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">User interface improvements</field>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project.project_category_02'),
                     ref('project.project_category_04')])]"/>
             <field name="stage_id" ref="project_stage_1"/>
@@ -268,7 +268,7 @@
             <field name="name">User Interface design</field>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="date_start">2011-02-06</field>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_04')])]"/>
         </record>
 
@@ -310,7 +310,7 @@
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project.project_project_4"/>
             <field name="name">Basic outline</field>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_03')])]"/>
         </record>
 
@@ -330,7 +330,7 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="project_id" ref="project.project_project_4"/>
             <field name="name">Useablity review</field>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_04')])]"/>
         </record>
 
@@ -363,7 +363,7 @@
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_5"/>
             <field name="name">Modifications asked by the customer</field>
-            <field name="categ_ids" eval="[(6, 0, [
+            <field name="tag_ids" eval="[(6, 0, [
                     ref('project_category_01')])]"/>
         </record>
 
