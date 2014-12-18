@@ -117,18 +117,32 @@ data attributes is optional:
 - ``data-selector``:
   Apply options on all The part of html who match with this jQuery selector.
   E.g.: If the selector is div, all div will be selected and can be highlighted and assigned an editor.
-- ``data-option``:
-  javascript ``option`` to call when the ``editor`` is loaded
+- ``data-js``:
+  javascript to call when the ``editor`` is loaded
 - ``data-drop-in``:
   The html part can be insert or move beside the selected html block (jQuery selector)
 - ``data-drop-near``:
   The html part can be insert or move inside the selected html block (jQuery selector)
-- ``data-drop-in-vertical``:
-  The html part can be insert or move inside the selected html block. The drop zone is displayed
-  vertically (jQuery selector)
 - HTML content like <li data-your_js_method="your_value"><a>...</a></li>:
   List of HTML li menu items displayed in customize menu. If the li tag have datas the methods are
   automatically called
 - ``no-check``:
   The selectors are automatically compute to have elements inside the branding. If you use this option
   the check is not apply (for e.g.: to have a snippet for the grid view of website_sale)
+
+t-snippet and data-snippet
+++++++++++++++++++++++++++
+
+User can call a snippet template with qweb or inside a demo page.
+
+e.g.:
+
+<template id="website.name_of_the_snippet" name="Name of the snippet">
+  <hr/>
+</template>
+
+Inside #snippet_structure for e.g.: ``<t t-snippet="website.name_of_the_snippet" t-thumbnail="/image_path"/>``
+The container of the snippet became not editable (with branding)
+
+Inside a demo page call the snippet with: ``<div data-oe-call="website.name_of_the_template"/>``
+The snippets are loaded in one time by js and the page stay editable.
