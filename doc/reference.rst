@@ -21,3 +21,4 @@ Reference
     reference/translations
     reference/reports
     reference/workflows
+    reference/cdn

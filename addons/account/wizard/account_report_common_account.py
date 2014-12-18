@@ -26,8 +26,8 @@ class account_common_account_report(osv.osv_memory):
     _description = 'Account Common Account Report'
     _inherit = "account.common.report"
     _columns = {
-        'display_account': fields.selection([('all','All'), ('movement','With movements'),
-                                            ('not_zero','With balance is not equal to 0'),
+        'display_account': fields.selection([('all','Display all Accounts'), ('movement','Display Accounts with movements'),
+                                            ('not_zero','Display Account where balance is not equal to 0'),
                                             ],'Display Accounts', required=True),
 
     }

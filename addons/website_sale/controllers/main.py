@@ -176,18 +176,12 @@ class website_sale(http.Controller):
         else:
             pricelist = pool.get('product.pricelist').browse(cr, uid, context['pricelist'], context)
 
-        product_obj = pool.get('product.template')
-
         url = "/shop"
-        product_count = product_obj.search_count(cr, uid, domain, context=context)
         if search:
             post["search"] = search
         if category:
             category = pool['product.public.category'].browse(cr, uid, int(category), context=context)
             url = "/shop/category/%s" % slug(category)
-        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
-        products = product_obj.browse(cr, uid, product_ids, context=context)
 
         style_obj = pool['product.style']
         style_ids = style_obj.search(cr, uid, [], context=context)
@@ -197,6 +191,14 @@ class website_sale(http.Controller):
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
         categs = filter(lambda x: not x.parent_id, categories)
+
+        domain += ['|', ('public_categ_ids', 'in', category_ids), ('public_categ_ids', '=', False)]
+        product_obj = pool.get('product.template')
+
+        product_count = product_obj.search_count(cr, uid, domain, context=context)
+        pager = request.website.pager(url=url, total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        product_ids = product_obj.search(cr, uid, domain, limit=PPG, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
         attributes_ids = attributes_obj.search(cr, uid, [], context=context)
@@ -702,6 +704,7 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
+            tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # update quotation
         request.registry['sale.order'].write(
@@ -709,6 +712,10 @@ class website_sale(http.Controller):
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': request.session['sale_transaction_id']
             }, context=context)
+
+        # confirm the quotation
+        if tx.acquirer_id.auto_confirm == 'at_pay_now':
+            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
@@ -738,21 +745,22 @@ class website_sale(http.Controller):
                 }
             else:
                 state = 'done'
-                message = ""
+                message = '<h2>%s</h2>' % _('Your order has been confirmed, thank you for your loyalty.')
                 validation = None
         else:
             tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
             state = tx.state
+            message = '<h2>%s</h2>' % _('Thank you for your order.')
             if state == 'done':
-                message = '<p>%s</p>' % _('Your payment has been received.')
+                message += '<p>%s</p>' % _('Your payment has been received.')
             elif state == 'cancel':
-                message = '<p>%s</p>' % _('The payment seems to have been canceled.')
+                message += '<p>%s</p>' % _('The payment seems to have been canceled.')
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
             validation = tx.acquirer_id.validation
 
         return {

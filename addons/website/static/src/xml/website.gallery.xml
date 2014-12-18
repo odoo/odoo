@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- 
+    =======================================================================
+        Gallery Dialog
+     
+        This template is shown when creating a gallery, allowing users to upload
+        images.
+     ======================================================================= 
+     -->
+
+    <t t-name="website.gallery.dialog.upload">
+        <div class="modal fade" >
+            <div class="modal-dialog" style="max-width: 50%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><![CDATA[&times;]]></button>
+                        <h4 class="modal-title">Add images</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/website/attach" method="post" enctype="multipart/form-data" >
+                            <div class="form-group">
+                                <input name="upload" type="file" value="Choose images" multiple="multiple" accept="image/*"/> 
+                            </div>
+                            <div class="form-group hidden">
+                                <input type="submit" value="Upload images" class="btn btn-default" />
+                            </div>
+                        </form>
+                        <div class="text-center"><span class="fa fa-refresh fa-5x fa-spin hidden"></span></div>
+                        <div class="alert alert-success" role="alert">Upload successful.</div>
+                        <div class="alert alert-danger" role="alert">Upload failed, some images might not have been uploaded. Check your network connectivity.</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- 
+        ========================================================================
+        Gallery Slideshow
+                
+        This template is used to display a slideshow of images inside a 
+        bootstrap carousel.
+        
+        ========================================================================
+    -->
+
+    <t t-name="website.gallery.slideshow">
+        <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}">
+            <div class="carousel-inner container">
+                 <t t-foreach="srcs" t-as="src">
+                    <div t-attf-class="item #{src_index == index and 'active' or ''}">
+                        <img class="img" t-att-src="src"/>
+                    </div>
+                 </t>
+            </div>
+
+            <ul class="carousel-indicators">
+                <t t-foreach="srcs" t-as="src">
+                    <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
+                </t>
+            </ul>
+            
+            <a class="carousel-control left" t-attf-href="##{id}" data-slide="prev"><span class="glyphicon glyphicon-chevron-left" /></a> 
+            <a class="carousel-control right" t-attf-href="##{id}" data-slide="next"><span class="glyphicon glyphicon-chevron-right" /></a>
+        </div> <!-- carousel-id -->
+        <script type="text/javascript">
+            (function() {
+            $(".slideshow").css("height", Math.round(window.innerHeight*0.7));
+            $(window).on("resize", function() { $(".slideshow").css("height", Math.round(window.innerHeight*0.7)); });
+            })();
+        </script>
+    </t>
+    
+    <!--
+        ========================================================================
+        Gallery Slideshow LightBox
+        
+        This template is used to display a lightbox with a slideshow.
+        
+        This template wraps website.gallery.slideshow in a bootstrap modal
+        dialog.
+        ========================================================================
+    -->
+    <t t-name="website.gallery.slideshow.lightbox">
+
+        <div class="modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
+
+            <div class="modal-dialog modal-lg" role="Picture Gallery"
+                t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ; height: #{dim.height}px ;">
+                <div class="modal-content">
+                    <div class="modal-body o_slideshow">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                        <t t-call="website.gallery.slideshow"></t>
+                    </div>
+
+                </div> 
+            </div>
+        </div>
+    </t>
+</templates>

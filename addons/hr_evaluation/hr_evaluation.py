@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -135,7 +135,7 @@ class hr_employee(osv.Model):
 
 class hr_evaluation(osv.Model):
     _name = "hr_evaluation.evaluation"
-    _inherit = "mail.thread"
+    _inherit = ['mail.thread']
     _description = "Employee Appraisal"
     _columns = {
         'date': fields.date("Appraisal Deadline", required=True, select=True),
@@ -157,7 +157,7 @@ class hr_evaluation(osv.Model):
             ('wait', 'Plan In Progress'),
             ('progress', 'Waiting Appreciation'),
             ('done', 'Done'),
-        ], 'Status', required=True, readonly=True, copy=False),
+        ], 'Status', required=True, readonly=True, track_visibility='onchange', copy=False),
         'date_close': fields.date('Ending Date', select=True),
     }
     _defaults = {
@@ -270,7 +270,7 @@ class hr_evaluation(osv.Model):
 
 class hr_evaluation_interview(osv.Model):
     _name = 'hr.evaluation.interview'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread']
     _rec_name = 'user_to_review_id'
     _description = 'Appraisal Interview'
     _columns = {

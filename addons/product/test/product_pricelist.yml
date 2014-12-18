@@ -4,60 +4,64 @@
   I check sale price of Assemble Computer
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'pricelist': ref("customer_pricelist"), 'quantity':1})
     product = self.browse(cr, uid, ref("product_product_4"), context=context)
-    assert product.price == (product.lst_price-product.lst_price*(0.10)), "Wrong sale price: Assemble Computer."
+    assert float_compare(product.price, (product.lst_price-product.lst_price*(0.10)), precision_digits=2) == 0, "Wrong sale price: Assemble Computer."
 -
   I check sale price of Laptop.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     product = self.browse(cr, uid, ref("product_product_25"), context=context)
-    assert product.price == product.lst_price + 1, "Wrong sale price: Laptop."
+    assert float_compare(product.price, product.lst_price + 1, precision_digits=2) == 0, "Wrong sale price: Laptop."
 -
   I check sale price of IT component.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     product = self.browse(cr, uid, ref("product_product_7"), context=context)
-    assert product.price == product.lst_price, "Wrong sale price: IT component."
-
+    assert float_compare(product.price, product.lst_price, precision_digits=2) == 0, "Wrong sale price: IT component."
 -
   I check sale price of IT component if more than 3 Unit.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'quantity':5})
     product = self.browse(cr, uid, ref("product_product_26"), context=context)
-    assert product.price == product.lst_price-product.lst_price*(0.05), "Wrong sale price: IT component if more than 3 Unit."
+    assert float_compare(product.price, product.lst_price-product.lst_price*(0.05), precision_digits=2) == 0, "Wrong sale price: IT component if more than 3 Unit."
 -
   I check sale price of LCD Monitor.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'quantity':1})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == product.lst_price, "Wrong sale price: LCD Monitor."
-
+    assert float_compare(product.price, product.lst_price, precision_digits=2) == 0, "Wrong sale price: LCD Monitor."
 -
   I check sale price of LCD Monitor on end of year.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'quantity':1, 'date': '2011-12-31'})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == product.lst_price-product.lst_price*(0.30), "Wrong sale price: LCD Monitor on end of year."
-
+    assert float_compare(product.price, product.lst_price-product.lst_price*(0.30), precision_digits=2) == 0, "Wrong sale price: LCD Monitor on end of year."
 -
   I check cost price of LCD Monitor.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4'), 'pricelist': ref("supplier_pricelist")})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == 792, "wrong cost price: LCD Monitor."
+    assert float_compare(product.price, 792, precision_digits=2) == 0, "Wrong cost price: LCD Monitor."
 -
   I check cost price of LCD Monitor if more than 3 Unit.
 -
   !python {model: product.product}: |
+    from openerp.tools import float_compare
     context.update({'quantity':3})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == 787, "wrong cost price: LCD Monitor if more than 3 Unit."
-
+    assert float_compare(product.price, 787, precision_digits=2) == 0, "Wrong cost price: LCD Monitor if more than 3 Unit."
 -
  I print the sale prices report.
 -

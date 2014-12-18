@@ -75,7 +75,7 @@
                             name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
                             class="oe_stat_button"
                             icon="fa-clock-o">
-                            <field name="timesheet_activity_count" widget="statinfo" string="Timesheet" help="Timesheet Activities"/>
+                            <div><strong><field name="total_timesheet" widget="float_time"/></strong><br/>Timesheet</div>
                         </button>
                         <button type="action" groups="base.group_hr_attendance"
                             class="oe_stat_button" icon="fa-users"
@@ -98,7 +98,6 @@
                         </group>
                         <group groups="base.group_hr_attendance">
                             <field name="total_attendance" widget="float_time"/>
-                            <field name="total_timesheet" widget="float_time"/>
                             <field name="total_difference" widget="float_time"/>
                         </group>
                     </group>
@@ -111,7 +110,7 @@
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time" string="Hours" sum="Hours"/>
                                     <field name="to_invoice" widget="selection"/>
@@ -167,8 +166,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -182,6 +181,7 @@
                     <field name="date_from"/>
                     <filter name="new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By">
@@ -193,7 +193,7 @@
         </record>
 
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
-            <field name="name">Timesheets to Validate</field>
+            <field name="name">Timesheets to Approve</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
@@ -215,7 +215,7 @@
         </record>
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-             sequence="2" groups="base.group_hr_user"/>
+             sequence="11" groups="base.group_hr_user"/>
 
         <!--
             Company inheritancy
@@ -328,7 +328,7 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" fonts="bold: message_unread == True" string="Timesheets">
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -337,6 +337,7 @@
                     <field name="total_timesheet" widget="float_time"/>
                     <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="state"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>

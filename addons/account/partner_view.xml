@@ -62,8 +62,8 @@
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="name">Contracts/Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_id" ref="view_account_analytic_account_tree"/>
-            <field name="search_view_id" ref="view_account_analytic_account_search"/>
+            <field name="view_id" ref="analytic.view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
         </record>
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
@@ -102,7 +102,7 @@
         <menuitem
             action="action_account_fiscal_position_form"
             id="menu_action_account_fiscal_position_form"
-            parent="next_id_27" sequence="20"/>
+            parent="next_id_27" sequence="3"/>
 
         <!--
         Partners Extension
@@ -117,25 +117,26 @@
                 <page name="sales_purchases" position="after">
                 <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
                     <group>
-                        <group>
-                            <field name="property_account_position" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="last_reconciliation_date"/>
-                        </group>
-                        <group>
-                            <field name="property_account_receivable" groups="account.group_account_invoice" />
+                        <group string="Sale" name="acc_sale">
                             <field name="property_payment_term" widget="selection"/>
                             <field name="credit"/>
                             <field name="credit_limit"/>
                         </group>
-                        <group>
-                            <field name="property_account_payable" groups="account.group_account_invoice"/>
+                        <group string="Purchase" name="acc_purchase">
                             <field name="property_supplier_payment_term" widget="selection"/>
                             <field name="debit"/>
                         </group>
+                        <group string="Fiscal Information" name="fiscal_information">
+                            <field name="property_account_position" widget="selection"/>
+                        </group>
+                        <group string="Accounting Entries" name="accounting_entries">
+                            <field name="property_account_receivable" groups="account.group_account_invoice" />
+                            <field name="property_account_payable" groups="account.group_account_invoice"/>
+                            <field name="last_reconciliation_date"/>
+                        </group>
                     </group>
-                    <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
+                    <group string="Bank Accounts" name="bank_accounts">
+                    <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}" nolabel="1">
                         <tree string="Bank Details">
                             <field name="state" invisible="1"/>
                             <field name="sequence" invisible="1"/>
@@ -144,6 +145,7 @@
                             <field name="owner_name"/>
                         </tree>
                     </field>
+                </group>
                 </page>
                 <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice">
                     <div>

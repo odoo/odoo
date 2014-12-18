@@ -51,8 +51,8 @@ class account_config_settings(osv.osv_memory):
         'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round per line'),
-            ('round_globally', 'Round globally'),
+            ('round_per_line', 'Round calculation of taxes per line'),
+            ('round_globally', 'Round globally calculation of taxes '),
             ], string='Tax calculation rounding method',
             help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
@@ -108,6 +108,12 @@ class account_config_settings(osv.osv_memory):
         'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
             help='With this module, link your products to a template to send complete information and tools to your customer.\n'
                  'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
+        'module_account_bank_statement_import_ofx': fields.boolean('Import of Bank Statements in .OFX Format',
+            help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
+                '-that installs the module account_bank_statement_import.'),
+        'module_account_bank_statement_import_qif': fields.boolean('Import of Bank Statements in .QIF Format.',
+            help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
+                '-that installs the module account_bank_statement_import_qif.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),

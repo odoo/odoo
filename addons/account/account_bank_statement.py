@@ -850,7 +850,6 @@ class account_bank_statement_line(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
         'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
     }
 
@@ -860,16 +859,17 @@ class account_statement_operation_template(osv.osv):
     _columns = {
         'name': fields.char('Button Label', required=True),
         'account_id': fields.many2one('account.account', 'Account', ondelete='cascade', domain=[('type', 'not in', ('view', 'closed', 'consolidation'))]),
-        'label': fields.char('Label'),
-        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')],
-                                   'Amount type', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance').", required=True),
-        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='restrict', domain=[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]),
+        'label': fields.char('Journal Item Label'),
+        'amount_type': fields.selection([('fixed', 'Fixed'),('percentage_of_total','Percentage of total amount'),('percentage_of_balance', 'Percentage of open balance')], 'Amount type', required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account'), required=True, help="The amount will count as a debit if it is negative, as a credit if it is positive (except if amount type is 'Percentage of open balance')."),
+        'tax_id': fields.many2one('account.tax', 'Tax', ondelete='restrict', domain=[('type_tax_use','in',('purchase','all')), ('parent_id','=',False)]),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='set null', domain=[('type','!=','view'), ('state','not in',('close','cancelled'))]),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'amount_type': 'percentage_of_balance',
-        'amount': 100.0
+        'amount': 100.0,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

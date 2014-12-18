@@ -159,7 +159,7 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name'),
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
-        'type': fields.selection([('normal', 'Normal'), ('phantom', 'Set')], 'BoM Type', required=True,
+        'type': fields.selection([('normal','Manufacture this product as a normal bill of material'),('phantom','Sell and ship this product as a set of components(phantom)')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
         'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
         'product_tmpl_id': fields.many2one('product.template', 'Product', domain="[('type', '!=', 'service')]", required=True),
@@ -411,6 +411,14 @@ class mrp_bom_line(osv.osv):
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        if 'product_id' in values and not 'product_uom' in values:
+            values['product_uom'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
+        return super(mrp_bom_line, self).create(cr, uid, values, context=context)
+
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
         res = {'value': {}}
         if not product_uom or not product_id:
@@ -568,7 +576,7 @@ class mrp_production(osv.osv):
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'ready_production': fields.function(_moves_assigned, type='boolean', store={'stock.move': (_mrp_from_move, ['state'], 10)}),
+        'ready_production': fields.function(_moves_assigned, type='boolean', string="Ready for production", store={'stock.move': (_mrp_from_move, ['state'], 10)}),
     }
 
     _defaults = {
@@ -577,7 +585,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty': lambda *a: 1.0,
         'user_id': lambda self, cr, uid, c: uid,
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').next_by_code(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
         'location_src_id': _src_id_default,
         'location_dest_id': _dest_id_default
@@ -598,6 +606,14 @@ class mrp_production(osv.osv):
     _constraints = [
         (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
+
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product')
+        if 'product_id' in values and not 'product_uom' in values:
+            values['product_uom'] = product_obj.browse(cr, uid, values.get('product_id'), context=context).uom_id.id
+        return super(mrp_production, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):

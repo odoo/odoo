@@ -1,4 +1,5 @@
     openerp.website.if_dom_contains('.website_forum', function () {
+        $("[data-toggle='popover']").popover();
         $('.karma_required').on('click', function (ev) {
             var karma = $(ev.currentTarget).data('karma');
             if (karma) {
@@ -120,6 +121,30 @@
         });
 
 
+        $('.js_close_intro').on('click', function (ev) {
+            ev.preventDefault();
+            document.cookie = "no_introduction_message = false";
+            return true;
+        });
+
+        $('.link_url').on('change', function (ev) {
+            ev.preventDefault();
+            var $link = $(ev.currentTarget);
+            if ($link.attr("value").search("^http(s?)://.*")) {
+                var $warning = $('<div class="alert alert-danger alert-dismissable" style="position:absolute; margin-top: -180px; margin-left: 90px;">'+
+                    '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                    'Please enter valid URL. Example: http://www.odoo.com'+
+                    '</div>');
+                $link.parent().append($warning);
+                $("button#btn_post_your_article")[0].disabled = true;
+            } else {
+                openerp.jsonRpc("/forum/get_url_title", 'call', {'url': $link.attr("value")}).then(function (data) {
+                    $("input[name='post_name']")[0].value = data;
+                    $('button#btn_post_your_article').prop('disabled', false);
+                });
+            }
+        });
+
         $('input.js_select2').select2({
             tags: true,
             tokenSeparators: [",", " ", "_"],
@@ -137,7 +162,6 @@
                             isNew: true,
                         };
                     }
-                    
                 }
             },
             formatResult: function(term) {
@@ -154,7 +178,6 @@
                 data: function(term, page) {
                     return {
                         q: term,
-                        t: 'select2',
                         l: 50
                     };
                 },
@@ -179,43 +202,14 @@
             },
         });
 
-        if($('input.load_tags').length){
-            var tags = $("input.load_tags").val();
-            $("input.load_tags").val("");
-            set_tags(tags);
-        };
-
-        function set_tags(tags) {
-            $("input.load_tags").textext({
-                plugins: 'tags focus autocomplete ajax',
-                tagsItems: tags.split(","),
-                //Note: The following list of keyboard keys is added. All entries are default except {32 : 'whitespace!'}.
-                keys: {8: 'backspace', 9: 'tab', 13: 'enter!', 27: 'escape!', 37: 'left', 38: 'up!', 39: 'right',
-                    40: 'down!', 46: 'delete', 108: 'numpadEnter', 32: 'whitespace!'},
-                ajax: {
-                    url: '/forum/get_tags',
-                    dataType: 'json',
-                    cacheResults: true
-                }
-            });
-            // Adds: create tags on space + blur
-            $("input.load_tags").on('whitespaceKeyDown blur', function () {
-                $(this).textext()[0].tags().addTags([ $(this).val() ]);
-                $(this).val("");
-            });
-            $("input.load_tags").on('isTagAllowed', function(e, data) {
-                if (_.indexOf($(this).textext()[0].tags()._formData, data.tag) != -1) {
-                    data.result = false;
-                }
-            });
-        }
-        //END-TODO Remove in master
-
         if ($('textarea.load_editor').length) {
-            var editor = CKEDITOR.instances['content'];
-            editor.on('instanceReady', CKEDITORLoadComplete);
+            $('textarea.load_editor').each(function () {
+                if (this['id']) {
+                    CKEDITOR.replace(this['id']).on('instanceReady', CKEDITORLoadComplete);
+                }
+            });
         }
-
+        
         function CKEDITORLoadComplete(){
             "use strict";
             $('.cke_button__link').attr('onclick','website_forum_IsKarmaValid(33,30)');

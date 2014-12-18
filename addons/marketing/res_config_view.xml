@@ -12,26 +12,28 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Mass Mailing"/>
-                    <group>
-                        <label for="id" string="Settings"/>
-                        <div>
-                            <div name="module_mass_mailing">
-                                <field name="module_mass_mailing" class="oe_inline"/>
-                                <label for="module_mass_mailing"/>
+                    <div name="config_setting">        
+                        <separator string="Mass Mailing"/>
+                        <group>
+                            <label for="id" string="Settings"/>
+                            <div>
+                                <div name="module_mass_mailing">
+                                    <field name="module_mass_mailing" class="oe_inline"/>
+                                    <label for="module_mass_mailing"/>
+                                </div>
                             </div>
-                        </div>
-                    </group>
-                    <separator string="Marketing Campaigns"/>
-                    <group>
-                        <label for="id" string="Settings"/>
-                        <div>
-                            <div name="module_marketing_campaign">
-                                <field name="module_marketing_campaign" class="oe_inline"/>
-                                <label for="module_marketing_campaign"/>
+                        </group>
+                        <separator string="Marketing Campaigns"/>
+                        <group>
+                            <label for="id" string="Settings"/>
+                            <div>
+                                <div name="module_marketing_campaign">
+                                    <field name="module_marketing_campaign" class="oe_inline"/>
+                                    <label for="module_marketing_campaign"/>
+                                </div>
                             </div>
-                        </div>
-                    </group>
+                        </group>
+                     </div>
                 </form>
             </field>
         </record>
@@ -44,7 +46,7 @@
         </record>
 
         <menuitem id="menu_marketing_configuration" name="Marketing" parent="base.menu_config"
-            sequence="17" action="action_marketing_configuration"/>
+            sequence="14" action="action_marketing_configuration"/>
 
     </data>
 </openerp>

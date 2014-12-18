@@ -26,17 +26,24 @@
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="/point_of_sale/static/src/fonts/lato/stylesheet.css" /> 
-        <link rel="stylesheet" href="/point_of_sale/static/src/fonts/font-awesome-4.0.3/css/font-awesome.min.css" /> 
+        <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" /> 
         <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
         <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
 
         <t t-call-assets="web.assets_common" t-css="false" />
         <t t-call-assets="web.assets_backend" t-css="false" />
 
-        <script type="text/javascript" id="loading-script">
+        <script type="text/javascript" id="loading-script" t-raw="init">
             $(function() {
-            var s = new openerp.init(<t t-raw='modules' />);
-                <t t-raw='init' />
+                var s = new openerp.init();
+                var wc = new s.web.WebClient();
+
+                wc.show_application = function() {
+                    wc.action_manager.do_action("pos.ui");
+                };
+
+                wc.setElement($(document.body));
+                wc.start();
             });
         </script>
 

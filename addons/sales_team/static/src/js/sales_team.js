@@ -27,7 +27,7 @@ openerp.crm = function(openerp) {
             var self = this;
             self._super.apply(self, arguments);
 
-            if (self.dataset.model === 'crm.case.section') {
+            if (self.dataset.model === 'crm.team') {
                 self.crm_display_members_names();
             }
         },
@@ -35,7 +35,7 @@ openerp.crm = function(openerp) {
 
     openerp.web_kanban.KanbanRecord.include({
         on_card_clicked: function() {
-            if (this.view.dataset.model === 'crm.case.section') {
+            if (this.view.dataset.model === 'crm.team') {
                 this.$('.oe_kanban_crm_salesteams_list a').first().click();
             } else {
                 this._super.apply(this, arguments);

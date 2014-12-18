@@ -235,7 +235,7 @@ class res_partner(osv.Model, format_address):
         'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'parent_name': fields.related('parent_id', 'name', type='char', readonly=True, string='Parent name'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Contact Reference', select=1),
+        'ref': fields.char('Internal Reference', select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -250,10 +250,10 @@ class res_partner(osv.Model, format_address):
         'comment': fields.text('Notes'),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
-        'ean13': fields.char('EAN13', size=13),
+        'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
@@ -292,7 +292,7 @@ class res_partner(osv.Model, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'has_image': fields.function(_has_image, type="boolean"),
+        'has_image': fields.function(_has_image, string="Has image", type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -394,24 +394,6 @@ class res_partner(osv.Model, format_address):
             state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
-
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
-                    return False
-                sum=0
-                for i in range(12):
-                    if not (i % 2):
-                        sum+=int(thisean[i])
-                    else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-                    return False
-        return True
-
-#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """

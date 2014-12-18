@@ -287,7 +287,17 @@ openerp.ParentedMixin = {
         });
         this.setParent(undefined);
         this.__parentedDestroyed = true;
-    }
+    },
+    /**
+     * Find the closest ancestor matching predicate
+     */
+    findAncestor: function (predicate) {
+        var ancestor = this;
+        while (!(predicate(ancestor)) && ancestor && ancestor.getParent) {
+            ancestor = ancestor.getParent();
+        }
+        return ancestor;
+    },
 };
 
 /**
@@ -773,6 +783,12 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         if (selector === undefined)
             return this.$el;
         return this.$el.find(selector);
+    },
+    do_show: function () {
+        this.$el.show();
+    },
+    do_hide: function () {
+        this.$el.hide();
     },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
@@ -1516,6 +1532,13 @@ openerp.time_to_str = function(obj) {
     return lpad(obj.getHours(),2) + ":" + lpad(obj.getMinutes(),2) + ":"
          + lpad(obj.getSeconds(),2);
 };
+
+// jQuery custom plugins
+jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
 
 openerp.declare = declare;
 

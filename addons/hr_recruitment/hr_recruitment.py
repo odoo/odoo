@@ -28,11 +28,10 @@ from openerp.tools.translate import _
 
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Bad'),
-    ('1', 'Below Average'),
-    ('2', 'Average'),
-    ('3', 'Good'),
-    ('4', 'Excellent')
+    ('0', 'Normal'),
+    ('1', 'Good'),
+    ('2', 'Very Good'),
+    ('3', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -54,6 +53,9 @@ class hr_recruitment_stage(osv.osv):
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
         'requirements': fields.text('Requirements'),
         'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
+        'legend_priority': fields.text(
+            'Priority Management Explanation', translate=True,
+            help='Explanation text to help users using the star and priority mechanism on applicants that are in this stage.'),
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
@@ -84,6 +86,9 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'emp_id': {
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.emp_id,
+        },
         'stage_id': {
             # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
             'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
@@ -226,7 +231,7 @@ class hr_applicant(osv.Model):
                                      multi='day_close', type="float",
                                      store={'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
+        'emp_id': fields.many2one('hr.employee', string='Employee', track_visibility='onchange', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
     }
@@ -582,6 +587,7 @@ class hr_job(osv.osv):
             'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        # TDE note: shouldn't it be in mail_create_nolog ?
         alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
         job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
         job = self.browse(cr, uid, job_id, context=context)
@@ -621,5 +627,3 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

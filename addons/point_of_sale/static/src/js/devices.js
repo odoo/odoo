@@ -1,5 +1,6 @@
+openerp.point_of_sale.load_devices = function load_devices(instance,module){ //module is instance.point_of_sale
+    "use strict";
 
-function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 	var _t = instance.web._t;
 
     // the JobQueue schedules a sequence of 'jobs'. each job is
@@ -88,7 +89,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
             options = options || {};
-            url = options.url || 'http://localhost:8069';
+            var url = options.url || 'http://localhost:8069';
 
             this.pos = parent;
             
@@ -129,8 +130,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             window.hw_proxy = this;
         },
         set_connection_status: function(status,drivers){
-            oldstatus = this.get('status');
-            newstatus = {};
+            var oldstatus = this.get('status');
+            var newstatus = {};
             newstatus.status = status;
             newstatus.drivers = status === 'disconnected' ? {} : oldstatus.drivers;
             newstatus.drivers = drivers ? drivers : newstatus.drivers;
@@ -203,20 +204,22 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // starts a loop that updates the connection status
         keepalive: function(){
             var self = this;
+
+            function status(){
+                self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
+                    .then(function(driver_status){
+                        self.set_connection_status('connected',driver_status);
+                    },function(){
+                        if(self.get('status').status !== 'connecting'){
+                            self.set_connection_status('disconnected');
+                        }
+                    }).always(function(){
+                        setTimeout(status,5000);
+                    });
+            }
+
             if(!this.keptalive){
                 this.keptalive = true;
-                function status(){
-                    self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
-                        .then(function(driver_status){
-                            self.set_connection_status('connected',driver_status);
-                        },function(){
-                            if(self.get('status').status !== 'connecting'){
-                                self.set_connection_status('disconnected');
-                            }
-                        }).always(function(){
-                            setTimeout(status,5000);
-                        });
-                }
                 status();
             };
         },
@@ -370,10 +373,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         scale_read: function(){
             var self = this;
             var ret = new $.Deferred();
-            console.log('scale_read');
             this.message('scale_read',{})
                 .then(function(weight){
-                    console.log(weight)
                     ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
                 }, function(){ //failed to read weight
                     ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
@@ -453,64 +454,18 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.remote_scanning = false;
             this.remote_active = 0;
 
+            this.barcode_parser = attributes.barcode_parser;
+
             this.action_callback_stack = [];
-
-            this.add_barcode_patterns(attributes.patterns || {
-                'product':  ['xxxxxxxxxxxxx'],
-                'cashier':  ['041xxxxxxxxxx'],
-                'client':   ['042xxxxxxxxxx'],
-                'weight':   ['21xxxxxNNDDDx'],
-                'discount': ['22xxxxxxxxNNx'],
-                'price':    ['23xxxxxNNNDDx'],
-            });
-
         },
 
-        add_barcode_patterns: function(patterns){
-            this.patterns = this.patterns || {};
-            for(type in patterns){
-                this.patterns[type] = this.patterns[type] || [];
-
-                var patternlist = patterns[type];
-                if( typeof patternlist === 'string'){
-                    patternlist = patternlist.split(',');
-                }
-                for(var i = 0; i < patternlist.length; i++){
-                    var pattern = patternlist[i].trim().substring(0,12);
-                    if(!pattern.length){
-                        continue;
-                    }
-                    pattern = pattern.replace(/[x\*]/gi,'x');
-                    while(pattern.length < 12){
-                        pattern += 'x';
-                    }
-                    this.patterns[type].push(pattern);
-                }
-            }
-
-            this.sorted_patterns = [];
-            for (var type in this.patterns){
-                var patterns = this.patterns[type];
-                for(var i = 0; i < patterns.length; i++){
-                    var pattern = patterns[i];
-                    var score = 0;
-                    for(var j = 0; j < pattern.length; j++){
-                        if(pattern[j] != 'x'){
-                            score++;
-                        }
-                    }
-                    this.sorted_patterns.push({type:type, pattern:pattern,score:score});
-                }
-            }
-            this.sorted_patterns.sort(function(a,b){
-                return b.score - a.score;
-            });
-
+        set_barcode_parser: function(barcode_parser) {
+            this.barcode_parser = barcode_parser;
         },
 
         save_callbacks: function(){
             var callbacks = {};
-            for(name in this.action_callback){
+            for(var name in this.action_callback){
                 callbacks[name] = this.action_callback[name];
             }
             this.action_callback_stack.push(callbacks);
@@ -523,23 +478,22 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
        
-        // when an ean is scanned and parsed, the callback corresponding
-        // to its type is called with the parsed_ean as a parameter. 
-        // (parsed_ean is the result of parse_ean(ean)) 
+        // when a barcode is scanned and parsed, the callback corresponding
+        // to its type is called with the parsed_barcode as a parameter. 
+        // (parsed_barcode is the result of parse_barcode(barcode)) 
         // 
-        // callbacks is a Map of 'actions' : callback(parsed_ean)
+        // callbacks is a Map of 'actions' : callback(parsed_barcode)
         // that sets the callback for each action. if a callback for the
         // specified action already exists, it is replaced. 
         // 
         // possible actions include : 
         // 'product' | 'cashier' | 'client' | 'discount' 
-    
         set_action_callback: function(action, callback){
             if(arguments.length == 2){
                 this.action_callback[action] = callback;
             }else{
                 var actions = arguments[0];
-                for(action in actions){
+                for(var action in actions){
                     this.set_action_callback(action,actions[action]);
                 }
             }
@@ -547,162 +501,26 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //remove all action callbacks 
         reset_action_callbacks: function(){
-            for(action in this.action_callback){
+            for(var action in this.action_callback){
                 this.action_callback[action] = undefined;
             }
         },
-        // returns the checksum of the ean, or -1 if the ean has not the correct length, ean must be a string
-        ean_checksum: function(ean){
-            var code = ean.split('');
-            if(code.length !== 13){
-                return -1;
-            }
-            var oddsum = 0, evensum = 0, total = 0;
-            code = code.reverse().splice(1);
-            for(var i = 0; i < code.length; i++){
-                if(i % 2 == 0){
-                    oddsum += Number(code[i]);
-                }else{
-                    evensum += Number(code[i]);
-                }
-            }
-            total = oddsum * 3 + evensum;
-            return Number((10 - total % 10) % 10);
-        },
-        // returns true if the ean is a valid EAN codebar number by checking the control digit.
-        // ean must be a string
-        check_ean: function(ean){
-            return /^\d+$/.test(ean) && this.ean_checksum(ean) === Number(ean[ean.length-1]);
-        },
-        // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
-        sanitize_ean:function(ean){
-            ean = ean.substr(0,13);
 
-            for(var n = 0, count = (13 - ean.length); n < count; n++){
-                ean = ean + '0';
-            }
-            return ean.substr(0,12) + this.ean_checksum(ean);
-        },
-        
-        // attempts to interpret an ean (string encoding an ean)
-        // it will check its validity then return an object containing various
-        // information about the ean.
-        // most importantly : 
-        // - code    : the ean
-        // - type   : the type of the ean: 
-        //      'price' |  'weight' | 'product' | 'cashier' | 'client' | 'discount' | 'error'
-        //
-        // - value  : if the id encodes a numerical value, it will be put there
-        // - base_code : the ean code with all the encoding parts set to zero; the one put on
-        //               the product in the backend
-
-        parse_ean: function(ean){
-            var self = this;
-            var parse_result = {
-                encoding: 'ean13',
-                type:'error',  
-                code:ean,
-                base_code: ean,
-                value: 0,
-            };
-
-            if (!this.check_ean(ean)){
-                return parse_result;
-            }
-
-            function is_number(char){
-                n = char.charCodeAt(0);
-                return n >= 48 && n <= 57;
-            }
-
-            function match_pattern(ean,pattern){
-                for(var i = 0; i < pattern.length; i++){
-                    var p = pattern[i];
-                    var e = ean[i];
-                    if( is_number(p) && p !== e ){
-                        return false;
-                    }
-                }
-                return true;
-            }
-            
-            function get_value(ean,pattern){
-                var value = 0;
-                var decimals = 0;
-                for(var i = 0; i < pattern.length; i++){
-                    var p = pattern[i];
-                    var v = parseInt(ean[i]);
-                    if( p === 'N'){
-                        value *= 10;
-                        value += v;
-                    }else if( p === 'D'){
-                        decimals += 1;
-                        value += v * Math.pow(10,-decimals);
-                    }
-                }
-                return value;
-            }
-
-            function get_basecode(ean,pattern){
-                var base = '';
-                for(var i = 0; i < pattern.length; i++){
-                    var p = pattern[i];
-                    var v = ean[i];
-                    if( p === 'x'  || is_number(p)){
-                        base += v;
-                    }else{
-                        base += '0';
-                    }
-                }
-                return self.sanitize_ean(base);
-            }
-
-            var patterns = this.sorted_patterns;
-
-            for(var i = 0; i < patterns.length; i++){
-                if(match_pattern(ean,patterns[i].pattern)){
-                    parse_result.type  = patterns[i].type;
-                    parse_result.value = get_value(ean,patterns[i].pattern);
-                    parse_result.base_code = get_basecode(ean,patterns[i].pattern);
-                    return parse_result;
-                }
-            }
-
-            return parse_result;
-        },
-        
         scan: function(code){
-            if(code.length < 3){
-                return;
-            }else if(code.length === 13 && this.check_ean(code)){
-                var parse_result = this.parse_ean(code);
-            }else if(code.length === 12 && this.check_ean('0'+code)){
-                // many barcode scanners strip the leading zero of ean13 barcodes.
-                // This is because ean-13 are UCP-A with an additional zero at the beginning,
-                // so by stripping zeros you get retrocompatibility with UCP-A systems.
-                var parse_result = this.parse_ean('0'+code);
-            }else if(this.pos.db.get_product_by_reference(code)){
-                var parse_result = {
-                    encoding: 'reference',
-                    type: 'product',
-                    code: code,
-                };
-            }else{
-                var parse_result = {
-                    encoding: 'error',
-                    type: 'error',
-                    code: code,
-                };
-            }
-
-            if(parse_result.type in {'product':'', 'weight':'', 'price':'', 'discount':''}){    //ean is associated to a product
+            var parsed_result = this.barcode_parser.parse_barcode(code);
+            
+            if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
                 if(this.action_callback['product']){
-                    this.action_callback['product'](parse_result);
+                    this.action_callback['product'](parsed_result);
                 }
-            }else{
-                if(this.action_callback[parse_result.type]){
-                    this.action_callback[parse_result.type](parse_result);
+            }
+            else if (parsed_result.type in {'cashier':'', 'client':'', 'discount':''}){ 
+                if(this.action_callback[parsed_result.type]){
+                    this.action_callback[parsed_result.type](parsed_result);
                 }
+            }
+            else{
+                this.action_callback['error'](parsed_result);
             }
         },
 
@@ -713,7 +531,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var self = this;
             var code = "";
             var timeStamp  = 0;
-            var onlynumbers = true;
             var timeout = null;
 
             this.handler = function(e){
@@ -725,15 +542,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
                 if(timeStamp + 50 < new Date().getTime()){
                     code = "";
-                    onlynumbers = true;
                 }
 
                 timeStamp = new Date().getTime();
                 clearTimeout(timeout);
-
-                if( e.which < 48 || e.which >= 58 ){ // not a number
-                    onlynumbers = false;
-                }
 
                 code += String.fromCharCode(e.which);
 
@@ -742,9 +554,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 // Internal Ref 5449 vs EAN13 5449000...
 
                 timeout = setTimeout(function(){
-                    self.scan(code);
+                    if(code.length >= 3){
+                        self.scan(code);
+                    }
                     code = "";
-                    onlynumbers = true;
                 },100);
             };
 

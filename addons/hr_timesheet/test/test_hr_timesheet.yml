@@ -14,6 +14,8 @@
     name: Gilles Gravie
     parent_id: 'hr.employee_al'
     user_id: 'base.user_demo'
+    product_id: product.product_product_consultant
+    journal_id: hr_timesheet.analytic_journal
 -
   Give the access rights of Employee to Sign In/Sign Out in  Project.
 -
@@ -42,7 +44,7 @@
     import time
     from datetime import datetime, date, timedelta
     uid = ref('base.user_demo')
-    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_nebula'),'analytic_amount': 7.0,
+    new_id = self.create(cr, uid, {'account_id': ref('analytic.analytic_nebula'),'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S') ,
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
     'name': 'Gilles Gravie', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
@@ -55,7 +57,7 @@
     import time
     from datetime import datetime, date, timedelta
     uid = ref('base.user_demo')
-    new_id = self.create(cr, uid, {'account_id': ref('account.analytic_spark'), 'analytic_amount': 7.0,
+    new_id = self.create(cr, uid, {'account_id': ref('analytic.analytic_spark'), 'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(2)).strftime('%Y-%m-%d %H:%M:%S'),
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
     'name': 'Gilles Gravie', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})

@@ -5,16 +5,16 @@
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
         </record>
         
-        <record id="section_sales_department" model="crm.case.section">
+        <record id="team_sales_department" model="crm.team">
             <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
         </record>
-        <record model="crm.case.section" id="crm_case_section_1">
+        <record model="crm.team" id="crm_team_1">
             <field name="name">Indirect Sales</field>
             <field name="code">IM</field>
             <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
         </record>
 
-        <record model="crm.case.section" id="crm_case_section_2">
+        <record model="crm.team" id="crm_team_2">
             <field name="name">Marketing</field>
             <field name="code">SPD</field>
             <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>

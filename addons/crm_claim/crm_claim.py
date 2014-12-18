@@ -41,7 +41,7 @@ class crm_claim_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
-        'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
+        'team_ids':fields.many2many('crm.team', 'crm_team_claim_stage_rel', 'stage_id', 'team_id', string='Teams',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
@@ -59,14 +59,14 @@ class crm_claim(osv.osv):
     _order = "priority,date desc"
     _inherit = ['mail.thread']
 
-    def _get_default_section_id(self, cr, uid, context=None):
-        """ Gives default section by checking if present in the context """
-        return self.pool.get('crm.lead')._resolve_section_id_from_context(cr, uid, context=context) or False
+    def _get_default_team_id(self, cr, uid, context=None):
+        """ Gives default team by checking if present in the context """
+        return self.pool.get('crm.lead')._resolve_team_id_from_context(cr, uid, context=context) or False
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
+        team_id = self._get_default_team_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], team_id, [('sequence', '=', '1')], context=context)
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -82,14 +82,12 @@ class crm_claim(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Claim Date', select=True),
         'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.claim')]"),
+        'categ_id': fields.many2one('crm.claim.category', 'Category'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='always'),
         'user_fault': fields.char('Trouble Responsible'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help="Responsible sales team."\
                                 " Define Responsible user and Email account for"\
                                 " mail gateway."),
@@ -99,13 +97,13 @@ class crm_claim(osv.osv):
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone'),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
-                domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
+                domain="['|', ('team_ids', '=', team_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
     }
 
     _defaults = {
         'user_id': lambda s, cr, uid, c: uid,
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
+        'team_id': lambda s, cr, uid, c: s._get_default_team_id(cr, uid, c),
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': '1',
@@ -113,27 +111,27 @@ class crm_claim(osv.osv):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
     }
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
-            - section_id: if set, stages must belong to this section or
+            - team_id: if set, stages must belong to this team or
               be a default case
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
-        # collect all section_ids
-        section_ids = []
-        if section_id:
-            section_ids.append(section_id)
+        # collect all team_ids
+        team_ids = []
+        if team_id:
+            team_ids.append(team_id)
         for claim in cases:
-            if claim.section_id:
-                section_ids.append(claim.section_id.id)
-        # OR all section_ids and OR with case_default
+            if claim.team_id:
+                team_ids.append(claim.team_id.id)
+        # OR all team_ids and OR with case_default
         search_domain = []
-        if section_ids:
-            search_domain += [('|')] * len(section_ids)
-            for section_id in section_ids:
-                search_domain.append(('section_ids', '=', section_id))
+        if team_ids:
+            search_domain += [('|')] * len(team_ids)
+            for team_id in team_ids:
+                search_domain.append(('team_ids', '=', team_id))
         search_domain.append(('case_default', '=', True))
         # AND with the domain in parameter
         search_domain += list(domain)
@@ -154,8 +152,8 @@ class crm_claim(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         context = dict(context or {})
-        if vals.get('section_id') and not context.get('default_section_id'):
-            context['default_section_id'] = vals.get('section_id')
+        if vals.get('team_id') and not context.get('default_team_id'):
+            context['default_team_id'] = vals.get('team_id')
 
         # context: no_log, because subtype already handle this
         return super(crm_claim, self).create(cr, uid, vals, context=context)
@@ -202,6 +200,14 @@ class res_partner(osv.osv):
 
     _columns = {
         'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
+    }
+
+class crm_claim_category(osv.Model):
+    _name = "crm.claim.category"
+    _description = "Category of claim"
+    _columns = {
+        'name': fields.char('Name', required=True, translate=True),
+        'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

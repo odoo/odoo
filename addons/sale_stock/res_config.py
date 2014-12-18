@@ -37,7 +37,7 @@ class sale_configuration(osv.osv_memory):
                  'and to automatically creates project tasks from procurement lines.\n'
                  '-This installs the modules project_timesheet and sale_service.'),
         'default_order_policy': fields.selection(
-            [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
+            [('manual', 'Create invoice on sales order'), ('picking', 'Create invoice on deliveries')],
             'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
@@ -84,9 +84,7 @@ class sale_configuration(osv.osv_memory):
         res = super(sale_configuration, self).set_sale_defaults(cr, uid, ids, context)
         return res
 
-    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, group_invoice_deli_orders, context=None):
+    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_deli_orders, context=None):
         if not group_invoice_deli_orders:
             return {'value': {'default_order_policy': 'manual'}}
-        if not group_invoice_so_lines:
-            return {'value': {'default_order_policy': 'picking'}}
         return {}

@@ -20,7 +20,9 @@ chat operators.
         "security/im_livechat_security.xml",
         "security/ir.model.access.csv",
         "views/im_livechat_view.xml",
-        "views/im_livechat.xml"
+        "views/im_livechat.xml",
+        "report/im_livechat_report.xml",
+        "im_livechat_data.xml"
     ],
     'demo': [
         "im_livechat_demo.xml",

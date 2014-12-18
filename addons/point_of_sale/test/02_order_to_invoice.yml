@@ -47,5 +47,7 @@
 -
   I test that the total of the attached invoice is correct
 -
-  !assert {model: pos.order, id: pos_order_pos1, string: Invoice inconsistent with its origin order}:
-     - invoice_id.amount_total == 1795.5
+  !python {model: pos.order}: |
+     from openerp.tools import float_compare
+     amount_total = self.browse(cr, uid, ref('pos_order_pos1')).amount_total
+     assert float_compare(amount_total, 1752.75, precision_digits=2) == 0, "Invoice not correct"

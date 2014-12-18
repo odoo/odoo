@@ -6,15 +6,37 @@
         groups="base.group_no_one"
         parent="base.menu_base_config" sequence="60" />
 
-        <!-- Helpdesk Support Categories Form View -->
+        <!-- Helpdesk Support Categories -->
+
+        <record id="crm_helpdesk_category_form" model="ir.ui.view">
+            <field name="name">crm.helpdesk.category.form</field>
+            <field name="model">crm.helpdesk.category</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk Categories">
+                    <group>
+                        <field name="name"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_category_tree" model="ir.ui.view">
+            <field name="name">crm.helpdesk.category.tree</field>
+            <field name="model">crm.helpdesk.category</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Categories">
+                    <field name="name"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
             <field name="name">Helpdesk Categories</field>
-            <field name="res_model">crm.case.categ</field>
+            <field name="res_model">crm.helpdesk.category</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-            <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
-            <field name="context" eval="{'object_id': ref('model_crm_helpdesk')}"/>
+            <field name="view_id" ref="crm_helpdesk_category_tree"/>
             <field name="help">Create and manage helpdesk categories to better manage and classify your support requests.</field>
         </record>
 
@@ -37,7 +59,7 @@
                 <sheet string="Helpdesk Support">
                     <group col="4" class="oe_header">
                         <field name="name" string="Query"/>
-                        <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" widget="selection" groups="base.group_multi_salesteams"/>
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                         <field name="date"/>
                         <field name="date_deadline"/>
@@ -52,7 +74,7 @@
                                 </group>
                                 <group string="Categorization">
                                     <field name="priority" widget="priority"/>
-                                    <field name="categ_id" domain="[('object_id.model', '=', 'crm.helpdesk')]" context="{'object_name': 'crm.helpdesk'}"/>
+                                    <field name="categ_id"/>
                                     <field name="channel_id"/>
                                 </group>
                             </group>
@@ -103,7 +125,7 @@
                     <field name="date" string="Date"/>
                     <field name="date_deadline"/>
                     <field name="user_id"/>
-                    <field name="section_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="priority"/>
                     <field name="state"/>
                 </tree>
@@ -138,15 +160,15 @@
                     <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
                     <separator/>
-                    <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                    <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('team_id.user_id','=',uid), ('team_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
-                    <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
                         <filter string="Request Month" icon="terp-go-month" domain="[]" help="Request Date by Month" context="{'group_by':'date'}" />

@@ -3,63 +3,41 @@
     min-height: 160px;
 }
 
-.oe_kanban_project_list > a > span:hover{
-    margin: 4px 0;
-    text-decoration: underline;
-}
-
-.openerp .oe_kanban_content h4 {
-    margin: 0 0 8px;
-}
-
-.oe_kanban_content > table {
-    width: 100%;
-}
-
-.oe_kanban_content > table > th {
-    padding: 0;
-    border-right: 1px solid #DDD;
-    vertical-align: top;
-    font-weight: normal;
-}
-
-.oe_kanban_content > table > td {
-    padding: 2px 0 2px 8px;
-    color: #888;
-}
-
-.oe_kanban_content .oe_ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-height: 100px;
-}
-
-.oe_kanban_project_fields div:nth-child(odd) {
-    border-right: 1px solid #dddddd;
-    vertical-align: top;
-    padding-right: 8px;
-}
-
-.oe_kanban_project_fields div:nth-child(even) {
-    padding-left: 8px;
-    color: #888888;
-}
-
-.oe_kanban_project_avatars {
-    margin-top: 8px;
-}
-
 .oe_kanban_project_avatars img {
     width: 30px;
-    height: 30px;
-    padding-left: 0px;
-    margin-top: 3px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 2px;
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+.oe_form_gantt_avatars:after {
+  font-family: "mnmliconsRegular" !important;
+  font-size: 21px;
+  font-weight: 300 !important;
+  content: "y";
+  top: 3px;
+  position: relative;
+}
 
+.openerp .oe_kanban_view .oe_kanban_project_task_spark {
+  /* Customize width and height of kanban according bootstrap3 */
+  width: 265px;
+  min-height: 120px;
+  /* End of customize */
+  cursor: default;
+}
 
+.openerp .oe_kanban_view .oe_sparkline_bar {
+    height: 20px;
+    width: 30px;
+    display: inline;
+
+}
+
+.openerp .oe_project_kanban_content {
+  margin-right: 16px !important;
+  margin-left: 16px !important;
+}
+.openerp .oe_margin_top_8 {
+  margin-top: 8px;
+}

@@ -55,18 +55,6 @@ def ean_checksum(eancode):
     check = int(10 - math.ceil(total % 10.0)) %10
     return check
 
-def check_ean(eancode):
-    """returns True if eancode is a valid ean13 string, or null"""
-    if not eancode:
-        return True
-    if len(eancode) != 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
-    return ean_checksum(eancode) == int(eancode[-1])
-
 def sanitize_ean13(ean13):
     """Creates and returns a valid ean13 from an invalid one"""
     if not ean13:
@@ -495,6 +483,7 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
+        'sequence': fields.integer('Sequence', help='Gives the sequence order when displaying a product list'),
         'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True,
             help="A precise description of the Product, used only for internal information purposes."),
@@ -519,8 +508,7 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'state': fields.selection([('',''),
-            ('draft', 'In Development'),
+        'state': fields.selection([('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status'),
@@ -573,7 +561,7 @@ class product_template(osv.osv):
         'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
-        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='EAN13 Barcode'),
+        'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
     }
 
@@ -715,8 +703,8 @@ class product_template(osv.osv):
         # TODO: this is needed to set given values to first variant after creation
         # these fields should be moved to product as lead to confusion
         related_vals = {}
-        if vals.get('ean13'):
-            related_vals['ean13'] = vals['ean13']
+        if vals.get('barcode'):
+            related_vals['barcode'] = vals['barcode']
         if vals.get('default_code'):
             related_vals['default_code'] = vals['default_code']
         if related_vals:
@@ -728,12 +716,6 @@ class product_template(osv.osv):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if 'uom_po_id' in vals:
-            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
-            for product in self.browse(cr, uid, ids, context=context):
-                old_uom = product.uom_po_id
-                if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
@@ -768,6 +750,7 @@ class product_template(osv.osv):
         'categ_id' : _default_category,
         'type' : 'consu',
         'active': True,
+        'sequence': 1,
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -937,7 +920,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
-        'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
+        'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -994,14 +977,6 @@ class product_product(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for product in self.read(cr, uid, ids, ['ean13'], context=context):
-            if not check_ean(product['ean13']):
-                return False
-        return True
-
-    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
-
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
 
@@ -1057,6 +1032,8 @@ class product_product(osv.osv):
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         if name:
@@ -1065,7 +1042,7 @@ class product_product(osv.osv):
             if operator in positive_operators:
                 ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
                 if not ids:
-                    ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+                    ids = self.search(cr, user, [('barcode','=',name)]+ args, limit=limit, context=context)
             if not ids and operator not in expression.NEGATIVE_TERM_OPERATORS:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
@@ -1084,6 +1061,17 @@ class product_product(osv.osv):
                 res = ptrn.search(name)
                 if res:
                     ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            # still no results, partner in context: search on supplier info as last hope to find something
+            if not ids and context.get('partner_id'):
+                supplier_ids = self.pool['product.supplierinfo'].search(
+                    cr, user, [
+                        ('name', '=', context.get('partner_id')),
+                        '|',
+                        ('product_code', operator, name),
+                        ('product_name', operator, name)
+                    ], context=context)
+                if supplier_ids:
+                    ids = self.search(cr, user, [('product_tmpl_id.seller_ids', 'in', supplier_ids)], limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
@@ -1168,7 +1156,7 @@ class product_product(osv.osv):
 class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
-    _rec_name = 'ean'
+    _rec_name = 'barcode'
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
@@ -1181,26 +1169,18 @@ class product_packaging(osv.osv):
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
-        'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
+        'barcode' : fields.char('Barcode', help="The Barcode of the package unit.", oldname="ean"),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
     }
-
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for pack in self.browse(cr, uid, ids, context=context):
-            if not check_ean(pack.ean):
-                return False
-        return True
-
-    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         res = []
         for pckg in self.browse(cr, uid, ids, context=context):
-            p_name = pckg.ean and '[' + pckg.ean + '] ' or ''
+            p_name = pckg.barcode and '[' + pckg.barcode + '] ' or ''
             p_name += pckg.ul.name
             res.append((pckg.id,p_name))
         return res
@@ -1249,7 +1229,7 @@ class product_supplierinfo(osv.osv):
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
-        'company_id':fields.many2one('res.company','Company',select=1),
+        'company_id':fields.many2one('res.company', string='Company',select=1),
     }
     _defaults = {
         'min_qty': 0.0,

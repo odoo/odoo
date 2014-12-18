@@ -31,10 +31,17 @@ from openerp.tools.translate import _
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
-    _inherit = "mail.thread"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
-    _description="Timesheet"
+    _description = "Timesheet"
+
+    _track = {
+        'state': {
+            'hr_timesheet_sheet.mt_timesheet_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
+            'hr_timesheet_sheet.mt_timesheet_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+        },
+    }
 
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
@@ -168,6 +175,7 @@ class hr_timesheet_sheet(osv.osv):
             ('draft','Open'),
             ('confirm','Waiting Approval'),
             ('done','Approved')], 'Status', select=True, required=True, readonly=True,
+            track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
                 \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
@@ -304,7 +312,7 @@ class account_analytic_account(osv.osv):
         if context is None:
             context = {}
         group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
-        if not context.get('default_use_timesheets') or group_template_required:
+        if not context.get('default_invoice_on_timesheets') or group_template_required:
             return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
         rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]

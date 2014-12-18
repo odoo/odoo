@@ -18,22 +18,29 @@
         <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing"/>
         <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
         <menuitem id="periodical_processing_invoicing" name="Invoicing" parent="menu_finance_periodical_processing"/>
-        <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" groups="account.group_account_user" sequence="6"/>
+        <menuitem id="periodical_processing_bank_statements" name="Bank Statements" parent="menu_finance_periodical_processing"/>
+        <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" groups="account.group_account_user" sequence="9"/>
         <menuitem id="menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35"/>
-        <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user"/>
-        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="14" groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user" sequence="8"/>
+        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="10" groups="group_account_user,group_account_manager"/>
         <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reports"/>
         <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_manager"/>
         <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration" sequence="1"/>
-        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="40"/>
+        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
+        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
+
         <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts" groups="analytic.group_analytic_accounting"/>
-        <menuitem id="menu_journals" sequence="15" name="Journals" parent="menu_finance_configuration" groups="group_account_manager"/>
-        <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_finance_configuration" sequence="55"/>
-        <menuitem id="base.menu_action_currency_form" name="Currencies" parent="menu_configuration_misc" sequence="20" groups="base.group_no_one"/>
+        <menuitem id="menu_journals" sequence="3" name="Journals" parent="menu_finance_configuration" groups="group_account_manager"/>
+        <menuitem id="menu_configuration_recurrent_entries" name="Reccuring Entries" parent="menu_finance_configuration" sequence="54"/>
+        <menuitem id="menu_config_multi_currency" name="Multi-Currencies" parent="menu_finance_configuration" sequence="9" groups="base.group_multi_currency"/>
+
+        <menuitem id="base.menu_action_currency_form" name="Currencies" parent="menu_config_multi_currency" sequence="20" groups="base.group_no_one"/>
         <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reports" sequence="100"/>
-        <menuitem id="menu_finance_entries" name="Journal Entries" parent="menu_finance" sequence="5" groups="group_account_user,group_account_manager"/>
-        <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" sequence="30" />
+        <menuitem id="menu_finance_entries" name="Journal Entries" parent="menu_finance" sequence="6" groups="group_account_user,group_account_manager"/>
+
+        <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="2"/>
+        <menuitem id="menu_account_reports" name="Reports" parent="account.account_account_menu" sequence="4" />
 
         <menuitem id="account.menu_finance_recurrent_entries" name="Recurring Entries"
             parent="menu_finance_periodical_processing" sequence="15"/>
@@ -45,6 +52,7 @@
 
         <menuitem id="next_id_22" name="Partners" parent="menu_finance_generic_reporting" sequence="1"/>
         <menuitem id="menu_multi_currency" name="Multi-Currencies" parent="menu_finance_generic_reporting" sequence="10" groups="base.group_multi_currency"/>
+
         <menuitem
             parent="account.menu_finance_legal_statement"
             id="final_accounting_reports"

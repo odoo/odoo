@@ -45,29 +45,54 @@ class QWeb(orm.AbstractModel):
         'a': 'href',
     }
 
-    def add_template(self, qcontext, name, node):
-        # preprocessing for multilang static urls
-        if request.website:
-            for tag, attr in self.URL_ATTRS.iteritems():
-                for e in node.iterdescendants(tag=tag):
-                    url = e.get(attr)
-                    if url:
-                        e.set(attr, qcontext.get('url_for')(url))
-        super(QWeb, self).add_template(qcontext, name, node)
+    re_remove_spaces = re.compile('\s+')
+    PRESERVE_WHITESPACE = [
+        'pre',
+        'textarea',
+        'script',
+        'style',
+    ]
 
-    def render_att_att(self, element, attribute_name, attribute_value, qwebcontext):
-        URL_ATTRS = self.URL_ATTRS.get(element.tag)
-        is_website = request.website
-        for att, val in super(QWeb, self).render_att_att(element, attribute_name, attribute_value, qwebcontext):
-            if is_website and att == URL_ATTRS and isinstance(val, basestring):
-                val = qwebcontext.get('url_for')(val)
-            yield (att, val)
+    CDN_TRIGGERS = {
+        'link':    'href',
+        'script':  'src',
+        'img':     'src',
+    }
 
+    def render_attribute(self, element, name, value, qwebcontext):
+        context = qwebcontext.context or {}
+        if not context.get('rendering_bundle'):
+            if name == self.URL_ATTRS.get(element.tag):
+                value = qwebcontext.get('url_for')(value)
+            if request and request.website and request.website.cdn_activated and name == self.CDN_TRIGGERS.get(element.tag):
+                value = request.website.get_cdn_url(value)
+
+        return super(QWeb, self).render_attribute(element, name, value, qwebcontext)
+
+    def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
+        if request and request.website and request.website.cdn_activated:
+            if qwebcontext.context is None:
+                qwebcontext.context = {}
+            qwebcontext.context['url_for'] = request.website.get_cdn_url
+        return super(QWeb, self).render_tag_call_assets(element, template_attributes, generated_attributes, qwebcontext)
 
     def get_converter_for(self, field_type):
         return self.pool.get(
             'website.qweb.field.' + field_type,
             self.pool['website.qweb.field'])
+
+    def render_text(self, text, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.tag not in self.PRESERVE_WHITESPACE:
+            text = self.re_remove_spaces.sub(' ', text.lstrip())
+        return super(QWeb, self).render_text(text, element, qwebcontext)
+
+    def render_tail(self, tail, element, qwebcontext):
+        compress = request and not request.debug and request.website and request.website.compress_html
+        if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
+            # No need to recurse because those tags children are not html5 parser friendly
+            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
+        return super(QWeb, self).render_tail(tail, element, qwebcontext)
 
 class Field(orm.AbstractModel):
     _name = 'website.qweb.field'
@@ -264,7 +289,6 @@ class HTML(orm.AbstractModel):
         content.extend(html.tostring(child)
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
-
 
 class Image(orm.AbstractModel):
     """

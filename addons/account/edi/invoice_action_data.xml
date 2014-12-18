@@ -12,8 +12,6 @@
             <field name="context">{'search_default_model_id':'account.invoice'}</field>
             <field name="context" eval="{'search_default_model_id': ref('account.model_account_invoice')}"/>
         </record>
-        <menuitem id="menu_email_templates" parent="menu_configuration_misc" action="action_email_templates" sequence="30" groups="base.group_no_one"/>
-
     </data>
 
     <!-- Mail template are declared in a NOUPDATE block

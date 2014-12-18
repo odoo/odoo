@@ -32,7 +32,8 @@ openerp.account = function (instance) {
             this.model_bank_statement_line = new instance.web.Model("account.bank.statement.line");
             this.reconciliation_menu_id = false; // Used to update the needaction badge
             this.formatCurrency; // Method that formats the currency ; loaded from the server
-    
+            this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
+
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
@@ -479,23 +480,17 @@ openerp.account = function (instance) {
                 .call("get_object_reference", ['account', 'action_bank_statement_tree'])
                 .then(function (result) {
                     var action_id = result[1];
-                    // Warning : altough I don't see why this widget wouldn't be directly instanciated by the
-                    // action manager, if it wasn't, this code wouldn't work. You'd have to do something like :
-                    // var action_manager = self;
-                    // while (! action_manager instanceof ActionManager)
-                    //    action_manager = action_manager.getParent();
-                    var action_manager = self.getParent();
-                    var breadcrumbs = action_manager.breadcrumbs;
-                    var found = false;
-                    for (var i=breadcrumbs.length-1; i>=0; i--) {
-                        if (breadcrumbs[i].action && breadcrumbs[i].action.id === action_id) {
-                            var title = breadcrumbs[i].get_title();
-                            action_manager.select_breadcrumb(i, _.isArray(title) ? i : undefined);
-                            found = true;
-                        }
+                    var breadcrumbs = self.action_manager.get_widgets();
+                    var widget = _.find(breadcrumbs, function(widget){
+                        return widget.action && widget.action.id === action_id;
+                    });
+                    if (widget) {
+                        self.action_manager.select_widget(widget, 0);
+                    } else {
+                        self.action_manager.do_action(action_id, {
+                            clear_breadcrumbs: true
+                        });
                     }
-                    if (!found)
-                        instance.web.Home(self);
                 });
         },
     
@@ -1177,7 +1172,7 @@ openerp.account = function (instance) {
             var self = this;
             $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_matched_lines").empty();
-
+    
             _(self.get("mv_lines_selected")).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_move_line", {line: line, selected: true}));
                 self.bindPopoverTo($line.find(".line_info_button"));
@@ -1194,7 +1189,7 @@ openerp.account = function (instance) {
     
             _(self.getCreatedLines()).each(function(line){
                 var $line = $(QWeb.render("bank_statement_reconciliation_created_line", {line: line}));
-                $line.click(function(){ self.removeLine($(this)) });
+                $line.find(".line_remove_button").click(function(){ self.removeLine($(this).closest(".created_line")) });
                 self.$(".tbody_created_lines").append($line);
                 if (line.no_remove_action) {
                     // Then the previous line's remove button deletes this line too
@@ -1246,62 +1241,50 @@ openerp.account = function (instance) {
     
         /** Properties changed */
     
-        // Updates the validation button, the "open balance" line and the  partial reconciliation sign
+        // Updates the validation button and the "open balance" line
         balanceChanged: function() {
             var self = this;
-                
-            // 'reset' the widget to invalid state
-            self.is_valid = false;
-            self.$(".tip_reconciliation_not_balanced").show();
+            var balance = self.get("balance");
             self.$(".tbody_open_balance").empty();
-            self.$(".button_ok").text("OK").removeClass("oe_highlight").attr("disabled", "disabled");
-
-            // Find out if the counterpart is lower than, equal or greater than the transaction being reconciled
-            var balance_type = undefined;
-            if (Math.abs(self.get("balance")).toFixed(3) === "0.000") balance_type = "equal";
-            else if (self.get("balance") * self.st_line.amount > 0) balance_type = "greater";
-            else if (self.get("balance") * self.st_line.amount < 0) balance_type = "lower";
-
-            // Adjust to different cases
-            if (balance_type === "equal") {
-                displayValidState(true);
-            } else if (balance_type === "greater") {
-                createOpenBalance("Create Write-off");
-            } else if (balance_type === "lower") {
-                if (self.st_line.has_no_partner) {
-                    createOpenBalance("Choose counterpart");
+            // Special case hack : no identified partner
+            if (self.st_line.has_no_partner) {
+                if (Math.abs(balance).toFixed(3) === "0.000") {
+                    self.$(".button_ok").addClass("btn-primary");
+                    self.$(".button_ok").removeAttr("disabled");
+                    self.$(".button_ok").text("OK");
+                    self.is_valid = true;
                 } else {
-                    displayValidState(false, "Keep open");
-                    createOpenBalance("Open balance");
+                    self.$(".button_ok").removeClass("btn-primary");
+                    self.$(".button_ok").attr("disabled", "disabled");
+                    self.$(".button_ok").text("OK");
+                    self.is_valid = false;
+                    var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                    var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
+                    var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
+                        debit: debit,
+                        credit: credit,
+                        account_code: self.map_account_id_code[self.st_line.open_balance_account_id]
+                    }));
+                    $line.find('.js_open_balance')[0].innerHTML = _t("Choose counterpart");
+                    self.$(".tbody_open_balance").append($line);
                 }
+                return;
             }
-
-            // Show or hide partial reconciliation
-            if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
-                self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
-                self.updateAccountingViewMatchedLines();
-            }
-
-            function displayValidState(higlight_ok_button, ok_button_text) {
-                self.is_valid = true;
-                self.$(".tip_reconciliation_not_balanced").hide();
-                self.$(".button_ok").removeAttr("disabled");
-                if (higlight_ok_button) self.$(".button_ok").addClass("oe_highlight");
-                if (ok_button_text !== undefined) self.$(".button_ok").text(ok_button_text)
-            }
-
-            function createOpenBalance(name) {
-                var balance = self.get("balance");
-                var amount = self.formatCurrency(Math.abs(balance), self.st_line.currency_id);
+    
+            if (Math.abs(balance).toFixed(3) === "0.000") {
+                self.$(".button_ok").addClass("btn-primary");
+                self.$(".button_ok").text("OK");
+            } else {
+                self.$(".button_ok").removeClass("btn-primary");
+                self.$(".button_ok").text("Keep open");
+                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
                 var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
-                    debit: balance > 0 ? amount : "",
-                    credit: balance < 0 ? amount : "",
+                    debit: debit,
+                    credit: credit,
                     account_code: self.map_account_id_code[self.st_line.open_balance_account_id]
                 }));
-                if (name !== undefined)
-                    $line.find(".cell_label").text(name);
-                self.$(".tbody_open_balance").empty().append($line);
+                self.$(".tbody_open_balance").append($line);
             }
         },
     
@@ -1544,8 +1527,20 @@ openerp.account = function (instance) {
             });
             // Dealing with floating-point
             balance = Math.round(balance*1000)/1000;
-
             self.set("balance", balance);
+    
+            // Propose partial reconciliation if necessary
+            if (lines_selected_num === 1 &&
+                self.st_line.amount * balance > 0 &&
+                self.st_line.amount * (mv_lines_selected[0].debit - mv_lines_selected[0].credit) < 0 &&
+                ! mv_lines_selected[0].partial_reconcile) {
+                
+                mv_lines_selected[0].propose_partial_reconcile = true;
+                self.updateAccountingViewMatchedLines();
+            } else if (lines_selected_num === 1) {
+                mv_lines_selected[0].propose_partial_reconcile = false;
+                self.updateAccountingViewMatchedLines();
+            }
         },
 
         // Loads move lines according to the widget's state

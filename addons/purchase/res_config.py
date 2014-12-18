@@ -28,9 +28,9 @@ class purchase_config_settings(osv.osv_memory):
 
     _columns = {
         'default_invoice_method': fields.selection(
-            [('manual', 'Based on purchase order lines'),
-             ('picking', 'Based on incoming shipments'),
-             ('order', 'Pre-generate draft invoices based on purchase orders'),
+            [('manual', 'Control supplier invoice on purchase order line'),
+             ('picking', 'Control supplier invoice on incoming shipments'),
+             ('order', 'Control supplier invoice on a pregenerated draft invoice'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
@@ -62,7 +62,7 @@ class purchase_config_settings(osv.osv_memory):
                  '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
-            help="Allows you to specify an analytic account on purchase orders."),
+            help="Allows you to specify an analytic account on purchase order lines."),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
@@ -88,7 +88,7 @@ class account_config_settings(osv.osv_memory):
                  '-This installs the module purchase_analytic_plans.'),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
-            help="Allows you to specify an analytic account on purchase orders."),
+            help="Allows you to specify an analytic account on purchase order lines."),
     }
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):

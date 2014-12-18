@@ -30,7 +30,7 @@ class account_partner_balance(osv.osv_memory):
     _name = 'account.partner.balance'
     _description = 'Print Account Partner Balance'
     _columns = {
-        'display_partner': fields.selection([('non-zero_balance', 'With balance is not equal to 0'), ('all', 'All Partners')]
+        'display_partner': fields.selection([('non-zero_balance', 'Display partners with balance is not equal to 0'), ('all', 'Display all partners')]
                                     ,'Display Partners'),
         'journal_ids': fields.many2many('account.journal', 'account_partner_balance_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }

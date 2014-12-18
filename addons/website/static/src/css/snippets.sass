@@ -43,6 +43,7 @@
         display: inline-block
         white-space: nowrap
         background: black
+        margin-right: 60px
         > div
             background: rgb(0,0,0)
             label
@@ -81,13 +82,18 @@
             +text-shadow(0 0 2px rgb(0,0,0))
         .oe_snippet_thumbnail_img
             height: 74px
-            +box-shadow(inset 0px 0px 0px 3px #333333)
+            width: 92px
+            background-size: cover
             @include transform( scale(1,1))
         span, div
             line-height: 18px
     & > :not(.oe_snippet_thumbnail)
         display: none !important
-
+    &.disable
+        .oe_snippet_thumbnail
+            background-color: rgba(255, 0, 0, 0.75)
+        .oe_snippet_thumbnail_img
+            opacity: 0.8
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
@@ -286,6 +292,8 @@
                 display: inline-block
                 float: none
                 margin: 0 -3px
+            > div
+                float: none
         .btn, a
             cursor: pointer
         .dropdown
@@ -507,6 +515,124 @@
             height: 16px
             display: inline-block
 
+/* ---- COLOR-PICKER ----  {{{ */
 
+.colorpicker
+    margin: 0 auto
+    background: transparent
+    border: 0
+    td
+        padding: 0
+        background: transparent
+        > *
+            width: 16px
+            height: 16px
+            border-radius: 2px
+            margin: 3px
+            padding: 0
+            border-width: 1px
+            display: block
+    .only-text
+        display: none
+    .automatic-color
+        background: #fff
+        border-left: 7px solid #f33
+        border-top: 7px solid #0e0
+        border-right: 8px solid #33f
+        border-bottom: 8px solid #fe0
+        margin: 4px 3px 3px 3px
+        width: 0
+        height: 0
+.cke_panel_container table.colorpicker
+    tr:first-child td
+        padding-top: 6px
+    tr:last-child td
+        padding-bottom: 6px
 
+// }}}
 
+/* ---- Table Snippet ----  {{{ */
+
+.table_desc
+    margin: 0 0 20px 0
+    width: 100%
+    word-break: break-all
+    border: 1px solid #dddddd
+
+.table_heading
+    background-color: #f5f5f5
+    border: 1px solid #dddddd
+    color: #666666
+    font-size: 14px
+    padding: 4px
+
+table.table_desc tr td
+    text-align: left
+    padding: 5px
+    font-size: 13px
+    &:first-child
+        width: 25%
+        font-weight: bold
+        border-bottom: 1px solid #c9c9c9
+        border-right: 1px solid #c9c9c9
+        border-left: none
+    &:last-child
+        border-bottom: 1px solid #c9c9c9
+
+// }}}
+
+/* ---- thumbnail ----  {{{ */
+
+.oe_snippet
+    &.o_block_banner .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_banner.png')
+    &.o_block_text_image .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
+    &.o_block_image_text .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_image_text.png')
+    &.o_block_jumbotron .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_jumbotron.png')
+    &.o_block_text_block .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_block.png')
+    &.o_block_title .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_title.png')
+    &.o_block_features .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_features.png')
+    &.o_block_big_picture .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_big_picture.png')
+    &.o_block_three_columns .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_three_columns.png')
+
+    &.o_block_well .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_well.png')
+    &.o_block_quote .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quote.png')
+    &.o_block_panel .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_panel.png')
+    &.o_block_separator .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_separator.png')
+    &.o_block_table .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_table.png')        
+    &.o_block_button .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_button.png')
+
+    &.o_block_image_gallery .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_image_gallery.png')
+    &.o_block_comparison .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_comparison.png')
+    &.o_block_button .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_button.png')
+    &.o_block_faq .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_faq.png')
+    &.o_block_references .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_references.png')
+    &.o_block_quotes_slider .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quotes_slider.png')
+    &.o_block_features .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_features.png')
+
+    &.o_block_parallax .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_parallax.png')
+    &.o_block_quotes_slider .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_quotes_slider.png')
+// }}}

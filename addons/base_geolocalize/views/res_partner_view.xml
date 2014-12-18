@@ -8,18 +8,24 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Geo Localization" name="geo_localization">
+                    <page string="Partner Assignation" name="geo_location">
                         <group colspan="2" col="2">
-                            <separator string="Geo Localization" colspan="2"/>
+                            <separator string="Geo Location" colspan="2"/>
                             <button
                                 string="Geo Localize"
                                 name="geo_localize"
                                 colspan="2"
                                 icon="gtk-apply"
                                 type="object"/>
-                            <field name="partner_latitude"/>
-                            <field name="partner_longitude"/>
-                            <field name="date_localization"/>
+                            <div>
+                                <span class="oe_inline"> ( On  </span>
+                                <field name="date_localization" nolabel="1" class="oe_inline"/>
+                                <span> : Lat : </span>
+                                <field name="partner_latitude" nolabel="1" class="oe_inline"/> 
+                                <span> ;  Long:  </span>
+                                <field name="partner_longitude" nolabel="1" class="oe_inline"/>
+                                <span>) </span>
+                            </div>    
                         </group>
                     </page>
                 </xpath>

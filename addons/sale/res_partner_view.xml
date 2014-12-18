@@ -58,34 +58,6 @@
             </field>
         </record>
 
-        <record id="res_partner_address_type" model="ir.ui.view">
-            <field name="name">res.partner.view.address_type</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//label[@for='type']" position="attributes">
-                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
-                    <attribute name="invisible">False</attribute>
-                </xpath>
-                <xpath expr="//div[@name='div_type']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
-                </xpath>
-                <!--  Version-specific hacks to avoid breaking view inheritance when the sale module
-                      is installed on top of an older 7.0 version of the base module
-                      (as the second embedded div_type was added later in the 7.0 release)
-                      TODO: remove the hacks in trunk -->
-                <xpath expr="//div[@name='div_type'][field[@name='use_parent_address']] | //field[@name='child_ids']//div[@name='div_type']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
-                </xpath>
-                <xpath expr="//label[@for='type'][following-sibling::div[@name='div_type']/field[@name='use_parent_address']] | //field[@name='child_ids']//label[@for='type']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
-                </xpath>
-            </field>
-        </record>
-
     </data>
 </openerp>
 

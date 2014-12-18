@@ -22,16 +22,30 @@
                         </group>
                         <notebook>
                             <page string="Conditions">
-                                <group>
+                                <group attrs="{'invisible': [('model', '!=', False)]}">
+                                    <p><b>Please choose the document type before setting the conditions.</b></p>
+                                </group>
+                                <group attrs="{'invisible': [('model', '=', False)]}">
                                     <field name="kind" required="1"
                                         on_change="onchange_kind(kind)"/>
-                                    <field name="filter_pre_id"
-                                        domain="[('model_id','=',model), ('user_id', '=', False)]"
-                                        context="{'default_model_id': model}"
-                                        attrs="{'invisible': [('kind', '!=', 'on_write')]}"/>
-                                    <field name="filter_id"
-                                        domain="[('model_id','=',model), ('user_id', '=', False)]"
-                                        context="{'default_model_id': model}"/>
+                                    <label for="filter_pre_id" attrs="{'invisible': [('kind', '!=', 'on_write')]}"/>
+                                    <div attrs="{'invisible': [('kind', '!=', 'on_write')]}">
+                                        <field name="filter_pre_domain" widget="char_domain" options="{'model_field': 'model'}"
+                                            class="oe_inline"/>
+                                        <div class="oe_edit_only oe_inline">Set selection based on a search filter:
+                                            <field name="filter_pre_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
+                                                class="oe_inline" context="{'default_model_id': model}"
+                                                on_change="onchange_filter_pre_id(filter_pre_id, context)"/></div>
+                                    </div>
+                                    <label for="filter_id"/>
+                                    <div>
+                                        <field name="filter_domain" widget="char_domain" options="{'model_field': 'model'}"
+                                            class="oe_inline"/>
+                                        <div class="oe_edit_only oe_inline">Set selection based on a search filter:
+                                            <field name="filter_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
+                                                class="oe_inline" context="{'default_model_id': model}"
+                                                on_change="onchange_filter_id(filter_id, context)"/></div>
+                                    </div>
                                     <field name="trg_date_id"
                                         attrs="{'invisible': [('kind', '!=', 'on_time')], 'required': [('kind', '=', 'on_time')]}"/>
                                     <label for="trg_date_range" string="Delay After Trigger Date"
@@ -43,16 +57,14 @@
                                     <field name="trg_date_calendar_id" class="oe_inline"
                                         attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
                                 </group>
-                                <p>
-                                    Select when the action must be run, and add filters and/or timing conditions.
-                                    <br/>
-                                    In order to create a new filter:
-                                    <ul>
+                                <div attrs="{'invisible': [('model', '=', False)]}">
+                                    <p>Select when the action must be run, and choose records and/or timing conditions.</p>
+                                    <p groups="base.group_no_one">You may also use filters instead of choosing records. In order to create a new filter:</p>
+                                    <ul groups="base.group_no_one">
                                         <li>Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Creation Date "is equal to" 01/01/2012)</li>
                                         <li>In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Create the 01/01/2012) and add the option "Share with all users"</li>
                                     </ul>
-                                    The filter must therefore be available in this page.
-                                </p>
+                                </div>
                             </page>
                             <page string="Actions">
                                 <group name="action_field" col="4" string="Fields to Change">

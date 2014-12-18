@@ -4,8 +4,8 @@
     'use strict';
     
     var website = openerp.website,
-    qweb = openerp.qweb;
-    website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml');
+        qweb = openerp.qweb;
+
     website.blog_discussion = openerp.Class.extend({
         init: function(options) {
             var self = this ;
@@ -17,7 +17,11 @@
                 public_user: false,
             };
             self.settings = $.extend({}, defaults, options);
-            self.do_render(self);
+
+            // TODO: bundlify qweb templates
+            website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml').then(function () {
+                self.do_render(self);
+            });
         },
         do_render: function(data) {
             var self = this;

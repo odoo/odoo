@@ -35,7 +35,7 @@
                     </header>
                     <sheet>
                     <div class="oe_right oe_button_box" name="button_box">
-                        <button name="do_view_procurements" string="Group's Procurements" type="object"/>
+                        <button name="do_view_procurements" class="oe_stat_button" icon="fa-bars" string="Group's Procurements" type="object"/>
                     </div>
                     <group>
                         <group>
@@ -60,7 +60,6 @@
                     </group>
                     <notebook>
                         <page string="Notes">
-                            <label for="name" class="oe_edit_only"/>
                             <field name="name" placeholder="External note..."/>
                         </page>
                         <page string="Extra Information">
@@ -212,25 +211,24 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Pull Rule">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <group>
-                            <group string="General Information">
-                                <field name="action"/>
-                                <field name="sequence"/>
-                                <field name="active"/>
-                            </group>
-                            <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
-                                <field name="group_propagation_option"/>
-                                <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
-                            </group>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="General Information">
+                            <field name="action"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
                         </group>
-                    </sheet>
+                        <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
+                            <field name="group_propagation_option"/>
+                            <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
     </data>
 </openerp>
+

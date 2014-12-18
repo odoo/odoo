@@ -7,7 +7,7 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis" type="pivot" stacked="True">
-                 <field name="section_id" type="row"/>
+                 <field name="team_id" type="row"/>
                  <field name="date" interval="month" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
@@ -32,7 +32,7 @@
         <field name="name">By Salesteam</field>
         <field name="model_id">sale.report</field>
         <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date:month', 'section_id']}</field>
+        <field name="context">{'group_by': ['date:month', 'team_id']}</field>
     </record>
     <record id="filter_isale_report_product" model="ir.filters">
         <field name="name">By Product</field>
@@ -52,7 +52,6 @@
                 <filter name="Quotations" domain="[('state','in',('draft','sent'))]"/>
                 <filter name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel'))]"/>
                 <separator/>
-                <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="user_id"/>
@@ -62,9 +61,10 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
-                    <filter string="Category of Product" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>

@@ -31,6 +31,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
             get_domain: function () {},
             get_groupby: function () {},
         };
+        this.$buttons = options.$buttons;
+        this.view_loaded = $.Deferred();
+    },
+
+    start: function() {
+        var $buttons = instance.web.qweb.render("graph-view-buttons");
+        this.$buttons.html($buttons);
+        return this._super();
     },
 
     view_loading: function (fields_view_get) {
@@ -45,6 +53,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             row_groupby: [],
             col_groupby: [],
             graph_view: this,
+            $buttons: this.$buttons
         };
 
         _.each(arch.children, function (field) {
@@ -72,9 +81,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (self.widget_config.measures.length === 0) {
             self.widget_config.measures.push('__count');
         }
+        this.view_loaded.resolve();
     },
 
     do_search: function (domain, context, group_by) {
+        var self = this;
+        this.view_loaded.done(function () {
+            self._do_search(domain, context, group_by);
+        });
+    },
+
+    _do_search: function (domain, context, group_by) {
         if (this.ignore_do_search) {
             this.ignore_do_search = false;
             return;
@@ -97,12 +114,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.widget_config.measures = measures;
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
-            this.graph_widget.appendTo(this.$el);
-            this.ViewManager.on('switch_mode', this, function (e) {
-                if (e === 'graph') {
-                    var group_bys = self.get_groupbys_from_searchview();
-                    this.graph_widget.set(domain, group_bys.group_by, group_bys.col_group_by, group_bys.measures);
-                }
+            this.graph_widget.appendTo(this.$el).done(function () {
+
             });
             return;
         }
@@ -209,7 +222,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             category:'GroupBy',
             values: this.make_groupby_values(groupbys, 'group_by'),
-            icon:'w',
+            icon:'fa fa-bars',
             field: this.search_view._s_groupby
         };
     },
@@ -218,7 +231,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return {
             category:'ColGroupBy',
             values: this.make_groupby_values(groupbys, 'col_group_by'),
-            icon:'f',
+            icon:'fa fa-level-down',
             field: this.col_search_field
         };
     },

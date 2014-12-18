@@ -108,7 +108,7 @@ class website_hr_recruitment(http.Controller):
         env = request.env(user=SUPERUSER_ID)
         value = {
             'source_id' : env.ref('hr_recruitment.source_website_company').id,
-            'name': '%s\'s Application' % post.get('partner_name'), 
+            'name': '%s\'s Application' % post.get('partner_name'),
         }
         for f in ['email_from', 'partner_name', 'description']:
             value[f] = post.get(f)
@@ -117,17 +117,14 @@ class website_hr_recruitment(http.Controller):
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
         value['partner_phone'] = post.pop('phone', False)
 
-        applicant_id = env['hr.applicant'].create(value).id
+        applicant = env['hr.applicant'].create(value)
         if post['ufile']:
-            attachment_value = {
-                'name': post['ufile'].filename,
-                'res_name': value['partner_name'],
-                'res_model': 'hr.applicant',
-                'res_id': applicant_id,
-                'datas': base64.encodestring(post['ufile'].read()),
-                'datas_fname': post['ufile'].filename,
-            }
-            env['ir.attachment'].create(attachment_value)
+            name = applicant.partner_name if applicant.partner_name else applicant.name
+            applicant.message_post(
+                body = _("%s's Application \n From: %s \n\n %s \n") % (name, applicant.email_from or "", applicant.description or ""),
+                attachments = [(post['ufile'].filename, post['ufile'].read())],
+                content_subtype = 'plaintext',
+                subtype = "hr_recruitment.mt_applicant_hired")
+
         return request.render("website_hr_recruitment.thankyou", {})
 
-# vim :et:
