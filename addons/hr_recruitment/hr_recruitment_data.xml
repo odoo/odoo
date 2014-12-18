@@ -54,22 +54,6 @@
          ${object.user_id.signature | safe}]]></field>
     </record>
 
-        <!--    HR Recruitment Source        -->
-
-    <record model="hr.recruitment.source" id="source_linkedin">
-        <field name="name">LinkedIn</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_monster">
-        <field name="name">Monster</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_word">
-        <field name="name">Word of Mouth</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_website_company">
-        <field name="name">Company Website</field>
-    </record>
-
-
         <!--    Resource(type_id)        -->
 
     <record model="hr.recruitment.degree" id="degree_graduate">
@@ -182,5 +166,9 @@
     <record id="tag_applicant_sales" model="hr.applicant_category">
         <field name="name">Sales</field>
     </record>
+    <record model="utm.campaign" id="utm_campaign_job">
+            <field name="name">Job Campaign</field>
+    </record>
+
 </data>
 </openerp>

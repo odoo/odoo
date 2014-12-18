@@ -107,7 +107,6 @@ class website_hr_recruitment(http.Controller):
         # public user can't create applicants (duh)
         env = request.env(user=SUPERUSER_ID)
         value = {
-            'source_id' : env.ref('hr_recruitment.source_website_company').id,
             'name': '%s\'s Application' % post.get('partner_name'),
         }
         for f in ['email_from', 'partner_name', 'description']:

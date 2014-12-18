@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import werkzeug
 from datetime import datetime
 
 from openerp import tools
@@ -38,8 +39,54 @@ class hr_recruitment_source(osv.osv):
     """ Sources of HR Recruitment """
     _name = "hr.recruitment.source"
     _description = "Source of Applicants"
+    _inherits = {"utm.source": "source_id"}
+
+    def _get_url(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        imd = self.pool['ir.model.data']
+        for source in self.browse(cr, uid, ids, context=context):
+            if not source.alias_id.id:
+                result[source.id] = ''
+            else:
+                result[source.id] = werkzeug.url_encode({
+                    'utm_campaign': imd.xmlid_to_object(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job').name,
+                    'utm_medium': imd.xmlid_to_object(cr, SUPERUSER_ID, 'utm.utm_medium_website').name,
+                    'utm_source': source.source_id.name
+                })
+        return result
+
+    def create_alias(self, cr, uid, ids, context=None):
+        imd = self.pool['ir.model.data']
+        for source in self.browse(cr, uid, ids, context=context):
+            alias_context = dict(context or {}, alias_model_name='hr.applicant', alias_parent_model_name='hr.job')
+            vals = {
+                'alias_parent_thread_id': source.job_id.id,
+                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
+                'alias_defaults': {
+                    'job_id': source.job_id.id,
+                    'campaign_id': imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'hr_recruitment.utm_campaign_job'),
+                    'medium_id': imd.xmlid_to_res_id(cr, SUPERUSER_ID, 'utm.utm_medium_email'),
+                    'source_id': source.source_id.id,
+                },
+            }
+            new_alias_id = self.pool['mail.alias'].create(cr, uid, vals, alias_context)
+            source.write({'alias_id': new_alias_id, 'name': source.source_id.name})
+        return
+
+    def _get_source(self, cr, uid, ids, context=None):
+        if ids:
+            return self.pool['hr.recruitment.source'].search(cr, uid, [('source_id', 'in', ids)], context=context)
+        return []
+
     _columns = {
-        'name': fields.char('Source Name', required=True, translate=True),
+        'source_id': fields.many2one('utm.source', 'Source', ondelete='cascade', required=True),
+        'url': fields.function(_get_url, string='Url', type='char', store={
+            'hr.recruitment.source': (lambda self, cr, uid, ids, ctx: ids, ['source_id'], 20),
+            'utm.source': (_get_source, ['name'], 20),
+        }),
+        'email': fields.related('alias_id', 'alias_name', string='Email', readonly=True, type='char'),
+        'job_id': fields.many2one('hr.job', 'Job ID'),
+        'alias_id': fields.many2one('mail.alias', 'Alias ID'),
     }
 
 class hr_recruitment_stage(osv.osv):
@@ -83,7 +130,7 @@ class hr_applicant(osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
 
     _track = {
         'emp_id': {
@@ -223,7 +270,6 @@ class hr_applicant(osv.Model):
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey.survey', string='Survey'),
         'response_id': fields.many2one('survey.user_input', "Response", ondelete='set null', oldname="response"),
         'reference': fields.char('Referred By'),
-        'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open',
                                     multi='day_open', type="float",
                                     store={'hr.applicant': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),

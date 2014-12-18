@@ -46,6 +46,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'calendar',
         'fetchmail',
         'web_kanban_gauge',
+        'utm',
     ],
     'data': [
         'wizard/hr_recruitment_create_partner_job_view.xml',

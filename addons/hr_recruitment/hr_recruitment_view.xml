@@ -34,7 +34,6 @@
         </field>
     </record>
 
-
     <!-- Applicants -->
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
@@ -53,7 +52,8 @@
                 <field name="stage_id"/>
                 <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
-                <field name="source_id" invisible="1"/>
+                <field name="medium_id"/>
+                <field name="source_id"/>
                 <field name="survey" invisible="1"/>
                 <field name="response_id" invisible="1"/>
                 <field name="priority"/>
@@ -139,6 +139,7 @@
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
                         <field name="priority" widget="priority"/>
+                        <field name="medium_id"/>
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>
@@ -337,6 +338,23 @@
               </p>
          </field>
     </record>
+    <record model="ir.actions.act_window" id="action_hr_job_sources">
+        <field name="name">Jobs Sources</field>
+        <field name="res_model">hr.recruitment.source</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('job_id', '=', active_id)]</field>
+        <field name="context">{'default_job_id': active_id}</field>
+        <field name="help" type="html">
+              <p>
+                Create here some alias...
+                That will allow you to track from where the applicant is coming from...
+              </p>
+              <p>
+                Create email and url for each distinct source. <br/>
+                When the applicant will arrive, you will know from wich source the Job position is coming.
+              </p>
+         </field>
+    </record>
 
     <!-- Jobs -->
     <record id="view_job_filter_recruitment" model="ir.ui.view">
@@ -418,6 +436,11 @@
                         name="action_get_attachment_tree_view" 
                         type="object">
                         <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                    <button class="oe_stat_button" type="action"
+                        name="%(action_hr_job_sources)d" icon="fa-share"
+                        context="{'default_job_id': active_id}">
+                        <div>Source / Alias</div>
                     </button>
                 </div>
             </xpath>
@@ -654,7 +677,10 @@
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
             <tree string="Sources of Applicants">
-                <field name="name"/>
+                <field name="source_id"/>
+                <field name="email"/>
+                <field name="url"/>
+                <button name="create_alias" string="Create alias" type="object" icon="gtk-redo" />
             </tree>
         </field>
     </record>
@@ -664,7 +690,11 @@
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
                 <group>
-                    <field name="name"/>
+                    <field name="source_id"/>
+                    <field name="email"/>
+                    <field name="url"/>
+                    <field name="alias_id" invisible="1"/>
+                    <field name="job_id" invisible="1"/>
                 </group>
             </form>
         </field>
