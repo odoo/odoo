@@ -5,9 +5,9 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID
 from psycopg2 import OperationalError
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_round
 import pytz
-
+import openerp
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -21,7 +21,6 @@ class procurement_order(osv.osv):
 
     def assign_group_date(self, cr, uid, ids, context=None):
         orderpoint_obj = self.pool.get("stock.warehouse.orderpoint")
-        group_obj = self.pool.get("procurement.group")
         for procurement in self.browse(cr, uid, ids, context=context):
             ops = orderpoint_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id),
                                                   ('product_id', '=', procurement.product_id.id)], context=context)
@@ -43,18 +42,22 @@ class procurement_order(osv.osv):
            :rtype: datetime
            :return: the desired Order Date for the PO
         """
-        calendar_obj = self.pool.get('resource.calendar')
-        if procurement.orderpoint_id.purchase_calendar_id and procurement.orderpoint_id.purchase_calendar_id.attendance_ids:
-            now_date = self._convert_to_tz(cr, uid, datetime.utcnow(), context=context)
-            res = calendar_obj._schedule_days(cr, uid, procurement.orderpoint_id.purchase_calendar_id.id, 1, now_date, compute_leaves=True, context=context)
-            if res:
-                return res[0][0]
-        seller_delay = int(procurement.product_id.seller_delay)
-        return schedule_date - relativedelta(days=seller_delay)
+        if procurement.next_purchase_date:
+            return datetime.strptime(procurement.next_purchase_date, DEFAULT_SERVER_DATETIME_FORMAT)
+        return super(procurement_order, self)._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
-    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
-        date_planned = start_date + relativedelta(days=orderpoint.product_id.seller_delay)
-        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+    def _get_purchase_schedule_date(self, cr, uid, procurement, company, context=None):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for the
+           Purchase Order Lines created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :rtype: datetime
+           :return: the desired Schedule Date for the PO lines
+        """
+        if procurement.next_delivery_date:
+            return datetime.strptime(procurement.next_delivery_date, DEFAULT_SERVER_DATETIME_FORMAT)
+        return super(procurement_order, self)._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, date=False, purchase_date = False, group=False, context=None):
         return {
@@ -153,14 +156,6 @@ class procurement_order(osv.osv):
             if res:
                 return (date1, res[0][1])
         return (False, False)
-
-    def _product_virtual_get(self, cr, uid, order_point, context=None):
-        product_obj = self.pool.get('product.product')
-        ctx = context.copy()
-        ctx.update({'location': order_point.location_id.id})
-        return product_obj._product_available(cr, uid,
-                                              [order_point.product_id.id],
-                                              context=ctx)[order_point.product_id.id]['virtual_available']
 
     def _convert_to_tz(self, cr, uid, date, context=None):
         if not context or not context.get('tz'):
@@ -276,20 +271,22 @@ class procurement_order(osv.osv):
                             prods = prod_qty[op.product_id.id]['virtual_available']
                             if prods is None:
                                 continue
-                            if prods <= op.product_min_qty:
+
+                            if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) < 0:
                                 qty = max(op.product_min_qty, op.product_max_qty) - prods
                                 reste = op.qty_multiple > 0 and qty % op.qty_multiple or 0.0
-                                if reste > 0:
+                                if float_compare(reste, 0.0, precision_rounding=op.product_uom.rounding) > 0:
                                     qty += op.qty_multiple - reste
 
-                                if qty < 0:
+                                if float_compare(qty, 0.0, precision_rounding=op.product_uom.rounding) <= 0:
                                     continue
 
                                 qty -= subtract_qty[op.id]
 
-                                if qty >= 0:
+                                qty_rounded = float_round(qty, precision_rounding=op.product_uom.rounding)
+                                if qty_rounded > 0:
                                     proc_id = procurement_obj.create(cr, uid,
-                                                                     self._prepare_orderpoint_procurement(cr, uid, op, qty, date=ndelivery, purchase_date=npurchase, group=group, context=context),
+                                                             self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, date=ndelivery, purchase_date=npurchase, group=group, context=context),
                                                                      context=context)
                                     tot_procs.append(proc_id)
                                     orderpoint_obj.write(cr, uid, [op.id], {'last_execution_date': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
