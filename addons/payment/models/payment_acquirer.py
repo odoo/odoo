@@ -121,7 +121,7 @@ class PaymentAcquirer(osv.Model):
 
              - partner_values: will contain name, lang, email, zip, address, city,
                country_id (int or False), country (browse or False), phone, reference
-             - tx_values: will contain refernece, amount, currency_id (int or False),
+             - tx_values: will contain reference, amount, currency_id (int or False),
                currency (browse or False), partner (browse or False)
         """
         acquirer = self.browse(cr, uid, id, context=context)

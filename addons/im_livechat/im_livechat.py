@@ -308,7 +308,7 @@ class LiveChatController(http.Controller):
             if country_ids:
                 country_id = country_ids[0]
         # extract url
-        url = request.httprequest.headers['Referer'] or request.httprequest.base_url
+        url = request.httprequest.headers.get('Referer', False) or request.httprequest.base_url
         # find the match rule for the given country and url
         rule = registry.get('im_livechat.channel.rule').match_rule(cr, uid, channel_id, url, country_id, context=context)
         if rule:

@@ -1,14 +1,14 @@
 .. queue:: backend/series
 
-=======
-Backend
-=======
+=================
+Building a Module
+=================
 
 Start/Stop the Odoo server
 ==========================
 
 Odoo uses a client/server architecture in which clients are web browsers
-accessing the odoo server via RPC.
+accessing the Odoo server via RPC.
 
 Business logic and extension is generally performed on the server side,
 although supporting client features (e.g. new data representation such as
@@ -1691,14 +1691,14 @@ server with the library ``xmlrpclib``::
    uid = xmlrpclib.ServerProxy(root + 'common').login(DB, USER, PASS)
    print "Logged in as %s (uid: %d)" % (USER, uid)
 
-   # Create a new idea
+   # Create a new note
    sock = xmlrpclib.ServerProxy(root + 'object')
    args = {
-       'name' : 'Another idea',
-       'description' : 'This is another idea of mine',
-       'inventor_id': uid,
+       'color' : 8,
+       'memo' : 'This is a note',
+       'create_uid': uid,
    }
-   idea_id = sock.execute(DB, uid, PASS, 'idea.idea', 'create', args)
+   note_id = sock.execute(DB, uid, PASS, 'note.note', 'create', args)
 
 .. exercise:: Add a new service to the client
 
@@ -1725,12 +1725,12 @@ server with the library ``xmlrpclib``::
             print "Logged in as %s (uid:%d)" % (USER,uid)
 
             call = functools.partial(
-                xmlcprlib.ServerProxy(ROOT + 'object').execute,
+                xmlrpclib.ServerProxy(ROOT + 'object').execute,
                 DB, uid, PASS)
 
             # 2. Read the sessions
             sessions = call('openacademy.session','search_read', [], ['name','seats'])
-            for session in sessions :
+            for session in sessions:
                 print "Session %s (%s seats)" % (session['name'], session['seats'])
             # 3.create a new session
             session_id = call('openacademy.session', 'create', {
@@ -1780,13 +1780,13 @@ with the standard Python libraries ``urllib2`` and ``json``::
     url = "http://%s:%s/jsonrpc" % (HOST, PORT)
     uid = call(url, "common", "login", DB, USER, PASS)
 
-    # create a new idea
+    # create a new note
     args = {
-        'name' : 'Another idea',
-        'description' : 'This is another idea of mine',
-        'inventor_id': uid,
+        'color' : 8,
+        'memo' : 'This is another note',
+        'create_uid': uid,
     }
-    idea_id = call(url, "object", "execute", DB, uid, PASS, 'idea.idea', 'create', args)
+    note_id = call(url, "object", "execute", DB, uid, PASS, 'note.note', 'create', args)
 
 Here is the same program, using the library
 `jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
@@ -1805,13 +1805,13 @@ Here is the same program, using the library
         args = [DB, uid, PASS, model, method] + list(args)
         return server.call(service="object", method="execute", args=args)
 
-    # create a new idea
+    # create a new note
     args = {
-        'name' : 'Another idea',
-        'description' : 'This is another idea of mine',
-        'inventor_id': uid,
+        'color' : 8,
+        'memo' : 'This is another note',
+        'create_uid': uid,
     }
-    idea_id = invoke('idea.idea', 'create', args)
+    note_id = invoke('note.note', 'create', args)
 
 Examples can be easily adapted from XML-RPC to JSON-RPC.
 

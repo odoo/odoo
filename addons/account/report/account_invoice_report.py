@@ -33,7 +33,7 @@ class account_invoice_report(models.Model):
     payment_term = fields.Many2one('account.payment.term', string='Payment Term', readonly=True)
     fiscal_position = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    categ_id = fields.Many2one('product.category', string='Category of Product', readonly=True)
+    categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
@@ -78,7 +78,7 @@ class account_invoice_report(models.Model):
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
-            'quantity', 'uos_id',
+            'quantity', 'uos_id', 'account_analytic_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
@@ -89,7 +89,7 @@ class account_invoice_report(models.Model):
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id,
+            SELECT sub.id, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
                 sub.payment_term, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
@@ -102,7 +102,7 @@ class account_invoice_report(models.Model):
         select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
-                    ail.product_id, ai.partner_id, ai.payment_term, 
+                    ail.product_id, ai.partner_id, ai.payment_term, ail.account_analytic_id,
                     CASE
                      WHEN u.uom_type::text <> 'reference'::text
                         THEN ( SELECT product_uom.name
@@ -172,7 +172,7 @@ class account_invoice_report(models.Model):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, ai.date_invoice, ai.id,
+                GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,

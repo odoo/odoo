@@ -294,7 +294,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             });
         };
         recurse(this.fields_view.arch);
-        var group_ids = _.map(groups, function (elem) { return elem.attributes.value[0]});
+        var group_ids = _.without(_.map(groups, function (elem) { return elem.attributes.value[0]}), undefined);
         if (this.grouped_by_m2o && group_ids.length && group_by_fields_to_read.length) {
             var group_data = new instance.web.DataSet(
                 this,
@@ -751,7 +751,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 [this.title],
                 _.map(
                     options.group_by_tooltip,
-                    function (key, value, list) { return self.values[value] || ''; })
+                    function (key, value, list) { return self.values && self.values[value] || ''; })
             ).join('\n\n');
             this.$(".oe_kanban_group_title_text").attr("title", this.tooltip || this.title || "");
         }

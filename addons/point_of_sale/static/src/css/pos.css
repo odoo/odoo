@@ -37,6 +37,7 @@ div.modal.in {
     top: 50%;
     left: 50%;
 }
+
 /* --- Generic Restyling and Resets --- */
 
 html {
@@ -53,6 +54,9 @@ td {
 
 .oe_hidden{
     display: none !important;
+}
+.oe_invisible{
+    visibility: hidden !important;
 }
 .clearfix:after {
     content:" ";
@@ -79,6 +83,20 @@ td {
 .pos button:hover{
     background: default;
 }
+.pos textarea {
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+}
+.pos textarea:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+
 
 .pos .oe_hidden{
     display: none !important;
@@ -307,6 +325,7 @@ td {
     margin-right:32px;
     line-height: 48px;
     font-style:italic;
+    cursor: pointer;
 }
 
 /*  b) The right part of the top-bar */
@@ -317,6 +336,11 @@ td {
     right:0;
     top:0;
     height:100%;
+    display: -webkit-flex;
+    display: flex;
+}
+.pos .pos-rightheader > * {
+    border-right: 1px solid #292929;
 }
 
 .pos .order-button{
@@ -347,6 +371,8 @@ td {
     height: 45px;
     border-bottom: solid 1px rgb(196, 196, 196);
     box-shadow: none;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .pos .order-button .order-sequence{
@@ -383,12 +409,19 @@ td {
 }
 
 .pos .order-selector {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
 }
 .pos .orders {
-    display: inline-block;
+    display: -webkit-flex;
+    display: flex;
     vertical-align: top;
     margin-left: 8px;
+    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */
@@ -487,20 +520,26 @@ td {
 /*  ********* The control buttons ********* */
 
 .pos .control-buttons {
-    padding-top: 8px;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 8px 13px 0px 11px;
+    margin-bottom: -6px;
 }
 .pos .control-button {
+    flex: 1;
     background: #e2e2e2;
-    border: solid 1px #BEBEBE;
+    border: solid 1px #cacaca;
     display: inline-block;
     line-height: 38px;
-    min-width: 38px;
+    min-width: 80px;
     text-align: center;
     border-radius: 3px;
     padding: 0px 10px;
     font-size: 18px;
     margin-left: 6px;
+    margin-bottom: 6px;
     cursor: pointer;
+    overflow: hidden;
 }
 .pos .control-button .fa{
     margin-right: 4px;
@@ -528,7 +567,7 @@ td {
 
 /*  ********* The actionpad (payment, set customer) ********* */
 
-.pos .actionpad{
+.pos .actionpad {
     padding: 8px 3px 8px 19px;
     display: inline-block;
     text-align: center;
@@ -579,11 +618,21 @@ td {
     vertical-align: middle;
     color: #555555;
 }
+.pos .numpad button:active {
+    background: black;
+    color: white;
+    border-color: transparent;
+}
 .pos .input-button {
     font-size: 24px;
 }
 .pos .mode-button {
     font-size: 14px;
+}
+.pos .mode-button.selected-mode {
+    color: white;
+    background: #6EC89B;
+    border-color: transparent;
 }
 
 /*  ********* The right pane contains the screens and headers ********* */
@@ -964,7 +1013,7 @@ td {
     overflow-y: auto;
 }
 .screen .right-content.pc60{
-    left:34%
+    left:34%;
 }
 .screen .centered-content{
     position: absolute;
@@ -1027,7 +1076,6 @@ td {
     width: 66px;
     height: 66px;
 }
-
 .pos .paymentlines-container {
     padding: 16px;
     padding-top: 0;
@@ -1065,7 +1113,6 @@ td {
     position: relative;
     border-radius: 3px;
 }
-
 .pos .paymentline > *{
     padding: 8px 12px;
 }
@@ -1091,28 +1138,28 @@ td {
     padding: 16px;
     float: right;
 }
-
-.payment-screen   .payment-buttons .button {
-    background: rgb(221, 221, 221);
+.payment-screen .payment-buttons .button {
+    background: rgb(220,220,220);
     line-height: 48px;
     margin-bottom: 4px;
     border-radius: 3px;
     font-size: 16px;
     padding: 0px 8px;
-    border: solid 1px rgb(202, 202, 202);
+    border: solid 1px rgb(200,200,200);
     cursor: pointer;
     text-align: center;
 }
-.payment-screen  .paymentlines-empty .total {
+.payment-screen .paymentlines-empty .total {
     text-align: center;
     padding: 24px 0px 18px;
     font-size: 64px;
     color: #43996E;
     text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
 }
-.payment-screen  .paymentlines-empty .message {
+.payment-screen .paymentlines-empty .message {
     text-align: center;
 }
+
 
 /* c) The receipt screen */
 
@@ -1128,6 +1175,7 @@ td {
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
 }
+
 .pos .pos-receipt-container {
     font-size: 0.75em;
     text-align: center;
@@ -1178,7 +1226,7 @@ td {
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
-    .pos .keyboard_frame, 
+    .pos .keyboard_frame,
     .pos .receipt-screen header,
     .pos .receipt-screen .top-content,
     .pos .receipt-screen .centered-content .button {
@@ -1208,7 +1256,6 @@ td {
     .pos .receipt-screen .centered-content{
         position: static;
         border: none;
-        margin: none;
     }
     .pos .pos-receipt-container {
         text-align: left;
@@ -1614,11 +1661,11 @@ td {
     vertical-align: top;
 }
 .splitbill-screen .paymentmethods,
-.payment-screen   .paymentmethods {
+.payment-screen .paymentmethods {
     margin: 16px;
 }
-.splitbill-screen .paymentmethod,
-.payment-screen   .paymentmethod {
+.splitbill-screen .paymentmethods .button,
+.payment-screen .paymentmethods .button {
     background: rgb(221, 221, 221);
     line-height: 40px;
     margin-bottom: 4px;
@@ -1629,7 +1676,7 @@ td {
     text-align: center;
 }
 .splitbill-screen .paymentmethod.active,
-.payment-screen   .paymentmethod.active {
+.payment-screen .paymentmethod.active {
     background: #6EC89B;
     color: white;
     border-color: #6EC89B;
@@ -1854,6 +1901,7 @@ td {
     height: 40px;
     line-height:40px;
     text-align:center;
+    border-radius: 2px;
     margin:3px;
     margin-top:10px;
     margin-right:10px;
@@ -1894,6 +1942,91 @@ td {
     height: 180px;
     line-height:180px;
 }
+.pos .popup input,
+.pos .popup-input {
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    background: white;
+    min-height: 44px;
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+    box-sizing: border-box;
+    width: 80%;
+}
+.pos .popup input:focus,
+.pos .popup-input.active {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px #6EC89B;
+}
+.pos .popup.popup-selection .message {
+    margin-top: 0;
+}
+.pos .popup.popup-selection .selection {
+    overflow-y: auto;
+    max-height: 305px;
+    font-size: 16px;
+    margin: 0 -10px;
+    width: auto;
+    line-height: 50px;
+    border-top: dashed 1px rgb(215,215,215);
+}
+.pos .popup.popup-selection .selection-item {
+    width: auto;
+    background: rgb(230,230,230);
+    cursor: pointer;
+    text-align: left;
+    padding: 0px 16px;
+}
+.pos .popup.popup-selection .selection-item:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .popup-numpad {
+    margin: 12px auto;
+    text-align: left;
+    width: 244px;
+}
+.pos .popup-number .message {
+    margin-top: 0;
+}
+.pos .popup-numpad .input-button,
+.pos .popup-numpad .mode-button {
+    background: none;
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 25px;
+    margin: 4px;
+    vertical-align: top;
+    color: #444;
+}
+.pos .popup-numpad .input-button:active,
+.pos .popup-numpad .mode-button:active {
+    background: #444;
+    color: white;
+    border-color: #444;
+}
+
+.pos .popup.popup-password {
+    width: 238px;
+    margin-left: -119px;
+}
+.pos .popup-password .mode-button.add,
+.pos .popup-password .input-button.dot {
+    display: none;
+}
+.pos .popup-password .popup-numpad {
+    width: 182px;
+}
+.pos .popup-password .popup-input {
+    width: 70%;
+    -webkit-text-security: disc;
+ }
 
 /*  ********* The Webkit Scrollbar  ********* */
 

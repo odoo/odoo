@@ -67,6 +67,14 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+# don't trigger debugger for those exceptions, they carry user-facing warnings
+# and indications, they're not necessarily indicative of anything being
+# *broken*
+NO_POSTMORTEM = (openerp.osv.orm.except_orm,
+                 openerp.exceptions.AccessError,
+                 openerp.exceptions.AccessDenied,
+                 openerp.exceptions.Warning,
+                 openerp.exceptions.RedirectWarning)
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -110,9 +118,7 @@ def dispatch_rpc(service_name, method, params):
                 openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
-            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
-            openerp.exceptions.RedirectWarning):
+    except NO_POSTMORTEM:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(openerp.tools.exception_to_unicode(e))
@@ -256,13 +262,18 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
+        if not isinstance(exception, NO_POSTMORTEM):
+            openerp.tools.debugger.post_mortem(
+                openerp.tools.config, sys.exc_info())
         raise
 
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
-            raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                % (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
+            msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
+            params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
+            _logger.error(msg, *params)
+            raise werkzeug.exceptions.BadRequest(msg % params)
 
         kwargs.update(self.endpoint.arguments)
 
@@ -463,7 +474,13 @@ class JsonRequest(WebRequest):
             request = self.httprequest.stream.read()
 
         # Read POST content or POST Form Data named "request"
-        self.jsonrequest = simplejson.loads(request)
+        try:
+            self.jsonrequest = simplejson.loads(request)
+        except simplejson.JSONDecodeError:
+            msg = 'Invalid JSON data: %r' % (request,)
+            _logger.error('%s: %s', self.httprequest.path, msg)
+            raise werkzeug.exceptions.BadRequest(msg)
+
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
@@ -499,15 +516,19 @@ class JsonRequest(WebRequest):
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, (openerp.exceptions.Warning, SessionExpiredException)):
+                _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
-                    'message': "OpenERP Server Error",
+                    'message': "Odoo Server Error",
                     'data': serialize_exception(exception)
             }
             if isinstance(exception, AuthenticationError):
                 error['code'] = 100
-                error['message'] = "OpenERP Session Invalid"
+                error['message'] = "Odoo Session Invalid"
+            if isinstance(exception, SessionExpiredException):
+                error['code'] = 100
+                error['message'] = "Odoo Session Expired"
             return self._json_response(error=error)
 
     def dispatch(self):

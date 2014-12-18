@@ -182,9 +182,9 @@
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
-                                <span class="oe_e">í</span> <!-- icon for dropdown menu -->
+                                <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
-                                    <li><a type="edit">Survey Options</a></li>
+                                    <li><a type="edit">Edit Survey</a></li>
                                     <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>

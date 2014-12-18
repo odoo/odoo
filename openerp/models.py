@@ -241,6 +241,11 @@ class MetaModel(api.Meta):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+        # check for new-api conversion error: leave comma after field definition
+        for key, val in attrs.iteritems():
+            if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
+                _logger.error("Trailing comma after field definition: %s.%s", self, key)
+
         # transform columns into new-style fields (enables field inheritance)
         for name, column in self._columns.iteritems():
             if name in self.__dict__:
@@ -3007,8 +3012,8 @@ class BaseModel(object):
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
-    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ fields_get([fields])
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True, attributes=None):
+        """ fields_get([fields][, attributes])
 
         Return the definition of each field.
 
@@ -3016,15 +3021,13 @@ class BaseModel(object):
         dictionaries. The _inherits'd fields are included. The string, help,
         and selection (if present) attributes are translated.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param allfields: list of fields
-        :param context: context arguments, like lang, time zone
-        :return: dictionary of field dictionaries, each one describing a field of the business object
-        :raise AccessError: * if user has no create/write rights on the requested object
-
+        :param allfields: list of fields to document, all if empty or not provided
+        :param attributes: list of description attributes to return for each field, all if empty or not provided
         """
         recs = self.browse(cr, user, [], context)
+
+        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
+        readonly = not (has_access('write') or has_access('create'))
 
         res = {}
         for fname, field in self._fields.iteritems():
@@ -3034,14 +3037,15 @@ class BaseModel(object):
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
-            res[fname] = field.get_description(recs.env)
 
-        # if user cannot create or modify records, make all fields readonly
-        has_access = functools.partial(recs.check_access_rights, raise_exception=False)
-        if not (has_access('write') or has_access('create')):
-            for description in res.itervalues():
+            description = field.get_description(recs.env)
+            if readonly:
                 description['readonly'] = True
                 description['states'] = {}
+            if attributes:
+                description = {k: v for k, v in description.iteritems()
+                               if k in attributes}
+            res[fname] = description
 
         return res
 
@@ -3617,38 +3621,67 @@ class BaseModel(object):
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        .. _openerp/models/relationals/format:
+        * For numeric fields (:class:`~openerp.fields.Integer`,
+          :class:`~openerp.fields.Float`) the value should be of the
+          corresponding type
+        * For :class:`~openerp.fields.Boolean`, the value should be a
+          :class:`python:bool`
+        * For :class:`~openerp.fields.Selection`, the value should match the
+          selection values (generally :class:`python:str`, sometimes
+          :class:`python:int`)
+        * For :class:`~openerp.fields.Many2one`, the value should be the
+          database identifier of the record to set
+        * Other non-relational fields use a string for value
 
-        .. note:: Relational fields use a special "commands" format to manipulate their values
+          .. danger::
 
-            This format is a list of command triplets executed sequentially,
-            possible command triplets are:
+              for historical and compatibility reasons,
+              :class:`~openerp.fields.Date` and
+              :class:`~openerp.fields.Datetime` fields use strings as values
+              (written and read) rather than :class:`~python:datetime.date` or
+              :class:`~python:datetime.datetime`. These date strings are
+              UTC-only and formatted according to
+              :const:`openerp.tools.misc.DEFAULT_SERVER_DATE_FORMAT` and
+              :const:`openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
+        * .. _openerp/models/relationals/format:
 
-            ``(0, _, values: dict)``
-                links to a new record created from the provided values
-            ``(1, id, values: dict)``
-                updates the already-linked record of id ``id`` with the
-                provided ``values``
-            ``(2, id, _)``
-                unlinks and deletes the linked record of id ``id``
-            ``(3, id, _)``
-                unlinks the linked record of id ``id`` without deleting it
-            ``(4, id, _)``
-                links to an existing record of id ``id``
-            ``(5, _, _)``
-                unlinks all records in the relation, equivalent to using
-                the command ``3`` on every linked record
-            ``(6, _, ids)``
-                replaces the existing list of linked records by the provoded
-                ones, equivalent to using ``5`` then ``4`` for each id in
-                ``ids``)
+          :class:`~openerp.fields.One2many` and
+          :class:`~openerp.fields.Many2many` use a special "commands" format to
+          manipulate the set of records stored in/associated with the field.
 
-            (in command triplets, ``_`` values are ignored and can be
-            anything, generally ``0`` or ``False``)
+          This format is a list of triplets executed sequentially, where each
+          triplet is a command to execute on the set of records. Not all
+          commands apply in all situations. Possible commands are:
 
-            Any command can be used on :class:`~openerp.fields.Many2many`,
-            only ``0``, ``1`` and ``2`` can be used on
-            :class:`~openerp.fields.One2many`.
+          ``(0, _, values)``
+              adds a new record created from the provided ``value`` dict.
+          ``(1, id, values)``
+              updates an existing record of id ``id`` with the values in
+              ``values``. Can not be used in :meth:`~.create`.
+          ``(2, id, _)``
+              removes the record of id ``id`` from the set, then deletes it
+              (from the database). Can not be used in :meth:`~.create`.
+          ``(3, id, _)``
+              removes the record of id ``id`` from the set, but does not
+              delete it. Can not be used on
+              :class:`~openerp.fields.One2many`. Can not be used in
+              :meth:`~.create`.
+          ``(4, id, _)``
+              adds an existing record of id ``id`` to the set. Can not be
+              used on :class:`~openerp.fields.One2many`.
+          ``(5, _, _)``
+              removes all records from the set, equivalent to using the
+              command ``3`` on every record explicitly. Can not be used on
+              :class:`~openerp.fields.One2many`. Can not be used in
+              :meth:`~.create`.
+          ``(6, _, ids)``
+              replaces all existing records in the set by the ``ids`` list,
+              equivalent to using the command ``5`` followed by a command
+              ``4`` for each ``id`` in ``ids``. Can not be used on
+              :class:`~openerp.fields.One2many`.
+
+          .. note:: Values marked as ``_`` in the list above are ignored and
+                    can be anything, generally ``0`` or ``False``.
         """
         if not self:
             return True
@@ -4754,14 +4787,15 @@ class BaseModel(object):
 
         By convention, new records are returned as existing.
         """
-        ids = filter(None, self._ids)           # ids to check in database
+        ids, new_ids = [], []
+        for i in self._ids:
+            (ids if isinstance(i, (int, long)) else new_ids).append(i)
         if not ids:
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
-        self._cr.execute(query, (ids,))
-        ids = ([r[0] for r in self._cr.fetchall()] +    # ids in database
-               [id for id in self._ids if not id])      # new ids
-        existing = self.browse(ids)
+        self._cr.execute(query, [tuple(ids)])
+        ids = [r[0] for r in self._cr.fetchall()]
+        existing = self.browse(ids + new_ids)
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
             exc = MissingError(_("Record does not exist or has been deleted."))
@@ -5328,22 +5362,24 @@ class BaseModel(object):
         return record
 
     #
-    # Dirty flag, to mark records modified (in draft mode)
+    # Dirty flags, to mark record fields modified (in draft mode)
     #
 
-    @property
-    def _dirty(self):
+    def _is_dirty(self):
         """ Return whether any record in `self` is dirty. """
         dirty = self.env.dirty
         return any(record in dirty for record in self)
 
-    @_dirty.setter
-    def _dirty(self, value):
-        """ Mark the records in `self` as dirty. """
-        if value:
-            map(self.env.dirty.add, self)
-        else:
-            map(self.env.dirty.discard, self)
+    def _get_dirty(self):
+        """ Return the list of field names for which `self` is dirty. """
+        dirty = self.env.dirty
+        return list(dirty.get(self, ()))
+
+    def _set_dirty(self, field_name):
+        """ Mark the records in `self` as dirty for the given `field_name`. """
+        dirty = self.env.dirty
+        for record in self:
+            dirty[record].add(field_name)
 
     #
     # "Dunder" methods
@@ -5745,7 +5781,7 @@ class BaseModel(object):
                     field = self._fields[name]
                     newval = record[name]
                     if field.type in ('one2many', 'many2many'):
-                        if newval != oldval or newval._dirty:
+                        if newval != oldval or newval._is_dirty():
                             # put new value in result
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),

@@ -15,6 +15,7 @@
                     <div>
                         <field name="website_id" on_change="on_change_website_id(website_id)"/>
                         <group string="Domain">
+                            <field name="website_name" />
                             <label for="google_analytics_key"/>
                             <div name="google_analytics_key">
                                 <div>
@@ -28,13 +29,13 @@
                             <label for="social_twitter"/>
                             <div name="social_twitter">
                                 <div class="oe_inline">
-                                    <field name="social_twitter" placeholder="https://twitter.com/openerp"/>
+                                    <field name="social_twitter" placeholder="https://twitter.com/Odoo"/>
                                 </div>
                             </div>
                             <label for="social_facebook"/>
                             <div name="social_facebook">
                                 <div class="oe_inline">
-                                    <field name="social_facebook" placeholder="https://facebook.com/openerp"/>
+                                    <field name="social_facebook" placeholder="https://www.facebook.com/Odoo"/>
                                 </div>
                             </div>
                             <label for="social_github"/>
@@ -46,19 +47,19 @@
                             <label for="social_linkedin"/>
                             <div name="social_linkedin">
                                 <div class="oe_inline">
-                                    <field name="social_linkedin" placeholder="http://www.linkedin.com/company/openerp"/>
+                                    <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo"/>
                                 </div>
                             </div>
                             <label for="social_youtube"/>
                             <div name="social_youtube">
                                 <div class="oe_inline">
-                                    <field name="social_youtube" placeholder="http://www.youtube.com/channel/HCU842OHPPNrQ"/>
+                                    <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline"/>
                                 </div>
                             </div>
                             <label for="social_googleplus"/>
                             <div name="social_googleplus">
                                 <div class="oe_inline">
-                                    <field name="social_googleplus" placeholder="https://plus.google.com/+openerp"/>
+                                    <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
                                 </div>
                             </div>
                         </group>
@@ -89,7 +90,7 @@
                             <label for="compress_html"/>
                             <div name="compress_html">
                                 <div class="oe_inline">
-                                    <field name="compress_html"/> Compress rendered html for a better google pagespeed result
+                                    <field name="compress_html"/> Compress rendered HTML for a better Google PageSpeed result
                                 </div>
                             </div>
                             <field name="cdn_activated"/>

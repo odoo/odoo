@@ -60,12 +60,14 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Supplier" name="group_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Responsible" name="Responsible" context="{'group_by':'user_id'}"/>
-                    <filter string="Category of product" name="group_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Product Category" name="group_category_id" context="{'group_by':'category_id'}"/>
                     <filter string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
                     <filter string="Order Month" context="{'group_by':'date:month'}" help="Order of Day"/>
+                    <filter string="Fiscal Position" context="{'group_by':'fiscal_position'}" help="Purchase Order Fiscal Position"/>
                 </group>
             </search>
         </field>

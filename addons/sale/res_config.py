@@ -59,6 +59,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
                  '-This installs the module sale_margin.'),
+        'module_sale_layout': fields.boolean("Allow to categorize sale order lines",
+            help='Allows to create categories to structure lines in pdf reports.\n'
+                 '-This installs the module sale_layout.'),
         'module_website_quote': fields.boolean("Allow online quotations and templates",
             help='This adds the online quotation'),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",

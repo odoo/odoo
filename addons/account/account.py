@@ -241,7 +241,7 @@ class account_account(models.Model):
 class account_journal(models.Model):
     _name = "account.journal"
     _description = "Journal"
-    _order = 'code'
+    _order = 'sequence, code'
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Code', size=5, required=True, help="The code will be displayed on reports.")
@@ -275,6 +275,7 @@ class account_journal(models.Model):
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     sequence_refund_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
         help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
+    sequence= fields.Integer(string='Sequence', help='Used to order Journals')
 
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')

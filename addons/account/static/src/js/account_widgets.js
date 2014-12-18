@@ -138,7 +138,7 @@ openerp.account = function (instance) {
                         relation: "account.analytic.account",
                         string: _t("Analytic Acc."),
                         type: "many2one",
-                        domain: [['type','!=','view'], ['state','not in',['close','cancelled']]],
+                        domain: [['type', '!=', 'view'], ['state', 'not in', ['close','cancelled']]],
                     },
                 },
             };
@@ -2177,6 +2177,8 @@ openerp.account = function (instance) {
                     return $.when(self.updateProgress(false)).then(function(){
                         return self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                     });
+                }).always(function() {
+                    self.$(".button_ok").removeAttr("disabled");
                 });
             });
         },

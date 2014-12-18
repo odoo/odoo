@@ -1,7 +1,8 @@
-function openerp_pos_basewidget(instance, module){ //module is instance.point_of_sale
+openerp.point_of_sale.load_basewidget = function load_basewidget(instance, module){ //module is instance.point_of_sale
+    "use strict";
 
     var round_di = instance.web.round_decimals;
-    var round_pr = instance.web.round_precision
+    var round_pr = instance.web.round_precision;
 
     // This is a base class for all Widgets in the POS. It exposes relevant data to the 
     // templates : 
@@ -21,6 +22,17 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         },
         format_currency: function(amount,precision){
             var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
+
+            amount = this.format_currency_no_symbol(amount,precision);
+
+            if (currency.position === 'after') {
+                return amount + ' ' + (currency.symbol || '');
+            } else {
+                return (currency.symbol || '') + ' ' + amount;
+            }
+        },
+        format_currency_no_symbol: function(amount, precision) {
+            var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
             var decimals = currency.decimals;
 
             if (precision && (typeof this.pos.dp[precision]) !== undefined) {
@@ -28,7 +40,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             }
 
             this.format_currency_no_symbol = function(amount){
-                amount = round_pr(amount,this.currency.rounding);
+                amount = round_pr(amount,currency.rounding);
                 amount = amount.toFixed(decimals);
                 return amount;
             };
@@ -37,11 +49,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                 amount = round_di(amount,decimals).toFixed(decimals);
             }
 
-            if (currency.position === 'after') {
-                return amount + ' ' + (currency.symbol || '');
-            } else {
-                return (currency.symbol || '') + ' ' + amount;
-            }
+            return amount;
         },
         show: function(){
             this.$el.removeClass('oe_hidden');
@@ -52,6 +60,19 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         format_pr: function(value,precision){
             var decimals = precision > 0 ? Math.max(0,Math.ceil(Math.log(1.0/precision) / Math.log(10))) : 0;
             return value.toFixed(decimals);
+        },
+        format_fixed: function(value,integer_width,decimal_width){
+            value = value.toFixed(decimal_width || 0);
+            var width = value.indexOf('.');
+            if (width < 0 ) {
+                width = value.length;
+            }
+            var missing = integer_width - width;
+            while (missing > 0) {
+                value = '0' + value;
+                missing--;
+            }
+            return value;
         },
     });
 

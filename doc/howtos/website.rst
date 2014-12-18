@@ -1,7 +1,7 @@
 .. queue:: website/series
 
 ==================
-Building a website
+Building a Website
 ==================
 
 .. warning::
@@ -142,7 +142,7 @@ First define an Odoo model file and import it:
 .. patch::
 
 Then setup :ref:`basic access control <reference/security/acl>` for the model
-and and add them to the manifest:
+and add them to the manifest:
 
 .. patch::
 
@@ -211,7 +211,7 @@ integration and a few other services (e.g. default styling, theming) via the
 #. then add the ``website=True`` flag on the controller, this sets up a few
    new variables on :ref:`the request object <reference/http/request>` and
    allows using the website layout in our template
-#. use the wesite layout in the template
+#. use the website layout in the template
 
 .. patch::
 
@@ -307,7 +307,7 @@ interfaces. Change the *person* template to use ``t-field``:
 
 Restart Odoo and upgrade the module, there is now a placeholder under the
 teacher's name and a new zone for blocks in :guilabel:`Edit` mode. Content
-dropped there is stored in the correspoding teacher's ``biography`` field, and
+dropped there is stored in the corresponding teacher's ``biography`` field, and
 thus specific to that teacher.
 
 The teacher's name is also editable, and when saved the change is visible on
@@ -344,7 +344,7 @@ The conceptual structure of the Odoo backend is simple:
 #. actions. Actions have various types: links, reports, code which Odoo should
    execute or data display. Data display actions are called *window actions*,
    and tell Odoo to display a given *model* according to a set of views…
-#. a view has a type, a the broad category to which it corresponds (a list,
+#. a view has a type, a broad category to which it corresponds (a list,
    a graph, a calendar) and an *architecture* which customises the way the
    model is displayed inside the view.
 
@@ -457,8 +457,8 @@ though they may have to be looked for.
     * to extend a model in-place, it's :attr:`inherited
       <openerp.models.Model._inherit>` without giving it a new
       :attr:`~openerp.models.Model._name`
-    * ``product.template`` already uses the discussions system, so we don't
-      can remove it from our extension model
+    * ``product.template`` already uses the discussions system, so we can
+      remove it from our extension model
     * we're creating our courses as *published* by default so they can be
       seen without having to log in
 

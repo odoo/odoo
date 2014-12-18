@@ -41,7 +41,7 @@ class crm_phonecall_report(osv.osv):
 
     _columns = {
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'team_id':fields.many2one('crm.team', 'team', oldname='section_id', readonly=True),
+        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),

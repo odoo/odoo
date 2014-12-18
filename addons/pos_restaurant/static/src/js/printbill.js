@@ -12,10 +12,11 @@ function openerp_restaurant_printbill(instance,module){
 
                 printbill.click(function(){
                     var order = self.pos.get('selectedOrder');
-                    if(order.get('orderLines').models.length > 0){
+                    if(order.get_orderlines().length > 0){
                         var receipt = order.export_for_printing();
+                            receipt.bill = true;
                         self.pos.proxy.print_receipt(QWeb.render('BillReceipt',{
-                            receipt: receipt, widget: self,
+                            receipt: receipt, widget: self, pos: self.pos, order: order,
                         }));
                     }
                 });
