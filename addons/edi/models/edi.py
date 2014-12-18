@@ -384,18 +384,18 @@ class EDIMixin(object):
         results = []
         for record in records:
             edi_dict = self.edi_metadata(cr, uid, [record], context=context)[0]
-            for field in fields_to_export:
-                column = self._all_columns[field].column
-                value = getattr(record, field)
+            for field_name in fields_to_export:
+                field = self._fields[field_name]
+                value = getattr(record, field_name)
                 if not value and value not in ('', 0):
                     continue
-                elif column._type == 'many2one':
+                elif field.type == 'many2one':
                     value = self.edi_m2o(cr, uid, value, context=context)
-                elif column._type == 'many2many':
+                elif field.type == 'many2many':
                     value = self.edi_m2m(cr, uid, value, context=context)
-                elif column._type == 'one2many':
-                    value = self.edi_o2m(cr, uid, value, edi_struct=edi_struct.get(field, {}), context=context)
-                edi_dict[field] = value
+                elif field.type == 'one2many':
+                    value = self.edi_o2m(cr, uid, value, edi_struct=edi_struct.get(field_name, {}), context=context)
+                edi_dict[field_name] = value
             results.append(edi_dict)
         return results
 
@@ -558,25 +558,24 @@ class EDIMixin(object):
             # skip metadata and empty fields
             if field_name.startswith('__') or field_value is None or field_value is False:
                 continue
-            field_info = self._all_columns.get(field_name)
-            if not field_info:
+            field = self._fields.get(field_name)
+            if not field:
                 _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document.', field_name, self._name)
                 continue
-            field = field_info.column
             # skip function/related fields
-            if isinstance(field, fields.function):
+            if not field.store:
                 _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
                 continue
-            relation_model = field._obj
-            if field._type == 'many2one':
+            relation_model = field.comodel_name
+            if field.type == 'many2one':
                 record_values[field_name] = self.edi_import_relation(cr, uid, relation_model,
                                                                       field_value[1], field_value[0],
                                                                       context=context)
-            elif field._type == 'many2many':
+            elif field.type == 'many2many':
                 record_values[field_name] = [self.edi_import_relation(cr, uid, relation_model, m2m_value[1],
                                                                        m2m_value[0], context=context)
                                              for m2m_value in field_value]
-            elif field._type == 'one2many':
+            elif field.type == 'one2many':
                 # must wait until parent report is imported, as the parent relationship
                 # is often required in o2m child records
                 o2m_todo[field_name] = field_value
@@ -591,11 +590,12 @@ class EDIMixin(object):
 
         # process o2m values, connecting them to their parent on-the-fly
         for o2m_field, o2m_value in o2m_todo.iteritems():
-            field = self._all_columns[o2m_field].column
-            dest_model = self.pool[field._obj]
+            field = self._fields[o2m_field]
+            dest_model = self.pool[field.comodel_name]
+            dest_field = field.inverse_name
             for o2m_line in o2m_value:
                 # link to parent record: expects an (ext_id, name) pair
-                o2m_line[field._fields_id] = (ext_id_members['full'], record_display[1])
+                o2m_line[dest_field] = (ext_id_members['full'], record_display[1])
                 dest_model.edi_import(cr, uid, o2m_line, context=context)
 
         # process the attachments, if any

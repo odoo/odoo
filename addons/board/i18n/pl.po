@@ -1,93 +1,22 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* board
+# Polish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-11 23:18+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-01 14:05+0000\n"
+"Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
+"<monika.grzelak@openglobe.pl>\n"
+"Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Utwórz panel"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "Utwórz"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Przywracanie układu..."
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Utwórz nową konsolę"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Wybierz układ konsoli"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
-#, python-format
-msgid "Add"
-msgstr "Dodaj"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
-#, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Jesteś pewien, że chcesz usunąć ten element?"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "Board"
-msgstr "Panel"
-
-#. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Moja konsola"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Nazwa panelu"
-
-#. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Tworzenie panelu"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Dodaj do konsoli"
+"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: board
 #. openerp-web
@@ -132,15 +61,58 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:70
 #, python-format
-msgid "Reset"
-msgstr "Zresetuj"
+msgid "Add"
+msgstr "Dodaj"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Menu nadrzędne"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
+#, python-format
+msgid "Add to Dashboard"
+msgstr "Dodaj do konsoli"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:136
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr "Jesteś pewien, że chcesz usunąć ten element?"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr "Konsola"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Tworzenie konsoli"
+
+#. module: board
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr "Nazwa konsoli"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:374
+#, python-format
+msgid "Can't find dashboard action"
+msgstr "Nie można znaleźć akcji konsoli"
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Cancel"
+msgstr "Anuluj"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr "Zmień układ"
 
 #. module: board
 #. openerp-web
@@ -151,27 +123,99 @@ msgstr "Zmiana układu..."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Wybierz układ konsoli"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:406
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr "Nie można dodać filtra do konsoli"
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create"
+msgstr "Utwórz"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Utwórz konsolę"
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Utwórz nową konsolę"
+
+#. module: board
+#: field:board.create,create_uid:0
+msgid "Created by"
+msgstr "Utworzone przez"
+
+#. module: board
+#: field:board.create,create_date:0
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:92
 #, python-format
 msgid "Edit Layout"
 msgstr "Edytuj układ"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
-msgid "Change Layout"
-msgstr "Zmień układ"
+msgid "Filter added to dashboard"
+msgstr "Filtry dodane do konsoli"
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Anuluj"
+#: field:board.board,id:0
+#: field:board.create,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "lub"
+#: field:board.create,write_uid:0
+msgid "Last Updated by"
+msgstr "Ostatnio modyfikowane przez"
+
+#. module: board
+#: field:board.create,write_date:0
+msgid "Last Updated on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: board
+#: view:board.board:board.board_my_dash_view
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr "Moja konsola"
+
+#. module: board
+#: field:board.create,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Menu nadrzędne"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr "Zresetuj"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr "Przywracanie układu..."
 
 #. module: board
 #. openerp-web
@@ -179,217 +223,3 @@ msgstr "lub"
 #, python-format
 msgid "Title of new dashboard item"
 msgstr "Tytuł nowego elementu konsoli"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-#~ "specjalnych !"
-
-#~ msgid "Author"
-#~ msgstr "Autor"
-
-#~ msgid "Note"
-#~ msgstr "Uwagi"
-
-#~ msgid "Width"
-#~ msgstr "Szerokość"
-
-#~ msgid "Title"
-#~ msgstr "Tytuł"
-
-#~ msgid "Date"
-#~ msgstr "Data"
-
-#~ msgid "Configuration"
-#~ msgstr "Ustawienia"
-
-#~ msgid "Note Type"
-#~ msgstr "Typ notatki"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
-
-#~ msgid "Notes"
-#~ msgstr "Uwagi"
-
-#~ msgid "Position"
-#~ msgstr "Położenie"
-
-#~ msgid "Menu Name"
-#~ msgstr "Menu nazwy"
-
-#~ msgid "Sequence"
-#~ msgstr "Sekwencja"
-
-#~ msgid "Height"
-#~ msgstr "Wysokość"
-
-#~ msgid "Subject"
-#~ msgstr "Temat"
-
-#~ msgid "Dashboard main module"
-#~ msgstr "Główny moduł konsol"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "Błąd użytkownika!"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "Definicja konsoli"
-
-#~ msgid "Menu Information"
-#~ msgstr "Informacja o menu"
-
-#~ msgid "Action Views"
-#~ msgstr "Widoki akcji"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Utwórz menu dla konsoli"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Otwórz konsolę"
-
-#~ msgid "Note type"
-#~ msgstr "Typ uwagi"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Proszę wstawić Widoki konsoli !"
-
-#~ msgid "Left"
-#~ msgstr "Po lewej"
-
-#~ msgid "Board View"
-#~ msgstr "Widok konsoli"
-
-#~ msgid "Dashboard"
-#~ msgstr "Konsola"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Utwórz menu konsoli"
-
-#~ msgid "Dashboards"
-#~ msgstr "Konsole"
-
-#~ msgid "Create Menu"
-#~ msgstr "Utwórz menu"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Widok konsoli"
-
-#~ msgid "Right"
-#~ msgstr "Po prawej"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Ogólna tygodniowa aktywność"
-
-#~ msgid "  Year  "
-#~ msgstr "  Rok  "
-
-#~ msgid "# of Entries"
-#~ msgstr "# Zapisów"
-
-#~ msgid "Menu Create"
-#~ msgstr "Utwórz menu"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Konsola administracyjna"
-
-#~ msgid "Group By..."
-#~ msgstr "Grupuj wg..."
-
-#~ msgid "Latest Connections"
-#~ msgstr "Ostatnie połączenia"
-
-#~ msgid "Creation Date"
-#~ msgstr "Data utworzenia"
-
-#~ msgid "June"
-#~ msgstr "Czerwiec"
-
-#~ msgid "Publish a note"
-#~ msgstr "Publikuj notatkę"
-
-#~ msgid "Month"
-#~ msgstr "Miesiąc"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Miesięczna aktywność wg dokumentów"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Analiza logów"
-
-#~ msgid "March"
-#~ msgstr "Marzec"
-
-#~ msgid "August"
-#~ msgstr "Sierpień"
-
-#~ msgid "User Connections"
-#~ msgstr "Połaczenia użytkownika"
-
-#~ msgid "January"
-#~ msgstr "Styczeń"
-
-#~ msgid "October"
-#~ msgstr "Październik"
-
-#~ msgid "February"
-#~ msgstr "Luty"
-
-#~ msgid "Day"
-#~ msgstr "Dzień"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Rozszerzone filtry..."
-
-#~ msgid "July"
-#~ msgstr "Lipiec"
-
-#~ msgid "Log Report"
-#~ msgstr "Raport logów"
-
-#~ msgid "Board Line"
-#~ msgstr "Pozycja konsoli"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Miesiąc-1    "
-
-#~ msgid "November"
-#~ msgstr "Listopad"
-
-#~ msgid "April"
-#~ msgstr "Kwiecień"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "Określa kolejność pozycji konsoli w listach."
-
-#~ msgid "Latest Activities"
-#~ msgstr "Ostatnia aktywność"
-
-#~ msgid "   Month   "
-#~ msgstr "   Miesiąc   "
-
-#~ msgid "December"
-#~ msgstr "Grudzień"
-
-#~ msgid "September"
-#~ msgstr "Wrzesień"
-
-#~ msgid "Action"
-#~ msgstr "Akcja"
-
-#~ msgid "Object"
-#~ msgstr "Obiekt"
-
-#~ msgid "Year"
-#~ msgstr "Rok"
-
-#~ msgid "May"
-#~ msgstr "Maj"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Moduł podstawowy dla wszystkich konsol"

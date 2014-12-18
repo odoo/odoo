@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import openerp
-from openerp import http
+from openerp import http, SUPERUSER_ID
 from openerp.http import request
 import time
 
@@ -20,7 +20,7 @@ class website_gengo(http.Controller):
     
     @http.route('/website/check_gengo_set', type='json', auth='user', website=True)
     def check_gengo_set(self):
-        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid)
+        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid)
         company_flag = 0
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             company_flag = user.company_id.id
@@ -30,7 +30,7 @@ class website_gengo(http.Controller):
     def set_gengo_config(self,config):
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid)
         if user.company_id:
-            request.registry['res.company'].write(request.cr, request.uid, user.company_id.id,config)
+            request.registry['res.company'].write(request.cr, request.uid, user.company_id.id, config)
         return True
 
     @http.route('/website/post_gengo_jobs', type='json', auth='user', website=True)

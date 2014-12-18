@@ -56,8 +56,11 @@ class product_template(osv.osv):
     def action_view_mos(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'mrp.act_product_mrp_production', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{}"
+        if len(ids) == 1 and len(products) == 1:
+            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{}"
         return result
 
     
@@ -81,8 +84,16 @@ class product_product(osv.osv):
         for product in self.browse(cr, uid, ids, context=context):
             products.add(product.product_tmpl_id.id)
         result = tmpl_obj._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
+        # bom specific to this variant or global to template
+        domain = [
+            '|',
+                ('product_id', 'in', ids),
+                '&',
+                    ('product_id', '=', False),
+                    ('product_tmpl_id', 'in', list(products)),
+        ]
         result['context'] = "{}"
-        result['domain'] = "[('product_tmpl_id','in',[" + ','.join(map(str, list(products))) + "])]"
+        result['domain'] = str(domain)
         return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

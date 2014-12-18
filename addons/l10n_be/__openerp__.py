@@ -82,6 +82,7 @@ Wizards provided by this module:
     ],
     'demo': [],
     'installable': True,
+    'website': 'https://www.odoo.com/page/accounting',
     'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
 }
 

@@ -13,9 +13,6 @@
                             <td>
                                <span  t-field="l.name"/>
                             </td>
-                            <td>
-                                <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
-                            </td>
                             <td class="text-right">
                                 <span t-field="l.product_uom_qty"/>
                                 <span groups="product.group_uom" t-field="l.product_uom"/>
@@ -25,6 +22,9 @@
                             </td>
                             <td groups="sale.group_discount_per_so_line">
                                 <span t-field="l.discount"/>
+                            </td>
+                            <td>
+                                <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
                             </td>
                             <td class="text-right">
                                 <span t-field="l.price_subtotal"
@@ -51,10 +51,10 @@
                             <thead>
                                 <tr>
                                     <th>Description</th>
-                                    <th>Taxes</th>
                                     <th class="text-right">Quantity</th>
                                     <th class="text-right">Unit Price</th>
                                     <th groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                                    <th>Taxes</th>
                                     <th class="text-right">Price</th>
                                 </tr>
                            </thead>

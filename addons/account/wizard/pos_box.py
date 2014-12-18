@@ -49,16 +49,19 @@ class CashBoxIn(CashBox):
 
     _columns = CashBox._columns.copy()
     _columns.update({
-        'ref' : fields.char('Reference'),
+        'ref': fields.char('Reference'),
     })
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        if not record.journal_id.internal_account_id.id:
+            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         return {
-            'statement_id' : record.id,
-            'journal_id' : record.journal_id.id,
-            'amount' : box.amount or 0.0,
-            'ref' : '%s' % (box.ref or ''),
-            'name' : box.name,
+            'statement_id': record.id,
+            'journal_id': record.journal_id.id,
+            'amount': box.amount or 0.0,
+            'account_id': record.journal_id.internal_account_id.id,
+            'ref': '%s' % (box.ref or ''),
+            'name': box.name,
         }
 
 
@@ -68,11 +71,13 @@ class CashBoxOut(CashBox):
     _columns = CashBox._columns.copy()
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        if not record.journal_id.internal_account_id.id:
+            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
         amount = box.amount or 0.0
         return {
-            'statement_id' : record.id,
-            'journal_id' : record.journal_id.id,
-            'amount' : -amount if amount > 0.0 else amount,
-            'name' : box.name,
+            'statement_id': record.id,
+            'journal_id': record.journal_id.id,
+            'amount': -amount if amount > 0.0 else amount,
+            'account_id': record.journal_id.internal_account_id.id,
+            'name': box.name,
         }
-

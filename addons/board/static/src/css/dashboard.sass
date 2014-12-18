@@ -1,3 +1,5 @@
+@charset "utf-8"
+
 @mixin radius($radius: 5px)
   -moz-border-radius: $radius
   -webkit-border-radius: $radius
@@ -98,25 +100,15 @@
         margin-left: 4px
         padding: 0 4px 0 4px
         height: 16px !important
-      //.oe_rename
-        //float: left
-        //padding-right: 4px
-        //position: relative
-        //top: 1px
-      //.oe_input
-          //height: 16px;
-          //position: relative;
-          //top: 2px;
-      //.ui-sortable-placeholder
-        //border: 1px dotted black;
-        //visibility: visible !important;
-        //height: 50px !important;
-        //*
-          //visibility: hidden;
       .oe_content
         padding: 0 12px 12px 12px
-        .oe_view_manager_header
-          display: none
+        .oe-view-manager
+          display: block
+        .oe-view-manager-content
+          display: block
+          position: static
+        .oe-view-manager-view-kanban
+          position: static
         .oe_list_content
           > thead
             border-bottom: 1px
@@ -124,3 +116,13 @@
             tr:nth-child(odd)
               background: transparent
 
+
+  .oe-search-options
+    .add-to-dashboard
+      button
+        margin: 3px 25px
+        display: none
+      input
+        width: calc(100% - 50px)
+        margin: 3px 25px
+        display: none

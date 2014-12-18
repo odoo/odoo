@@ -179,14 +179,9 @@
             <xpath expr="//div[@name='creation_div']" position='after'>
                 <label for="write_uid" string="Modification"/>
                 <div>
-                    <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                    <field name="write_uid" readonly="1" class="oe_inline"/> on
                     <field name="write_date" readonly="1" class="oe_inline"/>
                 </div>
-            </xpath>
-            <xpath expr="//group[@name='description_group']" position='after'>
-                <group string="Indexed Content" colspan="4">
-                    <field name="index_content" nolabel="1"/>
-                </group>
             </xpath>
         </field>
     </record>
@@ -246,7 +241,7 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to create a new document. 
+            Click to create a new document.
           </p><p>
             The Documents repository gives you access to all attachments, such
             as mails, project documents, invoices etc.

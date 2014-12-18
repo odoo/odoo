@@ -61,7 +61,9 @@
                                      function (hashtag) { return create_link("http://twitter.com/search?q="+hashtag.replace("#",""), hashtag); });
         },
         parse_date: function(tweet) {
-            var d = new Date(tweet.created_at);
+            if (_.isEmpty(tweet.created_at)) return "";
+            var v = tweet.created_at.split(' ');
+            var d = new Date(Date.parse(v[1]+" "+v[2]+", "+v[5]+" "+v[3]+" UTC"));
             return d.toDateString();
         },
         setupMouseEvents: function() {
@@ -91,23 +93,25 @@
                 tweet.text = self.parse_tweet(tweet);
                 tweets.push(qweb.render("website.Twitter.Tweet", {'tweet': tweet}));
             });
-            
-            var f = Math.floor(tweets.length / 3);
-            var tweet_slice = [tweets.slice(0, f).join(" "), tweets.slice(f, f * 2).join(" "), tweets.slice(f * 2, tweets.length).join(" ")];
-            
-            this.$scroller = $(qweb.render("website.Twitter.Scroller"));
-            this.$scroller.appendTo(this.$target.find(".twitter_timeline"));
-            this.$scroller.find("div[id^='scroller']").each(function(index, element){
-                var scrollWrapper = $('<div class="scrollWrapper"></div>');
-                var scrollableArea = $('<div class="scrollableArea"></div>');
-                scrollWrapper.append(scrollableArea)
-                             .data('scrollableArea', scrollableArea);
-                scrollableArea.append(tweet_slice[index]);
-                $(element).append(scrollWrapper);
-                scrollableArea.width(self.get_wrapper_width(scrollableArea));
-                scrollWrapper.scrollLeft(index*180);
-                self.start_scrolling(scrollWrapper);
-            });
+
+            if (!_.isEmpty(tweets)) {
+                var f = Math.floor(tweets.length / 3);
+                var tweet_slice = [tweets.slice(0, f).join(" "), tweets.slice(f, f * 2).join(" "), tweets.slice(f * 2, tweets.length).join(" ")];
+
+                this.$scroller = $(qweb.render("website.Twitter.Scroller"));
+                this.$scroller.appendTo(this.$target.find(".twitter_timeline"));
+                this.$scroller.find("div[id^='scroller']").each(function(index, element){
+                    var scrollWrapper = $('<div class="scrollWrapper"></div>');
+                    var scrollableArea = $('<div class="scrollableArea"></div>');
+                    scrollWrapper.append(scrollableArea)
+                                 .data('scrollableArea', scrollableArea);
+                    scrollableArea.append(tweet_slice[index]);
+                    $(element).append(scrollWrapper);
+                    scrollableArea.width(self.get_wrapper_width(scrollableArea));
+                    scrollWrapper.scrollLeft(index*180);
+                    self.start_scrolling(scrollWrapper);
+                });
+            }
         },
         get_wrapper_width: function(wrapper){
             var total_width = 0;

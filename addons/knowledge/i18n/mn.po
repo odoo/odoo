@@ -1,45 +1,31 @@
 # Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-15 10:59+0000\n"
-"Last-Translator: erdenebold <erdenebold10@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Documents"
-msgstr "Баримтууд"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Apply"
+msgstr "Ашиглах"
 
 #. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_config_settings
-msgid "knowledge.config.settings"
-msgstr "knowledge.config.settings"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_webdav:0
-msgid ""
-"Access your documents in OpenERP through WebDAV.\n"
-"                This installs the module document_webdav."
-msgstr ""
-"OpenERP бичиг баримтууд руу WebDAV-р хандана.\n"
-"                Энэ нь document_webdav модулийг суулгана."
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_page:0
-msgid "This installs the module document_page."
-msgstr "Энэ нь мdocument_page модулийг суулгана."
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Cancel"
+msgstr "Цуцлах"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -47,79 +33,42 @@ msgid "Collaborative Content"
 msgstr "Хамтарсан агуулга"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
-#: view:knowledge.config.settings:0
-msgid "Configure Knowledge"
-msgstr "Баримтын Тохиргоо"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Knowledge and Documents Management"
-msgstr "Бичиг Баримт, Мэдлэгийн менежмент"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document:0
-msgid ""
-"This is a complete document management system, with: user authentication,\n"
-"                full document search (but pptx and docx are not supported), "
-"and a document dashboard.\n"
-"                This installs the module document."
-msgstr ""
-"Энэ нь дараах боломжийг агуулсан бүрэн дүүрэн баримтын менежментийн систем: "
-"\n"
-"                             хэрэглэгчийн нэвтрэх эрхийн хяналт, баримтын "
-"бүрэн хайлт (гэвч pptx болон docx дэмжигдэхггүй),\n"
-"                             болон баримтын хянах самбар.\n"
-"                             Энэ нь document модулийг суулгана."
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_page:0
-msgid "Create static web pages"
-msgstr "Статик веб хуудас үүсгэх."
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_ftp:0
-msgid "Share repositories (FTP)"
-msgstr "Хуваалцах агуулахууд (FTP)"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document:0
-msgid "Manage documents"
-msgstr "Бичиг баримтуудыг менежмент хийх"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Apply"
-msgstr "Ашиглах"
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: knowledge
-#: help:knowledge.config.settings,module_document_ftp:0
-msgid ""
-"Access your documents in OpenERP through an FTP interface.\n"
-"                This installs the module document_ftp."
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Configure Knowledge"
+msgstr "Баримтын Тохиргоо"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
-"OpenERP бичиг баримтууд руу FTP интерфейсээр хандана.\n"
-"Энэ нь document_ftp модулийг суулгана."
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "or"
-msgstr "эсвэл"
+#: field:knowledge.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: knowledge
-#: field:knowledge.config.settings,module_document_webdav:0
-msgid "Share repositories (WebDAV)"
-msgstr "Хуваалцах агуулахууд (WebDAV)"
+#: help:knowledge.config.settings,module_document:0
+msgid ""
+"Document indexation, full text search of attachements.\n"
+"-This installs the module document."
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Documents"
+msgstr "Баримтууд"
+
+#. module: knowledge
+#: field:knowledge.config.settings,id:0
+msgid "ID"
+msgstr ""
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document
@@ -127,86 +76,22 @@ msgstr "Хуваалцах агуулахууд (WebDAV)"
 msgid "Knowledge"
 msgstr "Баримт"
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Тохиргооны явц"
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Knowledge and Documents Management"
+msgstr "Бичиг Баримт, Мэдлэгийн менежмент"
 
-#~ msgid "Image"
-#~ msgstr "Зураг"
+#. module: knowledge
+#: field:knowledge.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
-#~ msgid "Collaborative Content (Wiki)"
-#~ msgstr "Хамтарсан агуулга (Вики)"
+#. module: knowledge
+#: field:knowledge.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
-#~ msgid "Knowledge Management System"
-#~ msgstr "Баримтын удирдлагын систем"
-
-#~ msgid "title"
-#~ msgstr "гарчиг"
-
-#~ msgid "Internal FAQ"
-#~ msgstr "Дотоод түгээмэл тавигддаг асуултууд(ТТА)"
-
-#~ msgid "Content templates"
-#~ msgstr "Агуулгын загвар"
-
-#~ msgid ""
-#~ "Lets you create wiki pages and page groups in order to keep track of "
-#~ "business knowledge and share it with and  between your employees."
-#~ msgstr ""
-#~ "Бусадтай бизнесийн мэдлэгээ хуваалцах, суралцахад зориулан вики хуудас "
-#~ "үүсгэх боломж олгоно."
-
-#~ msgid "Creates an example skeleton for a standard quality manual."
-#~ msgstr "Стандарт чанарын зааварчилгаа бүхий  загвар жишээ үүсгэнэ."
-
-#~ msgid "Shared Repositories (FTP)"
-#~ msgstr "Дундын агуулах  (FTP)"
-
-#~ msgid ""
-#~ "Provides an FTP access to your OpenERP's Document Management System. It lets "
-#~ "you access attachments and virtual documents through a standard FTP client."
-#~ msgstr ""
-#~ "OpenERP-н Баримтын удирдлагын систем рүү FTP хандалт гаргана. Стандарт файл "
-#~ "браузер ашиглан хавсралт, FTP клиентрүү хандах боломжтой. болно."
-
-#~ msgid ""
-#~ "Provides a WebDAV access to your OpenERP's Document Management System. Lets "
-#~ "you access attachments and virtual documents through your standard file "
-#~ "browser."
-#~ msgstr ""
-#~ "OpenERP-н Баримтын удирдлагын систем рүү WebDAV хандалт гаргана. Стандарт "
-#~ "файл браузер ашиглан хавсралт, баримтууд руу хандах боломжтой болно."
-
-#~ msgid ""
-#~ "Installer for knowledge-based tools\n"
-#~ "    "
-#~ msgstr ""
-#~ "Мэдлэгийн багажуудад зориулсан суулгагч\n"
-#~ "    "
-
-#~ msgid "Quality Manual"
-#~ msgstr "Чанарын зааварчилгаа"
-
-#~ msgid "Shared Repositories (WebDAV)"
-#~ msgstr "Дундын агуулах (WebDAV)"
-
-#~ msgid ""
-#~ "Creates a skeleton internal FAQ pre-filled with documentation about "
-#~ "OpenERP's Document Management System."
-#~ msgstr ""
-#~ "OpenERP-н Баримтын удирдлагын системийн тухай мэдээлэл бүхий дотоод ТТА "
-#~ "хуудас үүсгэнэ."
-
-#~ msgid "Knowledge Application Configuration"
-#~ msgstr "Баримтын програмын тохиргоо"
-
-#~ msgid "knowledge.installer"
-#~ msgstr "knowledge.installer"
-
-#~ msgid "Configure"
-#~ msgstr "Тохируулах"
-
-#~ msgid "Share information within the company with these specific Addons."
-#~ msgstr "Энэхүү тодорхой Addons ээр компани дотроо мэдээллийг хуваалцах"
-
-#~ msgid "Configure Your Knowledge Application"
-#~ msgstr "Мэдлэгийн Аппликэшнийг Тохируулах"
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "Бичиг баримтуудыг менежмент хийх"

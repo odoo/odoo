@@ -1,42 +1,107 @@
 # Portuguese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 18:28+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-15 16:52+0000\n"
+"Last-Translator: Daniel Santos - ThinkOpen <dcs@thinkopensolutions.pt>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:48+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-16 05:52+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_check_writing
-#: selection:res.company,check_layout:0
-msgid "Check on Top"
-msgstr "Verifique no topo"
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you "
+"do\n"
+"                to your suppliers using checks. When you select a supplier, "
+"the\n"
+"                payment method and an amount for the payment, Odoo will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo Cheque. \n"
+"              </p><p>\n"
+"                O formulário de pagamento por cheque permite que acompanhe o "
+"\n"
+"                pagamento que faz aos seus fornecedores por cheque. Quando \n"
+"                escolhe um fornecedor, o método e o montante de pagamento, o "
+"\n"
+"                Odoo propõe a reconciliação entre o pagamento com os "
+"documentos \n"
+"                em aberto.\n"
+"              </p>\n"
+"            "
 
 #. module: account_check_writing
-#: report:account.print.check.top:0
-msgid "Open Balance"
-msgstr "Abrir Balanço"
+#: model:ir.model,name:account_check_writing.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Recibo de Contabilidade"
 
 #. module: account_check_writing
-#: view:account.check.write:0
-#: view:account.voucher:0
-msgid "Print Check"
-msgstr "Imprimir Cheque"
+#: field:account.voucher,allow_check:0
+msgid "Allow Check Writing"
+msgstr "Permitir Escrever Cheques"
+
+#. module: account_check_writing
+#: field:account.journal,allow_check_writing:0
+msgid "Allow Check writing"
+msgstr "Permitir escrever Cheques"
+
+#. module: account_check_writing
+#: field:account.voucher,amount_in_word:0
+msgid "Amount in Word"
+msgstr "Valor em Palavra"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: model:ir.actions.report.xml,name:account_check_writing.action_report_check
+msgid "Check"
+msgstr "Cheque"
+
+#. module: account_check_writing
+#: field:res.company,check_layout:0
+msgid "Check Layout"
+msgstr "Esboço do Cheque"
+
+#. module: account_check_writing
+#: help:account.journal,use_preprint_check:0
+msgid "Check if you use a preformated sheet for check"
+msgstr "Verificar se usa uma folha pré-formatada para o Cheque"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
 msgid "Check in middle"
 msgstr "Verifique no meio"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on Top"
+msgstr "Verifique no Topo"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on bottom"
+msgstr "Verifique na parte inferior"
 
 #. module: account_check_writing
 #: help:res.company,check_layout:0
@@ -51,123 +116,39 @@ msgstr ""
 "DacEasy"
 
 #. module: account_check_writing
-#: selection:res.company,check_layout:0
-msgid "Check on bottom"
-msgstr "Verifique na parte inferior"
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
-msgid "Print Check in Batch"
-msgstr ""
-
-#. module: account_check_writing
-#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
-#, python-format
-msgid "One of the printed check already got a number."
-msgstr ""
-
-#. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
 msgid "Check this if the journal is to be used for writing checks."
 msgstr "Marque esta opção se está a utilizar diáriamente cheques."
 
 #. module: account_check_writing
-#: field:account.journal,allow_check_writing:0
-msgid "Allow Check writing"
-msgstr "Permitir que verifique a escrita"
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Empresas"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: field:account.check.write,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: account_check_writing
+#: field:account.check.write,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
 msgid "Description"
 msgstr "Descrição"
 
 #. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_journal
-msgid "Journal"
-msgstr "Diário"
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,name:account_check_writing.action_write_check
-#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
-msgid "Write Checks"
-msgstr "Preencher cheques"
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: view:website:account_check_writing.report_check
 msgid "Discount"
 msgstr "Desconto"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Original Amount"
-msgstr "Montante original"
-
-#. module: account_check_writing
-#: field:res.company,check_layout:0
-msgid "Check Layout"
-msgstr ""
-
-#. module: account_check_writing
-#: field:account.voucher,allow_check:0
-msgid "Allow Check Writing"
-msgstr "Permitir cheques"
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Payment"
-msgstr "Pagamento"
-
-#. module: account_check_writing
-#: field:account.journal,use_preprint_check:0
-msgid "Use Preprinted Check"
-msgstr "Usar cheques pré imprimidos"
-
-#. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
-msgid "Print Check (Bottom)"
-msgstr ""
-
-#. module: account_check_writing
-#: model:ir.actions.act_window,help:account_check_writing.action_write_check
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new check. \n"
-"              </p><p>\n"
-"                The check payment form allows you to track the payment you "
-"do\n"
-"                to your suppliers using checks. When you select a supplier, "
-"the\n"
-"                payment method and an amount for the payment, OpenERP will\n"
-"                propose to reconcile your payment with the open supplier\n"
-"                invoices or bills.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
+#: view:website:account_check_writing.report_check
 msgid "Due Date"
 msgstr "Data da Dívida"
-
-#. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
-msgid "Print Check (Middle)"
-msgstr ""
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_res_company
-msgid "Companies"
-msgstr "Empresas"
 
 #. module: account_check_writing
 #: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
@@ -176,99 +157,92 @@ msgid "Error!"
 msgstr "Erro!"
 
 #. module: account_check_writing
-#: help:account.check.write,check_number:0
-msgid "The number of the next check number to be printed."
-msgstr ""
+#: field:account.check.write,id:0
+#: field:report.account_check_writing.report_check,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-msgid "Balance Due"
-msgstr "Saldo devedor"
+#: model:ir.model,name:account_check_writing.model_account_journal
+msgid "Journal"
+msgstr "Diário"
 
 #. module: account_check_writing
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
-msgid "Print Check (Top)"
-msgstr ""
+#: field:account.check.write,write_uid:0
+msgid "Last Updated by"
+msgstr "Última Atualização por"
 
 #. module: account_check_writing
-#: report:account.print.check.bottom:0
-#: report:account.print.check.middle:0
-#: report:account.print.check.top:0
-msgid "Check Amount"
-msgstr "Verificar montante"
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_voucher
-msgid "Accounting Voucher"
-msgstr "Voucher da Contabilidade"
-
-#. module: account_check_writing
-#: view:account.check.write:0
-msgid "or"
-msgstr ""
-
-#. module: account_check_writing
-#: field:account.voucher,amount_in_word:0
-msgid "Amount in Word"
-msgstr "Valor em Palavra"
-
-#. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_account_check_write
-msgid "Prin Check in Batch"
-msgstr ""
-
-#. module: account_check_writing
-#: view:account.check.write:0
-msgid "Cancel"
-msgstr ""
+#: field:account.check.write,write_date:0
+msgid "Last Updated on"
+msgstr "Última Atualização em"
 
 #. module: account_check_writing
 #: field:account.check.write,check_number:0
 msgid "Next Check Number"
-msgstr ""
+msgstr "Próximo Número de Cheque"
 
 #. module: account_check_writing
-#: view:account.check.write:0
-msgid "Check"
-msgstr "Cheque"
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "No check selected "
+msgstr "Nenhum cheque selecionado "
 
-#~ msgid ""
-#~ "The check payment form allows you to track the payment you do to your "
-#~ "suppliers specially by check. When you select a supplier, the payment method "
-#~ "and an amount for the payment, OpenERP will propose to reconcile your "
-#~ "payment with the open supplier invoices or bills.You can print the check"
-#~ msgstr ""
-#~ "A seleção da forma de pagamento permite que acompanhe o pagamento que faz "
-#~ "aos seus fornecedores, especialmente por meio de cheque. Quando selecionar "
-#~ "um fornecedor, o método de pagamento e um montante para o pagamento, OpenERP "
-#~ "irá propor a conciliar o pagamento com as faturas de fornecedores ou contas "
-#~ "abertas. Pode imprimir o cheque"
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "One of the printed check already got a number."
+msgstr "Um dos cheques impressos já tem número."
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Erro! Não pode criar empresas recursivas."
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Open Balance"
+msgstr "Abrir Balanço"
 
-#~ msgid "Configuration"
-#~ msgstr "Configuração"
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Original Amount"
+msgstr "Montante original"
 
-#~ msgid "The company name must be unique !"
-#~ msgstr "O nome da empresa deve ser único!"
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Payment"
+msgstr "Pagamento"
 
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "O código do diário deve ser único por empresa!"
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_check_write
+msgid "Prin Check in Batch"
+msgstr "Imprimir Cheques em Lote"
 
-#~ msgid "Default Check layout"
-#~ msgstr "Verificar disposição predefinida"
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: view:account.voucher:account_check_writing.view_vendor_payment_check_form
+msgid "Print Check"
+msgstr "Imprimir Cheque"
 
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Erro na configuração! A moeda escolhida deve ser partilhada também pelas "
-#~ "contas padrão."
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
+msgid "Print Check in Batch"
+msgstr "Imprimir Cheques em Lote"
 
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "O nome do diário deve ser único por empresa!"
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "Printing error"
+msgstr "Erro de impressão"
 
-#~ msgid "Choose Check layout"
-#~ msgstr "Escolha verificação da disposição"
+#. module: account_check_writing
+#: help:account.check.write,check_number:0
+msgid "The number of the next check number to be printed."
+msgstr "O número do próximo cheque a ser impresso"
+
+#. module: account_check_writing
+#: field:account.journal,use_preprint_check:0
+msgid "Use Preprinted Check"
+msgstr "Usar cheques pré-imprimidos"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_write_check
+#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
+msgid "Write Checks"
+msgstr "Preencher cheques"

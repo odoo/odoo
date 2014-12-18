@@ -1,27 +1,78 @@
 # Dutch translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-01 16:19+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-09-17 07:39+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-19 08:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Boeking"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Boeking volgnummer applicatie configuratie"
+
+#. module: account_sequence
+#: field:account.sequence.installer,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "Configureren"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "Uw boeking volgnummer applicatie configureren"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Ophogingsgetal"
+
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+#: field:account.move.line,internal_sequence_number:0
+msgid "Internal Number"
+msgstr "Intern nummer"
+
+#. module: account_sequence
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Intern volgnummer"
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -30,49 +81,9 @@ msgid "Internal Sequence Number"
 msgstr "Intern volgnummer"
 
 #. module: account_sequence
-#: help:account.sequence.installer,number_next:0
-msgid "Next number of this sequence"
-msgstr "Volgend nummer in deze reeks"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_next:0
-msgid "Next Number"
-msgstr "Volgende nummer"
-
-#. module: account_sequence
-#: field:account.sequence.installer,number_increment:0
-msgid "Increment Number"
-msgstr "Ophogingsgetal"
-
-#. module: account_sequence
-#: help:account.sequence.installer,number_increment:0
-msgid "The next number of the sequence will be incremented by this number"
-msgstr "Het volgende nummer in de reeks wordt verhoogd met dit aantal"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure Your Account Sequence Application"
-msgstr "Uw boeking volgnummer applicatie configureren"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Configureren"
-
-#. module: account_sequence
-#: help:account.sequence.installer,suffix:0
-msgid "Suffix value of the record for the sequence"
-msgstr "Volgnummer achtervoegsel voor het record"
-
-#. module: account_sequence
-#: field:account.sequence.installer,company_id:0
-msgid "Company"
-msgstr "Bedrijf"
-
-#. module: account_sequence
-#: field:account.sequence.installer,padding:0
-msgid "Number padding"
-msgstr "Nummer verspringing"
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Dagboek"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move_line
@@ -80,19 +91,14 @@ msgid "Journal Items"
 msgstr "Boekingsregels"
 
 #. module: account_sequence
-#: field:account.move,internal_sequence_number:0
-#: field:account.move.line,internal_sequence_number:0
-msgid "Internal Number"
-msgstr "Intern Nummer"
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatst aangepast door"
 
 #. module: account_sequence
-#: help:account.sequence.installer,padding:0
-msgid ""
-"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
-"get the required padding size."
-msgstr ""
-"OpenERP voegt links van het 'Volgende nummer' automatisch enkele nullen toe "
-"om de juiste opvulgrootte te krijgen."
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst aangepast op"
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -100,9 +106,33 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: account_sequence
-#: field:account.journal,internal_sequence_id:0
-msgid "Internal Sequence"
-msgstr "Intern volgnummer"
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Volgende nummer"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Volgend nummer in deze reeks"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Nummer verspringing"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+"Odoo voegt automatisch een aantal nullen toe aan het 'volgende nummer' om de "
+"juiste uitlijning te krijgen."
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Voorvoegsel"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -110,24 +140,19 @@ msgid "Prefix value of the record for the sequence"
 msgstr "Voorvoegsel voor het record voor de reeks"
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_move
-msgid "Account Entry"
-msgstr "Boeking"
-
-#. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Achtervoegsel"
 
 #. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "title"
-msgstr "titel"
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Volgnummer achtervoegsel voor het record"
 
 #. module: account_sequence
-#: field:account.sequence.installer,prefix:0
-msgid "Prefix"
-msgstr "Voorvoegsel"
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Het volgende nummer in de reeks wordt verhoogd met dit aantal"
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -139,105 +164,12 @@ msgstr ""
 "dagboek."
 
 #. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "account.sequence.installer"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_journal
-msgid "Journal"
-msgstr "Dagboek"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 "Je kunt de  Account Sequence Application verbeteren door het installeren."
 
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "Volgnummers bij boekingen"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Deze module beheert de interne volgnummers voor boekingen.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "U kunt geen boekingen aanmaken met verschillende periodes of dagboeken"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Configuratievoortgang"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Verkeerde debet of credit waarde in boekingsregel!"
-
-#~ msgid "Image"
-#~ msgstr "Afbeelding"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Je mag niet meer dan een verschuiving per periode maken op een "
-#~ "gecentraliseerd dagboek"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "De geselecteerde rekening van uw journalboeking vraagt om een tweede valuta. "
-#~ "U moet de tweede valuta op de rekening verwijderen of selecteer een multi-"
-#~ "valuta overzicht van de boeking."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "De datum van uw dagboek boeking is niet in de gedefinieerde periode! U moet "
-#~ "de datum aanpassen of deze beperking van het dagboek verwijderen."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr ""
-#~ "Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
-#~ "type 'aanzicht'"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr ""
-#~ "Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
-
-#~ msgid ""
-#~ "Configuration error! The currency chosen should be shared by the default "
-#~ "accounts too."
-#~ msgstr ""
-#~ "Configuratiefout! De gekozen valuta moet hetzelfde zijn als dat van de "
-#~ "standaard grootboekrekeningen."
-
-#~ msgid ""
-#~ "You can not create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Het is niet mogelijk meer dan één mutatie per periode te maken op een "
-#~ "algemeen dagboek"
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "titel"

@@ -1,25 +1,174 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * base_setup
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-11-07 12:54+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-06 14:48+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:02+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_setup
-#: view:sale.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "(reload fonts)"
+msgstr "(betűk frissítése)"
+
+#. module: base_setup
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer portal"
+msgstr "A közösségi portál aktiválása"
+
+#. module: base_setup
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr "Dokumentumok megoszásának engedélyezése"
+
+#. module: base_setup
+#: field:base.config.settings,module_google_calendar:0
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr ""
+"Lehetővé teszi a felhasználók számára a naptár szinkronizálását a Google "
+"naptárral"
+
+#. module: base_setup
+#: field:base.config.settings,module_base_import:0
+msgid "Allow users to import data from CSV files"
+msgstr "Lehetővé teszi a felhasználók adatainak betöltését CSV fájlokból"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#. module: base_setup
+#: field:base.config.settings,module_google_drive:0
+msgid "Attach Google documents to any record"
+msgstr "Fűzzön hozzá Google dokumentumokat bármilyen rekordhoz"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Authentication"
+msgstr "Azonosítás"
+
+#. module: base_setup
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr "CRM ügyfélkapcsolat-kezelő rendszer"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Cancel"
+msgstr "Visszavonás"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Ügyfél"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Eladás beállítása"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure outgoing email servers"
+msgstr "Kimenő e-mail szerverek beállítása"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Configure your company data"
+msgstr "A vállalata részleteinek beállítása"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Contacts"
+msgstr "Kapcsolattartók"
+
+#. module: base_setup
+#: field:base.config.settings,create_uid:0
+#: field:base.setup.terminology,create_uid:0
+#: field:sale.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: base_setup
+#: field:base.config.settings,create_date:0
+#: field:base.setup.terminology,create_date:0
+#: field:sale.config.settings,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Vevő"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Customer Features"
+msgstr "Vavő tulajdonságai"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donor"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Email"
+msgstr "E-mail"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
 msgid "Emails Integration"
 msgstr "e-amil integrálás"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr "Általános beállítások"
+
+#. module: base_setup
+#: help:sale.config.settings,module_mass_mailing:0
+msgid "Get access to statistics with your mass mailing, manage campaigns."
+msgstr ""
+"Férjen hozzá a statisztikákhoz a tömeges levélküldéssel, szervezze a "
+"kampányait."
+
+#. module: base_setup
+#: field:sale.config.settings,module_web_linkedin:0
+msgid "Get contacts automatically from linkedIn"
+msgstr "Kapcsolatok automatikus behozatala a LinkeIn-ből"
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "Adjon hozzáférést a vevőknek a dokumentumaikhoz."
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Calendar"
+msgstr "Google naptár"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Google Drive"
+msgstr "Google Drive"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -27,14 +176,165 @@ msgid "Guest"
 msgstr "Vendég"
 
 #. module: base_setup
-#: view:sale.config.settings:0
-msgid "Contacts"
-msgstr "Kapcsolattartók"
+#: field:base.setup.terminology,partner:0
+msgid "How do you call a Customer"
+msgstr "Hogy hívhat meg egy Vevőt"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
+#: field:base.config.settings,id:0
+#: field:base.setup.terminology,id:0
+#: field:sale.config.settings,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Import / Export"
+msgstr "Import / Export"
+
+#. module: base_setup
+#: field:base.config.settings,write_uid:0
+#: field:base.setup.terminology,write_uid:0
+#: field:sale.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: base_setup
+#: field:base.config.settings,write_date:0
+#: field:base.setup.terminology,write_date:0
+#: field:sale.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: base_setup
+#: field:sale.config.settings,module_mass_mailing:0
+msgid "Manage mass mailing campaigns"
+msgstr "Kezelje a tömeges levelezés kampányait"
+
+#. module: base_setup
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr "Többes válallkozás kezelése"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Tag"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid ""
+"Odoo allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with Odoo\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"Odoo using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
+"Odoo rendszer lehetővé teszi az automatikus érdeklődés (vagy más "
+"dokumentumok) létrehozását \n"
+"                            a beérkező levelekből. Automatikusan "
+"szinkronizálhatja emailjeit az Odoo rendszerrel\n"
+"                            az általános POP/IMAP fiókokkal, egy közvetlen "
+"email beépülési szkripttel az email\n"
+"                            szerverén, vagy kézzel az emailek bevitelével az "
+"Odoo rendszerbe sajátos pliginnel\n"
+"                            az előnybe részesített email alkalmazásához."
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid ""
+"Once installed, you can configure your API credentials for \"Google "
+"calendar\""
+msgstr ""
+"Ha egyszer telepítette, beállíthatja az API interfészt engedélyeket a "
+"\"Google naptár\" alkalmazásban"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Options"
+msgstr "Lehetőségek"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Páciens"
+
+#. module: base_setup
+#: view:base.config.settings:base_setup.view_general_configuration
+msgid "Portal access"
+msgstr "Portál hozzáférés"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Quotations and Sales Orders"
+msgstr "Árajánlatok és vevői megrendelések"
+
+#. module: base_setup
+#: field:base.config.settings,font:0
+msgid "Report Font"
+msgstr "Jelentés betűtípus"
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr "ÉRTÉKESÍTÉS"
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Sale Features"
+msgstr "eladás tulajdonságai"
+
+#. module: base_setup
+#: help:base.config.settings,font:0
+msgid ""
+"Set the font into the report header, it will be used as default font in the "
+"RML reports of the user company"
+msgstr ""
+"Állítsa be a jelentés fejléc betűtípusát, amit alapértelmezettként használ "
+"az felhasználó vállalat RML jelentéseiben"
+
+#. module: base_setup
+#: help:base.config.settings,module_share:0
+msgid "Share or embbed any screen of openerp."
+msgstr "Bármely OpenERP képernyő megosztása vagy eltüntetése."
+
+#. module: base_setup
+#: view:sale.config.settings:base_setup.view_sale_config_settings
+msgid "Social Network Integration"
+msgstr "Közösségi hálózat integráció"
+
+#. module: base_setup
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Terminológia meghatározása"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Haszonélvező"
+
+#. module: base_setup
+#: help:base.config.settings,module_google_calendar:0
+msgid "This installs the module google_calendar."
+msgstr "Ez előkészíti a google_calendar modult."
+
+#. module: base_setup
+#: help:base.config.settings,module_google_drive:0
+msgid "This installs the module google_docs."
+msgstr "Ez előkészíti a google_docs modult."
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Használjon másik szót amivel kifejezi \"Vevő\""
 
 #. module: base_setup
 #: field:base.config.settings,module_auth_oauth:0
@@ -43,160 +343,6 @@ msgid ""
 msgstr ""
 "Használjon külső azonosító tartalomkezelőt, lépjen be mint google, facebook, "
 "... felhasználó"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid ""
-"OpenERP allows to automatically create leads (or others documents)\n"
-"                            from incoming emails. You can automatically "
-"synchronize emails with OpenERP\n"
-"                            using regular POP/IMAP accounts, using a direct "
-"email integration script for your\n"
-"                            email server, or by manually pushing emails to "
-"OpenERP using specific\n"
-"                            plugins for your preferred email application."
-msgstr ""
-"OpenERP lehetővé teszi az automatikus érdeklődések (vagy egyéb dokumentumok) "
-"létrehozását \n"
-"                            a beérkező levelekből. Autokmatikusan tud e-"
-"mailt szinkronizálni az OpenERP\n"
-"                            alapértelmezett POP/IMAP fiókok használatával, "
-"közvetlen az e-mail szerver címéhez tartozó \n"
-"                            e-mail beillesztő skript használatával, vagy "
-"kézzel saját betöltő plugin használatával az OpenERP\n"
-"                            kiegészítőivel, az előnyben létesített levelező "
-"használatához."
-
-#. module: base_setup
-#: field:sale.config.settings,module_sale:0
-msgid "SALE"
-msgstr "ÉRTÉKESÍTÉS"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Tag"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Portal access"
-msgstr "Portál hozzáférés"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Authentication"
-msgstr "Azonosítás"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Quotations and Sales Orders"
-msgstr "Árajánlatok és vevői megrendelések"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_general_configuration
-msgid "General Settings"
-msgstr "Általános beállítások"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Donor"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Email"
-msgstr "E-mail"
-
-#. module: base_setup
-#: field:sale.config.settings,module_crm:0
-msgid "CRM"
-msgstr "CRM ügyfélkapcsolat-kezelő rendszer"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Páciens"
-
-#. module: base_setup
-#: field:base.config.settings,module_base_import:0
-msgid "Allow users to import data from CSV files"
-msgstr "Lehetővé teszi a felhasználók adatainak betöltését CSV fájlokból"
-
-#. module: base_setup
-#: field:base.config.settings,module_multi_company:0
-msgid "Manage multiple companies"
-msgstr "Többes válallkozás kezelése"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "On Mail Client"
-msgstr "Az e-mail ügyfelen"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "--db-filter=YOUR_DATABAE"
-msgstr "--db-filter=YOUR_DATABAE"
-
-#. module: base_setup
-#: field:sale.config.settings,module_web_linkedin:0
-msgid "Get contacts automatically from linkedIn"
-msgstr "Kapcsolatok automatikus behozatala a LinkeIn-ből"
-
-#. module: base_setup
-#: field:sale.config.settings,module_plugin_thunderbird:0
-msgid "Enable Thunderbird plug-in"
-msgstr "Thunderbird plug-in bekapcsolása"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Customer Features"
-msgstr "Vavő tulajdonságai"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Import / Export"
-msgstr "Import / Export"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Sale Features"
-msgstr "eladás tulajdonságai"
-
-#. module: base_setup
-#: field:sale.config.settings,module_plugin_outlook:0
-msgid "Enable Outlook plug-in"
-msgstr "Outlook plug-in bekapcsolása"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-"Használhatja ezt a varázslót a vevők nyelvezetének megváltoztatásához a "
-"teljes alkalmazásra vonatkozólag."
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Haszonélvező"
-
-#. module: base_setup
-#: help:base.config.settings,module_share:0
-msgid "Share or embbed any screen of openerp."
-msgstr "Bármely OpenERP képernyő megosztása vagy eltüntetése."
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Vevő"
 
 #. module: base_setup
 #: help:sale.config.settings,module_web_linkedin:0
@@ -208,48 +354,7 @@ msgstr ""
 "lesz a LinkedIn adatok betöltésére (fotók, címek, stb.)."
 
 #. module: base_setup
-#: help:base.config.settings,module_multi_company:0
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies.\n"
-"                This installs the module multi_company."
-msgstr ""
-"Többes vállalkozású környezetben dolgozni, a helyesen meghatározott "
-"vállalatok közötti hozzáférési jogosultságokkal.\n"
-"                Ez a multi_company modult telepíti."
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"The public portal is accessible only if you are in a single database mode. "
-"You can\n"
-"                                    launch the OpenERP Server with the option"
-msgstr ""
-"A közösségi portál csak akkor hozzáférhetző ha egyszeres, önálló adatbázis "
-"módot használ. Elindíthatja\n"
-"                                    az OpenERP Szervert ezzel a lehetőséggel"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr ""
-"Több lehetőséget fog találni a vállalata részleteinél: a fejléc és "
-"lábjegyzet címek, határidő túllépés szöveges üzenete, stb."
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: base_setup
-#: field:base.setup.terminology,partner:0
-msgid "How do you call a Customer"
-msgstr "Hogy hívhat meg egy Vevőt"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
 "                                    (quotation, invoice), your customer will "
@@ -269,543 +374,35 @@ msgstr ""
 "                                    stb."
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Ügyfél"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal_anonymous:0
-msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr ""
-"Az OpenERP közösségi részének bekapcsolása, OpenERP elérhetővé válik egy "
-"közösségi weboldalként."
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_thunderbird:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"The plugin allows you archive email and its attachments to the selected\n"
-"                OpenERP objects. You can select a partner, or a lead and\n"
-"                attach the selected mail as a .eml file in\n"
-"                the attachment of a selected record. You can create "
-"documents for CRM Lead,\n"
-"                Partner from the selected emails.\n"
-"                This installs the module plugin_thunderbird."
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"-This installs the module multi_company."
 msgstr ""
-"A közösség lehetővé teszi a kiválasztott OpenERP\n"
-"                objektumhoz tartozó e-mailek és mellékletei\n"
-"                archiválását. Kiválaszthat egy partnert, vagy érdeklődést és "
-"\n"
-"                mellékelheti a kiválasztott levelet mint .eml fájl\n"
-"                a kiválasztott rekord mellékleteként. A CRM érdeklődésekből "
-"dokumentumokat\n"
-"                hozhat létre, Partnert a kiválasztott e-mailekből.\n"
-"                Ez a plugin_thunderbird modult telepíti.."
+"Több vállalkozásos környezetben, a vállalatok közti megfelelő biztonsági "
+"hozzáférésekkel.\n"
+"-Ez a multi_company modult telepíti."
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Használjon másik szót amivel kifejezi \"Vevő\""
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: view:sale.config.settings:0
-msgid "Configure Sales"
-msgstr "Eladás beállítása"
-
-#. module: base_setup
-#: help:sale.config.settings,module_plugin_outlook:0
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
 msgid ""
-"The Outlook plugin allows you to select an object that you would like to "
-"add\n"
-"                to your email and its attachments from MS Outlook. You can "
-"select a partner,\n"
-"                or a lead object and archive a selected\n"
-"                email into an OpenERP mail message with attachments.\n"
-"                This installs the module plugin_outlook."
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
 msgstr ""
-"Az Outlook plugin lehetővé teszi egy objektum kiválasztását amit\n"
-"                az Outlookból az e-mailhez és mellékletéhez szeretne "
-"csatolni. \n"
-"                Kiválaszthat egy partnert vagy érdeklődés objektumot\n"
-"                és eltárolhatja a kiválasztott e-mailt az OpenERP "
-"üzenetekhez\n"
-"                mellékletekkel együtt.\n"
-"                Ez a plugin_outlook modult telepíti."
+"Használhatja ezt a varázslót a vevők nyelvezetének megváltoztatásához a "
+"teljes alkalmazásra vonatkozólag."
 
 #. module: base_setup
-#: view:base.config.settings:0
-msgid "Options"
-msgstr "Lehetőségek"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal:0
-msgid "Activate the customer portal"
-msgstr "A közösségi portál aktiválása"
-
-#. module: base_setup
-#: view:base.config.settings:0
+#: view:base.config.settings:base_setup.view_general_configuration
 msgid ""
-"to do so.\n"
-"                                    Once activated, the login page will be "
-"replaced by the public website."
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
 msgstr ""
-"így tenni.\n"
-"                                    Ha egyszer aktiválva van, a "
-"bejelentkezési oldal ki lesz váltva a közösségi weboldallal."
+"Több lehetőséget fog találni a vállalata részleteinél: a fejléc és "
+"lábjegyzet címek, határidő túllépés szöveges üzenete, stb."
 
 #. module: base_setup
-#: field:base.config.settings,module_share:0
-msgid "Allow documents sharing"
-msgstr "Dokumentumok megoszásának engedélyezése"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "(company news, jobs, contact form, etc.)"
-msgstr "(vállalati hírek, munkahelyek, kapcsolatu űrlapok, stb.)"
-
-#. module: base_setup
-#: field:base.config.settings,module_portal_anonymous:0
-msgid "Activate the public portal"
-msgstr "Közösségi portál aktiválása"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure outgoing email servers"
-msgstr "Kimenő e-mail szerverek beállítása"
-
-#. module: base_setup
-#: view:sale.config.settings:0
-msgid "Social Network Integration"
-msgstr "Közösségi hálózat integráció"
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give your customers access to their documents."
-msgstr "Adjon hozzáférést a vevőknek a dokumentumaikhoz."
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Cancel"
-msgstr "Visszavonás"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "Apply"
-msgstr "Alkalmaz"
-
-#. module: base_setup
-#: view:base.setup.terminology:0
-msgid "Specify Your Terminology"
-msgstr "Terminológia meghatározása"
-
-#. module: base_setup
-#: view:base.config.settings:0
-#: view:sale.config.settings:0
-msgid "or"
-msgstr "vagy"
-
-#. module: base_setup
-#: view:base.config.settings:0
-msgid "Configure your company data"
-msgstr "A vállalata részleteinek beállítása"
-
-#~ msgid "City"
-#~ msgstr "Város"
-
-#~ msgid "Invoicing"
-#~ msgstr "Számlázás"
-
-#~ msgid "E-mail"
-#~ msgstr "E-mail"
-
-#~ msgid "Bank Account No"
-#~ msgstr "Bankszámlaszám"
-
-#~ msgid "Currency"
-#~ msgstr "Pénznem"
-
-#~ msgid "Marketing"
-#~ msgstr "Marketing"
-
-#~ msgid "Advanced Reporting"
-#~ msgstr "Haladó jelentés"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "base.setup.installer"
-#~ msgstr "base.setup.installer"
-
-#~ msgid "Country"
-#~ msgstr "Ország"
-
-#~ msgid "Auction Houses"
-#~ msgstr "Aukciós házak"
-
-#~ msgid "Zip Code"
-#~ msgstr "Irányítószám"
-
-#~ msgid "New Database"
-#~ msgstr "Új adatbázis"
-
-#~ msgid "Information about your new database"
-#~ msgstr "Információk az Ön új adatbázisáról"
-
-#~ msgid "Image"
-#~ msgstr "Kép"
-
-#~ msgid "Food Industry"
-#~ msgstr "Élelmiszeripar"
-
-#~ msgid "Manufacturing"
-#~ msgstr "Gyártás"
-
-#~ msgid "Street"
-#~ msgstr "Utca"
-
-#~ msgid "base.setup.company"
-#~ msgstr "base.setup.company"
-
-#~ msgid "Example: http://openerp.com"
-#~ msgstr "Például: http://openerp.com"
-
-#~ msgid "Install Applications"
-#~ msgstr "Alkalmazások telepítése"
-
-#~ msgid "base.setup.config"
-#~ msgstr "base.setup.config"
-
-#~ msgid "Install"
-#~ msgstr "Telepítés"
-
-#~ msgid "Human Resources"
-#~ msgstr "Humán Erőforrás"
-
-#~ msgid "Report Footer 1"
-#~ msgstr "Jelentés lábléc 1"
-
-#~ msgid "Report Footer 2"
-#~ msgstr "Jelentés lábléc 2"
-
-#~ msgid "Fed. State"
-#~ msgstr "Szövetségi állam"
-
-#~ msgid "Company"
-#~ msgstr "Vállalat"
-
-#~ msgid "title"
-#~ msgstr "Pozíció"
-
-#~ msgid "Company Name"
-#~ msgstr "Vállalat neve"
-
-#~ msgid "Street 2"
-#~ msgstr "Utca 2"
-
-#~ msgid "Setup"
-#~ msgstr "Beállítás"
-
-#~ msgid "Accounting & Finance"
-#~ msgstr "Könyvelés és pénzügy"
-
-#~ msgid "Start Configuration"
-#~ msgstr "Konfigurálás indítása"
-
-#~ msgid "Installed Users"
-#~ msgstr "Telepített felhasználók"
-
-#~ msgid "Report Header"
-#~ msgstr "Jelentés fejléc"
-
-#~ msgid "Your Logo - Use a size of about 450x150 pixels."
-#~ msgstr "Az Ön logója - használható méret kb. 450x150 pixel"
-
-#~ msgid "Company Website"
-#~ msgstr "Vállalat weboldala"
-
-#~ msgid "Base Setup"
-#~ msgstr "Alapbeállítás"
-
-#~ msgid "Helps you manage your marketing campaigns step by step."
-#~ msgstr "Segít Önnek a marketing kampányok kezelésében lépésről lépésre."
-
-#~ msgid "Your database is now created."
-#~ msgstr "Az Ön adatbázisa létrejött."
-
-#~ msgid ""
-#~ "Helps you handle your accounting needs, if you are not an accountant, we "
-#~ "suggest you to install only the Invoicing "
-#~ msgstr ""
-#~ "Segít Önnek a könyvelésben, de ha Ön nem könyvelő, azt javasoljuk, hogy csak "
-#~ "a Számlázást telepítse. "
-
-#~ msgid "Associations"
-#~ msgstr "Egyesületek"
-
-#, python-format
-#~ msgid "The following users have been installed : \n"
-#~ msgstr "A következő felhasználók lettek létrehozva : \n"
-
-#~ msgid ""
-#~ "You can start configuring the system or connect directly to the database as "
-#~ "an administrator."
-#~ msgstr ""
-#~ "Elkezdheti a rendszer konfigurálását vagy közvetlenül kapcsolódhat az "
-#~ "adatbázishoz rendszergazdaként."
-
-#~ msgid ""
-#~ "Your company information will be used to personalize documents issued with "
-#~ "OpenERP such as invoices, sales orders and much more."
-#~ msgstr ""
-#~ "A cég adatai arra lesznek felhasználva, hogy személyre legyenek szabva a "
-#~ "generált dokumentumok, úgymint számlák, vevő rendelések, stb."
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Tudáskezelés"
-
-#~ msgid ""
-#~ "Lets you install various interesting but non-essential tools like Survey, "
-#~ "Lunch and Ideas box."
-#~ msgstr ""
-#~ "Lehetővé teszi, hogy telepítsen különböző érdekes, de nem alapvető "
-#~ "eszközöket, mint Felmérés, Ebédrendelés és Ötlet doboz."
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to put bank information here:\n"
-#~ "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-#~ msgstr ""
-#~ "Ez a mondat a jelentések alján fog megjelenni.\n"
-#~ "Azt javasoljuk, hogy itt adja meg a bank információkat:\n"
-#~ "IBAN: HU24 1171 4007 8060 1443 - SWIFT: OTPV-HU-HB - VAT: HU12345678"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module implements a configuration system that helps user\n"
-#~ "    to configure the system at the installation of a new database.\n"
-#~ "\n"
-#~ "    It allows you to select between a list of profiles to install:\n"
-#~ "    * Minimal profile\n"
-#~ "    * Accounting only\n"
-#~ "    * Services companies\n"
-#~ "    * Manufacturing companies\n"
-#~ "\n"
-#~ "    It also asks screens to help easily configure your company, the header "
-#~ "and\n"
-#~ "    footer, the account chart to install and the language.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Ez a modul biztosít egy beállítási felületet, hogy segítsen\n"
-#~ "    a felhasználóknak egy új rendszer beállításában.\n"
-#~ "\n"
-#~ "    Lehetőséget ad alapvető profilok közül választani:\n"
-#~ "    * Minimális profil\n"
-#~ "    * Könyvelő profil\n"
-#~ "    * Szolgáltató cégeknek\n"
-#~ "    * Gyáraknak\n"
-#~ "\n"
-#~ "    Továbbá alapvető kérdésekkel segít a cégre testre szabni a felületet,\n"
-#~ "    a fejlécet és a láblécet, beállítani a könyvelési számlákat és a "
-#~ "nyelvet.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Helps you manage your projects and tasks by tracking them, generating "
-#~ "plannings, etc..."
-#~ msgstr ""
-#~ "Segít Önnek a projektjei és feladatai kezelésében, azok nyomon követésével, "
-#~ "automata tervezés könnyítéssel, stb..."
-
-#~ msgid ""
-#~ "Select the Applications you want your system to cover. If you are not sure "
-#~ "about your exact needs at this stage, you can easily install them later."
-#~ msgstr ""
-#~ "Kiválaszthatja a felhasználni kívánt programokat. Ha jelenleg nem tudja "
-#~ "pontosan mit is szeretne, később is telepítheti őket."
-
-#~ msgid ""
-#~ "Lets you install addons geared towards sharing knowledge with and between "
-#~ "your employees."
-#~ msgstr ""
-#~ "Olyan addon-okat telepíthet, amik segítségével a tudás alapú információt "
-#~ "használhatják és oszthatják meg a dolgozók egymás között."
-
-#~ msgid "Warehouse Management"
-#~ msgstr "Raktár kezelés"
-
-#~ msgid "Company Configuration"
-#~ msgstr "Cég testreszabás"
-
-#~ msgid "Customer Relationship Management"
-#~ msgstr "Ügyfélkapcsolat kezelés"
-
-#~ msgid "Project Management"
-#~ msgstr "Projekt kezelés"
-
-#~ msgid "Logo"
-#~ msgstr "Embléma"
-
-#~ msgid "Point of Sales"
-#~ msgstr "Pénztárgép működés"
-
-#~ msgid "Sales Management"
-#~ msgstr "Értékesítés kezelés"
-
-#~ msgid "Skip Configuration Wizards"
-#~ msgstr "Beállítási lépések kihagyása"
-
-#~ msgid ""
-#~ "Helps you manage your manufacturing processes and generate reports on those "
-#~ "processes."
-#~ msgstr ""
-#~ "Segít Önnek a gyártási folyamatok kezelésében és az azokhoz tartozó "
-#~ "jelentések létrehozásában."
-
-#~ msgid "Purchase Management"
-#~ msgstr "Beszerzés kezelés"
-
-#~ msgid ""
-#~ "Helps you get the most out of your points of sales with fast sale encoding, "
-#~ "simplified payment mode encoding, automatic picking lists generation and "
-#~ "more."
-#~ msgstr ""
-#~ "Segít Önnek, hogy a legtöbbet hozza ki a számlázásnál egyszerűsített adat "
-#~ "bevitellel, egyszerűsített fizetési információ bevitellel, automatikus "
-#~ "szállítólevél generálással, stb..."
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "We suggest you to write legal sentences here:\n"
-#~ "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
-#~ msgstr ""
-#~ "Ez a mondat meg fog jelenni az Ön jelentéseinek alján.\n"
-#~ "Azt javasoljuk, hogy írjon ide hivatalos mondatokat:\n"
-#~ "Web: http://openerp.com - Fax: +36 (1) 1234-56-78 - OTP Bank: 11714007-"
-#~ "80601443"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications selected to help you "
-#~ "manage your auctions as well as the business processes around them."
-#~ msgstr ""
-#~ "A kiválasztott OpenERP alkalmazások egy előre kiválasztott beállítását "
-#~ "telepíti, hogy segítsen Önnek az aukciói valamint az azokhoz tartozó üzleti "
-#~ "folyamatok kezelésében."
-
-#~ msgid ""
-#~ "Lets you install various tools to simplify and enhance OpenERP's report "
-#~ "creation."
-#~ msgstr ""
-#~ "Több különböző eszközt telepíthet, hogy egyszerűsítse és fejlessze az "
-#~ "OpenERP rendszerével generálható riportokat."
-
-#~ msgid ""
-#~ "This sentence will appear at the top right corner of your reports.\n"
-#~ "We suggest you to put a slogan here:\n"
-#~ "\"Open Source Business Solutions\"."
-#~ msgstr ""
-#~ "Ez a mondat meg fog jelenni a jelentések jobb felső sarkában.\n"
-#~ "Azt javasoljuk, hogy itt adja meg a szlogenjét:\n"
-#~ "\"Nyílt Forráskódú Üzleti Megoldások\"."
-
-#~ msgid "Configure Your Company Information"
-#~ msgstr "Adja meg a cégének az adatait"
-
-#~ msgid "Install Specific Industry Applications"
-#~ msgstr "Különböző profilú cégekhez kialakított modulok telepítése"
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your association more efficiently."
-#~ msgstr ""
-#~ "A kiválasztott OpenERP alkalmazások egy előre kiválasztott beállítását "
-#~ "telepíti, hogy segítsen Önnek az egyesületének kezelésében."
-
-#~ msgid "Extra Tools"
-#~ msgstr "További eszközök"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Beállítás előrehaladása"
-
-#~ msgid ""
-#~ "Helps you manage your purchase-related processes such as requests for "
-#~ "quotations, supplier invoices, etc..."
-#~ msgstr ""
-#~ "Segít Önnek a beszerzéshez kapcsolódó folyamatainak kezelésében, mint "
-#~ "például ajánlatkérések, szállítói számlák, stb..."
-
-#~ msgid ""
-#~ "Helps you manage your human resources by encoding your employees structure, "
-#~ "generating work sheets, tracking attendance and more."
-#~ msgstr ""
-#~ "Segít Önnek a humán erőforrások kezelésében az alkalmazotti struktúra "
-#~ "berögzítésével, munkaidő-kimutatások előállításával, jelenlét nyomon "
-#~ "követésével, stb."
-
-#~ msgid ""
-#~ "Allows you to create your invoices and track the payments. It is an easier "
-#~ "version of the accounting module for managers who are not accountants."
-#~ msgstr ""
-#~ "Lehetővé teszi számlák készítését és a kifizetések nyomon követését. Ez a "
-#~ "könyvelési modul egyszerűbb változata nem könyvelők számára."
-
-#~ msgid ""
-#~ "Installs a preselected set of OpenERP applications which will help you "
-#~ "manage your industry."
-#~ msgstr ""
-#~ "Telepíti az előre kiválasztott OpenERP modulok kombinációit, amelyek "
-#~ "segítenek vállalkozása jobb kézben tartásában."
-
-#~ msgid "Helps you handle your quotations, sale orders and invoicing."
-#~ msgstr ""
-#~ "Segít Önnek az árajánlatok, a vevői megrendelések és a számlázás kezelésében."
-
-#~ msgid ""
-#~ "Helps you track and manage relations with customers such as leads, requests "
-#~ "or issues. Can automatically send reminders, escalate requests or trigger "
-#~ "business-specific actions based on standard events."
-#~ msgstr ""
-#~ "Segít Önnek az ügyfelekkel való kapcsolatok nyomon követésében és "
-#~ "kezelésében, mint például találkozók, igények vagy problémák. Automatikusan "
-#~ "küldhet emlékeztetőket, kiterjesztheti a kéréseket vagy indíthat üzlet-"
-#~ "specifikus műveleteket az események alapján."
-
-#~ msgid ""
-#~ "Helps you manage your inventory and main stock operations: delivery orders, "
-#~ "receptions, etc."
-#~ msgstr ""
-#~ "Segít Önnek a készletek és a fő készletműveletek kezelésében: "
-#~ "szállítólevelek, áruátvételek, stb."
-
-#~ msgid "Create"
-#~ msgstr "Létrehozás"
-
-#~ msgid "Import"
-#~ msgstr "Importálás"
-
-#~ msgid "Customers"
-#~ msgstr "Vásárlók"
-
-#~ msgid "Language"
-#~ msgstr "Nyelv"
-
-#~ msgid "Create Additional Users"
-#~ msgstr "Új felhasználók létrehozása"
-
-#~ msgid "Timezone"
-#~ msgstr "Időzóna"
-
-#~ msgid "Simplified"
-#~ msgstr "Egyszerűsített"
+#: view:base.setup.terminology:base_setup.base_setup_terminology_form
+msgid "res_config_contents"
+msgstr "res_config_contents"

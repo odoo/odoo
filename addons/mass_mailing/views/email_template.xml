@@ -51,7 +51,7 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
-                                    <ul class="oe_dropdown_menu">
+                                    <ul class="oe_dropdown_menu" t-if="widget.view.is_action_enabled('edit') or widget.view.is_action_enabled('delete')">
                                         <t t-if="widget.view.is_action_enabled('edit')">
                                             <li><a type="edit">Edit</a></li>
                                         </t>
@@ -89,7 +89,7 @@
 
         <!-- Add Templates in Marketing / Mass mailing menu -->
         <menuitem name="Mail Templates" id="menu_email_template"
-            parent="mass_mailing_campaign" sequence="3"
+            parent="menu_view_mass_mailing_config" sequence="3"
             action="action_email_template_marketing"/>
 
     </data>

@@ -1,6 +1,7 @@
 {
     'name': 'Contact Form',
     'category': 'Website',
+    'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Create Leads From Contact Form',
     'version': '1.0',
     'description': """

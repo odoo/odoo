@@ -1,45 +1,31 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-28 09:17+0000\n"
-"Last-Translator: Stanislav Hanzhin <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Documents"
-msgstr "Документы"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Apply"
+msgstr "Применить"
 
 #. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_config_settings
-msgid "knowledge.config.settings"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Cancel"
 msgstr ""
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_webdav:0
-msgid ""
-"Access your documents in OpenERP through WebDAV.\n"
-"                This installs the module document_webdav."
-msgstr ""
-"Доступ к документам в OpenERP через WebDAV.\n"
-"                Это установит модуль document_webdav."
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_page:0
-msgid "This installs the module document_page."
-msgstr "Это установит модуль document_page."
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -47,70 +33,41 @@ msgid "Collaborative Content"
 msgstr "Совместное содержание"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
-#: view:knowledge.config.settings:0
-msgid "Configure Knowledge"
-msgstr "Настройка знаний"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Knowledge and Documents Management"
-msgstr "Управление знаниями и документами"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document:0
-msgid ""
-"This is a complete document management system, with: user authentication,\n"
-"                full document search (but pptx and docx are not supported), "
-"and a document dashboard.\n"
-"                This installs the module document."
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_page:0
-msgid "Create static web pages"
-msgstr "Создать статичные веб-страницы"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_ftp:0
-msgid "Share repositories (FTP)"
-msgstr "Открыть доступ к репозиториям (FTP)"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document:0
-msgid "Manage documents"
-msgstr "Управлять документами"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Cancel"
-msgstr ""
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Apply"
-msgstr "Применить"
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "Настройка"
 
 #. module: knowledge
-#: help:knowledge.config.settings,module_document_ftp:0
-msgid ""
-"Access your documents in OpenERP through an FTP interface.\n"
-"                This installs the module document_ftp."
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Configure Knowledge"
+msgstr "Настройка знаний"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "or"
-msgstr "или"
+#: field:knowledge.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: knowledge
-#: field:knowledge.config.settings,module_document_webdav:0
-msgid "Share repositories (WebDAV)"
+#: help:knowledge.config.settings,module_document:0
+msgid ""
+"Document indexation, full text search of attachements.\n"
+"-This installs the module document."
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Documents"
+msgstr "Документы"
+
+#. module: knowledge
+#: field:knowledge.config.settings,id:0
+msgid "ID"
 msgstr ""
 
 #. module: knowledge
@@ -119,88 +76,22 @@ msgstr ""
 msgid "Knowledge"
 msgstr "Знания"
 
-#~ msgid "title"
-#~ msgstr "заголовок"
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Knowledge and Documents Management"
+msgstr "Управление знаниями и документами"
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Настройка выполняется"
+#. module: knowledge
+#: field:knowledge.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
-#~ msgid "Internal FAQ"
-#~ msgstr "Внутренний FAQ"
+#. module: knowledge
+#: field:knowledge.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
-#~ msgid "Image"
-#~ msgstr "Изображение"
-
-#~ msgid "Shared Repositories (FTP)"
-#~ msgstr "Общий репозиторий (FTP)"
-
-#~ msgid "Collaborative Content (Wiki)"
-#~ msgstr "Совместное содержание (Wiki)"
-
-#~ msgid "Knowledge Management System"
-#~ msgstr "Система управления знаниями"
-
-#~ msgid "Configure"
-#~ msgstr "Настройка"
-
-#~ msgid "Quality Manual"
-#~ msgstr "Руководство по качеству"
-
-#~ msgid "Shared Repositories (WebDAV)"
-#~ msgstr "Общий репозиторий (WebDAV)"
-
-#~ msgid ""
-#~ "Installer for knowledge-based tools\n"
-#~ "    "
-#~ msgstr ""
-#~ "Установщик инструментов, основанных на Knowledge\n"
-#~ "    "
-
-#~ msgid "Knowledge Application Configuration"
-#~ msgstr "Настройка приложения Knowledge"
-
-#~ msgid "Creates an example skeleton for a standard quality manual."
-#~ msgstr "Создаёт шаблон для типового руководства по качеству."
-
-#~ msgid ""
-#~ "Creates a skeleton internal FAQ pre-filled with documentation about "
-#~ "OpenERP's Document Management System."
-#~ msgstr ""
-#~ "Создаёт шаблон для встренных ЧаВо, заполненный документацией о системе "
-#~ "управления документами OpenERP."
-
-#~ msgid ""
-#~ "Provides a WebDAV access to your OpenERP's Document Management System. Lets "
-#~ "you access attachments and virtual documents through your standard file "
-#~ "browser."
-#~ msgstr ""
-#~ "Предоставляет доступ к системе управления документами OpenERP по протоколу "
-#~ "WebDAV.  Позволяет получить доступ к вложениям и виртуальным документам с "
-#~ "помощью вашего обозревателя файлов."
-
-#~ msgid ""
-#~ "Provides an FTP access to your OpenERP's Document Management System. It lets "
-#~ "you access attachments and virtual documents through a standard FTP client."
-#~ msgstr ""
-#~ "Предоставляет FTP доступ к системе управления документами OpenERP. Позволяет "
-#~ "получить доступ к вложениям и виртуальным документам с помощью вашего FTP-"
-#~ "клиента."
-
-#~ msgid "Share information within the company with these specific Addons."
-#~ msgstr "Делитесь информацией внутри компании с помощью этих дополнений."
-
-#~ msgid "Configure Your Knowledge Application"
-#~ msgstr "Настройте ваше приложение для Knowledge"
-
-#~ msgid "Content templates"
-#~ msgstr "Шаблоны содержимого"
-
-#~ msgid "knowledge.installer"
-#~ msgstr "knowledge.installer"
-
-#~ msgid ""
-#~ "Lets you create wiki pages and page groups in order to keep track of "
-#~ "business knowledge and share it with and  between your employees."
-#~ msgstr ""
-#~ "Позволяет создавать wiki-страницы и группы страниц, чтобы отслеживать бизнес-"
-#~ "знания и делиться ими с сотрудниками."
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "Управлять документами"

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <template id="assets_frontend_result" inherit_id="website.assets_frontend" name="Survey Results assets">
+        <xpath expr="." position="inside">
+            <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
+            <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
+            <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+            <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
+            <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+        </xpath>
+    </template>
     <template id="result" name="Survey Result">
         <t t-call="website.layout">
-            <t t-set="head">
-                <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
-                <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
-                <script src="/web_graph/static/lib/nvd3/d3.v3.js"></script>
-                <script src="/web_graph/static/lib/nvd3/nv.d3.js"></script>
-                <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
-            </t>
             <div class="oe_structure" />
             <div class="container">
                 <div class="jumbotron mt32">
@@ -262,6 +264,7 @@
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
         <span class="pull-right mt8">
+            <span class="label label-default only_left_radius">Sum </span> <span class="label label-info only_right_radius" t-esc="number_result['sum']"></span>
             <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
             <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
             <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>

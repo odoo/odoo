@@ -29,7 +29,7 @@ Landed Costs Management
 =======================
 This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/warehouse',
     'images': [],
     'depends': ['stock_account'],
     'category': 'Warehouse Management',
@@ -44,9 +44,9 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'stock_landed_costs_data.xml',
     ],
     'test': [
+        'test/stock_landed_costs.yml'
     ],
     'installable': True,
-    'application': True,
     'auto_install': False,
 }
 

@@ -187,7 +187,7 @@ class mrp_repair(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'draft',
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
         'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],
@@ -343,7 +343,7 @@ class mrp_repair(osv.osv):
                         'origin': repair.name,
                         'type': 'out_invoice',
                         'account_id': account_id,
-                        'partner_id': repair.partner_id.id,
+                        'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
                         'comment': repair.quotation_notes,
                         'fiscal_position': repair.partner_id.property_account_position.id
@@ -495,7 +495,7 @@ class mrp_repair(osv.osv):
 
 class ProductChangeMixin(object):
     def product_id_change(self, cr, uid, ids, pricelist, product, uom=False,
-                          product_uom_qty=0, partner_id=False, guarantee_limit=False):
+                          product_uom_qty=0, partner_id=False, guarantee_limit=False, context=None):
         """ On change of product it sets product quantity, tax account, name,
         uom of product, unit price and price subtotal.
         @param pricelist: Pricelist of current record.
@@ -508,18 +508,20 @@ class ProductChangeMixin(object):
         """
         result = {}
         warning = {}
+        ctx = context and context.copy() or {}
+        ctx['uom'] = uom
 
         if not product_uom_qty:
             product_uom_qty = 1
         result['product_uom_qty'] = product_uom_qty
 
         if product:
-            product_obj = self.pool.get('product.product').browse(cr, uid, product)
+            product_obj = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
             if partner_id:
                 partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
-                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id)
+                result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, product_obj.taxes_id, context=ctx)
 
-            result['name'] = product_obj.partner_ref
+            result['name'] = product_obj.display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
@@ -530,7 +532,7 @@ class ProductChangeMixin(object):
                 }
             else:
                 price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                            product, product_uom_qty, partner_id, {'uom': uom})[pricelist]
+                            product, product_uom_qty, partner_id, context=ctx)[pricelist]
 
                 if price is False:
                     warning = {

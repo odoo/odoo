@@ -47,7 +47,7 @@ Creates a dashboard for accountants that includes:
 Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) 
 for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
@@ -107,11 +107,11 @@ for a particular financial year and for preparation of vouchers there is a modul
         'product_view.xml',
         'account_assert_test.xml',
         'account_analytic_view.xml',
-        'ir_sequence_view.xml',
         'company_view.xml',
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
+        'account_tip_data.xml',
         'account_pre_install.yml',
         'views/report_vat.xml',
         'views/report_invoice.xml',

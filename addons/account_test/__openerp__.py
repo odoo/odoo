@@ -25,7 +25,7 @@
     'version': '1.0',
     'author': 'OpenERP',
     'category': 'Accounting & Finance',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/accounting',
     'description': """
 Asserts on accounting.
 ======================

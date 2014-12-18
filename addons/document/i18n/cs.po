@@ -1,195 +1,41 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* document
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 17:49+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:17+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Language: Czech\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:05+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: document
-#: field:document.directory,parent_id:0
-msgid "Parent Directory"
-msgstr "Nadřazená složka"
+#: field:report.document.file,nbr:0
+#: field:report.document.user,nbr:0
+msgid "# of Files"
+msgstr "Počet souborů"
 
 #. module: document
-#: code:addons/document/document.py:350
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:19
 #, python-format
-msgid "Directory name contains special characters!"
-msgstr "Název adresáře obsahuje nepovolené znaky!"
-
-#. module: document
-#: view:document.directory:0
-msgid "Search Document Directory"
-msgstr "Hledat adresář dokumentů"
-
-#. module: document
-#: help:document.directory,resource_field:0
-msgid ""
-"Field to be used as name on resource directories. If empty, the \"name\" "
-"will be used."
-msgstr ""
-"Pole, které se má použít pro název adresářů. Pokud ho necháte prázdné, "
-"použije se pole \"název\" (name)."
-
-#. module: document
-#: view:document.directory:0
-msgid "Group By..."
-msgstr "Seskupit podle..."
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Modification"
+msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-msgid "Resources"
-msgstr "Zdroje"
-
-#. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
-msgid "Files"
-msgstr "Soubory"
-
-#. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "MIME typ"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "March"
-msgstr "Březen"
-
-#. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Výraz"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
-msgid "Company"
-msgstr "Společnost"
-
-#. module: document
-#: model:ir.model,name:document.model_document_directory_content
-msgid "Directory Content"
-msgstr "Obsah adresáře"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_document_management_configuration
-msgid "Document Management"
-msgstr "Správa dokumentů"
-
-#. module: document
-#: help:document.directory.dctx,expr:0
-msgid ""
-"A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Výraz Pythonu použitý pro vyhodnocení pole.\n"
-"Můžete použití 'dir_id' pro aktuální adresář, 'res_id', 'res_model' jako "
-"odkaz na aktuální záznam, v dynamických složkách"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid "The name of the field."
-msgstr ""
-
-#. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
+#: code:addons/document/document.py:117
+#: code:addons/document/document.py:307
 #, python-format
-msgid "Directory name must be unique!"
-msgstr "Název adresáře musí být unikátní!"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Filter on my documents"
-msgstr "Filtr nad mými dokumenty"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
-msgid "Indexed Content"
-msgstr "Indexovaný obsah"
-
-#. module: document
-#: help:document.directory,resource_find_all:0
-msgid ""
-"If true, all attachments that match this resource will  be located. If "
-"false, only ones that have this as parent."
+msgid "%s (copy)"
 msgstr ""
-"Pokud je pravda, všechny přílohy odpovídající tomuto zdroji budou vyhledány. "
-"Pokud je nepravda, pouze ty, které mají tohoto jako rodiče."
-
-#. module: document
-#: view:document.directory:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
-#: model:ir.ui.menu,name:document.menu_document_directories
-msgid "Directories"
-msgstr "Adresáře"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_user
-msgid "Files details by Users"
-msgstr "Detaily souborů podle uživatelů"
-
-#. module: document
-#: field:document.directory,resource_find_all:0
-msgid "Find all resources"
-msgstr "Hledat všechny zdroje"
-
-#. module: document
-#: selection:document.directory,type:0
-msgid "Folders per resource"
-msgstr "Složky podle zdroje"
-
-#. module: document
-#: field:document.directory.content,suffix:0
-msgid "Suffix"
-msgstr "Přípona"
-
-#. module: document
-#: field:report.document.user,change_date:0
-msgid "Modified Date"
-msgstr "Datum změny"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Knowledge Application Configuration"
-msgstr "Nastavení aplikace znalostí"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Související dokumenty"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -205,251 +51,61 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
-#: code:addons/document/document.py:350
-#, python-format
-msgid "ValidateError"
-msgstr "Chyba kontroly"
-
-#. module: document
-#: model:ir.model,name:document.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_file_form
-#: model:ir.ui.menu,name:document.menu_document_doc
-#: model:ir.ui.menu,name:document.menu_document_files
-msgid "Documents"
-msgstr "Dokumenty"
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Model zdroje"
-
-#. module: document
-#: field:report.document.file,file_size:0
-#: field:report.document.user,file_size:0
-msgid "File Size"
-msgstr "Velikost souboru"
-
-#. module: document
-#: field:document.directory.content.type,name:0
-#: field:ir.attachment,file_type:0
-msgid "Content Type"
-msgstr "Typ obsahu"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
-msgid "Type"
-msgstr "Typ"
-
-#. module: document
-#: sql_constraint:ir.attachment:0
-msgid "The filename must be unique in a directory !"
-msgstr ""
-
-#. module: document
-#: code:addons/document/document.py:110
-#: code:addons/document/document.py:310
-#, python-format
-msgid "%s (copy)"
-msgstr ""
-
-#. module: document
-#: help:document.directory,ressource_type_id:0
+#: help:document.directory.dctx,expr:0
 msgid ""
-"Select an object here and there will be one folder per record of that "
-"resource."
-msgstr "Vyberte zde objekt a bude jedna složka na záznam pro tento zdroj."
-
-#. module: document
-#: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
+"A python expression used to evaluate the field.\n"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
+"to the current record, in dynamic folders"
 msgstr ""
-"Použijte doménu, pokud chcete použít automatické filtrování na viditelných "
-"zdrojích."
+"Výraz Pythonu použitý pro vyhodnocení pole.\n"
+"Můžete použití 'dir_id' pro aktuální adresář, 'res_id', 'res_model' jako "
+"odkaz na aktuální záznam, v dynamických složkách"
 
 #. module: document
-#: constraint:document.directory:0
-msgid "Error! You cannot create recursive directories."
-msgstr ""
+#: field:document.directory.content.type,active:0
+msgid "Active"
+msgstr "Aktivní"
 
 #. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Pole názvu"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Soubory všech uživatelů"
 
 #. module: document
-#: field:document.directory,dctx_ids:0
-msgid "Context fields"
-msgstr "Pole obsahu"
-
-#. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
-msgid "Directory Type"
-msgstr "Typ adresáře"
-
-#. module: document
-#: field:document.directory.content,report_id:0
-msgid "Report"
-msgstr "Report"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "July"
-msgstr "Červenec"
-
-#. module: document
-#: field:document.directory.content.type,code:0
-msgid "Extension"
-msgstr "Přípona"
-
-#. module: document
-#: field:document.directory,content_ids:0
-msgid "Virtual Files"
-msgstr "Virtuální soubory"
-
-#. module: document
-#: code:addons/document/document.py:576
-#, python-format
-msgid "Error at doc write!"
-msgstr "Chyba při zápisu dokumentu!"
-
-#. module: document
-#: view:document.directory:0
-msgid "Generated Files"
-msgstr "Generované soubory"
-
-#. module: document
-#: view:document.configuration:0
-msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Když je tento průvodce vykonán, nastaví automaticky vaše adresáře podle "
-"instalovaných modulů."
-
-#. module: document
-#: field:document.directory.content,directory_id:0
-#: field:document.directory.dctx,dir_id:0
-#: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
-#: model:ir.model,name:document.model_document_directory
-#: field:report.document.user,directory:0
-msgid "Directory"
-msgstr "Adresář"
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Zabezpečení"
-
-#. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
-msgid "Last Modification User"
-msgstr "Naposledy upraveno uživatelem"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
-#: view:report.document.user:0
-msgid "Files by User"
-msgstr ""
-
-#. module: document
-#: view:ir.attachment:0
-msgid "on"
-msgstr ""
-
-#. module: document
-#: field:document.directory,domain:0
-msgid "Domain"
-msgstr "Doména"
-
-#. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
-msgid "Date Modified"
-msgstr "Datum změny"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_file
-msgid "Files details by Directory"
-msgstr "Detaily souborů podle adresářů"
-
-#. module: document
-#: view:report.document.user:0
+#: view:report.document.user:document.view_report_document_user_search
 msgid "All users files"
 msgstr "Soubory všech uživatelů"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_size_month
-#: view:report.document.file:0
-msgid "File Size by Month"
-msgstr "Velikost souborů podle měsíců"
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+"Stejně s Nadřazeným modelem, toto ID připojí tuto složku k určitému záznamu "
+"Nadřazeného modelu."
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "December"
-msgstr "Prosinec"
+msgid "April"
+msgstr "Duben"
 
 #. module: document
-#: selection:document.directory,type:0
-msgid "Static Directory"
-msgstr "Statický adresář"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-msgid "Month"
-msgstr "Měsíc"
-
-#. module: document
-#: view:document.directory:0
-msgid "Define words in the context, for all child directories and files"
-msgstr "Definuje slova v kontextu, pro všechny podřízené adresáře a soubory"
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Statický"
-
-#. module: document
-#: field:report.document.user,user:0
-msgid "unknown"
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:7
+#, python-format
+msgid "Attachment(s)"
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
-msgid "Owner"
-msgstr "Vlastník"
+#: view:ir.attachment:document.view_document_file_tree
+msgid "Attachments"
+msgstr ""
 
 #. module: document
-#: view:document.directory:0
-msgid "PDF Report"
-msgstr "PDF výkaz"
-
-#. module: document
-#: view:document.directory:0
-msgid "Contents"
-msgstr "Obsah"
-
-#. module: document
-#: field:document.directory,create_date:0
-#: field:report.document.user,create_date:0
-msgid "Date Created"
-msgstr "Datum vytvoření"
+#: selection:report.document.user,month:0
+msgid "August"
+msgstr "Srpen"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -463,22 +119,6 @@ msgstr ""
 "Pokud je nastavení, adresář bude jako zdroje."
 
 #. module: document
-#: view:document.configuration:0
-#: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Configure Directories"
-msgstr "Nastavit adresáře"
-
-#. module: document
-#: field:document.directory.content,include_name:0
-msgid "Include Record Name"
-msgstr "Začlenit název záznamu"
-
-#. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "ID modulu"
-
-#. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
 "Check this if you want to use the same tree structure as the object selected "
@@ -488,107 +128,58 @@ msgstr ""
 "objektu vybraného v systému."
 
 #. module: document
-#: help:document.directory,ressource_id:0
-msgid ""
-"Along with Parent Model, this ID attaches this folder to a specific record "
-"of Parent Model."
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Potomci"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,company_id:0
+msgid "Company"
+msgstr "Společnost"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Configure Directories"
+msgstr "Nastavit adresáře"
+
+#. module: document
+#: field:document.directory.content,name:0
+msgid "Content Name"
+msgstr "Název obsahu"
+
+#. module: document
+#: field:document.directory.content.type,name:0
+msgid "Content Type"
+msgstr "Typ obsahu"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Contents"
+msgstr "Obsah"
+
+#. module: document
+#: field:document.directory,dctx_ids:0
+msgid "Context fields"
+msgstr "Pole obsahu"
+
+#. module: document
+#: field:document.configuration,create_uid:0
+#: field:document.directory.content,create_uid:0
+#: field:document.directory.content.type,create_uid:0
+#: field:document.directory.dctx,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Created by"
 msgstr ""
-"Stejně s Nadřazeným modelem, toto ID připojí tuto složku k určitému záznamu "
-"Nadřazeného modelu."
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:6
-#, python-format
-msgid "Attachment(s)"
-msgstr ""
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "August"
-msgstr "Srpen"
-
-#. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Dynamický kontext"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "Adresář nebůže být nadřazen sám sobě!"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "June"
-msgstr "Červen"
-
-#. module: document
-#: field:document.directory,group_ids:0
-msgid "Groups"
-msgstr "Skupiny"
-
-#. module: document
-#: field:document.directory.content.type,active:0
-msgid "Active"
-msgstr "Aktivní"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "November"
-msgstr "Listopad"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
-"record, just like attachments. Don't put a parent directory if you select a "
-"parent model."
-msgstr ""
-"Pokud sem dáte objekt, tato šablona adresáře se objeví dole pod všemi těmito "
-"objekty. Takové adresáře jsou \"přiloženy\" ke určitému modelu nebo záznamu, "
-"právě jako přílohy. Nedávejte sem nadřazený adresář, pokud vybíráte "
-"nadřazený model."
-
-#. module: document
-#: view:document.directory:0
-msgid "Definition"
-msgstr "Definice"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "October"
-msgstr "Říjen"
-
-#. module: document
-#: view:document.directory:0
-msgid "Seq."
-msgstr "Poř."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Soubory všech uživatelů"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "January"
-msgstr "Leden"
-
-#. module: document
-#: view:document.directory:0
-msgid "Document Directory"
-msgstr "Adresář dokumentů"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "Jméno adresáře musí být unikátní!"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachments"
+#: field:document.configuration,create_date:0
+#: field:document.directory.content,create_date:0
+#: field:document.directory.content.type,create_date:0
+#: field:document.directory.dctx,create_date:0
+#: field:document.storage,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: document
@@ -597,48 +188,70 @@ msgid "Creator"
 msgstr "Tvůrce"
 
 #. module: document
-#: view:document.configuration:0
-msgid ""
-"OpenERP's Document Management System supports mapping virtual folders with "
-"documents. The virtual folder of a document can be used to manage the files "
-"attached to the document, or to print and download any report. This tool "
-"will create directories automatically according to modules installed."
-msgstr ""
-"Systém správy dokumentů OpenERP podporuje mapování virtuálních složek s "
-"dokumenty. Virtuální složka dokumentů může být použita pro správu souborů "
-"přiložených k dokumentům nebo k vytištění a stažení jakéhokoliv výkazu. "
-"Tento nástroj vytvoří automaticky adresář podle instalovaných modulů."
+#: field:document.directory,create_date:0
+#: field:report.document.user,create_date:0
+msgid "Date Created"
+msgstr "Datum vytvoření"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
-#: view:report.document.user:0
-msgid "Files by Month"
-msgstr "Soubory podle měsíců"
+#: field:document.directory,write_date:0
+msgid "Date Modified"
+msgstr "Datum změny"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "September"
-msgstr "Září"
+msgid "December"
+msgstr "Prosinec"
 
 #. module: document
-#: field:document.directory.content,prefix:0
-msgid "Prefix"
-msgstr "Předpona"
+#: view:document.directory:document.view_document_directory_form
+msgid "Define words in the context, for all child directories and files"
+msgstr "Definuje slova v kontextu, pro všechny podřízené adresáře a soubory"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Potomci"
+#: view:document.directory:document.view_document_directory_form
+msgid "Definition"
+msgstr "Definice"
 
 #. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "ID zdroje"
+#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:document.view_document_directory_tree
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: model:ir.ui.menu,name:document.menu_document_directories
+msgid "Directories"
+msgstr "Adresáře"
 
 #. module: document
-#: field:document.directory.dctx,field:0
-msgid "Field"
-msgstr "Pole"
+#: model:ir.actions.act_window,name:document.action_document_directory_tree
+#: model:ir.ui.menu,name:document.menu_document_directories_tree
+msgid "Directories' Structure"
+msgstr "Struktura adresářů"
+
+#. module: document
+#: field:document.directory.content,directory_id:0
+#: field:document.directory.dctx,dir_id:0
+#: model:ir.actions.act_window,name:document.action_document_file_directory_form
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,parent_id:0
+#: model:ir.model,name:document.model_document_directory
+#: field:report.document.user,directory:0
+msgid "Directory"
+msgstr "Adresář"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
+msgstr "Nastavení adresáře"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content
+msgid "Directory Content"
+msgstr "Obsah adresáře"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Typ obsahu adresáře"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
@@ -646,44 +259,58 @@ msgid "Directory Dynamic Context"
 msgstr "Dynamický kontext adresáře"
 
 #. module: document
-#: field:document.directory,ressource_parent_type_id:0
-msgid "Parent Model"
-msgstr "Nadřazený model"
+#: view:document.directory:document.view_document_directory_form
+#: field:report.document.user,type:0
+msgid "Directory Type"
+msgstr "Typ adresáře"
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Tyto skupiny se ale nevztahují k podřízeným adresářům, které musí mít "
-"definovány vlastní skupiny."
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Adresář nebůže být nadřazen sám sobě!"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "May"
-msgstr "Květen"
+#: code:addons/document/document.py:347
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Název adresáře obsahuje nepovolené znaky!"
 
 #. module: document
-#: view:document.directory:0
-msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
-"Pro každý zdejší záznam se v tomto adresáři objeví virtuální soubory."
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#, python-format
+msgid "Directory name must be unique!"
+msgstr "Název adresáře musí být unikátní!"
 
 #. module: document
-#: model:ir.model,name:document.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: view:document.directory:document.view_document_directory_filter
+msgid "Document Directory"
+msgstr "Adresář dokumentů"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Users File"
-msgstr ""
+#: model:ir.ui.menu,name:document.menu_document_management_configuration
+msgid "Document Management"
+msgstr "Správa dokumentů"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Directory Configuration"
-msgstr "Nastavení adresáře"
+#: field:document.directory.content,extension:0
+msgid "Document Type"
+msgstr "Typ dokumentu"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_document_file_form
+msgid "Documents"
+msgstr "Dokumenty"
+
+#. module: document
+#: field:document.directory,domain:0
+msgid "Domain"
+msgstr "Doména"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Dynamic context"
+msgstr "Dynamický kontext"
 
 #. module: document
 #: help:document.directory,type:0
@@ -701,60 +328,49 @@ msgstr ""
 "nadřazeném adresáři."
 
 #. module: document
+#: code:addons/document/document.py:573
+#, python-format
+msgid "Error at doc write!"
+msgstr "Chyba při zápisu dokumentu!"
+
+#. module: document
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Výraz"
+
+#. module: document
+#: field:document.directory.content.type,code:0
+msgid "Extension"
+msgstr "Přípona"
+
+#. module: document
 #: selection:report.document.user,month:0
 msgid "February"
 msgstr "Únor"
 
 #. module: document
-#: field:document.directory,name:0
-msgid "Name"
-msgstr "Název"
-
-#. module: document
-#: view:document.directory:0
-msgid "Fields"
+#: field:document.directory.dctx,field:0
+msgid "Field"
 msgstr "Pole"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "April"
-msgstr "Duben"
-
-#. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
-msgid "# of Files"
-msgstr "Počet souborů"
-
-#. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Typ obsahu adresáře"
-
-#. module: document
-#: view:document.directory:0
+#: help:document.directory,resource_field:0
 msgid ""
-"Only members of these groups will have access to this directory and its "
-"files."
+"Field to be used as name on resource directories. If empty, the \"name\" "
+"will be used."
 msgstr ""
-"Přístup k tomuto adresáři a souborům v něm mají pouze členové těchto skupin."
+"Pole, které se má použít pro název adresářů. Pokud ho necháte prázdné, "
+"použije se pole \"název\" (name)."
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:17
-#, python-format
-msgid "%s (%s)"
-msgstr ""
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Pořadí"
-
-#. module: document
-#: field:document.directory.content,name:0
-msgid "Content Name"
-msgstr "Název obsahu"
+#: view:document.directory:document.view_document_directory_form
+msgid "Fields"
+msgstr "Pole"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -762,25 +378,352 @@ msgid "File Name"
 msgstr "Název souboru"
 
 #. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Stromová struktura"
+#: field:report.document.file,file_size:0
+#: field:report.document.user,file_size:0
+msgid "File Size"
+msgstr "Velikost souboru"
 
 #. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:document.view_size_month
+#: view:report.document.file:document.view_size_month_tree
+msgid "File Size by Month"
+msgstr "Velikost souborů podle měsíců"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_tree
-#: model:ir.ui.menu,name:document.menu_document_directories_tree
-msgid "Directories' Structure"
-msgstr "Struktura adresářů"
+#: field:document.directory,file_ids:0
+#: view:report.document.user:document.view_document_user_form
+#: view:report.document.user:document.view_document_user_tree
+msgid "Files"
+msgstr "Soubory"
 
 #. module: document
-#: field:report.document.user,name:0
-msgid "Year"
-msgstr "Rok"
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_tree
+msgid "Files by Month"
+msgstr "Soubory podle měsíců"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:document.view_files_by_user_graph
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Detaily souborů podle adresářů"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Detaily souborů podle uživatelů"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "Filter on my documents"
+msgstr "Filtr nad mými dokumenty"
+
+#. module: document
+#: field:document.directory,resource_find_all:0
+msgid "Find all resources"
+msgstr "Hledat všechny zdroje"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Folders per resource"
+msgstr "Složky podle zdroje"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "For each entry here, virtual files will appear in this folder."
+msgstr ""
+"Pro každý zdejší záznam se v tomto adresáři objeví virtuální soubory."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Generated Files"
+msgstr "Generované soubory"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Group By"
+msgstr ""
+
+#. module: document
+#: field:document.directory,group_ids:0
+msgid "Groups"
+msgstr "Skupiny"
+
+#. module: document
+#: field:document.configuration,id:0
+#: field:document.directory,id:0
+#: field:document.directory.content,id:0
+#: field:document.directory.content.type,id:0
+#: field:document.directory.dctx,id:0
+#: field:document.storage,id:0
+#: field:report.document.file,id:0
+#: field:report.document.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: document
+#: help:document.directory,resource_find_all:0
+msgid ""
+"If true, all attachments that match this resource will  be located. If "
+"false, only ones that have this as parent."
+msgstr ""
+"Pokud je pravda, všechny přílohy odpovídající tomuto zdroji budou vyhledány. "
+"Pokud je nepravda, pouze ty, které mají tohoto jako rodiče."
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+"Pokud sem dáte objekt, tato šablona adresáře se objeví dole pod všemi těmito "
+"objekty. Takové adresáře jsou \"přiloženy\" ke určitému modelu nebo záznamu, "
+"právě jako přílohy. Nedávejte sem nadřazený adresář, pokud vybíráte "
+"nadřazený model."
+
+#. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Začlenit název záznamu"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+#: field:ir.attachment,index_content:0
+msgid "Indexed Content"
+msgstr "Indexovaný obsah"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "January"
+msgstr "Leden"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "July"
+msgstr "Červenec"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "June"
+msgstr "Červen"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "Knowledge Application Configuration"
+msgstr "Nastavení aplikace znalostí"
+
+#. module: document
+#: field:document.directory,write_uid:0
+msgid "Last Modification User"
+msgstr "Naposledy upraveno uživatelem"
+
+#. module: document
+#: field:document.configuration,write_uid:0
+#: field:document.directory.content,write_uid:0
+#: field:document.directory.content.type,write_uid:0
+#: field:document.directory.dctx,write_uid:0
+#: field:document.storage,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: document
+#: field:document.configuration,write_date:0
+#: field:document.directory.content,write_date:0
+#: field:document.directory.content.type,write_date:0
+#: field:document.directory.dctx,write_date:0
+#: field:document.storage,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "March"
+msgstr "Březen"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "May"
+msgstr "Květen"
+
+#. module: document
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "MIME typ"
+
+#. module: document
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID modulu"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+msgid "Modification"
+msgstr ""
+
+#. module: document
+#: field:report.document.user,change_date:0
+msgid "Modified Date"
+msgstr "Datum změny"
+
+#. module: document
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Měsíc"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "My Document(s)"
+msgstr ""
+
+#. module: document
+#: field:document.directory,name:0
+msgid "Name"
+msgstr "Název"
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Pole názvu"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "November"
+msgstr "Listopad"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "October"
+msgstr "Říjen"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"Odoo's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"Only members of these groups will have access to this directory and its "
+"files."
+msgstr ""
+"Přístup k tomuto adresáři a souborům v něm mají pouze členové těchto skupin."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,user_id:0
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,user_id:0
+#: field:report.document.user,user_id:0
+msgid "Owner"
+msgstr "Vlastník"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "PDF Report"
+msgstr "PDF výkaz"
+
+#. module: document
+#: field:document.directory,parent_id:0
+msgid "Parent Directory"
+msgstr "Nadřazená složka"
+
+#. module: document
+#: field:document.directory,ressource_parent_type_id:0
+msgid "Parent Model"
+msgstr "Nadřazený model"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: document
+#: field:document.directory.content,prefix:0
+msgid "Prefix"
+msgstr "Předpona"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Související dokumenty"
+
+#. module: document
+#: field:document.directory.content,report_id:0
+msgid "Report"
+msgstr "Report"
+
+#. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID zdroje"
+
+#. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Model zdroje"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Resources"
+msgstr "Zdroje"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Search Document Directory"
+msgstr "Hledat adresář dokumentů"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Security"
+msgstr "Zabezpečení"
+
+#. module: document
+#: help:document.directory,ressource_type_id:0
+msgid ""
+"Select an object here and there will be one folder per record of that "
+"resource."
+msgstr "Vyberte zde objekt a bude jedna složka na záznam pro tento zdroj."
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "September"
+msgstr "Září"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Seq."
+msgstr "Poř."
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Pořadí"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Static"
+msgstr "Statický"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Static Directory"
+msgstr "Statický adresář"
 
 #. module: document
 #: model:ir.model,name:document.model_document_storage
@@ -788,299 +731,91 @@ msgid "Storage Media"
 msgstr "Úložné zařízení"
 
 #. module: document
-#: field:document.directory.content,extension:0
-msgid "Document Type"
-msgstr "Typ dokumentu"
+#: field:document.directory.content,suffix:0
+msgid "Suffix"
+msgstr "Přípona"
 
-#~ msgid "Notes"
-#~ msgstr "Poznámky"
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Jméno adresáře musí být unikátní!"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
+#. module: document
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
 
-#~ msgid "Preview"
-#~ msgstr "Náhled"
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
-#~ msgid "Document Configuration"
-#~ msgstr "Konfigurace dokumentu"
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr ""
+"Tyto skupiny se ale nevztahují k podřízeným adresářům, které musí mít "
+"definovány vlastní skupiny."
 
-#~ msgid "Attachment"
-#~ msgstr "Příloha"
+#. module: document
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Stromová struktura"
 
-#~ msgid "Configure"
-#~ msgstr "Nastavení"
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,type:0
+msgid "Type"
+msgstr "Typ"
 
-#~ msgid "Link"
-#~ msgstr "Odkaz"
+#. module: document
+#: help:document.directory,domain:0
+msgid ""
+"Use a domain if you want to apply an automatic filter on visible resources."
+msgstr ""
+"Použijte doménu, pokud chcete použít automatické filtrování na viditelných "
+"zdrojích."
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalidní XML pro zobrazení architektury!"
+#. module: document
+#: view:report.document.user:document.view_report_document_user_search
+msgid "Users File"
+msgstr ""
 
-#~ msgid "Database"
-#~ msgstr "Databáze"
-
-#~ msgid "Storing Method"
-#~ msgstr "Způsob skladování"
-
-#~ msgid "Other Resources"
-#~ msgstr "Jiné zdroje"
-
-#~ msgid "File Information"
-#~ msgstr "Informace souboru"
-
-#~ msgid "Parent Item"
-#~ msgstr "Nadřazená položka"
-
-#~ msgid "Directorie's Structure"
-#~ msgstr "Struktura adresářů"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Špatný název modelu v definici akce"
-
-#~ msgid "Resource Title"
-#~ msgstr "Titulek zdroje"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "Automatická konfigurace adresářů"
-
-#~ msgid "Process Node"
-#~ msgstr "Uzel procesu"
-
-#~ msgid "Files per Month"
-#~ msgstr "Souborů za měsíc"
-
-#~ msgid "title"
-#~ msgstr "název"
-
-#~ msgid "This Year"
-#~ msgstr "Letos"
-
-#~ msgid "Path"
-#~ msgstr "Cesta"
-
+#. module: document
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#: code:addons/document/document.py:347
 #, python-format
-#~ msgid "Error!"
-#~ msgstr "Chyba!"
+msgid "ValidateError"
+msgstr "Chyba kontroly"
 
-#~ msgid "Project"
-#~ msgstr "Projekt"
+#. module: document
+#: field:document.directory,content_ids:0
+msgid "Virtual Files"
+msgstr "Virtuální soubory"
 
-#~ msgid "Files by Users"
-#~ msgstr "Soubory podle uživatelů"
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+"Když je tento průvodce vykonán, nastaví automaticky vaše adresáře podle "
+"instalovaných modulů."
 
-#~ msgid "Document directory"
-#~ msgstr "Adresář s dokumenty"
+#. module: document
+#: field:report.document.user,name:0
+msgid "Year"
+msgstr "Rok"
 
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "Chyba! Nemůžete vytvářet rekurzivní adresáře."
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
-#~ msgid "Storage"
-#~ msgstr "Úložiště"
-
-#~ msgid "Files Per Partner"
-#~ msgstr "Soubory podle partnerů"
-
-#~ msgid "Created"
-#~ msgstr "Vytvořeno"
-
-#~ msgid "Stored Filename"
-#~ msgstr "Uložené jméno souboru"
-
-#~ msgid "Modified"
-#~ msgstr "Změněno"
-
-#~ msgid "Files by Partner"
-#~ msgstr "Soubory podle partnerů"
-
-#~ msgid "Image"
-#~ msgstr "Obrázek"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Automatická konfigurace adresáře"
-
-#~ msgid "User"
-#~ msgstr "Uživatel"
-
-#~ msgid "Online"
-#~ msgstr "Online"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "Automatická konfigurace adresářů pro projekty."
-
-#~ msgid "Data"
-#~ msgstr "Data"
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "Integrovaný systém správy dokumentů"
-
-#~ msgid "Read Only"
-#~ msgstr "Pouze ke čtení"
-
-#~ msgid "Files By Users"
-#~ msgstr "Soubory podle uživatelů"
-
-#~ msgid "For file storage, the root path of the storage"
-#~ msgstr "Pro úložiště souborů - kořenový adresář"
-
-#~ msgid "Last Posted Time"
-#~ msgstr "Čas posledního odeslání"
-
-#~ msgid "Wall of Shame"
-#~ msgstr "Zeď hanby"
-
-#~ msgid "Files details by Partners"
-#~ msgstr "Detaily souborů podle partnerů"
-
-#~ msgid "External file storage"
-#~ msgstr "Externí úložiště souborů"
-
-#~ msgid "Users that did not inserted documents since one month"
-#~ msgstr "Uživatelé, kteří měsíc neuložili žádný soubor"
-
-#~ msgid "Files by users"
-#~ msgstr "Soubory podle uživatelů"
-
-#~ msgid "This Month"
-#~ msgstr "Tento měsíc"
-
-#~ msgid ""
-#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-#~ "what is typed here."
-#~ msgstr ""
-#~ "Název pole. Mějte na paměti, že před to, co sem napíšete, bude vložena "
-#~ "předpona \"dctx_\"."
-
-#~ msgid "New Files"
-#~ msgstr "Nové soubory"
-
-#~ msgid "Files By Partner"
-#~ msgstr "Soubory podle partnerů"
-
-#~ msgid ""
-#~ "The Documents repository gives you access to all attachments, such as mails, "
-#~ "project documents, invoices etc."
-#~ msgstr ""
-#~ "Úložiště Documents vám umožňuje přístup ke všem přílohám, jako jsou maily, "
-#~ "projektové dokumenty, faktury atd."
-
-#~ msgid "If set, media is for reading only"
-#~ msgstr "Pokud je toto nastaveno, médium je jen pro čtení"
-
-#~ msgid "Statistics by User"
-#~ msgstr "Statistika podle uživatelů"
-
-#~ msgid ""
-#~ "Auto directory configuration for Sale Orders and Quotation with report."
-#~ msgstr "Automatická konfigurace adresářů pro objednávky a nabídky."
-
-#, python-format
-#~ msgid "File name must be unique!"
-#~ msgstr "Název souboru musí být unikátní!"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(kopie)"
-
-#~ msgid "Internal File storage"
-#~ msgstr "Interní úložiště souborů"
-
-#~ msgid "Directory must have a parent or a storage"
-#~ msgstr "Adresář musí mít rodiče nebo úložiště"
-
-#~ msgid "Files by Resource Type"
-#~ msgstr "Soubory podle typu zdroje"
-
-#~ msgid "Search Document storage"
-#~ msgstr "Hledej v úložišti dokumentů"
-
-#~ msgid "Document board"
-#~ msgstr "Nástěnka dokumentů"
-
-#~ msgid "Sale Order"
-#~ msgstr "Prodejní objednávka"
-
-#~ msgid "Auto directory configuration for Products."
-#~ msgstr "Automatická konfigurace adresářů pro výrobky"
-
-#~ msgid "Configure Resource Directory"
-#~ msgstr "Nastavení adresáře zdrojů"
-
-#~ msgid "Document Dashboard"
-#~ msgstr "Nástěnka dokument"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Průběh nastavení"
-
-#~ msgid ""
-#~ "This is a complete document management system:\n"
-#~ "    * User Authentication\n"
-#~ "    * Document Indexation :- .pptx and .docx files are not support in "
-#~ "windows platform.\n"
-#~ "    * Dashboard for Document that includes:\n"
-#~ "        * New Files (list)\n"
-#~ "        * Files by Resource Type (graph)\n"
-#~ "        * Files by Partner (graph)\n"
-#~ "        * Files by Month (graph)\n"
-#~ "    ATTENTION:\n"
-#~ "    - When you install this module in a running company that have already "
-#~ "PDF files stored into the database,\n"
-#~ "      you will lose them all.\n"
-#~ "    - After installing this module PDF's are no longer stored into the "
-#~ "database,\n"
-#~ "      but in the servers rootpad like /server/bin/filestore.\n"
-#~ msgstr ""
-#~ "Toto je kompletní systém pro správu dokumentů:\n"
-#~ "    * Autentizace uživatelů\n"
-#~ "    * Indexování dokumentů :- soubory .pptx a .docx nejsou podporovány na "
-#~ "platformě windows.\n"
-#~ "    * Nástěnka pro dokumenty zahrnuje:\n"
-#~ "        * Nové soubory (seznam)\n"
-#~ "        * Soubory podle typu zdroje (graf)\n"
-#~ "        * Soubory podle partnera (graf)\n"
-#~ "        * Soubory podle měsíce (graf)\n"
-#~ "    POZOR:\n"
-#~ "    - Když instalujete tento modul do běžící společnosti, která již má "
-#~ "soubory PDF uložené v databázi,\n"
-#~ "      všechny je ztratíte.\n"
-#~ "    - Po instalaci tohoto modulu dále nejsou PDF uchovány v databázi,\n"
-#~ "      ale na serveru v adresáři jako /server/bin/filestore.\n"
-
-#~ msgid ""
-#~ "If not checked, media is currently offline and its contents not available"
-#~ msgstr ""
-#~ "Pokud není zaškrtnuto, médium je aktuálně offline a jeho obsahu nedostupný"
-
-#~ msgid "Related to"
-#~ msgstr "Souvisí s"
-
-#~ msgid "Choose the following Resouces to auto directory configuration."
-#~ msgstr "Vyberte následující zdroj pro automatické nastavení adresáře."
-
-#~ msgid "Attached To"
-#~ msgstr "Připojeno k"
-
-#~ msgid "Dashboard"
-#~ msgstr "Nástěnka"
-
-#~ msgid "Reporting"
-#~ msgstr "Vykazování"
-
-#~ msgid "Product"
-#~ msgstr "Výrobek"
-
-#~ msgid "The storage path must be unique!"
-#~ msgstr "Cesta úložiště musí být unikátní!"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Správa znalostí"
-
-#~ msgid "Indexed Content - experimental"
-#~ msgstr "Indexovaný obsah - pokusné"
-
-#~ msgid "This Months Files"
-#~ msgstr "Soubory za tyto měsíce"
-
-#~ msgid "All Months Files"
-#~ msgstr "Soubory za všechny měsíce"
+#. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""

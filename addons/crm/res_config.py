@@ -55,7 +55,7 @@ class crm_configuration(osv.TransientModel):
                 cr, uid, [
                     ('alias_model_id.model', '=', 'crm.lead'),
                     ('alias_force_thread_id', '=', False),
-                    ('alias_parent_model_id.model', '=', 'crm.case.section'),
+                    ('alias_parent_model_id.model', '=', 'crm.team'),
                     ('alias_parent_thread_id', '=', False),
                     ('alias_defaults', '=', '{}')
                 ], context=context)
@@ -74,7 +74,7 @@ class crm_configuration(osv.TransientModel):
         for record in self.browse(cr, uid, ids, context=context):
             alias_id = self._find_default_lead_alias_id(cr, uid, context=context)
             if not alias_id:
-                create_ctx = dict(context, alias_model_name='crm.lead', alias_parent_model_name='crm.case.section')
+                create_ctx = dict(context, alias_model_name='crm.lead', alias_parent_model_name='crm.team')
                 alias_id = self.pool['mail.alias'].create(cr, uid, {'alias_name': record.alias_prefix}, context=create_ctx)
             else:
                 mail_alias.write(cr, uid, alias_id, {'alias_name': record.alias_prefix}, context=context)

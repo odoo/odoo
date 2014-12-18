@@ -1,195 +1,42 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* document
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-22 01:15+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-06 02:49+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@zupy.com.br>\n"
-"Language-Team: \n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:05+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: document
-#: field:document.directory,parent_id:0
-msgid "Parent Directory"
-msgstr "Diretório Superior"
+#: field:report.document.file,nbr:0
+#: field:report.document.user,nbr:0
+msgid "# of Files"
+msgstr "Nº de Arquivos"
 
 #. module: document
-#: code:addons/document/document.py:350
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:19
 #, python-format
-msgid "Directory name contains special characters!"
-msgstr "Nome do diretório contém caracteres especias!"
+msgid "%s (%s)"
+msgstr "%s (%s)"
 
 #. module: document
-#: view:document.directory:0
-msgid "Search Document Directory"
-msgstr "Pesquisar Diretório de Documento"
-
-#. module: document
-#: help:document.directory,resource_field:0
-msgid ""
-"Field to be used as name on resource directories. If empty, the \"name\" "
-"will be used."
-msgstr ""
-"Campo para ser usado como o nome dos diretórios dos recursos. Se vazio, o "
-"\"nome\" será usado."
-
-#. module: document
-#: view:document.directory:0
-msgid "Group By..."
-msgstr "Agrupar Por..."
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr "Modificação"
-
-#. module: document
-#: view:document.directory:0
-msgid "Resources"
-msgstr "Recursos"
-
-#. module: document
-#: field:document.directory,file_ids:0
-#: view:report.document.user:0
-msgid "Files"
-msgstr "Arquivos"
-
-#. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Tipo Mime"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "March"
-msgstr "Março"
-
-#. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Expressão"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,company_id:0
-msgid "Company"
-msgstr "Empresa"
-
-#. module: document
-#: model:ir.model,name:document.model_document_directory_content
-msgid "Directory Content"
-msgstr "Conteúdo do Diretório"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr "Meus Documentos"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_document_management_configuration
-msgid "Document Management"
-msgstr "Gerenciamento de Documentos"
-
-#. module: document
-#: help:document.directory.dctx,expr:0
-msgid ""
-"A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Uma expressão python usada para avaliar o campo.\n"
-"Você pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como "
-"referência para o registro atual, em pastas dinâmicas"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid "The name of the field."
-msgstr "O nome do campo."
-
-#. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
+#: code:addons/document/document.py:117
+#: code:addons/document/document.py:307
 #, python-format
-msgid "Directory name must be unique!"
-msgstr "Nome do diretório deve ser único!"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Filter on my documents"
-msgstr "Filtrar em meus documentos"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
-msgid "Indexed Content"
-msgstr "Conteúdo Indexado"
-
-#. module: document
-#: help:document.directory,resource_find_all:0
-msgid ""
-"If true, all attachments that match this resource will  be located. If "
-"false, only ones that have this as parent."
-msgstr ""
-"Se verdadeiro, todos os anexos que correspondam a este recurso serão "
-"localizados. Se falso, somente os que o tiverem como pai."
-
-#. module: document
-#: view:document.directory:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
-#: model:ir.ui.menu,name:document.menu_document_directories
-msgid "Directories"
-msgstr "Diretórios"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_user
-msgid "Files details by Users"
-msgstr "Detalhes de arquivos por Usuários"
-
-#. module: document
-#: field:document.directory,resource_find_all:0
-msgid "Find all resources"
-msgstr "Procurar todos os recursos"
-
-#. module: document
-#: selection:document.directory,type:0
-msgid "Folders per resource"
-msgstr "Pastas por recursos"
-
-#. module: document
-#: field:document.directory.content,suffix:0
-msgid "Suffix"
-msgstr "Sufixo"
-
-#. module: document
-#: field:report.document.user,change_date:0
-msgid "Modified Date"
-msgstr "Data de Modificação"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Knowledge Application Configuration"
-msgstr "Configuração da Aplicação de Conhecimento"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,partner_id:0
-msgid "Partner"
-msgstr "Parceiro"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Documentos Relacionados"
+msgid "%s (copy)"
+msgstr "%s (cópia)"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -212,252 +59,61 @@ msgstr ""
 "        "
 
 #. module: document
-#: code:addons/document/document.py:340
-#: code:addons/document/document.py:345
-#: code:addons/document/document.py:350
-#, python-format
-msgid "ValidateError"
-msgstr "Erro de Validação"
-
-#. module: document
-#: model:ir.model,name:document.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_file_form
-#: model:ir.ui.menu,name:document.menu_document_doc
-#: model:ir.ui.menu,name:document.menu_document_files
-msgid "Documents"
-msgstr "Documentos"
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Modelo de recurso"
-
-#. module: document
-#: field:report.document.file,file_size:0
-#: field:report.document.user,file_size:0
-msgid "File Size"
-msgstr "Tamanho do Arquivo:"
-
-#. module: document
-#: field:document.directory.content.type,name:0
-#: field:ir.attachment,file_type:0
-msgid "Content Type"
-msgstr "Tipo de Conteúdo"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,type:0
-msgid "Type"
-msgstr "Tipo"
-
-#. module: document
-#: sql_constraint:ir.attachment:0
-msgid "The filename must be unique in a directory !"
-msgstr "O nome do arquivo deve ser único em um diretório!"
-
-#. module: document
-#: code:addons/document/document.py:110
-#: code:addons/document/document.py:310
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (cópia)"
-
-#. module: document
-#: help:document.directory,ressource_type_id:0
+#: help:document.directory.dctx,expr:0
 msgid ""
-"Select an object here and there will be one folder per record of that "
-"resource."
+"A python expression used to evaluate the field.\n"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
+"to the current record, in dynamic folders"
 msgstr ""
-"Selecione um objeto aqui a terá uma pasta por registro para este recurso."
+"Uma expressão python usada para avaliar o campo.\n"
+"Você pode usar 'dir_id' para a pasta atual, 'res_id', 'res_model' como "
+"referência para o registro atual, em pastas dinâmicas"
 
 #. module: document
-#: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Use um domínio se você quer aplicar um filtro automático em recursos "
-"visíveis."
+#: field:document.directory.content.type,active:0
+msgid "Active"
+msgstr "Ativo"
 
 #. module: document
-#: constraint:document.directory:0
-msgid "Error! You cannot create recursive directories."
-msgstr "Erro! Não é possível criar diretórios recursivos."
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Todos os Arquivos do Usuário"
 
 #. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Nome do Campo"
-
-#. module: document
-#: field:document.directory,dctx_ids:0
-msgid "Context fields"
-msgstr "Campos de Contexto"
-
-#. module: document
-#: view:document.directory:0
-#: field:report.document.user,type:0
-msgid "Directory Type"
-msgstr "Tipo de Diretório"
-
-#. module: document
-#: field:document.directory.content,report_id:0
-msgid "Report"
-msgstr "Relatório"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "July"
-msgstr "Julho"
-
-#. module: document
-#: field:document.directory.content.type,code:0
-msgid "Extension"
-msgstr "Extensão"
-
-#. module: document
-#: field:document.directory,content_ids:0
-msgid "Virtual Files"
-msgstr "Arquivos Virtuais"
-
-#. module: document
-#: code:addons/document/document.py:576
-#, python-format
-msgid "Error at doc write!"
-msgstr "Erro na gravação do documento!"
-
-#. module: document
-#: view:document.directory:0
-msgid "Generated Files"
-msgstr "Arquivos Gerados"
-
-#. module: document
-#: view:document.configuration:0
-msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Quando executar este assistente, ele irá configurar seus diretórios "
-"automaticamente de acordo com os módulos instalados."
-
-#. module: document
-#: field:document.directory.content,directory_id:0
-#: field:document.directory.dctx,dir_id:0
-#: model:ir.actions.act_window,name:document.action_document_file_directory_form
-#: view:ir.attachment:0
-#: field:ir.attachment,parent_id:0
-#: model:ir.model,name:document.model_document_directory
-#: field:report.document.user,directory:0
-msgid "Directory"
-msgstr "Diretório"
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Segurança"
-
-#. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
-msgid "Last Modification User"
-msgstr "Usuário da Última Modificação"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
-#: view:report.document.user:0
-msgid "Files by User"
-msgstr "Arquivos Por Usuário"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "on"
-msgstr "em"
-
-#. module: document
-#: field:document.directory,domain:0
-msgid "Domain"
-msgstr "Domínio"
-
-#. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
-msgid "Date Modified"
-msgstr "Data de Modificação"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_file
-msgid "Files details by Directory"
-msgstr "Detalhes de Arquivos por Diretório"
-
-#. module: document
-#: view:report.document.user:0
+#: view:report.document.user:document.view_report_document_user_search
 msgid "All users files"
 msgstr "Todos os arquivos de usuários"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_size_month
-#: view:report.document.file:0
-msgid "File Size by Month"
-msgstr "Tamanho de Arquivo por Mês"
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+"Junto com o Modelo Superior, este ID anexa esta pasta a um registro "
+"específico de um Modelo Superior"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "December"
-msgstr "Dezembro"
+msgid "April"
+msgstr "Abril"
 
 #. module: document
-#: selection:document.directory,type:0
-msgid "Static Directory"
-msgstr "Diretório Estático"
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:7
+#, python-format
+msgid "Attachment(s)"
+msgstr "Anexo(s)"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-msgid "Month"
-msgstr "Mês"
+#: view:ir.attachment:document.view_document_file_tree
+msgid "Attachments"
+msgstr "Anexos"
 
 #. module: document
-#: view:document.directory:0
-msgid "Define words in the context, for all child directories and files"
-msgstr "Defina palavras no contexo, para todos os subdiretório e Arquivos"
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Estático"
-
-#. module: document
-#: field:report.document.user,user:0
-msgid "unknown"
-msgstr "desconhecido"
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,user_id:0
-#: view:ir.attachment:0
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
-msgid "Owner"
-msgstr "Proprietário"
-
-#. module: document
-#: view:document.directory:0
-msgid "PDF Report"
-msgstr "Relatório PDF"
-
-#. module: document
-#: view:document.directory:0
-msgid "Contents"
-msgstr "Conteúdo"
-
-#. module: document
-#: field:document.directory,create_date:0
-#: field:report.document.user,create_date:0
-msgid "Date Created"
-msgstr "Data de Criação"
+#: selection:report.document.user,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -471,22 +127,6 @@ msgstr ""
 "Se sim, o diretório deverá ser do tipo recurso."
 
 #. module: document
-#: view:document.configuration:0
-#: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Configure Directories"
-msgstr "Configurar Diretórios"
-
-#. module: document
-#: field:document.directory.content,include_name:0
-msgid "Include Record Name"
-msgstr "Incluir Nome do Registro"
-
-#. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "ID do Modelo"
-
-#. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
 "Check this if you want to use the same tree structure as the object selected "
@@ -496,108 +136,59 @@ msgstr ""
 "objeto selecionado no sistema."
 
 #. module: document
-#: help:document.directory,ressource_id:0
-msgid ""
-"Along with Parent Model, this ID attaches this folder to a specific record "
-"of Parent Model."
-msgstr ""
-"Junto com o Modelo Superior, este ID anexa esta pasta a um registro "
-"específico de um Modelo Superior"
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Subdiretório"
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:6
-#, python-format
-msgid "Attachment(s)"
-msgstr "Anexo(s)"
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,company_id:0
+msgid "Company"
+msgstr "Empresa"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "August"
-msgstr "Agosto"
+#: view:document.configuration:document.view_auto_config_form
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Configure Directories"
+msgstr "Configurar Diretórios"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Contexto dinâmico"
+#: field:document.directory.content,name:0
+msgid "Content Name"
+msgstr "Nome de Conteúdo"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory cannot be parent of itself!"
-msgstr "Diretório não pode ser pai dele mesmo!"
+#: field:document.directory.content.type,name:0
+msgid "Content Type"
+msgstr "Tipo de Conteúdo"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "June"
-msgstr "Junho"
+#: view:document.directory:document.view_document_directory_form
+msgid "Contents"
+msgstr "Conteúdo"
 
 #. module: document
-#: field:document.directory,group_ids:0
-msgid "Groups"
-msgstr "Grupos"
+#: field:document.directory,dctx_ids:0
+msgid "Context fields"
+msgstr "Campos de Contexto"
 
 #. module: document
-#: field:document.directory.content.type,active:0
-msgid "Active"
-msgstr "Ativo"
+#: field:document.configuration,create_uid:0
+#: field:document.directory.content,create_uid:0
+#: field:document.directory.content.type,create_uid:0
+#: field:document.directory.dctx,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "November"
-msgstr "Novembro"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
-"record, just like attachments. Don't put a parent directory if you select a "
-"parent model."
-msgstr ""
-"Se você colocar um objeto aqui, este modelo de diretório aparecerá abaixo "
-"desses objetos. Alguns diretórios são \"Anexados\" a um modelo ou registro "
-"específico,  como anexos. Não coloque um diretório parente se você "
-"selecionar um modelo parente."
-
-#. module: document
-#: view:document.directory:0
-msgid "Definition"
-msgstr "Definição"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "October"
-msgstr "Outubro"
-
-#. module: document
-#: view:document.directory:0
-msgid "Seq."
-msgstr "Seq."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Todos os Arquivos do Usuário"
-
-#. module: document
-#: selection:report.document.user,month:0
-msgid "January"
-msgstr "Janeiro"
-
-#. module: document
-#: view:document.directory:0
-msgid "Document Directory"
-msgstr "Diretório de Documentos"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "The directory name must be unique !"
-msgstr "O nome do diretório deve ser único !"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachments"
-msgstr "Anexos"
+#: field:document.configuration,create_date:0
+#: field:document.directory.content,create_date:0
+#: field:document.directory.content.type,create_date:0
+#: field:document.directory.dctx,create_date:0
+#: field:document.storage,create_date:0
+msgid "Created on"
+msgstr "Criado em"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -605,49 +196,70 @@ msgid "Creator"
 msgstr "Criador"
 
 #. module: document
-#: view:document.configuration:0
-msgid ""
-"OpenERP's Document Management System supports mapping virtual folders with "
-"documents. The virtual folder of a document can be used to manage the files "
-"attached to the document, or to print and download any report. This tool "
-"will create directories automatically according to modules installed."
-msgstr ""
-"O sistema de controle de documentos do OpenErp suporta mapear pastas "
-"virtuais com documentos. A pasta virtual de um documento pode ser usada para "
-"gerenciar os arquivos anexados ao documento, os para exibir ou fazer "
-"download de qualquer relatório. Esta ferramenta irá criar diretórios "
-"automaticamente de acordo com os módulos instalados."
+#: field:document.directory,create_date:0
+#: field:report.document.user,create_date:0
+msgid "Date Created"
+msgstr "Data de Criação"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
-#: view:report.document.user:0
-msgid "Files by Month"
-msgstr "Arquivos por Mês"
+#: field:document.directory,write_date:0
+msgid "Date Modified"
+msgstr "Data de Modificação"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "September"
-msgstr "Setembro"
+msgid "December"
+msgstr "Dezembro"
 
 #. module: document
-#: field:document.directory.content,prefix:0
-msgid "Prefix"
-msgstr "Prefixo"
+#: view:document.directory:document.view_document_directory_form
+msgid "Define words in the context, for all child directories and files"
+msgstr "Defina palavras no contexo, para todos os subdiretório e Arquivos"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Subdiretório"
+#: view:document.directory:document.view_document_directory_form
+msgid "Definition"
+msgstr "Definição"
 
 #. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "ID do Recurso"
+#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:document.view_document_directory_tree
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: model:ir.ui.menu,name:document.menu_document_directories
+msgid "Directories"
+msgstr "Diretórios"
 
 #. module: document
-#: field:document.directory.dctx,field:0
-msgid "Field"
-msgstr "Campo"
+#: model:ir.actions.act_window,name:document.action_document_directory_tree
+#: model:ir.ui.menu,name:document.menu_document_directories_tree
+msgid "Directories' Structure"
+msgstr "Estrutura do Diretório"
+
+#. module: document
+#: field:document.directory.content,directory_id:0
+#: field:document.directory.dctx,dir_id:0
+#: model:ir.actions.act_window,name:document.action_document_file_directory_form
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,parent_id:0
+#: model:ir.model,name:document.model_document_directory
+#: field:report.document.user,directory:0
+msgid "Directory"
+msgstr "Diretório"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
+msgstr "Configuração do Diretório"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content
+msgid "Directory Content"
+msgstr "Conteúdo do Diretório"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Tipo de Conteúdo do Diretório"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
@@ -655,43 +267,58 @@ msgid "Directory Dynamic Context"
 msgstr "Contexto de Diretório Dinâmico"
 
 #. module: document
-#: field:document.directory,ressource_parent_type_id:0
-msgid "Parent Model"
-msgstr "Modelo Principal"
+#: view:document.directory:document.view_document_directory_form
+#: field:report.document.user,type:0
+msgid "Directory Type"
+msgstr "Tipo de Diretório"
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Estes grupos, no entanto, NÃO se aplicam a diretórios filhos, que precisam "
-"definir seus próprios grupos."
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Diretório não pode ser pai dele mesmo!"
 
 #. module: document
-#: selection:report.document.user,month:0
-msgid "May"
-msgstr "Maio"
+#: code:addons/document/document.py:347
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Nome do diretório contém caracteres especias!"
 
 #. module: document
-#: view:document.directory:0
-msgid "For each entry here, virtual files will appear in this folder."
-msgstr "Para cada entrada aqui, arquivos virtuais irão aparecer nesta pasta"
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#, python-format
+msgid "Directory name must be unique!"
+msgstr "Nome do diretório deve ser único!"
 
 #. module: document
-#: model:ir.model,name:document.model_ir_attachment
-msgid "ir.attachment"
-msgstr "Anexo"
+#: view:document.directory:document.view_document_directory_filter
+msgid "Document Directory"
+msgstr "Diretório de Documentos"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Users File"
-msgstr "Arquivo do Usuário"
+#: model:ir.ui.menu,name:document.menu_document_management_configuration
+msgid "Document Management"
+msgstr "Gerenciamento de Documentos"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Directory Configuration"
-msgstr "Configuração do Diretório"
+#: field:document.directory.content,extension:0
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_document_file_form
+msgid "Documents"
+msgstr "Documentos"
+
+#. module: document
+#: field:document.directory,domain:0
+msgid "Domain"
+msgstr "Domínio"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Dynamic context"
+msgstr "Contexto dinâmico"
 
 #. module: document
 #: help:document.directory,type:0
@@ -709,9 +336,261 @@ msgstr ""
 "definido no diretório pai"
 
 #. module: document
+#: code:addons/document/document.py:573
+#, python-format
+msgid "Error at doc write!"
+msgstr "Erro na gravação do documento!"
+
+#. module: document
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr "Erro! Não é possível criar diretórios recursivos."
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Expressão"
+
+#. module: document
+#: field:document.directory.content.type,code:0
+msgid "Extension"
+msgstr "Extensão"
+
+#. module: document
 #: selection:report.document.user,month:0
 msgid "February"
 msgstr "Fevereiro"
+
+#. module: document
+#: field:document.directory.dctx,field:0
+msgid "Field"
+msgstr "Campo"
+
+#. module: document
+#: help:document.directory,resource_field:0
+msgid ""
+"Field to be used as name on resource directories. If empty, the \"name\" "
+"will be used."
+msgstr ""
+"Campo para ser usado como o nome dos diretórios dos recursos. Se vazio, o "
+"\"nome\" será usado."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Fields"
+msgstr "Campos"
+
+#. module: document
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Nome do Arquivo"
+
+#. module: document
+#: field:report.document.file,file_size:0
+#: field:report.document.user,file_size:0
+msgid "File Size"
+msgstr "Tamanho do Arquivo:"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:document.view_size_month
+#: view:report.document.file:document.view_size_month_tree
+msgid "File Size by Month"
+msgstr "Tamanho de Arquivo por Mês"
+
+#. module: document
+#: field:document.directory,file_ids:0
+#: view:report.document.user:document.view_document_user_form
+#: view:report.document.user:document.view_document_user_tree
+msgid "Files"
+msgstr "Arquivos"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_tree
+msgid "Files by Month"
+msgstr "Arquivos por Mês"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:document.view_files_by_user_graph
+msgid "Files by User"
+msgstr "Arquivos Por Usuário"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Detalhes de Arquivos por Diretório"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Detalhes de arquivos por Usuários"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "Filter on my documents"
+msgstr "Filtrar em meus documentos"
+
+#. module: document
+#: field:document.directory,resource_find_all:0
+msgid "Find all resources"
+msgstr "Procurar todos os recursos"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Folders per resource"
+msgstr "Pastas por recursos"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "For each entry here, virtual files will appear in this folder."
+msgstr "Para cada entrada aqui, arquivos virtuais irão aparecer nesta pasta"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Generated Files"
+msgstr "Arquivos Gerados"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: document
+#: field:document.directory,group_ids:0
+msgid "Groups"
+msgstr "Grupos"
+
+#. module: document
+#: field:document.configuration,id:0
+#: field:document.directory,id:0
+#: field:document.directory.content,id:0
+#: field:document.directory.content.type,id:0
+#: field:document.directory.dctx,id:0
+#: field:document.storage,id:0
+#: field:report.document.file,id:0
+#: field:report.document.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: document
+#: help:document.directory,resource_find_all:0
+msgid ""
+"If true, all attachments that match this resource will  be located. If "
+"false, only ones that have this as parent."
+msgstr ""
+"Se verdadeiro, todos os anexos que correspondam a este recurso serão "
+"localizados. Se falso, somente os que o tiverem como pai."
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+"Se você colocar um objeto aqui, este modelo de diretório aparecerá abaixo "
+"desses objetos. Alguns diretórios são \"Anexados\" a um modelo ou registro "
+"específico,  como anexos. Não coloque um diretório parente se você "
+"selecionar um modelo parente."
+
+#. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Incluir Nome do Registro"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+#: field:ir.attachment,index_content:0
+msgid "Indexed Content"
+msgstr "Conteúdo Indexado"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "January"
+msgstr "Janeiro"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "July"
+msgstr "Julho"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "June"
+msgstr "Junho"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "Knowledge Application Configuration"
+msgstr "Configuração da Aplicação de Conhecimento"
+
+#. module: document
+#: field:document.directory,write_uid:0
+msgid "Last Modification User"
+msgstr "Usuário da Última Modificação"
+
+#. module: document
+#: field:document.configuration,write_uid:0
+#: field:document.directory.content,write_uid:0
+#: field:document.directory.content.type,write_uid:0
+#: field:document.directory.dctx,write_uid:0
+#: field:document.storage,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: document
+#: field:document.configuration,write_date:0
+#: field:document.directory.content,write_date:0
+#: field:document.directory.content.type,write_date:0
+#: field:document.directory.dctx,write_date:0
+#: field:document.storage,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "March"
+msgstr "Março"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "May"
+msgstr "Maio"
+
+#. module: document
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Tipo Mime"
+
+#. module: document
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID do Modelo"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+msgid "Modification"
+msgstr "Modificação"
+
+#. module: document
+#: field:report.document.user,change_date:0
+msgid "Modified Date"
+msgstr "Data de Modificação"
+
+#. module: document
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Mês"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "My Document(s)"
+msgstr "Meus Documentos"
 
 #. module: document
 #: field:document.directory,name:0
@@ -719,28 +598,36 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: document
-#: view:document.directory:0
-msgid "Fields"
-msgstr "Campos"
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Nome do Campo"
 
 #. module: document
 #: selection:report.document.user,month:0
-msgid "April"
-msgstr "Abril"
+msgid "November"
+msgstr "Novembro"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
-msgid "# of Files"
-msgstr "Nº de Arquivos"
+#: selection:report.document.user,month:0
+msgid "October"
+msgstr "Outubro"
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Tipo de Conteúdo do Diretório"
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"Odoo's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
+"O sistema de gerenciamento de documentos do Odoo suporta um mapeamento "
+"virtual de pastas com documentos. Uma pasta virtual de documentos pode ser "
+"usada para gerenciar os arquivos anexados ao documento, ou para imprimir e "
+"baixar qualquer relatório. Esta ferramenta cria diretórios automaticamente "
+"de acordo com os módulos instalados."
 
 #. module: document
-#: view:document.directory:0
+#: view:document.directory:document.view_document_directory_form
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
@@ -749,11 +636,93 @@ msgstr ""
 "arquivos."
 
 #. module: document
-#. openerp-web
-#: code:addons/document/static/src/js/document.js:17
-#, python-format
-msgid "%s (%s)"
-msgstr "%s (%s)"
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,user_id:0
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,user_id:0
+#: field:report.document.user,user_id:0
+msgid "Owner"
+msgstr "Proprietário"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "PDF Report"
+msgstr "Relatório PDF"
+
+#. module: document
+#: field:document.directory,parent_id:0
+msgid "Parent Directory"
+msgstr "Diretório Superior"
+
+#. module: document
+#: field:document.directory,ressource_parent_type_id:0
+msgid "Parent Model"
+msgstr "Modelo Principal"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,partner_id:0
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: document
+#: field:document.directory.content,prefix:0
+msgid "Prefix"
+msgstr "Prefixo"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Documentos Relacionados"
+
+#. module: document
+#: field:document.directory.content,report_id:0
+msgid "Report"
+msgstr "Relatório"
+
+#. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID do Recurso"
+
+#. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Modelo de recurso"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Resources"
+msgstr "Recursos"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Search Document Directory"
+msgstr "Pesquisar Diretório de Documento"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Security"
+msgstr "Segurança"
+
+#. module: document
+#: help:document.directory,ressource_type_id:0
+msgid ""
+"Select an object here and there will be one folder per record of that "
+"resource."
+msgstr ""
+"Selecione um objeto aqui a terá uma pasta por registro para este recurso."
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "September"
+msgstr "Setembro"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Seq."
+msgstr "Seq."
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -761,35 +730,14 @@ msgid "Sequence"
 msgstr "Sequência"
 
 #. module: document
-#: field:document.directory.content,name:0
-msgid "Content Name"
-msgstr "Nome de Conteúdo"
+#: view:document.directory:document.view_document_directory_filter
+msgid "Static"
+msgstr "Estático"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Nome do Arquivo"
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Estrutura em Árvore"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_tree
-#: model:ir.ui.menu,name:document.menu_document_directories_tree
-msgid "Directories' Structure"
-msgstr "Estrutura do Diretório"
-
-#. module: document
-#: field:report.document.user,name:0
-msgid "Year"
-msgstr "Ano"
+#: selection:document.directory,type:0
+msgid "Static Directory"
+msgstr "Diretório Estático"
 
 #. module: document
 #: model:ir.model,name:document.model_document_storage
@@ -797,272 +745,91 @@ msgid "Storage Media"
 msgstr "Mídia de Armazenamento"
 
 #. module: document
-#: field:document.directory.content,extension:0
-msgid "Document Type"
-msgstr "Tipo de Documento"
+#: field:document.directory.content,suffix:0
+msgid "Suffix"
+msgstr "Sufixo"
 
-#~ msgid "Attachment"
-#~ msgstr "Anexo"
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "O nome do diretório deve ser único !"
 
-#~ msgid "Preview"
-#~ msgstr "Pré-visualizar"
+#. module: document
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr "O nome do arquivo deve ser único em um diretório!"
 
-#~ msgid "Data"
-#~ msgstr "Dados"
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr "O nome do campo."
 
-#~ msgid "Attached To"
-#~ msgstr "Anexado a"
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr ""
+"Estes grupos, no entanto, NÃO se aplicam a diretórios filhos, que precisam "
+"definir seus próprios grupos."
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
+#. module: document
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Estrutura em Árvore"
 
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "Erro! Você não pode criar diretórios recursivos."
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,type:0
+msgid "Type"
+msgstr "Tipo"
 
-#~ msgid "Document Configuration"
-#~ msgstr "Configuração do Documento"
+#. module: document
+#: help:document.directory,domain:0
+msgid ""
+"Use a domain if you want to apply an automatic filter on visible resources."
+msgstr ""
+"Use um domínio se você quer aplicar um filtro automático em recursos "
+"visíveis."
 
-#~ msgid "Document Management System."
-#~ msgstr "Sistema de gerênciamento de documento."
+#. module: document
+#: view:report.document.user:document.view_report_document_user_search
+msgid "Users File"
+msgstr "Arquivo do Usuário"
 
-#~ msgid "Other Resources"
-#~ msgstr "Outros Recursos"
-
-#~ msgid "Configure"
-#~ msgstr "Configurar"
-
-#~ msgid "File Information"
-#~ msgstr "Informação do Arquivo"
-
-#~ msgid "Notes"
-#~ msgstr "Observações"
-
-#~ msgid "Database"
-#~ msgstr "Banco de Dados"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome de modelo inválido na definição da ação"
-
-#~ msgid "Reporting"
-#~ msgstr "Relatórios"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "Configuração Automática de Diretório"
-
-#~ msgid "Files per Month"
-#~ msgstr "Arquivos por Mês"
-
-#~ msgid "title"
-#~ msgstr "título"
-
-#~ msgid "This Year"
-#~ msgstr "Este Ano"
-
-#~ msgid "Path"
-#~ msgstr "Caminho"
-
-#~ msgid "Project"
-#~ msgstr "Projeto"
-
+#. module: document
+#: code:addons/document/document.py:337
+#: code:addons/document/document.py:342
+#: code:addons/document/document.py:347
 #, python-format
-#~ msgid "Error!"
-#~ msgstr "Erro!"
+msgid "ValidateError"
+msgstr "Erro de Validação"
 
-#~ msgid "Auto directory configuration for Products."
-#~ msgstr "Configuração automática de diretório para Produtos."
+#. module: document
+#: field:document.directory,content_ids:0
+msgid "Virtual Files"
+msgstr "Arquivos Virtuais"
 
-#~ msgid "Files by Users"
-#~ msgstr "Arquivos por Usuários"
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+"Quando executar este assistente, ele irá configurar seus diretórios "
+"automaticamente de acordo com os módulos instalados."
 
-#~ msgid "Document directory"
-#~ msgstr "Diretório de Documento"
+#. module: document
+#: field:report.document.user,name:0
+msgid "Year"
+msgstr "Ano"
 
-#~ msgid "Storage"
-#~ msgstr "Armazenamento"
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
-#~ msgid "Configure Resource Directory"
-#~ msgstr "Configurar Diretório de Recurso"
-
-#~ msgid "Files Per Partner"
-#~ msgstr "Arquivos Por Parceiro"
-
-#~ msgid "Created"
-#~ msgstr "Criação"
-
-#~ msgid "Modified"
-#~ msgstr "Modificado"
-
-#~ msgid "Files by Partner"
-#~ msgstr "Arquivos por Parceiro"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Progresso da Configuração"
-
-#~ msgid "Image"
-#~ msgstr "Imagem"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Auto Configuração do Diretório"
-
-#~ msgid "Online"
-#~ msgstr "Online"
-
-#~ msgid "User"
-#~ msgstr "Usuário"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "Configuração automática de diretórios para projetos."
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "Sistema Integrado de Gestão de Documentos"
-
-#~ msgid "Choose the following Resouces to auto directory configuration."
-#~ msgstr "Selecione os recursos seguintes para auto configurar o diretório."
-
-#~ msgid "Dashboard"
-#~ msgstr "Painel"
-
-#~ msgid "Read Only"
-#~ msgstr "Somente Leitura"
-
-#~ msgid "Last Posted Time"
-#~ msgstr "Última Publicação"
-
-#~ msgid "Files details by Partners"
-#~ msgstr "Detalhes de arquivos por Parceiros"
-
-#~ msgid "Files by users"
-#~ msgstr "Arquivos por Usuários"
-
-#~ msgid "Product"
-#~ msgstr "Produto"
-
-#~ msgid "New Files"
-#~ msgstr "Novos Arquivos"
-
-#~ msgid "This Month"
-#~ msgstr "Este Mês"
-
-#~ msgid ""
-#~ "Auto directory configuration for Sale Orders and Quotation with report."
-#~ msgstr ""
-#~ "Auto configurar diretório para Ordem de Venda e Contação com Relatório."
-
-#~ msgid "Statistics by User"
-#~ msgstr "Estatísticas por Usuário"
-
-#~ msgid "The storage path must be unique!"
-#~ msgstr "O Caminho de armazenamento deve ser único!"
-
-#, python-format
-#~ msgid "File name must be unique!"
-#~ msgstr "Nome do Arquivo deve ser único!"
-
-#~ msgid "Internal File storage"
-#~ msgstr "Armazenamento interno de arquivo"
-
-#~ msgid "Files by Resource Type"
-#~ msgstr "Arquivos por Tipo de Recursos"
-
-#~ msgid "Search Document storage"
-#~ msgstr "Procurar Armazenamento de Documento"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML Inválido da Arquitetura da Visão!"
-
-#~ msgid "Parent Item"
-#~ msgstr "Item Pai"
-
-#~ msgid "Directorie's Structure"
-#~ msgstr "Estrutura de Diretórios"
-
-#~ msgid "Storing Method"
-#~ msgstr "Método de Armazenando"
-
-#~ msgid ""
-#~ "Check this field if you want that the name of the file start by the record "
-#~ "name."
-#~ msgstr ""
-#~ "Marque este campo se você quiser que o nome do arquivo começa pelo nome de "
-#~ "registro"
-
-#~ msgid "Sale Order"
-#~ msgstr "Pedido de Venda"
-
-#~ msgid ""
-#~ "If not checked, media is currently offline and its contents not available"
-#~ msgstr ""
-#~ "Se não estiver marcado, a mídia está atualmente offline e seu conteúdo não "
-#~ "disponível."
-
-#~ msgid "Process Node"
-#~ msgstr "Nó do processo"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Gestão de Conhecimento"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(copiar)"
-
-#~ msgid "External file storage"
-#~ msgstr "Armazenamento externo de arquivo"
-
-#~ msgid "This Months Files"
-#~ msgstr "Arquivos Deste Mês"
-
-#~ msgid "Users that did not inserted documents since one month"
-#~ msgstr "Usuários não inseriram documentos a mais de um mês"
-
-#~ msgid "Wall of Shame"
-#~ msgstr "Mural da Vergonha"
-
-#~ msgid "For file storage, the root path of the storage"
-#~ msgstr "Para armazenamento de arquivos, o caminho raiz do armazenamento"
-
-#~ msgid ""
-#~ "The Documents repository gives you access to all attachments, such as mails, "
-#~ "project documents, invoices etc."
-#~ msgstr ""
-#~ "O repositório de documentos lhe dá acesso a todos os anexos, como emails, "
-#~ "documentos de projetos, faturas, etc"
-
-#~ msgid ""
-#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-#~ "what is typed here."
-#~ msgstr ""
-#~ "Nome do campo. Note que o prefixo \"dctx_\" será preposto ao que for "
-#~ "digitado aqui."
-
-#~ msgid "Indexed Content - experimental"
-#~ msgstr "Conteúdo Indexado - experimental"
-
-#~ msgid "Directory must have a parent or a storage"
-#~ msgstr "O diretório precisa ter um pai ou um armazenamento"
-
-#~ msgid "All Months Files"
-#~ msgstr "Arquivos de todos os meses"
-
-#~ msgid "Document board"
-#~ msgstr "Painel de Documentos"
-
-#~ msgid "Document Dashboard"
-#~ msgstr "Painel dos Documentos"
-
-#~ msgid "Files By Users"
-#~ msgstr "Arquivos por Usuários"
-
-#~ msgid "Related to"
-#~ msgstr "Relacionado a"
-
-#~ msgid "Files By Partner"
-#~ msgstr "Arquivos por Parceiro"
-
-#~ msgid "If set, media is for reading only"
-#~ msgstr "Se marcado, será somente leitura"
-
-#~ msgid "Stored Filename"
-#~ msgstr "Nome do Arquivo Armazenado"
+#. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr "desconhecido"

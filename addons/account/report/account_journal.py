@@ -31,6 +31,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if context is None:
             context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
+        self.context = context
         self.period_ids = []
         self.last_move_id = False
         self.journal_ids = []

@@ -1,31 +1,21 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-27 13:53+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "生产单"
-
-#. module: sale_mrp
-#: help:mrp.production,sale_name:0
-msgid "Indicate the name of sales order."
-msgstr "在销售订单中标识出这名称"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_mrp
 #: help:mrp.production,sale_ref:0
@@ -33,45 +23,41 @@ msgid "Indicate the Customer Reference from sales order."
 msgstr "在销售订单中标识出相关客户"
 
 #. module: sale_mrp
-#: field:mrp.production,sale_ref:0
-msgid "Sale Reference"
-msgstr "销售单号"
+#: help:mrp.production,sale_name:0
+msgid "Indicate the name of sales order."
+msgstr "在销售订单中标识出这名称"
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "生产单"
+
+#. module: sale_mrp
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr ""
 
 #. module: sale_mrp
 #: field:mrp.production,sale_name:0
 msgid "Sale Name"
 msgstr "销售名称"
 
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "订单数量不能为0或者负数!"
+#. module: sale_mrp
+#: field:mrp.production,sale_ref:0
+msgid "Sale Reference"
+msgstr "销售单号"
 
-#~ msgid "Sales and MRP Management"
-#~ msgstr "销售和MRP管理"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
-#~ msgid "Sales Reference"
-#~ msgstr "销售订单"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
-#~ msgid "Sales Name"
-#~ msgstr "销售名称"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module provides facility to the user to install mrp and sales "
-#~ "modules\n"
-#~ "    at a time. It is basically used when we want to keep track of "
-#~ "production\n"
-#~ "    orders generated from sales order.\n"
-#~ "    It adds sales name and sales Reference on production order\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这模块提方便用户一次安装MRP和销售模块。\n"
-#~ "它基本是用于跟踪从销售订单生成生产单。\n"
-#~ "它在生产单中加入销售名称和销售订单。\n"
-#~ "    "
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "编号必须在公司内唯一！"
-
-#~ msgid "Order quantity cannot be negative or zero!"
-#~ msgstr "订单数量不能是负数或者0！"
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_stock_move
+msgid "Stock Move"
+msgstr ""

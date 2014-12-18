@@ -1,128 +1,32 @@
 # Hungarian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-19 18:17+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-05 08:58+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-06 07:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: auth_oauth
-#: field:auth.oauth.provider,validation_endpoint:0
-msgid "Validation URL"
-msgstr "URL elérési út érvényesítés"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,auth_endpoint:0
-msgid "Authentication URL"
-msgstr "URL elérési út hitelesítés"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,name:0
-msgid "Provider name"
-msgstr "Szolgáltató neve"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,scope:0
-msgid "Scope"
-msgstr "Hatáskör"
-
-#. module: auth_oauth
-#: field:res.users,oauth_provider_id:0
-msgid "OAuth Provider"
-msgstr "OAuth szolgáltató"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,css_class:0
-msgid "CSS class"
-msgstr "CSS osztály"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,body:0
-msgid "Body"
-msgstr "Törzs"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_res_users
-msgid "Users"
-msgstr "Felhasználók"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,sequence:0
-msgid "unknown"
-msgstr "ismeretlen"
-
-#. module: auth_oauth
-#: field:res.users,oauth_access_token:0
-msgid "OAuth Access Token"
-msgstr "OAuth hozzáférési Token"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,client_id:0
-#: field:base.config.settings,auth_oauth_facebook_client_id:0
-#: field:base.config.settings,auth_oauth_google_client_id:0
-msgid "Client ID"
-msgstr "Ügyfál ID azonosító"
-
-#. module: auth_oauth
-#: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
-msgid "OAuth Providers"
-msgstr "OAuth szolgáltatók"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
-msgid "OAuth2 provider"
-msgstr "OAuth2 szolgáltató"
-
-#. module: auth_oauth
-#: field:res.users,oauth_uid:0
-msgid "OAuth User ID"
-msgstr "OAuth felhasználó ID azonosító"
+#: code:addons/auth_oauth/controllers/main.py:99
+#, python-format
+msgid "Access Denied"
+msgstr "A hozzáférés megtagadva"
 
 #. module: auth_oauth
 #: field:base.config.settings,auth_oauth_facebook_enabled:0
 msgid "Allow users to sign in with Facebook"
 msgstr "Felhasználók Facebook keresztüli bejelentkezés engedélyezése"
-
-#. module: auth_oauth
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID egyedinek kell lennie mindegyik szolgáltatóhoz"
-
-#. module: auth_oauth
-#: help:res.users,oauth_uid:0
-msgid "Oauth Provider user_id"
-msgstr "Oauth szolgáltatói felhasználó_id"
-
-#. module: auth_oauth
-#: field:auth.oauth.provider,data_endpoint:0
-msgid "Data URL"
-msgstr "Adat  URL elérési út"
-
-#. module: auth_oauth
-#: view:auth.oauth.provider:0
-msgid "arch"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
-msgid "Providers"
-msgstr "Szolgáltatók"
 
 #. module: auth_oauth
 #: field:base.config.settings,auth_oauth_google_enabled:0
@@ -133,3 +37,149 @@ msgstr "Engedélyezze a felhasználók Google bejelentkezését"
 #: field:auth.oauth.provider,enabled:0
 msgid "Allowed"
 msgstr "Engedélyezett"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,auth_endpoint:0
+msgid "Authentication URL"
+msgstr "URL elérési út hitelesítés"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,body:0
+msgid "Body"
+msgstr "Törzs"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,css_class:0
+msgid "CSS class"
+msgstr "CSS osztály"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,client_id:0
+#: field:base.config.settings,auth_oauth_facebook_client_id:0
+#: field:base.config.settings,auth_oauth_google_client_id:0
+msgid "Client ID"
+msgstr "Ügyfál ID azonosító"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,data_endpoint:0
+msgid "Data URL"
+msgstr "Adat  URL elérési út"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: auth_oauth
+#: field:res.users,oauth_access_token:0
+msgid "OAuth Access Token"
+msgstr "OAuth hozzáférési Token"
+
+#. module: auth_oauth
+#: field:res.users,oauth_provider_id:0
+msgid "OAuth Provider"
+msgstr "OAuth szolgáltató"
+
+#. module: auth_oauth
+#: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+msgid "OAuth Providers"
+msgstr "OAuth szolgáltatók"
+
+#. module: auth_oauth
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr "OAuth UID egyedinek kell lennie mindegyik szolgáltatóhoz"
+
+#. module: auth_oauth
+#: field:res.users,oauth_uid:0
+msgid "OAuth User ID"
+msgstr "OAuth felhasználó ID azonosító"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
+msgid "OAuth2 provider"
+msgstr "OAuth2 szolgáltató"
+
+#. module: auth_oauth
+#: view:res.users:auth_oauth.view_users_form
+msgid "Oauth"
+msgstr "Társszerző"
+
+#. module: auth_oauth
+#: help:res.users,oauth_uid:0
+msgid "Oauth Provider user_id"
+msgstr "Oauth szolgáltatói felhasználó_id"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,name:0
+msgid "Provider name"
+msgstr "Szolgáltató neve"
+
+#. module: auth_oauth
+#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
+msgid "Providers"
+msgstr "Szolgáltatók"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,scope:0
+msgid "Scope"
+msgstr "Hatáskör"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
+#, python-format
+msgid "Sign up is not allowed on this database."
+msgstr "A feliratkozás nem megengedett erre az adatbázisra."
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,validation_endpoint:0
+msgid "Validation URL"
+msgstr "URL elérési út érvényesítés"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:101
+#, python-format
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Nincs elérési jogosultsága ehhez az adatbázishoz vagy a meghívója lejárt. "
+"Kérjen meghívót és győződjön meg róla, hogy az e-mail-ben elküldött "
+"hivatkozást használja."
+
+#. module: auth_oauth
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_form
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_list
+msgid "arch"
+msgstr "vezető"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,sequence:0
+msgid "unknown"
+msgstr "ismeretlen"

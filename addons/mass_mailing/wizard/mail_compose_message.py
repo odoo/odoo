@@ -32,13 +32,19 @@ class MailComposeMessage(osv.TransientModel):
                 wizard.model in [item[0] for item in self.pool['mail.mass_mailing']._get_mailing_model(cr, uid, context=context)]:
             mass_mailing = wizard.mass_mailing_id
             if not mass_mailing:
+                reply_to_mode = wizard.no_auto_thread and 'email' or 'thread'
+                reply_to = wizard.no_auto_thread and wizard.reply_to or False
                 mass_mailing_id = self.pool['mail.mass_mailing'].create(
                     cr, uid, {
                         'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id and wizard.mass_mailing_campaign_id.id or False,
                         'name': wizard.mass_mailing_name,
                         'template_id': wizard.template_id and wizard.template_id.id or False,
                         'state': 'done',
-                        'mailing_type': wizard.model,
+                        'reply_to_mode': reply_to_mode,
+                        'reply_to': reply_to,
+                        'sent_date': fields.datetime.now(),
+                        'body_html': wizard.body,
+                        'mailing_model': wizard.model,
                         'mailing_domain': wizard.active_domain,
                     }, context=context)
                 mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
@@ -52,6 +58,6 @@ class MailComposeMessage(osv.TransientModel):
                     })],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
-                    'auto_delete': True,
+                    'auto_delete': not mass_mailing.keep_archives,
                 })
         return res

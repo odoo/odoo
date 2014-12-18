@@ -72,7 +72,6 @@ class hr_employee_category(osv.Model):
         (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
-
 class hr_job(osv.Model):
 
     def _get_nbr_employees(self, cr, uid, ids, name, args, context=None):
@@ -119,21 +118,22 @@ class hr_job(osv.Model):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'Recruitment Closed'), ('recruit', 'Recruitment in Progress')],
+        'state': fields.selection([('recruit', 'Recruitment in Progress'), ('open', 'Recruitment Closed')],
                                   string='Status', readonly=True, required=True,
                                   track_visibility='always', copy=False,
-                                  help="By default 'Closed', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+                                  help="Set whether the recruitment process is open or closed for this job position."),
         'write_date': fields.datetime('Update Date', readonly=True),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=ctx),
-        'state': 'open',
+        'state': 'recruit',
+        'no_of_recruitment' : 1,
     }
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
-        ('hired_employee_check', "CHECK ( no_of_hired_employee <= no_of_recruitment )", "Number of hired employee must be less than expected number of employee in recruitment."),
+        
     ]
 
     def set_recruit(self, cr, uid, ids, context=None):
@@ -207,7 +207,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
@@ -352,8 +352,8 @@ class hr_employee(osv.osv):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+        for name, field in self._fields.items():
+            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
 
@@ -449,7 +449,7 @@ class hr_department(osv.osv):
         if manager_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
             if employee.user_id:
-                self.message_subscribe_users(cr, uid, [ids], user_ids=[employee.user_id.id], context=context)
+                self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
         return super(hr_department, self).write(cr, uid, ids, vals, context=context)
 
 

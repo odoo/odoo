@@ -22,6 +22,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Sales Management',
+    'website': 'https://www.odoo.com',
     'description': """
 This module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.
 ===============================================================================================================

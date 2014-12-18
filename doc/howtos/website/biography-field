@@ -1,0 +1,16 @@
+# HG changeset patch
+# Parent 216904cc7636679adbf1a5a211070e739c59c3a8
+diff -r 216904cc7636 -r d5b8a2de3e35 academy/templates.xml
+--- a/academy/templates.xml	Tue Aug 12 17:24:44 2014 +0200
++++ b/academy/templates.xml	Tue Aug 12 17:25:15 2014 +0200
+@@ -20,8 +20,8 @@
+       <div class="oe_structure"/>
+       <div class="oe_structure">
+         <div class="container">
+-          <h3><t t-esc="person.name"/></h3>
+-          <div><t t-esc="person.biography"/></div>
++          <h3 t-field="person.name"/>
++          <div t-field="person.biography"/>
+         </div>
+       </div>
+       <div class="oe_structure"/>

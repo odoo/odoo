@@ -174,7 +174,7 @@ class partner_vat_list(osv.osv_memory):
         obj_users = self.pool.get('res.users')
         obj_partner = self.pool.get('res.partner')
         obj_model_data = self.pool.get('ir.model.data')
-        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        seq_declarantnum = obj_sequence.next_by_code(cr, uid, 'declarantnum')
         obj_cmpny = obj_users.browse(cr, uid, uid, context=context).company_id
         company_vat = obj_cmpny.partner_id.vat
 
@@ -184,7 +184,7 @@ class partner_vat_list(osv.osv_memory):
         company_vat = company_vat.replace(' ','').upper()
         SenderId = company_vat[2:]
         issued_by = company_vat[:2]
-        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        seq_declarantnum = obj_sequence.next_by_code(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
         street = city = country = ''
         addr = obj_partner.address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])

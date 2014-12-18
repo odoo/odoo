@@ -32,7 +32,7 @@ class res_partner(osv.osv):
     def _auto_init(self, cr, context=None):
         result = super(res_partner, self)._auto_init(cr, context=context)
         # Remove constrains for vat, nrc on "commercial entities" because is not mandatory by legislation
-        # Even that VAT numbers are unique, the NRC field is not unique, and there are certain entities that 
+        # Even that VAT numbers are unique, the NRC field is not unique, and there are certain entities that
         # doesn't have a NRC number plus the formatting was changed few times, so we cannot have a base rule for
         # checking if available and emmited by the Ministry of Finance, only online on their website.
         

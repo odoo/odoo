@@ -1,62 +1,223 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-08-08 10:24+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Lähettäjä"
-
-#. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Malli"
-
-#. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
 msgstr ""
 
 #. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Vastaanottaja (Sähköpostit)"
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Lisää allekirjoitus"
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Lähtevän sähköpostin palvelin"
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Liitteet"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Automaatinen poisto"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Sisältö"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Viestin kopion vastaanottajat (voit käyttä täytettä)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Kopio viestistä"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
 msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "Pilkulla erotetut vastaanottajien osoitteet (voit käyttä täytettä)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Toimintotietueen poisto epäonnistui"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Sähköpostin esikatselu"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "Sähköpostin mallipohja"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Sähköpostin mallin esikatselu"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Sähköpostin mallit"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
 msgstr ""
 
 #. module: email_template
@@ -66,14 +227,87 @@ msgid "Field"
 msgstr "Kenttä"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Lähettäjän osoite (voit käyttä täytettä)"
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Lähettäjä"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Ryhmittele.."
+
+#. module: email_template
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,user_signature:0
+#: help:email_template.preview,user_signature:0
+msgid ""
+"If checked, the user's signature will be appended to the text version of the "
+"message"
+msgstr "Jos valittu, käyttäjän allekirjoitus lisätään tekstiversion perään."
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
+
+#. module: email_template
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Kieli"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Malli"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Nimi"
+
+#. module: email_template
+#: help:email.template,report_name:0
+#: help:email_template.preview,report_name:0
+msgid ""
+"Name to use for the generated report file (may contain placeholders)\n"
+"The extension can be omitted and will then come from the report type."
+msgstr ""
+
+#. module: email_template
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
 msgstr ""
 
 #. module: email_template
@@ -87,15 +321,109 @@ msgstr ""
 "korkeimman prioriteetin palvelinta käytetään."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Raportin tiedostonnimi"
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Mahdollinen raportti tulostettavaksi ja liitettäväksi"
 
 #. module: email_template
-#: view:email.template:0
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Lähtevän sähköpostin palvelin"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Yhteistyökumppani"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Poista tämä viesti pysyvästi viestin lähettämisen jälkeen säästääksesi tilaa"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Ehdotettu vastausosoite (voit käyttä täytettä)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
 msgid "Preview"
 msgstr "Esikatselu"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Esikatselu:"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,reply_to:0
@@ -104,81 +432,36 @@ msgid "Reply-To"
 msgstr "Vastausosoite"
 
 #. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Käytä mallia"
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Raportin tiedostonnimi"
 
 #. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Sisältö"
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "Rich-text/HTML versio viestistä (voit käyttä täytettä)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,user_signature:0
-#: help:email_template.preview,user_signature:0
-msgid ""
-"If checked, the user's signature will be appended to the text version of the "
-"message"
-msgstr "Jos valittu, käyttäjän allekirjoitus lisätään tekstiversion perään."
-
-#. module: email_template
-#: view:email.template:0
+#: view:email.template:email_template.view_email_template_search
 msgid "SMTP Server"
 msgstr "SMTP-palvelin"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Tallenna uudeksi malliksi"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
-msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
-msgstr ""
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "Sähköpostin mallit"
-
-#. module: email_template
-#: help:email.template,report_name:0
-#: help:email_template.preview,report_name:0
-msgid ""
-"Name to use for the generated report file (may contain placeholders)\n"
-"The extension can be omitted and will then come from the report type."
-msgstr ""
-
-#. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Esimerkkidokumentti"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Tallenna uutena malli"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Tallenna uudeksi malliksi"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -190,112 +473,26 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr ""
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Lähetä sähköposti (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Mallin esikatselu"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Tallenna uutena malli"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Viestin kopion vastaanottajat (voit käyttä täytettä)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "Pilkulla erotetut vastaanottajien osoitteet (voit käyttä täytettä)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Kehittynyt"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Esikatselu:"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Käytetty esimerkkidokumenttia"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Mallit"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Nimi"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Kieli"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Sähköpostin mallin esikatselu"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Sähköpostin esikatselu"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Alamalli"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Aihe (voit käyttä täytettä)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Ehdotettu vastausosoite (voit käyttä täytettä)"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -304,98 +501,23 @@ msgid "Sidebar Button"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Mahdollinen raportti tulostettavaksi ja liitettäväksi"
-
-#. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Malli"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "Vastaanottaja (Kumppanit)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Automaatinen poisto"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Liitteet"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Toimintotietueen poisto epäonnistui"
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Kopio viestistä"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
 msgstr ""
 
 #. module: email_template
@@ -405,34 +527,89 @@ msgid "Sub-field"
 msgstr "Alakenttä"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Sähköpostin yksityiskohdat"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Alamalli"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Lähetä sähköposti (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Aihe"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Aihe (voit käyttä täytettä)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr ""
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Mallin esikatselu"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Mallit"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-"Poista tämä viesti pysyvästi viestin lähettämisen jälkeen säästääksesi tilaa"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Vastaanottaja (Sähköpostit)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Ryhmittele.."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Vastaanottaja (Kumppanit)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Käytä mallia"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Varoitus"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -443,26 +620,11 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Varoitus"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Lisää allekirjoitus"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Yhteistyökumppani"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 msgstr ""
 
 #. module: email_template
@@ -476,852 +638,12 @@ msgstr ""
 "perusteella tehtyjen viestien liitteinä."
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr "Rich-text/HTML versio viestistä (voit käyttä täytettä)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Contents"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
 msgstr ""
 
 #. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Aihe"
-
-#, python-format
-#~ msgid ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-#~ msgstr ""
-#~ "Sinullle ei ole määritelty henkilökohtaisia sähköpostitilejä. \n"
-#~ "Pyydä joko pääkäyttäjää pakottamaan tili tälle pohjalle tai hanki itsellesi "
-#~ "henkilökohtainen sähköpostitili."
-
-#~ msgid "Email Content  "
-#~ msgstr "Sähköpostin sisältö  "
-
-#~ msgid ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-#~ msgstr ""
-#~ "Valitse kenttä mallista jota haluat käyttää.\n"
-#~ "Jos sillä on suhdekenttä, voit valita sen allaolevasta laatikosta\n"
-#~ "(huom! Jos arvoja ei ole, varmista että olet valilnnut oikean mallin)"
-
-#~ msgid "Personal Emails"
-#~ msgstr "Henkilökohtaiset sähköpostit"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Poista pysyvästi sähköpostit lähetyksen jälkeen"
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Sähköpostin lähetysvelho"
-
-#, python-format
-#~ msgid "Emails for multiple items saved in outbox."
-#~ msgstr ""
-#~ "useita kohteita sisältävät sähköpostit jotka on tallennettu lähetettyihin "
-#~ "sähköposteihin"
-
-#~ msgid "Email Account Configuration"
-#~ msgstr "Sähköpostitilin konfiguraatio"
-
-#~ msgid "Plain Text & HTML with no attachments"
-#~ msgstr "Pelkkä teksti & HTML ilman liitteitä"
-
-#~ msgid ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-#~ msgstr ""
-#~ "Määrittele käyttäjänimi SMTP palvelimella, jos palvelin vaatii "
-#~ "käyttäjätunnuksen, muuten jätä tyhjäksi"
-
-#~ msgid "Approved"
-#~ msgstr "Hyväksytty"
-
-#~ msgid "Email Accounts"
-#~ msgstr "Sähköpostitilit"
-
-#~ msgid "Send all mails"
-#~ msgstr "Lähetä kaikki sähköpostit"
-
-#~ msgid "Server Reference of mail"
-#~ msgstr "Palvelimen viite sähköpostille"
-
-#, python-format
-#~ msgid "Deletion of Record failed"
-#~ msgstr "Tietueen poisto epäonnistui"
-
-#~ msgid ""
-#~ "Select if this mail account does not belong to specific user but to the "
-#~ "organization as a whole. eg: info@companydomain.com"
-#~ msgstr ""
-#~ "Valitse jos tämä sähköpostitili ei kuulu tietylle käyttäjälle vaan koko "
-#~ "organisaatiolle. esim. info@yrityksennimi.com"
-
-#~ msgid "Send now"
-#~ msgstr "Lähetä nyt"
-
-#~ msgid "Not Applicable"
-#~ msgstr "Sopimaton"
-
-#~ msgid "HTML code"
-#~ msgstr "HTML koodi"
-
-#, python-format
-#~ msgid "Email sending failed for one or more objects."
-#~ msgstr ""
-#~ "sähköpostin lähettäminen epäonnistui yhdelle tai useammalle kohteelle"
-
-#~ msgid "Email Account"
-#~ msgstr "Sähköpostitili"
-
-#~ msgid ""
-#~ "The default language for the email. Placeholders can be used here. eg. "
-#~ "${object.partner_id.lang}"
-#~ msgstr ""
-#~ "Sähköpostin oletuskieli. Viitteitä voidaan käyttää tässä, esim. "
-#~ "${object.partner_id.lang}"
-
-#~ msgid ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
-#~ "e.g. ${object.email_cc}"
-#~ msgstr ""
-#~ "kopio-viestistä osoitteet, pilkulla erotettuna. viitteitä voidaan käyttää "
-#~ "esim. ${object.email_cc}"
-
-#~ msgid "Account"
-#~ msgstr "Tili"
-
-#~ msgid ""
-#~ "The description is used as the Sender name along with the provided From "
-#~ "Email, unless it is already specified in the From Email, e.g: John Doe "
-#~ "<john@doe.com>"
-#~ msgstr ""
-#~ "Kuvausta käytetään lähettäjän nimenä lähettäjän sähköpostin ohessa, jos sitä "
-#~ "ei ole jo määritelty sähköpostissa esim. Jaska Jokunen <jaska@jokunen.com>"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Lisää tähän kaikki liitteet nykyiselle dokumentille, jotka haluat "
-#~ "sisällyttää sähköpostiin"
-
-#~ msgid ""
-#~ "When you choose relationship fields this field will specify the sub value "
-#~ "you can use."
-#~ msgstr ""
-#~ "Kun valitset viitekentät, tämä kenttä määrittelee alatason arvon jota voit "
-#~ "käyttää."
-
-#~ msgid "Wizard Complete"
-#~ msgstr "Velho valmis"
-
-#~ msgid "Delete Action"
-#~ msgstr "Poista toiminto"
-
-#~ msgid "Approve Account"
-#~ msgstr "Hyväksy tunnus"
-
-#~ msgid "Both HTML & Text (Mixed)"
-#~ msgstr "Sekä HTML että teksti (yhdistetty)"
-
-#~ msgid "Referred Document"
-#~ msgstr "Viitattu dokumentti"
-
-#~ msgid "Complete Success"
-#~ msgstr "Täydellinen onnistuminen"
-
-#~ msgid "No of requested Mails"
-#~ msgstr "Pyydettyjen sähköpostien määrä"
-
-#~ msgid "Both HTML & Text (Alternative)"
-#~ msgstr "Sekä HTML että teksti (vaihtoehtoiset)"
-
-#~ msgid "Body(Text)"
-#~ msgstr "Runko (teksti)"
-
-#~ msgid "Accounts"
-#~ msgstr "Tilit"
-
-#~ msgid "From Email"
-#~ msgstr "Lähettäjän osoite"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here."
-#~ msgstr ""
-#~ "Osoite joihin vastaanottajien tulisi vastata, jos eri kuin lähettäjän "
-#~ "osoite. Viitteitä voidaan käyttää."
-
-#~ msgid "Company Emails"
-#~ msgstr "Yrityksen sähköpostit"
-
-#~ msgid "Attached Files"
-#~ msgstr "Liitetiedostot"
-
-#~ msgid "Standard Body (Text)"
-#~ msgstr "Vakiorunko (teksti)"
-
-#~ msgid "Body (Text-Web Client Only)"
-#~ msgstr "Runko (teksti- vain web client)"
-
-#~ msgid ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here. e.g. ${object.email_bcc}"
-#~ msgstr ""
-#~ "Piilokopion vastaanottajien osoitteet, pilkulla erotettuina. Viitteitä "
-#~ "voidaan käyttää esim. ${object.email_bcc}"
-
-#, python-format
-#~ msgid "Reason: %s"
-#~ msgstr "Syy: %s"
-
-#~ msgid "Insert Simple Field"
-#~ msgstr "Syötä yksinkertainen kenttä"
-
-#~ msgid "Body(Html)"
-#~ msgstr "Runko (html)"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason: Server Send Error\n"
-#~ " Description: %s"
-#~ msgstr ""
-#~ "Sähköposti tililtä %s epäonnistui. Todennäköinen syys: palvelimen "
-#~ "lähetysvirhe\n"
-#~ " Kuvaus: %s"
-
-#, python-format
-#~ msgid " (Email Attachment)"
-#~ msgstr " (sähköpostin liite)"
-
-#~ msgid "Standard Body"
-#~ msgstr "Vakiorunko"
-
-#, python-format
-#~ msgid "Mail from Account %s successfully Sent."
-#~ msgstr "Sähköpostit lähetetty onnistuneesti tililtä %s."
-
-#, python-format
-#~ msgid "Out going connection test failed"
-#~ msgstr "Lähtevä testiyhteys epäonnistui"
-
-#~ msgid "Wizard Button"
-#~ msgstr "Ohjatun toiminnon nappi"
-
-#~ msgid "Sent Items"
-#~ msgstr "Lähetetyt"
-
-#~ msgid "State"
-#~ msgstr "Tila"
-
-#~ msgid "Resource"
-#~ msgstr "Resurssi"
-
-#~ msgid "The text version of the mail"
-#~ msgstr "Sähköpostin tekstiversio"
-
-#~ msgid "My Emails"
-#~ msgstr "Omat sähköpostit"
-
-#~ msgid "Sub Field"
-#~ msgstr "Alatason kenttä"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Raportti"
-
-#~ msgid "User account"
-#~ msgstr "Käyttäjätunnus"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "Lisää allekirjoitukseni sähköpostiin"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Testaa lähtevä yhteys"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-#~ msgstr ""
-#~ "Vastausosoite joihin vastaanottajien tulisi vastata, jos eri kuin lähettäjän "
-#~ "osoiste. Viitteitä voidaan käyttää, esim. ${object.email_reply_to}"
-
-#~ msgid ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-#~ msgstr "Lomakkeen sivupöydän nappi joka käynnistää toiminnon"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "Runko (Raw html)"
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Valitse tämä jos haluat liittää sähköposteihin erityisen seurantamerkin, "
-#~ "jolloin voit identifioida ja seurata linkkejä takaisin liittyvään "
-#~ "resurssiin. Tämä on hyödyllistä esim. CRM liidien yhteydessä."
-
-#~ msgid "Server"
-#~ msgstr "Palvelin"
-
-#~ msgid "Signature"
-#~ msgstr "Allekirjoitus"
-
-#~ msgid "Server Information"
-#~ msgstr "Palvelimen tiedot"
-
-#~ msgid "Options"
-#~ msgstr "Valinnat"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Huom: tämä on raaka HTML:ää."
-
-#~ msgid "Multiple Mail Wizard Step 1"
-#~ msgstr "Monen sähköpostin velho, vaihe 1"
-
-#~ msgid "Mail Details"
-#~ msgstr "Sähköpostin yksityiskohdat"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SMTP palvelin tai portti ei ole määritelty"
-
-#~ msgid "Yes"
-#~ msgstr "Kyllä"
-
-#~ msgid "Window Action"
-#~ msgstr "Ikkunan toiminto"
-
-#~ msgid "Related User"
-#~ msgstr "Liittyvä käyttäjä"
-
-#~ msgid "Body (Rich Text Clients Only)"
-#~ msgstr "Runko (vain rich text clientit)"
-
-#~ msgid "HTML, otherwise Text"
-#~ msgstr "HTML, muuten teksti"
-
-#~ msgid "Drafts"
-#~ msgstr "Luonnokset"
-
-#~ msgid "Mail Contents"
-#~ msgstr "Sähköpostin sisältö"
-
-#~ msgid "BCC"
-#~ msgstr "Piilokopio"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "Mallipohjan nimen tulee olla uniikki !"
-
-#~ msgid "Plain Text"
-#~ msgstr "raakateksti"
-
-#~ msgid "Draft"
-#~ msgstr "Luonnos"
-
-#~ msgid "SMTP Port"
-#~ msgstr "SMTP portti"
-
-#~ msgid "Message-ID"
-#~ msgstr "Viestin ID"
-
-#~ msgid "Status"
-#~ msgstr "Tila"
-
-#~ msgid "Outgoing"
-#~ msgstr "Lähtevä"
-
-#~ msgid "User Name"
-#~ msgstr "Käyttäjätunnus"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Tallenna luonnoksiin"
-
-#~ msgid "Outbox"
-#~ msgstr "Lähetetyt"
-
-#~ msgid "User"
-#~ msgstr "Käyttäjä"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Lähetä/Vastaanota"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Lisäasetukset"
-
-#~ msgid "Expression"
-#~ msgstr "Lauseke"
-
-#~ msgid "Report File Name"
-#~ msgstr "Raportin tiedoston nimi"
-
-#~ msgid "Suspended"
-#~ msgstr "Keskeytetty"
-
-#~ msgid "History"
-#~ msgstr "Historia"
-
-#~ msgid "Send Mail"
-#~ msgstr "Lähetä sähköpostia"
-
-#~ msgid "To"
-#~ msgstr "Vastaanottaja"
-
-#~ msgid "Close"
-#~ msgstr "Sulje"
-
-#~ msgid "Sending"
-#~ msgstr "Lähetetään"
-
-#, python-format
-#~ msgid "Error sending mail: %s"
-#~ msgstr "Virhe sähköpostin lähetyksessä: %s"
-
-#~ msgid "Trash"
-#~ msgstr "Roskalaatikko"
-
-#~ msgid "User Information"
-#~ msgstr "Käyttäjän tiedot"
-
-#~ msgid "Actions"
-#~ msgstr "Toiminnot"
-
-#~ msgid "Create Action"
-#~ msgstr "Luo toiminto"
-
-#~ msgid "Description"
-#~ msgstr "Kuvaus"
-
-#~ msgid "Null Value"
-#~ msgstr "Nolla-arvo"
-
-#~ msgid "CC"
-#~ msgstr "Kopio"
-
-#~ msgid "Emails"
-#~ msgstr "Sähköpostit"
-
-#~ msgid "Sent"
-#~ msgstr "Lähetetyt"
-
-#~ msgid "Password"
-#~ msgstr "Salasana"
-
-#~ msgid "Addresses"
-#~ msgstr "Osoitteet"
-
-#~ msgid "Folder"
-#~ msgstr "Kansio"
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Ei kuvausta"
-
-#~ msgid "Suspend Account"
-#~ msgstr "Lukitse käyttäjätili"
-
-#~ msgid "HTML Body"
-#~ msgstr "HTML runko"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "Tätä arvoa käytetään jos kenttä on tyhjä"
-
-#~ msgid "No"
-#~ msgstr "Ei"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Runko (pelkkä teksti)"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Runko (teksti)"
-
-#~ msgid "Rec/Sent Date"
-#~ msgstr "Vastaanotto/lähetys päivä"
-
-#~ msgid "Report to send"
-#~ msgstr "Lähetettävä raportti"
-
-#~ msgid "Preview Template"
-#~ msgstr "Esikatsele mallipohja"
-
-#~ msgid "Initiated"
-#~ msgstr "Aloitettu"
-
-#~ msgid "Request Re-activation"
-#~ msgstr "Pyydä uudelleenaktivointia"
-
-#~ msgid "From Account"
-#~ msgstr "Käyttäjätunnukselta"
-
-#~ msgid "Model Internal Name"
-#~ msgstr "Mallin sisäinen nimi"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "Sähköpostin mallipohja"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "Sähköpostin postilaatikko"
-
-#~ msgid "Allowed User Groups"
-#~ msgstr "Sallitut käyttäjäryhmät"
-
-#~ msgid "Date on which Email Sent or Received"
-#~ msgstr "Päivä jolloin sähköposti lähettettiin tai vastaanotettiin"
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Puuttuva sähköpostitili"
-
-#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-#~ msgstr "Syötä lähtevän sähköpostin palvelimen nimi esim. smtp.omadomain.com"
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "Sähköposti mallipohja OpenERP:ille"
-
-#, python-format
-#~ msgid "SMTP Test Connection Was Successful"
-#~ msgstr "SMTP testiyhteys onnistui"
-
-#~ msgid "Templating Language"
-#~ msgstr "Mallipohjan kieli"
-
-#~ msgid "Recipient (To)"
-#~ msgstr "Vastaanottaja (To)"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Resurssien seuranta"
-
-#~ msgid "Body (HTML)"
-#~ msgstr "Runko (html)"
-
-#~ msgid "Existing files"
-#~ msgstr "Olemassaolevat tiedostot"
-
-#~ msgid "Report Name"
-#~ msgstr "Raportin nimi"
-
-#~ msgid ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-#~ msgstr ""
-#~ "Kopioi tämä html kookdi html viestisi runkoon näyttääksesi sen "
-#~ "sähköpostissasi."
-
-#~ msgid "Mail Format"
-#~ msgstr "Sähköpostin muotoilu"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Yrityksen käyttäjätilit"
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Anna portin numero, esim. 25 tai 587"
-
-#, python-format
-#~ msgid "email-template"
-#~ msgstr "sähköpostin mallipohja"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "Luotujen sähköpostien määrä"
-
-#~ msgid "Applicable for inward items only"
-#~ msgstr "Voimassa vain saapuville yhteyksille"
-
-#~ msgid "The subject of email. Placeholders can be used here."
-#~ msgstr "Sähköpostin aihe. Viitteitä voidaankäyttää tässä."
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Vain näihin ryhmiin kuuluvat käyttäjät voivat lähettää sähköpostia tästä "
-#~ "mallipohjasta"
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Mallipohjan kopio "
-
-#~ msgid "Text, otherwise HTML"
-#~ msgstr "Teksti, muuten HTML"
-
-#~ msgid "the signature from the User details will be appended to the mail"
-#~ msgstr "allekirjoitus käyttäjätiedoista lisätään tämän viestin loppuun"
-
-#, python-format
-#~ msgid "%s (Email Attachment)"
-#~ msgstr "%s (sähköpostiliite)"
-
-#~ msgid "Email Templates for Models"
-#~ msgstr "Sähköpostipohjat malleille"
-
-#~ msgid "Discard Mail"
-#~ msgstr "Hylkää sähköposti"
-
-#~ msgid "Error: You are not allowed to have more than 1 account."
-#~ msgstr "Virhe! sinulla ei saa olla enempää kuin 1 käyttäjätili"
-
-#~ msgid "Another setting already exists with this email ID !"
-#~ msgstr "Toinen asetus on jo olemassa tälle sähköposti ID:lle !"
-
-#, python-format
-#~ msgid "Core connection for the given ID does not exist"
-#~ msgstr "Runkoyhteyttä annettuun tunnukseen ei ole"
-
-#~ msgid ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-#~ msgstr ""
-#~ "Vastaanottajan sähköpostiosoite. Viitteitä voidaan käyttää tässä esim. "
-#~ "${object.email_to}"
-
-#~ msgid "Action that will open this email template on Resource records"
-#~ msgstr "Toiminto joka aukaisee tämän sähköpostimallinen resurssitiedoissa"
-
-#~ msgid "Corporate"
-#~ msgstr "Yrityksen"
-
-#~ msgid ""
-#~ "Tip: Multiple emails are sent in the same language (the first one is "
-#~ "proposed). We suggest you send emails in groups according to language."
-#~ msgstr ""
-#~ "Vihje. Useita sähköposteja lähetään samalla kielellä (ensimmäistä "
-#~ "ehdotetaan). Ehdotamme että lähetät sähköpostit ryhminä kielikohtaisesti."
-
-#~ msgid ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-#~ msgstr ""
-#~ "Kun olet klikannut 'lähetä kaikki sähköpostit', sähköpostit lähetetään "
-#~ "lähtevien kansioon ja tyhjennetään seuraavan Lähetyksen/vastaanoton "
-#~ "yhteydessä"
-
-#, python-format
-#~ msgid ""
-#~ "Server Send Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Palvelimen lähetysvirhe\n"
-#~ "Kuvaus: %s"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Sähköposti tililtä %s epäonnistui. Todennäköinen syy: MIME virhe\n"
-#~ "Kuvaus: %s"
-
-#~ msgid ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-#~ msgstr ""
-#~ "Voit liitää olemassaolevia tiedostoja tähän mallipohjaan, jolloin ne "
-#~ "lisätään kaikkiin sähköposteihin jotka lähetetään tästä pohjasta"
-
-#~ msgid "Simple Mail Wizard Step 1"
-#~ msgstr "Yksinkertainen sähköpostivelho, vaihe 1"
-
-#~ msgid "This is the wizard for sending mail"
-#~ msgstr "Tämä velho auttaa sähköpostin lähetyksessä"
-
-#~ msgid "Emails will be sent from this approved account."
-#~ msgstr "Sähköpostit lähetetään tältä hyväksytyltä tililltä"
-
-#, python-format
-#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
-#~ msgstr ""
-#~ "Sähköposti tililtä %s epäonnistui. Todennäköinen syy:Ttiliä ei ole hyväksytty"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Sisältää liitteitä"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid ""
-#~ "Copy and paste the value in the location you want to use a system value."
-#~ msgstr ""
-#~ "Kopioi ja liitä arvo kohteeseen jossa haluat käyttää järjestelmäarvoa."
-
-#~ msgid ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-#~ msgstr ""
-#~ "Kun suhdekenttää käytetään tämä kenttä näyttää valitsemasi kentän tyypin"
-
-#~ msgid ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Luodun raporttitiedoston nimi. Viitteitä voidaan käyttää tiedostonnimissä "
-#~ "esim. 2009_S0003.pdf"
-
-#~ msgid "Body (HTML-Web Client Only)"
-#~ msgstr "Runko (HTML vain web client)"
-
-#~ msgid ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Määrittele viestin-ID SMTP otsikko jota käytetään lähtevissä sähköposteissa. "
-#~ "Ole hyvä ja huomaa että tämä korvaa resurssien seurantavaihtoehdon. "
-#~ "Viitteittä voidaan käyttää tässä."
-
-#~ msgid ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-#~ msgstr ""
-#~ "Viestin ID otsikkoarvo, jos sinun tarvitsee määritellä se, esim. "
-#~ "tunnistaaksesi vastaukset myöhemmin automaattisesti. Viitteitä voidaan "
-#~ "käyttää tässä."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed on login. Probable Reason:Could not login to "
-#~ "server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Sähköposti tililtä %s epäonnistui kirjautumisessa. Todennäköinen syy: Ei "
-#~ "voitu kirjautua palvelimelle\n"
-#~ "Virhe: %s"
-
-#, python-format
-#~ msgid ""
-#~ "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Sähköpostin %s lähetys epäonnistui. Todennäköinen syy: Ei voitu kirjautua "
-#~ "palvelimelle\n"
-#~ "Virhe: %s"
-
-#~ msgid "Message type"
-#~ msgstr "Viestin tyyppi"
-
-#~ msgid "Received"
-#~ msgstr "Vastaanotettu"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Viestin tyyppi, yleensä 'html' tai 'teksti', käytetään valittaessa "
-#~ "tekstimuotoinen tai rich text/html muotoinen viesti"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Sähköpostin luonti velho"
-
-#~ msgid "Cancelled"
-#~ msgstr "Peruutettu"
-
-#~ msgid "Related partner"
-#~ msgstr "Liittyvä kumppani"
-
-#~ msgid "Related Document ID"
-#~ msgstr "Liittyvä dokumentti ID"
-
-#~ msgid "Related Document model"
-#~ msgstr "Liittyvä dokumenttimalli"
-
-#~ msgid "Language Selection"
-#~ msgstr "Kielen valinta"
-
-#~ msgid "Message-Id"
-#~ msgstr "Viestin id"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(kopio)"
-
-#~ msgid "Original"
-#~ msgstr "Alkuperäinen"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Rich-text sisältö"
-
-#~ msgid "References"
-#~ msgstr "Viitteet"
-
-#~ msgid "Text contents"
-#~ msgstr "tekstisisältö"
-
-#~ msgid "Display Text"
-#~ msgstr "Näytä teksti"
-
-#~ msgid "Related user"
-#~ msgstr "Liittyvä käyttäjä"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
-
-#~ msgid "Bcc"
-#~ msgstr "Piilokopio"
-
-#~ msgid "Message headers"
-#~ msgstr "Viestin tunnistetiedot"
-
-#~ msgid "Attach Report"
-#~ msgstr "Liitä raportti"
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Lähetys epäonnistui"
-
-#~ msgid "Email Content"
-#~ msgstr "Sähköpostin sisältö"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Liitä olemassaolevat tiedostot"
-
-#~ msgid "Files to attach"
-#~ msgstr "Liitettävät tiedostot"
-
-#~ msgid "Use Template"
-#~ msgstr "Käytä mallipohjaa"
-
-#~ msgid "Related document model"
-#~ msgstr "Liittyvä dokumenttimalli"
-
-#~ msgid "Null value"
-#~ msgstr "Nolla-arvo"
-
-#~ msgid "Use a message template"
-#~ msgstr "Käytä viestipohjaa"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "Alkuperäinen viestin versio, kuten se lähetettiin verkkoon"
-
-#~ msgid "Date"
-#~ msgstr "Päivämäärä"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Runko (Rich/HTML)"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Täydet viestiotsikot, esim. SMTP tunnisteet (yleensä saatavilla vain "
-#~ "saapuville viesteille)"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "Sokean kopion vastaanottajat (voit käyttä täytettä)"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Viestin viitteet, kuten tunnisteet aikaisemmista viesteistä"
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Tekstiversio viestistä (voit käyttä täytettä)"
-
-#~ msgid "Opt-out"
-#~ msgstr "Jättäydy pois"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""

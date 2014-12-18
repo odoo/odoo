@@ -1,341 +1,44 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * hr_payroll
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-22 13:40+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-20 06:46+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-21 07:53+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,condition_select:0
-#: field:hr.salary.rule,condition_select:0
-msgid "Condition Based on"
-msgstr "Körülmény ezen feltételek alapján"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Monthly"
-msgstr "Havi"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,rate:0
-msgid "Rate (%)"
-msgstr "Arány (%)"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: report:paylip.details:0
-msgid "Salary Rule Category"
-msgstr "Fizetési kategória szabálya"
-
-#. module: hr_payroll
-#: field:hr.payslip.worked_days,number_of_days:0
-msgid "Number of Days"
-msgstr "Napok száma"
-
-#. module: hr_payroll
-#: help:hr.salary.rule.category,parent_id:0
-msgid ""
-"Linking a salary category to its parent is used only for the reporting "
-"purpose."
-msgstr ""
-"A fizetési kategória szülőhöz való csatolása csak jelentés készítéshez "
-"használt."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: view:hr.salary.rule:0
-msgid "Group By..."
-msgstr "Csoportosítás..."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "States"
-msgstr "Állapotok"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,input_ids:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,input_ids:0
-msgid "Inputs"
-msgstr "Hozzávalók"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,parent_rule_id:0
-#: field:hr.salary.rule,parent_rule_id:0
-msgid "Parent Salary Rule"
-msgstr "Szülö fizetési szabályok"
-
-#. module: hr_payroll
-#: view:hr.employee:0
-#: field:hr.employee,slip_ids:0
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-#: field:hr.payslip.run,slip_ids:0
-#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
-msgid "Payslips"
-msgstr "Fizetési jegyzékek"
-
-#. module: hr_payroll
-#: field:hr.payroll.structure,parent_id:0
-#: field:hr.salary.rule.category,parent_id:0
-msgid "Parent"
-msgstr "Szülő"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,company_id:0
-#: field:hr.payroll.structure,company_id:0
-#: field:hr.payslip,company_id:0
-#: field:hr.payslip.line,company_id:0
-#: field:hr.salary.rule,company_id:0
-#: field:hr.salary.rule.category,company_id:0
-msgid "Company"
-msgstr "Vállalat"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Done Slip"
-msgstr "Fizetési jegyzék létrehozva"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-msgid "Set to Draft"
-msgstr "Beállítás tervezetnek"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.run:0
-msgid "to"
-msgstr "ig"
-
-#. module: hr_payroll
-#: field:hr.payslip,payslip_run_id:0
-#: view:hr.payslip.run:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "Fizetési jegyzék kötegek"
-
-#. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
-msgstr ""
-"Ez a varázsló fizetési jegyzéket készít minden kiválasztott alkalmazott "
-"részére a fizetési jegyzék futásán lévő dátumok és a fizetési meghagyások "
-"/tartozások/ alapján."
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Quantity/Rate"
-msgstr "Mennyiség / Arány"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Children Definition"
-msgstr "Alárendeltek meghatározása"
-
-#. module: hr_payroll
-#: field:hr.payslip.input,payslip_id:0
-#: field:hr.payslip.line,slip_id:0
-#: field:hr.payslip.worked_days,payslip_id:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip
-#: report:payslip:0
-msgid "Pay Slip"
-msgstr "Fizetési jegyzék"
-
-#. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid "Generate"
-msgstr "Létrehozás"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,amount_percentage_base:0
-#: help:hr.salary.rule,amount_percentage_base:0
-msgid "result will be affected to a variable"
-msgstr "az eredmény egy változóhoz lesz rendelve"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-msgid "Total:"
-msgstr "Összesen:"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
-msgid "All Children Rules"
-msgstr "Az összes alárendelt szabály"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.salary.rule:0
-msgid "Input Data"
-msgstr "Adatbevitel"
-
-#. module: hr_payroll
-#: constraint:hr.payslip:0
-msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr ""
-"Fizetési jegyzés 'Dátumtól' értéke a 'Dátumig' értéknél kisebb kell legyen."
-
-#. module: hr_payroll
-#: view:hr.salary.rule.category:0
-msgid "Notes"
-msgstr "Jegyzetek"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:871
-#: code:addons/hr_payroll/hr_payroll.py:876
-#: code:addons/hr_payroll/hr_payroll.py:882
-#: code:addons/hr_payroll/hr_payroll.py:899
-#: code:addons/hr_payroll/hr_payroll.py:905
+#: code:addons/hr_payroll/hr_payroll.py:77
 #, python-format
-msgid "Error!"
-msgstr "Hiba!"
+msgid "%s (copy)"
+msgstr "%s (másolat)"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.input,amount:0
-#: field:hr.payslip.line,amount:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Amount"
-msgstr "Összeg"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "Fizetési jegyzék sor"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Other Information"
-msgstr "Egyéb információ"
-
-#. module: hr_payroll
-#: field:hr.config.settings,module_hr_payroll_account:0
-msgid "Link your payroll to accounting system"
-msgstr "A fizetési jegyzéket rendelje hozzá egy könyvelési rendszerhez"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,amount_select:0
-#: help:hr.salary.rule,amount_select:0
-msgid "The computation method for the rule amount."
-msgstr "A számítási mód az előírt mennyiségre."
-
-#. module: hr_payroll
-#: view:payslip.lines.contribution.register:0
-msgid "Contribution Register's Payslip Lines"
-msgstr "Névjegyzékek hozzáfűzése a fizetési jegyzék soraihoz"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
-#, python-format
-msgid "Warning !"
-msgstr "Figyelem!"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-msgid "Details by Salary Rule Category:"
-msgstr "Részletek fizetési szabályok szerint"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Note"
-msgstr "Jegyzet"
-
-#. module: hr_payroll
-#: field:hr.payroll.structure,code:0
-#: field:hr.payslip,number:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Reference"
-msgstr "Hivatkozás"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Draft Slip"
-msgstr "Jegyzék tervezet"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:432
-#, python-format
-msgid "Normal Working Days paid at 100%"
-msgstr "Normál munkanap 100%-an fizetve"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_range_max:0
-#: field:hr.salary.rule,condition_range_max:0
-msgid "Maximum Range"
-msgstr "Maximum kiterjedés"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Identification No"
-msgstr "Személyi igazolvány száma"
-
-#. module: hr_payroll
-#: field:hr.payslip,struct_id:0
-msgid "Structure"
-msgstr "Szerkezet"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Total Working Days"
-msgstr "Összes munka nap"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,code:0
-#: help:hr.salary.rule,code:0
+#: help:hr.payslip,state:0
 msgid ""
-"The code of salary rules can be used as reference in computation of other "
-"rules. In that case, it is case sensitive."
+"* When the payslip is created the status is 'Draft'.            \n"
+"* If the payslip is under verification, the status is 'Waiting'.             "
+"\n"
+"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When user cancel payslip the status is 'Rejected'."
 msgstr ""
-"A fizetési szabály kódját hivatkozásnak lehet használni a többi szabály "
-"számításához. Ebben az esetben, ez esetekre érzékeny."
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Weekly"
-msgstr "Heti"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "From"
-msgstr "Kezdő dátum"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Confirm"
-msgstr "Megerősítés"
+"* Fizetési jegyzék létrehozásakor annak állapota 'Tervezet'.           \n"
+"* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota "
+"'Várakozó'.            \n"
+"* Ha a fizetési jegyzék visszaigazolt akkor annak állapota 'Elvégezve'.      "
+"     \n"
+"* Amikor egy fizetési jegyzéket visszavon akkor annak az állapota "
+"'Elutasítva'."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -364,10 +67,69 @@ msgstr ""
 "            "
 
 #. module: hr_payroll
-#: help:hr.payslip.line,condition_range_max:0
-#: help:hr.salary.rule,condition_range_max:0
-msgid "The maximum amount, applied for this rule."
-msgstr "A maximum összeg ami erre a szabályra vonatkozik."
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "Könyvelés"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "Könyvelési információ"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,active:0
+#: field:hr.salary.rule,active:0
+msgid "Active"
+msgstr "Aktív"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Belső jegyzet hozzáadása..."
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Address"
+msgstr "Cím"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "Az összes alárendelt szabály"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "Mindig igaz"
+
+#. module: hr_payroll
+#: field:hr.payslip.input,amount:0
+#: field:hr.payslip.line,amount:0
+#: view:website:hr_payroll.report_contributionregister
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Amount"
+msgstr "Összeg"
+
+#. module: hr_payroll
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: field:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_select:0
+msgid "Amount Type"
+msgstr "Összeg típusa"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "Évente"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,appears_on_payslip:0
+#: field:hr.salary.rule,appears_on_payslip:0
+msgid "Appears on Payslip"
+msgstr "Fizetési jegyzéken feltüntetve"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -380,211 +142,53 @@ msgstr ""
 "feltételeket köthet ki mint alap > 1000."
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: report:paylip.details:0
-msgid "Register Name"
-msgstr "Feliratkozási név"
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Authorized signature"
+msgstr "Cégszerű aláírás"
 
 #. module: hr_payroll
-#: view:hr.payslip.employees:0
-msgid "Payslips by Employees"
-msgstr "Fizetési jegyzékek alkalmazottak szerint"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Quarterly"
-msgstr "Negyedéves"
-
-#. module: hr_payroll
-#: selection:hr.payslip,state:0
-msgid "Waiting"
-msgstr "Várakozó"
-
-#. module: hr_payroll
-#: help:hr.salary.rule,quantity:0
-msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
-"for Meal Voucher having fixed amount of 1€ per worked day can have its "
-"quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr ""
-"Ezt használja a százalékos és a fix ár számítására. Például, az Ebéd jegy-"
-"nek fix ára van, aminek 1€ per munkanap lehet  meghatározva mint "
-"ledolgozott_napok.WORK100.napok_száma."
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Search Salary Rule"
-msgstr "Fizetési szabály keresése"
-
-#. module: hr_payroll
-#: field:hr.payslip,employee_id:0
-#: field:hr.payslip.line,employee_id:0
-#: model:ir.model,name:hr_payroll.model_hr_employee
-msgid "Employee"
-msgstr "Alkalmazott"
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Bank Account"
+msgstr "Bankszámlaszám"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
-msgid "Semi-annually"
-msgstr "Félév(enkénti)"
+msgid "Bi-monthly"
+msgstr "Kéthavonta"
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Email"
-msgstr "E-mail"
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Kétheti"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Search Payslip Batches"
-msgstr "Fizetési jegyzék kötegek keresése"
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "Számítások"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,amount_percentage_base:0
-#: field:hr.salary.rule,amount_percentage_base:0
-msgid "Percentage based on"
-msgstr "Százalék ez alapján"
+#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "Mégse"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:90
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (másolat)"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "Fizetési jegyzék visszavonása"
 
 #. module: hr_payroll
-#: help:hr.config.settings,module_hr_payroll_account:0
-msgid "Create journal entries from payslips"
-msgstr "Napló belyegyzések létrehozása fizetési jegyzékekből"
+#: field:hr.payslip.line,category_id:0
+#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: field:hr.salary.rule,category_id:0
+msgid "Category"
+msgstr "Kategória"
 
 #. module: hr_payroll
-#: field:hr.payslip,paid:0
-msgid "Made Payment Order ? "
-msgstr "Fizetési meghagyás létrehozása? "
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-msgid "PaySlip Lines by Contribution Register"
-msgstr "Fizetési jegyzék sorok Hozzájárulási iktatás szerint"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: field:hr.payslip,line_ids:0
-#: view:hr.payslip.line:0
-#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
-msgid "Payslip Lines"
-msgstr "Fizetési jegyzék sorai"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Miscellaneous"
-msgstr "Egyebek"
-
-#. module: hr_payroll
-#: selection:hr.payslip,state:0
-msgid "Rejected"
-msgstr "Elutasított"
-
-#. module: hr_payroll
-#: view:hr.payroll.structure:0
-#: field:hr.payroll.structure,rule_ids:0
-#: view:hr.salary.rule:0
-#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
-msgid "Salary Rules"
-msgstr "Fizetési szabályok"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:341
-#, python-format
-msgid "Refund: "
-msgstr "Visszatérítés: "
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "Fizetési jegyzék sorai A Hozzájárulási bejegyzés szerint"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:0
-msgid "Done"
-msgstr "Kész"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,appears_on_payslip:0
-#: field:hr.salary.rule,appears_on_payslip:0
-msgid "Appears on Payslip"
-msgstr "Fizetési jegyzéken feltüntetve"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_fix:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_fix:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Fixed Amount"
-msgstr "Fix összeg"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:370
-#, python-format
-msgid "Warning!"
-msgstr "Figyelem!"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,active:0
-#: help:hr.salary.rule,active:0
-msgid ""
-"If the active field is set to false, it will allow you to hide the salary "
-"rule without removing it."
-msgstr ""
-"Ha az aktív mező hamisra állított, akkor lehetővé teszi a fizetési szabály "
-"elrejtését annak eltávolítása nélkül."
-
-#. module: hr_payroll
-#: field:hr.payslip,state:0
-#: field:hr.payslip.run,state:0
-msgid "Status"
-msgstr "Állapot"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Days & Inputs"
-msgstr "Ledolgozott napok és adatbevitelek"
-
-#. module: hr_payroll
-#: field:hr.payslip,details_by_salary_rule_category:0
-msgid "Details by Salary Rule Category"
-msgstr "Részletek fizetési szabályok szerint"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
-msgid "PaySlip Lines"
-msgstr "Fizetési jegyzék sor"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,register_id:0
-#: help:hr.salary.rule,register_id:0
-msgid "Eventual third party involved in the salary payment of the employees."
-msgstr ""
-"Esetleg harmadik személy is be van vonva ennek az alkalmazottnak a fizetés "
-"kifizetéséhez."
-
-#. module: hr_payroll
-#: field:hr.payslip.worked_days,number_of_hours:0
-msgid "Number of Hours"
-msgstr "Órák száma"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "PaySlip Batch"
-msgstr "Fizetési jegyzék köteg"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_range_min:0
-#: field:hr.salary.rule,condition_range_min:0
-msgid "Minimum Range"
-msgstr "Minimum tartomány"
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Alárendelt szabályok"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0
@@ -593,262 +197,80 @@ msgid "Child Salary Rule"
 msgstr "Alárendelt fizetési szabály"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip,date_to:0
-#: field:hr.payslip.run,date_end:0
-#: report:paylip.details:0
-#: report:payslip:0
-#: field:payslip.lines.contribution.register,date_to:0
-msgid "Date To"
-msgstr "Dátumig"
+#: field:hr.payroll.structure,children_ids:0
+#: field:hr.salary.rule.category,children_ids:0
+msgid "Children"
+msgstr "Alárendelt"
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
-#: selection:hr.salary.rule,condition_select:0
-msgid "Range"
-msgstr "Tartomány"
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "Alárendeltek meghatározása"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
-msgid "Salary Structures Hierarchy"
-msgstr "Bérszerkezet hierarchia"
-
-#. module: hr_payroll
-#: help:hr.employee,total_wage:0
-msgid "Sum of all current contract's wage of employee."
-msgstr "Az összes jelenleg szerződött alkalmazott fizetésének összege."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Payslip"
-msgstr "Fizetési jegyzék"
-
-#. module: hr_payroll
-#: field:hr.payslip,credit_note:0
-#: field:hr.payslip.run,credit_note:0
-msgid "Credit Note"
-msgstr "Jóváírás"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
-msgid "Payslip Computation Details"
-msgstr "Fizetési jegyzék számításának részletei"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,appears_on_payslip:0
-#: help:hr.salary.rule,appears_on_payslip:0
-msgid "Used to display the salary rule on payslip."
-msgstr "A fizetési szabály fizetési jegyzéken történő kijelzésére használt."
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_input
-msgid "Payslip Input"
-msgstr "Fizetési jegyzék adatbevitel"
-
-#. module: hr_payroll
-#: view:hr.salary.rule.category:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
-msgid "Salary Rule Categories"
-msgstr "Fizetési szabály kategóriák"
-
-#. module: hr_payroll
-#: help:hr.payslip.input,contract_id:0
-#: help:hr.payslip.worked_days,contract_id:0
-msgid "The contract for which applied this input"
-msgstr "A szerződés amire ezt a bevitelt használja"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Computation"
-msgstr "Számítás"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:899
-#, python-format
-msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
-"Rosszúl lett a tartomány meghatározva ehhez a fizetési szabályhoz %s (%s)."
-
-#. module: hr_payroll
-#: help:hr.payslip.input,amount:0
-msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
-msgstr ""
-"Egy számításhoz használja. Például, egy szabály az értékesítéshez 1% "
-"jutalékot ad az alap eladásra egy terméknél akkor a ennek a kifejezésnek a "
-"végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  "
-"bevitt.ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_select:0
-msgid "Amount Type"
-msgstr "Összeg típusa"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,category_id:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,category_id:0
-msgid "Category"
-msgstr "Kategória"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Company Contribution"
-msgstr "Vállalati hozzájárulás"
-
-#. module: hr_payroll
-#: help:hr.payslip.run,credit_note:0
-msgid ""
-"If its checked, indicates that all payslips generated from here are refund "
-"payslips."
-msgstr ""
-"Ha be van jelölve, mutatja, hogy az összes innen létrehozott fizetési "
-"jegyzék az visszatérítési fizetési jegyzék."
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:876
-#, python-format
-msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr ""
-"Nem megfelelően lett a százalék alapja vagy mennyisége meghatározva ennek a "
-"fizetési szabálynak %s (%s)."
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
-msgid "Salary Structures"
-msgstr "Bérszerkezetek"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Draft Payslip Batches"
-msgstr "Fizetési jegyzék vázlatok"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-#: selection:hr.payslip,state:0
-#: view:hr.payslip.run:0
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
 #: selection:hr.payslip.run,state:0
-msgid "Draft"
-msgstr "Tervezet"
+msgid "Close"
+msgstr "Zárás"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip,date_from:0
-#: field:hr.payslip.run,date_start:0
-#: report:paylip.details:0
-#: report:payslip:0
-#: field:payslip.lines.contribution.register,date_from:0
-msgid "Date From"
-msgstr "Dátumtól"
+#: field:hr.payslip.input,code:0
+#: field:hr.payslip.line,code:0
+#: field:hr.payslip.worked_days,code:0
+#: field:hr.rule.input,code:0
+#: field:hr.salary.rule,code:0
+#: field:hr.salary.rule.category,code:0
+#: view:website:hr_payroll.report_contributionregister
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Code"
+msgstr "Kód"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Done Payslip Batches"
-msgstr "Elvégzett fizetési jegyzék kötegek"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-msgid "Payslip Lines by Contribution Register:"
-msgstr "Fizetési jegyzék sorai Hozzájárulási iktatás szerint:"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Conditions"
-msgstr "Feltételek"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,amount_percentage:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_percentage:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Percentage (%)"
-msgstr "Százalék (%)"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:871
-#, python-format
-msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
-"Nem megfelelően lett a mennyisége meghatározva ennek a fizetési szabálynak "
-"%s (%s)."
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Day"
-msgstr "Ledolgozott nap"
-
-#. module: hr_payroll
-#: view:hr.payroll.structure:0
-msgid "Employee Function"
-msgstr "Alkalmazotti funkció"
-
-#. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.payslip_report
-msgid "Employee PaySlip"
-msgstr "Alkalmazott fizetési jegyzéke"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,salary_rule_id:0
-msgid "Rule"
-msgstr "Szabály"
-
-#. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
-msgid "PaySlip Details"
-msgstr "Fizetési jegyzék részletei"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Compute Sheet"
-msgstr "Táblázat kiszámítása"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,active:0
-#: field:hr.salary.rule,active:0
-msgid "Active"
-msgstr "Aktív"
-
-#. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "Child Rules"
-msgstr "Alárendelt szabályok"
-
-#. module: hr_payroll
-#: help:hr.payslip.line,condition_range_min:0
-#: help:hr.salary.rule,condition_range_min:0
-msgid "The minimum amount, applied for this rule."
-msgstr "A minimum mennyiség, amit erre a szabályra alkalmaz."
-
-#. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
-#: selection:hr.salary.rule,condition_select:0
-msgid "Python Expression"
-msgstr "Python kifejezés"
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Designation"
-msgstr "Kijelölés"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Authorized Signature"
-msgstr "Cégszerű aláírás"
+#: field:hr.contribution.register,company_id:0
+#: field:hr.payroll.structure,company_id:0
+#: field:hr.payslip,company_id:0
+#: field:hr.payslip.line,company_id:0
+#: field:hr.salary.rule,company_id:0
+#: field:hr.salary.rule.category,company_id:0
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: hr_payroll
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Vállalati hozzájárulás"
+
+#. module: hr_payroll
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Számítás"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Táblázat kiszámítása"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,condition_select:0
+#: field:hr.salary.rule,condition_select:0
+msgid "Condition Based on"
+msgstr "Körülmény ezen feltételek alapján"
+
+#. module: hr_payroll
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Feltételek"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "Megerősítés"
 
 #. module: hr_payroll
 #: field:hr.payslip,contract_id:0
@@ -860,136 +282,101 @@ msgid "Contract"
 msgstr "Szerződés"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
-#, python-format
-msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
-"Alkalmazotta(ka)t kell kiválasztani a fizetési jegyzék(ek) generálásához."
-
-#. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Credit"
-msgstr "Követel"
-
-#. module: hr_payroll
-#: field:hr.contract,schedule_pay:0
-msgid "Scheduled Pay"
-msgstr "Tervezett fizetés"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_python:0
-#: field:hr.salary.rule,condition_python:0
-msgid "Python Condition"
-msgstr "Python körülmény"
-
-#. module: hr_payroll
-#: view:hr.contribution.register:0
+#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
 msgstr "Közreműködés"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:351
-#, python-format
-msgid "Refund Payslip"
-msgstr "Visszatérítési fizetési jegyzék"
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: field:hr.payslip.line,register_id:0
+#: field:hr.salary.rule,register_id:0
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
+msgid "Contribution Register"
+msgstr "Hozzájárulás iktatás"
 
 #. module: hr_payroll
-#: field:hr.rule.input,input_id:0
-#: model:ir.model,name:hr_payroll.model_hr_rule_input
-msgid "Salary Rule Input"
-msgstr "Fizetés szabály bevitel"
+#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Névjegyzékek hozzáfűzése a fizetési jegyzék soraihoz"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,quantity:0
-#: field:hr.salary.rule,quantity:0
-msgid "Quantity"
-msgstr "Mennyiség"
+#: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
+#: view:hr.contribution.register:hr_payroll.hr_contribution_register_tree
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
+msgid "Contribution Registers"
+msgstr "Hozzájárulások iktatása"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Refund"
-msgstr "Visszatérítés"
+#: help:hr.config.settings,module_hr_payroll_account:0
+msgid "Create journal entries from payslips"
+msgstr "Napló belyegyzések létrehozása fizetési jegyzékekből"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.input,code:0
-#: field:hr.payslip.line,code:0
-#: field:hr.payslip.worked_days,code:0
-#: field:hr.rule.input,code:0
-#: field:hr.salary.rule,code:0
-#: field:hr.salary.rule.category,code:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Code"
-msgstr "Kód"
+#: field:hr.contribution.register,create_uid:0
+#: field:hr.payroll.structure,create_uid:0
+#: field:hr.payslip,create_uid:0
+#: field:hr.payslip.employees,create_uid:0
+#: field:hr.payslip.input,create_uid:0
+#: field:hr.payslip.line,create_uid:0
+#: field:hr.payslip.run,create_uid:0
+#: field:hr.payslip.worked_days,create_uid:0
+#: field:hr.rule.input,create_uid:0
+#: field:hr.salary.rule,create_uid:0
+#: field:hr.salary.rule.category,create_uid:0
+#: field:payslip.lines.contribution.register,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,amount_python_compute:0
-#: selection:hr.payslip.line,amount_select:0
-#: field:hr.salary.rule,amount_python_compute:0
-#: selection:hr.salary.rule,amount_select:0
-msgid "Python Code"
-msgstr "Python kód"
+#: field:hr.contribution.register,create_date:0
+#: field:hr.payroll.structure,create_date:0
+#: field:hr.payslip,create_date:0
+#: field:hr.payslip.employees,create_date:0
+#: field:hr.payslip.input,create_date:0
+#: field:hr.payslip.line,create_date:0
+#: field:hr.payslip.run,create_date:0
+#: field:hr.payslip.worked_days,create_date:0
+#: field:hr.rule.input,create_date:0
+#: field:hr.salary.rule,create_date:0
+#: field:hr.salary.rule.category,create_date:0
+#: field:payslip.lines.contribution.register,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,sequence:0
-#: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.worked_days,sequence:0
-#: field:hr.salary.rule,sequence:0
-msgid "Sequence"
-msgstr "Sorszám"
+#: field:hr.payslip,credit_note:0
+#: field:hr.payslip.run,credit_note:0
+msgid "Credit Note"
+msgstr "Jóváírás"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Period"
-msgstr "Időszak"
+#: field:hr.payslip,date_from:0
+#: field:hr.payslip.run,date_start:0
+#: field:payslip.lines.contribution.register,date_from:0
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Date From"
+msgstr "Dátumtól"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0
-msgid "Period from"
-msgstr "Kezdő időszak"
+#: view:website:hr_payroll.report_contributionregister
+msgid "Date From:"
+msgstr "Kezdés dátuma:"
 
 #. module: hr_payroll
-#: view:hr.salary.rule:0
-msgid "General"
-msgstr "Általános"
+#: field:hr.payslip,date_to:0
+#: field:hr.payslip.run,date_end:0
+#: field:payslip.lines.contribution.register,date_to:0
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Date To"
+msgstr "Dátumig"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:674
-#, python-format
-msgid "Salary Slip of %s for %s"
-msgstr "%s fizetési jegyzéke, időszak: %s"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
-msgid "Generate payslips for all selected employees"
-msgstr "Fizetési jegyzék létrehozása az összes kijelölt alkalmazottnak"
-
-#. module: hr_payroll
-#: field:hr.contract,struct_id:0
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
-msgid "Salary Structure"
-msgstr "Bérszerkezet"
-
-#. module: hr_payroll
-#: field:hr.contribution.register,register_line_ids:0
-msgid "Register Line"
-msgstr "Nyilvántartási sor"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Cancel"
-msgstr "Mégse"
-
-#. module: hr_payroll
-#: view:hr.payslip.run:0
-#: selection:hr.payslip.run,state:0
-msgid "Close"
-msgstr "Zárás"
+#: view:website:hr_payroll.report_contributionregister
+msgid "Date To:"
+msgstr "Befejezés dátuma:"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -1006,26 +393,89 @@ msgstr ""
 "érvényes a kiválasztott időintervallumban"
 
 #. module: hr_payroll
-#: field:hr.payroll.structure,children_ids:0
-#: field:hr.salary.rule.category,children_ids:0
-msgid "Children"
-msgstr "Alárendelt"
+#: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
+#: field:hr.contribution.register,note:0
+#: field:hr.payroll.structure,note:0
+#: field:hr.payslip.input,name:0
+#: field:hr.payslip.line,note:0
+#: field:hr.payslip.worked_days,name:0
+#: field:hr.rule.input,name:0
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: field:hr.salary.rule,note:0
+#: field:hr.salary.rule.category,note:0
+msgid "Description"
+msgstr "Leírás"
 
 #. module: hr_payroll
-#: help:hr.payslip,credit_note:0
-msgid "Indicates this payslip has a refund of another"
-msgstr ""
-"Mutatja, hogy ennek a fizetési jegyzéknek visszatérítése van a többiből"
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Designation"
+msgstr "Kijelölés"
 
 #. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Bi-monthly"
-msgstr "Kéthavonta"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Részletek a fizetési szabály kategóriánként"
 
 #. module: hr_payroll
-#: report:paylip.details:0
-msgid "Pay Slip Details"
-msgstr "Fizetési jegyzék részletei"
+#: field:hr.payslip,details_by_salary_rule_category:0
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Details by Salary Rule Category"
+msgstr "Részletek fizetési szabályok szerint"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: selection:hr.payslip,state:0
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+msgid "Done"
+msgstr "Kész"
+
+#. module: hr_payroll
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Elvégzett fizetési jegyzék kötegek"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "Fizetési jegyzék létrehozva"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: selection:hr.payslip,state:0
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: selection:hr.payslip.run,state:0
+msgid "Draft"
+msgstr "Tervezet"
+
+#. module: hr_payroll
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Fizetési jegyzék vázlatok"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "Jegyzék tervezet"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Email"
+msgstr "E-mail"
+
+#. module: hr_payroll
+#: field:hr.payslip,employee_id:0
+#: field:hr.payslip.line,employee_id:0
+#: model:ir.model,name:hr_payroll.model_hr_employee
+msgid "Employee"
+msgstr "Alkalmazott"
+
+#. module: hr_payroll
+#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
+#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "Alkalmazotti funkció"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
@@ -1034,72 +484,342 @@ msgid "Employee Payslips"
 msgstr "Fizetési jegyzékek"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.settings"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+#: field:hr.payslip.employees,employee_ids:0
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Alkalmazottak"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,register_id:0
-#: field:hr.salary.rule,register_id:0
-#: model:ir.model,name:hr_payroll.model_hr_contribution_register
-msgid "Contribution Register"
-msgstr "Hozzájárulás iktatás"
+#: constraint:hr.payroll.structure:0
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr "Hiba ! Nem hozhat létre egy visszatérő fizetési szerkezetet."
 
 #. module: hr_payroll
-#: view:payslip.lines.contribution.register:0
-msgid "Print"
-msgstr "Nyomtatás"
+#: code:addons/hr_payroll/hr_payroll.py:851
+#: code:addons/hr_payroll/hr_payroll.py:856
+#: code:addons/hr_payroll/hr_payroll.py:862
+#: code:addons/hr_payroll/hr_payroll.py:879
+#: code:addons/hr_payroll/hr_payroll.py:885
+#, python-format
+msgid "Error!"
+msgstr "Hiba!"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:0
-msgid "Calculations"
-msgstr "Számítások"
+#: help:hr.payslip.line,register_id:0
+#: help:hr.salary.rule,register_id:0
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr ""
+"Esetleg harmadik személy is be van vonva ennek az alkalmazottnak a fizetés "
+"kifizetéséhez."
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Worked Days"
-msgstr "Ledolgozott nap"
+#: field:hr.payslip.line,amount_fix:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_fix:0
+#: selection:hr.salary.rule,amount_select:0
+msgid "Fixed Amount"
+msgstr "Fix összeg"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Search Payslips"
-msgstr "Fizetési jegyzékek keresése"
+#: help:hr.payslip.line,amount_percentage:0
+#: help:hr.salary.rule,amount_percentage:0
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "Például, az 50.0 beírása 50% -ot jelent"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
-msgid "Payslips Batches"
-msgstr "Fizetési jegyzék kötegek"
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "Általános"
 
 #. module: hr_payroll
-#: view:hr.contribution.register:0
-#: field:hr.contribution.register,note:0
-#: field:hr.payroll.structure,note:0
-#: field:hr.payslip,name:0
+#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Létrehozás"
+
+#. module: hr_payroll
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
+msgid "Generate Payslips"
+msgstr "Fizetési jegyzék generálás"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Fizetési jegyzék létrehozása az összes kijelölt alkalmazottnak"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: hr_payroll
+#: field:hr.contribution.register,id:0
+#: field:hr.payroll.structure,id:0
+#: field:hr.payslip,id:0
+#: field:hr.payslip.employees,id:0
+#: field:hr.payslip.input,id:0
+#: field:hr.payslip.line,id:0
+#: field:hr.payslip.run,id:0
+#: field:hr.payslip.worked_days,id:0
+#: field:hr.rule.input,id:0
+#: field:hr.salary.rule,id:0
+#: field:hr.salary.rule.category,id:0
+#: field:payslip.lines.contribution.register,id:0
+#: field:report.hr_payroll.report_contributionregister,id:0
+#: field:report.hr_payroll.report_payslip,id:0
+#: field:report.hr_payroll.report_payslipdetails,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Identification No"
+msgstr "Személyi igazolvány száma"
+
+#. module: hr_payroll
+#: help:hr.payslip.run,credit_note:0
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr ""
+"Ha be van jelölve, mutatja, hogy az összes innen létrehozott fizetési "
+"jegyzék az visszatérítési fizetési jegyzék."
+
+#. module: hr_payroll
+#: help:hr.payslip.line,active:0
+#: help:hr.salary.rule,active:0
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr ""
+"Ha az aktív mező hamisra állított, akkor lehetővé teszi a fizetési szabály "
+"elrejtését annak eltávolítása nélkül."
+
+#. module: hr_payroll
+#: help:hr.payslip,credit_note:0
+msgid "Indicates this payslip has a refund of another"
+msgstr ""
+"Mutatja, hogy ennek a fizetési jegyzéknek visszatérítése van a többiből"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+msgid "Input Data"
+msgstr "Adatbevitel"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,input_ids:0
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: field:hr.salary.rule,input_ids:0
+msgid "Inputs"
+msgstr "Hozzávalók"
+
+#. module: hr_payroll
 #: field:hr.payslip,note:0
-#: field:hr.payslip.input,name:0
-#: field:hr.payslip.line,note:0
-#: field:hr.payslip.worked_days,name:0
-#: field:hr.rule.input,name:0
-#: view:hr.salary.rule:0
-#: field:hr.salary.rule,note:0
-#: field:hr.salary.rule.category,note:0
-msgid "Description"
-msgstr "Leírás"
+msgid "Internal Note"
+msgstr "Belső jegyzet"
 
 #. module: hr_payroll
-#: field:hr.employee,total_wage:0
-msgid "Total Basic Salary"
-msgstr "Összes alap fizetés"
+#: help:hr.salary.rule,quantity:0
+msgid ""
+"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+"Ezt használja a százalékos és a fix ár számítására. Például, az Ebéd jegy-"
+"nek fix ára van, aminek 1€ per munkanap lehet  meghatározva mint "
+"ledolgozott_napok.WORK100.napok_száma."
 
 #. module: hr_payroll
-#: view:hr.contribution.register:0
-#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
-msgid "Contribution Registers"
-msgstr "Hozzájárulások iktatása"
+#: help:hr.payslip.input,amount:0
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of "
+"basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"Egy számításhoz használja. Például, egy szabály az értékesítéshez 1% "
+"jutalékot ad az alap eladásra egy terméknél akkor a ennek a kifejezésnek a "
+"végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  "
+"bevitt.ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
+
+#. module: hr_payroll
+#: field:hr.contribution.register,write_uid:0
+#: field:hr.payroll.structure,write_uid:0
+#: field:hr.payslip,write_uid:0
+#: field:hr.payslip.employees,write_uid:0
+#: field:hr.payslip.input,write_uid:0
+#: field:hr.payslip.line,write_uid:0
+#: field:hr.payslip.run,write_uid:0
+#: field:hr.payslip.worked_days,write_uid:0
+#: field:hr.rule.input,write_uid:0
+#: field:hr.salary.rule,write_uid:0
+#: field:hr.salary.rule.category,write_uid:0
+#: field:payslip.lines.contribution.register,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: hr_payroll
+#: field:hr.contribution.register,write_date:0
+#: field:hr.payroll.structure,write_date:0
+#: field:hr.payslip,write_date:0
+#: field:hr.payslip.employees,write_date:0
+#: field:hr.payslip.input,write_date:0
+#: field:hr.payslip.line,write_date:0
+#: field:hr.payslip.run,write_date:0
+#: field:hr.payslip.worked_days,write_date:0
+#: field:hr.rule.input,write_date:0
+#: field:hr.salary.rule,write_date:0
+#: field:hr.salary.rule.category,write_date:0
+#: field:payslip.lines.contribution.register,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: hr_payroll
+#: field:hr.config.settings,module_hr_payroll_account:0
+msgid "Link your payroll to accounting system"
+msgstr "A fizetési jegyzéket rendelje hozzá egy könyvelési rendszerhez"
+
+#. module: hr_payroll
+#: help:hr.salary.rule.category,parent_id:0
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr ""
+"A fizetési kategória szülőhöz való csatolása csak jelentés készítéshez "
+"használt."
+
+#. module: hr_payroll
+#: field:hr.payslip,paid:0
+msgid "Made Payment Order ? "
+msgstr "Fizetési meghagyás létrehozása? "
+
+#. module: hr_payroll
+#: field:hr.payslip.line,condition_range_max:0
+#: field:hr.salary.rule,condition_range_max:0
+msgid "Maximum Range"
+msgstr "Maximum kiterjedés"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,condition_range_min:0
+#: field:hr.salary.rule,condition_range_min:0
+msgid "Minimum Range"
+msgstr "Minimum tartomány"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "Egyebek"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "Havi"
+
+#. module: hr_payroll
+#: field:hr.contribution.register,name:0
+#: field:hr.payroll.structure,name:0
+#: field:hr.payslip.line,name:0
+#: field:hr.payslip.run,name:0
+#: field:hr.salary.rule,name:0
+#: field:hr.salary.rule.category,name:0
+#: view:website:hr_payroll.report_contributionregister
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Name"
+msgstr "Név"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:415
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Normál munkanap 100%-an fizetve"
+
+#. module: hr_payroll
+#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "Jegyzetek"
+
+#. module: hr_payroll
+#: field:hr.payslip.worked_days,number_of_days:0
+msgid "Number of Days"
+msgstr "Napok száma"
+
+#. module: hr_payroll
+#: field:hr.payslip.worked_days,number_of_hours:0
+msgid "Number of Hours"
+msgstr "Órák száma"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "Egyéb bevitel"
+
+#. module: hr_payroll
+#: field:hr.payroll.structure,parent_id:0
+#: field:hr.salary.rule.category,parent_id:0
+msgid "Parent"
+msgstr "Szülő"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,parent_rule_id:0
+#: field:hr.salary.rule,parent_rule_id:0
+msgid "Parent Salary Rule"
+msgstr "Szülö fizetési szabályok"
+
+#. module: hr_payroll
+#: field:hr.contribution.register,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr_payroll
+#: field:hr.payslip.input,payslip_id:0
+#: field:hr.payslip.line,slip_id:0
+#: field:hr.payslip.worked_days,payslip_id:0
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Pay Slip"
+msgstr "Fizetési jegyzék"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "Fizetési jegyzék köteg"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "Fizetési jegyzék részletei"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "Fizetési jegyzék sor"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "Fizetési jegyzék a Hozzájárulások iktatása szerint"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_contributionregister
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Fizetési jegyzék sorok Hozzájárulási iktatás szerint"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "PaySlip Lines by Contribution Registers"
+msgstr "Fizetési jegyzék sorai A Hozzájárulási bejegyzés szerint"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_contributionregister
+msgid "PaySlip Name"
+msgstr "Fizetési jegyzék neve"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
@@ -1109,22 +829,70 @@ msgid "Payroll"
 msgstr "Bérszámfejtés"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.contribution_register
-msgid "PaySlip Lines By Conribution Register"
-msgstr "Fizetési jegyzék a Hozzájárulások iktatása szerint"
+#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "Fizetési jegyzék szerkezet"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:370
-#, python-format
-msgid "You cannot delete a payslip which is not draft or cancelled!"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+msgid "Payslip"
+msgstr "Fizetési jegyzék"
+
+#. module: hr_payroll
+#: constraint:hr.payslip:0
+msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
-"Nem tud olyan fizetési jegyzéket törölni mely nem tervezet vagy visszavont!"
+"Fizetési jegyzés 'Dátumtól' értéke a 'Dátumig' értéknél kisebb kell legyen."
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Address"
-msgstr "Cím"
+#: field:hr.payslip,payslip_run_id:0
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Fizetési jegyzék kötegek"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: field:hr.payslip,payslip_count:0
+#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
+msgid "Payslip Computation Details"
+msgstr "Fizetési jegyzék számításának részletei"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Fizetési jegyzék adatbevitel"
+
+#. module: hr_payroll
+#: field:hr.payslip,input_line_ids:0
+msgid "Payslip Inputs"
+msgstr "Fizetési jegyzék bevitel"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_form
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Fizetési jegyzék sor"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: field:hr.payslip,line_ids:0
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
+msgid "Payslip Lines"
+msgstr "Fizetési jegyzék sorai"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Payslip Lines by Contribution Register"
+msgstr "Bérjegyzék tételsorok, hozzájárulás nyilvántartás szerint"
+
+#. module: hr_payroll
+#: field:hr.payslip,name:0
+msgid "Payslip Name"
+msgstr "Bérjegyzék neve"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
@@ -1133,70 +901,341 @@ msgid "Payslip Worked Days"
 msgstr "Fizetési jegyzék ledolgozott napjai"
 
 #. module: hr_payroll
-#: view:hr.salary.rule.category:0
+#: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
+#: field:hr.employee,payslip_count:0
+#: field:hr.employee,slip_ids:0
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+#: view:hr.payslip:hr_payroll.view_hr_payslip_tree
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: field:hr.payslip.run,slip_ids:0
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+msgid "Payslips"
+msgstr "Fizetési jegyzékek"
+
+#. module: hr_payroll
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_tree
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+msgid "Payslips Batches"
+msgstr "Fizetési jegyzék kötegek"
+
+#. module: hr_payroll
+#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Fizetési jegyzékek alkalmazottak szerint"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,amount_percentage:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_percentage:0
+#: selection:hr.salary.rule,amount_select:0
+msgid "Percentage (%)"
+msgstr "Százalék (%)"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,amount_percentage_base:0
+#: field:hr.salary.rule,amount_percentage_base:0
+msgid "Percentage based on"
+msgstr "Százalék ez alapján"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+msgid "Period"
+msgstr "Időszak"
+
+#. module: hr_payroll
+#: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "Nyomtatás"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,amount_python_compute:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_python_compute:0
+#: selection:hr.salary.rule,amount_select:0
+msgid "Python Code"
+msgstr "Python kód"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,condition_python:0
+#: field:hr.salary.rule,condition_python:0
+msgid "Python Condition"
+msgstr "Python körülmény"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Python kifejezés"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,quantity:0
+#: field:hr.salary.rule,quantity:0
+msgid "Quantity"
+msgstr "Mennyiség"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_contributionregister
+msgid "Quantity/Rate"
+msgstr "Mennyiség / Arány"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Quantity/rate"
+msgstr "Mennyiség/mérték"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Negyedéves"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "Tartomány"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,condition_range:0
+#: field:hr.salary.rule,condition_range:0
+msgid "Range Based on"
+msgstr "Tartomány ez alapján"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,rate:0
+msgid "Rate (%)"
+msgstr "Arány (%)"
+
+#. module: hr_payroll
+#: field:hr.payroll.structure,code:0
+#: field:hr.payslip,number:0
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Reference"
+msgstr "Hivatkozás"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "Visszatérítés"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:334
+#, python-format
+msgid "Refund Payslip"
+msgstr "Visszatérítési fizetési jegyzék"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:324
+#, python-format
+msgid "Refund: "
+msgstr "Visszatérítés: "
+
+#. module: hr_payroll
+#: field:hr.contribution.register,register_line_ids:0
+msgid "Register Line"
+msgstr "Nyilvántartási sor"
+
+#. module: hr_payroll
+#: view:website:hr_payroll.report_contributionregister
+msgid "Register Name:"
+msgstr "Névjegyzék név:"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "Elutasított"
+
+#. module: hr_payroll
+#: field:hr.payslip.line,salary_rule_id:0
+msgid "Rule"
+msgstr "Szabály"
+
+#. module: hr_payroll
+#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
 msgstr "Fizetési kategóriák"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.contribution.register,name:0
-#: field:hr.payroll.structure,name:0
-#: field:hr.payslip.line,name:0
-#: field:hr.payslip.run,name:0
-#: field:hr.salary.rule,name:0
-#: field:hr.salary.rule.category,name:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Name"
-msgstr "Név"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "Bér kiszámítása"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,amount_percentage:0
-#: help:hr.salary.rule,amount_percentage:0
-msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr "Például, az 50.0 beírása 50% -ot jelent"
+#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree
+#: view:hr.salary.rule.category:hr_payroll.hr_salary_rule_category_tree_view
+#: view:hr.salary.rule.category:hr_payroll.view_hr_salary_rule_category_filter
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+msgid "Salary Rule Categories"
+msgstr "Fizetési szabály kategóriák"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:0
-msgid "Payroll Structures"
-msgstr "Fizetési jegyzék szerkezet"
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
+msgid "Salary Rule Categories Hierarchy"
+msgstr "Fizetési szabály kategóriák rangsora"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-#: view:hr.payslip.employees:0
-#: field:hr.payslip.employees,employee_ids:0
-#: view:hr.payslip.line:0
-msgid "Employees"
-msgstr "Alkalmazottak"
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Salary Rule Category"
+msgstr "Fizetési kategória szabálya"
 
 #. module: hr_payroll
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Bank Account"
-msgstr "Bankszámlaszám"
+#: field:hr.rule.input,input_id:0
+#: model:ir.model,name:hr_payroll.model_hr_rule_input
+msgid "Salary Rule Input"
+msgstr "Fizetés szabály bevitel"
 
 #. module: hr_payroll
-#: help:hr.payslip.line,sequence:0
-#: help:hr.salary.rule,sequence:0
-msgid "Use to arrange calculation sequence"
-msgstr "Számítási sorrend beállítására szolgál"
+#: view:hr.payroll.structure:hr_payroll.view_hr_employee_grade_form
+#: field:hr.payroll.structure,rule_ids:0
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_list
+#: view:hr.salary.rule:hr_payroll.hr_salary_rule_tree
+#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+msgid "Salary Rules"
+msgstr "Fizetési szabályok"
 
 #. module: hr_payroll
-#: help:hr.payslip,state:0
+#: code:addons/hr_payroll/hr_payroll.py:658
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "%s fizetési jegyzéke, időszak: %s"
+
+#. module: hr_payroll
+#: field:hr.contract,struct_id:0
+#: view:hr.payroll.structure:hr_payroll.view_hr_payroll_structure_tree
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_tree
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "Bérszerkezet"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "Bérszerkezetek"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
+msgid "Salary Structures Hierarchy"
+msgstr "Bérszerkezet hierarchia"
+
+#. module: hr_payroll
+#: field:hr.contract,schedule_pay:0
+msgid "Scheduled Pay"
+msgstr "Tervezett fizetés"
+
+#. module: hr_payroll
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Fizetési jegyzék kötegek keresése"
+
+#. module: hr_payroll
+#: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Fizetési jegyzék sorok keresése"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Fizetési jegyzékek keresése"
+
+#. module: hr_payroll
+#: view:hr.salary.rule:hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Fizetési szabály keresése"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Félév(enkénti)"
+
+#. module: hr_payroll
+#: field:hr.payslip.input,sequence:0
+#: field:hr.payslip.line,sequence:0
+#: field:hr.payslip.worked_days,sequence:0
+#: field:hr.salary.rule,sequence:0
+msgid "Sequence"
+msgstr "Sorszám"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+#: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
+msgid "Set to Draft"
+msgstr "Beállítás tervezetnek"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "Állapotok"
+
+#. module: hr_payroll
+#: field:hr.payslip,state:0
+#: field:hr.payslip.run,state:0
+msgid "Status"
+msgstr "Állapot"
+
+#. module: hr_payroll
+#: field:hr.payslip,struct_id:0
+msgid "Structure"
+msgstr "Szerkezet"
+
+#. module: hr_payroll
+#: help:hr.employee,total_wage:0
+msgid "Sum of all current contract's wage of employee."
+msgstr "Az összes jelenleg szerződött alkalmazott fizetésének összege."
+
+#. module: hr_payroll
+#: help:hr.payslip.line,code:0
+#: help:hr.salary.rule,code:0
 msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             "
-"\n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
-"* When user cancel payslip the status is 'Rejected'."
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
 msgstr ""
-"* Fizetési jegyzék létrehozásakor annak állapota 'Tervezet'.           \n"
-"* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota "
-"'Várakozó'.            \n"
-"* Ha a fizetési jegyzék visszaigazolt akkor annak állapota 'Elvégezve'.      "
-"     \n"
-"* amikor egy fizetési jegyzéket visszavon akkor annak az állapota "
-"'Elutasítva'."
+"A fizetési szabály kódját hivatkozásnak lehet használni a többi szabály "
+"számításához. Ebben az esetben, ez esetekre érzékeny."
+
+#. module: hr_payroll
+#: help:hr.payslip.input,code:0
+#: help:hr.payslip.worked_days,code:0
+#: help:hr.rule.input,code:0
+msgid "The code that can be used in the salary rules"
+msgstr "A kód ami használható a fizetési szabályokra"
+
+#. module: hr_payroll
+#: help:hr.payslip.line,amount_select:0
+#: help:hr.salary.rule,amount_select:0
+msgid "The computation method for the rule amount."
+msgstr "A számítási mód az előírt mennyiségre."
+
+#. module: hr_payroll
+#: help:hr.payslip.input,contract_id:0
+#: help:hr.payslip.worked_days,contract_id:0
+msgid "The contract for which applied this input"
+msgstr "A szerződés amire ezt a bevitelt használja"
+
+#. module: hr_payroll
+#: help:hr.payslip.line,condition_range_max:0
+#: help:hr.salary.rule,condition_range_max:0
+msgid "The maximum amount, applied for this rule."
+msgstr "A maximum összeg ami erre a szabályra vonatkozik."
+
+#. module: hr_payroll
+#: help:hr.payslip.line,condition_range_min:0
+#: help:hr.salary.rule,condition_range_min:0
+msgid "The minimum amount, applied for this rule."
+msgstr "A minimum mennyiség, amit erre a szabályra alkalmaz."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range:0
@@ -1211,708 +1250,129 @@ msgstr ""
 "(hra, ma, lta, stb.) és az alap  változókat."
 
 #. module: hr_payroll
+#: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"This wizard will generate payslips for all selected employee(s) based on the "
+"dates and credit note specified on Payslips Run."
+msgstr ""
+"Ez a varázsló fizetési jegyzéket készít minden kiválasztott alkalmazott "
+"részére a fizetési jegyzék futásán lévő dátumok és a fizetési meghagyások "
+"/tartozások/ alapján."
+
+#. module: hr_payroll
+#: field:hr.payslip.line,total:0
+#: view:website:hr_payroll.report_contributionregister
+#: view:website:hr_payroll.report_payslip
+#: view:website:hr_payroll.report_payslipdetails
+msgid "Total"
+msgstr "Összesen"
+
+#. module: hr_payroll
+#: field:hr.employee,total_wage:0
+msgid "Total Basic Salary"
+msgstr "Összes alap fizetés"
+
+#. module: hr_payroll
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "Összes munka nap"
+
+#. module: hr_payroll
+#: help:hr.payslip.line,sequence:0
+#: help:hr.salary.rule,sequence:0
+msgid "Use to arrange calculation sequence"
+msgstr "Számítási sorrend beállítására szolgál"
+
+#. module: hr_payroll
+#: help:hr.payslip.line,appears_on_payslip:0
+#: help:hr.salary.rule,appears_on_payslip:0
+msgid "Used to display the salary rule on payslip."
+msgstr "A fizetési szabály fizetési jegyzéken történő kijelzésére használt."
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "Várakozó"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:353
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
+#, python-format
+msgid "Warning!"
+msgstr "Figyelem!"
+
+#. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
-msgid "Annually"
-msgstr "Évente"
+msgid "Weekly"
+msgstr "Heti"
 
 #. module: hr_payroll
-#: field:hr.payslip,input_line_ids:0
-msgid "Payslip Inputs"
-msgstr "Fizetési jegyzék bevitel"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "Ledolgozott nap"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Other Inputs"
-msgstr "Egyéb bevitel"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "Ledolgozott nap"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Fizetési szabály kategóriák rangsora"
+#: view:hr.payslip:hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "Ledolgozott napok és adatbevitelek"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:882
+#: code:addons/hr_payroll/hr_payroll.py:856
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr ""
+"Nem megfelelően lett a százalék alapja vagy mennyisége meghatározva ennek a "
+"fizetési szabálynak %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:862
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Téves python kód meghatározás erre a fizetési szabályra %s (%s)."
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0
-#: field:hr.payslip.line,total:0
-#: report:paylip.details:0
-#: report:payslip:0
-msgid "Total"
-msgstr "Összesen"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Salary Computation"
-msgstr "Bér kiszámítása"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Details By Salary Rule Category"
-msgstr "Részletek a fizetési szabály kategóriánként"
-
-#. module: hr_payroll
-#: help:hr.payslip.input,code:0
-#: help:hr.payslip.worked_days,code:0
-#: help:hr.rule.input,code:0
-msgid "The code that can be used in the salary rules"
-msgstr "A kód ami használható a fizetési szabályokra"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:905
+#: code:addons/hr_payroll/hr_payroll.py:885
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 "Téves python feltétel meghatározás erre a fizetési szabályra %s (%s)."
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
-msgid "Generate Payslips"
-msgstr "Fizetési jegyzék generálás"
-
-#. module: hr_payroll
-#: view:hr.payslip.line:0
-msgid "Search Payslip Lines"
-msgstr "Fizetési jegyzék sorok keresése"
-
-#. module: hr_payroll
-#: selection:hr.contract,schedule_pay:0
-msgid "Bi-weekly"
-msgstr "Kétheti"
-
-#. module: hr_payroll
-#: selection:hr.payslip.line,condition_select:0
-#: selection:hr.salary.rule,condition_select:0
-msgid "Always True"
-msgstr "Mindíg igaz"
-
-#. module: hr_payroll
-#: report:contribution.register.lines:0
-msgid "PaySlip Name"
-msgstr "Fizetési jegyzék neve"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Accounting"
-msgstr "Könyvelés"
-
-#. module: hr_payroll
-#: field:hr.payslip.line,condition_range:0
-#: field:hr.salary.rule,condition_range:0
-msgid "Range Based on"
-msgstr "Tartomány ez alapján"
-
-#~ msgid "Leave Type"
-#~ msgstr "Szabadság típusa"
-
-#~ msgid "Validation"
-#~ msgstr "Érvényesítés"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív alkalmazotti hierarchiát."
-
-#~ msgid "Wage Type"
-#~ msgstr "Fizetési típus"
-
-#~ msgid "Allowances with Basic:"
-#~ msgstr "Alapjuttatások:"
-
-#~ msgid "Net Salary"
-#~ msgstr "Nettó bér"
-
-#~ msgid "Working Days"
-#~ msgstr "Munkanapok"
-
-#~ msgid "Department"
-#~ msgstr "Osztály, részleg"
-
-#~ msgid "Deductions:"
-#~ msgstr "Levonások:"
-
-#~ msgid "Use for Gratuity ?"
-#~ msgstr "Prémiumként?"
-
-#~ msgid "E-mail Address"
-#~ msgstr "E-mail cím"
-
-#~ msgid "Based"
-#~ msgstr "Alapul"
-
-#~ msgid ","
-#~ msgstr ","
-
-#~ msgid "The Manager"
-#~ msgstr "Menedzser"
-
-#~ msgid "Loan"
-#~ msgstr "Kölcsön"
-
-#~ msgid "Letter Details"
-#~ msgstr "Levél részletei"
-
-#~ msgid "("
-#~ msgstr "("
-
-#~ msgid "Others"
-#~ msgstr "Egyéb"
-
+#: code:addons/hr_payroll/hr_payroll.py:851
 #, python-format
-#~ msgid "Variable Error: %s "
-#~ msgstr "Változó hiba: %s "
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr ""
+"Nem megfelelően lett a mennyisége meghatározva ennek a fizetési szabálynak "
+"%s (%s)."
 
-#~ msgid "Calculaton Field"
-#~ msgstr "Számítási mező"
-
-#~ msgid "Contract Detail:"
-#~ msgstr "Szerződés részletei:"
-
-#~ msgid "Expire"
-#~ msgstr "Lejár"
-
-#~ msgid "Total Deductions"
-#~ msgstr "Összes levonás"
-
-#~ msgid "Register"
-#~ msgstr "Nyilvántartás"
-
-#~ msgid "Leaves"
-#~ msgstr "Szabadságok"
-
-#~ msgid "Name of the Employee"
-#~ msgstr "Alkalmazott neve"
-
-#~ msgid "Value"
-#~ msgstr "Érték"
-
-#~ msgid "Register Lines"
-#~ msgstr "Nyilvántartási sorok"
-
-#~ msgid "Un-Paid Holiday"
-#~ msgstr "Fizetetlen szabadság"
-
-#~ msgid "Passport Expire Date"
-#~ msgstr "Útlevél lejárati dátuma"
-
-#~ msgid "Other Deduction"
-#~ msgstr "Egyéb levonás"
-
-#~ msgid "Paid Holiday"
-#~ msgstr "Fizetett szabadság"
-
-#~ msgid "Percentage"
-#~ msgstr "Százalék"
-
-#~ msgid "Employee Deduction"
-#~ msgstr "Alkalmazott levonásai"
-
-#~ msgid "Amount (in words) :"
-#~ msgstr "Összeg (betűkkel) :"
-
-#~ msgid "Date :"
-#~ msgstr "Dátum :"
-
-#~ msgid "End Date"
-#~ msgstr "Befejezés dátuma"
-
-#~ msgid "Notes:"
-#~ msgstr "Megjegyzések:"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "Type"
-#~ msgstr "Típus"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:879
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Hiba !"
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr ""
+"Rosszúl lett a tartomány meghatározva ehhez a fizetési szabályhoz %s (%s)."
 
-#~ msgid "No of Working days / week for an employee"
-#~ msgstr "Alkalmazott munkanapjainak/heteinek száma"
-
-#~ msgid "Work Permit No"
-#~ msgstr "Munkavállalási engedély száma"
-
-#~ msgid "Deductions"
-#~ msgstr "Levonások"
-
-#~ msgid "Total Earnings"
-#~ msgstr "Összes jövedelem"
-
-#~ msgid "hr.payroll.employees.detail"
-#~ msgstr "hr.payroll.employees.detail"
-
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:353
 #, python-format
-#~ msgid "Variable Error !"
-#~ msgstr "Változó hiba !"
-
-#~ msgid "Total By Employee"
-#~ msgstr "Alkalmazott összesen"
-
-#~ msgid "Deduction"
-#~ msgstr "Levonás"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "Hiba! A szerződés kezdetének előbb kell lennie mint a végének."
-
-#~ msgid "Net Amount"
-#~ msgstr "Nettó összeg"
-
-#~ msgid "Yours Sincerely"
-#~ msgstr "Üdvözlettel:"
-
-#~ msgid "Employee Code"
-#~ msgstr "Alkalmazott kódja"
-
-#~ msgid "Country & Address"
-#~ msgstr "Ország & Cím"
-
-#~ msgid "Total By Company"
-#~ msgstr "Vállalat összesen"
-
-#~ msgid "All Passports"
-#~ msgstr "Összes útlevél"
-
-#~ msgid "Employee Name"
-#~ msgstr "Alkalmazott neve"
-
-#~ msgid "Contracts"
-#~ msgstr "Szerződések"
-
-#~ msgid "Passport Detail"
-#~ msgstr "Útlevél részlete"
-
-#~ msgid "Payroll Register"
-#~ msgstr "Bérszámfejtési nyilvántartás"
-
-#~ msgid "Paid"
-#~ msgstr "Fizetve"
-
-#~ msgid "User"
-#~ msgstr "Felhasználó"
-
-#~ msgid "Paid ? "
-#~ msgstr "Fizetett? "
-
-#~ msgid "Category Code"
-#~ msgstr "Kategória kód"
-
-#~ msgid "HR Manager"
-#~ msgstr "HR menedzser"
-
-#~ msgid "Compute"
-#~ msgstr "Számítás"
-
-#~ msgid "Search Passport"
-#~ msgstr "Útlevél keresése"
-
-#~ msgid "Next Month Date"
-#~ msgstr "Következő havi dátum"
-
-#~ msgid "Date"
-#~ msgstr "Dátum"
-
-#~ msgid "Phone No."
-#~ msgstr "Telefonszám"
-
-#~ msgid "Visa Expire Date"
-#~ msgstr "Vízum lejárati dátuma"
-
-#~ msgid "Visa No"
-#~ msgstr "Vízum száma"
-
-#~ msgid "Other No."
-#~ msgstr "Egyéb szám"
-
-#~ msgid "Number :"
-#~ msgstr "Szám :"
-
-#~ msgid "Number"
-#~ msgstr "Sorszám"
-
-#~ msgid "Passport No"
-#~ msgstr "Útlevélszám"
-
-#~ msgid "Allowances"
-#~ msgstr "Juttatások"
-
-#~ msgid "Print Report"
-#~ msgstr "Jelentés kinyomtatása"
-
-#~ msgid "E-mail"
-#~ msgstr "E-mail"
-
-#~ msgid "Passport"
-#~ msgstr "Útlevél"
-
-#~ msgid "Month"
-#~ msgstr "Hónap"
-
-#~ msgid "Dear Sir/Madam,"
-#~ msgstr "Tisztelt Hölgyem/Uram!"
-
-#~ msgid "Other Informations"
-#~ msgstr "Egyéb információ"
-
-#~ msgid "Category Name"
-#~ msgstr "Kategória neve"
-
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "Deduction -"
-#~ msgstr "Levonás -"
-
-#~ msgid "The Passport No must be unique !"
-#~ msgstr "Az útlevélszámnak egyedinek kell lennie !"
-
-#~ msgid "Number of Leaves"
-#~ msgstr "Szabadságok száma"
-
-#~ msgid "hr.payroll.year.salary"
-#~ msgstr "hr.payroll.year.salary"
-
-#~ msgid "Bank"
-#~ msgstr "Bank"
-
-#~ msgid "Country"
-#~ msgstr "Ország"
-
-#~ msgid "Other Id"
-#~ msgstr "Egyéb ID"
-
-#~ msgid "Allowance"
-#~ msgstr "Juttatás"
-
-#~ msgid "No of Leaves"
-#~ msgstr "Szabadságok száma"
-
-#~ msgid "Bank Details"
-#~ msgstr "Bankadatok"
-
-#~ msgid "Allowance / Deduction"
-#~ msgstr "Juttatás / Levonás"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Hiba! Nem választhat ki olyan részleget, amelynek az alkalmazott a "
-#~ "menedzsere."
-
-#~ msgid "Select the Bank Address from whcih the salary is going to be paid"
-#~ msgstr "Itt választhatja ki a bankszámlát, amelyről a munkabért átutalják"
-
-#~ msgid "Recompute Sheet"
-#~ msgstr "Táblázat újraszámítása"
-
-#~ msgid ""
-#~ "Calculation field used for internal calculation, do not place this on form"
-#~ msgstr ""
-#~ "Belső számításra használt számítási mező, kérem ne szerepeltesse nyilvános "
-#~ "kimutatásokban"
-
-#~ msgid "Posted"
-#~ msgstr "Könyvelt"
-
-#~ msgid "Payments -"
-#~ msgstr "Kifizetések -"
-
-#~ msgid "Sub Total"
-#~ msgstr "Részösszesen"
-
-#~ msgid "Valid From"
-#~ msgstr "Érvényesség kezdete"
-
-#~ msgid "Payment"
-#~ msgstr "Kifizetés"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "Other Lines"
-#~ msgstr "Egyéb sorok"
-
-#~ msgid "Paymeny Lines"
-#~ msgstr "Kifizetés sorok"
-
-#~ msgid "Other Payment"
-#~ msgstr "Egyéb kifizetés"
-
-#~ msgid "For the month of"
-#~ msgstr "Hónapra"
-
-#~ msgid "To"
-#~ msgstr "Záró dátum"
-
-#~ msgid "Loan Installment"
-#~ msgstr "Kölcsöntörlesztés"
-
-#~ msgid "Bank Account A/C"
-#~ msgstr "Bankszámlaszám"
-
-#~ msgid "Function Line"
-#~ msgstr "Függvénysor"
-
-#~ msgid "Function Calculation"
-#~ msgstr "Függvény kiszámítása"
-
-#~ msgid "Approve Sheet"
-#~ msgstr "Táblázat jóváhagyása"
-
-#~ msgid "Payment Lines"
-#~ msgstr "Kifizetés sorok"
-
-#~ msgid "Draft Sheet"
-#~ msgstr "Táblázattervezet"
-
-#~ msgid "Amount / Percentage"
-#~ msgstr "Összeg / százalék"
-
-#~ msgid "Dynamic Computation"
-#~ msgstr "Dinamikus számítás"
-
-#~ msgid "Advance"
-#~ msgstr "Előleg"
-
-#~ msgid "Total Payment"
-#~ msgstr "Összes kifizetés"
-
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr ""
+"Nem tud olyan fizetési jegyzéket törölni mely nem tervezet vagy visszavont!"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
-#~ msgid "Please define bank account for the %s employee"
-#~ msgstr "Kérem, állítsa be %s alkalmazott bankszámlaszámát"
-
-#~ msgid "Passport Issue Date"
-#~ msgstr "Útlevél kiállítás dátuma"
-
-#~ msgid "Bank Advice"
-#~ msgstr "Banki értesítő"
-
-#~ msgid "Reject"
-#~ msgstr "Visszautasítás"
-
-#~ msgid "Country of Issue"
-#~ msgstr "Kiállító ország"
-
-#~ msgid "Leave Deductions"
-#~ msgstr "Szabadság miatti levonás"
-
-#~ msgid "Function Arguments"
-#~ msgstr "Függvényargumentumok"
-
-#~ msgid "Function Value"
-#~ msgstr "Függvényérték"
-
-#~ msgid "Formula"
-#~ msgstr "Képlet"
-
-#~ msgid "Bank Advice Lines"
-#~ msgstr "Banki értesítő sorok"
-
-#~ msgid "Net Basic"
-#~ msgstr "Nettó alapbér"
-
-#~ msgid "Chaque Nos"
-#~ msgstr "Csekk számok"
-
-#~ msgid "Salary Structure:"
-#~ msgstr "Bérszerkezet:"
-
-#~ msgid "Complete HR Checking"
-#~ msgstr "HR ellenőrzés befejezése"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "Banki értesítő megjegyzés"
-
-#~ msgid "Others:"
-#~ msgstr "Egyéb:"
-
-#~ msgid "D/C"
-#~ msgstr "T/K"
-
-#~ msgid "Print Statement"
-#~ msgstr "Kimutatás nyomtatása"
-
-#~ msgid "Basic"
-#~ msgstr "Alapbér"
-
-#~ msgid "Basic Salary – Leaves"
-#~ msgstr "Alapbér - szabadságok"
-
-#~ msgid "Earnings"
-#~ msgstr "Jövedelem"
-
-#~ msgid "Heads"
-#~ msgstr "Fejek"
-
-#~ msgid "Payment Advice:"
-#~ msgstr "Kifizetési értesítés:"
-
-#~ msgid "Salary Information"
-#~ msgstr "Bér információ"
-
-#~ msgid "Basic Salary"
-#~ msgstr "Alapbér"
-
-#~ msgid "Condition"
-#~ msgstr "Feltétel"
-
-#~ msgid "Allowance Deduction Categoty"
-#~ msgstr "Levonási kategória"
-
-#~ msgid "Computation Overview"
-#~ msgstr "Számítás áttekintése"
-
-#~ msgid "Payment Advice"
-#~ msgstr "Kifizetési értesítés"
-
-#~ msgid "for period"
-#~ msgstr "időszakra"
-
-#~ msgid "Function"
-#~ msgstr "Függvény"
-
-#~ msgid "Basic Salary without Leave:"
-#~ msgstr "Alapbér szabadság nélkül:"
-
-#~ msgid "Issue"
-#~ msgstr "Kiállítás"
-
-#~ msgid "Allowance Deduction Heads"
-#~ msgstr "Levonás fejek"
-
-#~ msgid "Start Date"
-#~ msgstr "Kezdő dátum"
-
-#~ msgid "Leaved Deduction"
-#~ msgstr "Szabadság miatti levonás"
-
-#~ msgid "Leave Deductions Line:"
-#~ msgstr "Szabadság miatti levonás sora:"
-
-#~ msgid "Company Deduction"
-#~ msgstr "Vállalati levonás"
-
-#~ msgid "Letter Content"
-#~ msgstr "Levél tartalma"
-
-#~ msgid "Bank Payment Advice"
-#~ msgstr "Bank átutalás értesítő"
-
-#~ msgid "Based on"
-#~ msgstr "Alapul"
-
-#~ msgid "Wating for Verification"
-#~ msgstr "Várakozás a megerősítésre"
-
-#~ msgid "Employees Salary Details"
-#~ msgstr "Alkalmazott bérének részletei"
-
-#~ msgid "Year Salary Report"
-#~ msgstr "Éves bérkimutatás"
-
-#~ msgid "New Slip"
-#~ msgstr "Új fizetési jegyzék"
-
-#~ msgid "Gross Salary"
-#~ msgstr "Bruttó bér"
-
-#~ msgid "Employee Salary"
-#~ msgstr "Alkalmazotti bér"
-
-#~ msgid "Employees Salary Detail"
-#~ msgstr "Alkalmazott bérének részletei"
-
-#~ msgid "Salary Register"
-#~ msgstr "Bérnyilvántartás"
-
-#~ msgid "Yearly Salary Details"
-#~ msgstr "Éves bér részletei"
-
-#~ msgid "Salary"
-#~ msgstr "Bér"
-
-#~ msgid "Total Salary"
-#~ msgstr "Összes bér"
-
-#~ msgid "Gross Sal."
-#~ msgstr "Bruttó bér"
-
-#~ msgid "Net Sal."
-#~ msgstr "Nettó bér"
-
-#~ msgid "Slip Line"
-#~ msgstr "Fizetési jegyzék sor"
-
-#~ msgid "Slip ID"
-#~ msgstr "Fizetési jegyzék ID"
-
-#~ msgid "Employee Payslip"
-#~ msgstr "Alkalmazott fizetési jegyzéke"
-
-#~ msgid "Year Salary"
-#~ msgstr "Éves bér"
-
-#~ msgid "Salary Payment Register"
-#~ msgstr "Bérkifizetési nyilvántartás"
-
-#~ msgid "Paid Salary"
-#~ msgstr "Kifizetett bér"
-
-#~ msgid "Pay Salary"
-#~ msgstr "Bér kifizetése"
-
-#~ msgid "Employee Salary Statement"
-#~ msgstr "Alkalmazott bérkimutatása"
-
-#~ msgid "Confirm Sheet"
-#~ msgstr "Táblázat megerősítése"
-
-#~ msgid "Verify Sheet"
-#~ msgstr "Táblázat ellenőrzése"
-
-#~ msgid "Cancel Sheet"
-#~ msgstr "Táblázat érvénytelenítése"
-
-#~ msgid "Human Resource Payroll"
-#~ msgstr "Bérszámfejtés"
-
-#~ msgid ""
-#~ "Generic Payroll system\n"
-#~ "    * Employee Details\n"
-#~ "    * Employee Contracts\n"
-#~ "    * Passport based Contract\n"
-#~ "    * Allowances / Deductions\n"
-#~ "    * Allow to configure Basic / Grows / Net Salary\n"
-#~ "    * Employee Payslip\n"
-#~ "    * Monthly Payroll Register\n"
-#~ "    * Integrated with Holiday Management\n"
-#~ "    "
-#~ msgstr ""
-#~ "Általános bérszámfejtő rendszer\n"
-#~ "    * Alkalmazottak adatai\n"
-#~ "    * Munkaszerződések\n"
-#~ "    * Útlevél alapú szerződések\n"
-#~ "    * Juttatások/levonások\n"
-#~ "    * Alap/bruttó/nettó bér beállítása\n"
-#~ "    * Fizetési jegyzék\n"
-#~ "    * Havi bérlista\n"
-#~ "    * Szabadságkezeléssel integrálva\n"
-#~ "    "
-
-#, python-format
-#~ msgid "Please check configuration of %s, payroll head is missing"
-#~ msgstr "Kérem, ellenőrizze a %s beállítását, a bérlista fej hiányzik."
-
-#~ msgid "Payroll Head"
-#~ msgstr "Bérlista fej"
-
-#~ msgid "Payroll Configurtion"
-#~ msgstr "Bérlista beállítás"
-
-#~ msgid "Payslip Info"
-#~ msgstr "Fizetési jegyzék info"
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr ""
+"Alkalmazotta(ka)t kell kiválasztani a fizetési jegyzék(ek) generálásához."
+
+#. module: hr_payroll
+#: help:hr.payslip.line,amount_percentage_base:0
+#: help:hr.salary.rule,amount_percentage_base:0
+msgid "result will be affected to a variable"
+msgstr "az eredmény egy változóhoz lesz rendelve"

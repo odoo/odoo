@@ -7,8 +7,12 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='active']" position="after">
-                    <field name='notify_email' widget="radio"/>
+                <xpath expr="//group[@name='container_row_2']" position="after">
+                    <group name="container_row_communication">
+                        <group string="Mailing" name="mailing">
+                            <field name='notify_email' widget="radio"/>
+                        </group>
+                    </group>
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">

@@ -58,7 +58,7 @@ class account_bank_statement(osv.osv):
                 line_ids = [l.id for l in st.line_ids]
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='draft' WHERE id in %s ",
-                    (tuple([line_ids]),))
+                    (tuple(line_ids),))
                 bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
@@ -82,7 +82,7 @@ class account_bank_statement_line_global(osv.osv):
     }
     _rec_name = 'code'
     _defaults = {
-        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').get(c, u, 'account.bank.statement.line.global'),
+        'code': lambda s,c,u,ctx={}: s.pool.get('ir.sequence').next_by_code(c, u, 'account.bank.statement.line.global'),
         'name': '/',
     }
     _sql_constraints = [

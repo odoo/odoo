@@ -48,9 +48,10 @@ Main Features
     """,
     'author': 'OpenERP SA',
     'images': ['images/pos_touch_screen.jpeg', 'images/pos_session.jpeg', 'images/pos_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',
+        'data/default_barcode_patterns.xml',
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_box.xml',
@@ -63,9 +64,9 @@ Main Features
         'views/templates.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
+        'point_of_sale_sequence.xml',
         'point_of_sale_data.xml',
         'report/pos_order_report_view.xml',
-        'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',
         'account_statement_view.xml',
         'account_statement_report.xml',
@@ -94,6 +95,7 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/pos.xml'],
+    'website': 'https://www.odoo.com/page/point-of-sale',
     'auto_install': False,
 }
 

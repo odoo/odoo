@@ -1,26 +1,234 @@
 # Slovenian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-26 21:21+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:45+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: anonymization
-#: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
-msgid "ir.model.fields.anonymize.wizard"
-msgstr "ir.model.fields.anonymize.wizard"
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
+#: view:ir.model.fields.anonymization.history:anonymization.view_ir_model_fields_anonymization_history_form
+#: view:ir.model.fields.anonymization.history:anonymization.view_ir_model_fields_anonymization_history_tree
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
+msgid "Anonymization History"
+msgstr "Zgodovina kodiranja"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
+#: view:ir.model.fields.anonymize.wizard:anonymization.view_ir_model_fields_anonymize_wizard_form
+msgid "Anonymize Database"
+msgstr "Kodiranje podatkovne zbirke"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
+msgid "Anonymize database"
+msgstr "Kodiranje podatkovne zbirke"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Anonymized"
+msgstr "Kodirano"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization:anonymization.view_ir_model_fields_anonymization_form
+msgid "Anonymized Field"
+msgstr "Kodirano polje"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
+#: view:ir.model.fields.anonymization:anonymization.view_ir_model_fields_anonymization_tree
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
+msgid "Anonymized Fields"
+msgstr "Kodirana polja"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:448
+#, python-format
+msgid "Anonymized value is None. This cannot happens."
+msgstr "Kodirana vrednost je prazna. To se ne bi smelo zgoditi."
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:300
+#, python-format
+msgid ""
+"Before executing the anonymization process, you should make a backup of your "
+"database."
+msgstr "Pred kodiranjem , naredite rezervno kopijo podatkovne zbirke."
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:444
+#, python-format
+msgid ""
+"Cannot anonymize fields of these types: binary, many2many, many2one, "
+"one2many, reference."
+msgstr ""
+"Ni možno kodirati polj vrste:binary, many2many, many2one, one2many, "
+"reference."
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Clear"
+msgstr "Počisti"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,create_uid:0
+#: field:ir.model.fields.anonymization.history,create_uid:0
+#: field:ir.model.fields.anonymization.migration.fix,create_uid:0
+#: field:ir.model.fields.anonymize.wizard,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,create_date:0
+#: field:ir.model.fields.anonymization.history,create_date:0
+#: field:ir.model.fields.anonymization.migration.fix,create_date:0
+#: field:ir.model.fields.anonymize.wizard,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:anonymization.view_ir_model_fields_anonymize_wizard_form
+msgid "Database Anonymization"
+msgstr "Kodiranje podatkovne zbirke"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
+msgid "Database anonymization"
+msgstr "Kodiranje podatkovne zbirke"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,direction:0
+msgid "Direction"
+msgstr "Smer"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Done"
+msgstr "Končano"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:389
+#: code:addons/anonymization/anonymization.py:448
+#, python-format
+msgid "Error !"
+msgstr "Napaka!"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Exception occured"
+msgstr "Zgodila se je napaka"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_export:0
+msgid "Export"
+msgstr "Izvoz"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_id:0
+#: field:ir.model.fields.anonymization.migration.fix,field_name:0
+msgid "Field"
+msgstr "Field"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_name:0
+msgid "Field Name"
+msgstr "Field Name"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:anonymization.view_ir_model_fields_anonymization_history_form
+#: field:ir.model.fields.anonymization.history,field_ids:0
+msgid "Fields"
+msgstr "Polja"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,name:0
+msgid "File Name"
+msgstr "Ime datoteke"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,filepath:0
+msgid "File path"
+msgstr "Pot do datoteke"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,id:0
+#: field:ir.model.fields.anonymization.history,id:0
+#: field:ir.model.fields.anonymization.migration.fix,id:0
+#: field:ir.model.fields.anonymize.wizard,id:0
+msgid "ID"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_import:0
+msgid "Import"
+msgstr "Import"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:533
+#, python-format
+msgid ""
+"It is not possible to reverse the anonymization process without supplying "
+"the anonymization export file."
+msgstr ""
+"Če želite povrniti proces kodiranja , morate imeti datoteko , ki ste jo "
+"izvozili pri kodiranju."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,write_uid:0
+#: field:ir.model.fields.anonymization.history,write_uid:0
+#: field:ir.model.fields.anonymization.migration.fix,write_uid:0
+#: field:ir.model.fields.anonymize.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,write_date:0
+#: field:ir.model.fields.anonymization.history,write_date:0
+#: field:ir.model.fields.anonymization.migration.fix,write_date:0
+#: field:ir.model.fields.anonymize.wizard,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:anonymization.view_ir_model_fields_anonymization_history_form
+#: field:ir.model.fields.anonymization.history,msg:0
+#: field:ir.model.fields.anonymize.wizard,msg:0
+msgid "Message"
+msgstr "Sporočilo"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,model_name:0
+msgid "Model"
+msgstr "Model"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+msgid "New"
+msgstr "New"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+msgid "Not Existing"
+msgstr "Ne obstaja"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,model_id:0
@@ -28,19 +236,46 @@ msgid "Object"
 msgstr "Object"
 
 #. module: anonymization
-#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
-msgid "ir.model.fields.anonymization.migration.fix"
-msgstr "ir.model.fields.anonymization.migration.fix"
+#: field:ir.model.fields.anonymization,model_name:0
+msgid "Object Name"
+msgstr "Ime predmeta"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,query:0
+#: field:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "Query"
+msgstr "Query"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:anonymization.view_ir_model_fields_anonymize_wizard_form
+msgid "Reverse the Database Anonymization"
+msgstr "Povratek kodiranja"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,sequence:0
+msgid "Sequence"
+msgstr "Zaporedje"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Started"
+msgstr "Začeto"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,state:0
+#: field:ir.model.fields.anonymize.wizard,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,summary:0
+msgid "Summary"
+msgstr "Povzetek"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,target_version:0
 msgid "Target Version"
 msgstr "Target Version"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
-msgid "sql"
-msgstr "sql"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:91
@@ -54,167 +289,15 @@ msgstr ""
 "preden storite kakšno drugo dejanje."
 
 #. module: anonymization
-#: field:ir.model.fields.anonymization,field_name:0
-msgid "Field Name"
-msgstr "Field Name"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization,field_id:0
-#: field:ir.model.fields.anonymization.migration.fix,field_name:0
-msgid "Field"
-msgstr "Field"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization,state:0
-msgid "New"
-msgstr "New"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymize.wizard,file_import:0
-msgid "Import"
-msgstr "Import"
-
-#. module: anonymization
-#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
-msgid "ir.model.fields.anonymization"
-msgstr "ir.model.fields.anonymization"
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:300
+#: code:addons/anonymization/anonymization.py:358
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
-msgstr "Pred kodiranjem , naredite rezervno kopijo podatkovne zbirke."
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.history,state:0
-#: field:ir.model.fields.anonymize.wizard,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.history,direction:0
-msgid "Direction"
-msgstr "Smer"
-
-#. module: anonymization
-#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
-#: view:ir.model.fields.anonymization:0
-#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
-msgid "Anonymized Fields"
-msgstr "Kodirana polja"
-
-#. module: anonymization
-#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
-msgid "Database anonymization"
-msgstr "Kodiranje podatkovne zbirke"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.history,direction:0
-msgid "clear -> anonymized"
-msgstr "nekodirano -> kodirano"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization,state:0
-#: selection:ir.model.fields.anonymize.wizard,state:0
-msgid "Anonymized"
-msgstr "Kodirano"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization,state:0
-msgid "unknown"
-msgstr "neznano"
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:448
-#, python-format
-msgid "Anonymized value is None. This cannot happens."
-msgstr "Kodirana vrednost je prazna. To se ne bi smelo zgoditi."
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.history,filepath:0
-msgid "File path"
-msgstr "Pot do datoteke"
-
-#. module: anonymization
-#: help:ir.model.fields.anonymize.wizard,file_import:0
-msgid ""
-"This is the file created by the anonymization process. It should have the "
-"'.pickle' extention."
-msgstr "Ta datoteka je rezultat procesa kodiranja."
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.history,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymize.wizard,file_export:0
-msgid "Export"
-msgstr "Izvoz"
-
-#. module: anonymization
-#: view:ir.model.fields.anonymize.wizard:0
-msgid "Reverse the Database Anonymization"
-msgstr "Povratek kodiranja"
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:444
-#, python-format
-msgid ""
-"Cannot anonymize fields of these types: binary, many2many, many2one, "
-"one2many, reference."
+"The database anonymization is currently in an unstable state. Some fields "
+"are anonymized, while some fields are not anonymized. You should try to "
+"solve this problem before trying to do anything else."
 msgstr ""
-"Ni možno kodirati polj vrste:binary, many2many, many2one, one2many, "
-"reference."
-
-#. module: anonymization
-#: view:ir.model.fields.anonymize.wizard:0
-msgid "Database Anonymization"
-msgstr "Kodiranje podatkovne zbirke"
-
-#. module: anonymization
-#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
-msgid "Anonymize database"
-msgstr "Kodiranje podatkovne zbirke"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
-msgid "python"
-msgstr "python"
-
-#. module: anonymization
-#: view:ir.model.fields.anonymization.history:0
-#: field:ir.model.fields.anonymization.history,field_ids:0
-msgid "Fields"
-msgstr "Polja"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization,state:0
-#: selection:ir.model.fields.anonymize.wizard,state:0
-msgid "Clear"
-msgstr "Počisti"
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:533
-#, python-format
-msgid ""
-"It is not possible to reverse the anonymization process without supplying "
-"the anonymization export file."
-msgstr ""
-"Če želite povrniti proces kodiranja , morate imeti datoteko , ki ste jo "
-"izvozili pri kodiranju."
-
-#. module: anonymization
-#: field:ir.model.fields.anonymize.wizard,summary:0
-msgid "Summary"
-msgstr "Povzetek"
-
-#. module: anonymization
-#: view:ir.model.fields.anonymization:0
-msgid "Anonymized Field"
-msgstr "Kodirano polje"
+"Podatkovna zbirka je trenutno le delno kodirana. Poskušajte rešiti problem , "
+"preden storite kakšno drugo dejanje."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:391
@@ -229,109 +312,22 @@ msgstr ""
 "preden storite kakšno drugo dejanje."
 
 #. module: anonymization
-#: selection:ir.model.fields.anonymize.wizard,state:0
-msgid "Unstable"
-msgstr "Nestabilno"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.history,state:0
-msgid "Exception occured"
-msgstr "Zgodila se je napaka"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization,state:0
-msgid "Not Existing"
-msgstr "Ne obstaja"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization,model_name:0
-msgid "Object Name"
-msgstr "Ime predmeta"
-
-#. module: anonymization
-#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
-#: view:ir.model.fields.anonymization.history:0
-#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
-msgid "Anonymization History"
-msgstr "Zgodovina kodiranja"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.migration.fix,model_name:0
-msgid "Model"
-msgstr "Model"
-
-#. module: anonymization
-#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
-msgid "ir.model.fields.anonymization.history"
-msgstr "ir.model.fields.anonymization.history"
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:358
-#, python-format
-msgid ""
-"The database anonymization is currently in an unstable state. Some fields "
-"are anonymized, while some fields are not anonymized. You should try to "
-"solve this problem before trying to do anything else."
-msgstr ""
-"Podatkovna zbirka je trenutno le delno kodirana. Poskušajte rešiti problem , "
-"preden storite kakšno drugo dejanje."
-
-#. module: anonymization
-#: code:addons/anonymization/anonymization.py:389
-#: code:addons/anonymization/anonymization.py:448
-#, python-format
-msgid "Error !"
-msgstr "Napaka!"
-
-#. module: anonymization
-#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
-#: view:ir.model.fields.anonymize.wizard:0
-msgid "Anonymize Database"
-msgstr "Kodiranje podatkovne zbirke"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymize.wizard,name:0
-msgid "File Name"
-msgstr "Ime datoteke"
-
-#. module: anonymization
-#: field:ir.model.fields.anonymization.migration.fix,sequence:0
-msgid "Sequence"
-msgstr "Zaporedje"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.history,direction:0
-msgid "anonymized -> clear"
-msgstr "kodirani->nekodirano"
-
-#. module: anonymization
-#: selection:ir.model.fields.anonymization.history,state:0
-msgid "Started"
-msgstr "Začeto"
-
-#. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr "Podatkovna zbirka je že kodirana."
 
 #. module: anonymization
-#: selection:ir.model.fields.anonymization.history,state:0
-msgid "Done"
-msgstr "Končano"
+#: help:ir.model.fields.anonymize.wizard,file_import:0
+msgid ""
+"This is the file created by the anonymization process. It should have the "
+"'.pickle' extention."
+msgstr "Ta datoteka je rezultat procesa kodiranja."
 
 #. module: anonymization
-#: field:ir.model.fields.anonymization.migration.fix,query:0
-#: field:ir.model.fields.anonymization.migration.fix,query_type:0
-msgid "Query"
-msgstr "Query"
-
-#. module: anonymization
-#: view:ir.model.fields.anonymization.history:0
-#: field:ir.model.fields.anonymization.history,msg:0
-#: field:ir.model.fields.anonymize.wizard,msg:0
-msgid "Message"
-msgstr "Sporočilo"
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Unstable"
+msgstr "Nestabilno"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:65
@@ -339,3 +335,28 @@ msgstr "Sporočilo"
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
 msgstr "Ni možno imeti dveh polij z istim imenom na istem predmetu."
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "anonymized -> clear"
+msgstr "kodirani->nekodirano"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "clear -> anonymized"
+msgstr "nekodirano -> kodirano"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "python"
+msgstr "python"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "sql"
+msgstr "sql"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,state:0
+msgid "unknown"
+msgstr "neznano"

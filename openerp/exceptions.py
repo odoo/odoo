@@ -64,6 +64,10 @@ class MissingError(except_orm):
     def __init__(self, msg):
         super(MissingError, self).__init__('MissingError', msg)
 
+class ValidationError(except_orm):
+    def __init__(self, msg):
+        super(ValidationError, self).__init__('ValidateError', msg)
+
 class DeferredException(Exception):
     """ Exception object holding a traceback for asynchronous reporting.
 

@@ -1,39 +1,27 @@
 # Swedish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-12-15 11:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "Kreditkonto"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "Lönespecifikation för %s"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr "Utgiftsjournalen \"%s\" saknar kredit-konto"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Bokföring"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -41,31 +29,11 @@ msgid "Accounting Entry"
 msgstr "Bokföringstransaktion"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr "Utgiftsjournalen \"%s\" saknar debet-konto"
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "Momskod"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Forcera period"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "Håll tomt för att använda lönespecifikationens perioddatum."
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr "Avtal"
+msgid "Adjustment Entry"
+msgstr "Korrigeringstransaktion"
 
 #. module: hr_payroll_account
 #: field:hr.contract,analytic_account_id:0
@@ -74,14 +42,31 @@ msgid "Analytic Account"
 msgstr "Objektkonto"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr "Konfigurationsfel!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Avtal"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "Kreditkonto"
+
+#. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
 msgstr "Debetkonto"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "Betalningsslipbatch"
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "Forcera period"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -89,22 +74,9 @@ msgid "Generate payslips for all selected employees"
 msgstr "Generera lönespecifikationer för valda anställda"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr "Konfigurationsfel!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "Bokföring"
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Håll tomt för att använda lönespecifikationens perioddatum."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -112,11 +84,15 @@ msgid "Pay Slip"
 msgstr "Lönebesked"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Betalningsslipbatch"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Adjustment Entry"
-msgstr "Korrigeringstransaktion"
+msgid "Payslip of %s"
+msgstr "Lönespecifikation för %s"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
@@ -125,48 +101,21 @@ msgstr "Korrigeringstransaktion"
 msgid "Salary Journal"
 msgstr "Lönejournal"
 
-#~ msgid "Period"
-#~ msgstr "Period"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "Momskod"
 
-#~ msgid "Employee"
-#~ msgstr "Anställd"
-
-#~ msgid "Bank Journal"
-#~ msgstr "Bankjournal"
-
-#~ msgid "Salary Account"
-#~ msgstr "Lönekonto"
-
-#~ msgid "Description"
-#~ msgstr "Beskrivning"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "Bank Account"
-#~ msgstr "Bankkonto"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "Varning !"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "Utgiftsjournalen \"%s\" saknar kredit-konto"
 
-#~ msgid "Sequence"
-#~ msgstr "Sekvens"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Lönestruktur"
-
-#~ msgid "Year"
-#~ msgstr "År"
-
-#~ msgid "Expense Journal"
-#~ msgstr "Utgiftsjournal"
-
-#~ msgid "Payslip 'Date From' must be before 'Date To'."
-#~ msgstr "Lönespecifikation 'Datum från' måste bara före 'Datum till'"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "Fel! avtalsstartdatum måste komma före avtalsslutdatum."
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "Utgiftsjournalen \"%s\" saknar debet-konto"

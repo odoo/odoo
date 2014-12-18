@@ -3,6 +3,8 @@ $mainTableBordersPadding: 3px;
 $lightBorder: 1px solid #bbb;
 $accountingBorder: 1px solid #000;
 $initialLineBackground: #f0f0f0;
+// Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
+$aestetic_animation_speed: 300ms;
 
 
 .openerp .oe_bank_statement_reconciliation {
@@ -13,13 +15,54 @@ $initialLineBackground: #f0f0f0;
     -o-user-select: none;
     user-select: none;
     cursor: default;
+    height: 100%;
+    overflow: auto;
+
+    .oe_form_sheetbg {
+        padding-top: 0;
+
+        .oe_form_sheet {
+            position: relative;
+            padding: 20px 15px 20px 15px;
+            border-top: 0;
+            height: 100%;
+        }
+    }
+
+    h1 input, h2 input {
+       height: auto !important;
+    }
 
     h1 {
         width: 48%;
         padding: 0 0 0 $actionColWidth;
-        margin: 0 0 35px 0;
+        margin: 0 0 25px 0;
         float: left;
-        font-size: 2.3em;
+        font-size: 2em;
+        height: 1.5em;
+    }
+
+    .statement_name span {
+        line-height: 1.5em;
+        cursor: pointer;
+    }
+
+    .change_statement_name_container {
+        display: none;
+        width: 95%;
+
+        td:first-child, td:first-child > input {
+            width: 99%;
+        }
+        td:last-child {
+            width: 1%;
+            padding-left: 3px;
+
+            button {
+                height: 100%;
+                box-sizing: content-box;
+            }
+        }
     }
 
     h2 {
@@ -28,7 +71,7 @@ $initialLineBackground: #f0f0f0;
 
     .progress {
         width: 49%;
-        margin: 6px $actionColWidth 0 0;
+        margin: 10px $actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -46,11 +89,6 @@ $initialLineBackground: #f0f0f0;
                 -1px 1px 0 #f5f5f5,
                  1px 1px 0 #f5f5f5;
         }
-    }
-
-    .oe_form_sheet {
-        position: relative;
-        padding-bottom: 30px;
     }
 
     .protip {
@@ -145,6 +183,11 @@ $initialLineBackground: #f0f0f0;
             -ms-transform: rotate(0deg);
             -o-transform: rotate(0deg);
             transform: rotate(0deg);
+            -webkit-transition-duration: $aestetic_animation_speed;
+            -moz-transition-duration: $aestetic_animation_speed;
+            -ms-transition-duration: $aestetic_animation_speed;
+            -o-transition-duration: $aestetic_animation_speed;
+            transition-duration: $aestetic_animation_speed;
         }
 
         .visible_toggle {
@@ -154,6 +197,17 @@ $initialLineBackground: #f0f0f0;
             -ms-transform: rotate(90deg);
             -o-transform: rotate(90deg);
             transform: rotate(90deg);
+        }
+
+        .partner_name {
+            .change_partner {
+                display: none;
+                cursor: pointer;
+                margin: 0 10px 0 5px;
+            }
+            &:hover .change_partner {
+                display: inline;
+            }
         }
 
         .change_partner_container {
@@ -228,40 +282,40 @@ $initialLineBackground: #f0f0f0;
                 vertical-align: middle;
             }
 
-            td:nth-child(1), td:nth-child(7) {
+            td.cell_action, td.cell_info_popover {
                 width: $actionColWidth;
                 padding: 0;
             }
 
-            td:nth-child(1) {
+            td.cell_action {
                 text-align: left;
             }
 
-            td:nth-child(2) {
+            td.cell_account_code {
                 width: 80px;
                 padding-left: $mainTableBordersPadding;
             }
 
-            td:nth-child(3) {
+            td.cell_due_date {
                 width: 100px;
             }
 
-            td:nth-child(4) {
+            td.cell_label {
 
             }
 
-            td:nth-child(5) {
+            td.cell_debit {
                 text-align: right;
                 width: 15%;
             }
 
-            td:nth-child(6) {
+            td.cell_credit {
                 width: 15%;
                 text-align: right;
                 padding-right: $mainTableBordersPadding;
             }
 
-            td:nth-child(7) {
+            td.cell_info_popover {
                 text-align: right;
             }
 
@@ -291,6 +345,7 @@ $initialLineBackground: #f0f0f0;
 
         /* Partie infos */
         .accounting_view {
+            border-collapse: separate;
 
             .initial_line > td {
                 border-top: $lightBorder;
@@ -301,8 +356,13 @@ $initialLineBackground: #f0f0f0;
                 -moz-transition-property: background-color;
                 -ms-transition-property: background-color;
                 transition-property: background-color;
+                -webkit-transition-duration: $aestetic_animation_speed;
+                -moz-transition-duration: $aestetic_animation_speed;
+                -ms-transition-duration: $aestetic_animation_speed;
+                -o-transition-duration: $aestetic_animation_speed;
+                transition-duration: $aestetic_animation_speed;
 
-                &:nth-child(1), &:nth-child(7) {
+                &.cell_action, &.cell_info_popover {
                     border-top: none;
                     background: white !important;
                     // Hack pour l'alignement au px près
@@ -318,8 +378,10 @@ $initialLineBackground: #f0f0f0;
                 height: 26px;
                 margin: 0 $actionColWidth 4px $actionColWidth;
 
-                .button_ok {
+                button {
                     float: right;
+                    position: relative;
+                    top: -4px;
 
                     &:disabled {
                         opacity: 0.5;
@@ -329,12 +391,11 @@ $initialLineBackground: #f0f0f0;
                 > span, > input {
                     position: relative; top: 7px; /* meh */
                     font-weight: bold;
-                    cursor: pointer;
                 }
             }
 
             // accounting "T"
-            td:nth-child(6) { border-left: $accountingBorder; }
+            td.cell_credit { border-left: $accountingBorder; }
         }
 
 
@@ -394,8 +455,8 @@ $initialLineBackground: #f0f0f0;
                 width: 49%;
                 height: 26px;
                 
-                &:nth-child(2n+1) { float: left; }
-                &:nth-child(2n) { float: right; }
+                &:nth-child(2n+1) { float: left; clear: left; }
+                &:nth-child(2n) { float: right; clear: right; }
 
                 th {
                     font-weight: bold;

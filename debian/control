@@ -1,25 +1,24 @@
-Source: openerp
+Source: odoo
 Section: net
 Priority: optional
-Maintainer: OpenERP SA <al@openerp.com>
-Build-Depends: debhelper (>= 7.0.50~), python, rsync
-Standards-Version: 3.9.1
-Homepage: http://www.openerp.com/
-Vcs-Bzr: https://launchpad.net/openobject
+Maintainer: OpenERP SA <sle@odoo.com>
+Build-Depends: debhelper (>= 9.0), python, rsync
+Standards-Version: 3.9.5.0
+Homepage: http://www.odoo.com/
+Vcs-Git: https://github.com/odoo/odoo
 
-Package: openerp
+Package: odoo
 Section: net
 Architecture: all
 Depends:
  ${misc:Depends},
  adduser,
- python,
  postgresql-client,
+ python,
  python-dateutil,
  python-decorator,
  python-docutils,
  python-feedparser,
- python-gdata,
  python-imaging,
  python-jinja2,
  python-ldap,
@@ -43,13 +42,11 @@ Depends:
  python-unittest2,
  python-vatnumber,
  python-vobject,
- python-webdav,
  python-werkzeug,
  python-xlwt,
  python-yaml,
- python-zsi
-Conflicts: tinyerp-server, openerp-server, openerp-web
-Replaces: tinyerp-server, openerp-server, openerp-web
+Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
+Replaces: tinyerp-server, openerp-server, openerp-web, openerp
 Recommends:
  antiword,
  graphviz,
@@ -64,4 +61,3 @@ Description: OpenERP Enterprise Resource Management
  etc. Technical features include a distributed server, flexible workflows, an
  object database, a dynamic GUI, customizable reports, and an XML-RPC
  interface.
-

@@ -107,7 +107,8 @@ openerp.hr_timesheet_sheet = function(instance) {
                 var end = self.get("date_to");
                 while (start <= end) {
                     dates.push(start);
-                    start = start.clone().addDays(1);
+                    var m_start = moment(start).add(1,'days');
+                    start = m_start.toDate();
                 }
                 // group by account
                 accounts = _(self.get("sheets")).chain()
@@ -241,11 +242,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                     domain: [
                         ['type','in',['normal', 'contract']],
                         ['state', '<>', 'close'],
-                        ['use_timesheets','=',1],
+                        ['invoice_on_timesheets','=',1],
                         ['id', 'not in', _.pluck(self.accounts, "account")],
                     ],
                     context: {
-                        default_use_timesheets: 1,
+                        default_invoice_on_timesheets: 1,
                         default_type: "contract",
                     },
                     modifiers: '{"required": true}',

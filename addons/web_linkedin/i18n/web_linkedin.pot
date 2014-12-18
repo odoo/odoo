@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* web_linkedin
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 13:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "here:"
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
+#, python-format
+msgid "\" is not your account,"
 msgstr ""
 
 #. module: web_linkedin
@@ -26,107 +28,188 @@ msgid "API Key"
 msgstr ""
 
 #. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "API key"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Add a new application and fill the form:"
+msgstr ""
+
+#. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:249
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:16
+#, python-format
+msgid "Companies"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Copy the"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Go to this URL:"
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
+#, python-format
+msgid "If \""
+msgstr ""
+
+#. module: web_linkedin
+#: field:res.partner,linkedin_id:0
+msgid "LinkedIn ID"
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:34
+#, python-format
+msgid "LinkedIn access was not enabled on this server."
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:435
+#, python-format
+msgid "LinkedIn error"
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:60
+#, python-format
+msgid "LinkedIn is not enabled"
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:435
+#, python-format
+msgid "LinkedIn is temporary down for the searches by url."
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:360
+#, python-format
+msgid "LinkedIn search"
+msgstr ""
+
+#. module: web_linkedin
+#: field:res.partner,linkedin_public_url:0
+#: field:res.partner,linkedin_url:0
+msgid "LinkedIn url"
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:36
+#, python-format
+msgid "LinkedIn:"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Log into LinkedIn."
+msgstr ""
+
+#. module: web_linkedin
+#. openerp-web
+#: code:addons/web_linkedin/static/src/js/linkedin.js:499
 #, python-format
 msgid "No results found"
 msgstr ""
 
 #. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:84
+#: code:addons/web_linkedin/static/src/js/linkedin.js:62
 #, python-format
 msgid "Ok"
 msgstr ""
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Log into LinkedIn."
+#: model:ir.model,name:web_linkedin.model_res_partner
+msgid "Partner"
 msgstr ""
 
 #. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:13
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:14
 #, python-format
 msgid "People"
 msgstr ""
 
 #. module: web_linkedin
-#: model:ir.model,name:web_linkedin.model_sale_config_settings
-msgid "sale.config.settings"
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:35
+#, python-format
+msgid "Please ask your administrator to configure it in Settings > Configuration > Sales > Social Network Integration."
 msgstr ""
 
 #. module: web_linkedin
-#: field:sale.config.settings,server_domain:0
-msgid "unknown"
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:45
+#, python-format
+msgid "Search"
 msgstr ""
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
+#. openerp-web
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:44
+#, python-format
+msgid "Search by url or keywords :"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "The programming tool is Javascript"
+msgstr ""
+
+#. module: web_linkedin
+#: help:res.partner,linkedin_public_url:0
+msgid "This url is set automatically when you join the partner with a LinkedIn account."
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Website URL inside \"JavaScript API Domains\" field"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "Website URL:"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
+msgid "here:"
+msgstr ""
+
+#. module: web_linkedin
+#: view:sale.config.settings:web_linkedin.view_linkedin_config_settings
 msgid "https://www.linkedin.com/secure/developer"
 msgstr ""
 
 #. module: web_linkedin
 #. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:15
+#: code:addons/web_linkedin/static/src/xml/linkedin.xml:40
 #, python-format
-msgid "Companies"
+msgid "please click here to logout"
 msgstr ""
 
 #. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "API key"
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Copy the"
-msgstr ""
-
-#. module: web_linkedin
-#. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:181
-#, python-format
-msgid "LinkedIn search"
-msgstr ""
-
-#. module: web_linkedin
-#. openerp-web
-#: code:addons/web_linkedin/static/src/xml/linkedin.xml:31
-#, python-format
-msgid "LinkedIn access was not enabled on this server.\n"
-"            Please ask your administrator to configure it in Settings > Configuration > Sales > Social Network Integration."
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:"
-msgstr ""
-
-#. module: web_linkedin
-#. openerp-web
-#: code:addons/web_linkedin/static/src/js/linkedin.js:82
-#, python-format
-msgid "LinkedIn is not enabled"
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Add a new application and fill the form:"
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "Go to this URL:"
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "The programming tool is Javascript"
-msgstr ""
-
-#. module: web_linkedin
-#: view:sale.config.settings:0
-msgid "JavaScript API Domain:"
+#: field:sale.config.settings,server_domain:0
+msgid "unknown"
 msgstr ""
 

@@ -34,21 +34,27 @@
          name: sale order line
          event_id: event
 -
-    I confirm the sale order
+    In the event registration I add some attendee detail lines. i choose event product
 -
-    !workflow {model: sale.order, ref: order1, action: order_confirm}
+    !record {model: registration.editor, id: attendee_detail}:
+         sale_order_id: order1
+         event_registration_ids:
+            - event_id: event
+              name: 'Administrator'
+              email: 'abc@example.com'
 -
-    I check if the sale order is confirmed
+    I click apply to create attendees
 -
-    !assert {model: sale.order, id: order1}:
-         - state == 'manual'
+    !python {model: registration.editor}: |
+         self.action_make_registration(cr, uid, ref('attendee_detail'))
 -
     I check if a registration is created
 -
     !python {model: event.registration}: |
+        from openerp.osv import osv
+        from openerp.tools.translate import _
         order_id = ref('order1')
         order =  self.pool.get('sale.order').browse(cr, uid,order_id)
-        registration_ids = self.search(cr,uid,[('origin','=',order.name)])
+        registration_ids = self.search(cr,uid,[('origin', '=', order.name)])
         if registration_ids == []:
            raise osv.except_osv(_('Error!'),_("The registration is not created."))
-

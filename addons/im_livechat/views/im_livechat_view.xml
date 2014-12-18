@@ -1,9 +1,96 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem id="im_livechat" name="Live Chat" parent="mail.mail_feeds_main" groups="group_im_livechat"/>
+        <!--
+            Views for im_chat.session
+        -->
+        <!-- History : form, list and search views -->
+        <record id="action_session_history" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">im_chat.session</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('channel_id', '!=', None)]</field>
+            <field name="context">{'group_by': ['channel_id', 'create_date:month']}</field>
+        </record>
 
-        <record model="ir.actions.act_window" id="action_support_channels">
+        <record id="im_chat_session_search" model="ir.ui.view">
+            <field name="name">im_chat.session.search</field>
+            <field name="model">im_chat.session</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <filter name="id" string="My sessions" domain="[('user_ids','in', uid)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter name="group_by_day" string="Creation date (day)" domain="[]" context="{'group_by':'create_date:day'}"/>
+                        <filter name="group_by_week" string="Creation date (week)" domain="[]" context="{'group_by':'create_date:week'}"/>
+                        <filter name="group_by_month" string="Creation date (month)" domain="[]" context="{'group_by':'create_date:month'}" />
+                        <filter name="group_by_year" string="Creation date (year)" domain="[]" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="im_chat_session_list_view" model="ir.ui.view">
+            <field name="name">im_chat.session.tree</field>
+            <field name="model">im_chat.session</field>
+            <field name="arch" type="xml">
+                <tree string="History" create="false">
+                    <field name="id"/>
+                    <field name="fullname"/>
+                    <field name="create_date"/>
+                    <field name="feedback_rating"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_chat_session_form_view" model="ir.ui.view">
+            <field name="name">im_chat.session.form</field>
+            <field name="model">im_chat.session</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" create="false" edit="false">
+                    <sheet>
+                       <group string="General">
+                            <field name="id"/>
+                            <field name="fullname" />
+                            <field name="create_date" readonly="1"/>
+                        </group>
+                        <group string="Feedback">
+                            <field name="feedback_rating"/>
+                            <field name="feedback_reason"/>
+                        </group>
+                        <field name="message_ids" type="tree">
+                            <tree string="History">
+                                <field name="create_date" />
+                                <field name="from_id" />
+                                <field name="message" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Session of a channel : list view -->
+        <record id="action_session_channel" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">im_chat.session</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('channel_id','in',[active_id])]</field>
+            <field name="context">{
+                'search_default_channel_id': [active_id],
+                'default_channel_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="im_chat_session_search"/>
+        </record>
+
+
+        <!--
+            Views for im_livechat.channel
+        -->
+        <record id="action_support_channels" model="ir.actions.act_window">
             <field name="name">Live Chat Channels</field>
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
@@ -20,10 +107,8 @@
               </p>
             </field>
         </record>
-        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
 
-
-        <record model="ir.ui.view" id="support_channel_kanban">
+        <record id="support_channel_kanban" model="ir.ui.view">
             <field name="name">support_channel.kanban</field>
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
@@ -32,21 +117,34 @@
                     <field name="web_page" widget="url"/>
                     <field name="are_you_inside"/>
                     <field name="user_ids"/>
+                    <field name="nbr_session"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_group_image">
-                                <a type="open"><img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="oe_group_photo"/></a>
-                            </div>
-                            <div class="oe_group_details">
-                                <h4><a type="open"><field name="name"/></a></h4>
-                                <div class="oe_kanban_footer_left">
-                                    <span>
-                                        <span class="oe_e">+</span> <t t-esc="(record.user_ids.raw_value || []).length"/>
-                                    </span>
-                                </div>
-                                <div class="oe_group_button">
-                                    <button t-if="record.are_you_inside.raw_value" name="quit" type="object" class="oe_group_join">Quit</button>
-                                    <button t-if="! record.are_you_inside.raw_value" name="join" type="object">Join</button>
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_module_vignette row">
+                                    <div class="col-md-4">
+                                        <div class="oe_module_icon">
+                                            <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h3><field name="name"/></h3>
+                                        <div>
+                                            <p>
+                                                <i class="fa fa-user">
+                                                    <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
+                                                </i>
+                                                <br/>
+                                                <i class="fa fa-comments">
+                                                    <t t-esc="record.nbr_session.raw_value"/> Sessions
+                                                </i>
+                                            </p>
+                                            <div style="margin-top:5px;">
+                                                <button t-if="record.are_you_inside.raw_value" name="quit" type="object" class="btn btn-default btn-xs">Quit</button>
+                                                <button t-if="! record.are_you_inside.raw_value" name="join" type="object" class="btn btn-info btn-xs">Join</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -54,7 +152,6 @@
                 </kanban>
             </field>
         </record>
-
 
         <record id="support_channel_form" model="ir.ui.view">
             <field name="name">support_channel.form</field>
@@ -75,7 +172,11 @@
                             <field name="are_you_inside" invisible="1"/>
                         </div>
                     </div>
-
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(action_session_channel)d" icon="fa-comments">
+                            <field string="Sessions" name="nbr_session" widget="statinfo"/>
+                        </button>
+                    </div>
                     <group>
                         <group string="Operators">
                             <field name="user_ids" widget="many2many_kanban" nolabel="1" colspan="2">
@@ -116,48 +217,59 @@
                         <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Live Chat Channel you want to add on your website.</p>
                     </div>
 
+                    <group string="Channel Rules">
+                        <field name="rule_ids" nolabel="1"/>
+                    </group>
+                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be install on your server, otherwise, the countries of the rule will not be taken into account.</span>
                 </sheet>
                 </form>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">History</field>
-            <field name="res_model">im_chat.message</field>
-            <field name="view_mode">list</field>
-            <field name="domain">[('to_id.channel_id', '!=', None)]</field>
-            <field name="context">{'search_default_group_by_to_id': 1}</field>
-        </record>
-        <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 
-        <record id="im_message_form" model="ir.ui.view">
-            <field name="name">im.chat.message.tree</field>
-            <field name="model">im_chat.message</field>
+
+        <!--
+            Views for im_livechat_channel_rule
+        -->
+        <record id="im_livechat_channel_rule_tree_view" model="ir.ui.view">
+            <field name="name">im.livechat.channel.rule.tree</field>
+            <field name="model">im_livechat.channel.rule</field>
             <field name="arch" type="xml">
-                <tree string="History" create="false">
-                    <field name="to_id"/>
-                    <field name="create_date"/>
-                    <field name="from_id"/>
-                    <field name="message"/>
+                <tree string="Rules">
+                    <field name="regex_url"/>
+                    <field name="action"/>
+                    <field name="country_ids"/>
                 </tree>
             </field>
         </record>
 
-        <record id="im_message_search" model="ir.ui.view">
-            <field name="name">im.chat.message.search</field>
-            <field name="model">im_chat.message</field>
+        <record id="im_livechat_channel_rule_form_view" model="ir.ui.view">
+            <field name="name">im_livechat.channel.rule.form</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="type">form</field>
             <field name="arch" type="xml">
-                <search string="Search history">
-                    <filter name="to_id" string="My Sessions" domain="[('to_id.user_ids','in', uid)]"/>
-                    <field name="from_id"/>
-                    <field name="to_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter name="group_by_to_id" string="Session" domain="[]" context="{'group_by':'to_id'}"/>
-                        <filter name="group_by_date" string="Date" domain="[]" context="{'group_by':'create_date'}"/>
-                    </group>
-                </search>
+                <form string="Channel Rule">
+                    <sheet>
+                        <group>
+                            <field name="action"/>
+                            <field name="regex_url" />
+                            <field name="auto_popup_timer" />
+                            <field name="sequence" />
+                            <field name="country_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
+
+
+        <!-- Menu items -->
+        <menuitem name="Live Chat" parent="mail.mail_feeds_main" id="im_livechat" groups="group_im_livechat"/>
+
+        <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat"/>
+
+        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
+
 
     </data>
 </openerp>

@@ -47,14 +47,14 @@ def git_locate():
         os.chdir('odoo')
 
     path = os.getcwd()
-    while path != '/':
+    while path != os.path.abspath(os.sep):
         gitconfig_path = os.path.join(path, '.git/config')
         if os.path.isfile(gitconfig_path):
             release_py = os.path.join(path, 'openerp/release.py')
             if os.path.isfile(release_py):
                 break
         path = os.path.dirname(path)
-    if path == '/':
+    if path == os.path.abspath(os.sep):
         path = None
     return path
 
@@ -146,7 +146,7 @@ def cmd_setup():
     cmd_setup_pg()
 
 def main():
-    # regsitry of commands
+    # registry of commands
     g = globals()
     cmds = dict([(i[4:],g[i]) for i in g if i.startswith('cmd_')])
     # if curl URL | python2 then use command setup

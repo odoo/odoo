@@ -34,7 +34,7 @@ Demo data for the module marketing_campaign.
 
 Creates demo data like leads, campaigns and segments for the module marketing_campaign.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/lead-automation',
     'data': [],
     'demo': ['marketing_campaign_demo.xml'],
     'installable': True,

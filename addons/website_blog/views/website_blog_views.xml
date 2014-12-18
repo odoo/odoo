@@ -120,46 +120,41 @@
         </record>
         <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
 
-        <!-- History Tree view -->
-        <record model="ir.ui.view" id="view_blog_history_tree">
-            <field name="name">blog.post.history.tree</field>
-            <field name="model">blog.post.history</field>
+        <record model="ir.ui.view" id="blog_tag_tree">
+            <field name="name">blog_tag_tree</field>
+            <field name="model">blog.tag</field>
             <field name="arch" type="xml">
-                <tree string="Document History">
-                    <field name="create_date"/>
-                    <field name="create_uid"/>
-                    <field name="post_id"/>
+                <tree string="Tag List" create="false">
+                    <field name="name"/>
+                    <field name="post_ids"/>
                 </tree>
             </field>
         </record>
-        <!-- History Form view  -->
-        <record model="ir.ui.view" id="view_blog_history_form">
-            <field name="name">blog.post.history.form</field>
-            <field name="model">blog.post.history</field>
+
+        <record model="ir.ui.view" id="blog_tag_form">
+            <field name="name">blog_tag_form</field>
+            <field name="model">blog.tag</field>
             <field name="arch" type="xml">
-                <form string="Blog Post History">
-                    <label for="post_id" class="oe_edit_only"/>
-                    <h1><field name="post_id" select="1" /></h1>
-                    <label for="create_date" class="oe_edit_only"/>
-                    <field name="create_date" readonly="1"/>
+                <form string="Tag Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <label for="post_ids" string="Used in: "/>
+                        <field name="post_ids"/>
+                    </sheet>
                 </form>
             </field>
         </record>
-        <!-- History Action  -->
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">Page history</field>
-            <field name="res_model">blog.post.history</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
-        <act_window
-            id="action_related_page_history"
-            context="{'search_default_post_id': [active_id], 'default_post_id': active_id}"
-            domain="[('post_id','=',active_id)]"
-            name="Page History"
-            res_model="blog.post.history"
-            src_model="blog.post"/>
 
+        <record model="ir.actions.act_window" id="action_tags">
+            <field name="name">Blog Tags</field>
+            <field name="res_model">blog.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="blog_tag_tree"/>
+        </record>
+
+        <menuitem id="menu_blog_tag" parent="menu_wiki" name="Blog Tags" action="action_tags" sequence="40" />
     </data>
 </openerp>

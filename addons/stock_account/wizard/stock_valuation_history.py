@@ -84,7 +84,7 @@ class stock_history(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
-        'quantity': fields.integer('Product Quantity'),
+        'quantity': fields.float('Product Quantity'),
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),

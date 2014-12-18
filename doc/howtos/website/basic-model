@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent 3e800beb7db0f9f05bfd4db275c86e8903d4f127
+diff -r 3e800beb7db0 -r 91c0cc5b319e academy/__init__.py
+--- a/academy/__init__.py	Mon Aug 11 16:36:15 2014 +0200
++++ b/academy/__init__.py	Mon Aug 11 16:49:10 2014 +0200
+@@ -1,1 +1,2 @@
+ from . import controllers
++from . import models
+diff -r 3e800beb7db0 -r 91c0cc5b319e academy/models.py
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/academy/models.py	Mon Aug 11 16:49:10 2014 +0200
+@@ -0,0 +1,7 @@
++from openerp import fields
++from openerp import models
++
++class Teachers(models.Model):
++    _name = 'academy.teachers'
++
++    name = fields.Char()

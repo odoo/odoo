@@ -29,7 +29,7 @@ class account_entries_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Effective Date', readonly=True),
+        'date': fields.date('Effective Date', readonly=True),  # TDE FIXME master: rename into date_effective
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', readonly=True),
@@ -50,7 +50,7 @@ class account_entries_report(osv.osv):
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconciliation number', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
+        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),  # TDE FIXME master: rename into product_quantity
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),

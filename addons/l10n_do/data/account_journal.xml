@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+        Resource: account.journal
+        Add NCF Journal
+        -->
+        <record id="account_journal_cf_credito_fiscal" model="account.journal">
+            <field name="name">Factura que Genera Crédito Fiscal y/o Sustenta Costos y Gastos</field>
+            <field name="code">FCRF</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_credito_fiscal"/>
+        </record>
+        <record id="account_journal_cf_consumidor_final" model="account.journal">
+            <field name="name">Factura a Consumidor Final (Sin valor de Crédito Fiscal)</field>
+            <field name="code">FCOF</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_consumidor_final"/>
+        </record>
+        <record id="account_journal_cf_nota_debito" model="account.journal">
+            <field name="name">Nota de Débito Cliente</field>
+            <field name="code">ND-C</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_nota_debito"/>
+        </record>
+        <record id="account_journal_cf_nota_credito" model="account.journal">
+            <field name="name">Nota de Crédito Cliente</field>
+            <field name="code">NC-C</field>
+            <field name="type">sale_refund</field>
+            <field name="sequence_id" ref="ir_sequence_cf_nota_credito"/>
+        </record>
+        <record id="account_journal_cf_proveedores_informales" model="account.journal">
+            <field name="name">Registro de Proveedores Informales</field>
+            <field name="code">RPI</field>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="type">purchase</field>
+
+            <field name="sequence_id" ref="ir_sequence_cf_proveedores_informales"/>
+        </record>
+        <record id="account_journal_cf_ingreso_unico" model="account.journal">
+            <field name="name">Registro Único de Ingresos</field>
+            <field name="code">RUI</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_ingreso_unico"/>
+        </record>
+        <record id="account_journal_cf_gastos_menores" model="account.journal">
+            <field name="name">Registro de Gastos Menores</field>
+            <field name="code">RGM</field>
+            <field name="type">purchase</field>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="sequence_id" ref="ir_sequence_cf_gastos_menores"/>
+        </record>
+        <record id="account_journal_cf_regimenes_especiales" model="account.journal">
+            <field name="name">Registro Regimenes Especiales de Tributación</field>
+            <field name="code">RET</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_regimenes_especiales"/>
+        </record>
+        <record id="account_journal_cf_regimenes_gubernamental" model="account.journal">
+            <field name="name">Gubernamental</field>
+            <field name="code">GOV</field>
+            <field name="type">sale</field>
+            <field name="analytic_journal_id" ref="account.analytic_journal_sale"/>
+            <field name="sequence_id" ref="ir_sequence_cf_gubernamentales"/>
+        </record>
+    </data>
+</openerp>

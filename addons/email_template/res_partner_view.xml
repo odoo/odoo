@@ -6,23 +6,9 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='active']" position="after">
+                <group name="mailing" string="Mailing">    
                     <field name="opt_out"/>
-                </xpath>
-            </field>
-        </record>
-
-       <record model="ir.ui.view" id="res_partner_opt_out_search">
-            <field name="name">res.partner.opt_out.search</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_res_partner_filter"/>
-            <field name="arch" type="xml">
-                    <filter string="Suppliers" position="after">
-                        <separator />
-                        <filter string="Available for mass mailing"
-                                name='not_opt_out' domain="[('opt_out', '=', False)]"
-                                help="Partners that did not ask not to be included in mass mailing campaigns" />
-                    </filter>
+                </group>
             </field>
         </record>
 

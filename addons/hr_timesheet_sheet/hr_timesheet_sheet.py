@@ -112,7 +112,10 @@ class hr_timesheet_sheet(osv.osv):
         for att_tuple in attendance_tuples:
             if att_tuple[0] in [0,1,4]:
                 if att_tuple[0] in [0,1]:
-                    name = att_tuple[2]['name']
+                    if att_tuple[2] and att_tuple[2].has_key('name'):
+                        name = att_tuple[2]['name']
+                    else:
+                        name = self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name
                 else:
                     name = self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name
                 date_attendances.append((1, name, att_tuple))
@@ -309,7 +312,7 @@ class account_analytic_account(osv.osv):
         if context is None:
             context = {}
         group_template_required = self.pool['res.users'].has_group(cr, uid, 'account_analytic_analysis.group_template_required')
-        if not context.get('default_use_timesheets') or group_template_required:
+        if not context.get('default_invoice_on_timesheets') or group_template_required:
             return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
         rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]

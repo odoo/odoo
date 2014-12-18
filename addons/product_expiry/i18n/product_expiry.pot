@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* product_expiry
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 13:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,68 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
 msgstr ""
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "This is the date on which the goods with this Serial Number should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid "This is the date on which an alert should be notified about the goods with this Serial Number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
 msgstr ""
 
 #. module: product_expiry
@@ -86,7 +31,13 @@ msgid "Bread"
 msgstr ""
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr ""
+
+#. module: product_expiry
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr ""
 
@@ -96,28 +47,59 @@ msgid "End of Life Date"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr ""
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
+msgid "French cheese Camembert"
 msgstr ""
 
 #. module: product_expiry
-#: help:product.product,life_time:0
-msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid "This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet."
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid "This is the date on which an alert should be notified about the goods with this Serial Number."
 msgstr ""
 
 #. module: product_expiry
@@ -126,7 +108,32 @@ msgid "This is the date on which the goods with this Serial Number may become da
 msgstr ""
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
+#: help:stock.production.lot,removal_date:0
+msgid "This is the date on which the goods with this Serial Number should be removed from the stock."
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid "This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet."
+msgstr ""
+
+#. module: product_expiry
+#: help:product.template,alert_time:0
+msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
+msgstr ""
+
+#. module: product_expiry
+#: help:product.template,life_time:0
+msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
+msgstr ""
+
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
+msgstr ""
+
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
 msgstr ""
 

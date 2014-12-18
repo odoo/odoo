@@ -8,13 +8,35 @@
 
         <!-- Claims categories  -->
 
+        <record id="crm_claim_category_form" model="ir.ui.view">
+            <field name="name">crm.claim.category.form</field>
+            <field name="model">crm.claim.category</field>
+            <field name="arch" type="xml">
+                <form string="Claim Categories">
+                    <group>
+                        <field name="name"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_claim_category_tree" model="ir.ui.view">
+            <field name="name">crm.claim.category.tree</field>
+            <field name="model">crm.claim.category</field>
+            <field name="arch" type="xml">
+                <tree string="Claim Categories">
+                    <field name="name"/>
+                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="crm_claim_categ_action" model="ir.actions.act_window">
             <field name="name">Claim Categories</field>
-            <field name="res_model">crm.case.categ</field>
+            <field name="res_model">crm.claim.category</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-            <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-            <field name="context" eval="{'object_id': ref('model_crm_claim')}"/>
+            <field name="view_id" ref="crm_claim_category_tree"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a claim category.
@@ -109,7 +131,7 @@
                     <group colspan="4" col="4"  groups="base.group_user">
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                         <field name="priority" widget="priority"/>
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
                         <field name="date_deadline"/>
                     </group>
                     <group colspan="4" col="4">
@@ -125,8 +147,7 @@
                                 <group colspan="2" col="2" groups="base.group_user">
                                     <separator colspan="2" string="Responsibilities"/>
                                     <field name="user_fault"/>
-                                    <field name="categ_id" widget="selection"
-                                        domain="[('object_id.model', '=', 'crm.claim')]"/>
+                                    <field name="categ_id" options="{'no_create': True, 'no_open': True}"/>
                                     <field name="ref"/>
                                 </group>
                                 <separator colspan="4" string="Claim/Action Description" groups="base.group_user"/>

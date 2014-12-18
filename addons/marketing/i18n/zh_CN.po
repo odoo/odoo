@@ -1,63 +1,62 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-02-13 07:40+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_config_settings
-msgid "marketing.config.settings"
-msgstr "marketing.config.settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
+msgstr "应用"
 
 #. module: marketing
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"                This installs the module marketing_campaign_crm_demo."
-msgstr ""
-"为 市场营销活动添加演示数据，包括线索，营销活动和分段活动。\n"
-"这需要安装模块 marketing_campaign_crm_demo."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
+msgstr "取消"
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_configuration
-#: view:marketing.config.settings:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Configure Marketing"
 msgstr "配置营销"
 
 #. module: marketing
-#: view:crm.lead:0
-#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
-msgid "Marketing"
-msgstr "市场营销管理"
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign:0
-msgid "Marketing campaigns"
-msgstr "市场营销活动"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "or"
-msgstr "或"
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns"
-msgstr "营销活动"
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: marketing
 #: model:res.groups,name:marketing.group_marketing_manager
@@ -65,109 +64,47 @@ msgid "Manager"
 msgstr "经理"
 
 #. module: marketing
-#: model:res.groups,name:marketing.group_marketing_user
-msgid "User"
-msgstr "用户"
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "市场营销管理"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns Settings"
-msgstr "营销活动设置"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Marketing Campaigns"
+msgstr "市场营销活动"
 
 #. module: marketing
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
-msgstr "跟踪客户资料以针对你的营销活动"
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
+msgstr "市场营销活动"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Cancel"
-msgstr "取消"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
+msgstr ""
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Apply"
-msgstr "应用"
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
+msgstr ""
 
 #. module: marketing
 #: help:marketing.config.settings,module_marketing_campaign:0
 msgid ""
-"Provides leads automation through marketing campaigns.\n"
-"                Campaigns can in fact be defined on any resource, not just "
-"CRM leads.\n"
-"                This installs the module marketing_campaign."
+"Provides leads automation through marketing campaigns. Campaigns can in fact "
+"be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
 msgstr ""
-"自动通过市场营销活动提供线索。\n"
-"营销活动事实上可以定义在任意资源中，不仅仅是 CRM 线索。\n"
-"\n"
-"这需要安装模块 marketing_campaign。"
 
 #. module: marketing
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"                This installs the module crm_profiling."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
 msgstr ""
-"允许用户在合作伙伴中进行分片操作。\n"
-"这许奥安装模块crm_profiling。"
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
-msgstr "市场营销活动的演示数据"
-
-#~ msgid "Image"
-#~ msgstr "图片"
-
-#~ msgid "Automated E-Mails"
-#~ msgstr "自动化电子邮件处理"
-
-#~ msgid "Menu for Marketing"
-#~ msgstr "营销管理菜单"
-
-#~ msgid "marketing.installer"
-#~ msgstr "marketing.installer"
-
-#~ msgid "Marketing Campaigns"
-#~ msgstr "市场营销活动"
-
-#~ msgid "title"
-#~ msgstr "标题"
-
-#~ msgid ""
-#~ "Helps you to manage marketing campaigns and automate actions and "
-#~ "communication steps."
-#~ msgstr "帮你管理市场营销活动，自动活动和通讯步骤。"
-
-#~ msgid ""
-#~ "Helps you to perform segmentation of partners and design segmentation "
-#~ "questionnaires"
-#~ msgstr "帮助你细分业务伙伴并且设计细分的调查表"
-
-#~ msgid ""
-#~ "Helps you to design templates of emails and integrate them in your different "
-#~ "processes."
-#~ msgstr "帮你设计邮件模板并集成到各个不同的活动里面去。"
-
-#~ msgid "Profiling Tools"
-#~ msgstr "性能评测工具"
-
-#~ msgid "Configure Your Marketing Application"
-#~ msgstr "设置您的市场营销管理应用"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "设置进度"
-
-#~ msgid "Configure"
-#~ msgstr "设置"
-
-#~ msgid "Marketing Application Configuration"
-#~ msgstr "市场应用程序设置"
-
-#~ msgid ""
-#~ "OpenERP provides Addons to better manage your sales and marketing processes. "
-#~ "Select the ones you would be interested in."
-#~ msgstr "OpenERP提供插件来更好的管理你的销售和市场活动。请选择你感兴趣的。"
-
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "市场应用程序设置"
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
+msgstr "用户"

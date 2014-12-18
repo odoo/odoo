@@ -34,7 +34,7 @@ using the Gengo API. To activate it, you must
 This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['base'],
     'data': [
         'gengo_sync_schedular_data.xml',

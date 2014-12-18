@@ -1,274 +1,72 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_asset
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-05-10 18:04+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:45+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Language: Czech\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in draft and open states"
-msgstr "Majetek ve stavu koncept a otevřeném stavu"
-
-#. module: account_asset
-#: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
-msgid "Ending date"
-msgstr "Datum ukončení"
-
-#. module: account_asset
-#: field:account.asset.asset,value_residual:0
-msgid "Residual Value"
-msgstr "Zbytková hodnota"
-
-#. module: account_asset
-#: field:account.asset.category,account_expense_depreciation_id:0
-msgid "Depr. Expense Account"
-msgstr "Nákladový odpisovací účet"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Group By..."
-msgstr "Seskupit podle..."
-
-#. module: account_asset
-#: field:asset.asset.report,gross_value:0
-msgid "Gross Amount"
-msgstr "Hrubá částka"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
-#: model:ir.model,name:account_asset.model_account_asset_asset
-msgid "Asset"
-msgstr "Majetek"
-
-#. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
-msgid ""
-"Indicates that the first depreciation entry for this asset have to be done "
-"from the purchase date instead of the first January"
-msgstr ""
-"Říká, že první odpisová položka pro tento majetek by měla být provedena z "
-"data nákupu namísto prvního Ledna"
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Lineární"
-
-#. module: account_asset
-#: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,company_id:0
-msgid "Company"
-msgstr "Společnost"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Modify"
-msgstr "Upravit"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Running"
-msgstr "Běžící"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Nastavit na koncept"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
-#: model:ir.model,name:account_asset.model_asset_asset_report
-#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
-msgid "Assets Analysis"
-msgstr "Analýza majetku"
-
-#. module: account_asset
-#: field:asset.modify,name:0
-msgid "Reason"
-msgstr "Důvod"
-
-#. module: account_asset
-#: field:account.asset.asset,method_progress_factor:0
-#: field:account.asset.category,method_progress_factor:0
-msgid "Degressive Factor"
-msgstr "Činitel klesání"
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
-msgid "Asset Categories"
-msgstr "Kategorie majetku"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,account_move_line_ids:0
-#: field:account.move.line,entry_ids:0
-#: model:ir.actions.act_window,name:account_asset.act_entries_open
-msgid "Entries"
-msgstr "Položky"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,depreciation_line_ids:0
-msgid "Depreciation Lines"
-msgstr "Řádky odpisů"
-
-#. module: account_asset
-#: help:account.asset.asset,salvage_value:0
-msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Toto je částka, kterou plánujete, že nebudete odpisovat."
-
-#. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "The amount of time between two depreciations, in months"
+#: field:account.asset.asset,entry_count:0
+msgid "# Asset Entries"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
-msgid "Depreciation Date"
-msgstr "Datum odpisu"
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You cannot create recursive assets."
-msgstr ""
-
-#. module: account_asset
-#: field:asset.asset.report,posted_value:0
-msgid "Posted Amount"
-msgstr "Zaúčtovaná částka"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_finance_assets
-#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
-msgid "Assets"
-msgstr "Majetky"
-
-#. module: account_asset
-#: field:account.asset.category,account_depreciation_id:0
-msgid "Depreciation Account"
-msgstr "Účet odpisů"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
-msgid "Notes"
-msgstr "Poznámky"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_id:0
-msgid "Depreciation Entry"
-msgstr "Položka odpisu"
-
-#. module: account_asset
-#: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# z řádek odpisů"
 
 #. module: account_asset
-#: field:account.asset.asset,method_period:0
-msgid "Number of Months in a Period"
+#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
+msgid ""
+"<p>\n"
+"            From this report, you can have an overview on all depreciation. "
+"The\n"
+"            tool search can also be used to personalise your Assets reports "
+"and\n"
+"            so, match this analysis to your needs;\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in draft state"
-msgstr "Majetek ve stavu koncept"
-
-#. module: account_asset
-#: field:account.asset.asset,method_end:0
-#: selection:account.asset.asset,method_time:0
-#: selection:account.asset.category,method_time:0
-#: selection:account.asset.history,method_time:0
-msgid "Ending Date"
-msgstr "Konečný datum"
-
-#. module: account_asset
-#: field:account.asset.asset,code:0
-msgid "Reference"
-msgstr "Odkaz"
-
-#. module: account_asset
-#: view:account.asset.asset:0
+#: view:account.asset.asset:account_asset.view_account_asset_search
 msgid "Account Asset"
 msgstr "Účet majetku"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
-#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
-msgid "Compute Assets"
-msgstr "Spočítat majetky"
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktivní"
 
 #. module: account_asset
-#: field:account.asset.category,method_period:0
-#: field:account.asset.history,method_period:0
-#: field:asset.modify,method_period:0
-msgid "Period Length"
-msgstr "Délka období"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Draft"
-msgstr "Návrh"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of asset purchase"
-msgstr "Datum zakoupení majetku"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
-msgstr "Změnit trvání"
-
-#. module: account_asset
-#: help:account.asset.asset,method_number:0
-#: help:account.asset.category,method_number:0
-#: help:account.asset.history,method_number:0
-msgid "The number of depreciations needed to depreciate your asset"
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Add an internal note here..."
 msgstr ""
 
 #. module: account_asset
-#: view:account.asset.category:0
+#: field:account.asset.depreciation.line,depreciated_value:0
+msgid "Amount Already Depreciated"
+msgstr "Již odepsaná částka"
+
+#. module: account_asset
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
+msgstr "Částka odpisových řádků"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
 msgid "Analytic Information"
 msgstr "Analytické informace"
 
@@ -278,122 +76,148 @@ msgid "Analytic account"
 msgstr "Analytický účet"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
-msgid "Computation Method"
-msgstr "Metoda výpočtu"
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.asset:account_asset.view_account_asset_search
+#: field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,asset_id:0
+#: model:ir.model,name:account_asset.model_account_asset_asset
+msgid "Asset"
+msgstr "Majetek"
 
 #. module: account_asset
-#: constraint:account.asset.asset:0
-msgid ""
-"Prorata temporis can be applied only for time method \"number of "
-"depreciations\"."
-msgstr ""
-"Prorata temporis může být použita pouze pro časovou metodu \"počet odpisů\"."
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Účet majetku"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Next Period Depreciation"
-msgstr ""
-
-#. module: account_asset
-#: help:account.asset.history,method_period:0
-msgid "Time in month between two depreciations"
-msgstr "Čas v měsíci mezi dvěma odpočty"
-
-#. module: account_asset
-#: view:asset.modify:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_modify
-#: model:ir.model,name:account_asset.model_asset_modify
-msgid "Modify Asset"
-msgstr "Upravit majetek"
-
-#. module: account_asset
-#: field:account.asset.asset,salvage_value:0
-msgid "Salvage Value"
-msgstr "Záchranná hodnota"
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
+msgid "Asset Categories"
+msgstr "Kategorie majetku"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
+#: view:account.asset.category:account_asset.view_account_asset_category_search
 #: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
 msgid "Asset Category"
 msgstr "Kategorie majetku"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in closed state"
-msgstr "Majetek v uzavřeném stavu"
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Asset Durations to Modify"
+msgstr "Úprava trvání majetku"
 
 #. module: account_asset
-#: field:account.asset.asset,parent_id:0
-msgid "Parent Asset"
-msgstr "Nadřazený majetek"
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
+msgid "Asset Hierarchy"
+msgstr "Hierarchie majetku"
 
 #. module: account_asset
-#: view:account.asset.history:0
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+msgid "Asset History"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.category:account_asset.view_account_asset_category_tree
+#: field:asset.asset.report,asset_category_id:0
+#: model:ir.model,name:account_asset.model_account_asset_category
+msgid "Asset category"
+msgstr "Kategorie majetku"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
+msgid "Asset depreciation line"
+msgstr "Odpisový řádek majetku"
+
+#. module: account_asset
+#: view:account.asset.history:account_asset.view_account_asset_history_tree
 #: model:ir.model,name:account_asset.model_account_asset_history
 msgid "Asset history"
 msgstr "Historie majetku"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
-msgstr "Hledat kategorii majetku"
+#: view:account.asset.asset:account_asset.view_account_asset_asset_hierarchy_tree
+#: view:account.asset.asset:account_asset.view_account_asset_asset_tree
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_finance_assets
+#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
+msgid "Assets"
+msgstr "Majetky"
 
 #. module: account_asset
-#: view:asset.modify:0
-msgid "months"
-msgstr ""
+#: view:asset.asset.report:account_asset.action_account_asset_report_graph
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
+#: model:ir.model,name:account_asset.model_asset_asset_report
+#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
+msgid "Assets Analysis"
+msgstr "Analýza majetku"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Řádek faktury"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in closed state"
+msgstr "Majetek v uzavřeném stavu"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Depreciation Board"
-msgstr "Odpisová tabule"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in draft and open states"
+msgstr "Majetek ve stavu koncept a otevřeném stavu"
 
 #. module: account_asset
-#: field:asset.asset.report,unposted_value:0
-msgid "Unposted Amount"
-msgstr "Nezaúčtovaná částka"
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in draft state"
+msgstr "Majetek ve stavu koncept"
 
 #. module: account_asset
-#: field:account.asset.asset,method_time:0
-#: field:account.asset.category,method_time:0
-#: field:account.asset.history,method_time:0
-msgid "Time Method"
-msgstr "Časová metoda"
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in running state"
+msgstr "Majetek ve stavu běžící"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "or"
-msgstr ""
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Cancel"
+msgstr "Zrušit"
 
 #. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
-#: field:account.asset.history,note:0
-msgid "Note"
-msgstr "Poznámka"
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Change Duration"
+msgstr "Změnit trvání"
 
 #. module: account_asset
-#: help:account.asset.history,method_time:0
+#: help:account.asset.category,open_asset:0
 msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
+"Check this if you want to automatically confirm the assets of this category "
+"when created by invoices."
 msgstr ""
-"Metoda k použití pro výpočet datumů a počet odpisových řádek.\n"
-"Počet odpisů: Pevné číslo počtu odpisových řádků a čas mezi 2 odpisy.\n"
-"Konečný datum: Vybere čas mezi 2 odpisy a datum odpis nemůže jít přes."
+"Zaškrtněte toto, pokud chcete automaticky potvrdit majetky pro tutu "
+"kategorii, když jsou vytvořeny pomocí dokladů."
+
+#. module: account_asset
+#: field:account.asset.asset,child_ids:0
+msgid "Children Assets"
+msgstr "Podřízené majetky"
+
+#. module: account_asset
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr ""
 
 #. module: account_asset
 #: help:account.asset.asset,method_time:0
@@ -411,171 +235,6 @@ msgstr ""
 "  * Konečný datum: Vybere čas mezi 2 odpisy a datum odpis nemůže jít přes."
 
 #. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in running state"
-msgstr "Majetek ve stavu běžící"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Closed"
-msgstr "Zavřený"
-
-#. module: account_asset
-#: help:account.asset.asset,state:0
-msgid ""
-"When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
-msgid "Status"
-msgstr ""
-
-#. module: account_asset
-#: field:account.asset.asset,partner_id:0
-#: field:asset.asset.report,partner_id:0
-msgid "Partner"
-msgstr "Společník"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Posted depreciation lines"
-msgstr "Zaúčtované řádky odpisů"
-
-#. module: account_asset
-#: field:account.asset.asset,child_ids:0
-msgid "Children Assets"
-msgstr "Podřízené majetky"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of depreciation"
-msgstr "Datum odpisu"
-
-#. module: account_asset
-#: field:account.asset.history,user_id:0
-msgid "User"
-msgstr "Uživatel"
-
-#. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Účet majetku"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Extended Filters..."
-msgstr "Rozšířené filtry..."
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute"
-msgstr "Spočítat"
-
-#. module: account_asset
-#: view:account.asset.history:0
-msgid "Asset History"
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
-msgid "asset.depreciation.confirmation.wizard"
-msgstr "asset.depreciation.confirmation.wizard"
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktivní"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,parent_state:0
-msgid "State of Asset"
-msgstr "Stav majetku"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,name:0
-msgid "Depreciation Name"
-msgstr "Jméno odpisu"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
-msgid "History"
-msgstr "Historie"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Spočítat majetek"
-
-#. module: account_asset
-#: field:asset.depreciation.confirmation.wizard,period_id:0
-msgid "Period"
-msgstr "Období"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "General"
-msgstr "Obecné"
-
-#. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
-msgid "Prorata Temporis"
-msgstr "Prorata Temporis"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice
-msgid "Invoice"
-msgstr "Faktura"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr "Nastavit na uzavřené"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "Cancel"
-msgstr "Zrušit"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
-msgid "Close"
-msgstr "Zavřít"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr "Položky deníku"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Asset Durations to Modify"
-msgstr "Úprava trvání majetku"
-
-#. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,purchase_date:0
-msgid "Purchase Date"
-msgstr "Datum zakoupení"
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Degressive"
-msgstr "Klesající"
-
-#. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
@@ -585,34 +244,82 @@ msgstr ""
 "běžících majetků."
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Current"
-msgstr "Aktuální"
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
+msgid "Close"
+msgstr "Zavřít"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Odpisová metoda"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Closed"
+msgstr "Zavřený"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Current Depreciation"
+#: field:account.asset.asset,company_id:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,company_id:0
+msgid "Company"
+msgstr "Společnost"
+
+#. module: account_asset
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
+msgid "Computation Method"
+msgstr "Metoda výpočtu"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute"
+msgstr "Spočítat"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute Asset"
+msgstr "Spočítat majetek"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
+#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
+msgid "Compute Assets"
+msgstr "Spočítat majetky"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Confirm Asset"
+msgstr "Potvrdit majetek"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Create Move"
+msgstr "Vytvořit pohyb"
+
+#. module: account_asset
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
+#, python-format
+msgid "Created Asset Moves"
+msgstr "Vytvořit pohyby majetku"
+
+#. module: account_asset
+#: field:account.asset.asset,create_uid:0
+#: field:account.asset.category,create_uid:0
+#: field:account.asset.depreciation.line,create_uid:0
+#: field:account.asset.history,create_uid:0
+#: field:asset.depreciation.confirmation.wizard,create_uid:0
+#: field:asset.modify,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.asset,name:0
-msgid "Asset Name"
+#: field:account.asset.asset,create_date:0
+#: field:account.asset.category,create_date:0
+#: field:account.asset.depreciation.line,create_date:0
+#: field:account.asset.history,create_date:0
+#: field:asset.depreciation.confirmation.wizard,create_date:0
+#: field:asset.modify,create_date:0
+msgid "Created on"
 msgstr ""
-
-#. module: account_asset
-#: field:account.asset.category,open_asset:0
-msgid "Skip Draft State"
-msgstr "Přeskočit stav koncept"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Dates"
-msgstr "Datumy odpisů"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
@@ -620,48 +327,148 @@ msgid "Currency"
 msgstr "Měna"
 
 #. module: account_asset
-#: field:account.asset.category,journal_id:0
-msgid "Journal"
-msgstr "Deník"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Current"
+msgstr "Aktuální"
 
 #. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr "Jméno historie"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciated_value:0
-msgid "Amount Already Depreciated"
-msgstr "Již odepsaná částka"
-
-#. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
-msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
-msgid "Posted"
-msgstr "Zaúčtováno"
+#: field:account.asset.history,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: account_asset
-#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
-msgid ""
-"<p>\n"
-"            From this report, you can have an overview on all depreciation. "
-"The\n"
-"            tool search can also be used to personalise your Assets reports "
-"and\n"
-"            so, match this analysis to your needs;\n"
-"          </p>\n"
-"        "
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of asset purchase"
+msgstr "Datum zakoupení majetku"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of depreciation"
+msgstr "Datum odpisu"
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Degressive"
+msgstr "Klesající"
+
+#. module: account_asset
+#: field:account.asset.asset,method_progress_factor:0
+#: field:account.asset.category,method_progress_factor:0
+msgid "Degressive Factor"
+msgstr "Činitel klesání"
+
+#. module: account_asset
+#: field:account.asset.category,account_expense_depreciation_id:0
+msgid "Depr. Expense Account"
+msgstr "Nákladový odpisovací účet"
+
+#. module: account_asset
+#: field:account.asset.category,account_depreciation_id:0
+msgid "Depreciation Account"
+msgstr "Účet odpisů"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Depreciation Board"
+msgstr "Odpisová tabule"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciation_date:0
+#: field:asset.asset.report,depreciation_date:0
+msgid "Depreciation Date"
+msgstr "Datum odpisu"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Dates"
+msgstr "Datumy odpisů"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_id:0
+msgid "Depreciation Entry"
+msgstr "Položka odpisu"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,depreciation_line_ids:0
+msgid "Depreciation Lines"
+msgstr "Řádky odpisů"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Method"
+msgstr "Odpisová metoda"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Depreciation Month"
 msgstr ""
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,name:0
+msgid "Depreciation Name"
+msgstr "Jméno odpisu"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Draft"
+msgstr "Návrh"
+
+#. module: account_asset
+#: field:account.asset.asset,method_end:0
+#: selection:account.asset.asset,method_time:0
+#: selection:account.asset.category,method_time:0
+#: selection:account.asset.history,method_time:0
+msgid "Ending Date"
+msgstr "Konečný datum"
+
+#. module: account_asset
+#: field:account.asset.category,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
+msgid "Ending date"
+msgstr "Datum ukončení"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,account_move_line_ids:0
+#: model:ir.actions.act_window,name:account_asset.act_entries_open
+msgid "Entries"
+msgstr "Položky"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
+msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Extended Filters..."
+msgstr "Rozšířené filtry..."
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "General"
+msgstr "Obecné"
+
+#. module: account_asset
+#: field:asset.asset.report,gross_value:0
+msgid "Gross Amount"
+msgstr "Hrubá částka"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -669,62 +476,132 @@ msgid "Gross Value"
 msgstr ""
 
 #. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,history_ids:0
+msgid "History"
+msgstr "Historie"
+
+#. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Jméno historie"
+
+#. module: account_asset
+#: field:account.asset.asset,id:0
+#: field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0
+#: field:account.asset.history,id:0
+#: field:asset.asset.report,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0
+#: field:asset.modify,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
+msgid ""
+"Indicates that the first depreciation entry for this asset have to be done "
+"from the purchase date instead of the first January"
+msgstr ""
+"Říká, že první odpisová položka pro tento majetek by měla být provedena z "
+"data nákupu namísto prvního Ledna"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Řádek faktury"
+
+#. module: account_asset
+#: help:account.asset.asset,salvage_value:0
+msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr "Toto je částka, kterou plánujete, že nebudete odpisovat."
+
+#. module: account_asset
+#: field:account.asset.category,journal_id:0
+msgid "Journal"
+msgstr "Deník"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:349
+#: model:ir.model,name:account_asset.model_account_move_line
+#, python-format
+msgid "Journal Items"
+msgstr "Položky deníku"
+
+#. module: account_asset
+#: field:account.asset.asset,write_uid:0
+#: field:account.asset.category,write_uid:0
+#: field:account.asset.depreciation.line,write_uid:0
+#: field:account.asset.history,write_uid:0
+#: field:asset.depreciation.confirmation.wizard,write_uid:0
+#: field:asset.modify,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,write_date:0
+#: field:account.asset.category,write_date:0
+#: field:account.asset.depreciation.line,write_date:0
+#: field:account.asset.history,write_date:0
+#: field:asset.depreciation.confirmation.wizard,write_date:0
+#: field:asset.modify,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Lineární"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Modify"
+msgstr "Upravit"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+#: model:ir.actions.act_window,name:account_asset.action_asset_modify
+#: model:ir.model,name:account_asset.model_asset_modify
+msgid "Modify Asset"
+msgstr "Upravit majetek"
+
+#. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Název"
 
 #. module: account_asset
-#: help:account.asset.category,open_asset:0
-msgid ""
-"Check this if you want to automatically confirm the assets of this category "
-"when created by invoices."
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
 msgstr ""
-"Zaškrtněte toto, pokud chcete automaticky potvrdit majetky pro tutu "
-"kategorii, když jsou vytvořeny pomocí dokladů."
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Rok"
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
+#: field:account.asset.history,note:0
+msgid "Note"
+msgstr "Poznámka"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
-msgid "Asset depreciation line"
-msgstr "Odpisový řádek majetku"
-
-#. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
-#: model:ir.model,name:account_asset.model_account_asset_category
-msgid "Asset category"
-msgstr "Kategorie majetku"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr "Částka odpisových řádků"
-
-#. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
-#, python-format
-msgid "Created Asset Moves"
-msgstr "Vytvořit pohyby majetku"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence"
-msgstr "Pořadí"
-
-#. module: account_asset
-#: help:account.asset.category,method_period:0
-msgid "State here the time between 2 depreciations, in months"
-msgstr "Zde zjistěte čas mezi dvěma odpisy v měsíci"
-
-#. module: account_asset
-#: field:account.asset.history,date:0
-msgid "Date"
-msgstr "Datum"
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+#: view:asset.modify:account_asset.asset_modify_form
+#: field:asset.modify,note:0
+msgid "Notes"
+msgstr "Poznámky"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -738,355 +615,212 @@ msgid "Number of Depreciations"
 msgstr "Počet odpisů"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Create Move"
-msgstr "Vytvořit pohyb"
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
+msgstr ""
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Confirm Asset"
-msgstr "Potvrdit majetek"
+#: field:account.asset.asset,parent_id:0
+msgid "Parent Asset"
+msgstr "Nadřazený majetek"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
-msgid "Asset Hierarchy"
-msgstr "Hierarchie majetku"
-
-#~ msgid "Open Assets"
-#~ msgstr "Otevřít majetky"
-
-#~ msgid "Depreciation board"
-#~ msgstr "Nástěnka odpisování"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neplatné jméno modelu v definici akce."
-
-#~ msgid "Change duration"
-#~ msgstr "Změnit trvání"
-
-#~ msgid "Child assets"
-#~ msgstr "Podřízené majetky"
-
-#~ msgid "Asset Value"
-#~ msgstr "Hodnota majetku"
-
-#~ msgid "Generated entries"
-#~ msgstr "Generované položky"
-
-#~ msgid "Number of interval"
-#~ msgstr "Počet rozmezí"
-
-#~ msgid "Open entries"
-#~ msgstr "Otevřít položky"
-
-#~ msgid "Progressive"
-#~ msgstr "Postupný"
-
-#~ msgid "Draft Assets"
-#~ msgstr "Návrhy majetku"
-
-#~ msgid "Change history"
-#~ msgstr "Historie změn"
-
-#~ msgid "Depreciation entries"
-#~ msgstr "Odpisované položky"
-
-#~ msgid "Methods"
-#~ msgstr "Metody"
-
-#~ msgid "Asset properties to modify"
-#~ msgstr "Vlastnosti majetku k úpravě"
-
-#~ msgid "Period per interval"
-#~ msgstr "Období pro rozmezí"
-
-#~ msgid "Depreciation duration"
-#~ msgstr "Trvání odpisu"
-
-#~ msgid "State"
-#~ msgstr "Stav"
-
-#~ msgid "Depreciation methods"
-#~ msgstr "Odpisové metody"
-
-#~ msgid "Other information"
-#~ msgstr "Jiné informace"
-
-#~ msgid "Cumul. value"
-#~ msgstr "Souhrnná hodnota"
-
-#~ msgid "Assets methods"
-#~ msgstr "Metody majetků"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neplatné XML pro zobrazení architektury!"
-
-#~ msgid "Asset property"
-#~ msgstr "Vlastnosti majetku"
-
-#~ msgid "Compute assets"
-#~ msgstr "Spočítat majetky"
-
-#~ msgid "Modify asset"
-#~ msgstr "Upravit majetek"
-
-#~ msgid "Confirm asset"
-#~ msgstr "Potvrdit majetek"
-
-#~ msgid "Date created"
-#~ msgstr "Datum vytvoření"
-
-#~ msgid ""
-#~ "Financial and accounting asset management.\n"
-#~ "    Allows to define\n"
-#~ "    * Asset category. \n"
-#~ "    * Assets.\n"
-#~ "    *Asset usage period and property.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Finanční a účetní správa majetku.\n"
-#~ "    Umožňuje určit\n"
-#~ "    * Kategorie majetku. \n"
-#~ "    * Majetky.\n"
-#~ "    * Období užití majetku a jeho vlastnosti.\n"
-#~ "    "
-
-#~ msgid "Gross value"
-#~ msgstr "Hrubá hodnota"
-
-#~ msgid "Ending period"
-#~ msgstr "Konečné období"
-
-#~ msgid "Asset name"
-#~ msgstr "Jméno majetku"
-
-#~ msgid "Accounts information"
-#~ msgstr "Informace účtů"
-
-#~ msgid "Depr. method type"
-#~ msgstr "Typ odpisové metody"
-
-#~ msgid "Asset account"
-#~ msgstr "Účet majetku"
-
-#~ msgid "Method"
-#~ msgstr "Metoda"
-
-#~ msgid "Normal"
-#~ msgstr "Obyčejný"
-
-#~ msgid "Progressif factor"
-#~ msgstr "Činitel růstu"
-
-#~ msgid "Localisation"
-#~ msgstr "Lokalizace"
-
-#~ msgid "Computation method"
-#~ msgstr "Metoda výpočtu"
-
-#~ msgid "Time method"
-#~ msgstr "Časová metoda"
-
-#~ msgid "Asset method name"
-#~ msgstr "Jméno metody majetku"
-
-#~ msgid "Net value"
-#~ msgstr "Čistá hodnota"
-
-#~ msgid "Close asset"
-#~ msgstr "Uzavřít majetek"
-
-#~ msgid "Depreciation account"
-#~ msgstr "Odpisový účet"
-
-#~ msgid "Open"
-#~ msgstr "Otevřít"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Jméno objektu musí začínat s x_ a nesmí obsahovat žádný speciální znak !"
-
-#~ msgid "Asset management"
-#~ msgstr "Správa majetku"
-
-#~ msgid "Asset board"
-#~ msgstr "Nástěnka majetku"
-
-#~ msgid "Global state"
-#~ msgstr "Globální stav"
-
-#~ msgid "Delay"
-#~ msgstr "Zpoždění"
-
-#~ msgid "General information"
-#~ msgstr "Obecné informace"
-
-#~ msgid "Analytic journal"
-#~ msgstr "Analytický deník"
-
-#~ msgid "Method name"
-#~ msgstr "Jméno metody"
-
-#~ msgid "Close method"
-#~ msgstr "Uzavírací metoda"
-
-#~ msgid "Asset Entries"
-#~ msgstr "Položky majetku"
-
-#~ msgid "Depreciation"
-#~ msgstr "Odpisvoání"
-
-#~ msgid "Asset code"
-#~ msgstr "Kód majetku"
-
-#~ msgid "Total value"
-#~ msgstr "Celková cena"
-
-#~ msgid "View"
-#~ msgstr "Pohled"
-
-#~ msgid "General info"
-#~ msgstr "Obecné info"
-
-#~ msgid "Residual value"
-#~ msgstr "Zbytková cena"
-
-#~ msgid "End of asset"
-#~ msgstr "Konec majetku"
-
-#~ msgid "Direct"
-#~ msgstr "Přímý"
-
-#~ msgid "Indirect"
-#~ msgstr "Nepřímý"
-
-#~ msgid "Parent asset"
-#~ msgstr "Nadřazený majetek"
-
-#~ msgid "Depreciation Amount"
-#~ msgstr "Odpisová částka"
-
-#~ msgid ""
-#~ "This wizard will post the depreciation lines of running assets that belong "
-#~ "to the selected period."
-#~ msgstr ""
-#~ "Tento průvodce zaúčtuje řádky odpisů běžících majetků, které patří k "
-#~ "vybranému období."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Chybná hodnota Má dáti nebo Dal v účetním záznamu !"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Neplatná strukturovaná komunikace BBA !"
-
-#~ msgid "Sequence of the depreciation"
-#~ msgstr "Pořadí odpočtů"
-
-#~ msgid "Calculates Depreciation within specified interval"
-#~ msgstr "Spočítat odpočty v zadaném rozmezí"
-
-#~ msgid "State here the time during 2 depreciations, in months"
-#~ msgstr "Zde zjistěte čas trvajících dvou odpisů v měsících"
-
-#~ msgid "Gross value "
-#~ msgstr "Hrubá hodnota "
-
-#~ msgid "Error ! You can not create recursive assets."
-#~ msgstr "Chyba ! Nemůžete vytvářet rekurzivní majetky."
-
-#~ msgid "Other Information"
-#~ msgstr "Jiné informace"
-
-#~ msgid "Assets purchased in current year"
-#~ msgstr "Majetky zakoupené v tomto roce"
-
-#~ msgid "Month"
-#~ msgstr "Měsíc"
-
-#~ msgid "Analytic information"
-#~ msgstr "Analytické informace"
-
-#~ msgid "Asset durations to modify"
-#~ msgstr "Úprava trvání majetku"
-
-#~ msgid ""
-#~ "Choose the method to use to compute the amount of depreciation lines.\n"
-#~ "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-#~ "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
-#~ msgstr ""
-#~ "Vyberte metodu pro použití pro spočítání částky odpisových řádků.\n"
-#~ "  * Lineární: Vypočteno na základě: Hrubé hodnoty / Počet odpisů\n"
-#~ "  * Klesající: Vypočteno na základě: Zbytkové hodnoty * Činitel poklesu"
-
-#~ msgid "Assets purchased in current month"
-#~ msgstr "Majetek zakoupený v tomto měsíci"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Číslo dokladu musí být jedinečné na společnost!"
-
-#~ msgid "Accounting information"
-#~ msgstr "Účetní informace"
-
-#~ msgid "Review Asset Categories"
-#~ msgstr "Přezkoumat kategorie majetku"
-
-#~ msgid "Amount to Depreciate"
-#~ msgstr "Částka k odepsání"
-
-#~ msgid ""
-#~ "When an asset is created, the state is 'Draft'.\n"
-#~ "If the asset is confirmed, the state goes in 'Running' and the depreciation "
-#~ "lines can be posted in the accounting.\n"
-#~ "You can manually close an asset when the depreciation is over. If the last "
-#~ "line of depreciation is posted, the asset automatically goes in that state."
-#~ msgstr ""
-#~ "Když je majetek vytvořen, stav je 'Koncept'.\n"
-#~ "Pokud je majetek potvrzen, stav přechází na 'Běžící' a odpisové řádky mohou "
-#~ "být zaúčtovány v účetnictví.\n"
-#~ "Můžete ručně uzavřit majetek, pokud je odpisování dokončeno. Pokud je "
-#~ "poslední řádek odpisu zaúčtovaný, majetek automaticky přechází do tohoto "
-#~ "stavu."
-
-#~ msgid "Month-1"
-#~ msgstr "Měsíc -1"
-
-#~ msgid "Assets purchased in last month"
-#~ msgstr "Majetek zakoupený v minulém měsíci"
-
-#~ msgid ""
-#~ "From this report, you can have an overview on all depreciation. The tool "
-#~ "search can also be used to personalise your Assets reports and so, match "
-#~ "this analysis to your needs;"
-#~ msgstr ""
-#~ "Z tohoto výkazu můžete mít přehled nad všemi odpisy. Nástroj hledání může "
-#~ "být také použit pro přizpůsobení vašich výkazů majetku a tak odpovídat této "
-#~ "analýze podle vašich potřeb;"
-
-#~ msgid "Post Depreciation Lines"
-#~ msgstr "Zaúčtovat odpisové řádky"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Nemůžete vytvořit položky deníku v uzavřeném účtu."
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "Datum vašeho záznamu deníku není v určeném období! Měli byste změnit datum "
-#~ "nebo odstranit omezení z deníku."
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Nemůžete vytvořit položky deníku v účtu typu pohled."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "Společnost musí být stejná pro své vztažené účty a období."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Vybraný účet vašeho záznamu deníku vynucuje použití druhotné měny. Měli "
-#~ "byste odstranit druhotnou měnu z účtu nebo vybrat více-měny."
+#: field:account.asset.asset,partner_id:0
+#: field:asset.asset.report,partner_id:0
+msgid "Partner"
+msgstr "Společník"
+
+#. module: account_asset
+#: field:asset.depreciation.confirmation.wizard,period_id:0
+msgid "Period"
+msgstr "Období"
+
+#. module: account_asset
+#: field:account.asset.category,method_period:0
+#: field:account.asset.history,method_period:0
+#: field:asset.modify,method_period:0
+msgid "Period Length"
+msgstr "Délka období"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_check:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,move_check:0
+msgid "Posted"
+msgstr "Zaúčtováno"
+
+#. module: account_asset
+#: field:asset.asset.report,posted_value:0
+msgid "Posted Amount"
+msgstr "Zaúčtovaná částka"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Posted depreciation lines"
+msgstr "Zaúčtované řádky odpisů"
+
+#. module: account_asset
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
+msgid "Prorata Temporis"
+msgstr "Prorata Temporis"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid ""
+"Prorata temporis can be applied only for time method \"number of "
+"depreciations\"."
+msgstr ""
+"Prorata temporis může být použita pouze pro časovou metodu \"počet odpisů\"."
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: field:asset.asset.report,purchase_date:0
+msgid "Purchase Date"
+msgstr "Datum zakoupení"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Purchase Month"
+msgstr ""
+
+#. module: account_asset
+#: field:asset.modify,name:0
+msgid "Reason"
+msgstr "Důvod"
+
+#. module: account_asset
+#: field:account.asset.asset,code:0
+msgid "Reference"
+msgstr "Odkaz"
+
+#. module: account_asset
+#: field:account.asset.asset,value_residual:0
+msgid "Residual Value"
+msgstr "Zbytková hodnota"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Running"
+msgstr "Běžící"
+
+#. module: account_asset
+#: field:account.asset.asset,salvage_value:0
+msgid "Salvage Value"
+msgstr "Záchranná hodnota"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_search
+msgid "Search Asset Category"
+msgstr "Hledat kategorii majetku"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
+msgstr "Pořadí"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Close"
+msgstr "Nastavit na uzavřené"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Draft"
+msgstr "Nastavit na koncept"
+
+#. module: account_asset
+#: field:account.asset.category,open_asset:0
+msgid "Skip Draft State"
+msgstr "Přeskočit stav koncept"
+
+#. module: account_asset
+#: help:account.asset.category,method_period:0
+msgid "State here the time between 2 depreciations, in months"
+msgstr "Zde zjistěte čas mezi dvěma odpisy v měsíci"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,parent_state:0
+msgid "State of Asset"
+msgstr "Stav majetku"
+
+#. module: account_asset
+#: field:account.asset.asset,state:0
+#: field:asset.asset.report,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.history,method_time:0
+msgid ""
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Metoda k použití pro výpočet datumů a počet odpisových řádek.\n"
+"Počet odpisů: Pevné číslo počtu odpisových řádků a čas mezi 2 odpisy.\n"
+"Konečný datum: Vybere čas mezi 2 odpisy a datum odpis nemůže jít přes."
+
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,method_time:0
+#: field:account.asset.category,method_time:0
+#: field:account.asset.history,method_time:0
+msgid "Time Method"
+msgstr "Časová metoda"
+
+#. module: account_asset
+#: help:account.asset.history,method_period:0
+msgid "Time in month between two depreciations"
+msgstr "Čas v měsíci mezi dvěma odpočty"
+
+#. module: account_asset
+#: field:asset.asset.report,unposted_value:0
+msgid "Unposted Amount"
+msgstr "Nezaúčtovaná částka"
+
+#. module: account_asset
+#: field:account.asset.history,user_id:0
+msgid "User"
+msgstr "Uživatel"
+
+#. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Rok"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "months"
+msgstr ""

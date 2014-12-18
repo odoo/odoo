@@ -1,38 +1,25 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_vat
+# Catalan translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-03 03:16+0000\n"
-"Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
-"<resteve@zikzakmedia.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
-msgstr ""
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
 msgstr ""
 
 #. module: base_vat
@@ -41,24 +28,10 @@ msgid "Companies"
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr ""
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Marqueu aquesta opció si l'empresa està subjecta a l'IVA. Serà utilitzat per "
-"a la declaració legal de l'IVA."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -68,56 +41,38 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Subjecte a IVA"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "VAT"
-#~ msgstr "CIF/NIF"
-
-#~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
-#~ msgstr ""
-#~ "Activa l'IVA (Impost Valor Afegit) per a l'empresa. Comprova la validesa del "
-#~ "CIF/NIF."
-
+#: code:addons/base_vat/base_vat.py:130
 #, python-format
-#~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something like "
-#~ "this %s"
-#~ msgstr ""
-#~ "El CIF/NIF sembla que no sigui correcte. Hauríeu d'haver introduït alguna "
-#~ "cosa com això %s"
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr ""
 
-#~ msgid "Base VAT - To check VAT number validity"
-#~ msgstr "Base CIF/NIF - Per comprovar la validesa dels CIF/NIF"
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
 
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Error! No podeu crear membres associats recursius."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number.\n"
-#~ "\n"
-#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
-#~ "for\n"
-#~ "    checking the validity of VAT Number assigned to partners in European "
-#~ "countries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Permet la validació del CIF/NIF de les empreses. Comprova si el CIF/NIF "
-#~ "és un número vàlid.\n"
-#~ "\n"
-#~ "    Aquest mòdul usa els mètodes especificats a http://sima-pc.com/nif.php "
-#~ "per\n"
-#~ "    la validació del CIF/NIF assignat a les empreses dels països europeus.\n"
-#~ "    "
-
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
 #, python-format
-#~ msgid "The VAT is invalid, It should begin with the country code"
-#~ msgstr "El CIF/NIF no és vàlid, hauria de començar amb el codi del país"
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr ""
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr ""

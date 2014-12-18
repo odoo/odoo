@@ -5,8 +5,7 @@
              <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
      </record>
 
-
-<!-- Demo Data for Event Type -->
+    <!-- Demo Data for Event Type -->
     <record id="event_type_0" model="event.type">
         <field name="name">Seminar</field>
     </record>
@@ -32,6 +31,7 @@
         <field name="name">Open Days in Los Angeles</field>
         <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 8:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d 18:00:00')" name="date_end"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">500</field>
         <field name="address_id" ref="base.res_partner_6"/>
         <field name="type" ref="event_type_1"/>
@@ -78,6 +78,7 @@
         <field eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d 11:00:00')" name="date_end"/>
         <field name="type" ref="event_type_0"/>
         <field name="address_id" ref="base.res_partner_5"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">350</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
@@ -108,15 +109,16 @@
     </record>
     
     <record id="event_2" model="event.event">
-        <field name="name">Conference on Business Applications</field>
+        <field name="name">Conference on Business Apps</field>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
         <field name="address_id" ref="base.res_partner_14"/>
+        <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
-    <center><strong>Conference on Business Applications</strong></center>
+    <center><strong>Conference on Business Apps</strong></center>
     <p>&nbsp;</p>
     <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>
     <p>&nbsp;</p>
@@ -155,6 +157,7 @@
         <field name="type" ref="event_type_4"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="address_id" ref="base.res_partner_2"/>
+        <field name="seats_availability">unlimited</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
     <center><strong>5-days Technical Training</strong></center>
@@ -214,7 +217,6 @@
         <field name="phone">003281588558</field>
         <field name="event_id" ref="event_1"/>
         <field name="partner_id" ref="base.res_partner_2"/>
-        <field name="nb_register">5</field>
     </record>
 
     <record id="reg_1_2" model="event.registration">
@@ -223,7 +225,6 @@
         <field name="phone">+ 1 64 61 04 01</field>
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="event_id" ref="event_1"/>
-        <field name="nb_register">10</field>
     </record>
 
     <record id="reg_0_2" model="event.registration">
@@ -232,7 +233,6 @@
         <field name="phone">+41 21 619 10 04 </field>
         <field name="event_id" ref="event_2"/>
         <field name="partner_id" ref="base.res_partner_12"/>
-        <field name="nb_register">5</field>
     </record>
 
     </data>

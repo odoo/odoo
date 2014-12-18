@@ -9,6 +9,22 @@ openerp.report = function(instance) {
             error: c.rpc_error.bind(c)
         });
     }
+    var show_pdf = function(session, response, c, options, self) {
+        response.push("pdf_viewer")
+        session.show_pdf({
+            url: '/report/download',
+            data: {data: JSON.stringify(response)},
+            complete: function(){
+                openerp.web.unblockUI();
+                if (!self.dialog) {
+                    options.on_close();
+                }
+                self.dialog_stop();
+                window.scrollTo(0,0);
+            },
+            error: c.rpc_error.bind(c)
+        });
+    }
 
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
@@ -52,7 +68,7 @@ openerp.report = function(instance) {
                 var c = openerp.webclient.crashmanager;
 
                 if (action.report_type == 'qweb-html') {
-                    window.open(report_url, '_blank', 'height=900,width=1280');
+                    window.open(report_url, '_blank', 'scrollbars=1,height=900,width=1280');
                     instance.web.unblockUI();
                 } else if (action.report_type === 'qweb-pdf') {
                     // Trigger the download of the pdf/controller report
@@ -79,7 +95,12 @@ workers to print a pdf version of the reports.'), true);
  support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
  target="_blank">wkhtmltopdf.org</a>'), true);
                         }
-                        return trigger_download(self.session, response, c);
+                        if(action.hasOwnProperty('pdf_viewer')){
+                            return show_pdf(self.session, response, c, options, self);
+                        }
+                        else {
+                            return trigger_download(self.session, response, c );
+                        }
                     });
                 } else if (action.report_type === 'controller') {
                     return trigger_download(self.session, response, c);

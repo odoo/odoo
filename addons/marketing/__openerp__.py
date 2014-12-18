@@ -12,7 +12,7 @@ Menu for Marketing.
 
 Contains the installer for marketing-related modules.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/mailing',
     'data': [
         'security/marketing_security.xml',
         'marketing_view.xml',

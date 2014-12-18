@@ -2,15 +2,18 @@
 <openerp>
     <data>
 
+<template id="assets_editor" inherit_id="website.assets_editor" name="Email Designer">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
+    </xpath>
+</template>
+
 <!-- Template Choice page -->
 <template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
-        <t t-set="head">
-            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
-        </t>
         <div id="wrap" class="container" t-ignore="True">
             <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
-                <a class="mt16 btn btn-default pull-right" 
+                <a class="mt16 btn btn-default pull-right css_editable_mode_hidden" 
                   t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Back
                 </a>
@@ -27,7 +30,7 @@
                     </div>
                     <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
                         <div class="email_preview_border">
-                            <div t-field="template.body_html" class="email_preview js_content"/>
+                            <div t-raw="html_sanitize(template.body_html)" class="email_preview js_content"/>
                         </div>
                         <h4 t-field="template.name"/>
                         <button class="btn btn-primary js_template_set">Select</button>
@@ -35,9 +38,9 @@
                 </div>
             </div>
             <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
-                <a class="mt16 btn btn-primary pull-right" 
+                <a class="mt16 btn btn-primary pull-right" id="save_and_continue"
                   t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
-                    Save and Continue
+                    Back to the mass mailing
                 </a>
                 <h1 class="page-header mt16">
                     Design Your Email

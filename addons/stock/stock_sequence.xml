@@ -2,25 +2,6 @@
 <openerp>
     <data noupdate="1">
         <!--
-    Sequence types for pickings
-    -->
-
-        <record id="seq_type_picking_in" model="ir.sequence.type">
-            <field name="name">Picking IN</field>
-            <field name="code">stock.picking.in</field>
-        </record>
-        
-        <record id="seq_type_picking_out" model="ir.sequence.type">
-            <field name="name">Picking OUT</field>
-            <field name="code">stock.picking.out</field>
-        </record>
-        
-        <record id="seq_type_picking_internal" model="ir.sequence.type">
-            <field name="name">Picking INT</field>
-            <field name="code">stock.picking</field>
-        </record>
-
-        <!--
             Sequences for pickings
         -->
 
@@ -37,10 +18,6 @@
         <!--
     Sequences from tracking numbers
     -->
-        <record id="sequence_type_serial" model="ir.sequence.type">
-            <field name="name">Serial Numbers</field>
-            <field name="code">stock.lot.serial</field>
-        </record>
         <record id="sequence_production_lots" model="ir.sequence">
             <field name="name">Serial Numbers</field>
             <field name="code">stock.lot.serial</field>
@@ -52,11 +29,6 @@
         </record>
 
 	<!-- stock/lot.tracking sequence and sequence type should be removed, mmh? -->
-        <record id="sequence_type_tracking" model="ir.sequence.type">
-            <field name="name">Packs</field>
-            <field name="code">stock.lot.tracking</field>
-        </record>
-
         <record id="sequence_tracking" model="ir.sequence">
             <field name="name">Packs</field>
             <field name="code">stock.lot.tracking</field>
@@ -68,11 +40,6 @@
         </record>
 
         <!-- Sequences for stock.quant.package -->
-        <record id="seq_type_quant_package" model="ir.sequence.type">
-            <field name="name">Packages</field>
-            <field name="code">stock.quant.package</field>
-        </record>
-
         <record id="seq_quant_package" model="ir.sequence">
             <field name="name">Packages</field>
             <field name="code">stock.quant.package</field>

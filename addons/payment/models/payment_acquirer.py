@@ -75,6 +75,11 @@ class PaymentAcquirer(osv.Model):
         'website_published': fields.boolean(
             'Visible in Portal / Website', copy=False,
             help="Make this payment acquirer available (Customer invoices, etc.)"),
+        'auto_confirm': fields.selection(
+            [('none', 'No automatic confirmation'),
+             ('at_pay_confirm', 'At payment confirmation'),
+             ('at_pay_now', 'At payment')],
+            string='Order Confirmation', required=True),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
@@ -88,13 +93,14 @@ class PaymentAcquirer(osv.Model):
         'environment': 'test',
         'validation': 'automatic',
         'website_published': True,
+        'auto_confirm': 'at_pay_confirm',
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         for acquirer in self.browse(cr, uid, ids, context=context):
-            if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.provider and not acquirer[c]):
+            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
                 return False
         return True
 
@@ -115,7 +121,7 @@ class PaymentAcquirer(osv.Model):
 
              - partner_values: will contain name, lang, email, zip, address, city,
                country_id (int or False), country (browse or False), phone, reference
-             - tx_values: will contain refernece, amount, currency_id (int or False),
+             - tx_values: will contain reference, amount, currency_id (int or False),
                currency (browse or False), partner (browse or False)
         """
         acquirer = self.browse(cr, uid, id, context=context)
@@ -140,6 +146,7 @@ class PaymentAcquirer(osv.Model):
                 'country': tx.partner_country_id,
                 'phone': tx.partner_phone,
                 'reference': tx.partner_reference,
+                'state': None,
             }
         else:
             if partner_id:
@@ -154,6 +161,7 @@ class PaymentAcquirer(osv.Model):
                     'country_id': partner.country_id.id,
                     'country': partner.country_id,
                     'phone': partner.phone,
+                    'state': partner.state_id,
                 }
             else:
                 partner, partner_data = False, {}

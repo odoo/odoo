@@ -73,8 +73,8 @@
 
         <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="25"/>
         <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_hr_manager"/>
-        <menuitem parent="hr.menu_hr_configuration" id="menu_open_view_hr_evaluation_plan_tree"
-            action="open_view_hr_evaluation_plan_tree" sequence="15" groups="base.group_hr_manager"/>
+        <menuitem parent="hr.menu_hr_configuration_employees" id="menu_open_view_hr_evaluation_plan_tree"
+            action="open_view_hr_evaluation_plan_tree" sequence="5" groups="base.group_hr_manager"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
             <field name="name">hr_evaluation.plan.phase.form</field>

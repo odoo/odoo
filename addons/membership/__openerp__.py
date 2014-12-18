@@ -50,6 +50,7 @@ invoice and send propositions for membership renewal.
         'membership_demo.xml',
         'membership_demo.yml'
     ],
+    'website': 'https://www.odoo.com/page/community-builder',
     'test': ['test/test_membership.yml'],
     'installable': True,
     'auto_install': False,

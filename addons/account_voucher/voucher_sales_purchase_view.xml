@@ -73,7 +73,7 @@
                     <group>
                         <group>
                             <field name="type" invisible="True"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="account_id"
                                   domain="[('type','in', ['liquidity', 'receivable'])]"/>
@@ -222,6 +222,7 @@
 
                     <field name="pay_now" invisible="1"/>
                     <field name="type" invisible="True"/>
+                    <field name="payment_rate_currency_id" invisible="1"/>
                     <group>
                         <group>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
@@ -345,7 +346,7 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
-            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="3"/>
 
     </data>
 </openerp>

@@ -204,6 +204,7 @@ class gamification_challenge(osv.Model):
         'category': 'hr',
         'reward_failure': False,
         'report_template_id': lambda s, *a, **k: s._get_report_template(*a, **k),
+        'reward_realtime': True,
     }
 
 
@@ -291,6 +292,9 @@ class gamification_challenge(osv.Model):
 
         :param list(int) ids: the ids of the challenges to update, if False will
         update only challenges in progress."""
+        if not ids:
+            return True
+
         if isinstance(ids, (int,long)):
             ids = [ids]
 
@@ -361,6 +365,9 @@ class gamification_challenge(osv.Model):
 
         return True
 
+    def action_start(self, cr, uid, ids, context=None):
+        """Start a challenge"""
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
         """Check a challenge
@@ -701,13 +708,14 @@ class gamification_challenge(osv.Model):
         """
         if isinstance(ids, (int,long)):
             ids = [ids]
+        commit = context.get('commit_gamification', False)
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
 
             rewarded_users = []
             challenge_ended = end_date == yesterday.strftime(DF) or force
-            if challenge.reward_id and challenge_ended or challenge.reward_realtime:
+            if challenge.reward_id and (challenge_ended or challenge.reward_realtime):
                 # not using start_date as intemportal goals have a start date but no end_date
                 reached_goals = self.pool.get('gamification.goal').read_group(cr, uid, [
                     ('challenge_id', '=', challenge.id),
@@ -729,6 +737,8 @@ class gamification_challenge(osv.Model):
                                 continue
                         self.reward_user(cr, uid, user_id, challenge.reward_id.id, challenge.id, context=context)
                         rewarded_users.append(user_id)
+                        if commit:
+                            cr.commit()
 
             if challenge_ended:
                 # open chatter message
@@ -761,6 +771,8 @@ class gamification_challenge(osv.Model):
                     partner_ids=[user.partner_id.id for user in challenge.user_ids],
                     body=message_body,
                     context=context)
+                if commit:
+                    cr.commit()
 
         return True
 
@@ -852,7 +864,7 @@ class gamification_challenge_line(osv.Model):
         return ret
 
     _columns = {
-        'name': fields.related('definition_id', 'name', string="Name"),
+        'name': fields.related('definition_id', 'name', string="Name", type="char"),
         'challenge_id': fields.many2one('gamification.challenge',
             string='Challenge',
             required=True,

@@ -1,10 +1,10 @@
 openerp.web_view_editor = function(instance) {
 var _t = instance.web._t;
 var QWeb = instance.web.qweb;
-instance.web.ViewManagerAction.include({
+instance.web.ViewManager.include({
     on_debug_changed:function(evt){
-        var val = $(evt.currentTarget).find('option:selected').val(),
-            current_view = this.views[this.active_view].controller;
+        var val = $(evt.target).data('action'),
+            current_view = this.active_view.controller;
         if(val === "manage_views"){
             if (current_view.fields_view && current_view.fields_view.arch) {
                     var view_editor = new instance.web_view_editor.ViewEditor(current_view, current_view.$el, this.dataset, current_view.fields_view.arch);
@@ -13,7 +13,6 @@ instance.web.ViewManagerAction.include({
                     this.do_warn(_t("Manage Views"),
                             _t("Could not find current view declaration"));
                 }
-                evt.currentTarget.selectedIndex = 0;
         }else{
             return this._super.apply(this,arguments);
         }
@@ -51,6 +50,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 views_switcher: false,
                 action_buttons: false,
                 search_view: false,
+                headless: true,
                 pager: false,
                 radio: true,
                 select_view_id: self.parent.fields_view.view_id
@@ -71,7 +71,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.action_manager.appendTo(this.view_edit_dialog.$el);
         $.when(this.action_manager.do_action(action)).done(function() {
             var viewmanager = self.action_manager.inner_widget;
-            var controller = viewmanager.views[viewmanager.active_view].controller;
+            var controller = viewmanager.active_view.controller;
             $(controller.groups).bind({
                 'selected': function (e, ids, records, deselected) {
                         self.main_view_id = ids[0];
@@ -408,7 +408,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
-                    self.action_manager.inner_widget.views[self.action_manager.inner_widget.active_view].controller.reload_content();
+                    self.action_manager.inner_widget.active_view.controller.reload_content();
                     self.edit_xml_dialog.close();
                 }}
             ]

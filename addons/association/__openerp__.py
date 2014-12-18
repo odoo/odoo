@@ -33,10 +33,11 @@ membership products (schemes).
     """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'membership', 'event'],
-    'data': ['security/ir.model.access.csv', 'profile_association.xml'],
+    'data': ['profile_association.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,
     'images': ['images/association1.jpeg'],
+    'website': 'https://www.odoo.com'
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

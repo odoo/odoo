@@ -1,57 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* sale_crm
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-01-25 00:17+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-01 19:58+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:19+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Yetersiz Veri!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
+msgstr "Kampanya"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Teklife Dönüştür"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Fatura İsatistikleri"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Kazanıldı İşaretle"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Varsayılan Satış Takımı"
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Satış Takım(lar)ım"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Kullanıcılar"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr "Kanal"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -61,21 +40,25 @@ msgstr ""
 "Satış Siparişini oluşturduktan sonra fırsatı kapatmak için işaretleyin."
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Gönderilen Teklif"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Teklife Dönüştür"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Kategoriler"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Teklif Oluştur"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Teklif"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr "Oluşturulma"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -83,61 +66,25 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Oluştur"
+#: field:crm.make.sale,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Satış yap"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Fatura"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Fırsat: %s"
+msgid "Insufficient Data!"
+msgstr "Yetersiz Veri!"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Fırsat teklife <em>%s</em> <b>dönüştürüldü</b> ."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Mağaza"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Bu müşteri için adres tanımlanmamış."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Satış Siparişi Onaylandı"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Satış Takımı"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Teklif Oluştur"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -145,9 +92,39 @@ msgid "Make Quotation"
 msgstr "Teklif Yap"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "İptal"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Satış yap"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Kazanıldı İşaretle"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr "Bu müşteri için tanımlanmış adres yok."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "Fırsat teklife <em>%s</em> <b>dönüştürüldü</b> ."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Fırsat: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Teklif"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -155,193 +132,39 @@ msgid "Sales Order"
 msgstr "Satış Siparişi"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "ya da"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr "Kaynak"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr "Etiketler"
 
-#~ msgid "Create"
-#~ msgstr "Oluştur"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+"Farklı kampanya çabalarınızı izlemenize yardımcı olacak bir isimdir Örn: "
+"Sonbahar_Sürüşü, Yılbaşı_Özel"
 
-#~ msgid "All at once"
-#~ msgstr "Hepsi birden"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Bu teslimat yöntemidir. örn: Postakartı, Eposta yada Reklam Afişi"
 
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Fırsatı teklife dönüştür"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"Bu, bağlantının kaynağıdır. Örn: Arama Motoru, başka alan adı yada bir "
+"eposta listesi adı"
 
-#~ msgid "Convert to Quote"
-#~ msgstr "Teklife Dönüştür"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Sale CRM Stuff"
-
-#~ msgid "Create Quote"
-#~ msgstr "Teklif Oluştur"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "CRM Fırsatı"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "CRM Fırsatı teklifle sonuçlanabilir."
-
-#~ msgid "Close Case"
-#~ msgstr "Olay Kapat"
-
-#~ msgid "Make Case"
-#~ msgstr "Olay Yap"
-
-#~ msgid "Case Section"
-#~ msgstr "Olay Bölümü"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Analitik Hesap"
-
-#~ msgid "Case Description"
-#~ msgstr "Olay Tanımı"
-
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Olaya bağlı ortak yoksa bu ortağı kullan"
-
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "CRM Fırsat Teklifi"
-
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Fırsat Analitiği"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Fırsat teklife gider"
-
-#~ msgid "Analytic account"
-#~ msgstr "Analitik Hesap"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Sözleşme Fiyat Listesi"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Müşteri ile yapılan sözleşmeye göre göster"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Sözleşme Miktarı (fiyat listesi)"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Direk Teslim"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr "Satış emrini oluşturduktan sonra olayı kapatmak için seçiniz."
-
-#~ msgid "User Responsible"
-#~ msgstr "Sorumlu Kullanıcı"
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Fırsat Teklifi"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Fırsat Teklifi"
-
-#~ msgid "Products"
-#~ msgstr "Ürünler"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Fırsatı teklife çevir"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Picking Policy"
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Fırsatı Fiyat Listesine çevir"
-
-#~ msgid "Your action"
-#~ msgstr "İşleminiz"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Müşterinin tanımlanmış bir adresi yok!"
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Aylık Ciro"
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "Fiyat teklifine çevrildi."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Fırsat "
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "'%s' Fırsatı Teklife dönüştürüldü."
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Satış Teklifine Dönüştürüldü(no: %s)."
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Fırsattan Satış Siparişi Oluşturur"
-
-#~ msgid "My Quotations"
-#~ msgstr "Tekliflerim"
-
-#~ msgid "Quotations"
-#~ msgstr "Teklifler"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Fırsatı Kapat"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Aşamalara göre Fırsatlar"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Sipariş referansı tek olmalı !"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Bu modül, MİY de bir ya da birkaç fırsat durumuna kısayol ekler.\n"
-#~ "Bu kısayol, seçilen duruma göre satış siparişi oluşturmanızı sağlar.\n"
-#~ "Eğer farklı durumlar (bir liste) açıksa, duruma göre satış siparişi "
-#~ "oluşturur.\n"
-#~ "Sonra durumlar kpatılır ve oluşturulan satış siparişine bağlanır.\n"
-#~ "\n"
-#~ "Eğer hem satış hem de crm modüllerini kurduysanız bu modülü kurmanızı \n"
-#~ "Öneririz.\n"
-#~ "    "
-
-#~ msgid "Category"
-#~ msgstr "Kategori"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Fırsatlarım"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Yetersiz Veri!"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(%s)."
-#~ msgstr "Satış Teklifine (%s) dönüştürülmüş"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Sipariş Referansı Her Firma için benzersiz olmalı!"
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Satış siparişini oluşturduktan sonra fırsatı kapatmak için bunu tıklayın."
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Aşamaya göre Planlanan Gelirlerim"
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Oluştur"

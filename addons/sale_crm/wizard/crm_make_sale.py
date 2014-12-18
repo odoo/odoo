@@ -92,8 +92,8 @@ class crm_make_sale(osv.osv_memory):
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
-                    'section_id': case.section_id and case.section_id.id or False,
-                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
+                    'team_id': case.team_id and case.team_id.id or False,
+                    'tag_ids': [(6, 0, [categ_id.id for categ_id in case.tag_ids])],
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
@@ -101,6 +101,7 @@ class crm_make_sale(osv.osv_memory):
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
                     'payment_term':payment_term,
+                    'opportunity_id': case.id
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid

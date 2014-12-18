@@ -289,7 +289,7 @@
         </record>
 
 
-        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="12"
+        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="4"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
         <!-- Register Payment Form (old Pay Invoice wizard) -->
@@ -333,7 +333,7 @@
                     </group>
                     <group>
                         <group>
-                                <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="writeoff_amount" widget="monetary" attrs="{'invisible':[('writeoff_amount','=',0)]}" options="{'currency_field': 'currency_id'}"/>
                                 <field name="payment_option" required="1" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
                                 <field name="writeoff_acc_id"
                                         attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff'), ('writeoff_amount','!=',0)]}"
@@ -437,7 +437,7 @@
                             <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
                             <field name="reference" string="Payment Ref" placeholder="e.g. 003/10"/>
                             <field name="name" colspan="2" placeholder="e.g. Invoice SAJ/0042"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)"  groups="base.group_multi_company"/>
 
                             <field name="account_id"
                                 widget="selection"

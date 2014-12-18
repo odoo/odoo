@@ -329,7 +329,8 @@ class resource_calendar(osv.osv):
         # no calendar: try to use the default_interval, then return directly
         if id is None:
             if default_interval:
-                intervals.append((start_dt.replace(hour=default_interval[0]), start_dt.replace(hour=default_interval[1])))
+                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0), start_dt.replace(hour=default_interval[1], minute=0, second=0))
+            intervals = self.interval_remove_leaves(working_interval, work_limits)
             return intervals
 
         working_intervals = []
@@ -371,10 +372,16 @@ class resource_calendar(osv.osv):
                           resource_id=None, default_interval=None, context=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=end_dt + datetime.timedelta(days=1),
+                               until=(end_dt + datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0),
                                byweekday=self.get_weekdays(cr, uid, id, context=context)):
+            day_start_dt = day.replace(hour=0, minute=0, second=0)
+            if start_dt and day.date() == start_dt.date():
+                day_start_dt = start_dt
+            day_end_dt = day.replace(hour=23, minute=59, second=59)
+            if end_dt and day.date() == end_dt.date():
+                day_end_dt = end_dt
             hours += self.get_working_hours_of_date(
-                cr, uid, id, start_dt=day,
+                cr, uid, id, start_dt=day_start_dt, end_dt=day_end_dt,
                 compute_leaves=compute_leaves, resource_id=resource_id,
                 default_interval=default_interval,
                 context=context)

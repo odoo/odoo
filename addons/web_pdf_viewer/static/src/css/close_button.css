@@ -1,0 +1,52 @@
+div.close_print{
+    display: block;
+    text-shadow: 1px 1px 5px #050505;
+    filter: dropshadow(color=#050505, offx=1, offy=1);
+    line-height:50px;
+    width:50px;
+    position:absolute;
+    right:2%;
+    top:8%;
+    color:#C3C3C3;
+    background: #3f3f3f; /* Old browsers */
+    background: -moz-linear-gradient(top,  #3f3f3f 0%, #0e0e0e 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f3f3f), color-stop(100%,#0e0e0e)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #3f3f3f 0%,#0e0e0e 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #3f3f3f 0%,#0e0e0e 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #3f3f3f 0%,#0e0e0e 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #3f3f3f 0%,#0e0e0e 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f3f3f', endColorstr='#0e0e0e',GradientType=0 ); /* IE6-9 */
+    -webkit-border-radius: 100px 100px 100px 100px;
+    border-radius: 100px 100px 100px 100px;
+}
+iframe.ie_problem{
+    position:absolute;
+    background: transparent;
+    display: block;
+    text-shadow: 1px 1px 5px #050505;
+    line-height:50px;
+    width:50px;
+    border:0px;
+    right:2%;
+    top:8%;
+    height:100px;
+}
+div.close_print div{
+    padding-left:8px;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+div.close_print div div{
+    visibility:visible;
+    font-family: "entypoRegular";
+    font-size: 50px;
+    padding-top:0px;
+}
+
+div.close_print:hover div div{
+    font-size: 85px;
+    padding-left:4px;
+}

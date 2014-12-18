@@ -26,10 +26,9 @@ def cursor():
 
 def drop_sequence(code):
     cr = cursor()
-    for model in ['ir.sequence', 'ir.sequence.type']:
-        s = registry(model)
-        ids = s.search(cr, ADMIN_USER_ID, [('code', '=', code)])
-        s.unlink(cr, ADMIN_USER_ID, ids)
+    s = registry('ir.sequence')
+    ids = s.search(cr, ADMIN_USER_ID, [('code', '=', code)])
+    s.unlink(cr, ADMIN_USER_ID, ids)
     cr.commit()
     cr.close()
 
@@ -39,9 +38,6 @@ class test_ir_sequence_standard(unittest2.TestCase):
     def test_ir_sequence_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
-        assert c
         d = dict(code='test_sequence_type', name='Test sequence')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
@@ -87,9 +83,6 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_2', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
-        assert c
         d = dict(code='test_sequence_type_2', name='Test sequence',
             implementation='no_gap')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
@@ -130,14 +123,8 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
     def test_ir_sequence_1_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_3', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
-        assert c
         d = dict(code='test_sequence_type_3', name='Test sequence')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
-        assert c
-        d = dict(code='test_sequence_type_4', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence',
             implementation='no_gap')
@@ -176,9 +163,6 @@ class test_ir_sequence_generate(unittest2.TestCase):
     def test_ir_sequence_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_5', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
-        assert c
         d = dict(code='test_sequence_type_5', name='Test sequence')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
@@ -194,10 +178,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_6', name='Test sequence type')
-        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
-        assert c
-        d = dict(code='test_sequence_type_6', name='Test sequence')
+        d = dict(code='test_sequence_type_6', name='Test sequence', implementation='no_gap')
         c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()

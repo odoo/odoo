@@ -44,7 +44,7 @@ Main Features
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/enterprise-social-network',
     'depends': ['base', 'base_setup'],
     'data': [
         'wizard/invite_view.xml',

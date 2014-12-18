@@ -15,7 +15,7 @@
                         <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
                         <field name="partner_id" readonly="True"/>
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
-                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id" groups="base.group_multi_salesteams"/>
                     </group>
                     <footer>
                         <button name="action_schedule" type="object" string="Log Call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>

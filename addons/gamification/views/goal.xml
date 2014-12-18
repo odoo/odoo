@@ -23,7 +23,7 @@
             <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'"> 
+                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'" create="false">
                     <field name="definition_id" invisible="1" />
                     <field name="user_id" invisible="1" />
                     <field name="start_date"/>
@@ -36,8 +36,8 @@
                 </tree>
             </field>
         </record>
-		
-		<record id="goal_form_view" model="ir.ui.view">
+
+        <record id="goal_form_view" model="ir.ui.view">
             <field name="name">Goal Form</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
@@ -98,13 +98,21 @@
                     <filter name="my" string="My Goals" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                    <filter name="inprogress" string="Current"
+                    <filter name="inprogress" string="Running"
                         domain="[
                             '|',
                                 ('state', '=', 'inprogress'),
-                                ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
-                            ]"/>
-                    <filter name="closed" string="Passed" domain="[('state', 'in', ('reached', 'failed'))]"/>
+                                '&amp;',
+                                    ('state', 'in', ('done', 'failed')),
+                                    ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
+                        ]"/>
+                    <filter name="closed" string="Done"
+                        domain="[
+                            ('state', 'in', ('reached', 'failed')),
+                            '|',
+                                ('end_date', '=', False),
+                                ('end_date', '&lt;', context_today().strftime('%%Y-%%m-%%d'))
+                        ]"/>
                     <separator/>
 
                     <field name="user_id"/>
@@ -145,7 +153,7 @@
                             <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                                 <div class="oe_kanban_content">
                                     <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
-                                    <div class="oe_kanban_left">
+                                    <div class="pull-left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
                                     <field name="user_id" />
@@ -170,7 +178,7 @@
                                         </t>
                                         
                                     </div>
-                                    <p>
+                                    <p class="text-center">
                                         <t t-if="record.start_date.value">
                                             From <t t-esc="record.start_date.value" />
                                         </t>
@@ -236,9 +244,20 @@
                                 <field widget="radio" name="computation_mode"/>
 
                                 <!-- Hide the fields below if manually -->
-                                <field name="model_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id', '=', model_id)]"  class="oe_inline"/>
-                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id', '=', model_id)]" class="oe_inline"/>
+                                <field name="model_id" class="oe_inline" on_change="on_change_model_id(model_id)"
+                                    attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
+                                <field name="model_inherited_model_ids" invisible="True" />
+                                <field name="field_id" class="oe_inline"
+                                    attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"
+                                    domain="['|',
+                                        ('model_id', '=', model_id),
+                                        ('model_id', 'in', model_inherited_model_ids and model_inherited_model_ids[0] and model_inherited_model_ids[0][2])]" />
+                                <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"
+                                    domain="[
+                                        ('ttype', 'in', ('date', 'datetime')),
+                                        '|',
+                                            ('model_id', '=', model_id),
+                                            ('model_id', 'in', model_inherited_model_ids and model_inherited_model_ids[0] and model_inherited_model_ids[0][2])]" />
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
                                 <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
                                 <field name="condition" widget="radio"/>

@@ -21,7 +21,7 @@
         <record id="email_template_edi_sale" model="email.template">
             <field name="name">Sales Order - Send by Email</field>
             <field name="email_from">${(object.user_id.email or '')|safe}</field>
-            <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
+            <field name="subject">${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_invoice_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
@@ -40,6 +40,9 @@
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
        &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
        &nbsp;&nbsp;Order date: ${object.date_order}<br />
+       % if object.validity_date and object.state in ('draft', 'sent'):
+       &nbsp;&nbsp;Expiration date: ${object.validity_date}<br />
+       % endif
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif
@@ -51,7 +54,7 @@
        % endif
     </p>
 
-    % if object.paypal_url:
+    % if object.paypal_url and object.amount_total > 0 :
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
         <a style="margin-left: 120px;" href="${object.paypal_url}">

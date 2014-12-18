@@ -61,7 +61,7 @@
   !python {model: project.task}: |
     task_ids = self.search(cr, uid, [('sale_line_id', '=', ref('service_line'))])
     assert task_ids, "Task is not generated for Service Order Line."
-    self.write(cr, uid, task_ids, {'stage_id': ref('project.project_tt_deployment')}, context=context)
+    self.write(cr, uid, task_ids, {'stage_id': ref('project.project_stage_2')}, context=context)
 -
   I check procurement of Service Order Line after closed task.
 -

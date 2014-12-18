@@ -21,7 +21,7 @@
 
 import base64
 import logging
-import re
+from email.utils import formataddr
 from urlparse import urljoin
 
 from openerp import api, tools
@@ -45,7 +45,7 @@ class mail_mail(osv.Model):
     _rec_name = 'subject'
 
     _columns = {
-        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
+        'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade', auto_join=True),
         'state': fields.selection([
             ('outgoing', 'Outgoing'),
             ('sent', 'Sent'),
@@ -70,7 +70,6 @@ class mail_mail(osv.Model):
 
     _defaults = {
         'state': 'outgoing',
-        'headers': '{}',
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -159,7 +158,11 @@ class mail_mail(osv.Model):
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
             mail_model = mail.model or 'mail.thread'
             url = urljoin(base_url, self.pool[mail_model]._get_access_link(cr, uid, mail, partner, context=context))
-            return _("""<span class='oe_mail_footer_access'><small>about <a style='color:inherit' href="%s">%s %s</a></small></span>""") % (url, context.get('model_name', ''), mail.record_name)
+            return "<span class='oe_mail_footer_access'><small>%(access_msg)s <a style='color:inherit' href='%(portal_link)s'>%(portal_msg)s</a></small></span>" % {
+                'access_msg': _('about') if mail.record_name else _('access'),
+                'portal_link': url,
+                'portal_msg': '%s %s' % (context.get('model_name', ''), mail.record_name) if mail.record_name else _('your messages'),
+            }
         else:
             return None
 
@@ -178,21 +181,22 @@ class mail_mail(osv.Model):
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
-        body = mail.body_html
+        body = mail.body_html or ''
 
-        # generate footer
-        link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        # generate access links for notifications or emails linked to a specific document with auto threading
+        link = None
+        if mail.notification or (mail.model and mail.res_id and not mail.no_auto_thread):
+            link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
         if link:
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
     def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
         """Forge the email_to with the following heuristic:
-          - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
-          - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
+          - if 'partner', recipient specific (Partner Name <email>)
           - else fallback on mail.email_to splitting """
         if partner:
-            email_to = ['"%s" <%s>' % (partner.name, partner.email)]
+            email_to = [formataddr((partner.name, partner.email))]
         else:
             email_to = tools.email_split(mail.email_to)
         return email_to
@@ -272,6 +276,15 @@ class mail_mail(osv.Model):
                     except Exception:
                         pass
 
+                # Writing on the mail object may fail (e.g. lock on user) which
+                # would trigger a rollback *after* actually sending the email.
+                # To avoid sending twice the same email, provoke the failure earlier
+                mail.write({
+                    'state': 'exception', 
+                    'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
+                })
+                mail_sent = False
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
@@ -290,16 +303,23 @@ class mail_mail(osv.Model):
                         subtype='html',
                         subtype_alternative='plain',
                         headers=headers)
-                    res = ir_mail_server.send_email(cr, uid, msg,
+                    try:
+                        res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
-
+                    except AssertionError as error:
+                        if error.message == ir_mail_server.NO_VALID_RECIPIENT:
+                            # No valid recipient found for this particular
+                            # mail item -> ignore error to avoid blocking
+                            # delivery to next recipients, if any. If this is
+                            # the only recipient, the mail will show as failed.
+                            _logger.warning("Ignoring invalid recipients for mail.mail %s: %s",
+                                            mail.message_id, email.get('email_to'))
+                        else:
+                            raise
                 if res:
-                    mail.write({'state': 'sent', 'message_id': res})
+                    mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
                     mail_sent = True
-                else:
-                    mail.write({'state': 'exception', 'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.')})
-                    mail_sent = False
 
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1

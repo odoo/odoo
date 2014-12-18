@@ -25,7 +25,7 @@
     'author': 'OpenERP SA',
     'category': 'Human Resources',
     'sequence': 21,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
@@ -41,7 +41,7 @@ You can manage:
 * HR Jobs
     """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',
         'images/hr_employee.jpeg',
@@ -55,6 +55,7 @@ You can manage:
         'hr_view.xml',
         'hr_installer.xml',
         'hr_data.xml',
+        'hr_tip_data.xml',
         'res_config_view.xml',
         'mail_hr_view.xml',
         'res_users_view.xml',

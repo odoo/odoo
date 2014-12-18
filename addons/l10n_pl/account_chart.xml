@@ -3204,17 +3204,18 @@
         </record>
 
 <!-- Chart template -->
-        <record id="pl_chart_template" model="account.chart.template">
-                <field name="name">Polska - Plan kont</field>
-                <field name="account_root_id" ref="chart0"/>
-                <field name="tax_code_root_id" ref="tax_code"/>
-                <field name="bank_account_view_id" ref="chart11010000"/>
-                <field name="property_account_receivable" ref="chart20000000"/>
-                <field name="property_account_payable" ref="chart21000000"/>
-                <field name="property_account_expense_categ" ref="chart30020000"/>
-                <field name="property_account_income_categ" ref="chart73010000"/>
-                <field name="currency_id" ref="base.PLN"/>
-        </record>
+
+    <record id="pl_chart_template" model="account.chart.template">
+      <field name="name">Polska - Plan kont</field>
+      <field name="account_root_id" ref="chart0"/>
+      <field name="tax_code_root_id" ref="tax_code"/>
+      <field name="bank_account_view_id" ref="chart11010000"/>
+      <field name="property_account_receivable" ref="chart20000000"/>
+      <field name="property_account_payable" ref="chart21000000"/>
+      <field name="property_account_expense_categ" ref="chart30020000"/>
+      <field name="property_account_income_categ" ref="chart73010000"/>
+      <field name="currency_id" ref="base.PLN"/>
+    </record>
         
 </data>
 </openerp>

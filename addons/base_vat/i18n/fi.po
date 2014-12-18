@@ -1,41 +1,26 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-08-03 03:16+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
 msgstr "Tarkista voimassaolo"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"Tämä ALV numero ei ilmeisesti ole voimassa.\n"
-"Huom! Odotettu muotoilu on %s"
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES ALV tarkistus"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -43,24 +28,10 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr "Virhe!"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Valitse tämä jos kumppani on alv-velvollinen. Tätä alv-numeroa käytetään "
-"laskuissa ja muissa liiketoimintaa littyvissä asiakirjoissa.."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Kumppani"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -73,61 +44,38 @@ msgstr ""
 "Tarkista aina erikseen alv-numeron ja kumppanin nimen yhteenkuuluvuus."
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Alv-velvollisuus"
-
-#~ msgid "VAT"
-#~ msgstr "ALV"
-
-#~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
-#~ msgstr ""
-#~ "Ota kumppanille käyttöön ALV -numero. Tarkista tämän ALV -numeron kelpoisuus."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
-
+#: code:addons/base_vat/base_vat.py:130
 #, python-format
-#~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something like "
-#~ "this %s"
-#~ msgstr "Alv ei näytä olevan oikein. Sinun olisi tullut syöttää esim. %s"
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr ""
 
-#~ msgid "Base VAT - To check VAT number validity"
-#~ msgstr "Perus ALV - ALV numeron tarkistamiseksi"
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Kumppani"
 
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number.\n"
-#~ "\n"
-#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
-#~ "for\n"
-#~ "    checking the validity of VAT Number assigned to partners in European "
-#~ "countries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Aseta partnerin ALV numero. Tarkista ALV numeron oikeellisuus.\n"
-#~ "\n"
-#~ "    Tämä moduuli seuraa toimintatapaa joka onmääritelty http://sima-"
-#~ "pc.com/nif.php\n"
-#~ "    EU:n alueen alv numeroiden tarkistamiseksi\n"
-#~ "    "
-
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
 #, python-format
-#~ msgid "The VAT is invalid, It should begin with the country code"
-#~ msgstr "ALV (VAT) numero on virheellinen, sen tulisi alkaa maakoodilla"
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
 
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES ALV tarkistus"
 
-#~ msgid "The company name must be unique !"
-#~ msgstr "Yrityksen nimen pitää olla uniikki!"
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "e.g. FI25782977"

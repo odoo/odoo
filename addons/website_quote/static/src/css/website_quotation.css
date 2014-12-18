@@ -1,35 +1,42 @@
-.bs-sidebar {
+.o_website_quote .bs-sidebar {
   position: fixed;
   z-index : 1;
   background-color: #f7f5fa;
   border-radius: 5px;
 }
 
-.bs-sidenav {
+/* mobile preview: the left menu overlaps the quote */
+@media (max-width: 768px) {
+  .o_website_quote .bs-sidebar {
+    position: relative;
+  }
+}
+
+.o_website_quote .bs-sidenav {
    padding-top: 10px;
    padding-bottom: 10px;
 }
 
-.bs-sidebar .nav > li > a {
+.o_website_quote .bs-sidebar .nav > li > a {
    display: block;
    color: #716b7a;
    padding: 5px 20px;
 }
 
-.bs-sidebar .nav > .active > a,
-.bs-sidebar .nav > .active:hover > a,
-.bs-sidebar .nav > .active:focus > a {
+.o_website_quote .bs-sidebar .nav > .active > a,
+.o_website_quote .bs-sidebar .nav > .active:hover > a,
+.o_website_quote .bs-sidebar .nav > .active:focus > a {
   font-weight: bold;
   color: #563d7c;
   background-color: transparent;
   border-right: 1px solid #563d7c;
 }
 
-.bs-sidebar .nav .nav {
+.o_website_quote .bs-sidebar .nav .nav {
   display: none;
   margin-bottom: 8px;
 }
-.bs-sidebar .nav .nav > li > a {
+.o_website_quote .bs-sidebar .nav .nav > li > a {
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 30px;
@@ -37,15 +44,15 @@
 }
 
 @media (min-width: 992px) {
-  .bs-sidebar .nav > .active > ul {
+  .o_website_quote .bs-sidebar .nav > .active > ul {
     display: block;
   }
-  .bs-sidebar {
+  .o_website_quote .bs-sidebar {
     width: 213px;
   }
 }
 @media (min-width: 1200px) {
-  .bs-sidebar {
+  .o_website_quote .bs-sidebar {
     width: 263px;
   }
 }

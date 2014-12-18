@@ -29,17 +29,18 @@ class report_event_registration(models.Model):
     _order = 'event_date desc'
     _auto = False
 
+    create_date = fields.Datetime('Creation Date', readonly=True)
     event_date = fields.Datetime('Event Date', readonly=True)
     event_id = fields.Many2one('event.event', 'Event', required=True)
     draft_state = fields.Integer(' # No of Draft Registrations')
     confirm_state = fields.Integer(' # No of Confirmed Registrations')
     seats_max = fields.Integer('Max Seats')
-    nbevent = fields.Integer('Number of Registrations')
+    nbevent = fields.Integer('Number of Events')
+    nbregistration = fields.Integer('Number of Registrations')
     event_type = fields.Many2one('event.type', 'Event Type')
     registration_state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True)
     event_state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True)
     user_id = fields.Many2one('res.users', 'Event Responsible', readonly=True)
-    user_id_registration = fields.Many2one('res.users', 'Register', readonly=True)
     name_registration = fields.Char('Participant / Contact Name', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
 
@@ -53,13 +54,14 @@ class report_event_registration(models.Model):
                 e.id::varchar || '/' || coalesce(r.id::varchar,'') AS id,
                 e.id AS event_id,
                 e.user_id AS user_id,
-                r.user_id AS user_id_registration,
                 r.name AS name_registration,
+                r.create_date AS create_date,
                 e.company_id AS company_id,
                 e.date_begin AS event_date,
                 count(r.id) AS nbevent,
-                CASE WHEN r.state IN ('draft') THEN r.nb_register ELSE 0 END AS draft_state,
-                CASE WHEN r.state IN ('open','done') THEN r.nb_register ELSE 0 END AS confirm_state,
+                count(r.event_id) AS nbregistration,
+                CASE WHEN r.state IN ('draft') THEN count(r.event_id) ELSE 0 END AS draft_state,
+                CASE WHEN r.state IN ('open','done') THEN count(r.event_id) ELSE 0 END AS confirm_state,
                 e.type AS event_type,
                 e.seats_max AS seats_max,
                 e.state AS event_state,
@@ -70,10 +72,8 @@ class report_event_registration(models.Model):
 
             GROUP BY
                 event_id,
-                user_id_registration,
                 r.id,
                 registration_state,
-                r.nb_register,
                 event_type,
                 e.id,
                 e.date_begin,

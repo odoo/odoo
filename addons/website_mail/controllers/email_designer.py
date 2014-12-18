@@ -4,6 +4,7 @@ from urllib import urlencode
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools.mail import html_sanitize
 
 
 class WebsiteEmailDesigner(http.Controller):
@@ -12,10 +13,10 @@ class WebsiteEmailDesigner(http.Controller):
     def index(self, model, res_id, template_model=None, **kw):
         if not model or not model in request.registry or not res_id:
             return request.redirect('/')
-        model_cols = request.registry[model]._all_columns
-        if 'body' not in model_cols and 'body_html' not in model_cols or \
-           'email' not in model_cols and 'email_from' not in model_cols or \
-           'name' not in model_cols and 'subject' not in model_cols:
+        model_fields = request.registry[model]._fields
+        if 'body' not in model_fields and 'body_html' not in model_fields or \
+           'email' not in model_fields and 'email_from' not in model_fields or \
+           'name' not in model_fields and 'subject' not in model_fields:
             return request.redirect('/')
         res_id = int(res_id)
         obj_ids = request.registry[model].exists(request.cr, request.uid, [res_id], context=request.context)
@@ -24,13 +25,13 @@ class WebsiteEmailDesigner(http.Controller):
         # try to find fields to display / edit -> as t-field is static, we have to limit
         # the available fields to a given subset
         email_from_field = 'email'
-        if 'email_from' in model_cols:
+        if 'email_from' in model_fields:
             email_from_field = 'email_from'
         subject_field = 'name'
-        if 'subject' in model_cols:
+        if 'subject' in model_fields:
             subject_field = 'subject'
         body_field = 'body'
-        if 'body_html' in model_cols:
+        if 'body_html' in model_fields:
             body_field = 'body_html'
 
         cr, uid, context = request.cr, request.uid, request.context
@@ -64,6 +65,7 @@ class WebsiteEmailDesigner(http.Controller):
             tids = tmpl_obj.search(cr, uid, [], context=context)
         templates = tmpl_obj.browse(cr, uid, tids, context=context)
         values['templates'] = templates
+        values['html_sanitize'] = html_sanitize
 
         return request.website.render("website_mail.email_designer", values)
 

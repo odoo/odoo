@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* analytic_contract_hr_expense
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 8.0rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 13:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,35 +16,50 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "or view"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "Nothing to invoice, create"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "expenses"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
 #: model:ir.model,name:analytic_contract_hr_expense.model_account_analytic_account
 msgid "Analytic Account"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:129
+#: field:account.analytic.account,charge_expenses:0
+msgid "Charge Expenses"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: field:account.analytic.account,est_expenses:0
+msgid "Estimation of Expenses to Invoice"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Expenses"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Expenses and Timesheet Invoicing Ratio"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:135
+#, python-format
+msgid "Expenses of %s"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:143
 #, python-format
 msgid "Expenses to Invoice of %s"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:121
-#, python-format
-msgid "Expenses of %s"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Nothing to invoice, create"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "or view"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
@@ -55,17 +70,22 @@ msgid "unknown"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,est_expenses:0
-msgid "Estimation of Expenses to Invoice"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,charge_expenses:0
-msgid "Charge Expenses"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], 'invisible':[('invoice_on_timesheets','=',False), ('charge_expenses','=',False)]}"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "⇒ Invoice"
 msgstr ""
 

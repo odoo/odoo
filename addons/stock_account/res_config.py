@@ -38,4 +38,10 @@ class stock_config_settings(osv.osv_memory):
             help="""Install the module that allows to affect landed costs on pickings, and split them onto the different products."""),
     }
 
+
+    def onchange_landed_costs(self, cr, uid, ids, module_landed_costs, context=None):
+        if module_landed_costs:
+            return {'value': {'group_stock_inventory_valuation': True}}
+        return {}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -270,9 +270,13 @@ class account_analytic_account(osv.osv):
         if child_ids:
             #Search all invoice lines not in cancelled state that refer to this analytic account
             inv_line_obj = self.pool.get("account.invoice.line")
-            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', '!=', 'cancel')], context=context)
+            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', 'not in', ['draft', 'cancel']), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in inv_line_obj.browse(cr, uid, inv_lines, context=context):
-                res[line.account_analytic_id.id] += line.price_subtotal
+                if line.invoice_id.type == 'out_refund':
+                    res[line.account_analytic_id.id] -= line.price_subtotal
+                else:
+                    res[line.account_analytic_id.id] += line.price_subtotal
+
         for acc in self.browse(cr, uid, res.keys(), context=context):
             res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
 
@@ -370,11 +374,14 @@ class account_analytic_account(osv.osv):
         inv_ids = []
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 if line.invoice_id not in inv_ids:
                     inv_ids.append(line.invoice_id)
-                    res[account.id] += line.invoice_id.amount_untaxed
+                    if line.invoice_id.type == 'out_refund':
+                        res[account.id] -= line.invoice_id.amount_untaxed
+                    else:
+                        res[account.id] += line.invoice_id.amount_untaxed
         return res
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
@@ -403,7 +410,7 @@ class account_analytic_account(osv.osv):
         result = dict.fromkeys(ids, 0)
         for record in self.browse(cr, uid, ids, context=context):
             if record.quantity_max > 0.0:
-                result[record.id] = int(record.hours_quantity >= record.quantity_max)
+                result[record.id] = int(record.hours_quantity > record.quantity_max)
             else:
                 result[record.id] = 0
         return result
@@ -509,7 +516,6 @@ class account_analytic_account(osv.osv):
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
             digits_compute=dp.get_precision('Account')),
         'fix_price_invoices' : fields.boolean('Fixed Price'),
-        'invoice_on_timesheets' : fields.boolean("On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
         'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
@@ -633,18 +639,6 @@ class account_analytic_account(osv.osv):
             self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
 
         return True
-
-    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
-        if not invoice_on_timesheets:
-            return {'value': {'to_invoice': False}}
-        result = {'value': {'use_timesheets': True}}
-        try:
-            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
-            result['value']['to_invoice'] = to_invoice[1]
-        except ValueError:
-            pass
-        return result
-
 
     def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
         domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]

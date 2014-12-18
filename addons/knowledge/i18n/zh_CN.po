@@ -1,43 +1,31 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-28 08:39+0000\n"
-"Last-Translator: hifly <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:18+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Documents"
-msgstr "文档"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Apply"
+msgstr "应用"
 
 #. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_config_settings
-msgid "knowledge.config.settings"
-msgstr "knowledge.config.settings"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_webdav:0
-msgid ""
-"Access your documents in OpenERP through WebDAV.\n"
-"                This installs the module document_webdav."
-msgstr "在OpenERP中，通过WebDAV访问你的文档。"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_page:0
-msgid "This installs the module document_page."
-msgstr "安装模块document_page."
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Cancel"
+msgstr "取消"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -45,76 +33,42 @@ msgid "Collaborative Content"
 msgstr "协作内容"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
-#: view:knowledge.config.settings:0
-msgid "Configure Knowledge"
-msgstr "配置知识库"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Knowledge and Documents Management"
-msgstr "知识和文档管理"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document:0
-msgid ""
-"This is a complete document management system, with: user authentication,\n"
-"                full document search (but pptx and docx are not supported), "
-"and a document dashboard.\n"
-"                This installs the module document."
-msgstr ""
-"这是一个完整的文档管理系统，\n"
-"包含：用户认证，全文搜索（目前不支持pptx和docx）和一个文档控制台。\n"
-"需要安装document模块。"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_page:0
-msgid "Create static web pages"
-msgstr "创建静态页面"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_ftp:0
-msgid "Share repositories (FTP)"
-msgstr "共享库(FTP)"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document:0
-msgid "Manage documents"
-msgstr "管理文档"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Apply"
-msgstr "应用"
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "配置"
 
 #. module: knowledge
-#: help:knowledge.config.settings,module_document_ftp:0
-msgid ""
-"Access your documents in OpenERP through an FTP interface.\n"
-"                This installs the module document_ftp."
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Configure Knowledge"
+msgstr "配置知识库"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
-"在OpenERP里通过FTP接口访问你的文档。\n"
-"需要安装模块document_ftp。"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "or"
-msgstr "或者"
+#: field:knowledge.config.settings,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: knowledge
-#: field:knowledge.config.settings,module_document_webdav:0
-msgid "Share repositories (WebDAV)"
-msgstr "共享仓库(WebDAV)"
+#: help:knowledge.config.settings,module_document:0
+msgid ""
+"Document indexation, full text search of attachements.\n"
+"-This installs the module document."
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Documents"
+msgstr "文档"
+
+#. module: knowledge
+#: field:knowledge.config.settings,id:0
+msgid "ID"
+msgstr ""
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document
@@ -122,78 +76,22 @@ msgstr "共享仓库(WebDAV)"
 msgid "Knowledge"
 msgstr "知识管理"
 
-#~ msgid "Shared Repositories (FTP)"
-#~ msgstr "共享仓库（FTP）"
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Knowledge and Documents Management"
+msgstr "知识和文档管理"
 
-#~ msgid "Knowledge Management System"
-#~ msgstr "知识管理系统"
+#. module: knowledge
+#: field:knowledge.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
-#~ msgid "Share information within the company with these specific Addons."
-#~ msgstr "使用这些特定的模块在公司内部共享信息。"
+#. module: knowledge
+#: field:knowledge.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
-#~ msgid "Quality Manual"
-#~ msgstr "质量手册"
-
-#~ msgid "Shared Repositories (WebDAV)"
-#~ msgstr "共享仓库（WebDAV）"
-
-#~ msgid "Content templates"
-#~ msgstr "内容模板"
-
-#~ msgid "Creates an example skeleton for a standard quality manual."
-#~ msgstr "创建一个标准质量手册的示例骨架"
-
-#~ msgid "Internal FAQ"
-#~ msgstr "内部 FAQ"
-
-#~ msgid "knowledge.installer"
-#~ msgstr "knowledge.installer"
-
-#~ msgid ""
-#~ "Installer for knowledge-based tools\n"
-#~ "    "
-#~ msgstr ""
-#~ "知识管理工具安装程序\n"
-#~ "    "
-
-#~ msgid "title"
-#~ msgstr "标题"
-
-#~ msgid "Collaborative Content (Wiki)"
-#~ msgstr "协作编辑（维基 Wiki）"
-
-#~ msgid ""
-#~ "Provides a WebDAV access to your OpenERP's Document Management System. Lets "
-#~ "you access attachments and virtual documents through your standard file "
-#~ "browser."
-#~ msgstr "提供 WebDAV 方式访问您的系统的文档管理系统。您可以通过标准的 Web 浏览器访问系统中的附件和虚拟文档。"
-
-#~ msgid ""
-#~ "Provides an FTP access to your OpenERP's Document Management System. It lets "
-#~ "you access attachments and virtual documents through a standard FTP client."
-#~ msgstr "提供 FTP 方式访问您的系统文档管理系统。您可以通过标准的 FTP 客户端访问系统中的附件和虚拟文档。"
-
-#~ msgid "Configure"
-#~ msgstr "设置"
-
-#~ msgid "Knowledge Application Configuration"
-#~ msgstr "知识管理应用设置"
-
-#~ msgid ""
-#~ "Creates a skeleton internal FAQ pre-filled with documentation about "
-#~ "OpenERP's Document Management System."
-#~ msgstr "创建一个使用关于系统的文档管理系统的常见问题解答(FAQ)作为内容填充的骨架。"
-
-#~ msgid "Image"
-#~ msgstr "图像"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "设置进度"
-
-#~ msgid ""
-#~ "Lets you create wiki pages and page groups in order to keep track of "
-#~ "business knowledge and share it with and  between your employees."
-#~ msgstr "让您能够创建维基(wiki)页面和页面组来跟踪业务知识并与您的雇员们分享。"
-
-#~ msgid "Configure Your Knowledge Application"
-#~ msgstr "设置您的知识管理应用"
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "管理文档"

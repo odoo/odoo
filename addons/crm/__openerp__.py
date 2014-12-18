@@ -47,7 +47,7 @@ Dashboard for CRM will include:
 * Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'base_action_rule',
         'base_setup',
@@ -58,6 +58,7 @@ Dashboard for CRM will include:
         'resource',
         'board',
         'fetchmail',
+        'utm',
     ],
     'data': [
         'crm_data.xml',
@@ -75,7 +76,7 @@ Dashboard for CRM will include:
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
-        
+
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
 
@@ -85,6 +86,7 @@ Dashboard for CRM will include:
         'calendar_event_menu.xml',
 
         'report/crm_lead_report_view.xml',
+        'report/crm_opportunity_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
         'res_partner_view.xml',
@@ -93,6 +95,7 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'sales_team_view.xml',
+        'views/crm.xml',
     ],
     'demo': [
         'crm_demo.xml',
@@ -107,13 +110,13 @@ Dashboard for CRM will include:
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
         'test/crm_lead_cancel.yml',
-        'test/segmentation.yml',
         'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
     ],
+    'css': ['static/src/css/crm.css'],
     'installable': True,
     'application': True,
     'auto_install': False,
