@@ -3,63 +3,66 @@
 
     openerp.Tour.register({
         id:   'event_buy_tickets',
-        name: "Try to buy tickets for event",
+        name: "Buy tickets for the Conference on Business Apps",
         path: '/event',
         mode: 'test',
         steps: [
             {
-                title:     "select event",
+                title:     "Go to the `Events` page",
                 element:   'a[href*="/event"]:contains("Conference on Business Apps"):first',
             },
             {
+                title:     "Select 1 unit of `Standard` ticket type",
                 waitNot:   'a[href*="/event"]:contains("Conference on Business Apps")',
-                title:     "select 1 Standard ticket",
                 element:   'select:eq(0)',
                 sampleText: '1',
             },
             {
-                title:     "select 2 VIP tickets",
-                waitFor:   'select:eq(0) option:contains(1):selected',
+                title:     "Select 2 units of `VIP` ticket type",
+                waitFor:   'select:eq(0) option:contains(1):propSelected',
                 element:   'select:eq(1)',
                 sampleText: '2',
             },
             {
-                title:     "Order Now",
-                waitFor:   'select:eq(1) option:contains(2):selected',
+                title:     "Click on `Order Now` button",
+                waitFor:   'select:eq(1) option:contains(2):propSelected',
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
-                title:     "Add the details of attendees",
+                title:     "Fill attendees details",
                 waitFor:   'form[id="attendee_registration"] .btn:contains("Continue")',
                 autoComplete: function (tour) {
                     $("input[name='1-name']").val("Att1");
                     $("input[name='1-phone']").val("111 111");
                     $("input[name='1-email']").val("att1@example.com");
-                    $("input[name='1-name']").val("Att2");
-                    $("input[name='1-phone']").val("222 222");
-                    $("input[name='1-email']").val("att2@example.com");
+                    $("input[name='2-name']").val("Att2");
+                    $("input[name='2-phone']").val("222 222");
+                    $("input[name='2-email']").val("att2@example.com");
+                    $("input[name='3-name']").val("Att3");
+                    $("input[name='3-phone']").val("333 333");
+                    $("input[name='3-email']").val("att3@example.com");
                 },
             },
             {
-                title:     "click in modal on 'Continue' button",
+                title:     "Validate attendees details",
                 element:   '.modal button:contains("Continue")',
             },
             {
-                title:     "Check the cart",
-                element:   '#top_menu .my_cart_quantity:contains(3)'
+                title:     "Check that the cart contains exactly 3 elements",
+                element:   '#top_menu .my_cart_quantity:containsExact(3)',
             },
             {
-                title:     "Check if the cart have 2 order lines and add one VIP ticket",
+                title:     "Modify the cart to add 1 unit of `VIP` ticket type",
                 waitFor:   "#cart_products:contains(Standard):contains(VIP)",
                 element:   "#cart_products tr:contains(VIP) .fa-plus",
             },
             {
-                title:     "Process Checkout",
+                title:     "Now click on `Process Checkout`",
                 waitFor:   '#top_menu .my_cart_quantity:contains(4)',
                 element:   '.btn-primary:contains("Process Checkout")'
             },
             {
-                title:     "Complete checkout",
+                title:     "Complete the checkout",
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                 autoComplete: function (tour) {
                     if ($("input[name='name']").val() === "")
@@ -74,19 +77,18 @@
                 },
             },
             {
-                title:     "select payment",
+                title:     "Select `Wire Transfer` payment method",
                 element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
             },
             {
-                title:     "Pay Now",
+                title:     "Pay",
                 waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
                 element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
             },
             {
-                title:     "finish",
+                title:     "Last step",
                 waitFor:   '.oe_website_sale:contains("Thank you for your order")',
             }
         ]
     });
-
 }());

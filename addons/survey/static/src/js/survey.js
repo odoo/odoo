@@ -21,9 +21,9 @@
  * the website engine.
  */
 
-$(document).ready(function () {
-    'use strict';
-
+(function () {
+'use strict';
+openerp.website.if_dom_contains('.js_surveyform', function () {
     console.debug("[survey] Custom JS for survey is loading...");
 
     var the_form = $('.js_surveyform');
@@ -153,3 +153,4 @@ $(document).ready(function () {
 
     console.debug("[survey] Custom JS for survey loaded!");
 });
+})();

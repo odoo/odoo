@@ -1514,50 +1514,56 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
     process_notebook: function($notebook) {
         var self = this;
+
+        // Extract useful info from the notebook xml declaration
         var pages = [];
         $notebook.find('> page').each(function() {
             var $page = $(this);
             var page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
-            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs);
-            $page.contents().appendTo($new_page);
-            $page.before($new_page).remove();
-            var ic = self.handle_common_properties($new_page, $page).invisibility_changer;
-            page_attrs.__page = $new_page;
-            page_attrs.__ic = ic;
+            page_attrs.contents = $page.html();
+            page_attrs.ref = $page;  // keep a reference to the page node in the xml declaration
             pages.push(page_attrs);
-
-            $new_page.children().each(function() {
-                self.process($(this));
-            });
         });
-        var $new_notebook = this.render_element('FormRenderingNotebook', { pages : pages });
-        $notebook.contents().appendTo($new_notebook);
+
+        // Render the notebook and replace $notebook with it
+        var $new_notebook = self.render_element('FormRenderingNotebook', {'pages': pages});
         $notebook.before($new_notebook).remove();
-        self.process($($new_notebook.children()[0]));
-        //tabs and invisibility handling
-        $new_notebook.tabs();
-        _.each(pages, function(page, i) {
-            if (! page.__ic)
-                return;
-            page.__ic.on("change:effective_invisible", null, function() {
-                if (!page.__ic.get('effective_invisible') && page.autofocus) {
-                    $new_notebook.tabs('select', i);
-                    return;
-                }
-                var current = $new_notebook.tabs("option", "selected");
-                if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
-                    return;
-                var first_visible = _.find(_.range(pages.length), function(i2) {
-                    return (! pages[i2].__ic) || (! pages[i2].__ic.get("effective_invisible"));
-                });
-                if (first_visible !== undefined) {
-                    $new_notebook.tabs('select', first_visible);
-                }
-            });
-        });
 
-        this.handle_common_properties($new_notebook, $notebook);
+        // Save autofocus information in JQuery element data
+        var save_autofocus = function($element, autofocus_value) {
+            $element.data('autofocus', autofocus_value);
+        };
+
+        // Bind the invisibility changers and find the page to display
+        var pageid_to_display;
+        _.each(pages, function(page) {
+            $header = $new_notebook.find('a[href=#' + page.id + ']').parent();
+            $content = $new_notebook.find('#' + page.id);
+
+            // Case: <page autofocus="autofocus">;
+            save_autofocus($header, page.ref.attr('autofocus'));
+            save_autofocus($content, page.ref.attr('autofocus'));
+            if (!pageid_to_display && page.autofocus) {
+                pageid_to_display = page.id;
+            }
+
+            // Case: <page attrs="{'invisible': domain}">;
+            self.handle_common_properties($header, page.ref, instance.web.form.NotebookInvisibilityChanger);
+            self.handle_common_properties($content, page.ref, instance.web.form.NotebookInvisibilityChanger);
+        });
+        if (!pageid_to_display) {
+            pageid_to_display = $new_notebook.find('div[role="tabpanel"]:not(.oe_form_invisible):first').attr('id');
+        }
+
+        // Display page. Note: we can't use bootstrap's show function because it is looking for
+        // document attached DOM, and the form view is only attaching when everything is processed
+        $new_notebook.find('a[href=#' + pageid_to_display + ']').parent().addClass('active');
+        $new_notebook.find('#' + pageid_to_display).addClass('active in'); // in is required for fade
+
+        self.process($new_notebook.children());
+        self.handle_common_properties($new_notebook, $notebook);
+
         return $new_notebook;
     },
     process_separator: function($separator) {
@@ -1591,12 +1597,14 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         }
         return $new_label;
     },
-    handle_common_properties: function($new_element, $node) {
+    handle_common_properties: function($new_element, $node, InvisibilityChanger) {
         var str_modifiers = $node.attr("modifiers") || "{}";
         var modifiers = JSON.parse(str_modifiers);
         var ic = null;
-        if (modifiers.invisible !== undefined)
-            ic = new instance.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $new_element);
+        if (modifiers.invisible !== undefined) {
+            var InvisibilityChangerCls = InvisibilityChanger || instance.web.form.InvisibilityChanger;
+            ic = new InvisibilityChangerCls(this.view, this.view, modifiers.invisible, $new_element);
+        }
         $new_element.addClass($node.attr("class") || "");
         $new_element.attr('style', $node.attr('style'));
         return {invisibility_changer: ic,};
@@ -1771,6 +1779,38 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(instance.web.P
         this.start();
     },
 });
+
+instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityChanger.extend({
+    _check_visibility: function() {
+        this._super();
+        if (this.get("effective_invisible") === true) {
+            // Switch to invisible
+            // Remove this element as active and set a visible sibling active (if there is one)
+            if (this.$el.hasClass('active')) {
+                this.$el.removeClass('active in');
+                var visible_siblings = this.$el.siblings(':not(.oe_form_invisible)');
+                if (visible_siblings.length > 0) {
+                    $(visible_siblings[0]).addClass('active in');
+                }
+            }
+        } else {
+            // Switch to visible
+            // If there is no visible active sibling, set this element as active,
+            // otherwise:
+            //      if that sibling has autofocus, do nothing
+            //      otherwise, remove that sibling as active and set this element as active
+            var visible_active_sibling = this.$el.siblings(':not(.oe_form_invisible).active');
+            if (visible_active_sibling.length === 0) {
+                this.$el.addClass('active in');
+            }
+            else if (!$(visible_active_sibling[0]).data('autofocus')) {
+                this.$el.addClass('active in');
+                $(visible_active_sibling[0]).removeClass('active in');
+            }
+        }
+    },
+});
+
 
 /**
     Base class for all fields, custom widgets and buttons to be displayed in the form view.

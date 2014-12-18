@@ -309,7 +309,7 @@
       $(window).bind('resize.cleditor', function () {
         //Forcefully blurred iframe contentWindow, chrome, IE, safari doesn't trigger blur on window resize and due to which text disappears
         var contentWindow = editor.$frame[0].contentWindow;
-        if(!$.browser.mozilla && contentWindow){
+        if(!window.browser.mozilla && contentWindow){
           $(contentWindow).trigger('blur');
         }
         // CHM Note MonkeyPatch: if the DOM is not remove, refresh the cleditor

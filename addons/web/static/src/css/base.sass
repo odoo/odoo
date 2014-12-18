@@ -555,62 +555,6 @@ $sheet-padding: 16px
                 text-decoration: none
         margin-bottom: 1px
     // }}}
-    // Notebook {{{
-    .oe_notebook
-        margin: 8px 0
-        padding: 0 16px
-        list-style: none
-        zoom: 1
-    .oe_notebook.ui-corner-all
-        @include radius(0)
-    .oe_notebook:before, .oe_notebook:after
-        display: table
-        content: ""
-        zoom: 1
-    .oe_notebook:after
-        clear: both
-    .oe_notebook > li
-        float: left
-    .oe_notebook > li > a
-        display: block
-        color: #808080
-    .oe_notebook > li.ui-tabs-active > a
-        color: #4c4c4c
-    .oe_notebook
-        border-color: #ddd
-        border-style: solid
-        border-width: 0 0 1px
-    .oe_notebook > li
-        position: relative
-    .oe_notebook > li > a
-        padding: 0 12px
-        margin-right: 2px
-        line-height: 30px
-        border: 1px solid transparent
-        @include radius(4px 4px 0 0)
-    .oe_notebook > li > a:hover
-        text-decoration: none
-        background-color: #eee
-        border-color: #eee #eee #ddd
-    .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active
-        border-bottom: none
-        padding-bottom: 1px
-    .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
-        background-color: #ffffff
-        border: 1px solid #ddd
-        border-bottom-color: transparent
-        cursor: default
-    .oe_notebook_page
-        padding: 0
-        //Customize label weight according bootstrap3
-        > label:not([for])
-            font-weight: normal !important
-        // End of customize 
-    div.ui-tabs
-        padding: 3px 0px 3px 0px
-    .ui-tabs-hide
-        display: none
-    // }}}
     // Dropdown {{{
     .oe_dropdown, .oe_dropdown_hover, .oe_dropdown_toggle
         position: relative

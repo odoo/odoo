@@ -888,17 +888,18 @@
 </t>
 <t t-name="FormRenderingNotebook">
     <div class="oe_clear">
-        <ul t-attf-class="oe_notebook #{classnames}">
+        <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a t-attf-href="##{page.id}" t-att-accesskey="page.accesskey">
+                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab">
                     <t t-esc="page.string"/>
                 </a>
             </li>
         </ul>
-    </div>
-</t>
-<t t-name="FormRenderingNotebookPage">
-    <div t-attf-class="oe_notebook_page #{classnames}" t-att-id="id">
+        <div class="tab-content">
+            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane fade #{classnames}" t-att-id="id">
+                <t t-raw="page.contents"/>
+            </div>
+        </div>
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
