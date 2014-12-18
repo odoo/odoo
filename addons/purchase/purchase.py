@@ -853,7 +853,8 @@ class purchase_order(osv.osv):
             procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', po_lines)], context=context)
             if procs:
                 proc_obj.check(cr, uid, procs, context=context)
-        self.message_post(cr, uid, ids, body=_("Products received"), context=context)
+        for id in ids:
+            self.message_post(cr, uid, id, body=_("Products received"), context=context)
         return True
 
     def do_merge(self, cr, uid, ids, context=None):
@@ -1420,7 +1421,6 @@ class procurement_order(osv.osv):
 
     def make_po(self, cr, uid, ids, context=None):
         res = {}
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
         po_obj = self.pool.get('purchase.order')
         po_line_obj = self.pool.get('purchase.order.line')
         seq_obj = self.pool.get('ir.sequence')
@@ -1460,10 +1460,8 @@ class procurement_order(osv.osv):
                 tot_qty = 0
                 for proc, qty in lines_to_update[line]:
                     tot_qty += qty
-                    procs += [proc]
+                    self.message_post(cr, uid, proc, body=_("Quantity added in existing Purchase Order Line"), context=context)
                 line_values += [(1, line.id, {'product_qty': line.product_qty + tot_qty, 'procurement_ids': [(4, x[0]) for x in lines_to_update[line]]})]
-            if procs:
-                self.message_post(cr, uid, procs, body=_("Quantity added in existing Purchase Order Line"), context=context)
 
             # Create lines for which no line exists yet
             if procs_to_create:
@@ -1471,18 +1469,17 @@ class procurement_order(osv.osv):
                 schedule_date = datetime.strptime(po.minimum_planned_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 value_lines = self._get_po_line_values_from_procs(cr, uid, procs_to_create, partner, schedule_date, context=context)
                 line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
-                self.message_post(cr, uid, [x.id for x in procs_to_create], body=_("Purchase line created and linked to an existing Purchase Order"), context=context)
+                for proc in procs_to_create:
+                    self.message_post(cr, uid, [proc.id], body=_("Purchase line created and linked to an existing Purchase Order"), context=context)
             po_obj.write(cr, uid, [add_purchase], {'order_line': line_values},context=context)
 
 
         # Create new purchase orders
         partner_obj = self.pool.get("res.partner")
         new_pos = []
-        procs = []
         for create_purchase in create_purchase_procs.keys():
             procs_done += create_purchase_procs[create_purchase]
             line_values = []
-            procs += create_purchase_procs[create_purchase]
             procurements = self.browse(cr, uid, create_purchase_procs[create_purchase], context=context)
             partner = partner_obj.browse(cr, uid, create_purchase[0], context=context)
 
@@ -1493,7 +1490,7 @@ class procurement_order(osv.osv):
 
             value_lines = self._get_po_line_values_from_procs(cr, uid, procurements, partner, schedule_date, context=context)
             line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
-            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+            name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
             po_vals = {
@@ -1513,8 +1510,8 @@ class procurement_order(osv.osv):
                 }
             new_po = po_obj.create(cr, uid, po_vals, context=context)
             new_pos.append(new_po)
-        if procs:
-            self.message_post(cr, uid, procs, body=_("Draft Purchase Order created"), context=context)
+            for proc in create_purchase_procs[create_purchase]:
+                self.message_post(cr, uid, proc, body=_("Draft Purchase Order created"), context=context)
 
         other_proc_ids = list(set(ids) - set(procs_done))
         res = dict.fromkeys(ids, True)
