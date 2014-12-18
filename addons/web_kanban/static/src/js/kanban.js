@@ -728,11 +728,12 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         };
         recurse(this.view.fields_view.arch);
         if (options && options.group_by_tooltip) {
-            this.tooltip = _.union(
-                [this.title],
-                _.map(
-                    options.group_by_tooltip,
-                    function (key, value, list) { return self.values && self.values[value] || ''; })
+            this.tooltip = _.compact(
+                _.union(
+                    [this.title],
+                    _.map(
+                        options.group_by_tooltip,
+                        function (key, value, list) { return self.values && self.values[value] && (key + "\n" + self.values[value]) || ''; }))
             ).join('\n\n');
             this.$(".oe_kanban_group_title_text").attr("title", this.tooltip || this.title || "");
         }

@@ -40,12 +40,12 @@ class project_task_type(osv.osv):
     _order = 'sequence'
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', translate=True),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'legend_priority': fields.text(
+        'legend_priority': fields.char(
             'Priority Management Explanation', translate=True,
             help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.'),
         'legend_blocked': fields.char(
@@ -1245,7 +1245,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks', help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks', help="Check this box to manage internal activities through this project"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', string="Company UOM", type='many2one', relation='product.uom'),
     }
 

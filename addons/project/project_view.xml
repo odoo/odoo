@@ -93,15 +93,17 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="options_active">
+                        <div name="options_active" class="oe_edit_only">
                             <div>
                                 <field name="use_tasks" class="oe_inline" string="Use Tasks"/>
-                                <label for="use_tasks" class="oe_inline"/> as <field name="label_tasks" class="oe_inline"/>
+                                <label for="use_tasks" class="oe_inline"/>
+                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as</span>
+                                <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"
+                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
@@ -501,7 +503,7 @@
                 <kanban default_group_by="stage_id">
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="description"/>
@@ -720,18 +722,37 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="sequence"/>
                             <field name="case_default"/>
-                            <field name="fold"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="legend_blocked"/>
-                            <field name="legend_done"/>
-                            <field name="legend_normal"/>
-                            <field name="legend_priority"/>
+                            <field name="fold"/>
                         </group>
                     </group>
-                    <field name="description" placeholder="Add a description..."/>
+                    <group string="Stage Description and Tooltips">
+                        <p class="text-muted" colspan="2">
+                            At each stage employees can block or make task/issue ready for next stage.
+                            You can define here labels that will be displayed for the state instead
+                            of the default labels.
+                        </p>
+                        <label for="legend_normal" string=" " class="oe_kanban_status oe_project_kanban_legend"/>
+                        <field name="legend_normal" nolabel="1"/>
+                        <label for="legend_blocked" string=" " class="oe_kanban_status oe_kanban_status_red oe_project_kanban_legend"/>
+                        <field name="legend_blocked" nolabel="1"/>
+                        <label for="legend_done" string=" " class="oe_kanban_status oe_kanban_status_green oe_project_kanban_legend"/>
+                        <field name="legend_done" nolabel="1"/>
+
+                        <p class="text-muted" colspan="2">
+                            You can also give a tooltip about the use of the stars available in the kanban and form views.
+                        </p>
+                        <label for="legend_priority" string="7" class="oe_e oe_star_on oe_project_kanban_legend"/>
+                        <field name="legend_priority" nolabel="1"/>
+
+                        <p class="text-muted" colspan="2">
+                            You can also add a description to help your coworkers understanding the meaning and purpose of the stage.
+                        </p>
+                        <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -741,9 +762,10 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <tree string="Task Stage">
-                    <field name="sequence" widget="handle"/>
+                    <field name="sequence" widget="handle" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="fold"/>
+                    <field name="description"/>
                 </tree>
             </field>
         </record>
