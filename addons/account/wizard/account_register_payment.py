@@ -82,6 +82,8 @@ class account_register_payment(models.TransientModel):
             })
         balanced_line = ac_move_line.create(acl_dict_value)
 
+        move_id.post()
+
         #reconcile
         if self.invoice_id:
             self.invoice_id.register_payment(payment_line)

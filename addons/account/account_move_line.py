@@ -755,7 +755,7 @@ class account_move_line(models.Model):
     def write(self, vals, check=True, update_check=True):
         if vals.get('account_tax_id', False):
             raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
-        if ('account_id' in vals) and not self.env['account.account'].read(vals['account_id'], ['deprecated'])['deprecated']:
+        if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise Warning(_('You cannot use deprecated account.'))
         if update_check:
             if ('account_id' in vals) or ('journal_id' in vals) or ('date' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
