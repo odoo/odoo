@@ -425,27 +425,6 @@ class UpdateableDict(local):
     def __ne__(self, y):
         return self.dict.__ne__(y)
 
-class currency(float):
-    """ Deprecate
-    
-    .. warning::
-    
-    Don't use ! Use res.currency.round()
-    """
-
-    def __init__(self, value, accuracy=2, rounding=None):
-        if rounding is None:
-            rounding=10**-accuracy
-        self.rounding=rounding
-        self.accuracy=accuracy
-
-    def __new__(cls, value, accuracy=2, rounding=None):
-        return float.__new__(cls, round(value, accuracy))
-
-    #def __str__(self):
-    #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
-    #   return str(display_value)
-
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
