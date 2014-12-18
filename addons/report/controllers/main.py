@@ -52,7 +52,7 @@ class ReportController(Controller):
             options_data = simplejson.loads(data['options'])
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it. 
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
             data_context = simplejson.loads(data['context'])
             if data_context.get('lang'):
                 del data_context['lang']
@@ -72,21 +72,24 @@ class ReportController(Controller):
     # Misc. route utils
     #------------------------------------------------------
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
-    def report_barcode(self, type, value, width=600, height=100):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples: 
+        Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
-            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % 
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
+        at the bottom of the output image
         """
         try:
             width, height = int(width), int(height)
             barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height
+                type, value=value, format='png', width=width, height=height,
+                humanReadable = humanreadable
             )
             barcode = barcode.asString('png')
         except (ValueError, AttributeError):
