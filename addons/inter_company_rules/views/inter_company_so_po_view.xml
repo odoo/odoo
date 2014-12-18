@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_company_inter_change_inherit_form">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Configuration']" position="inside">
+                    <group string="Inter-Company Rules">
+                        <field name="so_from_po" attrs="{'invisible': [('auto_generate_invoices', '=', True)]}"/>
+                        <field name="po_from_so" attrs="{'invisible': [('auto_generate_invoices', '=', True)]}"/>
+                        <field name="warehouse_id" attrs="{'required': [('po_from_so', '=', True)], 'invisible': [('po_from_so', '=', False)]}" domain="[('company_id', '=', active_id)]"/>
+                        <field name="auto_validation" attrs="{'invisible': [('auto_generate_invoices', '=', True)]}"/>
+                        <field name="auto_generate_invoices" attrs="{'invisible': ['|', ('so_from_po', '=', True), ('po_from_so', '=', True)]}"/>
+                        <field name="intercompany_user_id" colspan="2" attrs="{'required': ['|','|',('so_from_po', '=', True), ('po_from_so', '=', True), ('auto_generate_invoices', '=', True)]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+	</data>
+</openerp>
