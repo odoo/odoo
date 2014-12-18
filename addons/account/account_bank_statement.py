@@ -312,7 +312,7 @@ class account_bank_statement_line(models.Model):
         """ Returns a function that can create the appropriate domain to search on move.line amount based on statement.line currency/amount """
         currency = self.currency_id or self.journal_id.currency
         field = currency and 'amount_residual_currency' or 'amount_residual'
-        precision = currency and currency.rounding or self.journal_id.company_id.currency_id.rounding
+        precision = currency and currency.decimal_places or self.journal_id.company_id.currency_id.decimal_places
 
         def ret(comparator, amount, p=precision, f=field, c=currency.id):
             if comparator == '<':
