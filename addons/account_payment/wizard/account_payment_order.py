@@ -83,7 +83,7 @@ class payment_order_create(osv.osv_memory):
                 date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid,{
                     'move_line_id': line.id,
-                    'amount_currency': line.amount_to_pay,
+                    'amount_currency': line.amount_residual_currency,
                     'bank_id': line2bank.get(line.id),
                     'order_id': payment.id,
                     'partner_id': line.partner_id and line.partner_id.id or False,
