@@ -132,7 +132,7 @@ openerp.crm_voip = function(instance) {
                 _.each(result.phonecalls, function(phonecall){
                     date = new Date(phonecall.date.split(" ")[0]);
                     date_now = new Date(Date.now());
-                    if(date.getDate() <= date_now.getDate() && date.getMonth() <= date_now.getMonth()){
+                    if(date.getDate() <= date_now.getDate() && date.getMonth() <= date_now.getMonth() && date.getFullYear() <= date_now.getFullYear()){
                         phonecall_displayed = true;
                         if(refresh_by_user){
                             if(phonecall.state != "done"){

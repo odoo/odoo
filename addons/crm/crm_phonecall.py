@@ -34,8 +34,6 @@ class crm_phonecall(osv.osv):
     _inherit = ['mail.thread']
     
     _columns = {
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
                         select=True, help='Sales team to which Case belongs to.'),
@@ -53,14 +51,12 @@ class crm_phonecall(osv.osv):
                  'When the call is over, the status is set to Held.\n'
                  'If the call is not applicable anymore, the status can be set to Cancelled.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'date_open': fields.datetime('Opened', readonly=True),
         'name': fields.char('Call Summary', required=True),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.phonecall.category', 'Category'),
         'partner_phone': fields.char('Phone'),
         'partner_mobile': fields.char('Mobile'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
-        'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity',ondelete='cascade', track_visibility='onchange'),
     }
@@ -82,17 +78,6 @@ class crm_phonecall(osv.osv):
                 'partner_mobile': partner.mobile,
             }
         return {'value': values}
-
-    def write(self, cr, uid, ids, values, context=None):
-        """ Override to add case management: open/close dates """
-        if values.get('state'):
-            if values.get('state') == 'done':
-                values['date_closed'] = fields.datetime.now()
-                self.compute_duration(cr, uid, ids, context=context)
-            elif values.get('state') == 'to_do':
-                values['date_open'] = fields.datetime.now()
-                values['duration'] = 0.0
-        return super(crm_phonecall, self).write(cr, uid, ids, values, context=context)
 
     def compute_duration(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
