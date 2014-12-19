@@ -90,7 +90,8 @@ class hr_holidays_status(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-
+        if context is None:
+            context = {}
         if not context.get('employee_id',False):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(hr_holidays_status, self).name_get(cr, uid, ids, context=context)
