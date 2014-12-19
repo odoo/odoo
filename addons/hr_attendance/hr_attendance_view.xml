@@ -65,13 +65,25 @@
             </field>
         </record>
 
+        <record id="view_hr_attendance_pivot" model="ir.ui.view">
+            <field name="name">hr.attendance.pivot</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <pivot string="Attendance">
+                    <field name="employee_id" type="row"/>
+                    <field name="name" type="col"/>
+                    <field name="worked_hours" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_hr_attendance_graph" model="ir.ui.view">
             <field name="name">hr.attendance.graph</field>
             <field name="model">hr.attendance</field>
             <field name="arch" type="xml">
-                <graph string="Attendance" type="pivot">
-                    <field name="employee_id" type="row"/>
-                    <field name="name" type="col"/>
+                <graph string="Attendance">
+                    <field name="employee_id"/>
+                    <field name="name"/>
                     <field name="worked_hours" type="measure"/>
                 </graph>
             </field>
@@ -91,8 +103,7 @@
             <field name="name">Attendance Analysis</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_hr_attendance_graph"/>
+            <field name="view_mode">pivot,graph</field>
         </record>
 
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
