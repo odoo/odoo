@@ -93,6 +93,8 @@ class Website_less(Website):
         '/website/image',
         '/website/image/<xmlid>',
         '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<int:max_width>x<int:max_height>',
+        '/website/image/<xmlid>/<field>/<int:max_width>x<int:max_height>',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>',
     ], auth="public", website=True)
@@ -114,13 +116,17 @@ class Website_less(Website):
         xmlid can be used to load the image. But the field image must by base64-encoded
         """
         if xmlid and "." in xmlid:
-            xmlid = xmlid.split(".", 1)
             try:
-                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+                record = request.env['ir.model.data'].xmlid_to_object(xmlid)
+                model, id = record._name, record.id
             except:
                 raise werkzeug.exceptions.NotFound()
-            if model == 'ir.attachment':
-                field = "datas"
+                env.ref
+            if model == 'ir.attachment' and not field:
+                if record.type == 'url':
+                    field = "url"
+                else:
+                    field = "datas"
         elif model and id and field:
             idsha = id.split('_')
             try:
