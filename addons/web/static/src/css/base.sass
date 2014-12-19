@@ -2635,11 +2635,18 @@ body.oe_single_form
         .oe_tooltip_message
             max-width: 310px
 
-// Hack for ui icon {{{
+// jquery-ui override {{{
 .ui-icon
     width: 18px
     height: 18px
-// End hack}}}
+.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
+    border: 1px solid #000000
+    color: #ffffff
+.ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a
+    color: #ffffff
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon
+    background-image: url("/web/static/lib/jquery.ui/images/ui-icons_ffffff_256x240.png")
+// End jquery-ui override}}}
 
 // Customized modal according bootstrap3
 .modal
