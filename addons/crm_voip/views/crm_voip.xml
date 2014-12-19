@@ -25,11 +25,10 @@
 
     <!-- Mail template are declared in a NOUPDATE block
          so users can freely customize/delete them -->
-    <data noupdate="1">
+    <data>
         <!--Email template -->
         <record id="email_template_call_client_notAvailable" model="email.template">
             <field name="name">Client not available</field>
-            
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.partner_id.lang}</field>
@@ -49,20 +48,19 @@
     </data>
     <!-- Mail template are declared in a NOUPDATE block
          so users can freely customize/delete them -->
-    <data noupdate="1">
+    <data>
         <!--Email template -->
         <record id="email_template_call_interrupted" model="email.template">
             <field name="name">Call interrupted</field>
-            
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
                 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-
+                    
                     <p>Hello ${object.partner_id.name},</p>
 
-                    <p>It seems that we have been interrupted during our conversation about: '${object.name}'. Can you please give me your availability in oreder to schedule 
+                    <p>It seems that we have been interrupted during our conversation about: '${object.name}'. Can you please give me your availability in order to schedule 
                         a new call? </p>
                     <p>Yours Sincerly</p>
                     <p>${user.name}</p>

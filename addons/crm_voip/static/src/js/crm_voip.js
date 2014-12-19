@@ -396,6 +396,7 @@ openerp.crm_voip = function(instance) {
         send_email: function(){
             var id = this.$(".oe_dial_selected_phonecall").data().id;
             var self = this;
+            debugger;
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -403,15 +404,12 @@ openerp.crm_voip = function(instance) {
                 multi: "True",
                 target: 'new',
                 key2: 'client_action_multi',
-                //TODO default_composition_mode? comment or mass_mail?
-                //TODO Problem if comment and no opportunity linked
-                //problem if mass_mail to get object information
                 context: {
-                            'default_composition_mode': 'comment',
-                            'default_email_to': this.phonecalls[id].partner_email,
+                            'default_composition_mode': 'mass_mail',
+                            'active_ids': [this.phonecalls[id].opportunity_id],
                             'default_model': 'crm.lead',
-                            'default_res_id': this.phonecalls[id].opportunity_id,
                             'default_partner_ids': [this.phonecalls[id].partner_id],
+                            'default_use_template': true,
                         },
                 views: [[false, 'form']],
             });
