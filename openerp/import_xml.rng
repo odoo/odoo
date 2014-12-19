@@ -312,13 +312,19 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="data">
-        <rng:element name="data">
+    <rng:define name="odoo_openerp_data">
+        <rng:element>
+            <rng:choice>
+                <rng:name>odoo</rng:name>
+                <rng:name>openerp</rng:name>
+                <rng:name>data</rng:name>
+            </rng:choice>
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
             <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
+                    <rng:ref name="odoo_openerp_data"/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
                     <rng:ref name="template" />
@@ -336,10 +342,6 @@
     </rng:define>
 
     <rng:start>
-        <rng:element name="openerp">
-            <rng:oneOrMore>
-                <rng:ref name="data" />
-            </rng:oneOrMore>
-        </rng:element>
+        <rng:ref name="odoo_openerp_data"/>
     </rng:start>
 </rng:grammar>

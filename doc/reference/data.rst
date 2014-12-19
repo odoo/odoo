@@ -15,16 +15,15 @@ Structure
 The main way to define data in Odoo is via XML data files: The broad structure
 of an XML data file is the following:
 
-* The nested root elements ``openerp`` and ``data``
-* Any number of operation elements within ``data``
+* Any number of operation elements within the root element ``odoo``
 
 .. code-block:: xml
 
     <!-- the root elements of the data file -->
-    <openerp><data>
+    <odoo>
       <operation/>
       ...
-    </data></openerp>
+    </odoo>
 
 Data files are executed sequentially, operations can only refer to the result
 of operations defined previously
