@@ -14,13 +14,24 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_invoice_pivot">
+            <field name="name">account.invoice.pivot</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <pivot string="Invoices" display_quantity="true">
+                    <field name="partner_id"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_invoice_graph">
             <field name="name">account.invoice.graph</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <graph string="Invoices" type="bar">
+                <graph string="Invoices">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+"/>
+                    <field name="amount_total" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -521,7 +532,7 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
@@ -561,7 +572,7 @@
             <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
@@ -582,7 +593,7 @@
             <field name="name">Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type':'out_refund', 'type':'out_refund', 'journal_type': 'sale_refund'}</field>
@@ -618,7 +629,7 @@
             <field name="name">Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase_refund'}</field>
