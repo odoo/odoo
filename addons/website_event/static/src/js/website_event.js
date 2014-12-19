@@ -13,7 +13,7 @@ $(document).ready(function () {
                 post[$(this)[0].name] = $(this).val();
             });
             openerp.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
-                var $modal = $(modal);
+                var $modal = $($.parseHTML(modal));
                 $modal.appendTo($form).modal()
                 $modal.on('click', '.js_goto_event', function () {
                     $modal.modal('hide');

@@ -1,3 +1,54 @@
+1.4.12
+[Fix]
+- Fixed selector matching body fails on window scrolling
+
+1.4.11
+[Misc]
+- Reverted changes from 1.4.10
+
+1.4.10
+[Enhancement]
+- Giving the plugin an AMD module id so it can be required (f.e by localScroll)
+
+1.4.9
+[Enhancement]
+- "offset" setting can now be a function as well (#60)
+
+1.4.8
+[Enhancement]
+- Added support for AMD
+
+1.4.7
+[Misc]
+- Changed spacing
+- Changed licensing to MIT
+- Repo is compliant with official jquery plugins repository
+
+1.4.6
+[Fix]
+- Fixed first argument of onAfter and onAfterFirst was original target and should be "parsed" target
+
+1.4.5
+[Fix]
+- Fixed passing a negative scroll value crashes
+
+1.4.4
+[Change]
+- Re-released as 1.4.4 to avoid issues with bower
+
+1.4.3.1
+[Fix]
+- Fixed $.scrollTo(0) broken on 1.4.3
+
+1.4.3
+[Enhancement]
+- Limit calculations can be disabled by setting the option 'limit' to false.
+- Null target or unmatching selector don't break and fail silently
+[Misc]
+- Removed support for the deprecated setting 'speed'
+[Fix]
+- Removed $.browser.webkit so the plugin works with jQuery +1.8
+
 1.4.2
 [Feature]
 - The plugin support percentages as target ('50%' or {top:'50%', left:'45%'})

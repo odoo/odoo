@@ -180,7 +180,7 @@
 
             openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
-                    var $html = $(html);
+                    var $html = $($.parseHTML(html));
 
                     // t-snippet
                     $html.find('> .tab-content > div > [data-oe-type="snippet"]').each(function () {

@@ -809,7 +809,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     var clientline_html = QWeb.render('ClientLine',{widget: this, partner:partners[i]});
                     var clientline = document.createElement('tbody');
                     clientline.innerHTML = clientline_html;
-                    clientline = clientline.childNodes[1];
+                    clientline = clientline.childNodes[0];
                     this.partner_cache.cache_node(partner.id,clientline);
                 }
                 if( partners === this.new_client ){

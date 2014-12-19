@@ -755,7 +755,7 @@
             root.addEventListener('click', function (e) {
                 // only webkit seems to have a fucked up behavior, ignore others
                 // FIXME: $.browser goes away in jquery 1.9...
-                if (!$.browser.webkit) { return; }
+                // if (!$.browser.webkit) { return; }
                 // http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-mouseevents
                 // The detail attribute indicates the number of times a mouse button has been pressed
                 // we just want the triple click
