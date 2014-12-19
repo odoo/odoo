@@ -1,58 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * sale_crm
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-04-06 05:16+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Language: Czech\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Nedostatečná data"
-
-#. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Převést na cenovou nabídku"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistiky faktur"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Označit 'získáno'"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
 msgstr ""
 
 #. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Můj prodejní tým"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Zrušit"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Uživatelé"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr ""
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -61,20 +39,24 @@ msgid ""
 msgstr ""
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Převést na cenovou nabídku"
+
+#. module: sale_crm
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Skupiny"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_crm
@@ -83,60 +65,24 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Vytvořit"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Provést prodej"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
+#: field:crm.make.sale,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Příležitost: %s"
+msgid "Insufficient Data!"
+msgstr "Nedostatečná data"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Příležitost byla <b>převedena</b> na nabídku <em>%s</em>."
-
-#. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Obchod"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
 msgstr ""
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr ""
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Obchodní tým"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
 msgstr ""
 
 #. module: sale_crm
@@ -145,9 +91,39 @@ msgid "Make Quotation"
 msgstr "Vytvořit cenovou nabídku"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Zrušit"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Provést prodej"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Označit 'získáno'"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "Příležitost byla <b>převedena</b> na nabídku <em>%s</em>."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Příležitost: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -155,76 +131,35 @@ msgid "Sales Order"
 msgstr "Prodejní objednávka"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
+#: field:sale.order,source_id:0
+msgid "Source"
 msgstr ""
 
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "je převedeno na cenovou nabídku"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr ""
 
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Nedostatečná data !"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
 
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "Zákazník nemá definovánu adresu!"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
 
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Odkaz objednávky musí být jedinečný !"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
 
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Zaškrtněte toto k uzavření příležitosti po té, když bude mít vytvořenu "
-#~ "prodejní objednávku."
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Převést na ocenění"
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Měsíční obrat"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Převedeno na prodejní ocenění(id: %s)."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Příležitost "
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Vytvořit prodejní objednávky z příležitosti"
-
-#~ msgid "Quotations"
-#~ msgstr "Cenové nabídky"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Příležitosti podle fáze"
-
-#~ msgid "My Quotations"
-#~ msgstr "Moje cenové nabídky"
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Užavřít příležitost"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "Příležitost '%s' je převedena na Ocenění."
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(%s)."
-#~ msgstr "Převedeno na prodejní ocenění(%s)."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Odkaz obědnávky musí být jedinečný na společnost!"
-
-#~ msgid "Category"
-#~ msgstr "Kategorie"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Moje příležitosti"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Moje plánované výnosy podle fáze"
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Vytvořit"

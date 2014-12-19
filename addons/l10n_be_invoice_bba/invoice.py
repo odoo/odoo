@@ -153,7 +153,7 @@ class account_invoice(osv.osv):
                 else:
                     raise osv.except_osv(_('Error!'),
                         _("Unsupported Structured Communication Type Algorithm '%s' !" \
-                          "\nPlease contact your OpenERP support channel.") % algorithm)
+                          "\nPlease contact your Odoo support channel.") % algorithm)
         return {'value': {'reference': reference}}
 
     def create(self, cr, uid, vals, context=None):

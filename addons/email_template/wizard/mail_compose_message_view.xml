@@ -6,12 +6,14 @@
             <field name="name">mail.compose.message.form</field>
             <field name="model">mail.compose.message</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer" position="inside">
                     <group class="oe_right oe_form" col="1">
                         <div>Use template
                             <!--FIX: To avoid css issue of many2one field in footer temporary used oe_form (BUG:1152464)-->
                             <field name="template_id" nolabel="1" class='oe_inline'
+                                options="{'no_create': True}"
                                 on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" domain="[('model_id.model','=',model)]"
                                 context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                         </div>

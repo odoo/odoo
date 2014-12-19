@@ -1,21 +1,57 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-01 17:26+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-07 07:50+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:21+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Норматив"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "Норматив"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
+msgid "Byproduct"
+msgstr "По производ"
+
+#. module: mrp_byproduct
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
+#: field:mrp.bom,sub_products:0
+msgid "Byproducts"
+msgstr "По производи"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "Промени ја количината на производите"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -28,16 +64,34 @@ msgid ""
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
+"Дефинирај како количината на нуспроизводите ќе биде прикажана на налозите за "
+"производство користејќи го овој норматив.  'Фиксно' илустрира ситуација каде "
+"количината на креираниот нуспроизвод секогаш е еднаква на количината "
+"подесена во нормативот, без разлика колку се произведени во налогот за "
+"производство.  Спротивно од тоа, 'Варијабилно' значи дека количината ќе биде "
+"пресметана како    '(количина на нуспроизвоид подесена во норматив / "
+"количина на произведен производ подесена во норматив * количина на "
+"произведен производ во налогот за производство.)'"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Производ"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Фиксно"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "Единица мерка на производот"
+#: field:mrp.subproduct,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -45,25 +99,9 @@ msgid "Manufacturing Order"
 msgstr "Налог за обработка"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Промени ја количината на производите"
-
-#. module: mrp_byproduct
-#: view:mrp.bom:0
-#: field:mrp.bom,sub_products:0
-msgid "Byproducts"
-msgstr "По производи"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Тип на количина"
-
-#. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Норматив"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Производ"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
@@ -71,25 +109,14 @@ msgid "Product Qty"
 msgstr "Количина на производот"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
-#, python-format
-msgid "Warning"
-msgstr "Внимание"
+#: field:mrp.subproduct,product_uom:0
+msgid "Product Unit of Measure"
+msgstr "Единица мерка на производот"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
-msgstr "Норматив"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Варијабла"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Фиксно"
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Тип на количина"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -102,6 +129,12 @@ msgstr ""
 "онаа во формуларот за производот."
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
-msgid "Byproduct"
-msgstr "По производ"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Варијабла"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#, python-format
+msgid "Warning"
+msgstr "Внимание"

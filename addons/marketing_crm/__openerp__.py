@@ -9,7 +9,7 @@
     'description': """
 Bridge module between marketing and CRM
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'data': [
         'views/crm.xml',
         'views/res_config.xml',

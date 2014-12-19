@@ -31,7 +31,7 @@ This module is for managing a multicompany environment.
 This module is the base module for other multi-company modules.
     """,
     'author': 'OpenERP SA,SYLEAM',
-    'website': 'http://www.openerp.com/',
+    'website': 'https://www.odoo.com',
     'depends': [
         'base',
         'sale_stock',

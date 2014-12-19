@@ -55,7 +55,7 @@
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" widget="selection" on_change="onchange_company(partner_id, journal_id, currency_id, company_id)" groups="base.group_multi_company"/>
                         <field name="reference"/>
                         <field name="number"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
@@ -159,7 +159,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{'type':'general'}</field>
+            <field name="context">{}</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
@@ -192,26 +192,6 @@
             <field name="domain">[('state','=','posted')]</field>
             <field name="context">{'state':'posted'}</field>
             <field name="search_view_id" ref="view_voucher_filter"/>
-        </record>
-        
-        <!-- res.config form view -->
-        <record model="ir.ui.view" id="view_account_settings_currency_xchange_form">
-            <field name="name">account.config.settings.inherit</field>
-            <field name="inherit_id" ref="account.view_account_config_settings"/>
-            <field name="model">account.config.settings</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='group_multi_currency']" position="after">
-                    <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
-                        <group>
-                            <field name="income_currency_exchange_account_id"/>
-                            <field name="expense_currency_exchange_account_id"/>
-                        </group>
-                        <group>
-                        </group>
-                    </group>
-                </xpath>
-            </field>
         </record>
 
     </data>

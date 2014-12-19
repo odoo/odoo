@@ -1,5 +1,6 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
+	var _t = instance.web._t;
 
     // the JobQueue schedules a sequence of 'jobs'. each job is
     // a function returning a deferred. the queue waits for each job to finish 
@@ -88,6 +89,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var self = this;
             options = options || {};
             url = options.url || 'http://localhost:8069';
+
+            this.pos = parent;
             
             this.weighting = false;
             this.debug_weight = 0;
@@ -410,7 +413,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     self.message('print_xml_receipt',{ receipt: r },{ timeout: 5000 })
                         .then(function(){
                             send_printing_job();
-                        },function(){
+                        },function(error){
+                            if (error) {
+                                self.pos.pos_widget.screen_selector.show_popup('error-traceback',{
+                                    'message': _t('Printing Error: ') + error.data.message,
+                                    'comment': error.data.debug,
+                                });
+                                return;
+                            }
                             self.receipt_queue.unshift(r)
                         });
                 }

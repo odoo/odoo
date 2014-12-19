@@ -1,45 +1,31 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-12 08:02+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-11 07:05+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-12 07:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Documents"
-msgstr "Belgeler"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Apply"
+msgstr "Uygula"
 
 #. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_config_settings
-msgid "knowledge.config.settings"
-msgstr "knowledge.config.settings"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_webdav:0
-msgid ""
-"Access your documents in OpenERP through WebDAV.\n"
-"                This installs the module document_webdav."
-msgstr ""
-"Belgelerinize WebDAV yolu OpenERP den erişin.\n"
-"                Bu document_webdav modülünü kurar."
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document_page:0
-msgid "This installs the module document_page."
-msgstr "Bu document_page modülünü kurar."
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
@@ -47,77 +33,44 @@ msgid "Collaborative Content"
 msgstr "İşbirliği İçeriği"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
-#: view:knowledge.config.settings:0
-msgid "Configure Knowledge"
-msgstr "Bilgi Birikimini Yapılandır"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Knowledge and Documents Management"
-msgstr "Bilgi ve Belge Yönetimi"
-
-#. module: knowledge
-#: help:knowledge.config.settings,module_document:0
-msgid ""
-"This is a complete document management system, with: user authentication,\n"
-"                full document search (but pptx and docx are not supported), "
-"and a document dashboard.\n"
-"                This installs the module document."
-msgstr ""
-"Bu kullanıcı kimlik doğrulamalı tam bir belge yönetim sistemidir,\n"
-"                tam belge araması (pptx ve docx desteklenmez) ve bir belge "
-"kontrol paneli içerir.\n"
-"                Bu, module document modülünü kurar."
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_page:0
-msgid "Create static web pages"
-msgstr "Statik web sayfaları oluştur"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document_ftp:0
-msgid "Share repositories (FTP)"
-msgstr "Havuzları Paylaş (FTP)"
-
-#. module: knowledge
-#: field:knowledge.config.settings,module_document:0
-msgid "Manage documents"
-msgstr "Belgeleri Yönet"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "Apply"
-msgstr "Uygula"
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "Yapılandırma"
 
 #. module: knowledge
-#: help:knowledge.config.settings,module_document_ftp:0
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Configure Knowledge"
+msgstr "Bilgi Birikimini Yapılandır"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: knowledge
+#: field:knowledge.config.settings,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document:0
 msgid ""
-"Access your documents in OpenERP through an FTP interface.\n"
-"                This installs the module document_ftp."
+"Document indexation, full text search of attachements.\n"
+"-This installs the module document."
 msgstr ""
-"Belgelerinize OpenERP den FTP arayüzü yolu ile erişin.\n"
-"                Bu, document_ftp modülünü kurar."
+"Eklerde belge dizinleme, tam metin arama.\n"
+"-Bu,document modülünü kurar."
 
 #. module: knowledge
-#: view:knowledge.config.settings:0
-msgid "or"
-msgstr "ya da"
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Documents"
+msgstr "Belgeler"
 
 #. module: knowledge
-#: field:knowledge.config.settings,module_document_webdav:0
-msgid "Share repositories (WebDAV)"
-msgstr "Havuzları paylaş (WebDAV)"
+#: field:knowledge.config.settings,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document
@@ -125,86 +78,22 @@ msgstr "Havuzları paylaş (WebDAV)"
 msgid "Knowledge"
 msgstr "Bilgi Birikimi"
 
-#~ msgid "title"
-#~ msgstr "başlık"
+#. module: knowledge
+#: view:knowledge.config.settings:knowledge.view_knowledge_configuration
+msgid "Knowledge and Documents Management"
+msgstr "Bilgi ve Belge Yönetimi"
 
-#~ msgid "Collaborative Content (Wiki)"
-#~ msgstr "İmece içerik (wiki)"
+#. module: knowledge
+#: field:knowledge.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
 
-#~ msgid "Shared Repositories (FTP)"
-#~ msgstr "Ortak Havuz (FTP)"
+#. module: knowledge
+#: field:knowledge.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
 
-#~ msgid "Creates an example skeleton for a standard quality manual."
-#~ msgstr "Standfart kalite el kitabı için örnek iskelet oluşturur."
-
-#~ msgid "Knowledge Management System"
-#~ msgstr "Bilgi Birikimi Yönetim Sistemi"
-
-#~ msgid ""
-#~ "Provides a WebDAV access to your OpenERP's Document Management System. Lets "
-#~ "you access attachments and virtual documents through your standard file "
-#~ "browser."
-#~ msgstr ""
-#~ "OpenERP döküman yönetim sistemine WebDAV  erişimi sağlar. Eklere ve sanal "
-#~ "dökümanlara standart dosya yöneticisiyle erişebilmenizi sağlar."
-
-#~ msgid ""
-#~ "Provides an FTP access to your OpenERP's Document Management System. It lets "
-#~ "you access attachments and virtual documents through a standard FTP client."
-#~ msgstr ""
-#~ "OpenERP döküman yönetim sistemine FTP erişimi sağlar. Eklere ve sanal "
-#~ "dökümanlara standart bir ftp istemcisiyle erişebilmenize imkan verir."
-
-#~ msgid "Share information within the company with these specific Addons."
-#~ msgstr "Bu özel eklentilerle şirket içinde bilgi paylaşımı yapılır"
-
-#~ msgid "Configure"
-#~ msgstr "Yapılandır"
-
-#~ msgid "Quality Manual"
-#~ msgstr "Kalite El Kitabı"
-
-#~ msgid ""
-#~ "Installer for knowledge-based tools\n"
-#~ "    "
-#~ msgstr ""
-#~ "Bilgi-yönetimi araçları için kurulum aracı\n"
-#~ "    "
-
-#~ msgid "Shared Repositories (WebDAV)"
-#~ msgstr "Ortak Havuz (WebDAV)"
-
-#~ msgid "Internal FAQ"
-#~ msgstr "Dahili SSS"
-
-#~ msgid ""
-#~ "Creates a skeleton internal FAQ pre-filled with documentation about "
-#~ "OpenERP's Document Management System."
-#~ msgstr ""
-#~ "OpenERP döküman yönetim sistemi hakkında önceden doldurulmuş bir dahili SSS "
-#~ "iskeleti oluşturur."
-
-#~ msgid "Image"
-#~ msgstr "Resim"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Yapılandırma gidişatı"
-
-#~ msgid ""
-#~ "Lets you create wiki pages and page groups in order to keep track of "
-#~ "business knowledge and share it with and  between your employees."
-#~ msgstr ""
-#~ "Şirket bilgi birikiminizi tutmak ve çalışanlar arasında paylaşmak için wiki "
-#~ "sayfaları ve sayfa grupları oluşturun."
-
-#~ msgid "knowledge.installer"
-#~ msgstr "BilgiBirikimi.kurulumcu"
-
-#~ msgid "Knowledge Application Configuration"
-#~ msgstr "Bilgi Birikimi Uygulama Ayarları"
-
-#~ msgid "Content templates"
-#~ msgstr "İçerik şablonları"
-
-#~ msgid "Configure Your Knowledge Application"
-#~ msgstr "Bilgi Birikimi Uygulamanızı Yapılandırın"
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "Belgeleri Yönet"

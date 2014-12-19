@@ -1,0 +1,43 @@
+# HG changeset patch
+# Parent 69d1f2d359eb8ef304a9d99f17790c78b35eda1a
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-26 17:26:02.903783329 +0200
++++ addons/openacademy/models.py	2014-08-26 17:26:02.895783329 +0200
+@@ -23,7 +23,8 @@
+     seats = fields.Integer(string="Number of seats")
+ 
+     instructor_id = fields.Many2one('res.partner', string="Instructor",
+-        domain=[('instructor', '=', True)])
++        domain=['|', ('instructor', '=', True),
++                     ('category_id.name', 'ilike', "Teacher")])
+     course_id = fields.Many2one('openacademy.course',
+         ondelete='cascade', string="Course", required=True)
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+Index: addons/openacademy/views/partner.xml
+===================================================================
+--- addons.orig/openacademy/views/partner.xml	2014-08-26 17:26:02.903783329 +0200
++++ addons/openacademy/views/partner.xml	2014-08-26 17:26:02.895783329 +0200
+@@ -28,5 +28,21 @@
+         <menuitem id="contact_menu" name="Contacts"
+                   parent="configuration_menu"
+                   action="contact_list_action"/>
++
++        <record model="ir.actions.act_window" id="contact_cat_list_action">
++            <field name="name">Contact Tags</field>
++            <field name="res_model">res.partner.category</field>
++            <field name="view_mode">tree,form</field>
++        </record>
++        <menuitem id="contact_cat_menu" name="Contact Tags"
++                  parent="configuration_menu"
++                  action="contact_cat_list_action"/>
++
++        <record model="res.partner.category" id="teacher1">
++            <field name="name">Teacher / Level 1</field>
++        </record>
++        <record model="res.partner.category" id="teacher2">
++            <field name="name">Teacher / Level 2</field>
++        </record>
+     </data>
+ </openerp>

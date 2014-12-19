@@ -23,10 +23,21 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website_event.controllers.main import website_event
+from openerp.addons.website_sale.controllers.main import get_pricelist
 from openerp.tools.translate import _
 
 
 class website_event(website_event):
+
+    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
+    def event_register(self, event, **post):
+        pricelist_id = int(get_pricelist())
+        values = {
+            'event': event.with_context(pricelist=pricelist_id),
+            'main_object': event.with_context(pricelist=pricelist_id),
+            'range': range,
+        }
+        return request.website.render("website_event.event_description_full", values)
 
     @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, event_id, **post):
@@ -41,8 +52,8 @@ class website_event(website_event):
             sale = True
             ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
             ticket = ticket_obj.browse(cr, SUPERUSER_ID, ticket_id, context=context)
-            request.website.sale_get_order(force_create=1)._cart_update(
-                product_id=ticket.product_id.id, add_qty=quantity, context=dict(context, event_ticket_id=ticket.id))
+            order = request.website.sale_get_order(force_create=1)
+            order.with_context(event_ticket_id=ticket.id)._cart_update(product_id=ticket.product_id.id, add_qty=quantity)
 
         if not sale:
             return request.redirect("/event/%s" % event_id)

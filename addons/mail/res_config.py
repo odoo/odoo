@@ -30,7 +30,7 @@ class project_configuration(osv.TransientModel):
     _columns = {
         'alias_domain': fields.char('Alias Domain',
                                      help="If you have setup a catch-all email domain redirected to "
-                                          "the OpenERP server, enter the domain name here."),
+                                          "the Odoo server, enter the domain name here."),
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):

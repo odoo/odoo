@@ -93,17 +93,17 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(user.groups_id, 'res.groups')
 
         partners = self.env['res.partner'].search([])
-        for name, cinfo in partners._all_columns.iteritems():
-            if cinfo.column._type == 'many2one':
+        for name, field in partners._fields.iteritems():
+            if field.type == 'many2one':
                 for p in partners:
-                    self.assertIsRecord(p[name], cinfo.column._obj)
-            elif cinfo.column._type == 'reference':
+                    self.assertIsRecord(p[name], field.comodel_name)
+            elif field.type == 'reference':
                 for p in partners:
                     if p[name]:
-                        self.assertIsRecord(p[name], cinfo.column._obj)
-            elif cinfo.column._type in ('one2many', 'many2many'):
+                        self.assertIsRecord(p[name], field.comodel_name)
+            elif field.type in ('one2many', 'many2many'):
                 for p in partners:
-                    self.assertIsRecordset(p[name], cinfo.column._obj)
+                    self.assertIsRecordset(p[name], field.comodel_name)
 
     @mute_logger('openerp.models')
     def test_07_null(self):

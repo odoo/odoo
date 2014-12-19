@@ -1,1634 +1,21 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2010-12-15 21:56+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:51+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale
-#: model:res.groups,name:sale.group_analytic_accounting
-msgid "Analytic Accounting for Sales"
-msgstr "판매의 분석 회계"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_confirmquotation0
-msgid "Confirm Quotation"
-msgstr "견적 확정"
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales Dashboard"
-msgstr "판매 대시보드"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
-#, python-format
-msgid "There is no income account defined as global property."
-msgstr "전체 속성으로 정의된 수입 계정이 존재하지 않습니다."
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree2
-#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
-msgid "Order Lines to Invoice"
-msgstr "송장 발행 대상 주문 입력줄"
-
-#. module: sale
-#: field:sale.order,date_confirm:0
-msgid "Confirmation Date"
-msgstr "확정일"
-
-#. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.report:0
-msgid "Group By..."
-msgstr "분류 기준..."
-
-#. module: sale
-#: field:sale.order.line,address_allotment_id:0
-msgid "Allotment Partner"
-msgstr "Allotment 파트너"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-msgid "Invoice Order"
-msgstr "주문에 대한 송장 발행"
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Product Features"
-msgstr "상품 특징"
-
-#. module: sale
-#: help:sale.config.settings,module_account_analytic_analysis:0
-msgid ""
-"Allows to define your customer contracts conditions: invoicing\n"
-"            method (fixed price, on timesheet, advance invoice), the exact "
-"pricing\n"
-"            (650€/day for a developer), the duration (one year support "
-"contract).\n"
-"            You will be able to follow the progress of the contract and "
-"invoice automatically.\n"
-"            It installs the account_analytic_analysis module."
-msgstr ""
-
-#. module: sale
-#: model:email.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
-
-#. module: sale
-#: view:sale.order.line:0
-#: field:sale.report,product_uom:0
-msgid "Unit of Measure"
-msgstr "계수 단위"
-
-#. module: sale
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "조달 방식"
-
-#. module: sale
-#: help:sale.order,date_confirm:0
-msgid "Date on which sales order is confirmed."
-msgstr "판매 주문이 확정된 날짜"
-
-#. module: sale
-#: field:account.config.settings,module_sale_analytic_plans:0
-msgid "Use multiple analytic accounts on sales"
-msgstr "판매에 다중 분석 계정 사용"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "March"
-msgstr "3월"
-
-#. module: sale
-#: code:addons/sale/sale.py:565
-#, python-format
-msgid "First cancel all invoices attached to this sales order."
-msgstr "먼저 해당 판매 주문에 첨부된 모든 송장을 취소하세요."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Quotation Number"
-msgstr "견적 번호"
-
-#. module: sale
-#: view:sale.order:0
-#: field:sale.order,message_unread:0
-msgid "Unread Messages"
-msgstr "읽지 않은 메시지"
-
-#. module: sale
-#: field:sale.order,company_id:0
-#: field:sale.order.line,company_id:0
-#: view:sale.report:0
-#: field:sale.report,company_id:0
-#: field:sale.shop,company_id:0
-msgid "Company"
-msgstr "업체"
-
-#. module: sale
-#: field:sale.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "송장 발행일"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree3
-msgid "Uninvoiced and Delivered Lines"
-msgstr "송장 미발행 및 배송 완료 입력줄"
-
-#. module: sale
-#: model:mail.message.subtype,description:sale.mt_order_confirmed
-msgid "Quotation confirmed"
-msgstr "견적 확정됨"
-
-#. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
-msgid "Invoice Exception"
-msgstr "송장 예외"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Quotation "
-msgstr "견적 "
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Draft Quotation"
-msgstr "견적 초안"
-
-#. module: sale
-#: field:sale.order,partner_shipping_id:0
-msgid "Delivery Address"
-msgstr "배송 주소"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,analytic_account_id:0
-#: field:sale.shop,project_id:0
-msgid "Analytic Account"
-msgstr "분석 계정"
-
-#. module: sale
-#: field:sale.config.settings,module_sale_journal:0
-msgid "Allow batch invoicing of delivery orders through journals"
-msgstr "장부를 통해 배송 주문서에 대한 송장 일괄 발행 허용"
-
-#. module: sale
-#: field:sale.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "소계"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,day:0
-msgid "Day"
-msgstr "일"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelorder0
-#: view:sale.order:0
-msgid "Cancel Order"
-msgstr "주문 취소"
-
-#. module: sale
-#: field:sale.order.line,th_weight:0
-msgid "Weight"
-msgstr "중량"
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Warehouse Features"
-msgstr "창고 특징"
-
-#. module: sale
-#: field:sale.config.settings,time_unit:0
-msgid "The default working time unit for services is"
-msgstr "서비스에 대한 기본 업무시간:"
-
-#. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Unit of Measure "
-msgstr "계수 단위 "
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:101
-#, python-format
-msgid "Incorrect Data"
-msgstr "올바르지 않은 데이터"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "선지급액의 금액은 양수여야 합니다."
-
-#. module: sale
-#: help:sale.config.settings,group_discount_per_so_line:0
-msgid "Allows you to apply some discount per sales order line."
-msgstr "판매 주문 입력줄마다 할인율을 적용할 수 있도록 함."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines that are in 'done' state"
-msgstr "'완료' 상태의 판매 주문 입력줄"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "주문 중"
-
-#. module: sale
-#: field:sale.order,message_ids:0
-msgid "Messages"
-msgstr "메시지"
-
-#. module: sale
-#: field:sale.report,state:0
-msgid "Order Status"
-msgstr "주문 상태"
-
-#. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
-msgid "Taxes"
-msgstr "세금"
-
-#. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "비과세액"
-
-#. module: sale
-#: field:sale.config.settings,module_project:0
-msgid "Project"
-msgstr "프로젝트"
-
-#. module: sale
-#: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:363
-#: code:addons/sale/sale.py:504
-#: code:addons/sale/sale.py:598
-#: code:addons/sale/sale.py:763
-#: code:addons/sale/sale.py:780
-#, python-format
-msgid "Error!"
-msgstr "오류!"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Net Total :"
-msgstr "순 합계 :"
-
-#. module: sale
-#: help:sale.order.line,type:0
-msgid ""
-"From stock: When needed, the product is taken from the stock or we wait for "
-"replenishment.\n"
-"On order: When needed, the product is purchased or produced."
-msgstr ""
-
-#. module: sale
-#: help:sale.config.settings,module_analytic_user_function:0
-msgid ""
-"Allows you to define what is the default function of a specific user on a "
-"given account.\n"
-"                This is mostly used when a user encodes his timesheet. The "
-"values are retrieved and the fields are auto-filled.\n"
-"                But the possibility to change these values is still "
-"available.\n"
-"                This installs the module analytic_user_function."
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr "취소됨"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "내 판매 주문에 관련된 판매 주문 입력줄"
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Quotation Sent"
-msgstr "견적 전송 완료"
-
-#. module: sale
-#: model:ir.model,name:sale.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "이메일 작성 마법사"
-
-#. module: sale
-#: help:sale.order,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
-
-#. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
-msgid "Shipping Exception"
-msgstr "배송 예외"
-
-#. module: sale
-#: field:sale.order.line,product_uos_qty:0
-msgid "Quantity (UoS)"
-msgstr "수량 (판매 단위)"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_shop_form
-#: field:sale.order,shop_id:0
-#: view:sale.report:0
-#: field:sale.report,shop_id:0
-msgid "Shop"
-msgstr "매장"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_exception
-msgid "Sales in Exception"
-msgstr "예외적인 판매"
-
-#. module: sale
-#: field:sale.order,partner_invoice_id:0
-msgid "Invoice Address"
-msgstr "송장 발행 주소"
-
-#. module: sale
-#: help:sale.order,create_date:0
-msgid "Date on which sales order is created."
-msgstr "판매 주문이 생성된 날짜."
-
-#. module: sale
-#: view:res.partner:0
-msgid "False"
-msgstr "거짓"
-
-#. module: sale
-#: help:sale.advance.payment.inv,advance_payment_method:0
-msgid ""
-"Use All to create the final invoice.\n"
-"                Use Percentage to invoice a percentage of the total amount.\n"
-"                Use Fixed Price to invoice a specific amound in advance.\n"
-"                Use Some Order Lines to invoice a selection of the sales "
-"order lines."
-msgstr ""
-
-#. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Create Invoices"
-msgstr "송장 생성"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tax"
-msgstr "세금"
-
-#. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:820
-#: code:addons/sale/sale.py:983
-#, python-format
-msgid "Invalid Action!"
-msgstr "유효하지 않은 액션!"
-
-#. module: sale
-#: help:sale.order,state:0
-msgid ""
-"Gives the status of the quotation or sales order.              \n"
-"The exception status is automatically set when a cancel operation occurs     "
-"          in the invoice validation (Invoice Exception) or in the picking "
-"list process (Shipping Exception).\n"
-"The 'Waiting Schedule' status is set when the invoice is confirmed           "
-"    but waiting for the scheduler to run on the order date."
-msgstr ""
-
-#. module: sale
-#: field:sale.report,date_confirm:0
-msgid "Date Confirm"
-msgstr "날짜 확정"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "입력줄 개수"
-
-#. module: sale
-#: help:sale.order,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
-
-#. module: sale
-#: help:sale.order.line,sequence:0
-msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr "판매 주문 입력줄을 표시할 때 순서를 제공함."
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,product_uom_qty:0
-msgid "# of Qty"
-msgstr "수량 개수"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Fax :"
-msgstr "팩스 :"
-
-#. module: sale
-#: code:addons/sale/sale.py:277
-#, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before !"
-msgstr "확정된 판매 주문을 삭제하려면 먼저 해당 주문을 취소해야 합니다 !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "(update)"
-msgstr "(업데이트)"
-
-#. module: sale
-#: model:ir.model,name:sale.model_res_partner
-#: view:sale.report:0
-#: field:sale.report,partner_id:0
-msgid "Partner"
-msgstr "협력업체"
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Contract Features"
-msgstr "견적 특징"
-
-#. module: sale
-#: code:addons/sale/sale.py:287
-#: code:addons/sale/sale.py:584
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_order0
-#: model:process.node,name:sale.process_node_saleorder0
-#: field:res.partner,sale_order_ids:0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#, python-format
-msgid "Sales Order"
-msgstr "판매 주문"
-
-#. module: sale
-#: model:res.groups,name:sale.group_invoice_so_lines
-msgid "Enable Invoicing Sales order lines"
-msgstr "판매 주문 입력줄 송장 발행 활성화"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "판매 주문 입력줄"
-
-#. module: sale
-#: field:sale.advance.payment.inv,amount:0
-msgid "Advance Amount"
-msgstr "선지불액"
-
-#. module: sale
-#: help:sale.order,invoice_exists:0
-msgid "It indicates that sales order has at least one invoice."
-msgstr "판매 주문에 최소 한 개의 송장이 존재함을 의미함."
-
-#. module: sale
-#: help:sale.config.settings,group_sale_pricelist:0
-msgid ""
-"Allows to manage different prices based on rules per category of customers.\n"
-"Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-
-#. module: sale
-#: field:sale.config.settings,module_analytic_user_function:0
-msgid "One employee can have different roles per contract"
-msgstr "직원 한 명이 계약 별로 다른 역할을 수행할 수 있습니다."
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Invoice the whole sales order"
-msgstr "전체 판매 주문에 대한 송장 발행"
-
-#. module: sale
-#: field:sale.shop,payment_default_id:0
-msgid "Default Payment Term"
-msgstr "기본 결제 조건"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_confirm0
-msgid "Confirm"
-msgstr "확정"
-
-#. module: sale
-#: field:sale.config.settings,timesheet:0
-msgid "Prepare invoices based on timesheets"
-msgstr "타임시트 기준으로 송장 준비"
-
-#. module: sale
-#: code:addons/sale/sale.py:820
-#, python-format
-msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr "이미 송장이 발행된 판매 주문 입력줄을 취소할 수 없습니다."
-
-#. module: sale
-#: view:account.invoice.report:0
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_turnover_by_month
-msgid "Monthly Turnover"
-msgstr "월간 매출액"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "배송된 수량"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,year:0
-msgid "Year"
-msgstr "년"
-
-#. module: sale
-#: field:sale.config.settings,group_uom:0
-msgid "Allow using different units of measures"
-msgstr "다른 계수 단위를 사용할 수 있도록 함"
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "확정된 판매 주문"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order that haven't yet been confirmed"
-msgstr "아직 확정되지 않은 판매 주문"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Print"
-msgstr "인쇄"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Order N°"
-msgstr "주문 번호"
-
-#. module: sale
-#: view:sale.order:0
-#: field:sale.order,order_line:0
-msgid "Order Lines"
-msgstr "주문 입력줄"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Disc.(%)"
-msgstr "할인율(%)"
-
-#. module: sale
-#: code:addons/sale/sale.py:764
-#, python-format
-msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr "해당 상품의 소득금액을 정의하세요: \"%s\" (id:%d)."
-
-#. module: sale
-#: field:sale.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "송장 입력줄"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,price_total:0
-msgid "Total Price"
-msgstr "총액"
-
-#. module: sale
-#: help:account.config.settings,group_analytic_account_for_sales:0
-msgid "Allows you to specify an analytic account on sales orders."
-msgstr "판매 주문에 분석 계정을 지정할 수 있도록 함."
-
-#. module: sale
-#: help:sale.config.settings,module_sale_journal:0
-msgid ""
-"Allows you to categorize your sales and deliveries (picking lists) between "
-"different journals,\n"
-"                and perform batch operations on journals.\n"
-"                This installs the module sale_journal."
-msgstr ""
-
-#. module: sale
-#: help:sale.make.invoice,grouped:0
-msgid "Check the box to group the invoices for the same customers"
-msgstr "동일한 고객의 송장을 분류하려면 상자를 체크하세요"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
-#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-msgid "Make Invoices"
-msgstr "송장 작성"
-
-#. module: sale
-#: code:addons/sale/res_config.py:97
-#, python-format
-msgid "Hour"
-msgstr "시"
-
-#. module: sale
-#: field:res.partner,sale_order_count:0
-msgid "# of Sales Order"
-msgstr "판매 주문 개수"
-
-#. module: sale
-#: help:sale.config.settings,timesheet:0
-msgid ""
-"For modifying account analytic view to show important data to project "
-"manager of services companies.\n"
-"                You can also view the report of account analytic summary "
-"user-wise as well as month wise.\n"
-"                This installs the module account_analytic_analysis."
-msgstr ""
-
-#. module: sale
-#: field:sale.order,create_date:0
-msgid "Creation Date"
-msgstr "생성일"
-
-#. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "To Invoice"
-msgstr "송장 발행 대상"
-
-#. module: sale
-#: help:sale.order,partner_invoice_id:0
-msgid "Invoice address for current sales order."
-msgstr "현재 판매 주문의 송장 발행 주소"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Ordered Quantities"
-msgstr "주문된 수량"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered Year of the sales order"
-msgstr "판매 주문의 주문 년도"
-
-#. module: sale
-#: model:res.groups,name:sale.group_delivery_invoice_address
-msgid "Addresses in Sales Orders"
-msgstr "판매 주문 상의 주소"
-
-#. module: sale
-#: field:sale.advance.payment.inv,qtty:0
-#: report:sale.order:0
-#: field:sale.order.line,product_uom_qty:0
-msgid "Quantity"
-msgstr "수량"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Total :"
-msgstr "합계 :"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines ready to be invoiced"
-msgstr "송장 발행 준비가 완료된 판매 주문 입력줄"
-
-#. module: sale
-#: view:sale.report:0
-msgid "My Sales"
-msgstr "내 판매"
-
-#. module: sale
-#: field:sale.order,name:0
-#: field:sale.order.line,order_id:0
-msgid "Order Reference"
-msgstr "주문 참조"
-
-#. module: sale
-#: field:sale.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "재정 위상"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "July"
-msgstr "7월"
-
-#. module: sale
-#: help:sale.order.line,state:0
-msgid ""
-"* The 'Draft' status is set when the related sales order in draft status.    "
-"                 \n"
-"* The 'Confirmed' status is set when the related sales order is confirmed.   "
-"                  \n"
-"* The 'Exception' status is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' status is set when the sales order line has been picked.        "
-"             \n"
-"* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Default Options"
-msgstr "기본 옵션"
-
-#. module: sale
-#: code:addons/sale/sale.py:960
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:91
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
-#, python-format
-msgid "Configuration Error!"
-msgstr "구성 오류!"
-
-#. module: sale
-#: field:account.config.settings,group_analytic_account_for_sales:0
-msgid "Analytic accounting for sales"
-msgstr "판매의 분석 회계"
-
-#. module: sale
-#: view:sale.order:0
-#: field:sale.order,state:0
-#: view:sale.order.line:0
-#: field:sale.order.line,state:0
-#: view:sale.report:0
-msgid "Status"
-msgstr "상태"
-
-#. module: sale
-#: view:sale.advance.payment.inv:0
-msgid ""
-"After clicking 'Show Lines to Invoice', select lines to invoice and create "
-"the invoice from the 'More' dropdown menu."
-msgstr ""
-"송장 발행 입력줄 표시' 버튼을 클릭한 후, 송장 발행 대상 입력줄을 선택하고 '더 보기' 드롭 다운 메뉴에서 송장을 생성하세요."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Send by Email"
-msgstr "이메일로 전송"
-
-#. module: sale
-#: code:addons/sale/edi/sale_order.py:140
-#, python-format
-msgid "EDI Pricelist (%s)"
-msgstr "EDI 가격표 (%s)"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "On Delivery Order"
-msgstr "배송 주문 상"
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Invoicing Process"
-msgstr "송장 발행 과정"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Date"
-msgstr "주문일"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order done"
-msgstr "판매 주문 완료"
-
-#. module: sale
-#: code:addons/sale/sale.py:364
-#, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "해당 업체의 판매 장부를 정의하세요: \"%s\" (id:%d)."
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-#: view:res.partner:0
-msgid "Quotations and Sales"
-msgstr "견적 및 판매"
-
-#. module: sale
-#: field:sale.order,invoiced:0
-msgid "Paid"
-msgstr "결제됨"
-
-#. module: sale
-#: help:sale.config.settings,group_uom:0
-msgid ""
-"Allows you to select and maintain different units of measure for products."
-msgstr "상품의 각기 다른 계수 단위를 선택 및 관리할 수 있도록 함."
-
-#. module: sale
-#: view:sale.report:0
-msgid "Reference Unit of Measure"
-msgstr "기준 계수 단위"
-
-#. module: sale
-#: view:sale.advance.payment.inv:0
-msgid "Create and View Invoice"
-msgstr "송장 생성 및 보기"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales order lines done"
-msgstr "판매 주문 입력줄  완료"
-
-#. module: sale
-#: field:sale.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "송장 분류"
-
-#. module: sale
-#: help:sale.advance.payment.inv,amount:0
-msgid "The amount to be invoiced in advance."
-msgstr "송장 사전 발행 대상 금액"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_make_invoice
-msgid "Sales Make Invoice"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:307
-#, python-format
-msgid "Pricelist Warning!"
-msgstr "가격표 경고!"
-
-#. module: sale
-#: field:sale.order.line,discount:0
-msgid "Discount (%)"
-msgstr "할인 (%)"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sales Order Line is Invoiced!"
-msgstr ""
-
-#. module: sale
-#: view:sale.order.line.make.invoice:0
-msgid "Create & View Invoice"
-msgstr "송장 생성 & 보기"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
-msgid "My Quotations"
-msgstr "내 견적"
-
-#. module: sale
-#: field:sale.order,invoice_ids:0
-msgid "Invoices"
-msgstr "송장"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "December"
-msgstr "12월"
-
-#. module: sale
-#: view:sale.config.settings:0
-msgid "Contracts Management"
-msgstr "계약 관리"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Shipped"
-msgstr "배송 완료"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,month:0
-msgid "Month"
-msgstr "월"
-
-#. module: sale
-#: field:sale.order,currency_id:0
-msgid "Currency"
-msgstr "통화"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Uninvoiced"
-msgstr "송장 미발행됨"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,categ_id:0
-msgid "Category of Product"
-msgstr "상품의 분류"
-
-#. module: sale
-#: code:addons/sale/sale.py:564
-#, python-format
-msgid "Cannot cancel this sales order!"
-msgstr "해당 판매 주문을 취소할 수 없음!"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Invoice"
-msgstr "송장 재생성"
-
-#. module: sale
-#: field:sale.config.settings,module_warning:0
-msgid "Allow configuring alerts by customer or products"
-msgstr "고객 또는 상품으로 인한 알림을 구성할 수 있도록 함"
-
-#. module: sale
-#: field:sale.shop,name:0
-msgid "Shop Name"
-msgstr "매장명"
-
-#. module: sale
-#: view:sale.order:0
-msgid "My Sales Orders"
-msgstr "내 판매 주문"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Taxes :"
-msgstr "세금 :"
-
-#. module: sale
-#: field:sale.order,invoice_exists:0
-#: field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "송장 발행됨"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
-#, python-format
-msgid "Advance Invoice"
-msgstr "선불 송장"
-
-#. module: sale
-#: help:sale.config.settings,group_invoice_so_lines:0
-msgid ""
-"To allow your salesman to make invoices for sales order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.client,name:sale.action_client_sale_menu
-msgid "Open Sale Menu"
-msgstr "판매 메뉴 열기"
-
-#. module: sale
-#: code:addons/sale/sale.py:598
-#, python-format
-msgid "You cannot confirm a sales order which has no line."
-msgstr "입력줄이 존재하지 않는 판매 주문을 확정할 수 없습니다."
-
-#. module: sale
-#: selection:sale.report,state:0
-msgid "In Progress"
-msgstr "진행 중"
-
-#. module: sale
-#: code:addons/sale/sale.py:865
-#, python-format
-msgid "No Customer Defined !"
-msgstr "고객이 정의되지 않음 !"
-
-#. module: sale
-#: field:sale.config.settings,module_sale_stock:0
-msgid "Trigger delivery orders automatically from sales orders"
-msgstr "판매 주문으로부터 배송 주문을 자동으로 촉발"
-
-#. module: sale
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Create invoices"
-msgstr "송장 생성"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Confirmed"
-msgstr "확정됨"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
-#, python-format
-msgid "Advance of %s %%"
-msgstr "%s %%의 선불"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line_make_invoice
-msgid "Sale OrderLine Make_invoice"
-msgstr "Sale OrderLine Make_invoice"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "초안"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_email_templates
-msgid "Email Templates"
-msgstr "이메일 양식"
-
-#. module: sale
-#: help:sale.order.line,address_allotment_id:0
-msgid "A partner to whom the particular product needs to be allotted."
-msgstr ""
-
-#. module: sale
-#: field:sale.order,project_id:0
-msgid "Contract / Analytic"
-msgstr "계약 / 분석"
-
-#. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
-msgid "Waiting Schedule"
-msgstr "대기 일정"
-
-#. module: sale
-#: field:sale.order,note:0
-msgid "Terms and conditions"
-msgstr "계약 및 조건"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.ui.menu,name:sale.menu_sale_order
-#: view:sale.order:0
-msgid "Sales Orders"
-msgstr "판매 주문"
-
-#. module: sale
-#: help:sale.order,amount_tax:0
-msgid "The tax amount."
-msgstr "세액"
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0
-msgid "Invoiced Ratio"
-msgstr "송장 발행 비율"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "On Demand"
-msgstr "주문형"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "August"
-msgstr "8월"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorder0
-msgid "Drives procurement and invoicing"
-msgstr "조달 및 송장 발행을 추진함"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "To Do"
-msgstr "과제"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "June"
-msgstr "6월"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_shop_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new sale shop.\n"
-"              </p><p>\n"
-"                Each quotation or sales order must be linked to a shop. The\n"
-"                shop also defines the warehouse from which the products will "
-"be\n"
-"                delivered for each particular sales.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order"
-msgstr "주문"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all
-#: view:sale.report:0
-msgid "Sales Analysis"
-msgstr "판매 분석"
-
-#. module: sale
-#: field:sale.order,message_is_follower:0
-msgid "Is a Follower"
-msgstr "은(는) 팔로어임"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid ""
-"Sales Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
-msgstr "확정, 완료되었거나 예외 상태이며, 아직 송장이 발행되지 않은 판매 주문 입력줄"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "판매 주문 통계"
-
-#. module: sale
-#: field:sale.order,date_order:0
-msgid "Date"
-msgstr "날짜"
-
-#. module: sale
-#: report:sale.order:0
-#: view:sale.order:0
-#: field:sale.order,user_id:0
-#: view:sale.order.line:0
-#: field:sale.order.line,salesman_id:0
-#: view:sale.report:0
-#: field:sale.report,user_id:0
-msgid "Salesperson"
-msgstr "영업사원"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "November"
-msgstr "11월"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Extended Filters..."
-msgstr "확장 필터..."
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: view:sale.order:0
-#: selection:sale.report,state:0
-msgid "Quotation"
-msgstr "견적"
-
-#. module: sale
-#: field:sale.advance.payment.inv,product_id:0
-msgid "Advance Product"
-msgstr "Advance Product"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Exception"
-msgstr "예외"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "October"
-msgstr "10월"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
-"if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
-msgid "Sales Shop"
-msgstr "판매 매장"
-
-#. module: sale
-#: help:sale.config.settings,module_sale_stock:0
-msgid ""
-"Allows you to Make Quotation, Sale Order using different Order policy and "
-"Manage Related Stock.\n"
-"                    This installs the module sale_stock."
-msgstr ""
-
-#. module: sale
-#: help:sale.advance.payment.inv,product_id:0
-msgid ""
-"Select a product of type service which is called 'Advance Product'.\n"
-"                You may have to create it and set it as a default value on "
-"this field."
-msgstr ""
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "January"
-msgstr "1월"
-
-#. module: sale
-#: field:sale.config.settings,group_discount_per_so_line:0
-msgid "Allow setting a discount on the sales order lines"
-msgstr "판매 주문 입력줄에 할인율을 설정할 수 있도록 허용"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_in_progress
-msgid "Sales Order in Progress"
-msgstr "진행 중인 판매 주문"
-
-#. module: sale
-#: view:sale.order.line.make.invoice:0
-msgid ""
-"All items in these order lines will be invoiced. You can also invoice a "
-"percentage of the sales order\n"
-"                    or a fixed price (for advances) directly from the sales "
-"order form if you prefer."
-msgstr ""
-
-#. module: sale
-#: help:sale.config.settings,module_warning:0
-msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to sale a given product or a given customer.\n"
-"Example: Product: this product is deprecated, do not purchase more than 5.\n"
-"                Supplier: don't forget to ask for an express delivery."
-msgstr ""
-
-#. module: sale
-#: field:sale.order,paypal_url:0
-msgid "Paypal Url"
-msgstr "페이팔 Url"
-
-#. module: sale
-#: help:sale.order,project_id:0
-msgid "The analytic account related to a sales order."
-msgstr "판매 주문과 관련된 분석 계정."
-
-#. module: sale
-#: view:sale.order:0
-msgid "View Invoice"
-msgstr "송장 보기"
-
-#. module: sale
-#: field:sale.advance.payment.inv,advance_payment_method:0
-msgid "What do you want to invoice?"
-msgstr "송장 발행 대상은 어떤 것입니니까?"
-
-#. module: sale
-#: field:sale.config.settings,group_sale_pricelist:0
-msgid "Use pricelists to adapt your price per customers"
-msgstr "고객 별로 가격을 적용하기 위해 가격표를 사용함"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sales order becomes "
-"'In progress' or 'Manual in progress'."
-msgstr "영업사원이 견적을 확정합니다. 판매 주문의 상태는 '진행 중' 또는 '수동 진행 중'이 됩니다."
-
-#. module: sale
-#: code:addons/sale/sale.py:942
-#, python-format
-msgid ""
-"You have to select a pricelist or a customer in the sales form !\n"
-"Please set one before choosing a product."
-msgstr ""
-"판매 양식에 가격표 또는 고객을 선택해야 합니다 !\n"
-"상품 선택 전 이를 설정하세요."
-
-#. module: sale
-#: help:sale.order,origin:0
-msgid "Reference of the document that generated this sales order request."
-msgstr "해당 판매 주문 요청을 생성한 문서의 참조"
-
-#. module: sale
-#: code:addons/sale/sale.py:955
-#, python-format
-msgid "No valid pricelist line found ! :"
-msgstr "유효한 가격표 입력줄을 찾을 수 없습니다 ! :"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:113
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:115
-#, python-format
-msgid "Advance of %s %s"
-msgstr "%s %s의 선불"
-
-#. module: sale
-#: view:sale.report:0
-#: field:sale.report,delay:0
-msgid "Commitment Delay"
-msgstr "약속 지연"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: view:sale.order:0
-#: view:sale.report:0
-msgid "Quotations"
-msgstr "견적"
-
-#. module: sale
-#: help:account.config.settings,module_sale_analytic_plans:0
-msgid "This allows install module sale_analytic_plans."
-msgstr "sale_analytic_plans 모듈을 설치할 수 있도록 합니다."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "예외 무시"
-
-#. module: sale
-#: help:sale.order,partner_shipping_id:0
-msgid "Delivery address for current sales order."
-msgstr "현재 판매 주문의 배송 주소"
-
-#. module: sale
-#: field:sale.config.settings,module_sale_margin:0
-msgid "Display margins on sales orders"
-msgstr "판매 주문의 이윤 표시"
-
-#. module: sale
-#: help:sale.order,invoice_ids:0
-msgid ""
-"This is the list of invoices that have been generated for this sales order. "
-"The same sales order may have been invoiced in several times (by line for "
-"example)."
-msgstr ""
-
-#. module: sale
-#: report:sale.order:0
-msgid "Your Reference"
-msgstr "귀하의 참조"
-
-#. module: sale
-#: view:sale.advance.payment.inv:0
-msgid "Show Lines to Invoice"
-msgstr "송장 발행 대상 입력줄 표시"
-
-#. module: sale
-#: field:sale.report,date:0
-msgid "Date Order"
-msgstr "주문에 날짜 부여"
-
-#. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.report,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
-msgid "Pricelist"
-msgstr "가격표"
-
-#. module: sale
-#: report:sale.order:0
-msgid "TVA :"
-msgstr "TVA:"
-
-#. module: sale
-#: code:addons/sale/sale.py:444
-#, python-format
-msgid "Customer Invoices"
-msgstr "고객 송장"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "Confirmed sales order to invoice."
-msgstr "송장 발행 대상 확정 판매 주문"
-
-#. module: sale
-#: field:sale.order.line,sequence:0
-msgid "Sequence"
-msgstr "시퀀스"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales
-#: model:ir.ui.menu,name:sale.menu_dashboard_sales
-#: model:process.process,name:sale.process_process_salesprocess0
-#: view:res.partner:0
-#: view:sale.order:0
-#: view:sale.report:0
-msgid "Sales"
-msgstr "판매"
-
-#. module: sale
-#: code:addons/sale/sale.py:308
-#, python-format
-msgid ""
-"If you change the pricelist of this order (and eventually the currency), "
-"prices of existing order lines will not be updated."
-msgstr ""
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Qty"
-msgstr "수량"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "재고로 부터"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation Date"
-msgstr "견적일"
-
-#. module: sale
-#: field:sale.order,amount_total:0
-#: view:sale.order.line:0
-msgid "Total"
-msgstr "합계"
-
-#. module: sale
-#: view:sale.order:0
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-#: selection:sale.report,state:0
-msgid "Done"
-msgstr "완료"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Invoice address :"
-msgstr "송장 발행 주소 :"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:121
-#: model:ir.model,name:sale.model_account_invoice
-#: model:process.node,name:sale.process_node_invoice0
-#: view:sale.order:0
-#, python-format
-msgid "Invoice"
-msgstr "송장"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "My Sales Order Lines"
-msgstr "내 판매 주문 입력줄"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: sale
-#: field:sale.order,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:944
-#, python-format
-msgid "No Pricelist ! : "
-msgstr "가격표가 없음 ! : "
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order "
-msgstr "판매 주문 "
-
-#. module: sale
-#: model:mail.message.subtype,description:sale.mt_order_sent
-#: model:mail.message.subtype,name:sale.mt_order_sent
-msgid "Quotation send"
-msgstr "견적 전송"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Search Uninvoiced Lines"
-msgstr "송장 미발행 입력줄 검색"
-
-#. module: sale
-#: model:ir.model,name:sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
-
-#. module: sale
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "주문 참조는 업체 별로 유일해야 합니다!"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_line_tree2
-msgid ""
-"<p>\n"
-"                Here is a list of each sales order line to be invoiced. You "
-"can\n"
-"                invoice sales orders partially, by lines of sales order. You "
-"do\n"
-"                not need this list if you invoice from the delivery orders "
-"or\n"
-"                if you invoice sales totally.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: sale
-#: report:sale.order:0
-msgid "Shipping address :"
-msgstr "배송 주소 :"
-
-#. module: sale
-#: code:addons/sale/sale.py:505
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr "동일한 협력업체에 서로 다른 통화의 판매를 함께 분류할 수 없습니다."
-
-#. module: sale
-#: view:sale.advance.payment.inv:0
-msgid "Invoice Sales Order"
-msgstr "판매 주문에 대한 송장 발행"
-
-#. module: sale
-#: help:sale.order,invoice_quantity:0
-msgid ""
-"The sales order will automatically create the invoice proposition (draft "
-"invoice).                                              You have to choose  "
-"if you want your invoice based on ordered "
-msgstr ""
-
-#. module: sale
-#: field:sale.config.settings,module_account_analytic_analysis:0
-msgid "Use contracts management"
-msgstr "계약 관리 사용"
-
-#. module: sale
-#: code:addons/sale/sale.py:952
-#, python-format
-msgid ""
-"Cannot find a pricelist line matching this product and quantity.\n"
-"You have to change either the product, the quantity or the pricelist."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "판매 선납 송장"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: field:sale.order,order_policy:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "송장 생성"
-
-#. module: sale
-#: help:sale.order,amount_untaxed:0
-msgid "The amount without tax."
-msgstr "세금 제외 금액."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order reference"
-msgstr "주문 참조"
-
-#. module: sale
-#: help:sale.order,invoiced:0
-msgid "It indicates that an invoice has been paid."
-msgstr "송장에 대한 지불이 완료되었음을 표시합니다."
-
-#. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "단가"
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Percentage"
-msgstr "퍼센트"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Other Information"
-msgstr "기타 정보"
+"X-Launchpad-Export-Date: 2014-09-24 09:33+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -1659,6 +46,16 @@ msgid ""
 "''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
+"    <p>\n"
+"        You can view your quotation online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; "
+"color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; "
+"font-size: 13px; font-weight: bold; text-align: center; text-decoration: "
+"none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: "
+"#8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View "
+"${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
@@ -1720,236 +117,76 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order.line:0
-#: field:sale.order.line,product_id:0
-#: view:sale.report:0
-#: field:sale.report,product_id:0
-msgid "Product"
-msgstr "상품"
+#: field:product.product,sales_count:0
+#: field:product.template,sales_count:0
+msgid "# Sales"
+msgstr ""
 
 #. module: sale
-#: help:sale.order,amount_total:0
-msgid "The total amount."
-msgstr "총액"
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "입력줄 개수"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Confirm Sale"
-msgstr "판매 확정"
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr "수량 개수"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
-#, python-format
-msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr "해당 상품에 대한 소득 계정이 정의되지 않았습니다: \"%s\" (id:%d)."
+#: field:res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr "판매 주문 개수"
 
 #. module: sale
-#: selection:sale.report,month:0
-msgid "May"
-msgstr "5월"
+#: model:email.template,report_name:sale.email_template_edi_sale
+msgid ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Price"
-msgstr "가격"
+#: view:sale.order:sale.view_order_form
+msgid "(update)"
+msgstr "(업데이트)"
 
 #. module: sale
-#: help:sale.order,order_policy:0
+#: help:sale.order.line,state:0
 msgid ""
-"On demand: A draft invoice can be created from the sales order when needed. "
-"\n"
-"On delivery order: A draft invoice can be created from the delivery order "
-"when the products have been delivered. \n"
-"Before delivery: A draft invoice is created from the sales order and must be "
-"paid before the products can be delivered."
+"* The 'Draft' status is set when the related sales order in draft status.    "
+"                 \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.   "
+"                  \n"
+"* The 'Exception' status is set when the related sales order is set as "
+"exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.        "
+"             \n"
+"* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_all
-msgid ""
-"This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
-"having invoiced yet. If you want to analyse your turnover, you should use "
-"the Invoice Analysis report in the Accounting application."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "견적 / 주문"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tel. :"
-msgstr "전화 :"
-
-#. module: sale
-#: view:sale.make.invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr "정말로 송장을 생성하시겠습니까?"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation, the first step of a new sale.\n"
-"              </p><p>\n"
-"                OpenERP will help you handle efficiently the complete sale "
-"flow:\n"
-"                from the quotation to the sales order, the\n"
-"                delivery, the invoicing and the payment collection.\n"
-"              </p><p>\n"
-"                The social feature helps you organize discussions on each "
-"sales\n"
-"                order, and allow your customers to keep track of the "
-"evolution\n"
-"                of the sales order.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: sale
-#: view:res.partner:0
-msgid "sale.group_delivery_invoice_address"
-msgstr "sale.group_delivery_invoice_address"
-
-#. module: sale
-#: code:addons/sale/sale.py:781
-#, python-format
-msgid ""
-"There is no Fiscal Position defined or Income category account defined for "
-"default properties of Product categories."
-msgstr ""
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoice0
-msgid "To be reviewed by the accountant."
-msgstr "회계사가 검토 예정."
-
-#. module: sale
-#: model:res.groups,name:sale.group_mrp_properties
-msgid "Properties on lines"
-msgstr "입력줄의 속성"
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Sale to Invoice"
-msgstr "송장 발행 대상 판매"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Number"
-msgstr "주문번호"
-
-#. module: sale
-#: view:sale.order:0
-#: field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
-msgid "Customer"
-msgstr "고객"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance"
-msgstr "선불"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "February"
-msgstr "2월"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that can be converted into a "
+"                    Click to create a quotation that can be converted into a "
 "sales\n"
-"                order.\n"
-"              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sales "
+"                    order.\n"
+"                </p><p>\n"
+"                    Odoo will help you efficiently handle the complete sales "
 "flow:\n"
-"                quotation, sales order, delivery, invoicing and payment.\n"
-"              </p>\n"
+"                    quotation, sales order, delivery, invoicing and "
+"payment.\n"
+"                </p>\n"
 "            "
 msgstr ""
-
-#. module: sale
-#: field:sale.order,invoice_quantity:0
-msgid "Invoice on"
-msgstr "송장 발행 예정일:"
-
-#. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Fixed price (deposit)"
-msgstr "고정가격 (예금)"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "September"
-msgstr "9월"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Date Ordered"
-msgstr "주문일"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Before Delivery"
-msgstr "배송 전"
-
-#. module: sale
-#: field:sale.order.line,product_uos:0
-msgid "Product UoS"
-msgstr "상품 판매 단위"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_quotation0
-msgid "Draft state of sales order"
-msgstr "판매 주문의 초안 상태"
-
-#. module: sale
-#: field:sale.order,origin:0
-msgid "Source Document"
-msgstr "소스 문서"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "April"
-msgstr "4월"
-
-#. module: sale
-#: selection:sale.report,state:0
-msgid "Manual In Progress"
-msgstr "수작업 진행 중"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
-#: code:addons/sale/wizard/sale_make_invoice.py:42
-#: code:addons/sale/wizard/sale_make_invoice.py:55
-#, python-format
-msgid "Warning!"
-msgstr "경고!"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree
-msgid "Old Quotations"
-msgstr "오래된 견적"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1958,7 +195,7 @@ msgid ""
 "                Click to create a quotation or sales order for this "
 "customer.\n"
 "              </p><p>\n"
-"                OpenERP will help you efficiently handle the complete sale "
+"                Odoo will help you efficiently handle the complete sale "
 "flow:\n"
 "                quotation, sales order, delivery, invoicing and\n"
 "                payment.\n"
@@ -1973,145 +210,251 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: field:sale.order,message_summary:0
-msgid "Summary"
-msgstr "요약"
-
-#. module: sale
-#: help:sale.order,message_ids:0
-msgid "Messages and communication history"
-msgstr "메시지 및 의사소통 기록"
-
-#. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Search Sales Order"
-msgstr "판매 주문 검색"
-
-#. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,name:0
-msgid "Description"
-msgstr "설명"
-
-#. module: sale
-#: view:sale.config.settings:0
+#: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
-"Use contract to be able to manage your services with\n"
-"                        multiple invoicing as part of the same contract "
-"with\n"
-"                        your customer."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Odoo will help you efficiently handle the complete sales "
+"flow:\n"
+"                quotation, sales order, delivery, invoicing and payment.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: sale
-#: view:sale.report:0
-msgid "Ordered month of the sales order"
-msgstr "판매 주문의 주문월"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleinvoice0
-msgid "From a sales order"
-msgstr "판매 주문으로 부터"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Confirmed sales order lines, not yet delivered"
-msgstr "아직 배송되지 않은 확정된 판매 주문 입력줄"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
+#: model:ir.actions.act_window,help:sale.action_quotations
+#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
-"Depending on the Invoicing control of the sales order, the invoice can be "
-"based on delivered or on ordered quantities. Thus, a sales order can "
-"generates an invoice or a delivery order as soon as it is confirmed by the "
-"salesman."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation, the first step of a new sale.\n"
+"              </p><p>\n"
+"                Odoo will help you handle efficiently the complete sale "
+"flow:\n"
+"                from the quotation to the sales order, the\n"
+"                delivery, the invoicing and the payment collection.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each "
+"sales\n"
+"                order, and allow your customers to keep track of the "
+"evolution\n"
+"                of the sales order.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "UoS"
-msgstr "판매 단위"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"<p>\n"
+"                Here is a list of each sales order line to be invoiced. You "
+"can\n"
+"                invoice sales orders partially, by lines of sales order. You "
+"do\n"
+"                not need this list if you invoice from the delivery orders "
+"or\n"
+"                if you invoice sales totally.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: sale
-#: selection:sale.advance.payment.inv,advance_payment_method:0
-msgid "Some order lines"
-msgstr "일부 주문 입력줄"
+#: help:sale.order.line,address_allotment_id:0
+msgid "A partner to whom the particular product needs to be allotted."
+msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:983
+#: model:res.groups,name:sale.group_delivery_invoice_address
+msgid "Addresses in Sales Orders"
+msgstr "판매 주문 상의 주소"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance"
+msgstr "선불"
+
+#. module: sale
+#: field:sale.advance.payment.inv,amount:0
+msgid "Advance Amount"
+msgstr "선지불액"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:203
 #, python-format
-msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr "'%s' 상태의 판매 주문 입력줄을 삭제할 수 없음."
+msgid "Advance Invoice"
+msgstr "선불 송장"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order,payment_term:0
-msgid "Payment Term"
-msgstr "결제 조건"
+#: field:sale.advance.payment.inv,product_id:0
+msgid "Advance Product"
+msgstr "Advance Product"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Sales Order ready to be invoiced"
-msgstr "송장 발행 준비가 완료된 판매 주문"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:107
+#, python-format
+msgid "Advance of %s %%"
+msgstr "%s %%의 선불"
 
 #. module: sale
-#: field:sale.config.settings,group_invoice_so_lines:0
-msgid "Generate invoices based on the sales order lines"
-msgstr "판매 주문 입력줄 기준으로 송장 생성"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:114
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:116
+#, python-format
+msgid "Advance of %s %s"
+msgstr "%s %s의 선불"
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
-#: view:sale.order.line.make.invoice:0
-msgid "or"
-msgstr "또는"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Sales Order Lines"
-msgstr "판매 주문 입력줄"
-
-#. module: sale
-#: help:sale.order,pricelist_id:0
-msgid "Pricelist for current sales order."
-msgstr "현재 판매 주문의 가격표."
-
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation N°"
-msgstr "견적 N°"
-
-#. module: sale
-#: model:res.groups,name:sale.group_discount_per_so_line
-msgid "Discount on lines"
-msgstr "입력줄 대상 할인율"
-
-#. module: sale
-#: field:sale.order,client_order_ref:0
-msgid "Customer Reference"
-msgstr "고객 참조"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Picked"
-msgstr "픽 완료"
-
-#. module: sale
-#: help:sale.config.settings,module_sale_margin:0
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid ""
-"This adds the 'Margin' on sales order.\n"
-"                This gives the profitability by calculating the difference "
-"between the Unit Price and Cost Price.\n"
-"                This installs the module sale_margin."
+"After clicking 'Show Lines to Invoice', select lines to invoice and create "
+"the invoice from the 'More' dropdown menu."
 msgstr ""
-"판매 주문에 '이윤'을 추가합니다.\n"
-"                이것은 단가 및 원가의 차액을 계산하여 수익성을 제공합니다.\n"
-"                이것은 module sale_margin 모듈을 설치합니다."
+"송장 발행 입력줄 표시' 버튼을 클릭한 후, 송장 발행 대상 입력줄을 선택하고 '더 보기' 드롭 다운 메뉴에서 송장을 생성하세요."
 
 #. module: sale
-#: code:addons/sale/sale.py:865
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid ""
+"All items in these order lines will be invoiced. You can also invoice a "
+"percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales "
+"order form if you prefer."
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Allotment 파트너"
+
+#. module: sale
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_sale_journal:0
+msgid "Allow batch invoicing of delivery orders through journals"
+msgstr "장부를 통해 배송 주문서에 대한 송장 일괄 발행 허용"
+
+#. module: sale
+#: field:sale.config.settings,module_warning:0
+msgid "Allow configuring alerts by customer or products"
+msgstr "고객 또는 상품으로 인한 알림을 구성할 수 있도록 함"
+
+#. module: sale
+#: field:sale.config.settings,module_website_quote:0
+msgid "Allow online quotations and templates"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_discount_per_so_line:0
+msgid "Allow setting a discount on the sales order lines"
+msgstr "판매 주문 입력줄에 할인율을 설정할 수 있도록 허용"
+
+#. module: sale
+#: help:sale.config.settings,module_warning:0
+msgid ""
+"Allow to configure notification on products and trigger them when a user "
+"wants to sell a given product or a given customer.\n"
+"Example: Product: this product is deprecated, do not purchase more than 5.\n"
+"Supplier: don't forget to ask for an express delivery."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_uom:0
+msgid "Allow using different units of measure"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,module_account_analytic_analysis:0
+msgid ""
+"Allows to define your customer contracts conditions: invoicing method (fixed "
+"price, on timesheet, advance invoice), the exact pricing (650€/day for a "
+"developer), the duration (one year support contract).\n"
+"You will be able to follow the progress of the contract and invoice "
+"automatically.\n"
+"-It installs the account_analytic_analysis module."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_sale_pricelist:0
+msgid ""
+"Allows to manage different prices based on rules per category of customers.\n"
+"Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,module_sale_stock:0
+msgid ""
+"Allows you to Make Quotation, Sale Order using different Order policy and "
+"Manage Related Stock.\n"
+"-This installs the module sale_stock."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_discount_per_so_line:0
+msgid "Allows you to apply some discount per sales order line."
+msgstr "판매 주문 입력줄마다 할인율을 적용할 수 있도록 함."
+
+#. module: sale
+#: help:sale.config.settings,module_sale_journal:0
+msgid ""
+"Allows you to categorize your sales and deliveries (picking lists) between "
+"different journals, and perform batch operations on journals.\n"
+"-This installs the module sale_journal."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,module_analytic_user_function:0
+msgid ""
+"Allows you to define what is the default function of a specific user on a "
+"given account.\n"
+"This is mostly used when a user encodes his timesheet. The values are "
+"retrieved and the fields are auto-filled. But the possibility to change "
+"these values is still available.\n"
+"-This installs the module analytic_user_function."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr "상품의 각기 다른 계수 단위를 선택 및 관리할 수 있도록 함."
+
+#. module: sale
+#: help:account.config.settings,group_analytic_account_for_sales:0
+msgid "Allows you to specify an analytic account on sales orders."
+msgstr "판매 주문에 분석 계정을 지정할 수 있도록 함."
+
+#. module: sale
+#: help:sale.config.settings,group_sale_delivery_address:0
+msgid ""
+"Allows you to specify different delivery and invoice addresses on a sales "
+"order."
+msgstr ""
+
+#. module: sale
+#: field:sale.report,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: sale
+#: model:res.groups,name:sale.group_analytic_accounting
+msgid "Analytic Accounting for Sales"
+msgstr "판매의 분석 회계"
+
+#. module: sale
+#: field:account.config.settings,group_analytic_account_for_sales:0
+msgid "Analytic accounting for sales"
+msgstr "판매의 분석 회계"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Before Delivery"
+msgstr "배송 전"
+
+#. module: sale
+#: code:addons/sale/sale.py:1041
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -2121,17 +464,1354 @@ msgstr ""
 " 판매 양식에서 고객을 선택하세요."
 
 #. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "포함된 총 세액"
+#: model:ir.filters,name:sale.filter_isale_report_product
+msgid "By Product"
+msgstr ""
 
 #. module: sale
-#: view:sale.order:0
+#: model:ir.filters,name:sale.filter_sale_report_salespersons
+msgid "By Salespersons"
+msgstr ""
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_salesteam
+msgid "By Salesteam"
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Cancel"
+msgstr "취소"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_form2
+msgid "Cancel Line"
+msgstr "입력줄 취소"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Cancel Order"
+msgstr "주문 취소"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Cancel Quotation"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: sale
+#: code:addons/sale/sale.py:588
+#, python-format
+msgid "Cannot cancel this sales order!"
+msgstr "해당 판매 주문을 취소할 수 없음!"
+
+#. module: sale
+#: code:addons/sale/sale.py:1164
+#, python-format
+msgid "Cannot delete a sales order line which is in state '%s'."
+msgstr "'%s' 상태의 판매 주문 입력줄을 삭제할 수 없음."
+
+#. module: sale
+#: code:addons/sale/sale.py:1133
+#, python-format
+msgid ""
+"Cannot find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,categ_id:0
+msgid "Category of Product"
+msgstr "상품의 분류"
+
+#. module: sale
+#: help:sale.make.invoice,grouped:0
+msgid "Check the box to group the invoices for the same customers"
+msgstr "동일한 고객의 송장을 분류하려면 상자를 체크하세요"
+
+#. module: sale
+#: help:crm.case.section,use_quotations:0
+msgid "Check this box to manage quotations in this sales team."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to acces the Sales Analysis."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of invoices."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis."
+msgstr ""
+
+#. module: sale
+#: field:sale.report,delay:0
+msgid "Commitment Delay"
+msgstr "약속 지연"
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_company
+msgid "Companies"
+msgstr "업체"
+
+#. module: sale
+#: field:sale.order,company_id:0
+#: field:sale.order.line,company_id:0
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,company_id:0
+msgid "Company"
+msgstr "업체"
+
+#. module: sale
+#: code:addons/sale/sale.py:1141
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#, python-format
+msgid "Configuration Error!"
+msgstr "구성 오류!"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Confirm Sale"
+msgstr "판매 확정"
+
+#. module: sale
+#: field:sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr "확정일"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "확정됨"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Confirmed sales order lines, not yet delivered"
+msgstr "아직 배송되지 않은 확정된 판매 주문 입력줄"
+
+#. module: sale
+#: field:sale.order,project_id:0
+msgid "Contract / Analytic"
+msgstr "계약 / 분석"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Contract Features"
+msgstr "견적 특징"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Contracts Management"
+msgstr "계약 관리"
+
+#. module: sale
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create & View Invoice"
+msgstr "송장 생성 & 보기"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.order:sale.view_order_form
+#: field:sale.order,order_policy:0
+#: view:sale.order.line:sale.view_order_line_form2
+msgid "Create Invoice"
+msgstr "송장 생성"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create Invoices"
+msgstr "송장 생성"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Create and View Invoice"
+msgstr "송장 생성 및 보기"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create invoices"
+msgstr "송장 생성"
+
+#. module: sale
+#: field:sale.advance.payment.inv,create_uid:0
+#: field:sale.make.invoice,create_uid:0
+#: field:sale.order,create_uid:0
+#: field:sale.order.line,create_uid:0
+#: field:sale.order.line.make.invoice,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,create_date:0
+#: field:sale.make.invoice,create_date:0
+#: field:sale.order.line,create_date:0
+#: field:sale.order.line.make.invoice,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,create_date:0
+msgid "Creation Date"
+msgstr "생성일"
+
+#. module: sale
+#: field:sale.order,currency_id:0
+msgid "Currency"
+msgstr "통화"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+#: view:sale.report:sale.view_order_product_search
+msgid "Customer"
+msgstr "고객"
+
+#. module: sale
+#: code:addons/sale/sale.py:464
+#, python-format
+msgid "Customer Invoices"
+msgstr "고객 송장"
+
+#. module: sale
+#: field:sale.order,date_order:0
+msgid "Date"
+msgstr "날짜"
+
+#. module: sale
+#: field:sale.report,date_confirm:0
+msgid "Date Confirm"
+msgstr "날짜 확정"
+
+#. module: sale
+#: field:sale.report,date:0
+msgid "Date Order"
+msgstr "주문에 날짜 부여"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Date Ordered:"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr "판매 주문이 확정된 날짜"
+
+#. module: sale
+#: help:sale.order,create_date:0
+msgid "Date on which sales order is created."
+msgstr "판매 주문이 생성된 날짜."
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Default Options"
+msgstr "기본 옵션"
+
+#. module: sale
+#: field:res.company,sale_note:0
+msgid "Default Terms and Conditions"
+msgstr ""
+
+#. module: sale
+#: view:res.company:sale.view_company_inherit_form2
+msgid "Default terms & conditions..."
+msgstr ""
+
+#. module: sale
+#: help:res.company,sale_note:0
+msgid "Default terms and conditions for quotations."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid ""
+"Define an invoicing target in the sales team settings to see the period's "
+"achievement and forecast at a glance."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Delivery Address"
+msgstr "배송 주소"
+
+#. module: sale
+#: field:sale.order.line,delay:0
+msgid "Delivery Lead Time"
+msgstr "배송소요시간"
+
+#. module: sale
+#: help:sale.order,partner_shipping_id:0
+msgid "Delivery address for current sales order."
+msgstr "현재 판매 주문의 배송 주소"
+
+#. module: sale
+#: field:sale.order.line,name:0
+#: view:website:sale.report_saleorder_document
+msgid "Description"
+msgstr "설명"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Disc.(%)"
+msgstr "할인율(%)"
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "할인 (%)"
+
+#. module: sale
+#: model:res.groups,name:sale.group_discount_per_so_line
+msgid "Discount on lines"
+msgstr "입력줄 대상 할인율"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_margin:0
+msgid "Display margins on sales orders"
+msgstr "판매 주문의 이윤 표시"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "정말로 송장을 생성하시겠습니까?"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: selection:sale.order,state:0
+#: view:sale.order.line:sale.view_order_line_form2
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Done"
+msgstr "완료"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "초안"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Draft Quotation"
+msgstr "견적 초안"
+
+#. module: sale
+#: code:addons/sale/edi/sale_order.py:140
+#, python-format
+msgid "EDI Pricelist (%s)"
+msgstr "EDI 가격표 (%s)"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_email_templates
+msgid "Email Templates"
+msgstr "이메일 양식"
+
+#. module: sale
+#: model:ir.model,name:sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "이메일 작성 마법사"
+
+#. module: sale
+#: model:res.groups,name:sale.group_invoice_so_lines
+msgid "Enable Invoicing Sales order lines"
+msgstr "판매 주문 입력줄 송장 발행 활성화"
+
+#. module: sale
+#: code:addons/sale/sale.py:154
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522
+#: code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:927
+#: code:addons/sale/sale.py:944
+#, python-format
+msgid "Error!"
+msgstr "오류!"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "예외"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "Extended Filters"
+msgstr ""
+
+#. module: sale
+#: view:res.partner:sale.res_partner_address_type
+msgid "False"
+msgstr "거짓"
+
+#. module: sale
+#: code:addons/sale/sale.py:589
+#, python-format
+msgid "First cancel all invoices attached to this sales order."
+msgstr "먼저 해당 판매 주문에 첨부된 모든 송장을 취소하세요."
+
+#. module: sale
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "재정 위상"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Fixed price (deposit)"
+msgstr "고정가격 (예금)"
+
+#. module: sale
+#: field:sale.order,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,timesheet:0
+msgid ""
+"For modifying account analytic view to show important data to project "
+"manager of services companies.You can also view the report of account "
+"analytic summary user-wise as well as month wise.\n"
+"-This installs the module account_analytic_analysis."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Forecast"
+msgstr ""
+
+#. module: sale
+#: help:crm.case.section,invoiced_forecast:0
+msgid ""
+"Forecast of the invoice revenue for the current month. This is the amount "
+"the sales \n"
+"team should invoice this month. It is used to compute the progression ratio "
+"\n"
+" of the current and forecast revenue on the kanban view."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The tool search can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_invoice_so_lines:0
+msgid "Generate invoices based on the sales order lines"
+msgstr "판매 주문 입력줄 기준으로 송장 생성"
+
+#. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr "판매 주문 입력줄을 표시할 때 순서를 제공함."
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the status of the quotation or sales order.              \n"
+"The exception status is automatically set when a cancel operation occurs     "
+"          in the invoice validation (Invoice Exception) or in the picking "
+"list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed           "
+"    but waiting for the scheduler to run on the order date."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Group By"
+msgstr ""
+
+#. module: sale
+#: field:sale.make.invoice,grouped:0
+msgid "Group the invoices"
+msgstr "송장 분류"
+
+#. module: sale
+#: help:sale.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
+
+#. module: sale
+#: code:addons/sale/res_config.py:100
+#, python-format
+msgid "Hour"
+msgstr "시"
+
+#. module: sale
+#: field:sale.advance.payment.inv,id:0
+#: field:sale.make.invoice,id:0
+#: field:sale.order,id:0
+#: field:sale.order.line,id:0
+#: field:sale.order.line.make.invoice,id:0
+#: field:sale.report,id:0
+msgid "ID"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
+
+#. module: sale
+#: code:addons/sale/sale.py:305
+#, python-format
+msgid ""
+"If you change the pricelist of this order (and eventually the currency), "
+"prices of existing order lines will not be updated."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Ignore Exception"
+msgstr "예외 무시"
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "In Progress"
+msgstr "진행 중"
+
+#. module: sale
+#: code:addons/sale/sale.py:274
+#, python-format
+msgid ""
+"In order to delete a confirmed sales order, you must cancel it before!"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "Incorrect Data"
+msgstr "올바르지 않은 데이터"
+
+#. module: sale
+#: code:addons/sale/sale.py:274
+#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:1164
+#, python-format
+msgid "Invalid Action!"
+msgstr "유효하지 않은 액션!"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
+#: view:sale.order:sale.view_order_form
+#, python-format
+msgid "Invoice"
+msgstr "송장"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "송장 발행 주소"
+
+#. module: sale
+#: field:sale.make.invoice,invoice_date:0
+msgid "Invoice Date"
+msgstr "송장 발행일"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Invoice Exception"
+msgstr "송장 예외"
+
+#. module: sale
+#: field:crm.case.section,invoiced_forecast:0
+msgid "Invoice Forecast"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "송장 입력줄"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+msgid "Invoice Order"
+msgstr "주문에 대한 송장 발행"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Invoice Sales Order"
+msgstr "판매 주문에 대한 송장 발행"
+
+#. module: sale
+#: field:crm.case.section,invoiced_target:0
+msgid "Invoice Target"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr "현재 판매 주문의 송장 발행 주소"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Invoice address:"
+msgstr ""
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Invoice and shipping address:"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sales Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sales Order Line is Invoiced!"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:97
+#, python-format
+msgid "Invoice created"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:1217
+#, python-format
+msgid "Invoice paid"
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoice the whole sales order"
+msgstr "전체 판매 주문에 대한 송장 발행"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: field:sale.order,invoice_exists:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "송장 발행됨"
+
+#. module: sale
+#: field:sale.order,invoiced_rate:0
+msgid "Invoiced Ratio"
+msgstr "송장 발행 비율"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
+#: field:sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr "송장"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Invoicing Process"
+msgstr "송장 발행 과정"
+
+#. module: sale
+#: field:sale.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr "은(는) 팔로어임"
+
+#. module: sale
+#: help:sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid."
+msgstr "송장에 대한 지불이 완료되었음을 표시합니다."
+
+#. module: sale
+#: help:sale.order,invoice_exists:0
+msgid "It indicates that sales order has at least one invoice."
+msgstr "판매 주문에 최소 한 개의 송장이 존재함을 의미함."
+
+#. module: sale
+#: field:sale.order,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,write_uid:0
+#: field:sale.make.invoice,write_uid:0
+#: field:sale.order,write_uid:0
+#: field:sale.order.line,write_uid:0
+#: field:sale.order.line.make.invoice,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,write_date:0
+#: field:sale.make.invoice,write_date:0
+#: field:sale.order,write_date:0
+#: field:sale.order.line,write_date:0
+#: field:sale.order.line.make.invoice,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
+msgid "Make Invoices"
+msgstr "송장 작성"
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "Manual In Progress"
+msgstr "수작업 진행 중"
+
+#. module: sale
+#: field:sale.order,message_ids:0
+msgid "Messages"
+msgstr "메시지"
+
+#. module: sale
+#: help:sale.order,message_ids:0
+msgid "Messages and communication history"
+msgstr "메시지 및 의사소통 기록"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "My Sales"
+msgstr "내 판매"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "My Sales Order Lines"
+msgstr "내 판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
 msgstr "견적의 새로운 사본"
 
 #. module: sale
-#: view:sale.advance.payment.inv:0
+#: view:sale.order:sale.view_sales_order_filter
+msgid "New Mail"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:1041
+#, python-format
+msgid "No Customer Defined!"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:1125
+#, python-format
+msgid "No Pricelist ! : "
+msgstr "가격표가 없음 ! : "
+
+#. module: sale
+#: code:addons/sale/sale.py:1136
+#, python-format
+msgid "No valid pricelist line found ! :"
+msgstr "유효한 가격표 입력줄을 찾을 수 없습니다 ! :"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+msgid "Old Quotations"
+msgstr "오래된 견적"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Delivery Order"
+msgstr "배송 주문 상"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Demand"
+msgstr "주문형"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"On demand: A draft invoice can be created from the sales order when needed. "
+"\n"
+"On delivery order: A draft invoice can be created from the delivery order "
+"when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be "
+"paid before the products can be delivered."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_analytic_user_function:0
+msgid "One employee can have different roles per contract"
+msgstr "직원 한 명이 계약 별로 다른 역할을 수행할 수 있습니다."
+
+#. module: sale
+#: model:ir.actions.client,name:sale.action_client_sale_menu
+msgid "Open Sale Menu"
+msgstr "판매 메뉴 열기"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Order"
+msgstr "주문"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+#: field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "주문 입력줄"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+msgid "Order Lines to Invoice"
+msgstr "송장 발행 대상 주문 입력줄"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Order Month"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_order_tree
+msgid "Order Number"
+msgstr "주문번호"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Order N°"
+msgstr "주문 번호"
+
+#. module: sale
+#: field:sale.order,name:0
+#: field:sale.order.line,order_id:0
+msgid "Order Reference"
+msgstr "주문 참조"
+
+#. module: sale
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "주문 참조는 업체 별로 유일해야 합니다!"
+
+#. module: sale
+#: field:sale.report,state:0
+msgid "Order Status"
+msgstr "주문 상태"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Order reference"
+msgstr "주문 참조"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "Ordered date of the sales order"
+msgstr "판매 주문의 주문일"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Other Information"
+msgstr "기타 정보"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "결제됨"
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_partner
+#: field:sale.report,partner_id:0
+msgid "Partner"
+msgstr "협력업체"
+
+#. module: sale
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "결제 조건"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Payment Term:"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,paypal_url:0
+msgid "Paypal Url"
+msgstr "페이팔 Url"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Percentage"
+msgstr "퍼센트"
+
+#. module: sale
+#: code:addons/sale/sale.py:928
+#, python-format
+msgid "Please define income account for this product: \"%s\" (id:%d)."
+msgstr "해당 상품의 소득금액을 정의하세요: \"%s\" (id:%d)."
+
+#. module: sale
+#: code:addons/sale/sale.py:391
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "해당 업체의 판매 장부를 정의하세요: \"%s\" (id:%d)."
+
+#. module: sale
+#: field:sale.config.settings,timesheet:0
+msgid "Prepare invoices based on timesheets"
+msgstr "타임시트 기준으로 송장 준비"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Price"
+msgstr "가격"
+
+#. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.report,pricelist_id:0
+msgid "Pricelist"
+msgstr "가격표"
+
+#. module: sale
+#: code:addons/sale/sale.py:304
+#, python-format
+msgid "Pricelist Warning!"
+msgstr "가격표 경고!"
+
+#. module: sale
+#: help:sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr "현재 판매 주문의 가격표."
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Print"
+msgstr "인쇄"
+
+#. module: sale
+#: model:ir.model,name:sale.model_procurement_order
+msgid "Procurement"
+msgstr "조달"
+
+#. module: sale
+#: field:sale.order,procurement_group_id:0
+msgid "Procurement group"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,procurement_ids:0
+msgid "Procurements"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_product
+#: field:sale.order,product_id:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: field:sale.order.line,product_id:0
+#: field:sale.report,product_id:0
+msgid "Product"
+msgstr "상품"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Product Features"
+msgstr "상품 특징"
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr "상품 판매 단위"
+
+#. module: sale
+#: field:sale.config.settings,module_project:0
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: sale
+#: model:res.groups,name:sale.group_mrp_properties
+msgid "Properties on lines"
+msgstr "입력줄의 속성"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_tree
+msgid "Qty"
+msgstr "수량"
+
+#. module: sale
+#: field:sale.advance.payment.inv,qtty:0
+#: field:sale.order.line,product_uom_qty:0
+#: view:website:sale.report_saleorder_document
+msgid "Quantity"
+msgstr "수량"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "수량 (판매 단위)"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+#: view:sale.order:sale.view_quotation_tree
+#: selection:sale.report,state:0
+msgid "Quotation"
+msgstr "견적"
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "견적 / 주문"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Quotation Date:"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_quotation_tree
+msgid "Quotation Number"
+msgstr "견적 번호"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Quotation N°"
+msgstr "견적 N°"
+
+#. module: sale
+#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Quotation Sent"
+msgstr "견적 전송 완료"
+
+#. module: sale
+#: model:mail.message.subtype,description:sale.mt_order_confirmed
+msgid "Quotation confirmed"
+msgstr "견적 확정됨"
+
+#. module: sale
+#: code:addons/sale/sale.py:362
+#, python-format
+msgid "Quotation created"
+msgstr ""
+
+#. module: sale
+#: model:mail.message.subtype,description:sale.mt_order_sent
+#: model:mail.message.subtype,name:sale.mt_order_sent
+msgid "Quotation sent"
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,use_quotations:0
+#: model:ir.actions.act_window,name:sale.action_quotations
+#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Quotations"
+msgstr "견적"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
+msgid "Quotations Analysis"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+msgid "Quotations and Sales"
+msgstr "견적 및 판매"
+
+#. module: sale
+#: field:crm.case.section,monthly_quoted:0
+msgid "Rate of created quotation per duration"
+msgstr ""
+
+#. module: sale
+#: field:crm.case.section,monthly_invoiced:0
+msgid "Rate of sent invoices per duration"
+msgstr ""
+
+#. module: sale
+#: field:crm.case.section,monthly_confirmed:0
+msgid "Rate of validate sales orders per duration"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Recreate Invoice"
+msgstr "송장 재생성"
+
+#. module: sale
+#: help:sale.order,origin:0
+msgid "Reference of the document that generated this sales order request."
+msgstr "해당 판매 주문 요청을 생성한 문서의 참조"
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Reference/Description"
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of confirmed sales orders per month."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of created quotations per month."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of sent invoices per month."
+msgstr ""
+
+#. module: sale
+#: field:procurement.order,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "판매 주문 라인"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line_make_invoice
+msgid "Sale OrderLine Make_invoice"
+msgstr "Sale OrderLine Make_invoice"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale to Invoice"
+msgstr "송장 발행 대상 판매"
+
+#. module: sale
+#: view:product.product:sale.product_form_view_sale_order_button
+#: view:product.template:sale.product_template_form_view_sale_order_button
+#: view:res.company:sale.view_company_inherit_form2
+#: view:res.partner:sale.crm_lead_partner_kanban_view
+#: view:res.partner:sale.res_partner_view_buttons
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Sales"
+msgstr "판매"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "판매 선납 송장"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_all
+#: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
+#: model:ir.ui.menu,name:sale.menu_report_product_all
+#: view:sale.report:sale.view_order_product_graph
+#: view:sale.report:sale.view_order_product_search
+msgid "Sales Analysis"
+msgstr "판매 분석"
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_sales_funnel
+msgid "Sales Funnel"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:284
+#: model:ir.model,name:sale.model_sale_order
+#: field:res.partner,sale_order_ids:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:sale.view_order_form
+#: view:sale.order:sale.view_sales_order_filter
+#: selection:sale.order,state:0
+#, python-format
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale
+#: model:mail.message.subtype,name:sale.mt_order_confirmed
+#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "확정된 판매 주문"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 입력줄"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+#: view:sale.order:sale.view_order_form
+#: view:sale.order.line:sale.view_order_line_form2
+#: view:sale.order.line:sale.view_order_line_tree
+msgid "Sales Order Lines"
+msgstr "판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Sales Order Lines ready to be invoiced"
+msgstr "송장 발행 준비가 완료된 판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Sales Order Lines related to a Sales Order of mine"
+msgstr "내 판매 주문에 관련된 판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid ""
+"Sales Order Lines that are confirmed, done or in exception state and haven't "
+"yet been invoiced"
+msgstr "확정, 완료되었거나 예외 상태이며, 아직 송장이 발행되지 않은 판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Sales Order Lines that are in 'done' state"
+msgstr "'완료' 상태의 판매 주문 입력줄"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order done"
+msgstr "판매 주문 완료"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+msgid "Sales Order in Progress"
+msgstr "진행 중인 판매 주문"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order ready to be invoiced"
+msgstr "송장 발행 준비가 완료된 판매 주문"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order that haven't yet been confirmed"
+msgstr "아직 확정되지 않은 판매 주문"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: model:ir.actions.act_window,name:sale.action_orders
+#: model:ir.actions.act_window,name:sale.action_orders_salesteams
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: view:sale.order:sale.view_order_tree
+#: view:sale.order:sale.view_sale_order_calendar
+#: view:sale.order:sale.view_sale_order_graph
+msgid "Sales Orders"
+msgstr "판매 주문"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "판매 주문 통계"
+
+#. module: sale
+#: view:account.invoice:sale.account_invoice_groupby_inherit
+#: view:account.invoice:sale.account_invoice_tree
+#: field:account.invoice,section_id:0
+#: field:account.invoice.report,section_id:0
+#: view:sale.order:sale.view_sales_order_filter
+#: field:sale.order,section_id:0
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_crm_case_section
+msgid "Sales Teams"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_orders_exception
+msgid "Sales in Exception"
+msgstr "예외적인 판매"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Sales order lines done"
+msgstr "판매 주문 입력줄  완료"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: field:sale.order,user_id:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,user_id:0
+msgid "Salesperson"
+msgstr "영업사원"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Salesperson:"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Search Sales Order"
+msgstr "판매 주문 검색"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Search Uninvoiced Lines"
+msgstr "송장 미발행 입력줄 검색"
+
+#. module: sale
+#: help:sale.advance.payment.inv,product_id:0
+msgid ""
+"Select a product of type service which is called 'Advance Product'.\n"
+"                You may have to create it and set it as a default value on "
+"this field."
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid ""
 "Select how you want to invoice this order. This\n"
 "                        will create a draft invoice that can be modified\n"
@@ -2142,868 +1822,438 @@ msgstr ""
 "                        생성합니다."
 
 #. module: sale
-#: view:sale.report:0
-msgid "Ordered date of the sales order"
-msgstr "판매 주문의 주문일"
+#: view:sale.order:sale.view_order_form
+msgid "Send by Email"
+msgstr "이메일로 전송"
 
-#~ msgid "Steps To Deliver a Sale Order"
-#~ msgstr "판매 주문 전달을 위한 단계들"
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "시퀀스"
 
-#~ msgid "Recreate Procurement"
-#~ msgstr "조달 재생성"
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Shipped"
+msgstr "배송 완료"
 
-#~ msgid "Partial Delivery"
-#~ msgstr "부분 배송"
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Shipping Exception"
+msgstr "배송 예외"
 
-#~ msgid "Delivery Order"
-#~ msgstr "배송 주문"
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Shipping address :"
+msgstr "배송 주소 :"
 
-#~ msgid "Delivery, from the warehouse to the customer."
-#~ msgstr "창고에서 고객에게 전달"
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Show Lines to Invoice"
+msgstr "송장 발행 대상 입력줄 표시"
 
-#~ msgid "You invoice has been successfully created !"
-#~ msgstr "인보이스가 생성되었습니다 !"
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Some order lines"
+msgstr "일부 주문 입력줄"
 
-#~ msgid "sale.config.picking_policy"
-#~ msgstr "sale.config.picking_policy"
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Source Document"
+msgstr "소스 문서"
 
-#~ msgid ""
-#~ "This is the list of picking list that have been generated for this invoice"
-#~ msgstr "이 인보이스를 위해 생성된 피킹 리스트"
+#. module: sale
+#: field:sale.order,state:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: field:sale.order.line,state:0
+#: view:sale.report:sale.view_order_product_search
+msgid "Status"
+msgstr "상태"
 
-#~ msgid "Automatic Declaration"
-#~ msgstr "자동 선언"
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "소계"
 
-#~ msgid "Set to Draft"
-#~ msgstr "초안으로 설정"
+#. module: sale
+#: field:sale.order,message_summary:0
+msgid "Summary"
+msgstr "요약"
 
-#~ msgid "Validate"
-#~ msgstr "검증"
+#. module: sale
+#: help:crm.case.section,invoiced_target:0
+msgid ""
+"Target of invoice revenue for the current month. This is the amount the "
+"sales \n"
+"team estimates to be able to invoice this month."
+msgstr ""
 
-#~ msgid ""
-#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
-#~ "is, quotation is moved to  sale order."
-#~ msgstr "확정 버튼이 클릭될 때 마다, 초안 상태가 매뉴얼로 이동합니다. 즉, 견적이 판매 주문으로 이동합니다."
+#. module: sale
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+#: view:website:sale.report_saleorder_document
+msgid "Taxes"
+msgstr "세금"
 
-#~ msgid "Inventory Moves"
-#~ msgstr "재고 이동"
+#. module: sale
+#: field:sale.order,note:0
+msgid "Terms and conditions"
+msgstr "계약 및 조건"
 
-#~ msgid "Manual Designation"
-#~ msgstr "매뉴얼 목적지"
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Terms and conditions..."
+msgstr "약관..."
 
-#~ msgid "Invoice after delivery"
-#~ msgstr "배송 뒤 인보이스"
+#. module: sale
+#: help:sale.advance.payment.inv,amount:0
+msgid "The amount to be invoiced in advance."
+msgstr "송장 사전 발행 대상 금액"
 
-#~ msgid "After confirming order, Create the invoice."
-#~ msgstr "주문을 확정한 뒤, 인보이스 생성"
+#. module: sale
+#: help:sale.order,amount_untaxed:0
+msgid "The amount without tax."
+msgstr "세금 제외 금액."
 
-#~ msgid "Shipping Policy"
-#~ msgstr "선적 정책"
+#. module: sale
+#: help:sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr "판매 주문과 관련된 분석 계정."
 
-#~ msgid "Reference"
-#~ msgstr "참조"
+#. module: sale
+#: field:sale.config.settings,time_unit:0
+msgid "The default working time unit for services is"
+msgstr "서비스에 대한 기본 업무시간:"
 
-#~ msgid "Outgoing Products"
-#~ msgstr "출고 상품"
+#. module: sale
+#: help:sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr "세액"
 
-#~ msgid "Origin"
-#~ msgstr "기원"
+#. module: sale
+#: help:sale.order,amount_total:0
+msgid "The total amount."
+msgstr "총액"
 
-#~ msgid "VAT"
-#~ msgstr "VAT"
-
-#~ msgid ""
-#~ "The sale order will automatically create the invoice proposition (draft "
-#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
-#~ "choose if you invoice based on ordered or shipped quantities. If the product "
-#~ "is a service, shipped quantities means hours spent on the associated tasks."
-#~ msgstr ""
-#~ "판매 주문은 자동적으로 인보이스 제안서 (초안 인보이스)를 생성합니다. 주문과 배송 수량이 일치하지 않을 수도 있습니다. 귀하는 주문 "
-#~ "또는 선적 수량 중 인보이스의 토대가 될 오브젝트를 선택할 수 있습니다. 서비스 상품의 경우, 선적 수량은 관련 작업에 소요된 시간을 "
-#~ "의미합니다."
-
-#~ msgid "Net Price"
-#~ msgstr "순 가격:"
-
-#~ msgid "Procurement is created after confirmation of sale order."
-#~ msgstr "판매 주문 확정 후에 조달이 생성됩니다."
-
-#~ msgid "All at Once"
-#~ msgstr "일괄처리"
-
-#~ msgid "My sales order in progress"
-#~ msgstr "진행 중인 내 판매 주문"
-
-#~ msgid "Procure Method"
-#~ msgstr "조달 방법"
-
-#~ msgid "All Sales Order"
-#~ msgstr "모든 판매 주문"
-
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:103
 #, python-format
-#~ msgid ""
-#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
-#~ "Invoice after delivery'."
-#~ msgstr "'배송 뒤 자동 인보이스'로 정의된 판매 주문에 대해 선급금을 처리할 수 없습니다."
+msgid "The value of Advance Amount must be positive."
+msgstr "선지급액의 금액은 양수여야 합니다."
 
-#~ msgid "Warehouse"
-#~ msgstr "창고"
-
-#~ msgid ""
-#~ "Packing list is created when 'Assign' is being clicked after confirming the "
-#~ "sale order. This transaction moves the sale order to packing list."
-#~ msgstr ""
-#~ "판매 주문을 확정한 뒤, '할당'을 클릭하면 포장 리스트가 생성됩니다. 이 트랜젝션은 판매 주문을 포잘 리스트로 이동합니다."
-
-#~ msgid ""
-#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
-#~ "will automatic create after delivery."
-#~ msgstr "선적 정책을 '배송 뒤 자동 인보이스'로 선택하면, 배송 뒤 인보이스를 자동 생성합니다."
-
-#~ msgid "My sales order waiting Invoice"
-#~ msgstr "인보이스를 대기 중인 내 판매 주문"
-
-#~ msgid "Confirm Order"
-#~ msgstr "주문 확정"
-
-#~ msgid "Manual Description"
-#~ msgstr "매뉴얼 설명"
-
-#~ msgid "Sale Order Procurement"
-#~ msgstr "판매 주문 조달"
-
+#. module: sale
+#: code:addons/sale/sale.py:945
 #, python-format
-#~ msgid "You must first cancel all invoices attached to this sale order."
-#~ msgstr "판매 주문에 첨부된 모든 인보이스를 먼저 취소하십시오."
+msgid ""
+"There is no Fiscal Position defined or Income category account defined for "
+"default properties of Product categories."
+msgstr ""
 
-#~ msgid "Packing"
-#~ msgstr "포장"
-
-#~ msgid "Complete Delivery"
-#~ msgstr "배송 완료"
-
+#. module: sale
+#: code:addons/sale/sale.py:154
 #, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "유효하지 않은 액션 !"
+msgid "There is no default company for the current user!"
+msgstr ""
 
-#~ msgid "Total amount"
-#~ msgstr "총 금액"
-
-#~ msgid "Configuration"
-#~ msgstr "구성"
-
-#~ msgid "Invoice on Order After Delivery"
-#~ msgstr "배송 뒤 주문 인보이스"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "에러: UOS는 UOM과 다른 카테고리 상에 위치해야 합니다."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
-
-#~ msgid "Sale Shop"
-#~ msgstr "판매 샵"
-
-#~ msgid "Sales orders"
-#~ msgstr "판매 주문"
-
-#~ msgid "Draft Invoice"
-#~ msgstr "인보이스 초안"
-
-#~ msgid "Procurement"
-#~ msgstr "조달"
-
-#~ msgid "Payment accounts"
-#~ msgstr "결제 계정"
-
-#~ msgid "Sales Order To Be Invoiced"
-#~ msgstr "인보이스가 발행될 판매 주문"
-
-#~ msgid "Packing Default Policy"
-#~ msgstr "포장 디폴트 정잭"
-
-#~ msgid "Shipping Default Policy"
-#~ msgstr "선적 디폴트 정책"
-
-#~ msgid "Manages the delivery and invoicing progress"
-#~ msgstr "배송과 인보이스 진행 관리"
-
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:93
 #, python-format
-#~ msgid "Could not cancel sale order !"
-#~ msgstr "판매 주문을 취소하지 못했습니다 !"
+msgid "There is no income account defined as global property."
+msgstr "전체 속성으로 정의된 수입 계정이 존재하지 않습니다."
 
-#~ msgid "Procurement for each line"
-#~ msgstr "각 라인을 위한 조달"
-
-#~ msgid "Canceled"
-#~ msgstr "취소됨"
-
-#~ msgid ""
-#~ "In sale order , procuerement for each line and it comes into the procurement "
-#~ "order"
-#~ msgstr "판매 주문에서 각 라인을 위한 조달이며, 조달 주문 속에 삽입됩니다."
-
-#~ msgid "Order Ref"
-#~ msgstr "주문 참조"
-
-#~ msgid "Order State"
-#~ msgstr "주문 상태"
-
-#~ msgid "Uninvoiced Lines"
-#~ msgstr "인보이스되지 않은 라인들"
-
-#~ msgid "Packaging"
-#~ msgstr "포장"
-
-#~ msgid "Procurement Corrected"
-#~ msgstr "교정된 조달"
-
-#~ msgid "Sales Configuration"
-#~ msgstr "판매 구성"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "에러: 디폴트 UOM과 구매 UOM은 같은 카테고리 속에 있어야 합니다."
-
-#~ msgid "Sales Process"
-#~ msgstr "판매 프로세스"
-
-#~ msgid "My sales in shipping exception"
-#~ msgstr "내 판매 중 예외적 선적"
-
-#~ msgid ""
-#~ "This Configuration step use to set default picking policy when make sale "
-#~ "order"
-#~ msgstr "판매 주문 작성 시, 디폴트 피킹 정책을 설정하는 구성 과정"
-
-#~ msgid "Configure Sale Order Logistic"
-#~ msgstr "판매 주문 물류 구성"
-
-#~ msgid "Sale Procurement"
-#~ msgstr "판매 조달"
-
-#~ msgid "Sale Order"
-#~ msgstr "판매 주문"
-
-#~ msgid ""
-#~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
-#~ "the sale order. This transaction moves the sale order to invoices."
-#~ msgstr ""
-#~ "판매 주문을 확정한 뒤, '인보이스 생성'을 클릭하면 인보이스가 생성됩니다. 이 트랜젝션은 판매 주문을 인보이스로 이동합니다."
-
-#~ msgid "One procurement for each product."
-#~ msgstr "각 상품 별 하나의 조달"
-
-#~ msgid "Sale Pricelists"
-#~ msgstr "판매 가격리스트"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "직접 배송"
-
-#~ msgid "Properties"
-#~ msgstr "속성"
-
-#~ msgid "Make Invoice"
-#~ msgstr "인보이스 만들기"
-
-#~ msgid "Draft customer invoice, to be reviewed by accountant."
-#~ msgstr "회계사무원이 검토할 고객 인보이스 초안"
-
-#~ msgid "Compute"
-#~ msgstr "계산"
-
-#~ msgid "Packing OUT is created for stockable products."
-#~ msgstr "스톡가능한 상품에 대해 포장 OUT이 생성됩니다."
-
-#~ msgid "Delivery Order Only"
-#~ msgstr "배송주문 만"
-
-#~ msgid "Sales order lines"
-#~ msgstr "판매 주문 라인"
-
-#~ msgid "Other data"
-#~ msgstr "기타 데이터"
-
-#~ msgid "Confirm sale order and Create invoice."
-#~ msgstr "판매 주문을 확정하고, 인보이스를 생성"
-
-#~ msgid "Close"
-#~ msgstr "닫기"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
-
-#~ msgid "Advance Payment"
-#~ msgstr "Advance Payment"
-
-#~ msgid "Shipping & Manual Invoice"
-#~ msgstr "선적 & 매뉴얼 인보이스"
-
-#~ msgid ""
-#~ "Confirming the packing list moves them to delivery order. This can be done "
-#~ "by clicking on 'Validate' button."
-#~ msgstr "포장 리스트를 확정하면 배송 주문이 생성됩니다. 이를 위해서는 '검증' 버튼을 클릭하십시오."
-
-#~ msgid "Quotation (A sale order in draft state)"
-#~ msgstr "견적 (초안 상태의 판매 주문)"
-
-#~ msgid "Packing List & Delivery Order"
-#~ msgstr "포장 리스트 & 배송 주문"
-
-#~ msgid "Invoice based on packing lists"
-#~ msgstr "포장 리스트에 기초한 인보이스"
-
-#~ msgid "Sale Order Lines"
-#~ msgstr "판매 주문 라인"
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "인보이스를 생성하시겠습니까 ?"
-
-#~ msgid "Set Default"
-#~ msgstr "디폴트로 설정"
-
-#~ msgid "Sales order"
-#~ msgstr "판매 주문"
-
-#~ msgid "Sale Invoice"
-#~ msgstr "판매 인보이스"
-
-#~ msgid "Open Advance Invoice"
-#~ msgstr "Advance 인보이스 오픈"
-
-#~ msgid "Incoterm"
-#~ msgstr "인코텀"
-
-#~ msgid "Sales Management"
-#~ msgstr "판매 관리"
-
-#~ msgid "Deliver"
-#~ msgstr "배송"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "판매 주문 라인"
-
-#~ msgid "Cancel Assignation"
-#~ msgstr "할당 취소"
-
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:97
 #, python-format
-#~ msgid "Could not cancel this sale order !"
-#~ msgstr "이 판매 주문을 취소하지 못했습니다 !"
+msgid "There is no income account defined for this product: \"%s\" (id:%d)."
+msgstr "해당 상품에 대한 소득 계정이 정의되지 않았습니다: \"%s\" (id:%d)."
 
-#~ msgid "Make invoices"
-#~ msgstr "인보이스 만들기"
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "This Year"
+msgstr ""
 
-#~ msgid ""
-#~ "The name and address of the contact that requested the order or quotation."
-#~ msgstr "주문 또는 견적을 요청한 이의 이름과 주소"
+#. module: sale
+#: help:sale.config.settings,module_sale_margin:0
+msgid ""
+"This adds the 'Margin' on sales order.\n"
+"This gives the profitability by calculating the difference between the Unit "
+"Price and Cost Price.\n"
+"-This installs the module sale_margin."
+msgstr ""
 
-#~ msgid ""
-#~ "By default, Open ERP is able to manage complex routing and paths of products "
-#~ "in your warehouse and partner locations. This will configure the most common "
-#~ "and simple methods to deliver products to the customer in one or two "
-#~ "operations by the worker."
-#~ msgstr ""
-#~ "디폴트로, 시스템은 귀하의 창고와 파트너 위치에 있는 상품들의 복잡한 라우팅과 결오를 관리할 수 있습니다. 이것은 작업자의 한 두 가지 "
-#~ "오퍼레이션을 통해 고객에게 상품을 전달할 가장 일반적이고 간편한 방식을 구성하게 됩니다."
+#. module: sale
+#: help:sale.config.settings,module_website_quote:0
+msgid "This adds the online quotation"
+msgstr ""
 
-#~ msgid "Purchase Pricelists"
-#~ msgstr "구매 가격리스트"
+#. module: sale
+#: help:account.config.settings,module_sale_analytic_plans:0
+msgid "This allows install module sale_analytic_plans."
+msgstr "sale_analytic_plans 모듈을 설치할 수 있도록 합니다."
 
-#~ msgid "Name"
-#~ msgstr "이름"
+#. module: sale
+#: help:sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sales order. "
+"The same sales order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
 
-#~ msgid "Configure Picking Policy for Sale Order"
-#~ msgstr "판매 주문을 위한 피킹 정책 구성"
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
 
-#~ msgid "New Quotation"
-#~ msgstr "새 견적"
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
+msgid ""
+"This report performs analysis on your quotations. Analysis check your sales "
+"revenues and sort it by different group criteria (salesman, partner, "
+"product, etc.) Use this report to perform analysis on sales not having "
+"invoiced yet. If you want to analyse your turnover, you should use the "
+"Invoice Analysis report in the Accounting application."
+msgstr ""
 
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
+msgid ""
+"This report performs analysis on your sales orders. Analysis check your "
+"sales revenues and sort it by different group criteria (salesman, partner, "
+"product, etc.) Use this report to perform analysis on sales not having "
+"invoiced yet. If you want to analyse your turnover, you should use the "
+"Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "To Do"
+msgstr "과제"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "To Invoice"
+msgstr "송장 발행 대상"
+
+#. module: sale
+#: help:sale.config.settings,group_invoice_so_lines:0
+msgid ""
+"To allow your salesman to make invoices for sales order lines using the menu "
+"'Lines to Invoice'."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_total:0
+#: view:sale.order.line:sale.view_order_line_tree
+#: view:website:sale.report_saleorder_document
+msgid "Total"
+msgstr "합계"
+
+#. module: sale
+#: field:sale.report,price_total:0
+msgid "Total Price"
+msgstr "총액"
+
+#. module: sale
+#: view:sale.order:sale.view_order_tree
+#: view:sale.order:sale.view_quotation_tree
+msgid "Total Tax Included"
+msgstr "포함된 총 세액"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Total Without Taxes"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_sale_stock:0
+msgid "Trigger delivery orders automatically from sales orders"
+msgstr "판매 주문으로부터 배송 주문을 자동으로 촉발"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Uninvoiced"
+msgstr "송장 미발행됨"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "송장 미발행 및 배송 완료 입력줄"
+
+#. module: sale
+#: field:sale.order.line,price_unit:0
+#: view:website:sale.report_saleorder_document
+msgid "Unit Price"
+msgstr "단가"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_tree
+#: field:sale.report,product_uom:0
+msgid "Unit of Measure"
+msgstr "계수 단위"
+
+#. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr "계수 단위 "
+
+#. module: sale
+#: field:sale.order,message_unread:0
+msgid "Unread Messages"
+msgstr "읽지 않은 메시지"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "비과세액"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "UoS"
+msgstr "판매 단위"
+
+#. module: sale
+#: help:sale.advance.payment.inv,advance_payment_method:0
+msgid ""
+"Use Invoice the whole sale order to create the final invoice.\n"
+"                Use Percentage to invoice a percentage of the total amount.\n"
+"                Use Fixed Price to invoice a specific amound in advance.\n"
+"                Use Some Order Lines to invoice a selection of the sales "
+"order lines."
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid ""
+"Use contract to be able to manage your services with\n"
+"                        multiple invoicing as part of the same contract "
+"with\n"
+"                        your customer."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_account_analytic_analysis:0
+msgid "Use contracts management"
+msgstr "계약 관리 사용"
+
+#. module: sale
+#: field:account.config.settings,module_sale_analytic_plans:0
+msgid "Use multiple analytic accounts on sales"
+msgstr "판매에 다중 분석 계정 사용"
+
+#. module: sale
+#: field:sale.config.settings,group_sale_pricelist:0
+msgid "Use pricelists to adapt your price per customers"
+msgstr "고객 별로 가격을 적용하기 위해 가격표를 사용함"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "VAT:"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "View Invoice"
+msgstr "송장 보기"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr "대기 일정"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Warehouse Features"
+msgstr "창고 특징"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
-#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
-#~ msgstr "이미 확정된 판매 주문은 삭제할 수 없습니다 !"
+msgid "Warning!"
+msgstr "경고!"
 
-#~ msgid "Related invoices"
-#~ msgstr "관련된 인보이스들"
+#. module: sale
+#: field:sale.order,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
 
-#~ msgid ""
-#~ "This is the list of invoices that have been generated for this sale order. "
-#~ "The same sale order may have been invoiced in several times (by line for "
-#~ "example)."
-#~ msgstr ""
-#~ "이 판매 주문을 위해 생성된 인보이스들의 목록입니다. 동일한 판매 주문이 여러 차례 인보이스들을 생성할 수도 있습니다 (가령, 라인 별)."
+#. module: sale
+#: help:sale.order,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
 
-#~ msgid "Payment Before Delivery"
-#~ msgstr "배송 전 결제"
+#. module: sale
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "중량"
 
-#~ msgid "Delivery Delay"
-#~ msgstr "배송 지연"
+#. module: sale
+#: field:sale.advance.payment.inv,advance_payment_method:0
+msgid "What do you want to invoice?"
+msgstr "송장 발행 대상은 어떤 것입니니까?"
 
-#~ msgid "Invoice Corrected"
-#~ msgstr "교정된 인보이스"
-
-#~ msgid "Payment Terms"
-#~ msgstr "결제 조건"
-
-#~ msgid "States"
-#~ msgstr "상태"
-
-#~ msgid "My Sales Order"
-#~ msgstr "내 판매 주문"
-
-#~ msgid "Sale Order line"
-#~ msgstr "판매 주문 라인"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "에러: 유효하지 않은 EAN 코드"
-
-#~ msgid "Packing Policy"
-#~ msgstr "포장 정책"
-
-#~ msgid "Product sales"
-#~ msgstr "상품 판매"
-
+#. module: sale
+#: code:addons/sale/sale.py:983
 #, python-format
-#~ msgid "invalid mode for test_state"
-#~ msgstr "test_state에 유효하지 않은 모드"
+msgid "You cannot cancel a sales order line that has already been invoiced."
+msgstr "이미 송장이 발행된 판매 주문 입력줄을 취소할 수 없습니다."
 
-#~ msgid "Create Advance Invoice"
-#~ msgstr "Advance Invoice 생성"
-
-#~ msgid "Our Salesman"
-#~ msgstr "우리 판매사원"
-
-#~ msgid "Sales by Salesman in last 90 days"
-#~ msgstr "최근 90일간 영업사원으로 인한 판매"
-
-#~ msgid "Based on Timesheet"
-#~ msgstr "타임시트 기준"
-
-#~ msgid "Shipping address for current sales order."
-#~ msgstr "현재 판매 주문의 배송 주소"
-
+#. module: sale
+#: code:addons/sale/sale.py:605
 #, python-format
-#~ msgid "The quotation '%s' has been converted to a sales order."
-#~ msgstr "'%s' 견적이 판매 주문으로 전환되었습니다."
+msgid "You cannot confirm a sales order which has no line."
+msgstr "입력줄이 존재하지 않는 판매 주문을 확정할 수 없습니다."
 
-#~ msgid "Print Quotation"
-#~ msgstr "견적 인쇄"
-
-#~ msgid "Invoice based on deliveries"
-#~ msgstr "배송 기준으로 송장 발행"
-
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "경고 !"
+msgid "You cannot create invoice when sales order is not confirmed."
+msgstr ""
 
-#~ msgid "Procurement Order"
-#~ msgstr "조달 주문"
-
-#~ msgid "Order Line"
-#~ msgstr "주문 입력줄"
-
-#~ msgid "Main Working Time Unit"
-#~ msgstr "주요 근무 시간 단위"
-
-#~ msgid "State"
-#~ msgstr "상태"
-
-#~ msgid "Based on Delivery Orders"
-#~ msgstr "배송 주문 기준"
-
-#~ msgid "Based on Tasks' Work"
-#~ msgstr "과제의 업무 기준"
-
-#~ msgid "Dates"
-#~ msgstr "날짜"
-
-#~ msgid "My Sale Orders"
-#~ msgstr "내 판매 주문"
-
-#~ msgid "Sales by Salesman"
-#~ msgstr "영업사원으로 인한 판매"
-
-#~ msgid ""
-#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
-#~ "pick' or 'Invoice on order after delivery'."
-#~ msgstr "배송 정책이 '피킹으로부터 송장 발행' 또는 '배송 후 주문에 대한 송장 발행'일 경우, 송장이 자동으로 생성됩니다."
-
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "판매 관리자 대시보드"
-
-#~ msgid "Conditions"
-#~ msgstr "조건"
-
+#. module: sale
+#: code:addons/sale/sale.py:523
 #, python-format
-#~ msgid "Configuration Error !"
-#~ msgstr "구성 오류 !"
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr "동일한 협력업체에 서로 다른 통화의 판매를 함께 분류할 수 없습니다."
 
+#. module: sale
+#: code:addons/sale/sale.py:1123
 #, python-format
-#~ msgid "Could not cancel this sales order !"
-#~ msgstr "해당 판매 주문을 취소할 수 없었음 !"
+msgid ""
+"You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr ""
+"판매 양식에 가격표 또는 고객을 선택해야 합니다 !\n"
+"상품 선택 전 이를 설정하세요."
 
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "참조는 업체 당 유일해야 합니다!"
-
-#~ msgid ""
-#~ "Number of days between the order confirmation the shipping of the products "
-#~ "to the customer"
-#~ msgstr "주문 확정일과 고객 상품 배송일 간의 일수"
-
-#~ msgid "UoM"
-#~ msgstr "계수 단위"
-
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
-#~ msgid "You cannot cancel a sale order line that has already been invoiced!"
-#~ msgstr "이미 송장이 발행된 판매 주문 입력줄을 취소할 수 없습니다!"
-
-#, python-format
-#~ msgid "(n/a)"
-#~ msgstr "(해당 없음)"
-
-#, python-format
-#~ msgid "You must first cancel stock moves attached to this sales order line."
-#~ msgstr "먼저 해당 판매 주문 입력줄에 첨부된 재고 이동을 취소해야 합니다."
-
-#~ msgid "Number Packages"
-#~ msgstr "포장 번호 부여"
-
-#~ msgid ""
-#~ "Select a product of type service which is called 'Advance Product'. You may "
-#~ "have to create it and set it as a default value on this field."
-#~ msgstr ""
-#~ "'고급 상품'이라 불리는 유형 서비스의 상품을 선택하세요. 이를 생성하거나 해당 필드에 기본 값으로 설정해야 할 수도 있습니다."
-
-#~ msgid "Notes"
-#~ msgstr "메모"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "회사명은 유일해야 합니다 !"
-
-#~ msgid "Month-1"
-#~ msgstr "전월"
-
-#~ msgid "Deliver each product when available"
-#~ msgstr "각 제품을 준비되었을 때마다 배송"
-
-#~ msgid ""
-#~ "For every sales order line, a procurement order is created to supply the "
-#~ "sold product."
-#~ msgstr "판매 주문의 각 입력줄마다 판매된 상품을 공급하기 위해 조달 주문이 생성됩니다."
-
-#~ msgid "Based on Sales Orders"
-#~ msgstr "판매 주문 기준"
-
-#~ msgid "Line Sequence"
-#~ msgstr "입력줄 순서"
-
-#~ msgid "Sales Open Invoice"
-#~ msgstr "판매 개시 송장"
-
-#~ msgid "Untaxed amount"
-#~ msgstr "비과세 금액"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "송장 발행 대상 입력줄"
-
-#~ msgid "Extra Info"
-#~ msgstr "추가 정보"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "기타"
-
-#~ msgid "Quantity (UoM)"
-#~ msgstr "수량 (계수 단위)"
-
-#~ msgid "All Quotations"
-#~ msgstr "모든 견적"
-
-#~ msgid "Options"
-#~ msgstr "옵션"
-
-#, python-format
-#~ msgid "You cannot confirm a sale order which has no line."
-#~ msgstr "입력줄이 존재하지 않는 판매 주문을 확정할 수 없습니다."
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "정말로 송장을 생성을 하시겠습니까 ?"
-
-#~ msgid "Stock Moves"
-#~ msgstr "재고 이동"
-
-#~ msgid "Shipping Address"
-#~ msgstr "배송 주소"
-
-#, python-format
-#~ msgid "Could not cancel sales order line!"
-#~ msgstr "판매 주문 입력줄을 취소할 수 없었음!"
-
-#~ msgid "Sales By Month"
-#~ msgstr "월별 판매"
-
-#~ msgid "Procurement of sold material"
-#~ msgstr "고체 물질의 조달"
-
-#~ msgid "Create Final Invoice"
-#~ msgstr "최종 송장 생성"
-
-#~ msgid "Companies"
-#~ msgstr "업체"
-
-#~ msgid "Invoice on order after delivery"
-#~ msgstr "배송 후 주문에 대한 송장 발행"
-
-#~ msgid "History"
-#~ msgstr "기록"
-
-#~ msgid ""
-#~ "It indicates that the sales order has been delivered. This field is updated "
-#~ "only after the scheduler(s) have been launched."
-#~ msgstr "판매 주문이 배송되었음을 표시합니다. 해당 필드는 스케줄러가 시작된 이후에만 업데이트됩니다."
-
-#~ msgid ""
-#~ "The name and address of the contact who requested the order or quotation."
-#~ msgstr "주문 또는 견적을 요청한 담당자의 성명과 주소"
-
-#~ msgid "References"
-#~ msgstr "참조"
-
-#~ msgid "Total Tax Excluded"
-#~ msgstr "미포함된 총 세액"
-
-#~ msgid "Auto-email confirmed sale orders"
-#~ msgstr "자동 발송 이메일로 확정된 판매 주문"
-
-#, python-format
-#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
-#~ msgstr "해당 업체에 정의된 판매 장부가 존재하지 않습니다: \"%s\" (id:%d)"
-
-#~ msgid "Sales by Partner"
-#~ msgstr "협력업체별 판매"
-
-#~ msgid "Open Invoice"
-#~ msgstr "송장 열기"
-
-#~ msgid "You invoice has been successfully created!"
-#~ msgstr "송장이 성공적으로 생성되었습니다!"
-
-#~ msgid "Ordering Contact"
-#~ msgstr "주문 담당자"
-
-#~ msgid "Based on the shipped or on the ordered quantities."
-#~ msgstr "배송 또는 주문 수량 기준"
-
-#, python-format
-#~ msgid "Cannot delete a sales order line which is in state '%s'!"
-#~ msgstr "'%s' 상태의 판매 주문 입력줄을 삭제할 수 없음!"
-
-#~ msgid "Deliver all products at once"
-#~ msgstr "모든 상품을 한 번에 배송"
-
-#~ msgid "Sales per Customer in last 90 days"
-#~ msgstr "최근 90일간 고객별 판매"
-
-#~ msgid "Related Picking"
-#~ msgstr "관련된 피킹"
-
-#~ msgid "Qty(UoS)"
-#~ msgstr "수량(판매 단위)"
-
-#~ msgid "Create Delivery Order"
-#~ msgstr "배송 주문 생성"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "오류"
-
-#~ msgid "Deliveries to Invoice"
-#~ msgstr "송장 발행 대상 배송"
-
-#~ msgid "Sales by Product Category"
-#~ msgstr "상품 분류별 판매"
-
-#~ msgid "Create Pick List"
-#~ msgstr "픽 리스트 생성"
-
-#~ msgid "Pick List"
-#~ msgstr "픽 리스트"
-
-#~ msgid "Create Procurement Order"
-#~ msgstr "조달 주문 생성"
-
-#~ msgid "Stock Move"
-#~ msgstr "재고 이동"
-
-#~ msgid "Invoice Based on Sales Orders"
-#~ msgstr "판매 주문 기준 송장"
-
-#~ msgid "Do you charge the delivery?"
-#~ msgstr "배송을 과금합니까?"
-
-#~ msgid "Sales order created in current month"
-#~ msgstr "현월에 생성된 판매 주문"
-
-#, python-format
-#~ msgid "Picking Information ! : "
-#~ msgstr "피킹 정보 ! : "
-
-#~ msgid "Qty(UoM)"
-#~ msgstr "수량(계수 단위)"
-
-#~ msgid "Picking List"
-#~ msgstr "피킹 리스트"
-
-#, python-format
-#~ msgid "Could not cancel sales order !"
-#~ msgstr "판매 주문을 취소할 수 없었음 !"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "오류 !"
-
-#~ msgid "Reference UoM"
-#~ msgstr "참조 계수 단위"
-
-#~ msgid "Setup your Invoicing Method"
-#~ msgstr "송장 발행 방식을 설정하세요"
-
-#~ msgid "Invoice Policy"
-#~ msgstr "송장 정책"
-
-#~ msgid "Confirmed sale order lines, not yet delivered"
-#~ msgstr "확정되었으나 배송되지 않은 판매 주문 입력줄"
-
-#~ msgid ""
-#~ "You can generate invoices based on sales orders or based on shippings."
-#~ msgstr "판매 주문 또는 배송 기준으로 송장을 생성할 수 있습니다."
-
-#~ msgid "Recreate Packing"
-#~ msgstr "포장 재생성"
-
-#, python-format
-#~ msgid ""
-#~ "You have to select a customer in the sales form !\n"
-#~ "Please set one customer before choosing a product."
-#~ msgstr ""
-#~ "판매 양식에 고객을 선택해야 합니다 !\n"
-#~ "상품을 선택하기 전에 고객 한 명을 선택하세요."
-
-#, python-format
-#~ msgid "You must first cancel all picking attached to this sales order."
-#~ msgstr "먼저 해당 판매 주문에 첨부된 모든 피킹을 취소해야 합니다."
-
-#~ msgid "Document of the move to the customer."
-#~ msgstr "고객으로 이동된 건에 대한 문서"
-
-#~ msgid "Picking Policy"
-#~ msgstr "피킹 정책"
-
-#~ msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-#~ msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-
-#, python-format
-#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-#~ msgstr "해당 제품에 정의된 수익 계정이 없습니다: \"%s\" (id:%d)"
-
-#~ msgid "res_config_contents"
-#~ msgstr "res_config_contents"
-
-#~ msgid "Logistic"
-#~ msgstr "물류"
-
-#~ msgid "Product UoM"
-#~ msgstr "상품 계수 단위"
-
-#~ msgid "Pay before delivery"
-#~ msgstr "배송 전 지불"
-
-#~ msgid "Contract/Analytic Account"
-#~ msgstr "계약/분석 계정"
-
-#~ msgid "Sales by Month"
-#~ msgstr "월별 판매"
-
-#, python-format
-#~ msgid "Warning"
-#~ msgstr "경고"
-
-#~ msgid "Main Method Based On"
-#~ msgstr "주요 방식 기준:"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "오류! 재귀적 업체를 생성할 수 없습니다."
-
-#~ msgid "Sale Order Lines that are in 'done' state"
-#~ msgstr "'완료' 상태의 판매 주문 입력줄"
-
-#~ msgid "Sales by Product's Category in last 90 days"
-#~ msgstr "최근 90일간 제품 분류별 판매"
-
-#~ msgid "Print Order"
-#~ msgstr "주문 인쇄"
-
-#~ msgid "Sale order lines done"
-#~ msgstr "판매 주문 입력줄 완료"
-
-#~ msgid "Sales order created in current year"
-#~ msgstr "올해 생성된 판매 주문"
-
-#~ msgid "Delivery Lead Time"
-#~ msgstr "배송소요시간"
-
-#~ msgid "Image"
-#~ msgstr "이미지"
-
-#~ msgid "Salesman"
-#~ msgstr "영업사원"
-
-#, python-format
-#~ msgid "The sales order '%s' has been cancelled."
-#~ msgstr "'%s' 판매 주문이 취소되었습니다."
-
-#~ msgid "Packings"
-#~ msgstr "포장"
-
-#~ msgid "Sales order created in last month"
-#~ msgstr "전월 생성된 판매 주문"
-
-#~ msgid "Sale Order Lines ready to be invoiced"
-#~ msgstr "송장 발행 준비가 완료된 판매 주문 입력줄"
-
-#~ msgid ""
-#~ "One Procurement order for each sales order line and for each of the "
-#~ "components."
-#~ msgstr "각 판매 주문 입력줄 및 각 부품마다 하나의 조달 주문이 생성됨."
-
-#, python-format
-#~ msgid "You must first cancel all invoices attached to this sales order."
-#~ msgstr "먼저 해당 판매 주문에 첨부된 모든 송장을 취소해야 합니다."
-
-#~ msgid "Deliver & invoice on demand"
-#~ msgstr "주문형 배송 & 송장 발행"
-
-#~ msgid "Delivered"
-#~ msgstr "배송 완료"
-
-#~ msgid "You must assign a production lot for this product"
-#~ msgstr "해당 상품에 생산 로트를 지정해야 합니다"
-
-#, python-format
-#~ msgid "The sales order '%s' has been set in draft state."
-#~ msgstr "The sales order '%s' 판매 주문이 초안 상태로 설정되었습니다."
-
-#~ msgid "Assign"
-#~ msgstr "지정"
-
-#~ msgid "Accounting"
-#~ msgstr "회계"
-
-#~ msgid "Invoice Based on Deliveries"
-#~ msgstr "배송 기준 송장"
-
-#, python-format
-#~ msgid "Not enough stock ! : "
-#~ msgstr "재고가 부족함 ! : "
-
-#~ msgid "Sales Order Requisition"
-#~ msgstr "판매 주문 요청"
+msgid "You shouldn't manually invoice the following sale order %s"
+msgstr ""
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Your Reference:"
+msgstr ""
+
+#. module: sale
+#: view:res.partner:sale.res_partner_address_type
+msgid "sale.group_delivery_invoice_address"
+msgstr "sale.group_delivery_invoice_address"
+
+#~ msgid "Order Date"
+#~ msgstr "주문일"
+
+#~ msgid "Reference Unit of Measure"
+#~ msgstr "기준 계수 단위"

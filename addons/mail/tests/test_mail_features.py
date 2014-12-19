@@ -448,7 +448,7 @@ class test_mail(TestMail):
                         'message_post: mail.mail notifications should have been auto-deleted!')
 
         # Test: notifications emails: to a and b, c is email only, r is author
-        test_emailto = ['"Administrator" <a@a>', '"Bert Tartopoils" <b@b>']
+        test_emailto = ['Administrator <a@a>', 'Bert Tartopoils <b@b>']
         # test_emailto = ['"Followers of -Pigs-" <a@a>', '"Followers of -Pigs-" <b@b>']
         self.assertEqual(len(sent_emails), 2,
                         'message_post: notification emails wrong number of send emails')
@@ -461,20 +461,16 @@ class test_mail(TestMail):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], '"YourCompany -Pigs-" <group+pigs@schlouby.fr>',
+            self.assertEqual(sent_email['reply_to'], u'"YourCompany \\"Pigs\\" !ù $%-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
                             'message_post: notification email body incorrect')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
                             'message_post: references should be False when sending a message that is not a reply')
 
@@ -522,7 +518,7 @@ class test_mail(TestMail):
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: emails send by server (to a, b, c, d)
-        test_emailto = [u'"Administrator" <a@a>', u'"Bert Tartopoils" <b@b>', u'"Carine Poilvache" <c@c>', u'"D\xe9d\xe9 Grosbedon" <d@d>']
+        test_emailto = [u'Administrator <a@a>', u'Bert Tartopoils <b@b>', u'Carine Poilvache <c@c>', u'D\xe9d\xe9 Grosbedon <d@d>']
         # test_emailto = [u'"Followers of Pigs" <a@a>', u'"Followers of Pigs" <b@b>', u'"Followers of Pigs" <c@c>', u'"Followers of Pigs" <d@d>']
         # self.assertEqual(len(sent_emails), 3, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
@@ -538,14 +534,10 @@ class test_mail(TestMail):
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
                             'message_post: notification email does not contain the body')
-            self.assertIn(user_raoul.signature, sent_email['body'],
-                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
                             'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
                             'message_post: notification email body alternative still contains html')
-            self.assertIn(html2plaintext(user_raoul.signature), sent_email['body_alternative'],
-                            'message_post: notification email body alternative should contain the sender signature')
             self.assertIn(msg_message_id, sent_email['references'],
                             'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
@@ -835,7 +827,9 @@ class test_mail(TestMail):
         self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
 
         # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
-        self.mail_group._track = {
+        cls = type(self.mail_group)
+        self.assertNotIn('_track', cls.__dict__)
+        cls._track = {
             'public': {
                 'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj.public == 'private',
             },
@@ -847,12 +841,16 @@ class test_mail(TestMail):
                 'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
             },
         }
-        public_col = self.mail_group._columns.get('public')
-        name_col = self.mail_group._columns.get('name')
-        group_public_col = self.mail_group._columns.get('group_public_id')
-        public_col.track_visibility = 'onchange'
-        name_col.track_visibility = 'always'
-        group_public_col.track_visibility = 'onchange'
+        visibility = {'public': 'onchange', 'name': 'always', 'group_public_id': 'onchange'}
+        for key in visibility:
+            self.assertFalse(hasattr(getattr(cls, key), 'track_visibility'))
+            getattr(cls, key).track_visibility = visibility[key]
+
+        @self.addCleanup
+        def cleanup():
+            delattr(cls, '_track')
+            for key in visibility:
+                del getattr(cls, key).track_visibility
 
         # Test: change name -> always tracked, not related to a subtype
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public'})
@@ -911,9 +909,3 @@ class test_mail(TestMail):
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'description': 'Dummy'})
         self.group_pigs.refresh()
         self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: No message should have been produced')
-
-        # Data: removed changes
-        public_col.track_visibility = None
-        name_col.track_visibility = None
-        group_public_col.track_visibility = None
-        self.mail_group._track = {}

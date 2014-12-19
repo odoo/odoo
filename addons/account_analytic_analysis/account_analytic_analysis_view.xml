@@ -80,7 +80,7 @@
                                 <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
                                     />
                             </td>
                         </tr><tr>
@@ -131,7 +131,7 @@
                     </table>
                     <group name='invoice_on_timesheets'>
                         <p name='invoice_on_timesheets_label' class="oe_grey oe_edit_only" colspan="2" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                            When reinvoicing costs, OpenERP uses the
+                            When reinvoicing costs, Odoo uses the
                             pricelist of the contract which uses the price
                             defined on the product related (e.g timesheet 
                             products are defined on each employee). 
@@ -198,6 +198,7 @@
             <field name="name">account.analytic.account.list.contract</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
@@ -264,7 +265,7 @@
                     Click to create a new contract.
                 </p><p>
                     Use contracts to follow tasks, issues, timesheets or invoicing based on
-                    work done, expenses and/or sales orders. OpenERP will automatically manage
+                    work done, expenses and/or sales orders. Odoo will automatically manage
                     the alerts for the renewal of the contracts to the right salesperson.
                 </p>
             </field>
@@ -310,7 +311,7 @@
                 end date is passed or the working effort is higher than the
                 maximum authorized one.
               </p><p>
-                OpenERP automatically sets contracts to be renewed in a pending
+                Odoo automatically sets contracts to be renewed in a pending
                 state. After the negociation, the salesman should close or renew
                 pending contracts.
               </p>

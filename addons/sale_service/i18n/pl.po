@@ -1,178 +1,95 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_mrp
+# Polish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-16 12:39+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-29 10:09+0000\n"
+"Last-Translator: Tobiasz Rozum (OpenGLOBE.pl) <tobiasz.rozum@openglobe.pl>\n"
+"Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:02+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_procuretasktask0
-msgid "For each product, on type service and on order"
-msgstr "Dla każdego produktu o typie usługa i na zamówienie"
+#. module: sale_service
+#: field:project.task.type,closed:0
+msgid "Close"
+msgstr "Zamknij"
 
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_createtask0
-msgid "Product type is service, then its creates the task."
-msgstr "Typ produktu jest 'usługa', czyli tworzone jest zadanie."
+#. module: sale_service
+#: field:product.template,auto_create_task:0
+msgid "Create Task Automatically"
+msgstr "Utwórz zadania automatycznie"
 
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:92
-#, python-format
-msgid "Task created"
-msgstr "Utworzone zadanie"
+#. module: sale_service
+#: view:project.task:sale_service.view_sale_service_inherit_form2
+msgid "Order Line"
+msgstr "Pozycja zamówienia"
 
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sales order"
-msgstr "W przypadku sprzedaży usług na zamówieniu sprzedaży"
-
-#. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_mrptask0
-msgid "A task is created to provide the service."
-msgstr "Utworzono zadanie dla wykonywanej usługi"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
-msgstr "Produkt"
-
-#. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sales Order Task"
-msgstr "Zadanie z zamówienia sprzedaży"
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr "jeśli typ produktu jest 'usługa' to tworzone jest zadanie."
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_ordertask0
-msgid "Order Task"
-msgstr "Zamów zadanie"
-
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
-msgstr "Zapotrzebowanie na zadanie"
-
-#. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sales order line"
-msgstr "Pozycja zamówienia sprzedaży"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "Zadanie"
-
-#. module: project_mrp
-#: view:product.product:0
-msgid ""
-"will be \n"
-"                        created to follow up the job to do. This task will "
-"appear\n"
-"                        in the project related to the contract of the sales "
-"order."
-msgstr ""
-"zostanie \n"
-"                        utworzone do śledzenia prac do wykonania. Te zadanie "
-"pojawi się\n"
-"                        w projekcie przypisanym do umowy dla zmaówienia "
-"sprzedaży."
-
-#. module: project_mrp
-#: view:product.product:0
-msgid "When you sell this service to a customer,"
-msgstr "Kiedy sprzedasz tę usługę klientowi"
-
-#. module: project_mrp
-#: field:product.product,project_id:0
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_procurement_order
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
 msgstr "Zapotrzebowanie"
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "False"
-msgstr "Fałsz"
-
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:86
-#, python-format
-msgid "Task created."
-msgstr "Zadanie utworzono"
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procurement method is Make to order and supply method is produce"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_product
+msgid "Product"
 msgstr ""
-"Jeśli metoda zapotrzebowania jest Na zamówienie a metoda nabycia jest "
-"Produkcja."
 
-#. module: project_mrp
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_product_template
+msgid "Product Template"
+msgstr "Szablon produktu"
+
+#. module: sale_service
+#: field:product.template,project_id:0
+msgid "Project"
+msgstr "Projekt"
+
+#. module: sale_service
+#: view:product.template:sale_service.view_product_task_form
+msgid "Project Management Information"
+msgstr "Informacje o zarządzie projektu"
+
+#. module: sale_service
 #: field:project.task,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Pozycja zlecenia sprzedaży"
+msgstr "Pozycja zamówienia sprzedaży"
 
-#. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_createtask0
-msgid "Create Task"
-msgstr "Utwórz zadanie"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Zadanie"
 
-#. module: project_mrp
-#: model:ir.model,name:project_mrp.model_sale_order
-msgid "Sales Order"
-msgstr "Zamówienie sprzedaży"
+#. module: sale_service
+#: model:ir.model,name:sale_service.model_project_task_type
+msgid "Task Stage"
+msgstr "Etap zadania"
 
-#. module: project_mrp
-#: view:project.task:0
-msgid "Order Line"
-msgstr "Pozycja zamówienia"
+#. module: sale_service
+#: code:addons/sale_service/models/sale_service.py:96
+#, python-format
+msgid "Task created"
+msgstr "Zadanie utworzone"
 
-#. module: project_mrp
-#: view:product.product:0
-msgid "a task"
-msgstr "zadanie"
+#. module: sale_service
+#: help:project.task.type,closed:0
+msgid "Tasks in this stage are considered as closed."
+msgstr "Zadania w tym etapie są uważane za zakończone."
 
-#~ msgid "Project Management - MRP and Sale Integration"
-#~ msgstr "Zarządzanie projektami - Integracja ze sprzedażą i MRP"
-
-#~ msgid "In case you sell services on sale order"
-#~ msgstr "W przypadku sprzedaży usług na zamówienie sprzedaży"
-
-#~ msgid "If procure method is Make to order and supply method is produce"
-#~ msgstr ""
-#~ "Jeśli metoda nabycia jest 'Na zamówienie' i metoda zaopatrzenia jest "
-#~ "'Produkcja'"
-
-#~ msgid "Procure Task"
-#~ msgstr "Utwórz zadanie"
-
-#~ msgid "Sale Order Task"
-#~ msgstr "Zadanie do zamówienia sprzedaży"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Pozycja zamówienia sprzedaży"
-
-#~ msgid "Sale order line"
-#~ msgstr "Pozycja zamówienia sprzedaży"
+#. module: sale_service
+#: help:product.template,auto_create_task:0
+msgid ""
+"Thick this option if you want to create a task automatically each time this "
+"product is sold"
+msgstr ""
+"Zaznacz jeśli chcesz, aby automatycznie tworzono zadanie, za każdym razem, "
+"gdy produkt jest sprzedawany."

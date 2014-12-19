@@ -21,9 +21,43 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.fields import Many2one
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+
+
+class product_template(osv.osv):
+    _name = 'product.template'
+    _inherit = 'product.template'
+
+    _columns = {
+        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
+                                        ('real_time', 'Real Time (automated)')], string='Inventory Valuation',
+                                        help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
+                                             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+                                        , required=True, copy=True),
+        'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
+            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
+                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
+                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
+            string="Costing Method", required=True, copy=True),
+        'property_stock_account_input': fields.property(
+            type='many2one',
+            relation='account.account',
+            string='Stock Input Account', 
+            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
+        'property_stock_account_output': fields.property(
+            type='many2one',
+            relation='account.account',
+            string='Stock Output Account', 
+            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
+                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
+    }
+
+    _defaults = {
+        'valuation': 'manual_periodic',
+    }
+
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -32,7 +66,7 @@ class product_product(osv.osv):
         """
         if context is None:
             context = {}
-        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        product_obj = self.browse(cr, uid, product_id, context=context)
 
         stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
         if not stock_input_acc:
@@ -60,6 +94,7 @@ class product_product(osv.osv):
             'property_stock_valuation_account_id': account_valuation
         }
 
+
     def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
         location_obj = self.pool.get('stock.location')
@@ -79,69 +114,44 @@ class product_product(osv.osv):
                 diff = product.standard_price - new_price
                 if not diff:
                     raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
-                qty = product.qty_available
-                if qty:
-                    # Accounting Entries
-                    move_vals = {
-                        'journal_id': datas['stock_journal'],
-                        'company_id': location.company_id.id,
-                    }
-                    move_id = move_obj.create(cr, uid, move_vals, context=context)
-
-                    if diff > 0:
-                        amount_diff = qty * diff
-                        debit_account_id = datas['stock_account_input']
-                        credit_account_id = datas['property_stock_valuation_account_id']
-                    else:
-                        amount_diff = qty * -diff
-                        debit_account_id = datas['property_stock_valuation_account_id']
-                        credit_account_id = datas['stock_account_output']
-
-                    move_line_obj.create(cr, uid, {
-                                    'name': _('Standard Price changed'),
-                                    'account_id': debit_account_id,
-                                    'debit': amount_diff,
-                                    'credit': 0,
-                                    'move_id': move_id,
-                                    }, context=context)
-                    move_line_obj.create(cr, uid, {
-                                    'name': _('Standard Price changed'),
-                                    'account_id': credit_account_id,
-                                    'debit': 0,
-                                    'credit': amount_diff,
-                                    'move_id': move_id
-                                    }, context=context)
+                for prod_variant in product.product_variant_ids:
+                    qty = prod_variant.qty_available
+                    if qty:
+                        # Accounting Entries
+                        move_vals = {
+                            'journal_id': datas['stock_journal'],
+                            'company_id': location.company_id.id,
+                        }
+                        move_id = move_obj.create(cr, uid, move_vals, context=context)
+    
+                        if diff*qty > 0:
+                            amount_diff = qty * diff
+                            debit_account_id = datas['stock_account_input']
+                            credit_account_id = datas['property_stock_valuation_account_id']
+                        else:
+                            amount_diff = qty * -diff
+                            debit_account_id = datas['property_stock_valuation_account_id']
+                            credit_account_id = datas['stock_account_output']
+    
+                        move_line_obj.create(cr, uid, {
+                                        'name': _('Standard Price changed'),
+                                        'account_id': debit_account_id,
+                                        'debit': amount_diff,
+                                        'credit': 0,
+                                        'move_id': move_id,
+                                        }, context=context)
+                        move_line_obj.create(cr, uid, {
+                                        'name': _('Standard Price changed'),
+                                        'account_id': credit_account_id,
+                                        'debit': 0,
+                                        'credit': amount_diff,
+                                        'move_id': move_id
+                                        }, context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
         return True
 
 
-class product_template(osv.osv):
-    _name = 'product.template'
-    _inherit = 'product.template'
-    _columns = {
-        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time', 'Real Time (automated)')], string='Inventory Valuation',
-                                        help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
-                                             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , required=True),
-        'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
-                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
-                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
-            string="Costing Method", required=True),
-        'property_stock_account_input': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Input Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the source location. When not set on the product, the one from the product category is used."),
-        'property_stock_account_output': fields.property(
-            type='many2one',
-            relation='account.account',
-            string='Stock Output Account',
-            help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
-                 "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
-    }
+
 
 
 class product_category(osv.osv):

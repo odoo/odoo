@@ -52,7 +52,7 @@
     new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
 - 
-  Transfer the reception
+  Transfer the receipt
 - 
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('pick1')], context=context)
@@ -138,13 +138,13 @@
   !python {model: stock.picking}: |
     backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
     assert backorder_ids, "Backorder should have been created"
+    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_prepare_partial(cr, uid, backorder_ids, context=context)
     picking = self.browse(cr, uid, backorder_ids[0])
     assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
     for pack_op in picking.pack_operation_ids:
         assert pack_op.product_qty == 1, "Wrong quantity in pack operation (%s found instead of 1)" % (pack_op.product_qty)
         assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
-    self.action_assign(cr, uid, backorder_ids, context=context)
     self.do_transfer(cr, uid, backorder_ids, context=context)
 - 
   Check there are still 0 pieces in stock 

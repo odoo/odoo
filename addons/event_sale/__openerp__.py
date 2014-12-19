@@ -24,6 +24,7 @@
     'name': 'Events Sales',
     'version': '0.1',
     'category': 'Tools',
+    'website' : 'https://www.odoo.com/page/events',
     'description': """
 Creating registration with sale orders.
 =======================================

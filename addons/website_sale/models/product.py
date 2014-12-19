@@ -82,7 +82,7 @@ class product_public_category(osv.osv):
         # In this case, the default image is set by the js code.
         # NOTE2: image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
+            help="This field holds the image used as image for the category, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
@@ -123,7 +123,7 @@ class product_template(osv.Model):
             string='Website Comments',
         ),
         'website_published': fields.boolean('Available in the website', copy=False),
-        'website_description': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website', translate=True),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
@@ -178,9 +178,6 @@ class product_template(osv.Model):
         else:
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
-
 class product_product(osv.Model):
     _inherit = "product.product"
 
@@ -194,14 +191,10 @@ class product_product(osv.Model):
         'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
 
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        temp_id = self.browse(cr, uid, ids[0], context=context).product_tmpl_id.id
-        return "/website/image?model=product.template&field=%s&id=%s" % (field, temp_id)
-
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
-        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type", type="char"),
+        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type"),
     }
     _defaults = {
         'type': lambda *a: 'radio',

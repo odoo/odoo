@@ -157,7 +157,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
             return {
                 type: 'search',
                 fields: {
-                    dummy: {type: 'char', string: "Dummy"}
+                    dummy: {type: 'char', string: "Dummy", searchable: true}
                 },
                 arch: '<search><field name="dummy" widget="dummy"/></search>'
             };
@@ -168,7 +168,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     };
     instance.session.responses['dummy.model:fields_get'] = function () {
         return {
-            dummy: {type: 'char', string: 'Dummy'}
+            dummy: {type: 'char', string: 'Dummy', searchable: true}
         };
     };
     instance.client = { action_manager: { inner_action: undefined } };
@@ -629,7 +629,7 @@ openerp.testing.section('search.completions', {
             dataset: {get_context: function () { return {flag: 1}; }}
         };
         var f = new instance.web.search.ManyToOneField(
-            {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
+            {attrs: {string: 'Dummy', domain: [["foo", "=", "bar"]]}},
             {relation: 'dummy.model'}, view);
         return f.expand("bob");
     });

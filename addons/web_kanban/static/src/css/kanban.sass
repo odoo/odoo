@@ -15,7 +15,7 @@
     background-image: -webkit-radial-gradient(circle, $gradient)
     background-image: -moz-radial-gradient($gradient)
     background-image: -ms-radial-gradient($gradient)
-    background-image: radial-gradient($gradient)
+    background-image: radial-gradient(circle, $gradient)
 
 @mixin radius($radius: 5px)
     -moz-border-radius: $radius
@@ -50,6 +50,9 @@
     // KanbanView {{{
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
+    &.oe_background_grey
+        > table.oe_kanban_groups
+            background-color: #eee
     height: inherit
     .oe_kanban_column_higlight
         background: #eeddf6 !important
@@ -539,7 +542,6 @@
     .oe_kanban_column, .oe_kanban_group_header
         padding: 0px
         background: #ffffff
-
 .openerp
     .oe_popup_form
         .oe_kanban_buttons

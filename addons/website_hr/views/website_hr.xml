@@ -3,7 +3,7 @@
 <data>
 <!-- Page --> 
 
-<template id="aboutus" inherit_id="website.aboutus" optional="enabled" name="Our Team">
+<template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
     <xpath expr="//div[@class='oe_structure']" position="after">
         <section class="container">
             <div class="col-sm-12 text-center" t-if="len(employee_ids)">
@@ -12,7 +12,7 @@
             <div t-foreach="employee_ids" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center colsize">
                 <t t-call="website.publish_management"><t t-set="object" t-value="employee"/></t>
                 <div class="clearfix"/>
-                <img t-att-src="employee.img('image_medium')" class="img shadow img-rounded"/>
+                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded"/>
                 <div class="mt8">
                     <strong t-field="employee.name"></strong>
                 </div>

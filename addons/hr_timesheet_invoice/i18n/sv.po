@@ -1,132 +1,30 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# Swedish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.14\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-11-22 20:59+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:01+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-#: view:report_timesheet.user:0
-msgid "Timesheet by user"
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
+msgid "50%"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,name:0
-msgid "Internal Name"
-msgstr "Internt namn"
-
-#. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Type of invoicing"
-msgstr "Typ av fakturering"
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,pricelist_id:0
-msgid ""
-"The product to invoice is defined on the employee form, the price will be "
-"deducted by this pricelist on the product."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
-#, python-format
-msgid "No record(s) found for this report."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Otillräcklig data!"
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Group By..."
-msgstr "Gruppera efter..."
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Force to use a specific product"
-msgstr "Kräv en viss produkt"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Income"
-msgstr "Income"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,name:0
-msgid "Log of Activity"
-msgstr "Aktivitetslogg"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Re-open project"
-msgstr "Återstarta projekt"
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,product_uom_id:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "March"
-msgstr "Mars"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Profit"
-msgstr "Vinst"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
-#, python-format
-msgid "You cannot modify an invoiced analytic line!"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
-msgid "Invoice Rate"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,time:0
-msgid "Display time in the history of works"
-msgstr "Display time in the history of works"
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,day:0
-msgid "Day"
-msgstr "Dag"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,product:0
-msgid ""
-"Fill this field only if you want to force to use a specific product. Keep "
-"empty to use the real product that comes from the cost."
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
+msgid "80%"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -135,7 +33,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new type of invoicing.\n"
 "              </p><p>\n"
-"                OpenERP allows you to create default invoicing types. You "
+"                Odoo allows you to create default invoicing types. You "
 "might\n"
 "                have to regularly assign discounts because of a specific\n"
 "                contract or agreement with a customer. From this menu, you "
@@ -147,85 +45,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 msgid "Account"
 msgstr "Konto"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,time:0
-msgid "Time spent"
-msgstr "Time spent"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_invoiced:0
-msgid "Invoiced Amount"
-msgstr "Invoiced Amount"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
-#, python-format
-msgid "Analytic Account incomplete !"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,account_id:0
-msgid "Project"
-msgstr "Projekt"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
 msgstr "Belopp"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,name:0
-msgid "The detail of each work done will be displayed on the invoice"
-msgstr "The detail of each work done will be displayed on the invoice"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,pricelist_id:0
-msgid "Pricelist"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
-msgid "Create invoice from timesheet"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Period to enddate"
-msgstr "Period to enddate"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
-msgid "Analytic account to close"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sales order), you should "
-"invoice the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Create Invoices"
-msgstr "Create Invoices"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet per account"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
@@ -236,51 +63,28 @@ msgid "Analytic Account"
 msgstr "Objektkonto"
 
 #. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,date_deadline:0
-msgid "Deadline"
-msgstr "Tidsfrist"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
-msgid "Configuration Error!"
+msgid "Analytic Account Incomplete!"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,partner_id:0
-msgid "Partner"
-msgstr "Företag"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,time:0
-msgid "The time of each work done will be displayed on the invoice"
-msgstr "The time of each work done will be displayed on the invoice"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Cancel Contract"
+#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_from:0
-msgid "From"
-msgstr "From"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "User or Journal Name"
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
+msgid "Analytic Lines"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
-msgid "Costs to invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
-#, python-format
-msgid "Please define income account for product '%s'."
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_filter
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_form
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_graph
+#: view:report.account.analytic.line.to.invoice:hr_timesheet_invoice.account_analytic_line_to_invoice_view_tree
+msgid "Analytic Lines to Invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -290,560 +94,13 @@ msgid "Analytic account"
 msgstr "Objektkonto"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Print"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,date:0
-msgid "Display date in the history of works"
-msgstr "Display date in the history of works"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,price:0
-msgid ""
-"The cost of each work done will be displayed on the invoice. You probably "
-"don't want to check this"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Force to use a special product"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
-msgid "Timesheet by User"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-#: view:hr.analytic.timesheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
-msgid "To Invoice"
-msgstr "Att fakturera"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
-#: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
-msgid "Timesheet Profit"
-msgstr "Timesheet Profit"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,product:0
-msgid "Force Product"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Contract Finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "July"
-msgstr "juli"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,to_invoice:0
-msgid "Invoiceable"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
-#: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
-msgid "Types of Invoicing"
-msgstr "Types of Invoicing"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Theorical"
-msgstr "Theorical"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
-msgid "Free of charge"
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
 msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
-msgid "Timesheet by Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
-#: view:report.analytic.account.close:0
-msgid "Expired analytic accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,factor:0
-msgid "Discount (%)"
-msgstr "Discount (%)"
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor1
-msgid "Yes (100%)"
-msgstr "Ja (100%)"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.user:0
-msgid "Timesheet by users"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:58
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
-#, python-format
-msgid "Invoices"
-msgstr "Invoices"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "December"
-msgstr "december"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Invoice contract"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,month:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,month:0
-#: field:report_timesheet.account,month:0
-#: field:report_timesheet.account.date,month:0
-#: field:report_timesheet.user,month:0
-msgid "Month"
-msgstr "Månad"
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Currency"
-msgstr "Currency"
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Non Assigned timesheets to users"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-#: view:hr.analytic.timesheet:0
-#: field:report.timesheet.line,invoice_id:0
-msgid "Invoiced"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity_max:0
-msgid "Max. Quantity"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Invoice rate by user"
-msgstr "Invoice rate by user"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-#: view:report_timesheet.account.date:0
-msgid "Timesheet by account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,amount_invoiced:0
-msgid "Total invoiced"
-msgstr "Total invoiced"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,state:0
-msgid "Status"
-msgstr "Status"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "August"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
-msgid "50%"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "June"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,name:0
-msgid "Display detail of work in the invoice line."
-msgstr "Display detail of work in the invoice line."
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
-#: view:report_timesheet.account:0
-msgid "Timesheet per account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
-msgid "Timesheet by Account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
-msgid "Journal Items"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "November"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:report.timesheet.line:0
-msgid "Extended Filters..."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Eff."
-msgstr "Eff."
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "October"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "January"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,date:0
-#: field:hr.timesheet.invoice.create.final,date:0
-#: field:report.timesheet.line,date:0
-msgid "Date"
-msgstr "Date"
-
-#. module: hr_timesheet_invoice
-#: field:report.timesheet.line,quantity:0
-#: field:report_timesheet.account,quantity:0
-#: field:report_timesheet.account.date,quantity:0
-#: field:report_timesheet.invoice,quantity:0
-#: field:report_timesheet.user,quantity:0
-msgid "Time"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
-msgid "Create invoice from timesheet final"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,balance:0
-msgid "Balance"
-msgstr "Balans"
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity:0
-#: view:report.timesheet.line:0
-msgid "Quantity"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.timesheet.line,general_account_id:0
-msgid "General Account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Totals:"
-msgstr "Totals:"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.line,to_invoice:0
-msgid ""
-"It allows to set the discount while making invoice, keep empty if the "
-"activities should not be invoiced."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_max:0
-msgid "Max. Invoice Price"
-msgstr "Max. Invoice Price"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,to_invoice:0
-msgid "Timesheet Invoicing Ratio"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "September"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,invoice_id:0
-#: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
-#: view:report.timesheet.line:0
-msgid "Invoice"
-msgstr "Invoice"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Cancel"
-msgstr "Cancel"
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
-#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
-#: view:report.timesheet.line:0
-msgid "Timesheet Line"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Billing Data"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr_timesheet_invoice.factor,customer_name:0
-msgid "Label for the customer"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "To"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-msgid "Do you want to show details of work in invoice?"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
-msgid "Create Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
-msgid "Timesheets per account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,date:0
-msgid "The real date of each work will be displayed on the invoice"
-msgstr "The real date of each work will be displayed on the invoice"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr "Display cost of the item you reinvoice"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheets to invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:186
-#, python-format
-msgid ""
-"Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
-msgid "Daily Timesheet by Account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,product:0
-#: field:report.account.analytic.line.to.invoice,product_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,product_id:0
-msgid "Product"
-msgstr "Product"
-
-#. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Types of invoicing"
-msgstr "Types of invoicing"
-
-#. module: hr_timesheet_invoice
-#: view:hr.analytic.timesheet:0
-msgid "Invoicing"
-msgstr "Invoicing"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "May"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,journal_ids:0
-msgid "Journal"
-msgstr "Journal"
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,product:0
-msgid "The product that will be used to invoice the remaining amount"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,time:0
-msgid "Time Spent"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,amount_max:0
-msgid "Keep empty if this contract is not limited to a total fixed price."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Do you want to show details of each activity to your customer?"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheet by invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Period from startdate"
-msgstr "Period from startdate"
-
-#. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "February"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Name"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet by account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,sale_price:0
-msgid "Sale price"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -856,16 +113,332 @@ msgid "April"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "August"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,balance:0
+msgid "Balance"
+msgstr "Balans"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Billing Data"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Cancel Contract"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Close Contract"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
 #, python-format
 msgid ""
-"There is no product defined. Please select one or force the product through "
-"the wizard."
+"Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,price:0
+#: field:hr.timesheet.invoice.create.final,price:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+#: field:report.timesheet.line,cost:0
+#: field:report_timesheet.user,cost:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Cost"
+msgstr "Cost"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
+msgid "Create Invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Create Invoices"
+msgstr "Create Invoices"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
+msgid "Create invoice from timesheet"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
+msgid "Create invoice from timesheet final"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,create_uid:0
+#: field:hr.timesheet.invoice.create,create_uid:0
+#: field:hr.timesheet.invoice.create.final,create_uid:0
+#: field:hr_timesheet_invoice.factor,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,create_date:0
+#: field:hr.timesheet.invoice.create,create_date:0
+#: field:hr.timesheet.invoice.create.final,create_date:0
+#: field:hr_timesheet_invoice.factor,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Currency:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
+msgid "Daily Timesheet by Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_form
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
+msgid "Daily timesheet by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_graph_account
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_tree
+msgid "Daily timesheet per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,date:0
+#: field:hr.timesheet.invoice.create.final,date:0
+#: field:report.timesheet.line,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,day:0
+msgid "Day"
+msgstr "Dag"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Tidsfrist"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "December"
+msgstr "december"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,name:0
+msgid "Description"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,factor:0
+msgid "Discount (%)"
+msgstr "Discount (%)"
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
 msgid "Discount in percentage"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Display cost of the item you reinvoice"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,date:0
+msgid "Display date in the history of works"
+msgstr "Display date in the history of works"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,name:0
+msgid "Display detail of work in the invoice line."
+msgstr "Display detail of work in the invoice line."
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,time:0
+msgid "Display time in the history of works"
+msgstr "Display time in the history of works"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Do you want to show details of each activity to your customer?"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Do you want to show details of work in invoice?"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+msgid "Duration"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Eff."
+msgstr "Eff."
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_form
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_close_tree
+#: view:report.analytic.account.close:hr_timesheet_invoice.view_analytic_account_graph
+msgid "Expired analytic accounts"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "February"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,product:0
+msgid ""
+"Fill this field only if you want to force to use a specific product. Keep "
+"empty to use the real product that comes from the cost."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,product:0
+msgid "Force Product"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Force to use a special product"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid "Force to use a specific product"
+msgstr "Kräv en viss produkt"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Free of charge"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_from:0
+msgid "From"
+msgstr "From"
+
+#. module: hr_timesheet_invoice
+#: field:report.timesheet.line,general_account_id:0
+msgid "General Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Group By"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,id:0
+#: field:hr.timesheet.invoice.create,id:0
+#: field:hr.timesheet.invoice.create.final,id:0
+#: field:hr_timesheet_invoice.factor,id:0
+#: field:report.account.analytic.line.to.invoice,id:0
+#: field:report.analytic.account.close,id:0
+#: field:report.hr_timesheet_invoice.report_analyticprofit,id:0
+#: field:report.timesheet.line,id:0
+#: field:report_timesheet.account,id:0
+#: field:report_timesheet.account.date,id:0
+#: field:report_timesheet.invoice,id:0
+#: field:report_timesheet.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Income"
+msgstr "Income"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Otillräcklig data!"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,name:0
+msgid "Internal Name"
+msgstr "Internt namn"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.line,invoice_id:0
+#: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Invoice"
+msgstr "Invoice"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
+msgid "Invoice Rate"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
+msgid "Invoice contract"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -875,34 +448,118 @@ msgid "Invoice is already linked to some of the analytic line(s)!"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create,name:0
-msgid "Description"
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-#: field:report.account.analytic.line.to.invoice,unit_amount:0
-msgid "Units"
-msgstr "Units"
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Invoice rate by user"
+msgstr "Invoice rate by user"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
+#: field:account.analytic.line,to_invoice:0
+msgid "Invoiceable"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
+#: field:report.timesheet.line,invoice_id:0
+msgid "Invoiced"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,amount_invoiced:0
+msgid "Invoiced Amount"
+msgstr "Invoiced Amount"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:58
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
-msgid "Error!"
+msgid "Invoices"
+msgstr "Invoices"
+
+#. module: hr_timesheet_invoice
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.hr_timesheet_line_form
+msgid "Invoicing"
+msgstr "Invoicing"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.line,to_invoice:0
+msgid ""
+"It allows to set the discount while making invoice, keep empty if the "
+"activities should not be invoiced."
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
-msgid "80%"
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "January"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-#: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
-msgid "or"
+#: field:hr.timesheet.analytic.profit,journal_ids:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
+msgid "Journal Items"
 msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "July"
+msgstr "juli"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "June"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_max:0
+msgid "Keep empty if this contract is not limited to a total fixed price."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr_timesheet_invoice.factor,customer_name:0
+msgid "Label for the customer"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,write_uid:0
+#: field:hr.timesheet.invoice.create,write_uid:0
+#: field:hr.timesheet.invoice.create.final,write_uid:0
+#: field:hr_timesheet_invoice.factor,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,write_date:0
+#: field:hr.timesheet.invoice.create,write_date:0
+#: field:hr.timesheet.invoice.create.final,write_date:0
+#: field:hr_timesheet_invoice.factor,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,name:0
+msgid "Log of Activity"
+msgstr "Aktivitetslogg"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -910,18 +567,405 @@ msgid "Manager"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-#: field:hr.timesheet.invoice.create,price:0
-#: field:hr.timesheet.invoice.create.final,price:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,cost:0
-#: field:report_timesheet.user,cost:0
-msgid "Cost"
-msgstr "Cost"
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "March"
+msgstr "Mars"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,amount_max:0
+msgid "Max. Invoice Price"
+msgstr "Max. Invoice Price"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "May"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,month:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,month:0
+#: field:report_timesheet.account,month:0
+#: field:report_timesheet.account.date,month:0
+#: field:report_timesheet.user,month:0
+msgid "Month"
+msgstr "Månad"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
+#, python-format
+msgid "No record(s) found for this report."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+msgid "Non Assigned timesheets to users"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "November"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "October"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Företag"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Period from startdate:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Period to enddate:"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
+#, python-format
+msgid "Please define income account for product '%s'."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,pricelist_id:0
+msgid "Pricelist"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+msgid "Print"
+msgstr "Print"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,product:0
+#: field:report.account.analytic.line.to.invoice,product_id:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Profit"
+msgstr "Vinst"
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr "Projekt"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+msgid "Quantity"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "September"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "Set In Progress"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,price:0
+msgid ""
+"The cost of each work done will be displayed on the invoice. You probably "
+"don't want to check this"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,name:0
+msgid "The detail of each work done will be displayed on the invoice"
+msgstr "The detail of each work done will be displayed on the invoice"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,product:0
+msgid "The product that will be used to invoice the remaining amount"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,pricelist_id:0
+msgid ""
+"The product to invoice is defined on the employee form, the price will be "
+"deducted by this pricelist on the product."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,date:0
+msgid "The real date of each work will be displayed on the invoice"
+msgstr "The real date of each work will be displayed on the invoice"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,time:0
+msgid "The time of each work done will be displayed on the invoice"
+msgstr "The time of each work done will be displayed on the invoice"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Theorical"
+msgstr "Theorical"
+
+#. module: hr_timesheet_invoice
+#: field:report.timesheet.line,quantity:0
+#: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
+#: field:report_timesheet.invoice,quantity:0
+#: field:report_timesheet.user,quantity:0
+msgid "Time"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,time:0
+msgid "Time Spent"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,time:0
+msgid "Time spent"
+msgstr "Time spent"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,to_invoice:0
+msgid "Timesheet Invoicing Ratio"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_graph
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_tree
+msgid "Timesheet Line"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
+#: model:ir.actions.report.xml,name:hr_timesheet_invoice.action_report_analytic_profit
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
+msgid "Timesheet Profit"
+msgstr "Timesheet Profit"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
+msgid "Timesheet by Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
+msgid "Timesheet by Invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
+msgid "Timesheet by User"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_form
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_search
+#: view:report_timesheet.account.date:hr_timesheet_invoice.view_timesheet_account_date_search
+msgid "Timesheet by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_form
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_graph
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_search
+msgid "Timesheet by invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_form
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_graph
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_tree
+msgid "Timesheet by user"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
+msgid "Timesheet by users"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_graph
+#: view:report_timesheet.account:hr_timesheet_invoice.view_timesheet_account_tree
+msgid "Timesheet per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:hr_timesheet_invoice.view_timesheet_invoice_tree
+msgid "Timesheets to invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "To"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:hr_timesheet_invoice.view_account_analytic_line_search_inherit
+#: view:hr.analytic.timesheet:hr_timesheet_invoice.view_hr_timesheet_line_search_to_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "To Invoice"
+msgstr "Att fakturera"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
+msgid "To Renew"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_invoiced:0
+msgid "Total invoiced"
+msgstr "Total invoiced"
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Totals:"
+msgstr "Totals:"
+
+#. module: hr_timesheet_invoice
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_form
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_search
+msgid "Type of invoicing"
+msgstr "Typ av fakturering"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+#: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
+msgid "Types of Invoicing"
+msgstr "Types of Invoicing"
+
+#. module: hr_timesheet_invoice
+#: view:hr_timesheet_invoice.factor:hr_timesheet_invoice.view_hr_timesheet_invoice_factor_tree
+msgid "Types of invoicing"
+msgstr "Types of invoicing"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,unit_amount:0
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "Units"
+msgstr "Units"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:website:hr_timesheet_invoice.report_analyticprofit
+msgid "User or Journal Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:hr_timesheet_invoice.view_hr_timesheet_invoice_create
+msgid ""
+"When reinvoicing costs, the amount on the invoice lines is given by the sale "
+"price of the corresponding product (if any, and if its sale price is not 0). "
+"You can use the following field to enforce the use of a single product for "
+"all the chosen lines in the future invoices."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
-#: view:report.timesheet.line:0
+#: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
 #: field:report.timesheet.line,name:0
 #: field:report_timesheet.account,name:0
 #: field:report_timesheet.account.date,name:0
@@ -930,282 +974,21 @@ msgid "Year"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Duration"
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor1
+msgid "Yes (100%)"
+msgstr "Ja (100%)"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
+#, python-format
+msgid "You cannot modify an invoiced analytic line!"
 msgstr ""
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#, python-format
-#~ msgid "Analytic account incomplete"
-#~ msgstr "Analytic account incomplete"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Invalid model name in the action definition."
-
-#~ msgid "Visible name"
-#~ msgstr "Visible name"
-
-#~ msgid "Start of period"
-#~ msgstr "Startdatum"
-
-#~ msgid ""
-#~ "The cost of each work done will be displayed on the invoice. You probably "
-#~ "don't want to check this."
-#~ msgstr ""
-#~ "The cost of each work done will be displayed on the invoice. You probably "
-#~ "don't want to check this."
-
-#~ msgid "Invoice analytic lines"
-#~ msgstr "Invoice analytic lines"
-
-#~ msgid "Draft Analytic Accounts"
-#~ msgstr "Draft Analytic Accounts"
-
-#~ msgid ""
-#~ "Check this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-#~ msgstr ""
-#~ "Check this field if you plan to automatically generate invoices based on the "
-#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
-#~ "an automatic invoice rate on analytic accounts."
-
-#, python-format
-#~ msgid "Partner incomplete"
-#~ msgstr "Partner incomplete"
-
-#~ msgid "Select period"
-#~ msgstr "Select period"
-
-#, python-format
-#~ msgid "Analytic Account incomplete"
-#~ msgstr "Analytic Account incomplete"
-
-#~ msgid "Balance product"
-#~ msgstr "Balance product"
-
-#~ msgid "Final Invoice"
-#~ msgstr "Final Invoice"
-
-#~ msgid "Do you want details for each line of the invoices ?"
-#~ msgstr "Do you want details for each line of the invoices ?"
-
-#~ msgid "Date or Code"
-#~ msgstr "Date or Code"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "Data Insufficient!"
-
-#~ msgid "Choose"
-#~ msgstr "Choose"
-
-#~ msgid "Debit"
-#~ msgstr "Debit"
-
-#~ msgid "Open Analytic Accounts"
-#~ msgstr "Open Analytic Accounts"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Error !"
-
-#~ msgid "Filter on Accounts"
-#~ msgstr "Filter on Accounts"
-
-#~ msgid "Name of entry"
-#~ msgstr "Name of entry"
-
-#~ msgid "Sale Pricelist"
-#~ msgstr "Sale Pricelist"
-
-#~ msgid "J.C. or Move name"
-#~ msgstr "J.C. or Move name"
-
-#~ msgid "Printing date"
-#~ msgstr "Printing date"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalid XML for View Architecture!"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "My Uninvoiced Entries"
-
-#, python-format
-#~ msgid "You can not modify an invoiced analytic line!"
-#~ msgstr "You can not modify an invoiced analytic line!"
-
-#~ msgid "Employee or Journal Name"
-#~ msgstr "Employee or Journal Name"
-
-#~ msgid ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-#~ msgstr ""
-#~ "Complete this field only if you want to force to use a specific product. "
-#~ "Keep empty to use the real product that comes from the cost."
-
-#~ msgid "Uninvoiced Entries"
-#~ msgstr "Uninvoiced Entries"
-
-#~ msgid "Create invoices"
-#~ msgstr "Create invoices"
-
-#~ msgid "Invoice Balance amount"
-#~ msgstr "Invoice Balance amount"
-
-#~ msgid "Period to"
-#~ msgstr "Period to"
-
-#~ msgid "The product that will be used to invoice the remaining amount."
-#~ msgstr "The product that will be used to invoice the remaining amount."
-
-#~ msgid "Cost Ledger"
-#~ msgstr "Cost Ledger"
-
-#, python-format
-#~ msgid "Please fill in the Address field in the Partner: %s."
-#~ msgstr "Please fill in the Address field in the Partner: %s."
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Analytic Accounts"
-
-#~ msgid "Total:"
-#~ msgstr "Total:"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "End of period"
-#~ msgstr "Slutdatum"
-
-#~ msgid "Reinvoice Costs"
-#~ msgstr "Reinvoice Costs"
-
-#~ msgid "Do you want to show details of work in invoice ?"
-#~ msgstr "Do you want to show details of work in invoice ?"
-
-#~ msgid "Period from"
-#~ msgstr "Period from"
-
-#~ msgid "Entries to invoice"
-#~ msgstr "Entries to invoice"
-
-#, python-format
-#~ msgid "Balance product needed"
-#~ msgstr "Balance product needed"
-
-#~ msgid "Employee"
-#~ msgstr "Employee"
-
-#, python-format
-#~ msgid "At least one line has no product !"
-#~ msgstr "At least one line has no product !"
-
-#~ msgid "Choose accounts you want to invoice"
-#~ msgstr "Choose accounts you want to invoice"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid "Internal name"
-#~ msgstr "Internal name"
-
-#, python-format
-#~ msgid "No Records Found for Report!"
-#~ msgstr "No Records Found for Report!"
-
-#, python-format
-#~ msgid ""
-#~ "Please fill in the Associate Partner and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Please fill in the Associate Partner and Sale Pricelist fields in the "
-#~ "Analytic Account:\n"
-#~ "%s"
-
-#~ msgid "Invoice on analytic lines"
-#~ msgstr "Invoice on analytic lines"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Pending Analytic Accounts"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Invoicing Data"
-
-#~ msgid "Invoice rate"
-#~ msgstr "Invoice rate"
-
-#~ msgid "Credit"
-#~ msgstr "Credit"
-
-#~ msgid "Unclosed Invoiceable Accounts"
-#~ msgstr "Unclosed Invoiceable Accounts"
-
-#, python-format
-#~ msgid "Please fill a Balance product in the wizard"
-#~ msgstr "Please fill a Balance product in the wizard"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 Dagar    "
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Fakturanummer måste vara unikt per bolag!"
-
-#~ msgid "This Year"
-#~ msgstr "Innevarande år"
-
-#~ msgid "Journals"
-#~ msgstr "Journaler"
-
-#~ msgid "UoM"
-#~ msgstr "Måttenhet"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Fel kredit- eller debetvärde i bokföringstransaktionerna."
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Varning !"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Ogiltig BBA-strukturerad kommunikation!"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "hr.timesheet.analytic.cost.ledger"
-#~ msgstr "hr.timesheet.analytic.cost.ledger"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Fel! Du kan inte skapa rekursiva objekt."
-
-#~ msgid "Timesheets"
-#~ msgstr "Tidkort"
-
-#~ msgid "Lines to Invoice"
-#~ msgstr "Rader att fakturera"
-
-#~ msgid "Gratis"
-#~ msgstr "Gratis"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Fakturera aktivitetsarbetet"
-
-#, python-format
-#~ msgid "Configuration Error"
-#~ msgstr "Inställningsfel"
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Valt konto på verifikatet tvingar fram en sekundär valuta. Du kan ta bort "
-#~ "den sekundära valutan på kontot eller välja en flervalutavy för journalen."
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""

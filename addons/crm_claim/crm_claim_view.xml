@@ -125,7 +125,7 @@
                                 <group colspan="2" col="2" groups="base.group_user">
                                     <separator colspan="2" string="Responsibilities"/>
                                     <field name="user_fault"/>
-                                    <field name="categ_id" widget="selection"
+                                    <field name="categ_id" options="{'no_create': True, 'no_open': True}"
                                         domain="[('object_id.model', '=', 'crm.claim')]"/>
                                     <field name="ref"/>
                                 </group>

@@ -1,58 +1,36 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-21 13:45+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-21 11:22+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-22 06:41+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "Недоволно податоци!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
+msgstr "Кампања"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Претвори во Понуда"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Статистики на фактури"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Mark Won"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Стандарден тим за продажба"
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Мојот тим(ови) за продажби"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Корисници"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr "Канал"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -62,21 +40,25 @@ msgstr ""
 "Штиклирај за затварање на можностите по креирањето на налогот за продажба."
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Цитатот е испратен"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Претвори во Понуда"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Категории"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Креирај цитат"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Цитат"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -84,61 +66,25 @@ msgid "Customer"
 msgstr "Купувач"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Креирај"
+#: field:crm.make.sale,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Направи продажби"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Фактура"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Можност: %s"
+msgid "Insufficient Data!"
+msgstr "Недоволно податоци!"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Можноста е <b>конвертирана</b> во цитатот <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Продавница"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "Нема дефинирано адреса(и) за овој купувач."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Потврден е налогот за продажба"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Продажен тим"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Креирај цитат"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -146,9 +92,39 @@ msgid "Make Quotation"
 msgstr "Направи понуда"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Откажи"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Направи продажби"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Mark Won"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr "Нема дефинирано адреса(и) за овој клиент."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "Можноста е <b>конвертирана</b> во цитатот <em>%s</em>."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Можност: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Цитат"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -156,6 +132,38 @@ msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "или"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr "Извор"
+
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr "Ознаки"
+
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+"Ова е име што ви помага да следите резултати од различни кампањи пр. : "
+"Fall_Drive, Christmas_Special"
+
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
+
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"ова е извор на врската пр. : пребарувач, друг домен или име од е-маил листа"
+
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Креирај"

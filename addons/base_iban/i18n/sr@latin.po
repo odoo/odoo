@@ -1,21 +1,21 @@
-# Serbian latin translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Serbian Latin translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-04-05 15:22+0000\n"
-"Last-Translator: Milan Milosevic <Unknown>\n"
-"Language-Team: Serbian latin <sr@latin@li.org>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:01+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:57+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -29,30 +29,9 @@ msgstr ""
 "validnih uplata/isplata."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
-#, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
-msgstr "Ovaj IBAN ne prolazi proveru validacije, molimo proverite ga"
-
-#. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr "bank_bic"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "poštanski broj"
-
-#. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "Međunarodni broj Bankovnog računa"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -60,9 +39,19 @@ msgid "Bank Accounts"
 msgstr "Bankovni računi"
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "country_id"
+#: field:res.partner.bank,iban:0
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "IBAN račun"
+
+#. module: base_iban
+#: help:res.partner.bank,iban:0
+msgid "International Bank Account Number"
+msgstr "Međunarodni broj Bankovnog računa"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:138
@@ -73,58 +62,28 @@ msgid ""
 msgstr "IBAN izgleda nije tačan. Trebalo je uneti nešto kao %s"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
-msgid "IBAN"
-msgstr "IBAN"
-
-#. module: base_iban
 #: code:addons/base_iban/base_iban.py:142
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "IBAN je neispravan, trebalo bi da počinje sa kodom države"
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "IBAN račun"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#~ msgid "bic"
-#~ msgstr "bic"
-
-#~ msgid "iban"
-#~ msgstr "iban"
-
+#: code:addons/base_iban/base_iban.py:141
 #, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "IBAN je neispravan, trebalo bi da počinje sa kodom zemlje"
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "Ovaj IBAN ne prolazi proveru validacije, molimo proverite ga"
 
-#, python-format
-#~ msgid ""
-#~ "The IBAN does not seems to be correct. You should have entered something "
-#~ "like this %s"
-#~ msgstr "IBAN izgleda da nije ispravan. Trebalo je uneti nešto kao %s"
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr "bank_bic"
 
-#~ msgid ""
-#~ "\n"
-#~ "This module installs the base for IBAN (International Bank Account Number) "
-#~ "bank accounts and checks for its validity.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ovaj modul instalira bazu za IBAN (Međunarodni broj bankovnog računa) "
-#~ "bankovne račune i proverava im validnost.\n"
-#~ "\n"
-#~ "    "
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
+msgid "country_id"
+msgstr "country_id"
 
-#~ msgid "acc_number"
-#~ msgstr "acc_number"
-
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "Napravi IBAN nalog banke"
-
-#~ msgid "The RIB and/or IBAN is not valid"
-#~ msgstr "RIB i / ili IBAN nije validan"
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
+msgid "zip"
+msgstr "poštanski broj"

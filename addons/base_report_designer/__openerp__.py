@@ -32,7 +32,7 @@ This module adds wizards to Import/Export .sxw report that you can modify in Ope
 Once you have modified it you can upload the report using the same wizard.
 """,
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com',
     'depends': ['base'],
     'data': ['wizard/base_report_design_view.xml' , 'base_report_designer_installer.xml'],
     'demo': [],

@@ -52,7 +52,7 @@
             </div>
 
             <div class="oe_import_with_file oe_padding">
-                <h2>Map your data to OpenERP</h2>
+                <h2>Map your data to Odoo</h2>
                 <div title="If the model uses openchatter, history tracking
                             will set up subscriptions and send notifications
                             during the import, but lead to a slower import.">
@@ -67,7 +67,7 @@
                 <label for="oe_import_has_header">The first row of the
                 file contains the label of the column</label>
                 <p class="oe_import_noheaders">If the file contains
-                the column names, OpenERP can try auto-detecting the
+                the column names, Odoo can try auto-detecting the
                 field corresponding to the column. This makes imports
                 simpler especially when the file has many columns.</p>
 
@@ -85,7 +85,7 @@
                         different records, you should use the unique
                         identifier from the original application and
                         map it to the <abbr title="External ID">ID</abbr>
-                        column in OpenERP. When you
+                        column in Odoo. When you
                         import an other record that links to the first
                         one, use <abbr title="XXX/External ID">XXX/ID</abbr>
                         to the original unique identifier.</p>
@@ -108,7 +108,7 @@
                         settings, you can modify the File Format Options 
                         (displayed under the Browse CSV file bar after you 
                         select your file).</p> <p>Note that if your CSV file 
-                        has a tabulation as separator, OpenERP will not 
+                        has a tabulation as separator, Odoo will not 
                         detect the separations. You will need to change the 
                         file format options in your spreadsheet application. 
                         See the following question.</p>
@@ -141,15 +141,15 @@
                         <p>Some fields define a relationship with another 
                         object. For example, the country of a contact is a 
                         link to a record of the 'Country' object. When you 
-                        want to import such fields, OpenERP will have to 
+                        want to import such fields, Odoo will have to 
                         recreate links between the different records. 
-                        To help you import such fields, OpenERP provides 3 
+                        To help you import such fields, Odoo provides 3 
                         mechanisms. You must use one and only one mechanism 
                         per field you want to import.</p> <p>For example, to 
-                        reference the country of a contact, OpenERP proposes 
+                        reference the country of a contact, Odoo proposes 
                         you 3 different fields to import: <ul>
                         <li>Country: the name or code of the country</li>
-                        <li>Country/Database ID: the unique OpenERP ID for a 
+                        <li>Country/Database ID: the unique Odoo ID for a 
                         record, defined by the ID postgresql column</li>
                         <li>Country/External ID: the ID of this record 
                         referenced in another application (or the .XML file 
@@ -254,10 +254,10 @@
                         have already been imported will be modified instead of 
                         being created. This is very usefull as it allows you 
                         to import several times the same CSV file while having 
-                        made some changes in between two imports. OpenERP will 
+                        made some changes in between two imports. Odoo will 
                         take care of creating or modifying each record 
                         depending if it's new or not.</p> <p> This feature 
-                        allows you to use the Import/Export tool of OpenERP to 
+                        allows you to use the Import/Export tool of Odoo to 
                         modify a batch of records in your favorite spreadsheet 
                         application.</p>
                     </dd>
@@ -269,9 +269,9 @@
                         specific field?</a></dt>
                     <dd>
                         <p>If you do not set all fields in your CSV file, 
-                        OpenERP will assign the default value for every non 
+                        Odoo will assign the default value for every non 
                         defined fields. But if you
-                        set fields with empty values in your CSV file, OpenERP 
+                        set fields with empty values in your CSV file, Odoo 
                         will set the EMPTY value in the field, instead of 
                         assigning the default value.</p>
                     </dd>
@@ -280,7 +280,7 @@
                 <dl>
                     <dt><a href="#" class="oe_import_toggle">
                         How to export/import different tables from an SQL 
-                        application to OpenERP?</a></dt>
+                        application to Odoo?</a></dt>
                     <dd>
                         <p>If you need to import data from different tables, 
                         you will have to recreate relations between records 
@@ -288,7 +288,7 @@
                         companies and persons, you will have to recreate the 
                         link between each person and the company they work 
                         for).</p> <p>To manage relations between tables, 
-                        you can use the "External ID" facilities of OpenERP. 
+                        you can use the "External ID" facilities of Odoo. 
                         The "External ID" of a record is the unique identifier 
                         of this record in another application. This "External 
                         ID" must be unique accoss all the records of all 
@@ -337,7 +337,7 @@
                         and company_1 who shared the same ID 1 in the orignial 
                         database).</p>
                         <p>The two files produced are ready to be imported in 
-                        OpenERP without any modifications. After having 
+                        Odoo without any modifications. After having 
                         imported these two CSV files, you will have 4 contacts 
                         and 3 companies. (the firsts two contacts are linked 
                         to the first company). You must first import the 

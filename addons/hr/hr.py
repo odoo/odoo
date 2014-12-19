@@ -207,7 +207,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.many2one('hr.employee', 'Manager'),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
@@ -270,7 +270,7 @@ class hr_employee(osv.osv):
         partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, SUPERUSER_ID, user_ids, context=context)))
         self.message_post(
             cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
             partner_ids=partner_ids,
             subtype='mail.mt_comment', context=context
         )
@@ -347,8 +347,8 @@ class hr_employee(osv.osv):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+        for name, field in self._fields.items():
+            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
 

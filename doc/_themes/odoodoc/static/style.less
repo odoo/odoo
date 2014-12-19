@@ -1,0 +1,830 @@
+@import "bootstrap/less/bootstrap";
+@import url(https://fonts.googleapis.com/css?family=Lato);
+
+@icon-font-path: 'fonts/';
+@brand-primary: #a24689;
+@brand-dark: darken(@brand-primary, 6%);
+@brand-light: lighten(@brand-primary, 10%);
+@brand-text: saturate(lighten(@brand-primary, 46%), 5%);
+
+@headings-font-family: Lato, Arial, sans-serif;
+
+@navbar-margin-bottom: 0;
+
+@navbar-default-bg: white;
+@navbar-default-border: 0;
+
+// indent level for various items list e.g. dl, fields lists, ...
+@item-indent: 30px;
+
+* {
+  box-sizing: border-box;
+}
+body {
+  overflow: auto;
+  position: relative;
+}
+
+.document-super:not(.stripe) {
+  .container();
+}
+.document-super.stripe {
+  .container-fluid();
+}
+
+.document {
+  .make-row();
+}
+
+.documentwrapper {
+  .make-md-column(9);
+}
+.sphinxsidebar {
+  .make-md-column(3);
+}
+
+.btn-outline {
+  color: @brand-primary;
+  background-color: transparent;
+  border-color: @brand-primary;
+  &:hover, &:focus, &:active {
+    color: #fff;
+    background-color: @brand-primary;
+    border-color: @brand-primary;
+  }
+}
+
+
+.btn-outline-inverse {
+  color: #fff;
+  background-color: transparent;
+  border-color: @brand-text;
+  &:hover, &:focus, &:active {
+    color: @brand-primary;
+    text-shadow: none;
+    background-color: #fff;
+    border-color: #fff;
+  }
+}
+/*
+ * Main navigation
+ */
+.docs-nav {
+  .navbar-brand,
+  .navbar-nav > li > a {
+    position: relative;
+  }
+
+  .navbar-nav > li {
+    > a:hover:before, &.current a:before {
+      bottom: 10px;
+      opacity: 1;
+    }
+    > a:before {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      content: "";
+      right: 10px;
+      height: 3px;
+      background: @brand-primary;
+      opacity: 0;
+      .transition(all 0.3s ease-out);
+    }
+    &.dropdown {
+      > a:after {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 5px;
+        vertical-align: middle;
+        border-top: 4px solid @gray-light;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+      }
+      .dropdown-menu > li.current > a.current {
+        background-color: @brand-primary;
+        color: white;
+      }
+    }
+  }
+  /* version switcher */
+  div.versions {
+    position: relative;
+    cursor: pointer;
+    font-size: 300%;
+    display: inline-block;
+
+    > a {
+      font-size: 40%;
+      margin: 0.2em;
+      color: #999;
+      font-family: Lato, Arial, sans-serif;
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// FIXME: protocol-relative urls for remote but absolute for local (file://)?
+.o_logo {
+  display: inline-block;
+  font-size: 300%;
+  .o_logo_main {
+    background-image: url(odoo_logo_rgb.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    color: rgba(255, 255, 255, 0);
+    text-decoration: none;
+  }
+  .o_logo_app {
+    text-decoration: none;
+    color: rgb(143, 143, 143);
+    font-family: Lato, Arial, sans-serif;
+    font-size: 50%;
+    margin: 0.2em;
+  }
+}
+
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.sphinxsidebarwrapper.affix {
+  position: static;
+}
+@media (min-width: @screen-sm-min) {
+  .sphinxsidebarwrapper {
+    padding-left: 20px;
+  }
+}
+
+/* Side navigation visibility changes */
+.sphinxsidebarwrapper {
+  > .nav { // root (contains document categories), always show
+    .nav {
+      // hide sub-everything by default
+      display: none;
+    }
+
+    li.active > .nav,
+    li.current > .nav {
+      // sub-items of a current or active li are shown
+      display: block;
+    }
+  }
+}
+
+/* Side navigation graphical styling */
+@nav-spacing: 20px;
+@nav-spacing-increment: 5px;
+@nav-hover-offset: 1px;
+@nav-hover: @nav-spacing - @nav-hover-offset;
+@nav-current-offset: 2px;
+@nav-current: @nav-spacing - @nav-current-offset;
+
+.sphinxsidebar {
+  z-index: 1;
+}
+.sphinxsidebarwrapper {
+  width: 100%;
+  font-size: 13px;
+  z-index: 1;
+
+  .hidden-xs();
+  .hidden-sm();
+  .hidden-print();
+
+  /* First level of nav */
+  > .nav {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .nav > li > a {
+    font-weight: bold;
+    padding-left: @nav-spacing;
+  }
+  .nav .nav > li > a {
+    font-size: 12px;
+    padding-left: @nav-spacing + @nav-spacing-increment;
+  }
+  .nav .nav .nav > li > a {
+    font-weight: normal;
+    padding-left: @nav-spacing + 2*@nav-spacing-increment;
+  }
+  .nav .nav .nav .nav > li > a {
+    font-size: 11px;
+    padding-left: @nav-spacing + 3*@nav-spacing-increment;
+  }
+
+  /* All levels of nav */
+  .nav {
+    > li > a {
+      display: block;
+      padding: 4px @nav-spacing;
+      color: #999;
+
+      &:hover, &:focus {
+        padding-left: @nav-hover;
+        color: @brand-primary;
+        text-decoration: none;
+        background-color: transparent;
+        border-left: @nav-hover-offset solid @brand-primary;
+      }
+    }
+
+    // before scrollspy is applied, need to use current for docs
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current;
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: transparent;
+      border-left: @nav-current-offset solid @brand-primary;
+    }
+  }
+  .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + @nav-spacing-increment;
+    }
+    > .current > a, > .current:hover > a, > .current:focus > a,
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + @nav-spacing-increment;
+    }
+  }
+  .nav .nav .nav {
+    padding-bottom: 10px;
+
+    > li > a {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 2 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 2 * @nav-spacing-increment;
+      font-weight: bold;
+    }
+  }
+  .nav .nav .nav .nav {
+    > li > a:hover, > li > a:focus {
+      padding-left: @nav-hover + 3 * @nav-spacing-increment;
+    }
+    > .active > a, > .active:hover > a, > .active:focus > a {
+      padding-left: @nav-current + 3 * @nav-spacing-increment;
+    }
+  }
+}
+/* github link for current document */
+.sphinxsidebarwrapper > p {
+  margin: 5px 10px 10px;
+  a {
+    font-size: 13px;
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.github {
+      padding-left: 15px;
+      position: relative;
+      &:before {
+        left: 0;
+        top: 1px;
+        content: '';
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        background: url(github-link.png) left bottom / 13px no-repeat;
+      }
+      &:hover:before {
+        background-position: left top;
+      }
+    }
+  }
+}
+
+/* Show and affix the side nav when space allows it */
+@media (min-width: @screen-md-min) {
+  .sphinxsidebarwrapper {
+    .nav .nav > .active > ul {
+      display: block;
+    }
+    /* Widen the fixed sidebar */
+    &.affix, &.affix-bottom {
+      width: 213px;
+    }
+    &.affix {
+      position: fixed; /* Undo the static from mobile first approach */
+      top: 20px;
+    }
+    &.affix-bottom {
+      position: absolute; /* Undo the static from mobile first approach */
+    }
+    &.affix-bottom > .nav, &.affix > .nav {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+@media (min-width: @screen-lg-min) {
+  /* Widen the fixed sidebar again */
+  .sphinxsidebarwrapper.affix-bottom,
+  .sphinxsidebarwrapper.affix {
+    width: 263px;
+  }
+}
+
+/*
+ * Footer
+ *
+ * Separated section of content at the bottom of all pages, save the homepage.
+ */
+
+.footer {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 100px;
+  color: #777;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
+}
+.docs-footer-links {
+  padding-left: 0;
+  margin-top: 20px;
+  color: #999;
+}
+.docs-footer-links li {
+  display: inline;
+  padding: 0 2px;
+}
+.docs-footer-links li:first-child {
+  padding-left: 0;
+}
+
+@media (min-width: 768px) {
+  .footer p {
+    margin-bottom: 0;
+  }
+}
+
+// move [source] link to the right
+.viewcode-link {
+  font-weight: normal;
+  float: right;
+  display: none;
+}
+dt:hover > a > .viewcode-link {
+  display: inline;
+}
+
+// either that or overwrite visit_attribution/depart_attribution
+blockquote p.attribution:extend(blockquote footer) {}
+
+div.section > h1 {
+  .page-header();
+  font-size: floor((@font-size-base * 3.05));
+}
+
+div.section > h2 {
+  .page-header();
+  font-size: @font-size-h1;
+  padding-top: 20px;
+  margin-top: 0;
+}
+// ~docs-section
+.body > .section > .section {
+  margin-bottom: 60px;
+}
+
+.literal:extend(code) {}
+
+.admonition {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid @gray-lighter;
+  border-left-width: 5px;
+  border-radius: 3px;
+
+  .admonition-title:after {
+    content: ": ";
+  }
+  > .admonition-title,
+  // only "aphorisms" should have the same size as the admonition category
+  &.aphorism > .admonition-title + p,
+  &.exercise > .admonition-title + p {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    font-family: @headings-font-family;
+    font-weight: @headings-font-weight;
+    line-height: @headings-line-height;
+    color: @headings-color;
+
+    font-size: @font-size-h4;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  &.tip {
+    border-left-color: @brand-info;
+    > .admonition-title {
+      color: @brand-info;
+    }
+  }
+  &.warning {
+    border-left-color: @brand-warning;
+    > .admonition-title {
+      color: @brand-warning;
+    }
+  }
+  &.danger {
+    border-left-color: @brand-danger;
+    > .admonition-title {
+      color: @brand-danger;
+    }
+  }
+  &.exercise {
+    border-left-color: @gray-light;
+    > .admonition-title {
+      color: @gray;
+    }
+  }
+}
+
+/*
+ * Code snippets
+ *
+ * Generated via Pygments
+ */
+.highlight pre {
+  padding: 4px;
+  font-size: 75%;
+  // don't break lines within words
+  word-break: normal;
+  word-wrap: normal;
+}
+.switchable .highlight.with-btn-clipboard pre {
+  // avoid copy button overlapping with even long lines
+  padding-right: 50px;
+}
+
+/*
+ * ZeroClipboard styles
+ */
+.highlight {
+  position: relative;
+}
+.btn-clipboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #777;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.active {
+    background-color: #ffffad;
+    .transition(background-color .5s linear);
+  }
+}
+
+// rST styles
+img.align-center {
+  display: block;
+  margin: 0 auto;
+}
+
+dd {
+  // Reinstate dd indent, looks horrible and illegible otherwise
+  margin-left: @item-indent;
+}
+
+// By default there's (browser) padding on ``ul`` so lists of >1 field are
+// nicely separated from the section name (e.g. ``Parameters``) but single
+// fields/items are stuck to it and look horrible. Make everything neatly-ish
+// aligned. Other option: half and half so list bullets are aligned to text
+// instead of text to text
+td.field-body {
+  padding-left: @item-indent;
+  ul {
+    padding-left: @item-indent;
+  }
+  > ul {
+    padding-left: 0;
+  }
+}
+
+// naming collision, rST generates .container nodes with completely different
+// semantics so go away
+.section .container {
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+// lighten js namespace/class name
+.descclassname {
+  opacity: 0.5;
+}
+
+
+.index-tree {
+  ul, li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  > ul > li {
+    margin-bottom: 0.5em;
+    > a {
+      .h3();
+      text-align: center;
+    }
+    > ul {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+      > li {
+        width: 50%;
+        a {
+          .h4();
+          padding-left: 10%;
+          padding-right: 10%;
+        }
+      }
+    }
+    a {
+      display: block;
+      color: @link-color !important;
+      padding: 0.3em 0;
+      margin: 3px !important;
+      &:hover {
+        background-color: @gray-lighter;
+      }
+    }
+  }
+}
+
+@background-right: @gray-dark;
+@color-right: @gray-lighter;
+@color-right-code: lighten(#000, 80%);
+@separator-right: @gray-light;
+// STRIPE-STYLE PAGES
+.stripe {
+  .section {
+    margin-bottom: 2em;
+  }
+
+  // === columning only on medium+ ===
+  @media (min-width: @screen-md-min) {
+    // column 1
+    .section > *,
+    .section > .force-left {
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    // column 2
+    .section > .force-right {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+    .section > .force-right,
+    .section > [class*=highlight] {
+      float: none;
+      clear: none;
+      margin-left: 50%;
+      width: 50%;
+      color: @color-right;
+      a {
+        color: lighten(@link-color, 30%);
+      }
+      code, .literal {
+        color: @code-bg;
+        background-color: @gray;
+      }
+      &:not(.highlight-json) .highlight {
+        border-bottom-color: @separator-right;
+      }
+      &.admonition {
+        margin-left: 51%;
+        width: 49%;
+        border-top-color: @separator-right;
+        border-bottom-color: @separator-right;
+        border-right-color: @separator-right;
+      }
+      pre {
+        // padding leads to overflow scrollbar in safari for no reason I understand,
+        // margin does not have that issue
+        padding: 0;
+        margin: 10px;
+
+        background: none;
+        border: none;
+      }
+      .highlight {
+        border-color: @gray;
+        border-style: solid;
+        border-width: 1px 0;
+        // solarized-ish from https://gist.github.com/qguv/7936275
+        color: @color-right-code;
+        background: none;
+        .lineno { color: #586e75 } /* Line Numbers */
+        .c { color: #586e75 } /* Comment */
+        .err { color: @color-right-code } /* Error */
+        .g { color: @color-right-code } /* Generic */
+        .k { color: #859900 } /* Keyword */
+        .l { color: @color-right-code } /* Literal */
+        .n { color: @color-right-code } /* Name */
+        .o { color: #859900 } /* Operator */
+        .x { color: #cb4b16 } /* Other */
+        .p { color: @color-right-code } /* Punctuation */
+        .cm { color: #586e75 } /* Comment.Multiline */
+        .cp { color: #859900 } /* Comment.Preproc */
+        .c1 { color: #586e75 } /* Comment.Single */
+        .cs { color: #859900 } /* Comment.Special */
+        .gd { color: #2aa198 } /* Generic.Deleted */
+        .ge { color: @color-right-code; font-style: italic } /* Generic.Emph */
+        .gr { color: #dc322f } /* Generic.Error */
+        .gh { color: #cb4b16 } /* Generic.Heading */
+        .gi { color: #859900 } /* Generic.Inserted */
+        .go { color: @color-right-code } /* Generic.Output */
+        .gp { color: @color-right-code } /* Generic.Prompt */
+        .gs { color: @color-right-code; font-weight: bold } /* Generic.Strong */
+        .gu { color: #cb4b16 } /* Generic.Subheading */
+        .gt { color: @color-right-code } /* Generic.Traceback */
+        .kc { color: #cb4b16 } /* Keyword.Constant */
+        .kd { color: #268bd2 } /* Keyword.Declaration */
+        .kn { color: #859900 } /* Keyword.Namespace */
+        .kp { color: #859900 } /* Keyword.Pseudo */
+        .kr { color: #268bd2 } /* Keyword.Reserved */
+        .kt { color: #dc322f } /* Keyword.Type */
+        .ld { color: @color-right-code } /* Literal.Date */
+        .m { color: #2aa198 } /* Literal.Number */
+        .s { color: #2aa198 } /* Literal.String */
+        .na { color: @color-right-code } /* Name.Attribute */
+        .nb { color: #B58900 } /* Name.Builtin */
+        .nc { color: #268bd2 } /* Name.Class */
+        .no { color: #cb4b16 } /* Name.Constant */
+        .nd { color: #268bd2 } /* Name.Decorator */
+        .ni { color: #cb4b16 } /* Name.Entity */
+        .ne { color: #cb4b16 } /* Name.Exception */
+        .nf { color: #268bd2 } /* Name.Function */
+        .nl { color: @color-right-code } /* Name.Label */
+        .nn { color: @color-right-code } /* Name.Namespace */
+        .nx { color: @color-right-code } /* Name.Other */
+        .py { color: @color-right-code } /* Name.Property */
+        .nt { color: #268bd2 } /* Name.Tag */
+        .nv { color: #268bd2 } /* Name.Variable */
+        .ow { color: #859900 } /* Operator.Word */
+        .w { color: @color-right-code } /* Text.Whitespace */
+        .mf { color: #2aa198 } /* Literal.Number.Float */
+        .mh { color: #2aa198 } /* Literal.Number.Hex */
+        .mi { color: #2aa198 } /* Literal.Number.Integer */
+        .mo { color: #2aa198 } /* Literal.Number.Oct */
+        .sb { color: #586e75 } /* Literal.String.Backtick */
+        .sc { color: #2aa198 } /* Literal.String.Char */
+        .sd { color: @color-right-code } /* Literal.String.Doc */
+        .s2 { color: #2aa198 } /* Literal.String.Double */
+        .se { color: #cb4b16 } /* Literal.String.Escape */
+        .sh { color: @color-right-code } /* Literal.String.Heredoc */
+        .si { color: #2aa198 } /* Literal.String.Interpol */
+        .sx { color: #2aa198 } /* Literal.String.Other */
+        .sr { color: #dc322f } /* Literal.String.Regex */
+        .s1 { color: #2aa198 } /* Literal.String.Single */
+        .ss { color: #2aa198 } /* Literal.String.Symbol */
+        .bp { color: #268bd2 } /* Name.Builtin.Pseudo */
+        .vc { color: #268bd2 } /* Name.Variable.Class */
+        .vg { color: #268bd2 } /* Name.Variable.Global */
+        .vi { color: #268bd2 } /* Name.Variable.Instance */
+        .il { color: #2aa198 } /* Literal.Number.Integer.Long */
+      }
+    }
+    // separator above H2
+    .body > .section > .section {
+      border-top: 1px solid @color-right;
+    }
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6 {
+      max-width: 50%;
+
+    }
+    .section > h1, .section > h2, .section > h3, .section > h4, .section > h5,
+    .section > h6, .section > .section {
+      position: relative;
+      width: auto;
+      float: none;
+      clear: both;
+    }
+
+    .documentwrapper {
+      overflow: auto;
+      // middle separator
+      &:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        content: "";
+        width: 50%;
+        background: @background-right;
+      }
+    }
+
+    .highlight pre {
+      // but allow additional line-breaks between "words" to avoid overflow
+      white-space: pre-wrap;
+    }
+
+    .btn-clipboard {
+      background-color: transparent;
+      color: @color-right;
+      border-color: @separator-right;
+      border-top: none;
+      border-top-right-radius: 0;
+
+      &.active {
+        background-color: @gray;
+        .transition(background-color .5s linear);
+      }
+    }
+  }
+
+  .switcher {
+    color: white;
+    width: auto !important;
+    float: none !important;
+
+    position: absolute;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+
+    right: 0.5em;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 5;
+    &.affix {
+      position: fixed;
+      top: 0;
+    }
+
+    li {
+      background-color: #0f131a;
+      padding: 0.4em 1em;
+      border: 1px solid #333;
+      border-left-width: 0;
+      cursor: pointer;
+      &:first-child {
+        border-left-width: 1px;
+        border-radius: 0 0 0 5px;
+      }
+      &:last-child {
+        border-radius: 0 0 5px 0;
+      }
+      &:hover {
+        background-color: #222;
+      }
+      &.active {
+        background-color: #333;
+      }
+    }
+  }
+
+  // === show/hide code snippets ===
+  [class*=only-],
+  .switchable > .highlight {
+    display: none;
+  }
+  // must be final rule of page
+  .only-python, .highlight-python > .highlight {
+    display: block;
+  }
+}

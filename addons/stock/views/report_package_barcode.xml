@@ -38,10 +38,29 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 mt32">
+                        <div class="col-xs-12 mt32 text-center">
                             <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                            <p class="text-center" t-field="o.name"></p>
+                            <p t-field="o.name"></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_package_barcode_small">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-xs-12 mt32 text-center">
+                            <table class="table table-condensed" style="border-bottom: 3px solid black !important;"><thead><th> </th></thead></table>
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
+                            <p t-field="o.name"></p>
                         </div>
                     </div>
                 </div>

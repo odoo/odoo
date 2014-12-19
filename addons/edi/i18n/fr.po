@@ -1,42 +1,27 @@
 # French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-18 23:20+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "Motif:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "Le document a été importé avec succès !"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "Désolé, le document ne peut pas être importé."
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' est un ID externe non valide"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,34 +35,26 @@ msgstr "Devise"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "Notification d'import de document"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "Application manquante."
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "Sous-système EDI"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
+#: field:edi.edi,id:0
+msgid "ID"
 msgstr ""
-"Le document que vous essayez d'importer exige l'application `%s` d'OpenERP. "
-"Vous pouvez l'installer en vous connectant en tant qu'administrateur et en "
-"lançant l'assistant de configuration."
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' est un ID externe non valide"
+msgid "Missing Application."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -85,232 +62,31 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "Sous-système EDI"
-
-#~ msgid "EDI token"
-#~ msgstr "Jeton EDI"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "Identifiant unique pour récupérer un document EDI."
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "Adresse de l'instance OpenERP :"
-
-#~ msgid "Import this document"
-#~ msgstr "Importer ce document"
-
-#~ msgid "View/Print"
-#~ msgstr "Aperçu/Impression"
-
-#~ msgid "EDI document content"
-#~ msgstr "Contenu du document EDI"
-
-#~ msgid "EDI Document"
-#~ msgstr "Document EDI"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "Application manquante"
+msgid "Reason:"
+msgstr "Motif:"
 
-#~ msgid ""
-#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
-#~ "language\n"
-#~ "                            independent"
-#~ msgstr ""
-#~ "Les documents  EDI (Échange de données informatisées) d'OpenERP  sont "
-#~ "génériques et indépendants du langage"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "Désolé, le document ne peut pas être importé."
 
-#~ msgid "OpenERP documentation"
-#~ msgstr "documentation OpenERP"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "Le document a été importé avec succès !"
 
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "Le code de la devise doit être unique par société !"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Le nom de la société doit être unique !"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "Adresses des partenaires"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr ""
-#~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "Importer dans une instance OpenERP existante"
-
-#~ msgid "Document"
-#~ msgstr "Document"
-
-#~ msgid "Import"
-#~ msgstr "Importer"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid "Invoice"
-#~ msgstr "Facture"
-
-#~ msgid "Description"
-#~ msgstr "Description"
-
-#~ msgid "Your Reference"
-#~ msgstr "Votre référence"
-
-#~ msgid "Date"
-#~ msgstr "Date"
-
-#~ msgid "Quantity"
-#~ msgstr "Quantité"
-
-#~ msgid "Product Description"
-#~ msgstr "Description du produit"
-
-#~ msgid "Download"
-#~ msgstr "Télécharger"
-
-#~ msgid "Powered by"
-#~ msgstr "Propulsé par"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Discount"
-#~ msgstr "Remise"
-
-#~ msgid "Unit Price"
-#~ msgstr "Prix unitaire"
-
-#~ msgid "Net Total:"
-#~ msgstr "Total net :"
-
-#~ msgid "Price"
-#~ msgstr "Prix"
-
-#~ msgid "Total:"
-#~ msgstr "Total :"
-
-#~ msgid "Taxes:"
-#~ msgstr "Taxes :"
-
-#~ msgid "Amount"
-#~ msgstr "Montant"
-
-#~ msgid "Notes:"
-#~ msgstr "Notes :"
-
-#~ msgid "Tax"
-#~ msgstr "Taxe"
-
-#~ msgid "Base Amount"
-#~ msgstr "Montant de base"
-
-#~ msgid "Order"
-#~ msgstr "Commande"
-
-#~ msgid "Salesman"
-#~ msgstr "Vendeur"
-
-#~ msgid "to"
-#~ msgstr "à"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Import into another application"
-#~ msgstr "Créer ma nouvelle instance OpenERP"
-
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "Importer dans une nouvelle instance en ligne d'OpenERP"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr ""
-#~ "voir, c'est tout ce qu'il faut pour utiliser ce document EDI en Python"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "Vous pouvez télécharger le document EDI brut ici:"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "Pour commencer immédiatement,"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Vous pouvez payer directement cette facture en ligne via la passerelle de "
-#~ "paiement sécurisée Paypal :"
-
-#~ msgid "Discount(%)"
-#~ msgstr "Remise(%)"
-
-#~ msgid "Payment terms"
-#~ msgstr "Conditions de règlement"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Vous pouvez payer directement cette facture en ligne via la passerelle de "
-#~ "paiement sécurisée Paypal:"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "Virement bancaire"
-
-#~ msgid "Pay Online"
-#~ msgstr "Payer en ligne"
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "Les jetons EDI doivent être uniques !"
-
-#~ msgid ""
-#~ "(postal address on the invoice header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the invoice\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(adresse postale de l'en-tête de facture)\n"
-#~ "                     en utilisant l'un des comptes bancaires suivants. "
-#~ "Assurez-vous de bien mentionner la référence de la\n"
-#~ "                     facture"
-
-#~ msgid ""
-#~ "(postal address on the order header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the document\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "(adresse postale de l'en-tête de commande)\n"
-#~ "                     en utilisant l'un des comptes bancaires suivants. "
-#~ "Assurez-vous de bien mentionner les références de la\n"
-#~ "                     commande"
-
-#~ msgid "Please transfer"
-#~ msgstr "Veuillez transférer s'il vous plait"
-
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "Créer ma nouvelle instance OpenERP"
-
-#~ msgid ""
-#~ "serialization of the document's attribute.\n"
-#~ "                            It is usually very quick and straightforward to "
-#~ "create a small plug-in for your preferred\n"
-#~ "                            application that will be capable of importing "
-#~ "any OpenERP EDI document.\n"
-#~ "                            You can find out more details about how to do "
-#~ "this and what the content of OpenERP EDI documents\n"
-#~ "                            is like in the"
-#~ msgstr ""
-#~ "sérialisation des attributs documents.\n"
-#~ "                            Il est souvent simple et rapide de créer un "
-#~ "petit plugin pour vos applications\n"
-#~ "                            préférées qui seront capables d'importer tout "
-#~ "document EDI.\n"
-#~ "                            Vous pouvez trouver plus de détails sur comment "
-#~ "faire cela et sur le contenu des documents EDI\n"
-#~ "                            sur"
-
-#~ msgid "on the transfer:"
-#~ msgstr "sur le transfert :"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

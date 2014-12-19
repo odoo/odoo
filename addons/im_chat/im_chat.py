@@ -52,6 +52,13 @@ class im_chat_session(osv.Model):
         'uuid': lambda *args: '%s' % uuid.uuid4(),
     }
 
+    def is_in_session(self, cr, uid, uuid, user_id, context=None):
+        """ return if the given user_id is in the session """
+        sids = self.search(cr, uid, [('uuid', '=', uuid)], context=context, limit=1)
+        for session in self.browse(cr, uid, sids, context=context):
+                return user_id and user_id in [u.id for u in session.user_ids]
+        return False
+
     def users_infos(self, cr, uid, ids, context=None):
         """ get the user infos for all the user in the session """
         for session in self.pool["im_chat.session"].browse(cr, uid, ids, context=context):
@@ -136,7 +143,8 @@ class im_chat_session(osv.Model):
             if session_id:
                 # get the image of the user
                 res = self.pool["res.users"].read(cr, uid, [user_id], ["image_small"])[0]
-                image_b64 = res["image_small"]
+                if res["image_small"]:
+                    image_b64 = res["image_small"]
         return image_b64
 
 class im_chat_message(osv.Model):
@@ -219,6 +227,17 @@ class im_chat_message(osv.Model):
             self.pool['bus.bus'].sendmany(cr, uid, notifications)
         return message_id
 
+    def get_messages(self, cr, uid, uuid, last_id=False, limit=20, context=None):
+        """ get messages (id desc) from given last_id in the given session """
+        Session = self.pool['im_chat.session']
+        if Session.is_in_session(cr, uid, uuid, uid, context=context):
+            domain = [("to_id.uuid", "=", uuid)]
+            if last_id:
+                domain.append(("id", "<", last_id));
+            return self.search_read(cr, uid, domain, ['id', 'create_date','to_id','from_id', 'type', 'message'], limit=limit, context=context)
+        return False
+
+
 class im_chat_presence(osv.Model):
     """ im_chat_presence status can be: online, away or offline.
         This model is a one2one, but is not attached to res_users to avoid database concurrence errors
@@ -226,7 +245,7 @@ class im_chat_presence(osv.Model):
     _name = 'im_chat.presence'
 
     _columns = {
-        'user_id' : fields.many2one('res.users', 'Users', required=True, select=True),
+        'user_id' : fields.many2one('res.users', 'Users', required=True, select=True, ondelete="cascade"),
         'last_poll': fields.datetime('Last Poll'),
         'last_presence': fields.datetime('Last Presence'),
         'status' : fields.selection([('online','Online'), ('away','Away'), ('offline','Offline')], 'IM Status'),
@@ -304,23 +323,59 @@ class res_users(osv.Model):
         'im_status' : fields.function(_get_im_status, type="char", string="IM Status"),
     }
 
-    def im_search(self, cr, uid, name, limit, context=None):
+    def im_search(self, cr, uid, name, limit=20, context=None):
         """ search users with a name and return its id, name and im_status """
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
-        user_ids = self.name_search(cr, uid, name, [('id','!=', uid), ('groups_id', 'in', [group_user_id])], limit=limit, context=context)
-        domain = [('user_id', 'in', [i[0] for i in user_ids])]
-        ids = self.pool['im_chat.presence'].search(cr, uid, domain, order="last_poll desc", context=context)
-        presences = self.pool['im_chat.presence'].read(cr, uid, ids, ['user_id','status'], context=context)
-        res = []
-        for user_id in user_ids:
-            user = {
-                'id' : user_id[0],
-                'name' : user_id[1]
-            }
-            tmp = filter(lambda p: p['user_id'][0] == user_id[0], presences)
-            user['im_status'] = len(tmp) > 0 and tmp[0]['status'] or 'offline'
-            res.append(user)
-        return res
+        result = [];
+        # find the employee group
+        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+
+        where_clause_base = " U.active = 't' "
+        query_params = ()
+        if name:
+            where_clause_base += " AND P.name ILIKE %s "
+            query_params = query_params + ('%'+name+'%',)
+
+        # first query to find online employee
+        cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id != %s
+                        AND EXISTS (SELECT 1 FROM res_groups_users_rel G WHERE G.gid = %s AND G.uid = U.id)
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+        ''', query_params + (uid, group_employee, limit))
+        result = result + cr.dictfetchall()
+
+        # second query to find other online people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM im_chat_presence S
+                    JOIN res_users U ON S.user_id = U.id
+                    JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                        AND S.status = 'online'
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+
+        # third query to find all other people
+        if(len(result) < limit):
+            cr.execute('''SELECT U.id as id, P.name as name, COALESCE(S.status, 'offline') as im_status
+                FROM res_users U
+                    LEFT JOIN im_chat_presence S ON S.user_id = U.id
+                    LEFT JOIN res_partner P ON P.id = U.partner_id
+                WHERE   '''+where_clause_base+'''
+                        AND U.id NOT IN %s
+                ORDER BY P.name
+                LIMIT %s
+            ''', query_params + (tuple([u["id"] for u in result]) + (uid,), limit-len(result)))
+            result = result + cr.dictfetchall()
+        return result
 
 #----------------------------------------------------------
 # Controllers
@@ -329,9 +384,11 @@ class Controller(openerp.addons.bus.bus.Controller):
     def _poll(self, dbname, channels, last, options):
         if request.session.uid:
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
-            registry.get('im_chat.presence').update(cr, uid, ('im_presence' in options), context=context)
-            # listen to connection and disconnections
-            channels.append((request.db,'im_chat.presence'))
+            registry.get('im_chat.presence').update(cr, uid, options.get('im_presence', False), context=context)
+            ## For performance issue, the real time status notification is disabled. This means a change of status are still braoadcasted
+            ## but not received by anyone. Otherwise, all listening user restart their longpolling at the same time and cause a 'ConnectionPool Full Error'
+            ## since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
+            ##channels.append((request.db,'im_chat.presence'))
             # channel to receive message
             channels.append((request.db,'im_chat.session', request.uid))
         return super(Controller, self)._poll(dbname, channels, last, options)
@@ -360,5 +417,10 @@ class Controller(openerp.addons.bus.bus.Controller):
         headers = [('Content-Type', 'image/png')]
         headers.append(('Content-Length', len(image_data)))
         return request.make_response(image_data, headers)
+
+    @openerp.http.route(['/im_chat/history'], type="json", auth="none")
+    def history(self, uuid, last_id=False, limit=20):
+        registry, cr, uid, context = request.registry, request.cr, request.session.uid or openerp.SUPERUSER_ID, request.context
+        return registry["im_chat.message"].get_messages(cr, uid, uuid, last_id, limit, context=context)
 
 # vim:et:

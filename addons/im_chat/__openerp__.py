@@ -6,6 +6,7 @@
     'sequence': '18',
     'category': 'Tools',
     'complexity': 'easy',
+    'website': 'https://www.odoo.com/page/live-chat',
     'description':
         """
 Instant Messaging
@@ -22,4 +23,6 @@ chat in real time. It support several chats in parallel.
     'depends' : ['base', 'web', 'bus'],
     'qweb': ['static/src/xml/*.xml'],
     'application': True,
+    'installable': True,
+    'auto_install': True,
 }

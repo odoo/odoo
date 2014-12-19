@@ -1,91 +1,77 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-09-08 14:48+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-03 04:43+0000\n"
+"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-05 01:12+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+"Language: ko\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "메모"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "사용"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "송장 발행 유형"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr "생성자:"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr "생성일"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "판매 & 구매"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "선택한 옵션 기준으로 청구서 생성"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "송장 발행"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "그룹화됨"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr ""
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
+msgstr "사용 중인 필드를 '아니오'로 설정할 경우, 청구서 유형을 제거하지 않고 숨길 수 있도록 합니다."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "메모"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "송장 발행 방식"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "피킹 리스트"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "청구서 유형"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "송장 유형"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "분류되지 않음"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "분류됨"
+msgstr "청구서 유형"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -94,30 +80,48 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"청구서 유형은 협력업체, 판매주문 및 배송주문에 사용됩니다. 특정 청구서 발행일지를 생성하여 고객의 필요에 따라 청구서 발행을 그룹화할 "
+"수 있습니다: 일간, 매 수요일, 월간 등."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "선택한 옵션에 근거하여 송장을 생성"
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "송장 발행"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "송장 유형"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "송장 발행 유형"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "활성"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "송장 발행 방식"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 업데이트 한 사람:"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr "최근 업데이트 날짜:"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "그룹화되지 않음"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "메모"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "메모"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -125,251 +129,22 @@ msgid "Partner"
 msgstr "협력업체"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "출고목록"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "판매 & 구매"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "판매 주문"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "배송 주문"
-
-#~ msgid "Journal date"
-#~ msgstr "저널 날짜"
-
-#~ msgid "Assigned packing"
-#~ msgstr "할당된 포장"
-
-#~ msgid "Sale Stats"
-#~ msgstr "판매 통계"
-
-#~ msgid "Sale Journal"
-#~ msgstr "판매 저널"
-
-#~ msgid "to be invoiced"
-#~ msgstr "인보이스 예정"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "대기 스케줄"
-
-#~ msgid "assigned"
-#~ msgstr "할당됨"
-
-#~ msgid "Monthly sales"
-#~ msgstr "월간 판매"
-
-#~ msgid "Set to Draft"
-#~ msgstr "초안으로 설정"
-
-#~ msgid "waiting"
-#~ msgstr "대기"
-
-#~ msgid "My open journals"
-#~ msgstr "내 오픈 저널들"
-
-#~ msgid "# of Lines"
-#~ msgstr "라인의 #"
-
-#~ msgid "All Open Journals"
-#~ msgstr "모든 오픈 저널들"
-
-#~ msgid "done"
-#~ msgstr "완료"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "저널별 판매 및 배송 관리"
-
-#~ msgid "Packing Journals"
-#~ msgstr "포장 저널"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "인보이스 방식별 포장"
-
-#~ msgid "Average Price"
-#~ msgstr "평균 가격"
-
-#~ msgid "My open packing journals"
-#~ msgstr "내 오픈 포장 저널들"
-
-#~ msgid "Packing journals"
-#~ msgstr "포장 저널"
-
-#~ msgid "Packing"
-#~ msgstr "포장"
-
-#~ msgid "State"
-#~ msgstr "상태"
-
-#~ msgid "Total Price"
-#~ msgstr "총 가격"
-
-#~ msgid "All Months"
-#~ msgstr "전체 기간 (월)"
-
-#~ msgid "Reporting"
-#~ msgstr "리포팅"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "저널별 판매 주문"
-
-#~ msgid "Open journals"
-#~ msgstr "저널 오픈"
-
-#~ msgid "Month"
-#~ msgstr "월"
-
-#~ msgid "In progress"
-#~ msgstr "진행 중"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "저널별 판매 (이달)"
-
-#~ msgid "Manual in progress"
-#~ msgstr "수작업 진행 중"
-
-#~ msgid "Packing by journals"
-#~ msgstr "저널별 포장"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "포장 취소"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "판매와 포장에 이용되는 저널 타입"
-
-#~ msgid "Packing by journal"
-#~ msgstr "저널별 포장"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "확정된 포장"
-
-#~ msgid "None"
-#~ msgstr "없음"
-
-#~ msgid "Draft"
-#~ msgstr "초안"
-
-#~ msgid "Validation date"
-#~ msgstr "검증 날짜"
-
-#~ msgid "draft"
-#~ msgstr "초안"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "인보이스 방식별 포장"
-
-#~ msgid "Invoice state"
-#~ msgstr "인보이스 상태"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "인보이스 예외"
-
-#~ msgid "cancel"
-#~ msgstr "취소"
-
-#~ msgid "Order State"
-#~ msgstr "주문 상태"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "선적 예외"
-
-#~ msgid "Draft sales"
-#~ msgstr "판매 초안"
-
-#~ msgid "Quotation"
-#~ msgstr "견적"
-
-#~ msgid "Sales Journals"
-#~ msgstr "판매 저널"
-
-#~ msgid "Open Journal"
-#~ msgstr "저널 오픈"
-
-#~ msgid "Creation date"
-#~ msgstr "생성 날짜"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "판매 확정"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "인보이싱 방법"
-
-#~ msgid "Code"
-#~ msgstr "코드"
-
-#~ msgid "Responsible"
-#~ msgstr "책임"
-
-#~ msgid "My Open Journals"
-#~ msgstr "내 오픈 저널"
-
-#~ msgid "Open"
-#~ msgstr "오픈"
-
-#~ msgid "Sales"
-#~ msgstr "판매"
-
-#~ msgid "Done"
-#~ msgstr "완료"
-
-#~ msgid "Packing Journal"
-#~ msgstr "포장 저널"
-
-#~ msgid "Journal Stats"
-#~ msgstr "저널 통계"
-
-#~ msgid "Cancel"
-#~ msgstr "취소"
-
-#~ msgid "invoiced"
-#~ msgstr "인보이스됨"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "판매 취소"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "포장과 인보이스 간의 통계"
-
-#~ msgid "confirmed"
-#~ msgstr "확정됨"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "저널별 포장리스트"
-
-#~ msgid "Journal"
-#~ msgstr "저널"
-
-#~ msgid "Quantities"
-#~ msgstr "수량"
-
-#~ msgid "This Month"
-#~ msgstr "이번 달"
-
-#~ msgid "Close Journal"
-#~ msgstr "저널 닫기"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "인보이싱 방식"
-
-#~ msgid "States"
-#~ msgstr "상태"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "포장에서 인보이스로"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "저널별 포장"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "인보이스 방식별 포장에 관한 통계"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "저널별 판매"
-
-#~ msgid "Journal Information"
-#~ msgstr "저널 정보"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "포장에서 인보이스로"
-
-#~ msgid "Approved sales"
-#~ msgstr "승인된 판매"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr "현재 협력업체에게 청구서를 발행하기 위해 청구서 발행 유형이 기본으로 사용됩니다."

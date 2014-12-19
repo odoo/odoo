@@ -335,13 +335,13 @@ instance.web.auto_date_to_str = function(value, type) {
  * performs a half up rounding with arbitrary precision, correcting for float loss of precision
  * See the corresponding float_round() in server/tools/float_utils.py for more info
  * @param {Number} the value to be rounded
- * @param {Number} a non zero precision parameter. eg: 0.01 rounds to two digits.
+ * @param {Number} a precision parameter. eg: 0.01 rounds to two digits.
  */
 instance.web.round_precision = function(value, precision){
-    if(!value){
+    if (!value) {
         return 0;
-    }else if(!precision){
-        throw new Error('round_precision(...):  Cannot round value: '+value+' with a precision of zero (or undefined)');
+    } else if (!precision || precision < 0) {
+        precision = 1;
     }
     var normalized_value = value / precision;
     var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);

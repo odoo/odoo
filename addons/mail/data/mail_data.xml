@@ -20,6 +20,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field eval="False" name="doall" />
             <field eval="'publisher_warranty.contract'" name="model" />
             <field eval="'update_notification'" name="function" />

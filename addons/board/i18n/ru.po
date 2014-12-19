@@ -1,93 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* board
+# Russian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-10-26 09:05+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Создать панель"
-
-#. module: board
-#: view:board.create:0
-msgid "Create"
-msgstr "Создать"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
-#, python-format
-msgid "Reset Layout.."
-msgstr "Обнулить Макет..."
-
-#. module: board
-#: view:board.create:0
-msgid "Create New Dashboard"
-msgstr "Создать новую панель"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
-#, python-format
-msgid "Choose dashboard layout"
-msgstr "Выбрать вид панели"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
-#, python-format
-msgid "Add"
-msgstr "Добавить"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
-#, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Вы действительно хотите удалить этот объект?"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "Board"
-msgstr "Панель"
-
-#. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_my_dash_action
-#: model:ir.ui.menu,name:board.menu_board_my_dash
-msgid "My Dashboard"
-msgstr "Моя панель"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Название панели"
-
-#. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Создание панели"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
-#, python-format
-msgid "Add to Dashboard"
-msgstr "Добавить на Панель"
+"X-Launchpad-Export-Date: 2014-09-24 08:58+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: board
 #. openerp-web
@@ -133,15 +61,58 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:70
 #, python-format
-msgid "Reset"
-msgstr "Сбросить"
+msgid "Add"
+msgstr "Добавить"
 
 #. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Родительское меню"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
+#, python-format
+msgid "Add to Dashboard"
+msgstr "Добавить на Панель"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:136
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr "Вы действительно хотите удалить этот объект?"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr "Панель"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Создание панели"
+
+#. module: board
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr "Название панели"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:374
+#, python-format
+msgid "Can't find dashboard action"
+msgstr ""
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr "Изменить Макет"
 
 #. module: board
 #. openerp-web
@@ -152,27 +123,99 @@ msgstr "Изменить Макет..."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:93
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Выбрать вид панели"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:406
+#, python-format
+msgid "Could not add filter to dashboard"
+msgstr ""
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create"
+msgstr "Создать"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Создать панель"
+
+#. module: board
+#: view:board.create:board.view_board_create
+msgid "Create New Dashboard"
+msgstr "Создать новую панель"
+
+#. module: board
+#: field:board.create,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: board
+#: field:board.create,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:92
 #, python-format
 msgid "Edit Layout"
 msgstr "Редактировать макет"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/js/dashboard.js:409
 #, python-format
-msgid "Change Layout"
-msgstr "Изменить Макет"
+msgid "Filter added to dashboard"
+msgstr ""
 
 #. module: board
-#: view:board.create:0
-msgid "Cancel"
-msgstr "Отмена"
+#: field:board.board,id:0
+#: field:board.create,id:0
+msgid "ID"
+msgstr ""
 
 #. module: board
-#: view:board.create:0
-msgid "or"
-msgstr "или"
+#: field:board.create,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: board
+#: field:board.create,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: board
+#: view:board.board:board.board_my_dash_view
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr "Моя панель"
+
+#. module: board
+#: field:board.create,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Родительское меню"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr "Сбросить"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr "Обнулить Макет..."
 
 #. module: board
 #. openerp-web
@@ -180,244 +223,3 @@ msgstr "или"
 #, python-format
 msgid "Title of new dashboard item"
 msgstr "Заголовок новой панели"
-
-#~ msgid "Author"
-#~ msgstr "Автор"
-
-#~ msgid "Note"
-#~ msgstr "Примечание"
-
-#~ msgid "Width"
-#~ msgstr "Ширина"
-
-#~ msgid "Dashboard Definition"
-#~ msgstr "Определения панели аналитики"
-
-#~ msgid "Publish a note"
-#~ msgstr "Опубликовать примечание"
-
-#~ msgid "Menu Information"
-#~ msgstr "Информация меню"
-
-#~ msgid "Action Views"
-#~ msgstr "Виды действия"
-
-#~ msgid "Date"
-#~ msgstr "Дата"
-
-#~ msgid "Configuration"
-#~ msgstr "Настройки"
-
-#~ msgid "Note Type"
-#~ msgstr "Тип примечания"
-
-#~ msgid "Create Menu For Dashboard"
-#~ msgstr "Создать меню для панели аналитики"
-
-#~ msgid "Notes"
-#~ msgstr "Примечания"
-
-#~ msgid "Dashboard"
-#~ msgstr "Панель аналитики"
-
-#~ msgid "Position"
-#~ msgstr "Позиция"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Открыть панель аналитики"
-
-#~ msgid "Menu Name"
-#~ msgstr "Название меню"
-
-#~ msgid "Note type"
-#~ msgstr "Тип примечания"
-
-#~ msgid "Left"
-#~ msgstr "Слева"
-
-#~ msgid "Board View"
-#~ msgstr "Вид панели"
-
-#~ msgid "Right"
-#~ msgstr "Справа"
-
-#~ msgid "Sequence"
-#~ msgstr "Последовательность"
-
-#~ msgid "Create Menu"
-#~ msgstr "Создать меню"
-
-#~ msgid "Dashboards"
-#~ msgstr "Панели аналитики"
-
-#~ msgid "Height"
-#~ msgstr "Высота"
-
-#~ msgid "Create Board Menu"
-#~ msgstr "Создать меню панели"
-
-#~ msgid "Dashboard View"
-#~ msgstr "Вид панели"
-
-#~ msgid "Subject"
-#~ msgstr "Тема"
-
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "Ошибка пользователя!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Dashboard main module"
-#~ msgstr "Главный модуль панели аналитики"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Имя Объекта должно начинаться с x_ и не должно содержать специальных "
-#~ "символов!"
-
-#~ msgid "board.board"
-#~ msgstr "board.board"
-
-#~ msgid "Title"
-#~ msgstr "Заголовок"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Некорректный формат XML для структуры просмотров!"
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Главный модуль для всех панелей аналитики."
-
-#~ msgid "board.note"
-#~ msgstr "board.note"
-
-#~ msgid "board.board.line"
-#~ msgstr "board.board.line"
-
-#~ msgid "board.note.type"
-#~ msgstr "board.note.type"
-
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "Пожалуйста, укажите Панель Просмотра(ов)!"
-
-#~ msgid "Weekly Global Activity"
-#~ msgstr "Общая активность за неделю"
-
-#~ msgid "  Year  "
-#~ msgstr "  Год  "
-
-#~ msgid "# of Entries"
-#~ msgstr "Кол-во записей"
-
-#~ msgid "Month"
-#~ msgstr "Месяц"
-
-#~ msgid "Monthly Activity per Document"
-#~ msgstr "Месячная активность на документ"
-
-#~ msgid "Menu Create"
-#~ msgstr "Создать меню"
-
-#~ msgid "Administration Dashboard"
-#~ msgstr "Инфо-панель администратора"
-
-#~ msgid "Latest Connections"
-#~ msgstr "Последние соединения"
-
-#~ msgid "Day"
-#~ msgstr "День"
-
-#~ msgid "July"
-#~ msgstr "Июль"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Расширенные фильтры..."
-
-#~ msgid "Creation Date"
-#~ msgstr "Дата создания"
-
-#~ msgid "June"
-#~ msgstr "Июнь"
-
-#~ msgid "Log Analysis"
-#~ msgstr "Анализ журналов"
-
-#~ msgid "March"
-#~ msgstr "Март"
-
-#~ msgid "August"
-#~ msgstr "Август"
-
-#~ msgid "User Connections"
-#~ msgstr "Соединения пользователя"
-
-#~ msgid "November"
-#~ msgstr "Ноябрь"
-
-#~ msgid "January"
-#~ msgstr "Январь"
-
-#~ msgid "October"
-#~ msgstr "Октябрь"
-
-#~ msgid "February"
-#~ msgstr "Февраль"
-
-#~ msgid "April"
-#~ msgstr "Апрель"
-
-#~ msgid "Log Report"
-#~ msgstr "Журнал отчета"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Месяц-1    "
-
-#~ msgid "May"
-#~ msgstr "Май"
-
-#~ msgid "   Month   "
-#~ msgstr "   Месяц   "
-
-#~ msgid "December"
-#~ msgstr "Декабрь"
-
-#~ msgid "Model"
-#~ msgstr "Модель"
-
-#~ msgid "September"
-#~ msgstr "Сентябрь"
-
-#~ msgid "Action"
-#~ msgstr "Действие"
-
-#~ msgid "Object"
-#~ msgstr "Объект"
-
-#~ msgid "Year"
-#~ msgstr "Год"
-
-#~ msgid "Latest Activities"
-#~ msgstr "Последнее мероприятие"
-
-#~ msgid ""
-#~ "Gives the sequence order                         when displaying a list of "
-#~ "board lines."
-#~ msgstr "Определяет порядок следования строк списка"
-
-#~ msgid "Board Line"
-#~ msgstr "Строки панели"
-
-#~ msgid "Group By..."
-#~ msgstr "Группировать по ..."
-
-#~ msgid "Configuration Overview"
-#~ msgstr "Обзор конфигурации"
-
-#~ msgid "Home Page"
-#~ msgstr "Домашняя страница"
-
-#~ msgid "Users"
-#~ msgstr "Пользователи"

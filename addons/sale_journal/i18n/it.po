@@ -1,53 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Italian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-16 20:52+0000\n"
-"Last-Translator: Sergio Corato <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-22 14:55+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:26+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Nota"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Attivo"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Tipo Fatturazione"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr "Creato da"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
-"Questo tipo di fatturazione sarà usato, di default, per fatturare al partner "
-"corrente."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr "Creato il"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Vendite e Acquisti"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Genera fattura in base all'opzione selezionata."
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Fatturazione"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Raggruppati"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Spedizioni in entrata"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -59,19 +57,15 @@ msgstr ""
 "fattura senza rimuoverlo."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Note"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Metodo fatturazione"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Picking List"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo Fattura"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -79,16 +73,6 @@ msgstr "Picking List"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Tipi Fattura"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Non raggruppato"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Raggruppati"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -103,28 +87,44 @@ msgstr ""
 "giornaliero, ogni Mercoledì, mensile, ecc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Genera fattura in base all'opzione selezionata."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Fatturazione"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Tipo Fattura"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Tipo Fatturazione"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Attivo"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Metodo fatturazione"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Non raggruppato"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Note"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -132,221 +132,24 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Picking List"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Vendite e Acquisti"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Ordine di vendita"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Ordini di Consegna"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Vendite Mensili"
-
-#~ msgid "assigned"
-#~ msgstr "assegnato"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "In attesa di programmazione"
-
-#~ msgid "to be invoiced"
-#~ msgstr "da Fatturare"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Registro Vendite"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Statistiche Vendite"
-
-#~ msgid "waiting"
-#~ msgstr "in attesa"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Impost come Bozza"
-
-#~ msgid "Journal date"
-#~ msgstr "Data Registro"
-
-#~ msgid "My open journals"
-#~ msgstr "I Miei Registri Aperti"
-
-#~ msgid "# of Lines"
-#~ msgstr "Numero Righe"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Tutti i Registri Aperti"
-
-#~ msgid "done"
-#~ msgstr "fatto"
-
-#~ msgid "Average Price"
-#~ msgstr "Prezzo Medio"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "All Months"
-#~ msgstr "Tutti i Mesi"
-
-#~ msgid "Total Price"
-#~ msgstr "Prezzo Totale"
-
-#~ msgid "Reporting"
-#~ msgstr "Reportistica"
-
-#~ msgid "My open packing journals"
-#~ msgstr "I Miei Registri di Preparazione Merci Aperti"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Ordini di Vendita da Registro"
-
-#~ msgid "None"
-#~ msgstr "Nessuno"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Vendite da Registro (questo mese)"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Manuale in corso"
-
-#~ msgid "In progress"
-#~ msgstr "In corso"
-
-#~ msgid "Month"
-#~ msgstr "Mese"
-
-#~ msgid "Invoice state"
-#~ msgstr "Stato Fattura"
-
-#~ msgid "Order State"
-#~ msgstr "Stato Ordine"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Eccezione Spedizione"
-
-#~ msgid "Draft"
-#~ msgstr "Bozza"
-
-#~ msgid "cancel"
-#~ msgstr "Annulla"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Eccezione Fattura"
-
-#~ msgid "Validation date"
-#~ msgstr "Data di Conferma"
-
-#~ msgid "draft"
-#~ msgstr "Bozza"
-
-#~ msgid "Draft sales"
-#~ msgstr "Bozze di Vendita"
-
-#~ msgid "Quotation"
-#~ msgstr "Preventivo"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Registro Vendite"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Convalida Vendite"
-
-#~ msgid "Creation date"
-#~ msgstr "Data di creazione"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Metodo Fatturazione"
-
-#~ msgid "Code"
-#~ msgstr "Codice"
-
-#~ msgid "Open Journal"
-#~ msgstr "Registro Aperto"
-
-#~ msgid "Sales"
-#~ msgstr "Vendite"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Registro Preparazioni Merci"
-
-#~ msgid "Done"
-#~ msgstr "Completato"
-
-#~ msgid "Cancel"
-#~ msgstr "Annulla"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Statistiche Registro"
-
-#~ msgid "Open"
-#~ msgstr "Aperto"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
-
-#~ msgid "Responsible"
-#~ msgstr "Responsabile"
-
-#~ msgid "My Open Journals"
-#~ msgstr "I Miei Registri Aperti"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Annulla Vendite"
-
-#~ msgid "invoiced"
-#~ msgstr "Fatturato"
-
-#~ msgid "confirmed"
-#~ msgstr "confermato"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Bolle di Accompagnamento da Registro"
-
-#~ msgid "Quantities"
-#~ msgstr "Quantità"
-
-#~ msgid "Journal"
-#~ msgstr "Registro"
-
-#~ msgid "This Month"
-#~ msgstr "Questo Mese"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Vendite da Registro"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Metodi Fatturazione"
-
-#~ msgid "Journal Information"
-#~ msgstr "Informazioni Registro"
-
-#~ msgid "States"
-#~ msgstr "Stati"
-
-#~ msgid "Close Journal"
-#~ msgstr "Chiudi Registro"
-
-#~ msgid "Approved sales"
-#~ msgstr "Vendite Approvate"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modulo non valido nella definizione dell'azione."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Errore! Non è possibile creare membri associati ricorsivi."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Il riferimento ordine deve essere unico!"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Il riferimento deve essere unico per ogni azienda!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Il riferimento dell'ordine deve essere unico per ogni azienda!"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+"Questo tipo di fatturazione sarà usato, di default, per fatturare al partner "
+"corrente."

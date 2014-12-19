@@ -14,6 +14,7 @@ from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 from openerp.tools.float_utils import float_compare
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -42,8 +43,8 @@ class AcquirerPaypal(osv.Model):
     _columns = {
         'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
         'paypal_seller_account': fields.char(
-            'Paypal Seller ID',
-            help='The Seller ID is used to ensure communications coming from Paypal are valid and secured.'),
+            'Paypal Merchant ID',
+            help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.'),
         'paypal_use_ipn': fields.boolean('Use IPN', help='Paypal Instant Payment Notification'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
@@ -69,13 +70,14 @@ class AcquirerPaypal(osv.Model):
         res = cr.fetchall()
         for (company_id, company_paypal_account) in res:
             if company_paypal_account:
-                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('name', '=', 'paypal')], limit=1, context=context)
+                company_paypal_ids = self.search(cr, uid, [('company_id', '=', company_id), ('provider', '=', 'paypal')], limit=1, context=context)
                 if company_paypal_ids:
                     self.write(cr, uid, company_paypal_ids, {'paypal_email_account': company_paypal_account}, context=context)
                 else:
                     paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
                     self.create(cr, uid, {
-                        'name': 'paypal',
+                        'name': 'Paypal',
+                        'provider': 'paypal',
                         'paypal_email_account': company_paypal_account,
                         'view_template_id': paypal_view.id,
                     }, context=context)
@@ -104,20 +106,21 @@ class AcquirerPaypal(osv.Model):
         return fees
 
     def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        base_url = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
 
         paypal_tx_values = dict(tx_values)
         paypal_tx_values.update({
             'cmd': '_xclick',
             'business': acquirer.paypal_email_account,
-            'item_name': tx_values['reference'],
+            'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'item_number': tx_values['reference'],
             'amount': tx_values['amount'],
             'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
             'address1': partner_values['address'],
             'city': partner_values['city'],
             'country': partner_values['country'] and partner_values['country'].name or '',
+            'state': partner_values['state'] and partner_values['state'].name or '',
             'email': partner_values['email'],
             'zip': partner_values['zip'],
             'first_name': partner_values['first_name'],
@@ -226,7 +229,7 @@ class TxPaypal(osv.Model):
         # check seller
         if data.get('receiver_email') != tx.acquirer_id.paypal_email_account:
             invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_account))
-        if tx.acquirer_id.paypal_seller_account and data.get('receiver_id') != tx.acquirer_id.paypal_seller_account:
+        if data.get('receiver_id') and tx.acquirer_id.paypal_seller_account and data['receiver_id'] != tx.acquirer_id.paypal_seller_account:
             invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_account))
 
         return invalid_parameters

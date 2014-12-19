@@ -23,6 +23,7 @@ from openerp import api
 from openerp.fields import Integer, One2many, Html
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
 
 class product_template(osv.osv):
     _inherit = 'product.template'
@@ -60,6 +61,13 @@ class sale_order_line(osv.osv):
         'event_type_id': fields.related('product_id','event_type_id', type='many2one', relation="event.type", string="Event Type"),
         'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
     }
+
+    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
+        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
+        if line.event_id:
+            event = self.pool['event.event'].read(cr, uid, line.event_id.id, ['name'], context=context)
+            res['name'] = '%s: %s' % (res['name'], event['name'])
+        return res
 
     def product_id_change(self, cr, uid, ids,
                           pricelist, 
@@ -128,7 +136,7 @@ class event_event(osv.osv):
     _inherit = 'event.event'
 
     event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
-        default=lambda rec: rec._default_tickets())
+        default=lambda rec: rec._default_tickets(), copy=True)
     seats_max = Integer(string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
@@ -180,7 +188,14 @@ class event_ticket(osv.osv):
         current_date = fields.date.context_today(self, cr, uid, context=context)
         return {ticket.id: ticket.deadline and ticket.deadline < current_date
                       for ticket in self.browse(cr, uid, ids, context=context)}
-        
+
+    def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0.0)
+        for ticket in self.browse(cr, uid, ids, context=context):
+            product = ticket.product_id
+            discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
+            res[ticket.id] = (1.0-discount) * ticket.price
+        return res
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
@@ -189,7 +204,8 @@ class event_ticket(osv.osv):
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
         'deadline': fields.date("Sales End"),
         'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
-        'price': fields.float('Price'),
+        'price': fields.float('Price', digits_compute=dp.get_precision('Product Price')),
+        'price_reduce': fields.function(_get_price_reduce, type='float', string='Price Reduce', digits_compute=dp.get_precision('Product Price')),
         'seats_max': fields.integer('Maximum Available Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
         'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
         'seats_available': fields.function(_get_seats, string='Available Seats', type='integer', multi='seats_reserved'),

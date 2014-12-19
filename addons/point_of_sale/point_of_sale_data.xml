@@ -13,6 +13,7 @@
             <field name="sequence_id" ref="seq_picking_type_posout"/>
             <field name="default_location_src_id" ref="stock.stock_location_stock"/>
             <field name="default_location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="warehouse_id" eval="False"/>
             <field name="code">outgoing</field>
         </record>
     </data>
@@ -40,7 +41,7 @@
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Point of Sale application installed!</field>
             <field name="body"><![CDATA[<p>Record sale orders, register payments, compute change to return, create invoices, and manage refunds through a specific web touch-screen interface.</p>
-<p>If you install the PoS proxy you will be able to interface OpenERP with retail hardware: barcode scanners, printers, cash registers, weighing machines, credit card payment terminals.</p>]]></field>
+<p>If you install the PoS proxy you will be able to interface Odoo with retail hardware: barcode scanners, printers, cash registers, weighing machines, credit card payment terminals.</p>]]></field>
         </record>
     </data>
 </openerp>

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    'name': 'Sale Team',
+    'name': 'Sales Teams',
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Sales Management',
@@ -28,7 +28,7 @@
 Using this application you can manage Sales Team  with CRM and/or Sales 
 =======================================================================
  """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/crm',
     'depends': ['base','mail','web_kanban_sparkline',],
     'data': ['security/sales_team_security.xml',
              'security/ir.model.access.csv',

@@ -1,40 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data> 
-   
-<!--    <record id="view_sale_receipt_report_tree" model="ir.ui.view">
-        <field name="name">sale.receipt.report.tree</field>
-        <field name="model">sale.receipt.report</field>
-        <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')" create="false"  string="Sales Receipts Analysis">
-                <field name="date" invisible="1"/>
-                <field name="user_id" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="type" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="journal_id" invisible="1"/>
-                <field name="date_due" invisible="1"/>
-                <field name="account_id" invisible="1"/>
-                <field name="nbr" sum="# of Voucher Lines"/>
-                <field name="price_total" sum="Total Without Tax"/>
-                <field name="price_total_tax" sum="Total With Tax"/>
-                <field name="due_delay"  sum="Avg. Due Delay"/>
-                <field name="delay_to_pay"  sum="Avg. Delay To Pay"/>
-            </tree>
-        </field>
-    </record>
- -->
+    <data>
     <record id="view_sale_receipt_report_graph" model="ir.ui.view">
          <field name="name">sale.receipt.report.graph</field>
          <field name="model">sale.receipt.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Receipts Analysis" type="pivot">
-                 <field name="account_id"/>
+                 <field name="partner_id" type="row"/>
+                 <field name="date_due" type="col"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
@@ -47,9 +20,9 @@
             <search string="Sales Receipts Analysis">
                 <field name="date"/>
                 <field name="date_due"/>
-                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
-                <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
-                <filter string="Posted" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
+                <filter string="Draft" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
+                <filter string="Pro-forma" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
+                <filter string="Posted" name="current" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
                 <field name="partner_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="journal_id"/>
@@ -58,16 +31,13 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
-                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Due Month" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by Invoice Date"/>
-                    <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Invoice Date"/>
-                    <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
+                    <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Type" context="{'group_by':'type'}"/>
+                    <filter string="Journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
                 </group>
             </search>
         </field>
@@ -78,7 +48,7 @@
         <field name="res_model">sale.receipt.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
-        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_sale_receipt_report_search"/>
         <field name="help" type="html">
           <p>
@@ -92,6 +62,6 @@
     </record>
 
     <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_reporting" sequence="3"/>
-       
+
    </data>
 </openerp>

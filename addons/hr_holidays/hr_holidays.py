@@ -68,13 +68,13 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, context=context)
         else:
-            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
+            res = dict((res_id, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}) for res_id in ids)
         return res
 
     _columns = {
         'name': fields.char('Leave Type', size=64, required=True, translate=True),
         'categ_id': fields.many2one('calendar.event.type', 'Meeting Type',
-            help='Once a leave is validated, OpenERP will create a corresponding meeting of this type in the calendar.'),
+            help='Once a leave is validated, Odoo will create a corresponding meeting of this type in the calendar.'),
         'color_name': fields.selection([('red', 'Red'),('blue','Blue'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Department.'),
         'limit': fields.boolean('Allow to Override Limit', help='If you select this check box, the system allows the employees to take more leaves than the available ones for this type and will not take them into account for the "Remaining Legal Leaves" defined on the employee form.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
@@ -325,8 +325,14 @@ class hr_holidays(osv.osv):
         if context is None:
             context = {}
         context = dict(context, mail_create_nolog=True)
-        hol_id = super(hr_holidays, self).create(cr, uid, values, context=context)
-        return hol_id
+        if values.get('state') and values['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
+        return super(hr_holidays, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not self.pool['res.users'].has_group(cr, uid, 'base.group_hr_user'):
+            raise osv.except_osv(_('Warning!'), _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % vals.get('state'))
+        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
     def holidays_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
@@ -379,7 +385,8 @@ class hr_holidays(osv.osv):
                 if record.user_id and record.user_id.partner_id:
                     meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
                     
-                meeting_id = meeting_obj.create(cr, uid, meeting_vals)
+                ctx_no_email = dict(context or {}, no_email=True)
+                meeting_id = meeting_obj.create(cr, uid, meeting_vals, context=ctx_no_email)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
             elif record.holiday_type == 'category':
@@ -424,7 +431,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        meeting_obj = self.pool.get('calendar.event')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.meeting_id:
@@ -500,7 +506,7 @@ class hr_employee(osv.osv):
         if diff > 0:
             leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
         elif diff < 0:
-            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+            raise osv.except_osv(_('Warning!'), _('You cannot reduce validated allocation requests'))
         else:
             return False
         for sig in ('confirm', 'validate', 'second_validate'):

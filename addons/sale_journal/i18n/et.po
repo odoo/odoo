@@ -1,50 +1,50 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Estonian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-11-09 19:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Märkus"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Aktiivne"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Müügid ja ostud"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Grupeeritud"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
 msgstr ""
 
 #. module: sale_journal
@@ -55,19 +55,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Märkmed"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Arveldamise meetod"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr ""
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Arve tüüp"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -75,16 +71,6 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Arve tüübid"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Grupeerimata"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Grupeeritud"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -95,28 +81,44 @@ msgid ""
 msgstr ""
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Arve tüüp"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Aktiivne"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Arveldamise meetod"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Grupeerimata"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Märkus"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Märkmed"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -124,265 +126,22 @@ msgid "Partner"
 msgstr ""
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Müügid ja ostud"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
-
-#~ msgid "Monthly sales"
-#~ msgstr "Igakuised müügid"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Määratud pakendamine"
-
-#~ msgid "assigned"
-#~ msgstr "määratud"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Ootegraafik"
-
-#~ msgid "to be invoiced"
-#~ msgstr "arveldamiseks"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Müügipäevik"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Müügistatistika"
-
-#~ msgid "waiting"
-#~ msgstr "ootel"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Määra mustandiks"
-
-#~ msgid "Journal date"
-#~ msgstr "Päeviku kuupäev"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Pakendamine arveldamise meetodi järgi"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Pakendamise päevik"
-
-#~ msgid "My open journals"
-#~ msgstr "Minu lahtised päevikud"
-
-#~ msgid "# of Lines"
-#~ msgstr "Ridade arv"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Kõik lahtised päevikud"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Müükide ja kättetoimetamiste haldamine päeviku abil"
-
-#~ msgid "done"
-#~ msgstr "valmis"
-
-#~ msgid "Average Price"
-#~ msgstr "Keskmine hind"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "State"
-#~ msgstr "Olek"
-
-#~ msgid "All Months"
-#~ msgstr "Kõik kuud"
-
-#~ msgid "Total Price"
-#~ msgstr "Hind kokku"
-
-#~ msgid "Packing journals"
-#~ msgstr "Pakkimispäevikud"
-
-#~ msgid "Reporting"
-#~ msgstr "Aruandlus"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Minu lahtised pakkimispäevikud"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Müügikorraldused päeviku järgi"
-
-#~ msgid "Open journals"
-#~ msgstr "Lahtised päevikud"
-
-#~ msgid "Packing"
-#~ msgstr "Pakkimine"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "Müükide ja pakkimise jaoks kasutatava päeviku tüüp"
-
-#~ msgid "None"
-#~ msgstr "Puudub"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Müügid päeviku järgi (see kuu)"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Pakkimine päeviku järgi"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Katkesta pakkimine"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Kinnitatud pakkimine"
-
-#~ msgid "In progress"
-#~ msgstr "Töös"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Pakkimine päevikute järgi"
-
-#~ msgid "Month"
-#~ msgstr "Kuu"
-
-#~ msgid "Invoice state"
-#~ msgstr "Arve olek"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Pakkimine arveldamise meetodi järgi"
-
-#~ msgid "Order State"
-#~ msgstr "Korralduse olek"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Tarne erand"
-
-#~ msgid "Draft"
-#~ msgstr "Mustand"
-
-#~ msgid "cancel"
-#~ msgstr "loobu"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Arve erand"
-
-#~ msgid "Validation date"
-#~ msgstr "Kinnitamise kuupäev"
-
-#~ msgid "draft"
-#~ msgstr "mustand"
-
-#~ msgid "Draft sales"
-#~ msgstr "Müükide mustandid"
-
-#~ msgid "Quotation"
-#~ msgstr "Hinnapakkumine"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Müügipäevikud"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "sale_journal.invoice.type.tree"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Kinnita müügid"
-
-#~ msgid "Creation date"
-#~ msgstr "Loomiskuupäev"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Arveldamise meetod"
-
-#~ msgid "Code"
-#~ msgstr "Kood"
-
-#~ msgid "Sales"
-#~ msgstr "Müügid"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Pakkimise päevik"
-
-#~ msgid "Done"
-#~ msgstr "Tehtud"
-
-#~ msgid "Cancel"
-#~ msgstr "Loobu"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Päeviku statistika"
-
-#~ msgid "Open"
-#~ msgstr "Lahtine"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Responsible"
-#~ msgstr "Vastutav"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Minu lahtised päevikud"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Pakkimise statistika arveks"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Katkesta müügid"
-
-#~ msgid "invoiced"
-#~ msgstr "arveldatud"
-
-#~ msgid "confirmed"
-#~ msgstr "kinnitatud"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Pakkelehed päeviku järgi"
-
-#~ msgid "Quantities"
-#~ msgstr "Kogused"
-
-#~ msgid "Journal"
-#~ msgstr "Päevik"
-
-#~ msgid "This Month"
-#~ msgstr "Käesolev kuu"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Müügid päeviku järgi"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Arveldamise meetodid"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Pakkimine arveks"
-
-#~ msgid "Journal Information"
-#~ msgstr "Päeviku informatsioon"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "Pakkimise statistika arveldamise meetodi järgi"
-
-#~ msgid "States"
-#~ msgstr "Olekud"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Pakkimine päeviku järgi"
-
-#~ msgid "Close Journal"
-#~ msgstr "Sulge päevik"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Pakkimine arveks"
-
-#~ msgid "Approved sales"
-#~ msgstr "Heakskiidetud müügid"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Manual in progress"
-#~ msgstr "Edenemisel käsitsi"
-
-#~ msgid "Open Journal"
-#~ msgstr "Lahtine päevik"

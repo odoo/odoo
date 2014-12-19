@@ -1,234 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_sheet
+# Italian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2011-01-13 18:55+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:03+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
-msgid "Sheet"
-msgstr "Foglio"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid "Service"
-msgstr "Servizio"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,quantity:0
-#: field:timesheet.report,quantity:0
-msgid "Time"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_max_difference:0
-msgid ""
-"Allowed difference in hours between the sign in/out and the timesheet\n"
-"                computation for one sheet. Set this to 0 if you do not want "
-"any control."
-msgstr ""
-"Differenza consentita tra le ore di presenza e le ore segnate sul timesheet, "
-"in ore per ogni timesheet. Imposta a 0 per disattivare il controllo."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-#: view:timesheet.report:0
-msgid "Group By..."
-msgstr "Raggruppa per..."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_attendance:0
-msgid "Total Attendance"
-msgstr "Presenza Totali"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,department_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,department_id:0
-msgid "Department"
-msgstr "Dipartimento"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
-msgid "Task timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must assign an "
-"analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
-"Per creare un timesheet per questo dipendente, bisogna assegnare un "
-"Sezionale Analitico al dipendente. Ad esempio, 'Sezionale Timesheet'."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "March"
-msgstr "Marzo"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,cost:0
-msgid "#Cost"
-msgstr "# Costo"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_unread:0
-msgid "Unread Messages"
-msgstr "Messaggi Non Letti"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,company_id:0
-#: field:hr_timesheet_sheet.sheet,company_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,company_id:0
-msgid "Company"
-msgstr "Azienda"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_timesheet_report
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
-#: view:timesheet.report:0
-msgid "Timesheet"
-msgstr "Timesheet"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Set to Draft"
-msgstr "Impost come Bozza"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Timesheet Period"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-#: field:timesheet.report,date_to:0
-msgid "Date to"
-msgstr "Fino a"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "to"
-msgstr "a"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Based on the timesheet"
-msgstr "Basato su timesheet"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
-#, python-format
-msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "Non è possibile modificare le righe di un timesheet confermato."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by day of date"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-msgid "My Current Timesheet"
-msgstr "Il mio Timesheet corrente"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
-msgid "Validate"
-msgstr "Convalida"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Approved"
-msgstr "Approvato"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Present"
-msgstr "Corrente"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-msgid "Total Cost"
-msgstr "Costo totale"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
-msgid "Refuse"
-msgstr "Rifiuta"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
-msgid "Timesheet Activities"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Please create an employee and associate it with this user."
-msgstr "Crea un dipendente e associalo a questo utente."
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
-#, python-format
-msgid ""
-"You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:205
-#, python-format
-msgid "Week "
-msgstr "Settimana "
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
-msgid ""
-"My Timesheet opens your timesheet so that you can book your activities into "
-"the system. From the same form, you can register your attendances (Sign "
-"In/Out) and describe the working hours made on the different projects. At "
-"the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_ids:0
-msgid "Messages"
-msgstr "Messaggi"
+"X-Launchpad-Export-Date: 2014-09-24 09:14+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -242,374 +29,24 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Error!"
-msgstr "Errore!"
-
-#. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_max_difference:0
-msgid ""
-"Allow a difference of time between timesheets and attendances of (in hours)"
+#: field:hr.timesheet.report,nbr:0
+msgid "# Nbr Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
-#, python-format
-msgid ""
-"Please verify that the total difference of the sheet is lower than %.2f."
+#: field:hr.timesheet.report,total_attendance:0
+msgid "# Total Attendance"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
-msgid "Timesheet Sheet Analysis"
+#: field:hr.timesheet.report,total_diff:0
+msgid "# Total Diff"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,name:0
-msgid "Project / Analytic Account"
-msgstr "Progetto / Conto Analitico"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
-msgid "Validation"
-msgstr "Convalida"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_unread:0
-msgid "If checked new messages require your attention."
+#: field:hr.timesheet.report,total_timesheet:0
+msgid "# Total Timesheet"
 msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must assign it to a "
-"user."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Employee's timesheet entry"
-msgstr "Voce del timesheet impiegato"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
-#, python-format
-msgid "Invalid Action!"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,account_id:0
-msgid "Analytic Account"
-msgstr "Conto Analitico"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: field:timesheet.report,nbr:0
-msgid "#Nbr"
-msgstr "#Nbr"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_from:0
-#: field:timesheet.report,date_from:0
-msgid "Date from"
-msgstr "Data Da"
-
-#. module: hr_timesheet_sheet
-#: view:hr.employee:0
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
-#: view:res.company:0
-msgid "Timesheets"
-msgstr "Timesheet"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Confirmed"
-msgstr "Confermato"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
-#: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
-msgid "Attendance"
-msgstr "Presenze"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
-msgid "Confirm"
-msgstr "Conferma"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
-msgid "Timesheet lines"
-msgstr "Righe Timesheet"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_follower_ids:0
-msgid "Followers"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
-msgid "State is 'confirmed'."
-msgstr "Lo stato è \"Confermato\"."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,employee_id:0
-msgid "Employee"
-msgstr "Dipendente"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-#: selection:timesheet.report,state:0
-msgid "New"
-msgstr "Nuovo"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
-msgid "My Total Attendances By Week"
-msgstr "La mia presenza totale per settimana"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,total:0
-msgid "Total Time"
-msgstr "Durata totale"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
-msgid "Timesheets to Validate"
-msgstr "Timesheet da validare"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Hours"
-msgstr "Ore"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by month of date"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
-msgid "The project manager validates the timesheets."
-msgstr "Il Manager di progetto convalita i timesheet."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "July"
-msgstr "Luglio"
-
-#. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_range:0
-msgid "Validate timesheets every"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
-#, python-format
-msgid "Configuration Error!"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state:0
-#: view:timesheet.report:0
-#: field:timesheet.report,state:0
-msgid "Status"
-msgstr "Stato"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
-msgid "Work on Task"
-msgstr "Lavoro sull'attività"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Waiting Approval"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-msgid "#Quantity"
-msgstr "# Quantità"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_timesheet:0
-#: view:hr_timesheet_sheet.sheet.day:0
-#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
-msgid "Total Timesheet"
-msgstr "Orari di Lavoro Totali"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Available Attendance"
-msgstr "Presenza media"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Sign In"
-msgstr "Entrata"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_timesheet:0
-msgid "#Total Timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
-msgid "hr.timesheet.current.open"
-msgstr "hr.timesheet.current.open"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "September"
-msgstr "Settembre"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "December"
-msgstr "Dicembre"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "It will open your current timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,month:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,month:0
-msgid "Month"
-msgstr "Mese"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_diff:0
-msgid "#Total Diff"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "In Draft"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
-msgid "Sign in/out"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:58
-#, python-format
-msgid ""
-"You will be able to register your working hours and\n"
-"                        activities."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "or"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
-msgid "Billing"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid ""
-"The timesheet line represents the time spent by the employee on a specific "
-"service provided."
-msgstr ""
-"La linea del timesheet rappresenta il tempo speso dall'impiegato su di uno "
-"specifico servizio fornito."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,name:0
-msgid "Note"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
-#, python-format
-msgid "Add"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Draft"
-msgstr "Bozza"
-
-#. module: hr_timesheet_sheet
-#: field:res.company,timesheet_max_difference:0
-msgid "Timesheet allowed difference(Hours)"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
-msgid "The invoice is created based on the timesheet."
-msgstr "La fattura è creata basandosi sul timesheet."
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
-msgid "Draft Timesheet"
-msgstr "Timesheet bozza"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -629,358 +66,15 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "August"
-msgstr "Agosto"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Differences"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "June"
-msgstr "Giugno"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Current Status"
-msgstr "Stato Attuale"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: selection:res.company,timesheet_range:0
-msgid "Week"
-msgstr "Settimana"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
-msgid "Timesheets by Period"
-msgstr "Timesheet per periodo"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_is_follower:0
-msgid "Is a Follower"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,user_id:0
-#: field:hr_timesheet_sheet.sheet,user_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,user_id:0
-msgid "User"
-msgstr "Utente"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
-msgid "Timesheet by Account"
-msgstr "Orari di Lavoro da Contabilità"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date:0
-#: field:hr_timesheet_sheet.sheet.day,name:0
-#: field:timesheet.report,date:0
-msgid "Date"
-msgstr "Data"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "November"
-msgstr "Novembre"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Extended Filters..."
-msgstr "Filtri estesi..."
-
-#. module: hr_timesheet_sheet
-#: field:res.company,timesheet_range:0
-msgid "Timesheet range"
-msgstr "Range timesheet"
-
-#. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "La mia presenza totale per settimana"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "October"
-msgstr "Ottobre"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:60
-#, python-format
-msgid ""
-"The timesheet cannot be validated as it does not contain an equal number of "
-"sign ins and sign outs."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "January"
-msgstr "Gennaio"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
-msgid "The employee signs in and signs out."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_res_company
-msgid "Companies"
-msgstr "Aziende"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,message_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
-#, python-format
-msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Unvalidated Timesheets"
-msgstr "Orari di Lavoro non Convalidati"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
-#, python-format
-msgid ""
-"You cannot have 2 timesheets that overlap!\n"
-"You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Submit to Manager"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,general_account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,general_account_id:0
-msgid "General Account"
-msgstr "Contabilità Generale"
-
-#. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_range:0
-#: help:res.company,timesheet_range:0
-msgid "Periodicity on which you validate your timesheets."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:0
-msgid "Search Account"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
-#, python-format
-msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: help:res.company,timesheet_max_difference:0
-msgid ""
-"Allowed difference in hours between the sign in/out and the timesheet "
-"computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,period_ids:0
-#: view:hr_timesheet_sheet.sheet.day:0
-msgid "Period"
-msgstr "Periodo"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,day:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,day:0
-msgid "Day"
-msgstr "Giorno"
-
-#. module: hr_timesheet_sheet
-#: constraint:hr_timesheet_sheet.sheet:0
-msgid ""
-"You cannot have 2 timesheets that overlap!\n"
-"Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
-#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
-msgid "My Timesheet"
-msgstr "Il mio Timesheet"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Done"
-msgstr "Completato"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
-msgid "State is 'draft'."
-msgstr "Lo stato è \"Bozza\"."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "Convalidato"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice on Work"
-msgstr "Fattura su lavoro"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:0
-msgid "Timesheet by Accounts"
-msgstr "Orari di Lavoro da Contabilità"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
-#, python-format
-msgid "Open Timesheet"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by year of date"
-msgstr ""
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Absent"
+msgstr "Assente"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
-msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "State is 'validated'."
-msgstr "Lo stato è \"Convalidato\"."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
-msgid "Timesheet Analysis"
-msgstr "Analisi timesheet"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Search Timesheet"
-msgstr "Ricerca timesheet"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Confirmed Timesheets"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Details"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Riga Foglio Orario"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
-#, python-format
-msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,product_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,product_id:0
-msgid "Product"
-msgstr "Prodotto"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,attendances_ids:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
-msgid "Attendances"
-msgstr "Presenze"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,name:0
-#: field:timesheet.report,name:0
-msgid "Description"
-msgstr "Descrizione"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
-msgid "The employee periodically confirms his own timesheets."
-msgstr "L'impiegato periodicamente conferma i propri timesheet."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "May"
-msgstr "Maggio"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "Definisce un riepilogo lavoro sull'attività"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Sign Out"
-msgstr "Uscita"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
-msgid "Moves task entry into the timesheet line"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:0
-msgid "Total Attendances"
+msgid "Add"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -991,98 +85,27 @@ msgid "Add a Line"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_difference:0
-#: field:hr_timesheet_sheet.sheet.day,total_difference:0
-msgid "Difference"
-msgstr "Differenza"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
-#, python-format
-msgid "You cannot duplicate a timesheet."
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Absent"
-msgstr "Assente"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "February"
-msgstr "Febbraio"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
+#: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
-"<p>\n"
-"                This report performs analysis on timesheets created by your\n"
-"                human resources in the system. It allows you to have a full\n"
-"                overview of  entries done by your employees. You can group "
-"them\n"
-"                by specific selection criteria thanks to the search tool.\n"
-"              </p>\n"
-"            "
+"Allow a difference of time between timesheets and attendances of (in hours)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Employees"
-msgstr "Impiegati"
-
-#. module: hr_timesheet_sheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
+#: help:hr.config.settings,timesheet_max_difference:0
+#: help:res.company,timesheet_max_difference:0
+msgid ""
+"Allowed difference in hours between the sign in/out and the timesheet "
+"computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
-msgid "Information of time spent on a service"
-msgstr "Informazione del tempo speso su di un servizio"
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Conto Analitico"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "April"
-msgstr "Aprile"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
-msgid "Confirmation"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
-msgid "Invoice rate"
-msgstr "Tasso di fatturazione"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
-#, python-format
-msgid "User Error!"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:0
-msgid "Total Difference"
-msgstr "Differenza Totale"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Approve"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_ids:0
-msgid "Messages and communication history"
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -1091,48 +114,548 @@ msgid "Analytic accounts"
 msgstr "Contabilità Analitica"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr "Tipo di fatturazione"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_attendance:0
-msgid "#Total Attendance"
-msgstr "# Presenza totale"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,cost:0
-msgid "Cost"
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Approve"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:timesheet.report,date_current:0
-msgid "Current date"
-msgstr "Data Corrente"
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Approved"
+msgstr "Approvato"
 
 #. module: hr_timesheet_sheet
-#: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
-msgid "Hr Timesheet"
+#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
+msgid "Attendance"
+msgstr "Presenze"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,attendance_count:0
+#: field:hr_timesheet_sheet.sheet,attendances_ids:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
+msgid "Attendances"
+msgstr "Presenze"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#, python-format
+msgid "Click to add projects, contracts or analytic accounts."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,year:0
-#: view:timesheet.report:0
-#: field:timesheet.report,year:0
-msgid "Year"
-msgstr "Anno"
+#: model:ir.model,name:hr_timesheet_sheet.model_res_company
+msgid "Companies"
+msgstr "Aziende"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
+#: field:hr_timesheet_sheet.sheet,company_id:0
+msgid "Company"
+msgstr "Azienda"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Confirmed"
+msgstr "Confermato"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Confirmed Timesheets"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,create_uid:0
+#: field:hr_timesheet_sheet.sheet,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,create_date:0
+#: field:hr_timesheet_sheet.sheet,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Current Status"
+msgstr "Stato Attuale"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,name:0
+msgid "Date"
+msgstr "Data"
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.report,date_from:0
+#: field:hr_timesheet_sheet.sheet,date_from:0
+msgid "Date from"
+msgstr "Data Da"
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.report,date_to:0
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "Fino a"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
+#: selection:res.company,timesheet_range:0
+msgid "Day"
+msgstr "Giorno"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,department_id:0
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: field:hr_timesheet_sheet.sheet,department_id:0
+msgid "Department"
+msgstr "Dipartimento"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Details"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_difference:0
+#: field:hr_timesheet_sheet.sheet.day,total_difference:0
+msgid "Difference"
+msgstr "Differenza"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Differences"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Done"
+msgstr "Completato"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Draft"
+msgstr "Bozza"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,employee_id:0
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
+msgid "Employee"
+msgstr "Dipendente"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Employees"
+msgstr "Impiegati"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
+#, python-format
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
+#, python-format
+msgid "Error!"
+msgstr "Errore!"
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Group By"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Hours"
+msgstr "Ore"
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,id:0
+#: field:hr_timesheet_sheet.sheet,id:0
+#: field:hr_timesheet_sheet.sheet.account,id:0
+#: field:hr_timesheet_sheet.sheet.day,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "In Draft"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must assign an "
+"analytic journal to the employee, like 'Timesheet Journal'."
+msgstr ""
+"Per creare un timesheet per questo dipendente, bisogna assegnare un "
+"Sezionale Analitico al dipendente. Ad esempio, 'Sezionale Timesheet'."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link him/her to a "
+"user."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link the employee "
+"to a product, like 'Consultant'."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link the employee "
+"to a product."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
+msgid "Invoice rate"
+msgstr "Tasso di fatturazione"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+msgid "It will open your current timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,write_uid:0
+#: field:hr_timesheet_sheet.sheet,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,write_date:0
+#: field:hr_timesheet_sheet.sheet,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_ids:0
+msgid "Messages"
+msgstr "Messaggi"
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
+#: selection:res.company,timesheet_range:0
+msgid "Month"
+msgstr "Mese"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
+msgid "My Current Timesheet"
+msgstr "Il mio Timesheet corrente"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
+#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
+msgid "My Timesheet"
+msgstr "Il mio Timesheet"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
+msgid ""
+"My Timesheet opens your timesheet so that you can book your activities into "
+"the system. From the same form, you can register your attendances (Sign "
+"In/Out) and describe the working hours made on the different projects. At "
+"the end of the period defined in the company, the timesheet is confirmed by "
+"the user and can be validated by his manager. If required, as defined on the "
+"project, you can generate the invoices based on the timesheet."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "New"
+msgstr "Nuovo"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,name:0
+msgid "Note"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
+#, python-format
+msgid "Open Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,period_ids:0
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+msgid "Period"
+msgstr "Periodo"
+
+#. module: hr_timesheet_sheet
+#: help:hr.config.settings,timesheet_range:0
+#: help:res.company,timesheet_range:0
+msgid "Periodicity on which you validate your timesheets."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
+#, python-format
+msgid "Please create an employee and associate it with this user."
+msgstr "Crea un dipendente e associalo a questo utente."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
+#, python-format
+msgid ""
+"Please verify that the total difference of the sheet is lower than %.2f."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Present"
+msgstr "Corrente"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,name:0
+msgid "Project / Analytic Account"
+msgstr "Progetto / Conto Analitico"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Refuse"
+msgstr "Rifiuta"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
+msgid "Search Account"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Search Timesheet"
+msgstr "Ricerca timesheet"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Set to Draft"
+msgstr "Impost come Bozza"
+
+#. module: hr_timesheet_sheet
+#: field:hr.analytic.timesheet,sheet_id:0
+#: field:hr.attendance,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
+msgid "Sheet"
+msgstr "Foglio"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Sign In"
+msgstr "Entrata"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Sign Out"
+msgstr "Uscita"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,state:0
+#: field:hr_timesheet_sheet.sheet,state:0
+msgid "Status"
+msgstr "Stato"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Submit to Manager"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:62
+#, python-format
+msgid ""
+"The timesheet cannot be validated as it does not contain an equal number of "
+"sign ins and sign outs."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
+msgid "Timesheet"
+msgstr "Timesheet"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
+msgid "Timesheet Activities"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Riga Foglio Orario"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Timesheet Period"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_max_difference:0
+msgid "Timesheet allowed difference(Hours)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
+msgid "Timesheet by Account"
+msgstr "Orari di Lavoro da Contabilità"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
+msgid "Timesheet by Accounts"
+msgstr "Orari di Lavoro da Contabilità"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
+msgid "Timesheet by Day"
+msgstr "Orari di Lavoro per Giorno"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Righe Timesheet"
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_range:0
+msgid "Timesheet range"
+msgstr "Range timesheet"
+
+#. module: hr_timesheet_sheet
+#: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
+#: field:hr.employee,timesheet_count:0
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
+#: view:res.company:hr_timesheet_sheet.hr_timesheet_sheet_company
+msgid "Timesheets"
+msgstr "Timesheet"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
+msgid "Timesheets by Period"
+msgstr "Timesheet per periodo"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
+msgid "Timesheets to Validate"
+msgstr "Timesheet da validare"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "To Approve"
 msgstr "Da Approvare"
 
@@ -1140,313 +663,194 @@ msgstr "Da Approvare"
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:15
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:40
-#: view:hr_timesheet_sheet.sheet.account:0
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
 #, python-format
 msgid "Total"
 msgstr "Totale"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
+#: field:hr_timesheet_sheet.sheet,total_attendance:0
+msgid "Total Attendance"
+msgstr "Presenza Totali"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+msgid "Total Attendances"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
-msgid "Timesheet by Day"
-msgstr "Orari di Lavoro per Giorno"
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+msgid "Total Difference"
+msgstr "Differenza Totale"
 
-#~ msgid "My timesheets to confirm"
-#~ msgstr "I Miei Orari di Lavoro da Confermare"
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,total:0
+msgid "Total Time"
+msgstr "Durata totale"
 
-#~ msgid "Timeshet range"
-#~ msgstr "Orari di Lavoro Da - A"
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_timesheet:0
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
+msgid "Total Timesheet"
+msgstr "Orari di Lavoro Totali"
 
-#~ msgid "Today"
-#~ msgstr "Oggi"
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,to_invoice:0
+msgid "Type of Invoicing"
+msgstr "Tipo di fatturazione"
 
-#~ msgid "Draft Timesheet sheet"
-#~ msgstr "Bozza foglio ore"
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_unread:0
+msgid "Unread Messages"
+msgstr "Messaggi Non Letti"
 
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Unvalidated Timesheets"
+msgstr "Orari di Lavoro non Convalidati"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,user_id:0
+msgid "User"
+msgstr "Utente"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
-#~ msgid "UserError"
-#~ msgstr "Errore utente"
+msgid "User Error!"
+msgstr ""
 
-#~ msgid "Validated Timesheet"
-#~ msgstr "Convalida il foglio lavoro"
+#. module: hr_timesheet_sheet
+#: field:hr.config.settings,timesheet_range:0
+msgid "Validate timesheets every"
+msgstr ""
 
-#~ msgid "You must select a Current date wich is in the timesheet dates !"
-#~ msgstr ""
-#~ "Devi selezionare una data Attuale che è tra le date del foglio lavoro!"
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Waiting Approval"
+msgstr ""
 
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
-#~ msgid "Warning !"
-#~ msgstr "Attenzione !"
+msgid "Warning !"
+msgstr "Attenzione !"
 
-#~ msgid ""
-#~ "Allowed difference between the sign in/out and the timesheet computation for "
-#~ "one sheet. Set this to 0 if you do not want any control."
-#~ msgstr ""
-#~ "Differenze permesse tra entrate/uscite e calcolo automatico degli orari di "
-#~ "lavoro su una tabella. Impostare a 0 se non vuoi alcun controllo"
-
-#~ msgid "Timesheet by Days"
-#~ msgstr "Orari di Lavoro per Giorno"
-
-#~ msgid "timesheet is confirmed at the end of the week / month"
-#~ msgstr "Il foglio ore è confermato alla fine della settimana / mese"
-
-#~ msgid "Project Timesheet"
-#~ msgstr "Orari di Lavoro Progetto"
-
-#~ msgid "Analytic cost"
-#~ msgstr "Costo Analitico"
-
-#~ msgid "Confirm Timesheet"
-#~ msgstr "Conferma il foglio ore"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
-#~ msgid "Error !"
-#~ msgstr "Errore !"
+msgid "Warning!"
+msgstr ""
 
-#~ msgid "Timesheet Lines"
-#~ msgstr "Righe Orari di Lavoro"
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
 
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
+#: selection:res.company,timesheet_range:0
+msgid "Week"
+msgstr "Settimana"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr ""
-#~ "Per favore verifica che la differenza totale del foglio sia minore di %.2f !"
+msgid "Week "
+msgstr "Settimana "
 
-#~ msgid "Confirm timesheet at the end of the period"
-#~ msgstr "Conferma il foglio ore alla fine del periodo"
-
-#~ msgid "No employee defined"
-#~ msgstr "Non è stato definito alcun dipendente"
-
-#~ msgid "Confirmed Timesheet"
-#~ msgstr "Foglio ore confermato"
-
-#~ msgid "Configuration"
-#~ msgstr "Configurazione"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "Daily View"
-#~ msgstr "Vista Giornaliero"
-
-#~ msgid "Timesheets by period"
-#~ msgstr "Orari di Lavoro per Periodo"
-
-#~ msgid "My Department's Timesheet"
-#~ msgstr "Foglio ore del mio settore"
-
-#~ msgid "Go to:"
-#~ msgstr "Vai a:"
-
-#~ msgid "Phone call"
-#~ msgstr "Telefonata"
-
-#~ msgid "Review of work"
-#~ msgstr "Revisione del lavoro"
-
-#~ msgid "Review"
-#~ msgstr "Revisione"
-
-#~ msgid "Timesheets To Confirm"
-#~ msgstr "Orari di Lavoro da Confermare"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
-#~ msgid "You can not sign out from an other date than today"
-#~ msgstr "Non è possibile registrare l'uscita in un giorno diverso da oggi"
+msgid ""
+"You can not enter an attendance date outside the current timesheet dates."
+msgstr ""
 
-#~ msgid "Invoice on timesheet"
-#~ msgstr "Fattura sul foglio ore"
-
-#~ msgid "Invoice based on timesheet"
-#~ msgstr "Fattura basata sul foglio ore"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Non è possibile modificare una registrazione oraria in un foglio ore "
-#~ "confermato!"
+msgid ""
+"You can not enter an attendance in a submitted timesheet. Ask your manager "
+"to reset it before adding attendance."
+msgstr ""
 
-#~ msgid "Creates invoice based on timesheet"
-#~ msgstr "Crea fattura basata sul foglio ore"
-
-#~ msgid "Timesheets To Validate"
-#~ msgstr "Orari di Lavoro da convalidare"
-
-#~ msgid "Timesheet allowed difference"
-#~ msgstr "Differenza ammessa in Orari di Lavoro"
-
-#~ msgid "Creates your analytic cost accoording to quantity"
-#~ msgstr "Crea il tuo costo analitico in base alla quantità"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
-
-#~ msgid "Timesheet is validate by project manager."
-#~ msgstr "Il foglio ore è validato dal capo progetto"
-
-#~ msgid "Whatever time u spent for phone call"
-#~ msgstr "Tempo speso per chiamate telefoniche"
-
-#~ msgid "Validate Timesheet"
-#~ msgstr "Convalida il foglio ore"
-
-#~ msgid "My Department's Timesheet to Confirm"
-#~ msgstr "Foglio ore del mio Dipartimento da convalidare"
-
-#~ msgid "Create Analytic cost"
-#~ msgstr "Crea costo Analitico"
-
-#~ msgid "By Day"
-#~ msgstr "Per Giorno"
-
-#~ msgid "hr_timesheet_sheet.sheet"
-#~ msgstr "hr_timesheet_sheet.sheet"
-
-#~ msgid "At the end of the period (week/month)"
-#~ msgstr "Alla fine del periodo (settimana/mese)"
-
-#~ msgid "timesheet entry is into draft state."
-#~ msgstr "Il foglio ore è in stato di bozza"
-
-#~ msgid "Analytic cost is created"
-#~ msgstr "Il costo Analitico è creato"
-
-#~ msgid "Encode how much time u spent on phone call"
-#~ msgstr "Definisce quanto tempo hai speso in chiamate telefoniche"
-
-#~ msgid "Review of your work at the end of the day"
-#~ msgstr "Revisiona il tuo lavoro alla fine del giorno"
-
-#~ msgid "My timesheets"
-#~ msgstr "I Miei Orari di Lavoro"
-
-#~ msgid "Accept"
-#~ msgstr "Accetto"
-
-#~ msgid "My Department's Timesheet to Validate"
-#~ msgstr "Foglio ore del mio Dipartimento da convalidare"
-
-#~ msgid "Control by the project manager"
-#~ msgstr "Controllato dall'Amministratore Progetto"
-
-#~ msgid "Defines the task work entry into timesheet line"
-#~ msgstr ""
-#~ "Definisce la voce di attività lavorate nelle righe del foglio di lavoro"
-
-#~ msgid "Hr Timesheet Process"
-#~ msgstr "HR Processe per Foglio orario"
-
-#~ msgid "Confirm timesheet sheet"
-#~ msgstr "Conferma il Foglio Presenza oraria"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
-#~ msgid ""
-#~ "You can not have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Non puoi avere 2 Fogli Presenza che si sovrappongono!\n"
-#~ "Per favore usa il menù \"I miei Fogli presenza\" per evitare questo problema"
+msgid "You cannot delete a timesheet which have attendance entries."
+msgstr ""
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#~ msgid "Encode your timesheet line"
-#~ msgstr "Codifica la tua linea del Foglio Orario"
-
-#~ msgid "Timesheet sheet confirm at the end of the period"
-#~ msgstr "Foglio Orario confermato alla fine del periodo"
-
-#~ msgid "Phone call encoding"
-#~ msgstr "Codifica chiamata telefonica"
-
-#~ msgid "Encode Your hours and Sign in / out"
-#~ msgstr "Codifica le tue ore e le registrazioni di Entrata / Uscita"
-
-#~ msgid "Defines employee's timesheet entry"
-#~ msgstr "Definisce le voci del Foglio Orario degli Impiegati"
-
-#~ msgid "Attendance entry moves into the timesheet"
-#~ msgstr "Voci di presenza spostate nel Foglio Ore"
-
-#~ msgid "Review end of day check day is complete"
-#~ msgstr "Verifica di fine giornata, il controllo giornata è completo"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Nessun impiegato definito per il tuo utente!"
+msgid "You cannot delete a timesheet which is already confirmed."
+msgstr ""
 
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Errore! Non è possibile creare aziende ricorsive."
-
-#~ msgid " Month "
-#~ msgstr " Mese "
-
-#~ msgid " Month-1 "
-#~ msgstr " Mese-1 "
-
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Errore: una operazione di Entrata (Uscita) deve essere seguita da una Uscita "
-#~ "(Entrata)"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Azione non valida!"
+msgid "You cannot duplicate a timesheet."
+msgstr ""
 
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
-#~ msgid "You cannot duplicate a timesheet !"
-#~ msgstr "Non è possibile duplicare un timesheet!"
+msgid ""
+"You cannot enter an attendance date outside the current timesheet dates."
+msgstr ""
 
+#. module: hr_timesheet_sheet
+#: constraint:hr_timesheet_sheet.sheet:0
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
 #, python-format
-#~ msgid ""
-#~ "You cannot create a timesheet for an employee that does not have any user "
-#~ "defined !"
-#~ msgstr ""
-#~ "Non è possibile creare un timesheet per un impiegato che non ha alcun utente "
-#~ "definito!"
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"You should use the menu 'My Timesheet' to avoid this problem."
+msgstr ""
 
-#~ msgid " Year "
-#~ msgstr " Anno "
+#. module: hr_timesheet_sheet
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
+msgstr ""
 
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr ""
-#~ "E' necessario selezionare una data corrente che è nel range di date del "
-#~ "timesheet!"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr "Non è possibile modificare una voce di un timesheet confermato!"
+msgid "You cannot modify an entry in a confirmed timesheet"
+msgstr ""
 
-#~ msgid "Quantity"
-#~ msgstr "Quantità"
-
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
-#~ msgid "You can not sign in from an other date than today"
-#~ msgstr "Non è possibile registrare una entrata in un giorno diverso da oggi"
+msgid "You cannot modify an entry in a confirmed timesheet."
+msgstr "Non è possibile modificare le righe di un timesheet confermato."
 
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:58
 #, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain equal no. of sign "
-#~ "ins and sign outs!"
-#~ msgstr ""
-#~ "Il timesheet non può essere convalidato perchè non contiene un egual numero "
-#~ "di entrate ed uscite!"
+msgid ""
+"You will be able to register your working hours and\n"
+"                        activities."
+msgstr ""
 
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr ""
-#~ "Non è possibile inserire una data di presenza che sta al di fuori del range "
-#~ "di date per l'attuale timesheet!"
+#~ msgid "#Total Attendance"
+#~ msgstr "# Presenza totale"
+
+#~ msgid "#Nbr"
+#~ msgstr "#Nbr"

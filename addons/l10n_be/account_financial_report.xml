@@ -191,13 +191,14 @@
         <!-- BS: PASSIF -->
         <record id="account_financial_report_passif0" model="account.financial.report">
             <field name="name">PASSIF</field>
-            <field eval="1" name="sign"/>
+            <field eval="-1" name="sign"/>
             <field name="parent_id" ref="account_financial_report_belgium_bs"/>
             <field name="display_detail">detail_flat</field>
             <field name="type">sum</field>
         </record>
         <record id="account_financial_report_capitauxpropres1" model="account.financial.report">
             <field name="name">CAPITAUX PROPRES</field>
+            <field eval="-1" name="sign"/>
             <field eval="10" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_passif0"/>
             <field name="display_detail">detail_flat</field>
@@ -205,6 +206,7 @@
         </record>
         <record id="account_financial_report_capital2" model="account.financial.report">
             <field name="name">Capital</field>
+            <field eval="-1" name="sign"/>
             <field eval="10" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">detail_flat</field>
@@ -212,6 +214,7 @@
         </record>
         <record id="account_financial_report_capitalsouscrit3" model="account.financial.report">
             <field name="name">Capital souscrit</field>
+            <field eval="-1" name="sign"/>
             <field eval="100" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capital2"/>
             <field name="display_detail">no_detail</field>
@@ -219,6 +222,7 @@
         </record>
         <record id="account_financial_report_capitalnonappel3" model="account.financial.report">
             <field name="name">Capital non appelé</field>
+            <field eval="-1" name="sign"/>
             <field eval="101" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capital2"/>
             <field name="display_detail">no_detail</field>
@@ -226,6 +230,7 @@
         </record>
         <record id="account_financial_report_primesdmission2" model="account.financial.report">
             <field name="name">Primes d'émission</field>
+            <field eval="-1" name="sign"/>
             <field eval="11" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">no_detail</field>
@@ -233,6 +238,7 @@
         </record>
         <record id="account_financial_report_plusvaluesdervaluation2" model="account.financial.report">
             <field name="name">Plus-values de réévaluation</field>
+            <field eval="-1" name="sign"/>
             <field eval="12" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">no_detail</field>
@@ -240,6 +246,7 @@
         </record>
         <record id="account_financial_report_rserves2" model="account.financial.report">
             <field name="name">Réserves</field>
+            <field eval="-1" name="sign"/>
             <field eval="13" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">no_detail</field>
@@ -247,6 +254,7 @@
         </record>
         <record id="account_financial_report_rservelgale3" model="account.financial.report">
             <field name="name">Réserve légale</field>
+            <field eval="-1" name="sign"/>
             <field eval="130" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rserves2"/>
             <field name="display_detail">no_detail</field>
@@ -254,6 +262,7 @@
         </record>
         <record id="account_financial_report_rservesindisponibles3" model="account.financial.report">
             <field name="name">Réserves indisponibles</field>
+            <field eval="-1" name="sign"/>
             <field eval="131" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rserves2"/>
             <field name="display_detail">no_detail</field>
@@ -261,6 +270,7 @@
         </record>
         <record id="account_financial_report_rservesimmunises3_A" model="account.financial.report">
             <field name="name">Pour actions propres</field>
+            <field eval="-1" name="sign"/>
             <field eval="1310" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rservesindisponibles3"/>
             <field name="display_detail">no_detail</field>
@@ -268,6 +278,7 @@
         </record>
         <record id="account_financial_report_rservesimmunises3_B" model="account.financial.report">
             <field name="name">Autres</field>
+            <field eval="-1" name="sign"/>
             <field eval="1311" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rservesindisponibles3"/>
             <field name="display_detail">no_detail</field>
@@ -275,6 +286,7 @@
         </record>
         <record id="account_financial_report_rservesimmunises3" model="account.financial.report">
             <field name="name">Réserves immunisées</field>
+            <field eval="-1" name="sign"/>
             <field eval="132" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rserves2"/>
             <field name="display_detail">no_detail</field>
@@ -282,6 +294,7 @@
         </record>
         <record id="account_financial_report_rservesdisponibles3" model="account.financial.report">
             <field name="name">Réserves disponibles</field>
+            <field eval="-1" name="sign"/>
             <field eval="133" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_rserves2"/>
             <field name="display_detail">no_detail</field>
@@ -289,6 +302,7 @@
         </record>
         <record id="account_financial_report_bnficepertereporte2" model="account.financial.report">
             <field name="name">Bénéfice (Perte) reporté(e)</field>
+            <field eval="-1" name="sign"/>
             <field eval="14" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">no_detail</field>
@@ -296,6 +310,7 @@
         </record>
         <record id="account_financial_report_bnficeperteencours0" model="account.financial.report">
             <field name="name">Bénéfice (Perte) en cours, non affecté(e)</field>
+            <field eval="-1" name="sign"/>
             <field eval="14" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_bnficepertereporte2"/>
             <field name="display_detail">no_detail</field>
@@ -303,6 +318,7 @@
         </record>
         <record id="account_financial_report_bnficereporte0" model="account.financial.report">
             <field name="name">Bénéfice reporté</field>
+            <field eval="-1" name="sign"/>
             <field eval="140" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_bnficepertereporte2"/>
             <field name="display_detail">no_detail</field>
@@ -310,6 +326,7 @@
         </record>
         <record id="account_financial_report_pertereporte0" model="account.financial.report">
             <field name="name">Perte reportée</field>
+            <field eval="-1" name="sign"/>
             <field eval="141" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_bnficepertereporte2"/>
             <field name="display_detail">no_detail</field>
@@ -317,6 +334,7 @@
         </record>
         <record id="account_financial_report_subsidesencapital2" model="account.financial.report">
             <field name="name">Subsides en capital</field>
+            <field eval="-1" name="sign"/>
             <field eval="15" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_capitauxpropres1"/>
             <field name="display_detail">no_detail</field>
@@ -324,6 +342,7 @@
         </record>
         <record id="account_financial_report_provisionsetimpotsdifferes1" model="account.financial.report">
             <field name="name">PROVISIONS ET IMPOTS DIFFERES</field>
+            <field eval="-1" name="sign"/>
             <field eval="16" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_passif0"/>
             <field name="display_detail">detail_flat</field>
@@ -331,14 +350,15 @@
         </record>
         <record id="account_financial_report_provisionspourrisquesetcharges2" model="account.financial.report">
             <field name="name">Provisions pour risques et charges</field>
+            <field eval="-1" name="sign"/>
             <field eval="160" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_provisionsetimpotsdifferes1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
         <record id="account_financial_report_imptsdiffrs2" model="account.financial.report"> 
-       <!-- currently unused, because we don't have such a thing in the COA, but it seems it should be there around 168 -->
             <field name="name">Impôts différés</field>
+            <field eval="-1" name="sign"/>
             <field eval="168" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_provisionsetimpotsdifferes1"/>
             <field name="display_detail">no_detail</field>
@@ -346,6 +366,7 @@
         </record>
         <record id="account_financial_report_dettes1" model="account.financial.report">
             <field name="name">DETTES</field>
+            <field eval="-1" name="sign"/>
             <field eval="17" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_passif0"/>
             <field name="display_detail">detail_flat</field>
@@ -353,6 +374,7 @@
         </record>
         <record id="account_financial_report_dettesplusdunan2" model="account.financial.report">
             <field name="name">Dettes à plus d'un an</field>
+            <field eval="-1" name="sign"/>
             <field eval="17" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettes1"/>
             <field name="display_detail">detail_flat</field>
@@ -360,6 +382,7 @@
         </record>
         <record id="account_financial_report_dettesfinancires5" model="account.financial.report">
             <field name="name">Dettes financières</field>
+            <field eval="-1" name="sign"/>
             <field eval="170" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">detail_flat</field>
@@ -367,6 +390,7 @@
         </record>
         <record id="account_financial_report_etablissementcredits4" model="account.financial.report">
             <field name="name">Etablissements de crédit, dettes de location-financement et assimilés</field>
+            <field eval="-1" name="sign"/>
             <field eval="172" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfinancires5"/>
             <field name="display_detail">no_detail</field>
@@ -374,6 +398,7 @@
         </record>
         <record id="account_financial_report_autresemprunts6" model="account.financial.report">
             <field name="name">Autres emprunts</field>
+            <field eval="-1" name="sign"/>
             <field eval="174" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfinancires5"/>
             <field name="display_detail">no_detail</field>
@@ -381,6 +406,7 @@
         </record>
         <record id="account_financial_report_dettescommerciales5" model="account.financial.report">
             <field name="name">Dettes commerciales</field>
+            <field eval="-1" name="sign"/>
             <field eval="175" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">no_detail</field>
@@ -388,6 +414,7 @@
         </record>
         <record id="account_financial_report_acomptesreussurcommandes6" model="account.financial.report">
             <field name="name">Acomptes reçus sur commandes</field>
+            <field eval="-1" name="sign"/>
             <field eval="176" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">no_detail</field>
@@ -395,6 +422,7 @@
         </record>
         <record id="account_financial_report_autresdettes6" model="account.financial.report">
             <field name="name">Autres dettes</field>
+            <field eval="-1" name="sign"/>
             <field eval="178" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesplusdunan2"/>
             <field name="display_detail">no_detail</field>
@@ -402,6 +430,7 @@
         </record>
         <record id="account_financial_report_dettesunanauplus2" model="account.financial.report">
             <field name="name">Dettes à un an au plus</field>
+            <field eval="-1" name="sign"/>
             <field eval="42" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettes1"/>
             <field name="display_detail">detail_flat</field>
@@ -409,6 +438,7 @@
         </record>
         <record id="account_financial_report_dettesplusdunanchantdanslanne3" model="account.financial.report">
             <field name="name">Dettes à plus d'un an échéant dans l'année</field>
+            <field eval="-1" name="sign"/>
             <field eval="42" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">no_detail</field>
@@ -416,6 +446,7 @@
         </record>
         <record id="account_financial_report_dettesfinancires7" model="account.financial.report">
             <field name="name">Dettes financières</field>
+            <field eval="-1" name="sign"/>
             <field eval="43" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">detail_flat</field>
@@ -423,6 +454,7 @@
         </record>
         <record id="account_financial_report_etablissementsdecrdit4" model="account.financial.report">
             <field name="name">Etablissements de crédit</field>
+            <field eval="-1" name="sign"/>
             <field eval="430" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfinancires7"/>
             <field name="display_detail">no_detail</field>
@@ -430,6 +462,7 @@
         </record>
         <record id="account_financial_report_autresemprunts9" model="account.financial.report">
             <field name="name">Autres emprunts</field>
+            <field eval="-1" name="sign"/>
             <field eval="439" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfinancires7"/>
             <field name="display_detail">no_detail</field>
@@ -437,6 +470,7 @@
         </record>
         <record id="account_financial_report_dettescommerciales7" model="account.financial.report">
             <field name="name">Dettes commerciales</field>
+            <field eval="-1" name="sign"/>
             <field eval="44" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">detail_flat</field>
@@ -444,6 +478,7 @@
         </record>
         <record id="account_financial_report_fournisseurs4" model="account.financial.report">
             <field name="name">Fournisseurs</field>
+            <field eval="-1" name="sign"/>
             <field eval="440" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettescommerciales7"/>
             <field name="display_detail">no_detail</field>
@@ -451,6 +486,7 @@
         </record>
         <record id="account_financial_report_effetspayer4" model="account.financial.report">
             <field name="name">Effets à payer</field>
+            <field eval="-1" name="sign"/>
             <field eval="441" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettescommerciales7"/>
             <field name="display_detail">no_detail</field>
@@ -458,6 +494,7 @@
         </record>
         <record id="account_financial_report_acomptesreussurcommandes8" model="account.financial.report">
             <field name="name">Acomptes reçus sur commandes</field>
+            <field eval="-1" name="sign"/>
             <field eval="46" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">no_detail</field>
@@ -465,6 +502,7 @@
         </record>
         <record id="account_financial_report_dettesfiscalessalarialesetsociales3" model="account.financial.report">
             <field name="name">Dettes fiscales, salariales et sociales</field>
+            <field eval="-1" name="sign"/>
             <field eval="45" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">detail_flat</field>
@@ -472,6 +510,7 @@
         </record>
         <record id="account_financial_report_impts4" model="account.financial.report">
             <field name="name">Impôts</field>
+            <field eval="-1" name="sign"/>
             <field eval="450" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfiscalessalarialesetsociales3"/>
             <field name="display_detail">no_detail</field>
@@ -479,6 +518,7 @@
         </record>
         <record id="account_financial_report_rmunrationsetchargessociales4" model="account.financial.report">
             <field name="name">Rémunérations et charges sociales</field>
+            <field eval="-1" name="sign"/>
             <field eval="454" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesfiscalessalarialesetsociales3"/>
             <field name="display_detail">no_detail</field>
@@ -486,6 +526,7 @@
         </record>
         <record id="account_financial_report_autresdettes8" model="account.financial.report">
             <field name="name">Autres dettes</field>
+            <field eval="-1" name="sign"/>
             <field eval="47" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettesunanauplus2"/>
             <field name="display_detail">no_detail</field>
@@ -493,6 +534,7 @@
         </record>
         <record id="account_financial_report_comptesdergularisation2" model="account.financial.report">
             <field name="name">Comptes de régularisation</field>
+            <field eval="-1" name="sign"/>
             <field eval="99" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_dettes1"/>
             <field name="display_detail">no_detail</field>
@@ -505,7 +547,7 @@
         <!-- - - - - - - - -->
         <record id="account_financial_report_belgiumpl0" model="account.financial.report">
             <field name="name">Belgium P&amp;L</field>
-            <field eval="1" name="sign"/>
+            <field eval="-1" name="sign"/>
             <field eval="[(6,0,[])]" name="account_type_ids"/>
             <field eval="[(6,0,[])]" name="account_ids"/>
             <field name="display_detail">detail_flat</field>
@@ -513,6 +555,7 @@
         </record>
         <record id="account_financial_report_produitsetchargesdexploitation1" model="account.financial.report">
             <field name="name">Produits et charges d'exploitation</field>
+            <field eval="-1" name="sign"/>
             <field eval="1" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">detail_flat</field>
@@ -521,6 +564,7 @@
         </record>
         <record id="account_financial_report_margebrutedexploitation2" model="account.financial.report">
             <field name="name">Marge brute d'exploitation</field>
+            <field eval="-1" name="sign"/>
             <field eval="1" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_produitsetchargesdexploitation1"/>
             <field name="display_detail">detail_flat</field>
@@ -529,6 +573,7 @@
         </record>
         <record id="account_financial_report_chiffredaffaires3" model="account.financial.report">
             <field name="name">Chiffre d'affaires</field>
+            <field eval="-1" name="sign"/>
             <field eval="70" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_margebrutedexploitation2"/>
             <field name="display_detail">no_detail</field>
@@ -593,6 +638,7 @@
         </record>
         <record id="account_financial_report_bnficepertedexploitation1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) d'exploitation</field>
+            <field eval="-1" name="sign"/>
             <field eval="2" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -601,6 +647,7 @@
         </record>
         <record id="account_financial_report_produitsfinanciers1" model="account.financial.report">
             <field name="name">Produits financiers</field>
+            <field eval="-1" name="sign"/>
             <field eval="3" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -617,6 +664,7 @@
         </record>
         <record id="account_financial_report_bnficepertecouranteavantimpts1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) courant(e) avant impôts</field>
+            <field eval="-1" name="sign"/>
             <field eval="5" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -625,6 +673,7 @@
         </record>
         <record id="account_financial_report_produitsexceptionnels1" model="account.financial.report">
             <field name="name">Produits exceptionnels</field>
+            <field eval="-1" name="sign"/>
             <field eval="6" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -640,7 +689,8 @@
             <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertedelexcerciceavantimpts1" model="account.financial.report">
-            <field name="name">Bénéfice (Perte) de l'excercice avant impôts</field>
+            <field name="name">Bénéfice (Perte) de l'exercice avant impôts</field>
+            <field eval="-1" name="sign"/>
             <field eval="8" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -648,8 +698,8 @@
             <field name="style_overwrite" eval="1"/>
         </record>
         <record id="account_financial_report_prlvementssurlesimptsdiffrs1" model="account.financial.report">
-       <!-- currently unused, because we don't have such a thing in the COA, but it seems it should be there around 780 -->
             <field name="name">Prélèvements sur les impôts différés</field>
+            <field eval="-1" name="sign"/>
             <field eval="9" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
@@ -657,7 +707,6 @@
             <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_transfertauximptsdiffrs1" model="account.financial.report">
-       <!-- currently unused, because we don't have such a thing in the COA, but it seems it should be there around 680 -->
             <field name="name">Transfert aux impôts différés</field>
             <field eval="10" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
@@ -674,27 +723,22 @@
             <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertedelexcercice1" model="account.financial.report">
-            <field name="name">Bénéfice (Perte) de l'excercice</field>
+            <field name="name">Bénéfice (Perte) de l'exercice</field>
+            <field eval="-1" name="sign"/>
             <field eval="12" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
             <field name="style_overwrite" eval="1"/>
         </record>
-
-
-       <!-- currently the rest is unused, because we don't have such a thing in the COA, but it seems it should be there around 
-            789, for 'prélèvements sur les réserves immunisées'
-            689, for 'transfert ayx réserves immunisées'
-            Thus 'bénéfice (perte) de l'exercice à affecter' would be the same as 'bénéfice (perte) de l'exercice' and so it's useless to add it
-        -->
-        <!--
         <record id="account_financial_report_prlvementssurlesrservesimmunises1" model="account.financial.report">
             <field name="name">Prélèvements sur les réserves immunisées</field>
+            <field eval="-1" name="sign"/>
             <field eval="13" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_transfertauxrservesimmunises1" model="account.financial.report">
             <field name="name">Transfert aux réserves immunisées</field>
@@ -702,15 +746,17 @@
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
+            <field name="style_overwrite" eval="2"/>
         </record>
         <record id="account_financial_report_bnficepertedelexerciceaffecter1" model="account.financial.report">
             <field name="name">Bénéfice (Perte) de l'exercice à affecter</field>
+            <field eval="-1" name="sign"/>
             <field eval="15" name="sequence"/>
             <field name="parent_id" ref="account_financial_report_belgiumpl0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
         </record>
-        -->
+
 
         <!-- Adding new menuitems in Reporting\Legal Reports\Belgian Statements -->
         <menuitem

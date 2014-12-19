@@ -368,7 +368,7 @@ class hr_payslip(osv.osv):
         #OR if it starts between the given dates
         clause_2 = ['&',('date_start', '<=', date_to),('date_start','>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
-        clause_3 = [('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date_to)]
+        clause_3 = ['&',('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date_to)]
         clause_final =  [('employee_id', '=', employee.id),'|','|'] + clause_1 + clause_2 + clause_3
         contract_ids = contract_obj.search(cr, uid, clause_final, context=context)
         return contract_ids

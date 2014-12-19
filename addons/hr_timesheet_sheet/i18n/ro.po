@@ -1,244 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_timesheet_sheet
+# Romanian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:03+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
-#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
-msgid "Sheet"
-msgstr "Foaie"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid "Service"
-msgstr "Service"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,quantity:0
-#: field:timesheet.report,quantity:0
-msgid "Time"
-msgstr "Timp"
-
-#. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_max_difference:0
-msgid ""
-"Allowed difference in hours between the sign in/out and the timesheet\n"
-"                computation for one sheet. Set this to 0 if you do not want "
-"any control."
-msgstr ""
-"Diferenta permisa in ore dintre intrare si iesire si calcularea\n"
-"                fisei de pontaj pentru o foaie. Setati pe 0 daca nu doriti "
-"nici un control."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-#: view:timesheet.report:0
-msgid "Group By..."
-msgstr "Grupati dupa..."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_attendance:0
-msgid "Total Attendance"
-msgstr "Total Prezenta"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,department_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,department_id:0
-msgid "Department"
-msgstr "Departament"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
-msgid "Task timesheet"
-msgstr "Fisa de pontaj activitate"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must assign an "
-"analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
-"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa atribuiti un "
-"registru analitic angajatului, precum 'Registru Fise de Pontaj'."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "March"
-msgstr "Martie"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,cost:0
-msgid "#Cost"
-msgstr "#Cost"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_unread:0
-msgid "Unread Messages"
-msgstr "Mesaje Necitite"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,company_id:0
-#: field:hr_timesheet_sheet.sheet,company_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,company_id:0
-msgid "Company"
-msgstr "Compania"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_timesheet_report
-#: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
-#: view:timesheet.report:0
-msgid "Timesheet"
-msgstr "Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Set to Draft"
-msgstr "Setati ca ciorna"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Timesheet Period"
-msgstr "Perioada Fisei de pontaj"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-#: field:timesheet.report,date_to:0
-msgid "Date to"
-msgstr "Data pana la"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "to"
-msgstr "catre"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Based on the timesheet"
-msgstr "Bazat pe fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
-#, python-format
-msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "Nu puteti modifica o inregistrare intr-o fisa de pontaj confirmata."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by day of date"
-msgstr "Grupati dupa ziua datei"
-
-#. module: hr_timesheet_sheet
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-msgid "My Current Timesheet"
-msgstr "Fisa de pontaj actuala"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
-msgid "Validate"
-msgstr "Validati"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Approved"
-msgstr "Aprobat(a)"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Present"
-msgstr "Prezent"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-msgid "Total Cost"
-msgstr "Cost total"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
-msgid "Refuse"
-msgstr "Refuzati"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
-msgid "Timesheet Activities"
-msgstr "Activitati Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Please create an employee and associate it with this user."
-msgstr "Va rugam sa creati un angajat si sa il asociati cu acest utilizator."
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
-#, python-format
-msgid ""
-"You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
-"Nu puteti introduce o data a prezentei in afara datelor fisei de pontaj "
-"actuale."
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:205
-#, python-format
-msgid "Week "
-msgstr "Saptamana "
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
-msgid ""
-"My Timesheet opens your timesheet so that you can book your activities into "
-"the system. From the same form, you can register your attendances (Sign "
-"In/Out) and describe the working hours made on the different projects. At "
-"the end of the period defined in the company, the timesheet is confirmed by "
-"the user and can be validated by his manager. If required, as defined on the "
-"project, you can generate the invoices based on the timesheet."
-msgstr ""
-"'Fisa mea de pontaj' deschide fisele dumneavoastra de pontaj astfel incat "
-"puteti sa va inscrieti activitatile in sistem. Din acelasi formular, puteti "
-"sa va inregistrati prezenta (Intrare/Iesire) si sa descrieti orele de lucru "
-"la diferite proiecte. La sfarsitul perioadei definite in companie, fisa de "
-"pontaj este confirmata de catre utilizator si poate fi validata de catre "
-"managerul sau. Daca este necesar, asa cum este definit in proiect, puteti "
-"genera facturi bazate pe fisa de pontaj."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_ids:0
-msgid "Messages"
-msgstr "Mesaje"
+"X-Launchpad-Export-Date: 2014-09-24 09:14+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -258,386 +35,24 @@ msgstr ""
 "utilizatorului este acceptata de catre superiorul sau."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
-
-#. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_max_difference:0
-msgid ""
-"Allow a difference of time between timesheets and attendances of (in hours)"
+#: field:hr.timesheet.report,nbr:0
+msgid "# Nbr Timesheet"
 msgstr ""
-"Permite o diferenta de timp intre fisele de pontaj si prezente (in ore)"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
-#, python-format
-msgid ""
-"Please verify that the total difference of the sheet is lower than %.2f."
+#: field:hr.timesheet.report,total_attendance:0
+msgid "# Total Attendance"
 msgstr ""
-"Va rugam sa verificati ca diferenta totala a foii sa fie mai mica de %.2f."
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
-msgid "Timesheet Sheet Analysis"
-msgstr "Analiza Fisei de pontaj"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,name:0
-msgid "Project / Analytic Account"
-msgstr "Proiect / Cont Analitic"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
-msgid "Validation"
-msgstr "Validare"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must assign it to a "
-"user."
+#: field:hr.timesheet.report,total_diff:0
+msgid "# Total Diff"
 msgstr ""
-"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa o atribuiti "
-"unui utilizator."
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Employee's timesheet entry"
-msgstr "Inregistrarea fisei de pontaj a angajatului"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
-#, python-format
-msgid "Invalid Action!"
-msgstr "Actiune Nevalida!"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,account_id:0
-msgid "Analytic Account"
-msgstr "Cont analitic"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: field:hr.timesheet.report,total_timesheet:0
+msgid "# Total Timesheet"
 msgstr ""
-"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
-"in format HTML, cu scopul de a se introduce in vizualizari kanban."
-
-#. module: hr_timesheet_sheet
-#: field:timesheet.report,nbr:0
-msgid "#Nbr"
-msgstr "#Nr"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_from:0
-#: field:timesheet.report,date_from:0
-msgid "Date from"
-msgstr "Data de la"
-
-#. module: hr_timesheet_sheet
-#: view:hr.employee:0
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
-#: view:res.company:0
-msgid "Timesheets"
-msgstr "Fise de pontaj"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Confirmed"
-msgstr "Confirmat(a)"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
-#: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
-msgid "Attendance"
-msgstr "Prezenta"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
-msgid "Confirm"
-msgstr "Confirmati"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
-msgid "Timesheet lines"
-msgstr "Linii fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_follower_ids:0
-msgid "Followers"
-msgstr "Persoane interesate"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
-msgid "State is 'confirmed'."
-msgstr "Starea este 'confirmat'."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,employee_id:0
-msgid "Employee"
-msgstr "Angajat"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-#: selection:timesheet.report,state:0
-msgid "New"
-msgstr "Nou(a)"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
-msgid "My Total Attendances By Week"
-msgstr "Prezentele mele Totale dupa Saptamana"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,total:0
-msgid "Total Time"
-msgstr "Total Ore"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
-msgid "Timesheets to Validate"
-msgstr "Fise de pontaj de Validat"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Hours"
-msgstr "Ore"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by month of date"
-msgstr "Grupeaza dupa luna datei"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
-msgid "The project manager validates the timesheets."
-msgstr "Managerul de proiect valideaza fisele de pontaj."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "July"
-msgstr "Iulie"
-
-#. module: hr_timesheet_sheet
-#: field:hr.config.settings,timesheet_range:0
-msgid "Validate timesheets every"
-msgstr "Valideaza fisele de pontaj in fiecare"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
-#, python-format
-msgid "Configuration Error!"
-msgstr "Eroare de configurare!"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state:0
-#: view:timesheet.report:0
-#: field:timesheet.report,state:0
-msgid "Status"
-msgstr "Stare"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
-msgid "Work on Task"
-msgstr "Lucrul la activitate"
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Waiting Approval"
-msgstr "Asteapta aprobare"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-msgid "#Quantity"
-msgstr "#Cantitate"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_timesheet:0
-#: view:hr_timesheet_sheet.sheet.day:0
-#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
-msgid "Total Timesheet"
-msgstr "Total fise de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Available Attendance"
-msgstr "Prezenta disponibila"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Sign In"
-msgstr "Intrare"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_timesheet:0
-msgid "#Total Timesheet"
-msgstr "#Total Fise de pontaj"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
-msgid "hr.timesheet.current.open"
-msgstr "ru.deschide.fisa de pontaj.curenta"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product, like 'Consultant'."
-msgstr ""
-"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa asociati "
-"angajatul unui produs, precum 'Consultant'."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "September"
-msgstr "Septembrie"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "December"
-msgstr "Decembrie"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "It will open your current timesheet"
-msgstr "Va deschie fisa dumneavoastra de pontaj curenta"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,month:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,month:0
-msgid "Month"
-msgstr "Luna"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_diff:0
-msgid "#Total Diff"
-msgstr "#Total diferenta"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "In Draft"
-msgstr "In ciorna"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
-msgid "Sign in/out"
-msgstr "Intrare/Iesire"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#, python-format
-msgid ""
-"In order to create a timesheet for this employee, you must link the employee "
-"to a product."
-msgstr ""
-"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa asociati "
-"angajatul unui produs."
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:58
-#, python-format
-msgid ""
-"You will be able to register your working hours and\n"
-"                        activities."
-msgstr ""
-"Veti putea sa va inregistrati programul de lucru si\n"
-"                        activitatile."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "or"
-msgstr "sau"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
-msgid "Billing"
-msgstr "Facturare"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
-msgid ""
-"The timesheet line represents the time spent by the employee on a specific "
-"service provided."
-msgstr ""
-"Linia fisei de pontaj reprezinta timpul petrecut de catre angajat la un "
-"anumit serviciu furnizat."
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,name:0
-msgid "Note"
-msgstr "Nota"
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
-#, python-format
-msgid "Add"
-msgstr "Adauga"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Draft"
-msgstr "Ciorna"
-
-#. module: hr_timesheet_sheet
-#: field:res.company,timesheet_max_difference:0
-msgid "Timesheet allowed difference(Hours)"
-msgstr "Diferenta permisa a fisei de pontaj (Ore)"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
-msgid "The invoice is created based on the timesheet."
-msgstr "Factura este creata pe baza fisei de pontaj."
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
-msgid "Draft Timesheet"
-msgstr "Fisa de pontaj Ciorna"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -671,184 +86,33 @@ msgstr ""
 "            "
 
 #. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Linie Analitica"
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Absent"
+msgstr "Absent"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "August"
-msgstr "August"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Differences"
-msgstr "Diferente"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "June"
-msgstr "Iunie"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Current Status"
-msgstr "Status curent"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.config.settings,timesheet_range:0
-#: selection:res.company,timesheet_range:0
-msgid "Week"
-msgstr "Saptamana"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
-msgid "Timesheets by Period"
-msgstr "Fise de pontaj dupa Perioada"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Este o persoana interesata"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,user_id:0
-#: field:hr_timesheet_sheet.sheet,user_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,user_id:0
-msgid "User"
-msgstr "Utilizator"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
-msgid "Timesheet by Account"
-msgstr "Fisa de pontaj dupa Cont"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date:0
-#: field:hr_timesheet_sheet.sheet.day,name:0
-#: field:timesheet.report,date:0
-msgid "Date"
-msgstr "Data"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "November"
-msgstr "Noiembrie"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Extended Filters..."
-msgstr "Filtre Extinse..."
-
-#. module: hr_timesheet_sheet
-#: field:res.company,timesheet_range:0
-msgid "Timesheet range"
-msgstr "Limita fisei de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:board.board:0
-msgid "My Total Attendance By Week"
-msgstr "Prezenta mea totala dupa Saptamana"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "October"
-msgstr "Octombrie"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:60
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
+msgid "Add"
+msgstr "Adauga"
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
+#, python-format
+msgid "Add a Line"
+msgstr "Adauga o Linie"
+
+#. module: hr_timesheet_sheet
+#: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
-"The timesheet cannot be validated as it does not contain an equal number of "
-"sign ins and sign outs."
+"Allow a difference of time between timesheets and attendances of (in hours)"
 msgstr ""
-"Fisa de pontaj nu poate fi validata deoarece nu contine un numar egal de "
-"intrari si iesiri."
+"Permite o diferenta de timp intre fisele de pontaj si prezente (in ore)"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "January"
-msgstr "Ianuarie"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
-msgid "The employee signs in and signs out."
-msgstr "Angajatul semneaza de intrare si de iesire."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_res_company
-msgid "Companies"
-msgstr "Companii"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,message_summary:0
-msgid "Summary"
-msgstr "Rezumat"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
-#, python-format
-msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
-"Nu puteti sterge o fisa de pontaj care contine inregistrari ale prezentei."
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Unvalidated Timesheets"
-msgstr "Fise de pontaj nevalidate"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
-#, python-format
-msgid ""
-"You cannot have 2 timesheets that overlap!\n"
-"You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
-"Nu puteti avea 2 fise de pontaj care se suprapun!\n"
-"Ar trebui sa folositi meniul 'Fisa mea de pontaj' pentru a evita aceasta "
-"problema."
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Submit to Manager"
-msgstr "Trimiteti Directorului"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,general_account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,general_account_id:0
-msgid "General Account"
-msgstr "Cont General"
-
-#. module: hr_timesheet_sheet
-#: help:hr.config.settings,timesheet_range:0
-#: help:res.company,timesheet_range:0
-msgid "Periodicity on which you validate your timesheets."
-msgstr "Periodicitatea cu care validati fisele de pontaj."
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:0
-msgid "Search Account"
-msgstr "Cautati Cont"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
-#, python-format
-msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr "Nu puteti modifica o inregistrare dintr-o fisa de pontaj confirmata"
-
-#. module: hr_timesheet_sheet
+#: help:hr.config.settings,timesheet_max_difference:0
 #: help:res.company,timesheet_max_difference:0
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
@@ -858,21 +122,734 @@ msgstr ""
 "pontaj pentru o fisa. Setati pe 0 daca nu doriti nici un control."
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cont analitic"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linie Analitica"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,account_ids:0
+msgid "Analytic accounts"
+msgstr "Conturi analitice"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Approve"
+msgstr "Aprobati"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Approved"
+msgstr "Aprobat(a)"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
+msgid "Attendance"
+msgstr "Prezenta"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,attendance_count:0
+#: field:hr_timesheet_sheet.sheet,attendances_ids:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
+msgid "Attendances"
+msgstr "Prezente"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+msgid "Cancel"
+msgstr "Anulati"
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
+#, python-format
+msgid "Click to add projects, contracts or analytic accounts."
+msgstr ""
+"Faceti click pentru a adauga proiecte, contracte sau conturi analitice."
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,company_id:0
+msgid "Company"
+msgstr "Compania"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
+#, python-format
+msgid "Configuration Error!"
+msgstr "Eroare de configurare!"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Confirmed"
+msgstr "Confirmat(a)"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Confirmed Timesheets"
+msgstr "Fise de pontaj Confirmate"
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,create_uid:0
+#: field:hr_timesheet_sheet.sheet,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,create_date:0
+#: field:hr_timesheet_sheet.sheet,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Current Status"
+msgstr "Status curent"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,name:0
+msgid "Date"
+msgstr "Data"
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.report,date_from:0
+#: field:hr_timesheet_sheet.sheet,date_from:0
+msgid "Date from"
+msgstr "Data de la"
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.report,date_to:0
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "Data pana la"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
+#: selection:res.company,timesheet_range:0
+msgid "Day"
+msgstr "Zi"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,department_id:0
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+#: field:hr_timesheet_sheet.sheet,department_id:0
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Details"
+msgstr "Detalii"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_difference:0
+#: field:hr_timesheet_sheet.sheet.day,total_difference:0
+msgid "Difference"
+msgstr "Diferenta"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Differences"
+msgstr "Diferente"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Done"
+msgstr "Efectuat"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: selection:hr.timesheet.report,state:0
+msgid "Draft"
+msgstr "Ciorna"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,employee_id:0
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
+msgid "Employee"
+msgstr "Angajat"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Employees"
+msgstr "Angajati"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
+#, python-format
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
+#, python-format
+msgid "Error!"
+msgstr "Eroare!"
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_follower_ids:0
+msgid "Followers"
+msgstr "Persoane interesate"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Group By"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Hours"
+msgstr "Ore"
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,id:0
+#: field:hr_timesheet_sheet.sheet,id:0
+#: field:hr_timesheet_sheet.sheet.account,id:0
+#: field:hr_timesheet_sheet.sheet.day,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "In Draft"
+msgstr "In ciorna"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:75
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:91
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must assign an "
+"analytic journal to the employee, like 'Timesheet Journal'."
+msgstr ""
+"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa atribuiti un "
+"registru analitic angajatului, precum 'Registru Fise de Pontaj'."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link him/her to a "
+"user."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link the employee "
+"to a product, like 'Consultant'."
+msgstr ""
+"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa asociati "
+"angajatul unui produs, precum 'Consultant'."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
+#, python-format
+msgid ""
+"In order to create a timesheet for this employee, you must link the employee "
+"to a product."
+msgstr ""
+"Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa asociati "
+"angajatul unui produs."
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
+#, python-format
+msgid "Invalid Action!"
+msgstr "Actiune Nevalida!"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
+msgid "Invoice rate"
+msgstr "Rata factura"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Este o persoana interesata"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+msgid "It will open your current timesheet"
+msgstr "Va deschie fisa dumneavoastra de pontaj curenta"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,write_uid:0
+#: field:hr_timesheet_sheet.sheet,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.timesheet.current.open,write_date:0
+#: field:hr_timesheet_sheet.sheet,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_ids:0
+msgid "Messages"
+msgstr "Mesaje"
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,message_ids:0
+msgid "Messages and communication history"
+msgstr "Istoric mesaje si conversatii"
+
+#. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
+#: selection:res.company,timesheet_range:0
+msgid "Month"
+msgstr "Luna"
+
+#. module: hr_timesheet_sheet
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
+msgid "My Current Timesheet"
+msgstr "Fisa de pontaj actuala"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
+#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
+msgid "My Timesheet"
+msgstr "Fisa mea de pontaj"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
+msgid ""
+"My Timesheet opens your timesheet so that you can book your activities into "
+"the system. From the same form, you can register your attendances (Sign "
+"In/Out) and describe the working hours made on the different projects. At "
+"the end of the period defined in the company, the timesheet is confirmed by "
+"the user and can be validated by his manager. If required, as defined on the "
+"project, you can generate the invoices based on the timesheet."
+msgstr ""
+"'Fisa mea de pontaj' deschide fisele dumneavoastra de pontaj astfel incat "
+"puteti sa va inscrieti activitatile in sistem. Din acelasi formular, puteti "
+"sa va inregistrati prezenta (Intrare/Iesire) si sa descrieti orele de lucru "
+"la diferite proiecte. La sfarsitul perioadei definite in companie, fisa de "
+"pontaj este confirmata de catre utilizator si poate fi validata de catre "
+"managerul sau. Daca este necesar, asa cum este definit in proiect, puteti "
+"genera facturi bazate pe fisa de pontaj."
+
+#. module: hr_timesheet_sheet
+#: selection:hr.timesheet.report,state:0
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "New"
+msgstr "Nou(a)"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,name:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Open"
+msgstr "Deschideti"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
+#, python-format
+msgid "Open Timesheet"
+msgstr "Deschide Fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: field:hr_timesheet_sheet.sheet,period_ids:0
-#: view:hr_timesheet_sheet.sheet.day:0
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Period"
 msgstr "Perioada"
 
 #. module: hr_timesheet_sheet
+#: help:hr.config.settings,timesheet_range:0
+#: help:res.company,timesheet_range:0
+msgid "Periodicity on which you validate your timesheets."
+msgstr "Periodicitatea cu care validati fisele de pontaj."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
+#, python-format
+msgid "Please create an employee and associate it with this user."
+msgstr "Va rugam sa creati un angajat si sa il asociati cu acest utilizator."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
+#, python-format
+msgid ""
+"Please verify that the total difference of the sheet is lower than %.2f."
+msgstr ""
+"Va rugam sa verificati ca diferenta totala a foii sa fie mai mica de %.2f."
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Present"
+msgstr "Prezent"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,name:0
+msgid "Project / Analytic Account"
+msgstr "Proiect / Cont Analitic"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Refuse"
+msgstr "Refuzati"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
+msgid "Search Account"
+msgstr "Cautati Cont"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Search Timesheet"
+msgstr "Cautati Fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Set to Draft"
+msgstr "Setati ca ciorna"
+
+#. module: hr_timesheet_sheet
+#: field:hr.analytic.timesheet,sheet_id:0
+#: field:hr.attendance,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
+msgid "Sheet"
+msgstr "Foaie"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Sign In"
+msgstr "Intrare"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Sign Out"
+msgstr "Iesire"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,state:0
+#: field:hr_timesheet_sheet.sheet,state:0
+msgid "Status"
+msgstr "Stare"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Submit to Manager"
+msgstr "Trimiteti Directorului"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,message_summary:0
+msgid "Summary"
+msgstr "Rezumat"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:62
+#, python-format
+msgid ""
+"The timesheet cannot be validated as it does not contain an equal number of "
+"sign ins and sign outs."
+msgstr ""
+"Fisa de pontaj nu poate fi validata deoarece nu contine un numar egal de "
+"intrari si iesiri."
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
+msgid "Timesheet"
+msgstr "Fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
+msgid "Timesheet Activities"
+msgstr "Activitati Fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Linie Fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+msgid "Timesheet Period"
+msgstr "Perioada Fisei de pontaj"
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_max_difference:0
+msgid "Timesheet allowed difference(Hours)"
+msgstr "Diferenta permisa a fisei de pontaj (Ore)"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
+msgid "Timesheet by Account"
+msgstr "Fisa de pontaj dupa Cont"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
+msgid "Timesheet by Accounts"
+msgstr "Fise de pontaj dupa Conturi"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
+msgid "Timesheet by Day"
+msgstr "Fise de pontaj dupa Zi"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Linii fisa de pontaj"
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_range:0
+msgid "Timesheet range"
+msgstr "Limita fisei de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
+#: field:hr.employee,timesheet_count:0
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
+#: view:res.company:hr_timesheet_sheet.hr_timesheet_sheet_company
+msgid "Timesheets"
+msgstr "Fise de pontaj"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
+msgid "Timesheets by Period"
+msgstr "Fise de pontaj dupa Perioada"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
+msgid "Timesheets to Validate"
+msgstr "Fise de pontaj de Validat"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "To Approve"
+msgstr "De aprobat"
+
+#. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:15
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:40
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
+#: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_attendance:0
+msgid "Total Attendance"
+msgstr "Total Prezenta"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+msgid "Total Attendances"
+msgstr "Total Prezente"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+msgid "Total Difference"
+msgstr "Total Diferenta"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,total:0
+msgid "Total Time"
+msgstr "Total Ore"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_timesheet:0
+#: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
+#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
+msgid "Total Timesheet"
+msgstr "Total fise de pontaj"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
+#: field:hr.timesheet.report,to_invoice:0
+msgid "Type of Invoicing"
+msgstr "Tip de facturare"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,message_unread:0
+msgid "Unread Messages"
+msgstr "Mesaje Necitite"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
+msgid "Unvalidated Timesheets"
+msgstr "Fise de pontaj nevalidate"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,user_id:0
+msgid "User"
+msgstr "Utilizator"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
+#, python-format
+msgid "User Error!"
+msgstr "Eroare utilizator!"
+
+#. module: hr_timesheet_sheet
+#: field:hr.config.settings,timesheet_range:0
+msgid "Validate timesheets every"
+msgstr "Valideaza fisele de pontaj in fiecare"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Waiting Approval"
+msgstr "Asteapta aprobare"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
+#, python-format
+msgid "Warning !"
+msgstr "Avertizare !"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
+#, python-format
+msgid "Warning!"
+msgstr "Avertisment!"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,website_message_ids:0
+msgid "Website Messages"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:hr_timesheet_sheet.sheet,website_message_ids:0
+msgid "Website communication history"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,day:0
 #: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
-#: field:timesheet.report,day:0
-msgid "Day"
-msgstr "Zi"
+msgid "Week"
+msgstr "Saptamana"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
+#, python-format
+msgid "Week "
+msgstr "Saptamana "
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#, python-format
+msgid ""
+"You can not enter an attendance date outside the current timesheet dates."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#, python-format
+msgid ""
+"You can not enter an attendance in a submitted timesheet. Ask your manager "
+"to reset it before adding attendance."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
+#, python-format
+msgid "You cannot delete a timesheet which have attendance entries."
+msgstr ""
+"Nu puteti sterge o fisa de pontaj care contine inregistrari ale prezentei."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#, python-format
+msgid "You cannot delete a timesheet which is already confirmed."
+msgstr "Nu puteti sterge o fisa de pontaj care este deja confirmata."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
+#, python-format
+msgid "You cannot duplicate a timesheet."
+msgstr "Nu puteti copia o fisa de pontaj."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
+#, python-format
+msgid ""
+"You cannot enter an attendance date outside the current timesheet dates."
+msgstr ""
+"Nu puteti introduce o data a prezentei in afara datelor fisei de pontaj "
+"actuale."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
@@ -885,215 +862,15 @@ msgstr ""
 "aceasta problema."
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
-#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
-msgid "My Timesheet"
-msgstr "Fisa mea de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
-msgid "Done"
-msgstr "Efectuat"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
-msgid "State is 'draft'."
-msgstr "Starea este 'ciorna'."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "Cancel"
-msgstr "Anulati"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "Validated"
-msgstr "Validat(a)"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice on Work"
-msgstr "Factura pe munca"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.account:0
-msgid "Timesheet by Accounts"
-msgstr "Fise de pontaj dupa Conturi"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
 #, python-format
-msgid "Open Timesheet"
-msgstr "Deschide Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
-msgid "Group by year of date"
-msgstr "Grupeaza dupa anul datei"
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
-#, python-format
-msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
-"Faceti click pentru a adauga proiecte, contracte sau conturi analitice."
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
-msgid "State is 'validated'."
-msgstr "Starea este 'Validat(a)."
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.setari"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
-msgid "Timesheet Analysis"
-msgstr "Analiza Fisei de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Search Timesheet"
-msgstr "Cautati Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Confirmed Timesheets"
-msgstr "Fise de pontaj Confirmate"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Details"
-msgstr "Detalii"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Linie Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
-#, python-format
-msgid "You cannot delete a timesheet which is already confirmed."
-msgstr "Nu puteti sterge o fisa de pontaj care este deja confirmata."
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,product_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,product_id:0
-msgid "Product"
-msgstr "Produs"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,attendances_ids:0
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
-msgid "Attendances"
-msgstr "Prezente"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,name:0
-#: field:timesheet.report,name:0
-msgid "Description"
-msgstr "Descriere"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
-msgid "The employee periodically confirms his own timesheets."
-msgstr "Angajatul isi confirma periodic propriile fise de pontaj."
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "May"
-msgstr "Mai"
-
-#. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
-msgid "Defines the work summary of task"
-msgstr "Defineste rezumatul activitatii"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Sign Out"
-msgstr "Iesire"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
-msgid "Moves task entry into the timesheet line"
-msgstr "Muta inregistrarea activitatii in linia fisei de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:0
-msgid "Total Attendances"
-msgstr "Total Prezente"
-
-#. module: hr_timesheet_sheet
-#. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
-#, python-format
-msgid "Add a Line"
-msgstr "Adauga o Linie"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,total_difference:0
-#: field:hr_timesheet_sheet.sheet.day,total_difference:0
-msgid "Difference"
-msgstr "Diferenta"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
-#, python-format
-msgid "You cannot duplicate a timesheet."
-msgstr "Nu puteti copia o fisa de pontaj."
-
-#. module: hr_timesheet_sheet
-#: selection:hr_timesheet_sheet.sheet,state_attendance:0
-msgid "Absent"
-msgstr "Absent"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "February"
-msgstr "Februarie"
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 msgid ""
-"<p>\n"
-"                This report performs analysis on timesheets created by your\n"
-"                human resources in the system. It allows you to have a full\n"
-"                overview of  entries done by your employees. You can group "
-"them\n"
-"                by specific selection criteria thanks to the search tool.\n"
-"              </p>\n"
-"            "
+"You cannot have 2 timesheets that overlap!\n"
+"You should use the menu 'My Timesheet' to avoid this problem."
 msgstr ""
-"<p>\n"
-"                Acest raport efectueaza analiza fiselor de pontja create de\n"
-"                resursele umane in sistem. Va permite sa aveti o privire "
-"generala\n"
-"                completa asupra inregistrarilor efectuate de angajatii "
-"dumneavoastra. Le puteti grupa\n"
-"                in functie de anumite criterii cu ajutorul uneltei de "
-"cautare.\n"
-"              </p>\n"
-"            "
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Employees"
-msgstr "Angajati"
+"Nu puteti avea 2 fise de pontaj care se suprapun!\n"
+"Ar trebui sa folositi meniul 'Fisa mea de pontaj' pentru a evita aceasta "
+"problema."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
@@ -1103,446 +880,36 @@ msgstr ""
 "confirmata/efectuata !"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
-msgid "Information of time spent on a service"
-msgstr "Informatii despre timpul petrecut cu un serviciu"
-
-#. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
-msgid "April"
-msgstr "Aprilie"
-
-#. module: hr_timesheet_sheet
-#: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
-msgid "Confirmation"
-msgstr "Confirmare"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
-msgid "Warning!"
-msgstr "Avertisment!"
+msgid "You cannot modify an entry in a confirmed timesheet"
+msgstr "Nu puteti modifica o inregistrare dintr-o fisa de pontaj confirmata"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
-msgid "Invoice rate"
-msgstr "Rata factura"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
-msgid "User Error!"
-msgstr "Eroare utilizator!"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet.day:0
-msgid "Total Difference"
-msgstr "Total Diferenta"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "Approve"
-msgstr "Aprobati"
-
-#. module: hr_timesheet_sheet
-#: help:hr_timesheet_sheet.sheet,message_ids:0
-msgid "Messages and communication history"
-msgstr "Istoric mesaje si conversatii"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,account_ids:0
-msgid "Analytic accounts"
-msgstr "Conturi analitice"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr "Tip de facturare"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_attendance:0
-msgid "#Total Attendance"
-msgstr "#Total Prezenta"
-
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,cost:0
-msgid "Cost"
-msgstr "Cost"
-
-#. module: hr_timesheet_sheet
-#: field:timesheet.report,date_current:0
-msgid "Current date"
-msgstr "Data curenta"
-
-#. module: hr_timesheet_sheet
-#: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
-msgid "Hr Timesheet"
-msgstr "RU Fisa de pontaj"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,year:0
-#: view:timesheet.report:0
-#: field:timesheet.report,year:0
-msgid "Year"
-msgstr "An"
-
-#. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-#: selection:hr_timesheet_sheet.sheet,state:0
-msgid "Open"
-msgstr "Deschideti"
-
-#. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-msgid "To Approve"
-msgstr "De aprobat"
+msgid "You cannot modify an entry in a confirmed timesheet."
+msgstr "Nu puteti modifica o inregistrare intr-o fisa de pontaj confirmata."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:15
-#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:40
-#: view:hr_timesheet_sheet.sheet.account:0
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:58
 #, python-format
-msgid "Total"
-msgstr "Total"
+msgid ""
+"You will be able to register your working hours and\n"
+"                        activities."
+msgstr ""
+"Veti putea sa va inregistrati programul de lucru si\n"
+"                        activitatile."
 
-#. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "Jurnal"
+#~ msgid "#Nbr"
+#~ msgstr "#Nr"
 
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
-msgid "Timesheet by Day"
-msgstr "Fise de pontaj dupa Zi"
+#~ msgid "#Total Diff"
+#~ msgstr "#Total diferenta"
 
-#, python-format
-#~ msgid ""
-#~ "You can not have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Nu puteti avea 2 foi de pontaj care se suprapun !\n"
-#~ "Va rugam folositi meniul 'Foaia mea de pontaj curenta' pentru a evita "
-#~ "asemenea probleme."
+#~ msgid "#Total Attendance"
+#~ msgstr "#Total Prezenta"
 
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "Nici un angajat nu este definit pentru utilizatorul dumneavoastra !"
-
-#~ msgid "Today"
-#~ msgstr "Astazi"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "EroareUtilizator"
-
-#, python-format
-#~ msgid "You can not sign in from an other date than today"
-#~ msgstr "Nu puteti semna de intrare in alta data decat astazi"
-
-#~ msgid " Month-1 "
-#~ msgstr " Luna-1 "
-
-#~ msgid " Month "
-#~ msgstr " Luna "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module helps you to easily encode and validate timesheet and "
-#~ "attendances\n"
-#~ "within the same view. The upper part of the view is for attendances and\n"
-#~ "track (sign in/sign out) events. The lower part is for timesheet.\n"
-#~ "\n"
-#~ "Other tabs contains statistics views to help you analyse your\n"
-#~ "time or the time of your team:\n"
-#~ "* Time spent by day (with attendances)\n"
-#~ "* Time spent by project\n"
-#~ "\n"
-#~ "This module also implements a complete timesheet validation process:\n"
-#~ "* Draft sheet\n"
-#~ "* Confirmation at the end of the period by the employee\n"
-#~ "* Validation by the project manager\n"
-#~ "\n"
-#~ "The validation can be configured in the company:\n"
-#~ "* Period size (day, week, month, year)\n"
-#~ "* Maximal difference between timesheet and attendances\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Acest modul va ajuta sa codati si sa validati usor foaia de pontaj si "
-#~ "prezenta\n"
-#~ "in cadrul aceleiasi ferestre. Partea superioara a ferestrei este pentru "
-#~ "prezente si urmarirea (intrare/iesire) evenimentelor. Partea de jos este "
-#~ "pentru foaia de pontaj.\n"
-#~ "\n"
-#~ "Alte taburi contin statistici pentru a va ajuta sa va analizati timpul sau "
-#~ "timpul echipei dumneavoastra:\n"
-#~ "* Timpul petrecut pe zi (cu perezente)\n"
-#~ "* Timpul petrecut pe proiect\n"
-#~ "\n"
-#~ "Acest modul implementeaza de asemenea procesul validarii foii de pontaj:\n"
-#~ "* Foaie ciorna\n"
-#~ "*Confirmarea la sfarsitul perioadei de catre anagajt\n"
-#~ "* Validarea de catre managerul de proiect\n"
-#~ "\n"
-#~ "Validarea poate fi configurata in companie:\n"
-#~ "* Marimea perioadei (zi, saptamana, luna, an)\n"
-#~ "* Diferenta maxima intre foaia de pontaj si prezente\n"
-#~ "    "
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Eroare! Nu puteti crea companii recursive."
-
-#~ msgid "State"
-#~ msgstr "Stare"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet !"
-#~ msgstr "Nu puteti multiplica o foaie de pontaj !"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Eroare !"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Eroare: Intrarea (respectiv Iesirea) trebuie sa fie urmata de Iesire "
-#~ "(respectiv Intrare)"
-
-#~ msgid "No employee defined"
-#~ msgstr "Nici un angajat definit"
-
-#~ msgid "Configuration"
-#~ msgstr "Configurare"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot create a timesheet for an employee that does not have any user "
-#~ "defined !"
-#~ msgstr ""
-#~ "Nu puteti crea o foaie de pontaj pentru un angajat care nu are nici un "
-#~ "utilizator definit !"
-
-#~ msgid "Daily View"
-#~ msgstr "Vizualizare zilnica"
-
-#~ msgid "Go to:"
-#~ msgstr "Mergeti la:"
-
-#~ msgid " Year "
-#~ msgstr " An "
-
-#~ msgid "Quantity"
-#~ msgstr "Cantitate"
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which are already confirmed !"
-#~ msgstr "Nu se poate(pot) sterge Foaia (Foile) care sunt deja confirmate !"
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain equal no. of sign "
-#~ "ins and sign outs!"
-#~ msgstr ""
-#~ "Foaia de pontaj nu poate fi validata deoarece nu contine un numar egal de "
-#~ "intrari si iesiri!"
-
-#, python-format
-#~ msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-#~ msgstr ""
-#~ "Nu se poate (pot) sterge foaia (foile) care au inregistrarile prezentei "
-#~ "codate !"
-
-#~ msgid "By Day"
-#~ msgstr "Dupa zi"
-
-#~ msgid "Timesheet in current year"
-#~ msgstr "Fise de pontaj in anul curent"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify that the total difference of the sheet is lower than %.2f !"
-#~ msgstr ""
-#~ "Va rugam sa verificati ca diferenta totala a fisei sa fie mai mica de %.2f !"
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet!"
-#~ msgstr "Nu puteti modifica o inregistrare dintr-o fisa de pontaj confirmata!"
-
-#~ msgid "Timesheet of last month"
-#~ msgstr "Fisele de pontaj din ultima luna"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal!"
-#~ msgstr ""
-#~ "Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa atribuiti "
-#~ "angajatul unui jurnal analitic!"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot enter an attendance date outside the current timesheet dates!"
-#~ msgstr ""
-#~ "Nu puteti introduce o data a prezentei care sa depaseasca datele fisei de "
-#~ "pontaj curente!"
-
-#~ msgid "My Departments Timesheet"
-#~ msgstr "Fisele de pontaj ale Departamentului meu"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Avertizare !"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Actiune nevalida !"
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Linii Fisa de pontaj"
-
-#~ msgid "Daily"
-#~ msgstr "Zilnic"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product, like 'Consultant'!"
-#~ msgstr ""
-#~ "Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa il conectati "
-#~ "la un produs, precum 'Consultant'!"
-
-#, python-format
-#~ msgid "You cannot duplicate a timesheet!"
-#~ msgstr "Nu puteti copia o fisa de pontaj!"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the employee "
-#~ "to a product!"
-#~ msgstr ""
-#~ "Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa conectati "
-#~ "angajatul la un produs!"
-
-#~ msgid "You must select a Current date which is in the timesheet dates !"
-#~ msgstr ""
-#~ "Trebuie sa selectati o data curenta care sa existe in datele fisei de pontaj "
-#~ "!"
-
-#~ msgid ""
-#~ "This report performs analysis on timesheets created by your human resources "
-#~ "in the system. It allows you to have a full overview of  entries done by "
-#~ "your employees. You can group them by specific selection criteria thanks to "
-#~ "the search tool."
-#~ msgstr ""
-#~ "Acest raport efectueaza analiza fiselor de pontaj create de catre resursele "
-#~ "umane in sistem. Va permite sa aveti o privire de ansamblu completa asupra "
-#~ "tuturor inregistrarilor efectuate de catre angajatii dumneavoastra. Le "
-#~ "puteti grupa dupa criterii specifice de selectie multumita uneltei de "
-#~ "cautare."
-
-#, python-format
-#~ msgid "You cannot modify an entry in a confirmed timesheet !"
-#~ msgstr ""
-#~ "Nu puteti modifica o inregistrare dintr-o fisa de pontaj confirmata !"
-
-#, python-format
-#~ msgid "You can not modify an entry in a confirmed timesheet !"
-#~ msgstr "Nu puteti modifica o inregistrare intr-o fisa de pontaj confirmata !"
-
-#~ msgid ""
-#~ "Check your timesheets for a specific period. You can also encode time spent "
-#~ "on a project (i.e. an analytic account) thus generating costs in the "
-#~ "analytic account concerned."
-#~ msgstr ""
-#~ "Verificati fisele de pontaj pentru o anumita perioada. De asemenea, puteti "
-#~ "inregistra timpul petrecut la un proiect (de exemplu, un cont analitic), "
-#~ "astfel generand costuri in contul analitic implicat."
-
-#, python-format
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps!\n"
-#~ "You should use the menu 'My Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Nu puteti avea 2 fise de pontaj care se suprapun!\n"
-#~ "Ar trebui sa folositi meniul 'Fisa mea de pontaj' pentru a evita aceasta "
-#~ "problema."
-
-#, python-format
-#~ msgid ""
-#~ "The timesheet cannot be validated as it does not contain an equal number of "
-#~ "sign ins and sign outs!"
-#~ msgstr ""
-#~ "Fisa de pontaj nu poate fi validata deoarece nu contine un numar egal de "
-#~ "intrari si iesiri!"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which have attendance entries!"
-#~ msgstr ""
-#~ "Nu puteti sterge o fisa de pontaj care contine inregistrari ale prezentei!"
-
-#, python-format
-#~ msgid "You cannot delete a timesheet which is already confirmed!"
-#~ msgstr "Nu puteti sterge o fisa de pontaj care este deja confirmata!"
-
-#~ msgid ""
-#~ "You cannot have 2 timesheets that overlaps !\n"
-#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
-#~ msgstr ""
-#~ "Nu puteti avea 2 fise de pontaj care se suprapun!\n"
-#~ "Va rugam sa folositi meniul 'Fisa mea de pontaj curenta' pentru a evita "
-#~ "aceasta problema."
-
-#~ msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-#~ msgstr ""
-#~ "Nu puteti modifica o inregistrare dintr-o fisa de pontaj "
-#~ "Confirmata/Efectuata !."
-
-#~ msgid "Timesheet in current month"
-#~ msgstr "Fise de pontaj in luna curenta"
-
-#~ msgid ""
-#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-#~ "timesheet.                 \n"
-#~ "* The 'Confirmed' state is used for to confirm the timesheet by user.        "
-#~ "         \n"
-#~ "* The 'Done' state is used when users timesheet is accepted by his/her "
-#~ "senior."
-#~ msgstr ""
-#~ " * Starea 'Ciorna' este folosita atunci cand un utilizator inregistreaza o "
-#~ "fisa de pontaj noua si neconfirmata.                 \n"
-#~ "* Starea 'Confirmat(a) este folosita pentru a confirma fisa de pontaj dupa "
-#~ "utilizator.                 \n"
-#~ "*Starea 'Efectuat(a) este folosita atunci cand fisa de pontaj a "
-#~ "utilizatorilor este acceptata de catre superior."
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Numele companiei trebuie sa fie unic !"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign it to a "
-#~ "user!"
-#~ msgstr ""
-#~ "Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa ii atribuiti "
-#~ "un utilizator!"
-
-#~ msgid "Submited to Manager"
-#~ msgstr "Inmanat Managerului"
-
-#, python-format
-#~ msgid "You cannot sign in/sign out from an other date than today"
-#~ msgstr "Nu puteti semna de intrare / iesire cu o alta data decat cea de azi"
-
-#, python-format
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must assign the "
-#~ "employee to an analytic journal, like 'Timesheet'!"
-#~ msgstr ""
-#~ "Pentru a crea o fisa de pontaj pentru acest angajat, trebuie sa-i atribuiti "
-#~ "angajatului un jurnal analitic, precum 'Fisa de pontaj'!"
+#~ msgid "#Total Timesheet"
+#~ msgstr "#Total Fise de pontaj"

@@ -18,18 +18,6 @@ class res_users(osv.osv):
             for user in self.browse(cr, uid, ids, context=context)
         )
 
-    def edit_ean(self, cr, uid, ids, context):
-        return {
-            'name': "Edit Ean",
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'pos.ean_wizard',
-            'target' : 'new',
-            'view_id': False,
-            'context':context,
-        }
-
     _constraints = [
         (_check_ean, "Error: Invalid ean code", ['ean13'],),
     ]

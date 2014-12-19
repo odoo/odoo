@@ -1,21 +1,92 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-30 07:45+0000\n"
-"Last-Translator: mrshelly <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-11-17 01:07+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-18 07:28+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:278
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "树"
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
+msgid "Account Manager"
+msgstr "科目管理员"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "客户/合约的名称"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "金额"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: selection:account.analytic.account,type:0
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "辅助核算项"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "辅助核算"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "辅助核算条目"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "辅助核算明细"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr "解析视图"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "差额"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr "计算公式是数量乘以产品成本价。币别是公司本位币。"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "已取消"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -24,35 +95,161 @@ msgstr "子科目"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr "进行中"
+msgid "Closed"
+msgstr "已关闭"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:229
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr "完成的合约"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Contract Information"
+msgstr "合约信息"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr "进行中的合约"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr "关闭的合约"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr "合约已开启"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "合同或者项目"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr "合同待定中"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr "需续签的合约"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:238
 #, python-format
 msgid "Contract: "
 msgstr "合约： "
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "模版"
+#: field:account.analytic.line,create_date:0
+msgid "Create Date"
+msgstr "创建日期"
 
 #. module: analytic
-#: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
-msgid "End Date"
-msgstr "截止日期"
+#: field:account.analytic.account,create_uid:0
+#: field:account.analytic.line,create_uid:0
+msgid "Created by"
+msgstr "创建人"
 
 #. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "指定金额的数量用来计算"
+#: field:account.analytic.account,create_date:0
+msgid "Created on"
+msgstr "创建于"
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "贷方"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "货币"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr "客户"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "日期"
+
+#. module: analytic
+#: help:account.analytic.account,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "最后一条信息记录的日期。"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "借方"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "描述"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "End Date"
+msgstr "截止日期"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "Error!"
+msgstr "错误！"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr "错误！你不能循环创建辅助核算项"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr "过期日期"
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr "关注者"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "完整姓名"
+
+#. module: analytic
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "保存聊天摘要（消息数，...）。本摘要是直接使用HTML格式，以便插入到看板视图。"
+
+#. module: analytic
+#: field:account.analytic.account,id:0
+#: field:account.analytic.line,id:0
+msgid "ID"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -68,7 +265,60 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: view:account.analytic.account:0
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr "进行中"
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr "是一个关注者"
+
+#. module: analytic
+#: field:account.analytic.account,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,write_uid:0
+#: field:account.analytic.line,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,write_date:0
+#: field:account.analytic.line,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr "消息"
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "消息和通信历史记录"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "新建"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
 "                                        passed or the maximum number of "
@@ -82,39 +332,14 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "合同或者项目"
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "上级辅助核算项"
 
 #. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "客户/合约的名称"
-
-#. module: analytic
-#: field:account.analytic.account,manager_id:0
-msgid "Account Manager"
-msgstr "科目管理员"
-
-#. module: analytic
-#: field:account.analytic.account,message_follower_ids:0
-msgid "Followers"
-msgstr "关注者"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Closed"
-msgstr "已关闭"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_pending
-msgid "Contract to Renew"
-msgstr "需续签的合约"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
-msgstr "新建"
+#: field:account.analytic.account,quantity_max:0
+msgid "Prepaid Service Units"
+msgstr "预付的服务单元"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
@@ -122,57 +347,26 @@ msgid "Project Manager"
 msgstr "项目主管"
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "Status"
-msgstr "状态"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "数量"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:272
 #, python-format
-msgid "%s (copy)"
-msgstr "%s (副本)"
+msgid "Quick account creation disallowed."
+msgstr "不允许快速客户创建"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "辅助核算明细"
+#: field:account.analytic.account,code:0
+msgid "Reference"
+msgstr "参考"
 
 #. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
-msgid "Description"
-msgstr "描述"
-
-#. module: analytic
-#: field:account.analytic.account,message_unread:0
-msgid "Unread Messages"
-msgstr "未读消息"
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "错误！你不能循环创建辅助核算项"
-
-#. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
-msgid "Company"
-msgstr "公司"
-
-#. module: analytic
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Renewal"
 msgstr "续约"
-
-#. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "消息和通信历史记录"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr ""
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -182,80 +376,29 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"如果选择公司，请注意保持成本科目货币与公司货币一致。\n"
-"针对视图类型的成本科目，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的成本科目合并起来。"
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "指定金额的数量用来计算"
 
 #. module: analytic
-#: field:account.analytic.account,message_is_follower:0
-msgid "Is a Follower"
-msgstr "是一个关注者"
+#: field:account.analytic.account,date_start:0
+msgid "Start Date"
+msgstr "开始日期"
 
 #. module: analytic
-#: field:account.analytic.line,user_id:0
-msgid "User"
-msgstr "用户"
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr "状态"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr ""
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr "摘要"
 
 #. module: analytic
-#: field:account.analytic.line,date:0
-msgid "Date"
-msgstr "日期"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_closed
-msgid "Contract Finished"
-msgstr "完成的合约"
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
-msgstr "条款和条件"
-
-#. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
-msgstr "计算公式是数量乘以产品成本价。币别是公司本位币。"
-
-#. module: analytic
-#: field:account.analytic.account,partner_id:0
-msgid "Customer"
-msgstr "客户"
-
-#. module: analytic
-#: field:account.analytic.account,child_complete_ids:0
-msgid "Account Hierarchy"
-msgstr "树"
-
-#. module: analytic
-#: field:account.analytic.account,message_ids:0
-msgid "Messages"
-msgstr "消息"
-
-#. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "上级辅助核算项"
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Contract Information"
-msgstr "合约信息"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "模版"
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
@@ -264,49 +407,9 @@ msgid "Template of Contract"
 msgstr "合约模板"
 
 #. module: analytic
-#: field:account.analytic.account,message_summary:0
-msgid "Summary"
-msgstr "摘要"
-
-#. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Prepaid Service Units"
-msgstr "预付的服务单元"
-
-#. module: analytic
-#: field:account.analytic.account,credit:0
-msgid "Credit"
-msgstr "贷方"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_opened
-msgid "Contract Opened"
-msgstr "进行中的合约"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "已取消"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Analytic View"
-msgstr "解析视图"
-
-#. module: analytic
-#: field:account.analytic.account,balance:0
-msgid "Balance"
-msgstr "差额"
-
-#. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Terms and Conditions"
+msgstr "条款和条件"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -314,184 +417,27 @@ msgid "To Renew"
 msgstr "要续签的"
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "数量"
-
-#. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Date End"
-msgstr "结束日期"
-
-#. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Reference"
-msgstr "参考"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "Error!"
-msgstr "错误！"
-
-#. module: analytic
-#: model:res.groups,name:analytic.group_analytic_accounting
-msgid "Analytic Accounting"
-msgstr "辅助核算"
-
-#. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "金额"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "所有项名称"
-
-#. module: analytic
-#: view:account.analytic.account:0
-#: selection:account.analytic.account,type:0
-#: field:account.analytic.line,account_id:0
-#: model:ir.model,name:analytic.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "辅助核算项"
-
-#. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Currency"
-msgstr "货币"
-
-#. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr "保存聊天摘要（消息数，...）。本摘要是直接使用HTML格式，以便插入到看板视图。"
-
-#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
 msgstr "科目的类型"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Start Date"
-msgstr "开始日期"
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "用户"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:272
+#, python-format
+msgid "Warning"
+msgstr "警告"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
 msgstr "你不能在视图类型的科目上创建解析行"
-
-#. module: analytic
-#: field:account.analytic.account,line_ids:0
-msgid "Analytic Entries"
-msgstr "辅助核算条目"
-
-#~ msgid "Account Name"
-#~ msgstr "项名称"
-
-#~ msgid "State"
-#~ msgstr "状态"
-
-#~ msgid ""
-#~ "Module for defining analytic accounting object.\n"
-#~ "    "
-#~ msgstr ""
-#~ "模块定义辅助核算对象\n"
-#~ "    "
-
-#~ msgid "Draft"
-#~ msgstr "草稿"
-
-#~ msgid ""
-#~ "* When an account is created its in 'Draft' state.                           "
-#~ "       \n"
-#~ "* If any associated partner is there, it can be in 'Open' state.             "
-#~ "                     \n"
-#~ "* If any pending balance is there it can be in 'Pending'.                    "
-#~ "               \n"
-#~ "* And finally when all the transactions are over, it can be in 'Close' "
-#~ "state.                                   \n"
-#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
-#~ " If it is template then we can make projects based on the template projects. "
-#~ "If its in 'Running' state it is a normal project.                            "
-#~ "     \n"
-#~ " If it is to be reviewed then the state is 'Pending'.\n"
-#~ " When the project is completed the state is set to 'Done'."
-#~ msgstr ""
-#~ "*当创建这项时为'草稿'状态.\n"
-#~ "*如果有任何相关的业务伙伴它是'待处理'状态.\n"
-#~ "*如果有任何悬而未决的差额它为'悬而未决'状态.\n"
-#~ "*当所有交易已结束, 它是'关闭'状态\n"
-#~ "\n"
-#~ "*该项目状态可为其中之一, 如果是'模板'状态我们能按项目模板来建造项目, 如果为'运行中'它是一正常项目\n"
-#~ "如果需要审查则状态为'悬而未决'\n"
-#~ "当项目结束状态为'完成'"
-
-#~ msgid "Account Type"
-#~ msgstr "项类型"
-
-#~ msgid "Maximum Quantity"
-#~ msgstr "最大数量"
-
-#~ msgid "View"
-#~ msgstr "视图"
-
-#~ msgid "Account Code"
-#~ msgstr "辅助核算项代码"
-
-#~ msgid "Date Start"
-#~ msgstr "开始日期"
-
-#~ msgid "Open"
-#~ msgstr "待处理"
-
-#~ msgid "Sets the higher limit of quantity of hours."
-#~ msgstr "设置较高的小时数限制"
-
-#~ msgid "Partner"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Normal"
-#~ msgstr "一般"
-
-#~ msgid "Pending"
-#~ msgstr "待处理"
-
-#~ msgid "Contact"
-#~ msgstr "联系"
-
-#~ msgid "Account currency"
-#~ msgstr "币别"
-
-#~ msgid ""
-#~ "Error! The currency has to be the same as the currency of the selected "
-#~ "company"
-#~ msgstr "错误！此币别必须是选定公司的默认币别。"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "错误! 你不能创建递归的辅助核算项"
-
-#~ msgid ""
-#~ "If you select the View Type, it means you won't allow to create journal "
-#~ "entries using that account."
-#~ msgstr "如果选择了 视图 类型，则你不能在这个辅助核算项上创建辅助核算凭证"
-
-#~ msgid "Code/Reference"
-#~ msgstr "编号"
-
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "错误！"
-
-#~ msgid "Maximum Time"
-#~ msgstr "最长时间"
-
-#~ msgid "Sets the higher limit of time to work on the contract."
-#~ msgstr "设置在这个合同上工作的最高时限。"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "无法在视图类型的科目上创建分析凭证行"

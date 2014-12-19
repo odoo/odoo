@@ -34,7 +34,8 @@ class report_event_registration(models.Model):
     draft_state = fields.Integer(' # No of Draft Registrations')
     confirm_state = fields.Integer(' # No of Confirmed Registrations')
     seats_max = fields.Integer('Max Seats')
-    nbevent = fields.Integer('Number of Registrations')
+    nbevent = fields.Integer('Number of Events')
+    nbregistration = fields.Integer('Number of Registrations')
     event_type = fields.Many2one('event.type', 'Event Type')
     registration_state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True)
     event_state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True)
@@ -58,6 +59,7 @@ class report_event_registration(models.Model):
                 e.company_id AS company_id,
                 e.date_begin AS event_date,
                 count(r.id) AS nbevent,
+                sum(r.nb_register) AS nbregistration,
                 CASE WHEN r.state IN ('draft') THEN r.nb_register ELSE 0 END AS draft_state,
                 CASE WHEN r.state IN ('open','done') THEN r.nb_register ELSE 0 END AS confirm_state,
                 e.type AS event_type,

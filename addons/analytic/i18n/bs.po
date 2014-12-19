@@ -1,21 +1,94 @@
 # Bosnian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2010-09-29 10:36+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:28+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 08:57+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:278
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "Hijerarhija konta"
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
+msgid "Account Manager"
+msgstr "Upravitelj računa"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Naziv konta / ugovora"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Iznos"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: selection:account.analytic.account,type:0
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analitički konto"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Analitičko računovodstvo"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "Analitičke stavke"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analitička stavka"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr "Analitički pogled"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Izračunato kao umnožak količine i nabavne cijene proizvoda. Uvijek u "
+"matičnoj valuti organizacije(bam)."
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "Otkazano"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -24,35 +97,163 @@ msgstr "Pod računi"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
-msgid "In Progress"
-msgstr "U toku"
+msgid "Closed"
+msgstr "Zatvorena"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:229
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "Poduzeće"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr "Ugovor završen"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Contract Information"
+msgstr "Informacije o ugovoru"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr "Ugovor je otvoren"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr "Ugovor zatvoren"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr "Ugovor otvoren"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Ugovor ili projekt"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr "Ugovor u toku"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr "Ugovor za obnovu"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:238
 #, python-format
 msgid "Contract: "
 msgstr "Ugovor: "
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Predložak."
+#: field:account.analytic.line,create_date:0
+msgid "Create Date"
+msgstr ""
 
 #. module: analytic
-#: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
-msgid "End Date"
-msgstr "Krajnji datum"
+#: field:account.analytic.account,create_uid:0
+#: field:account.analytic.line,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,unit_amount:0
-msgid "Specifies the amount of quantity to count."
-msgstr "Specificira količinu koja se zaračunava."
+#: field:account.analytic.account,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "Potraživanje"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: analytic
+#: help:account.analytic.account,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Dugovanje"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "End Date"
+msgstr "Krajnji datum"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "Error!"
+msgstr "Greška!"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr "Greška ! Ne možete kreirati rekurzivna analitička konta."
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr "Pratioci"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "Puno ime"
+
+#. module: analytic
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
+"da bi mogao biti ubačen u kanban pogled."
+
+#. module: analytic
+#: field:account.analytic.account,id:0
+#: field:account.analytic.line,id:0
+msgid "ID"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ako je označeno, nove poruke će zahtjevati vašu pažnju."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -76,7 +277,60 @@ msgstr ""
 "zadatim podatcima koje možete da jednostavno ponovno iskoristite."
 
 #. module: analytic
-#: view:account.analytic.account:0
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr "U toku"
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Je pratilac"
+
+#. module: analytic
+#: field:account.analytic.account,message_last_post:0
+msgid "Last Message Date"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,write_uid:0
+#: field:account.analytic.line,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,write_date:0
+#: field:account.analytic.line,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Poruke i istorija komunikacije"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "Nova"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
 "                                        passed or the maximum number of "
@@ -99,39 +353,14 @@ msgstr ""
 "                                        sa kupcem."
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Ugovor ili projekt"
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Nadređeni analitički konto"
 
 #. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Naziv konta / ugovora"
-
-#. module: analytic
-#: field:account.analytic.account,manager_id:0
-msgid "Account Manager"
-msgstr "Upravitelj računa"
-
-#. module: analytic
-#: field:account.analytic.account,message_follower_ids:0
-msgid "Followers"
-msgstr "Pratioci"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Closed"
-msgstr "Zatvorena"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_pending
-msgid "Contract to Renew"
-msgstr "Ugovor za obnovu"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "New"
-msgstr "Nova"
+#: field:account.analytic.account,quantity_max:0
+msgid "Prepaid Service Units"
+msgstr "Jedinica unaprijed plaćene usluge"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
@@ -139,57 +368,26 @@ msgid "Project Manager"
 msgstr "Rukovodilac projekta"
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "Status"
-msgstr "Status"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Količina"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:272
 #, python-format
-msgid "%s (copy)"
-msgstr "%s (kopija)"
+msgid "Quick account creation disallowed."
+msgstr "Brzo kreiranje konta onemogućeno."
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Analitička stavka"
+#: field:account.analytic.account,code:0
+msgid "Reference"
+msgstr "Referenca"
 
 #. module: analytic
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: analytic
-#: field:account.analytic.account,message_unread:0
-msgid "Unread Messages"
-msgstr "Nepročitane poruke"
-
-#. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
-msgstr "Greška ! Ne možete kreirati rekurzivna analitička konta."
-
-#. module: analytic
-#: field:account.analytic.account,company_id:0
-#: field:account.analytic.line,company_id:0
-msgid "Company"
-msgstr "Poduzeće"
-
-#. module: analytic
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Renewal"
 msgstr "Obnova"
-
-#. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "Poruke i istorija komunikacije"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr ""
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -201,86 +399,29 @@ msgstr ""
 "listovima. (na primjer, broj sati u limitiranom ugovoru održavanja)"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"Ako postavite kompaniju, odabrana valuta mora da bude ista kao i njegova "
-"valuta. \n"
-"Možete da uklonite pripadajuću kompaniju, i tako promjenite valutu, samo na "
-"analitičkim kontima tipa 'pogled'. Ovo stvarno može biti korisno za potrebe "
-"konsolidacije nekoliko kontnih planova kompanija sa različitim valutama, na "
-"primjer."
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Specificira količinu koja se zaračunava."
 
 #. module: analytic
-#: field:account.analytic.account,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Je pratilac"
+#: field:account.analytic.account,date_start:0
+msgid "Start Date"
+msgstr "Početni Datum"
 
 #. module: analytic
-#: field:account.analytic.line,user_id:0
-msgid "User"
-msgstr "Korisnik"
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr "Status"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr ""
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr "Rezime"
 
 #. module: analytic
-#: field:account.analytic.line,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_closed
-msgid "Contract Finished"
-msgstr "Ugovor završen"
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
-msgstr "Pravila i Uslovi"
-
-#. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
-msgstr ""
-"Izračunato kao umnožak količine i nabavne cijene proizvoda. Uvijek u "
-"matičnoj valuti organizacije(bam)."
-
-#. module: analytic
-#: field:account.analytic.account,partner_id:0
-msgid "Customer"
-msgstr "Kupac"
-
-#. module: analytic
-#: field:account.analytic.account,child_complete_ids:0
-msgid "Account Hierarchy"
-msgstr "Hijerarhija konta"
-
-#. module: analytic
-#: field:account.analytic.account,message_ids:0
-msgid "Messages"
-msgstr "Poruke"
-
-#. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Nadređeni analitički konto"
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Contract Information"
-msgstr "Informacije o ugovoru"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Predložak."
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
@@ -289,49 +430,9 @@ msgid "Template of Contract"
 msgstr "Predložak ugovora"
 
 #. module: analytic
-#: field:account.analytic.account,message_summary:0
-msgid "Summary"
-msgstr "Rezime"
-
-#. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Prepaid Service Units"
-msgstr "Jedinica unaprijed plaćene usluge"
-
-#. module: analytic
-#: field:account.analytic.account,credit:0
-msgid "Credit"
-msgstr "Potraživanje"
-
-#. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_opened
-msgid "Contract Opened"
-msgstr "Ugovor je otvoren"
-
-#. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Cancelled"
-msgstr "Otkazano"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Analytic View"
-msgstr "Analitički pogled"
-
-#. module: analytic
-#: field:account.analytic.account,balance:0
-msgid "Balance"
-msgstr "Saldo"
-
-#. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ako je označeno, nove poruke će zahtjevati vašu pažnju."
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Terms and Conditions"
+msgstr "Pravila i Uslovi"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -339,129 +440,27 @@ msgid "To Renew"
 msgstr "Za obnovu"
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Količina"
-
-#. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Date End"
-msgstr "Završni datum"
-
-#. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Reference"
-msgstr "Referenca"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid "Error!"
-msgstr "Greška!"
-
-#. module: analytic
-#: model:res.groups,name:analytic.group_analytic_accounting
-msgid "Analytic Accounting"
-msgstr "Analitičko računovodstvo"
-
-#. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Iznos"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Puno ime konta"
-
-#. module: analytic
-#: view:account.analytic.account:0
-#: selection:account.analytic.account,type:0
-#: field:account.analytic.line,account_id:0
-#: model:ir.model,name:analytic.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analitički konto"
-
-#. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Sadrži sažetak konverzacije (broj poruka,..). Ovaj sažetak je u html formatu "
-"da bi mogao biti ubačen u kanban pogled."
-
-#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
 msgstr "Tip konta"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Start Date"
-msgstr "Početni Datum"
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "Korisnik"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:272
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
 msgstr "Ne možete da kreirate stavke analitike na kontima tipa pogled"
-
-#. module: analytic
-#: field:account.analytic.account,line_ids:0
-msgid "Analytic Entries"
-msgstr "Analitičke stavke"
-
-#~ msgid "Account Name"
-#~ msgstr "Naziv konta"
-
-#~ msgid "State"
-#~ msgstr "Stanje"
-
-#~ msgid ""
-#~ "Module for defining analytic accounting object.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Modul za definiranje analitičkih računovodstvenih objekata.\n"
-#~ "    "
-
-#~ msgid "Draft"
-#~ msgstr "U pripremi"
-
-#~ msgid "Pending"
-#~ msgstr "Čekanje"
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
-
-#~ msgid "Maximum Quantity"
-#~ msgstr "Maksimalna količina"
-
-#~ msgid "Sets the higher limit of quantity of hours."
-#~ msgstr "Postavlja gornju granicu broja sati."
-
-#~ msgid "View"
-#~ msgstr "Prikaz"
-
-#~ msgid "Account currency"
-#~ msgstr "Valuta konta"
-
-#~ msgid "Account Code"
-#~ msgstr "Šifra konta"
-
-#~ msgid "Normal"
-#~ msgstr "Normalno"
-
-#~ msgid "Date Start"
-#~ msgstr "Početni datum"
-
-#~ msgid "Open"
-#~ msgstr "Otvoren"
-
-#~ msgid "Account Type"
-#~ msgstr "Tip konta"

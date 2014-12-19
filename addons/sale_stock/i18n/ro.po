@@ -1,34 +1,108 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* sale
+# Romanian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-09-21 13:56+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-11 17:12+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-12 07:20+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
+#: code:addons/sale_stock/sale_stock.py:266
+#, python-format
+msgid "(n/a)"
+msgstr "(n/a)"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_delivery:0
+msgid "Allow adding shipping costs"
+msgstr "Permite adaugarea costurilor de transport"
+
+#. module: sale_stock
+#: help:sale.config.settings,module_delivery:0
 msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
+"Allows you to add delivery methods in sales orders and delivery orders.\n"
+"You can define your own carrier and delivery grids for prices.\n"
+"-This installs the module delivery."
 msgstr ""
-"Pentru a-i permite agentului dumneavoastra de vanzari sa creeze facturi "
-"pentru Ordinele de Livrare folosind meniul 'Livrari de Facturat'."
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Comanda de livrare"
+#: help:sale.config.settings,group_route_so_lines:0
+msgid "Allows you to choose a delivery route on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_mrp_properties:0
+msgid "Allows you to tag sales order lines with properties."
+msgstr "Va permite sa marcati liniile comenzii de vanzare cu proprietati."
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Cancel Order"
+msgstr "Anulați Comanda"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:160
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr "Imposibil de anulat comanda de vânzare!"
+
+#. module: sale_stock
+#: field:sale.config.settings,group_route_so_lines:0
+msgid "Choose MTO, drop shipping,... on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
+#, python-format
+msgid "Configuration Error!"
+msgstr "Eroare de configurare!"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr "Detalii Contact"
+
+#. module: sale_stock
+#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+msgid "Default Options"
+msgstr "Opțiuni implicite"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_picking_policy:0
+msgid "Deliver all at once when all products are available."
+msgstr "Livrati totul odata atunci cand sunt disponibile toate produsele."
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver all products at once"
+msgstr "Livreaza toate produsele odata"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver each product when available"
+msgstr "Livreaza fiecare produs atunci cand este disponibil"
+
+#. module: sale_stock
+#: field:sale.order,shipped:0
+msgid "Delivered"
+msgstr "Livrat"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
@@ -37,274 +111,14 @@ msgid "Deliveries to Invoice"
 msgstr "Livrari de Facturat"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:570
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Informatii la ridicare !: "
+#: model:res.groups,name:sale_stock.group_invoice_deli_orders
+msgid "Enable Invoicing Delivery orders"
+msgstr "Activati Facturarea Livrarii Comenzilor"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_packinglist0
-msgid "Pick List"
-msgstr "Lista de ridicare"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:565
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
+#: model:res.groups,name:sale_stock.group_route_so_lines
+msgid "Enable Route on Sales Order Line"
 msgstr ""
-"Ati selectat o cantitate de Unitati %d.\n"
-"Dar nu este compatibila cu ambalajul selectat.\n"
-"Iata o propunere de cantitati conforme cu ambalajul:\n"
-"EAN: %s Cantitate: %s Tip de ul: %s"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "Documentul miscarii catre iesire sau catre client."
-
-#. module: sale_stock
-#: field:sale.config.settings,group_multiple_shops:0
-msgid "Manage multiple shops"
-msgstr "Gestioneaza magazine multiple"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_validate0
-msgid "Validate"
-msgstr "Valideaza"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:209
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Mai intai trebuie sa anulati toate comenzile de livrare atasate acestei "
-"comenzi de vanzare."
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "Creeaza Comanda de Aprovizionare"
-
-#. module: sale_stock
-#: field:stock.picking.out,sale_id:0
-msgid "Sale Order"
-msgstr "Comadă vânzare"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-"Pentru fiecare linie a comenzii de vanzare este creat un ordin de "
-"aprovizionare pentru a furniza produsul vandut."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr "Eroare!"
-
-#. module: sale_stock
-#: field:sale.order,picking_policy:0
-msgid "Shipping Policy"
-msgstr "Politica de expediere"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Nu puteti face un avans la comanda de vanzare care este definita drept ' "
-"Facturare Automata dupa livrare'."
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "Magazin"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr ""
-"Acţioneza ordinele de aprovizionare pentru fiecare linie a comenzii de "
-"vânzare."
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_move
-msgid "Stock Move"
-msgstr "Miscare stoc"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
-#, python-format
-msgid "Invalid Action!"
-msgstr "Actiune Nevalida!"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "Foaie de pontaj Proiect"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_sale_delivery_address:0
-msgid "Allow a different address for delivery and invoicing "
-msgstr "Permite o adresa diferita pentru livrare si facturare "
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:572
-#: code:addons/sale_stock/sale_stock.py:623
-#, python-format
-msgid "Configuration Error!"
-msgstr "Eroare de configurare!"
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr "Ordin de aprovizionare"
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Factura bazata pe livrari"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr "Comanda de vanzare"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Comenzi de Livrare"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "Linie comanda de vanzare"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-"Formularul Lista de Ridicare este creat de indata ce comanda de vanzare este "
-"confirmata in acelasi timp cu ordinul de aprovizionare. Reprezinta "
-"atribuirea de piese la comanda de vanzare. Exista o lista de ridicare per "
-"linie comanda de vanzare care evolueaza odata cu disponibilitatea pieselor."
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-"Acestea sunt zilele adaugate la cele promise clientilor in scop de siguranta"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "Lista de ridicare"
-
-#. module: sale_stock
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Depozit"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Forteaza atribuirea"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "Metoda implicita de facturare este"
-
-#. module: sale_stock
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr "Timp de livrare"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Documentul miscarii catre client."
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "View Delivery Order"
-msgstr "Vizualizeaza Comanda de Livrare"
-
-#. module: sale_stock
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Miscari inventar"
-
-#. module: sale_stock
-#: view:sale.config.settings:0
-msgid "Default Options"
-msgstr "Optiuni Implicite"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_mrp:0
-msgid "Project MRP"
-msgstr "Proiect MRP"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr ""
-"Factura este creata in mod automat daca politica de expediere este \"Factura "
-"la ridicare\" sau \"Factura la comanda dupa livrare\"."
-
-#. module: sale_stock
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Aprovizionare"
-
-#. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Expediat"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "mod invalid pentru test_stare"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-"O comanda de aprovizionare este creata automat de indata ce o comanda de "
-"vanzare este confirmata sau factura este platita. Ea conduce achizitionarea "
-"si productia produselor dupa norme si la parametrii comenzii de vanzare. "
-
-#. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
-msgid "Allows you to tag sales order lines with properties."
-msgstr "Va permite sa marcati liniile comenzii de vanzare cu proprietati."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -312,19 +126,14 @@ msgid "Generate invoices after and based on delivery orders"
 msgstr "Genereaza facturi dupa si pe baza comenzilor de livrare"
 
 #. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Permite adaugarea costurilor de transport"
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Ignore Exception"
+msgstr "Ignoră excepția"
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "days"
-msgstr "zile"
-
-#. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Ambalare"
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Incoterm"
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
@@ -336,38 +145,59 @@ msgstr ""
 "predefiniti folositi in tranzactiile internationale."
 
 #. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
+#: model:ir.model,name:sale_stock.model_stock_location_route
+msgid "Inventory Routes"
+msgstr "Rute inventar"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on deliveries"
+msgstr "Factură bazată pe livrări"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
+msgstr "Facturati pe baza comenzilor de vanzare"
+
+#. module: sale_stock
+#: help:sale.config.settings,task_work:0
 msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
-"                This installs the module delivery."
+"Lets you transfer the entries under tasks defined for Project Management to "
+"the Timesheet line entries for particular date and particular user  with the "
+"effect of creating, editing and deleting either ways and to automatically "
+"creates project tasks from procurement lines.\n"
+"-This installs the modules project_timesheet and sale_service."
 msgstr ""
-"Va permite sa adaugati metodele de livrare in comenzile de vanzare si in "
-"comenzile de livrare.\n"
-"                Va puteti defini propria companie de transport si grile de "
-"livrare pentru preturi.\n"
-"                Acesta instaleaza modulul livrare."
 
 #. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
-msgstr "Livrati totul odata atunci cand sunt disponibile toate produsele."
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "Activati Facturarea Livrarii Comenzilor"
+#: code:addons/sale_stock/sale_stock.py:346
+#, python-format
+msgid "Not enough stock ! : "
+msgstr "Stoc insuficient ! : "
 
 #. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Zile de siguranta"
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr "Numarul de pachete"
 
 #. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "Aprovizionarea materialelor vandute"
+#: code:addons/sale_stock/res_config.py:78
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr "Doar administratorul poate opera modificările"
+
+#. module: sale_stock
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "Ambalare"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -378,29 +208,35 @@ msgstr ""
 "permiteti livrarea partiala."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:208
+#: code:addons/sale_stock/sale_stock.py:275
 #, python-format
-msgid "Cannot cancel sales order!"
-msgstr "Imposibil de anulat comanda de vanzare!"
+msgid "Picking Information ! : "
+msgstr "Informatii la ridicare !: "
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_shop
-msgid "Sales Shop"
-msgstr "Magazin Vanzari"
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Picking List"
+msgstr "Lista de ridicare"
 
 #. module: sale_stock
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
+#: field:sale.order,picking_ids:0
+msgid "Picking associated to this sale"
 msgstr ""
-"Indica livrarea comenzii de vanzare. Acest camp este actualizat numai dupa "
-"ce programatorul (le) a(u) fost lansat(e)."
 
 #. module: sale_stock
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "Proprietati"
+#: field:sale.config.settings,task_work:0
+msgid "Prepare invoices based on task's activities"
+msgstr "Pregatiti facturile pe baza activitatilor sarcinilor"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr "Produs"
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr "Produs șablon"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -408,78 +244,49 @@ msgid "Product properties on order lines"
 msgstr "Proprietatile produsului in liniile comenzii"
 
 #. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Puteti genera facturi pe baza comenzilor de vanzare sau pe baza expedierilor."
+#: field:sale.config.settings,module_project_timesheet:0
+msgid "Project Timesheet"
+msgstr "Foaie de pontaj Proiect"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Recreate Delivery Order"
+msgstr "Recreati Comanda de Livrare"
+
+#. module: sale_stock
+#: field:sale.order.line,route_id:0
+msgid "Route"
+msgstr "Rută"
+
+#. module: sale_stock
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "Comadă vânzare"
+
+#. module: sale_stock
+#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+msgid "Sale Order Lines"
+msgstr "Poziţii comenzi vânzare"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_sale_service:0
+msgid "Sale Service"
+msgstr "Vânzare serviciu"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Sales Order"
+msgstr "Comandă de vânzare"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linie comandă de vânzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Statistici comenzi de vanzare"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_company
-msgid "Companies"
-msgstr "Companii"
-
-#. module: sale_stock
-#: help:sale.config.settings,task_work:0
-msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
-"                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"Va permite sa transferati inregistrarile sub sarcini definite pentru "
-"Managementul Proiectelor in\n"
-"                inregistrarile din linia Fisei de pontaj pentru o anumita "
-"data si un anumit utilizator cu scopul de le a crea, edita sau sterge\n"
-"                si creeaza automat sarcini ale proiectului din liniile de "
-"aprovizionare.\n"
-"                Acesta instaleaza modulele project_timesheet "
-"(proiect_fisa_de_pontaj) si project_mrp (proiect_mrp)."
-
-#. module: sale_stock
-#: help:sale.config.settings,group_sale_delivery_address:0
-msgid ""
-"Allows you to specify different delivery and invoice addresses on a sales "
-"order."
-msgstr ""
-"Va permite sa specificati adrese de livrare si de facturare diferite intr-o "
-"comanda de vanzare."
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleprocurement0
-msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr ""
-"O comanda de aprovizionare pentru fiecare linie a comenzii de vanzare si "
-"pentru fiecare dintre componente."
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_assign0
-msgid "Assign"
-msgstr "Atribuie"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:618
-#, python-format
-msgid "Not enough stock ! : "
-msgstr "Stoc insuficient ! : "
-
-#. module: sale_stock
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
-msgstr ""
-"Numarul de zile dintre confirmarea comenzii si livrarea produsului clientului"
+msgstr "Statistici comenzi de vânzare"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -493,172 +300,114 @@ msgstr ""
 "lucru poate avea un impact asupra pretului de transport."
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr "Facturati pe baza comenzilor de vanzare"
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr "Zile de siguranță"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "Factura"
+#: field:stock.location.route,sale_selectable:0
+msgid "Selectable on Sales Order Line"
+msgstr ""
 
 #. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-msgid "Cancel"
-msgstr "Anuleaza"
+#: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped"
+msgstr "Expediat"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
+#: field:sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr "Politica de expediere"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Mișcare stoc"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_order_policy:0
+msgid "The default invoicing method is"
+msgstr "Metoda implicita de facturare este"
+
+#. module: sale_stock
+#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
+msgid "To Invoice"
+msgstr "De facturat"
+
+#. module: sale_stock
+#: help:sale.config.settings,group_invoice_deli_orders:0
+msgid ""
+"To allow your salesman to make invoices for Delivery Orders using the menu "
+"'Deliveries to Invoice'."
+msgstr ""
+"Pentru a-i permite agentului dumneavoastra de vanzari sa creeze facturi "
+"pentru Ordinele de Livrare folosind meniul 'Livrari de Facturat'."
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "View Delivery Order"
+msgstr "Vizualizeaza Comanda de Livrare"
+
+#. module: sale_stock
+#: field:sale.order,warehouse_id:0
+#: field:sale.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "Depozit"
+
+#. module: sale_stock
+#: help:sale.config.settings,default_order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr ""
+"Puteți genera facturi pe baza comenzilor de vânzări sau pe baza livrărilor."
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
-"In order to delete a confirmed sales order, you must cancel it.\n"
-"To do so, you must first cancel related picking for delivery orders."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-"Pentru a sterge o comanda de vanzare confirmata, trebuie sa o anulati.\n"
-"Pentru a face acest lucru, mai intai trebuie sa anulati ridicarea asociata "
-"cu comenzile de livrare."
+"Mai intai trebuie sa anulati toate comenzile de livrare atasate acestei "
+"comenzi de vanzare."
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Numarul de pachete"
-
-#. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Livrat"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
-msgid "Create Invoice"
-msgstr "Creeaza Factura"
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "Pregatiti facturile pe baza activitatilor sarcinilor"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Factura Vanzare cu Plata in Avans"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:523
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Trebuie sa anulati mai intai miscarile de stoc atasate la această linie a "
-"comenzii de vanzare."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:561
-#, python-format
-msgid "(n/a)"
-msgstr "(n/a)"
-
-#. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:522
-#, python-format
-msgid "Cannot cancel sales order line!"
-msgstr "Imposibil de anulat linia comenzii de vanzare!"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Anulare Atribuire"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "Bazat pe cantitatile expediate sau comandate."
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Livreaza toate produsele odata"
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "Ridicari asociate"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings (vanzare.config.setari)"
-
-#. module: sale_stock
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of delivery orders that has been generated for this sales "
-"order."
-msgstr ""
-"Aceasta este o lista cu comenzile de livrare care au fost generate pentru "
-"aceasta comanda de livrare."
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "Cerere Comanda de vanzare"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "Creeaza Comanda de livrare"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "Ignora exceptia"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:614
+#: code:addons/sale_stock/sale_stock.py:342
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
-"Intentionati sa vindeti %.2f%s, dar aveti doar %.2f%s disponibil !\n"
-"Stocul real este %.2f%s. (fara rezerve)"
+"Intentionați să vindeți %.2f%s, dar aveți doar %.2f%s disponibil !\n"
+"Stocul real este %.2f%s. (fără rezerve)"
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Recreate Delivery Order"
-msgstr "Recreati Comanda de Livrare"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_multiple_shops:0
-msgid "This allows to configure and use multiple shops."
-msgstr "Acesta permite sa configurati si sa folositi magazine multiple."
-
-#. module: sale_stock
-#: field:sale.order,picked_rate:0
-msgid "Picked"
-msgstr "Ridicat(a)"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Livreaza fiecare produs atunci cand este disponibil"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_packing0
-msgid "Create Pick List"
-msgstr "Creeaza Lista de ridicare"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_deliver0
+#: code:addons/sale_stock/sale_stock.py:270
+#, python-format
 msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
-"In functie de configuratia locatiei de iesire, miscarea intre zona de iesire "
-"si client se face manual sau automat prin Comanda de  Livrare."
+"Ati selectat o cantitate de Unitati %d.\n"
+"Dar nu este compatibila cu ambalajul selectat.\n"
+"Iata o propunere de cantitati conforme cu ambalajul:\n"
+"EAN: %s Cantitate: %s Tip de ul: %s"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "days"
+msgstr "zile"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
+msgstr ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
+
+#~ msgid "Picked"
+#~ msgstr "Ridicat(a)"

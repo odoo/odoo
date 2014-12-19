@@ -1,32 +1,81 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* account_analytic_default
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-01-10 23:06+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-12 16:28+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:05+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-13 06:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: account_analytic_default
+#: field:product.product,rules_count:0
+#: field:product.template,rules_count:0
+msgid "# Analytic Rules"
+msgstr "Analiz Kuralı Sayısı"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+msgid "Accounts"
+msgstr "Hesaplar"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: field:account.analytic.default,analytic_id:0
+msgid "Analytic Account"
+msgstr "Analiz Hesabı"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_tree
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+msgid "Analytic Defaults"
+msgstr "Varsayılan Analizler"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "Analitic Dağılım"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
+#: view:product.product:account_analytic_default.product_form_view_default_analytic_button
+#: view:product.template:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr "Analiz Kuralları"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Group By..."
-msgstr "Gruplandır..."
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: field:account.analytic.default,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
+msgid "Conditions"
+msgstr "Koşullar"
+
+#. module: account_analytic_default
+#: field:account.analytic.default,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: account_analytic_default
+#: field:account.analytic.default,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
@@ -34,59 +83,9 @@ msgid "Default end date for this Analytic Account."
 msgstr "Bu analitik hesap için varsayılan bitiş tarihi"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"Select a product which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sales order if we select this "
-"product, it will automatically take this as an analytic account)"
-msgstr ""
-"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir ürün seçin "
-"(ör: yeni oluşturulan bir siparişte ya da müşteri faturasında bu ürünü "
-"seçersek otomatik olarak bu hesap kullanılacak.)"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Picking List"
-msgstr "Toplama Listesi"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Conditions"
-msgstr "Koşullar"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,product_id:0
-msgid "Product"
-msgstr "Ürün"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"Select a partner which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sales order if we select this "
-"partner, it will automatically take this as an analytic account)"
-msgstr ""
-"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir cari seçin "
-"(ör: yeni oluşturulan bir siparişte ya da müşteri faturasında bu cariyi "
-"seçersek otomatik olarak bu hesap kullanılacak.)"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,company_id:0
-msgid "Company"
-msgstr "Firma"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,user_id:0
-msgid "User"
-msgstr "Kullanıcı"
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "Girdiler"
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr "Bu analitik hesap için varsayılan başlangıç tarihi"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
@@ -94,29 +93,68 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-msgid "Analytic Defaults"
-msgstr "Varsayılan Analizler"
+#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
+msgid "Entries"
+msgstr "Girdiler"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
-msgid "Sequence"
-msgstr "Sıra No"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
+#: help:account.analytic.default,sequence:0
 msgid ""
-"Select a user which will use analytic account specified in analytic default."
-msgstr ""
-"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir kullanıcı "
-"seçin."
+"Gives the sequence order when displaying a list of analytic distribution"
+msgstr "Analiz dağılımı listesi gösteriminde diziliş sırasını belirtir."
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+msgid "Group By"
+msgstr "Gruplandır"
+
+#. module: account_analytic_default
+#: field:account.analytic.default,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Fatura Kalemi"
+
+#. module: account_analytic_default
+#: field:account.analytic.default,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_analytic_default
+#: field:account.analytic.default,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: field:account.analytic.default,partner_id:0
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Picking List"
+msgstr "Toplama Listesi"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: field:account.analytic.default,product_id:0
+#: model:ir.model,name:account_analytic_default.model_product_product
+msgid "Product"
+msgstr "Ürün"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_product_template
+msgid "Product Template"
+msgstr "Ürün Şablonu"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Siparişi Kalemi"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
@@ -130,31 +168,39 @@ msgstr ""
 "şirketi (cari değil) seçersek otomatik olarak bu hesap kullanılacak.)"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,analytic_id:0
-msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
+"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir cari seçin "
+"(ör: yeni oluşturulan bir siparişte ya da müşteri faturasında bu cariyi "
+"seçersek otomatik olarak bu hesap kullanılacak.)"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distribution"
-msgstr "Analitic Dağılım"
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir ürün seçin "
+"(ör: yeni oluşturulan bir siparişte ya da müşteri faturasında bu ürünü "
+"seçersek otomatik olarak bu hesap kullanılacak.)"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytic Account."
-msgstr "Bu analitik hesap için varsayılan başlangıç tarihi"
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
+"Analitik varsayılan da tanımlanan analitik hesabı kullanacak bir kullanıcı "
+"seçin."
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Accounts"
-msgstr "Hesaplar"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: field:account.analytic.default,partner_id:0
-msgid "Partner"
-msgstr "İş Ortağı"
+#: field:account.analytic.default,sequence:0
+msgid "Sequence"
+msgstr "Sıra No"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_start:0
@@ -162,94 +208,7 @@ msgid "Start Date"
 msgstr "Başlama Tarihi"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of analytic distribution"
-msgstr "Analiz dağılımı listesi gösteriminde diziliş sırasını belirtir."
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Satış Siparişi Kalemi"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "Seq"
-#~ msgstr "Sıra No"
-
-#~ msgid "Analytic Distributions"
-#~ msgstr "Analiz Dağılımları"
-
-#~ msgid "Default start date for this Analytical Account"
-#~ msgstr "Bu analitik hesap için varsayılan başlangıç tarihi"
-
-#~ msgid "Analytical Account"
-#~ msgstr "Analitik Hesap"
-
-#~ msgid "Default end date for this Analytical Account"
-#~ msgstr "Bu analitik hesap için varsayılan bitiş tarihi"
-
-#~ msgid ""
-#~ "\n"
-#~ "Allows to automatically select analytic accounts based on criterions:\n"
-#~ "* Product\n"
-#~ "* Partner\n"
-#~ "* User\n"
-#~ "* Company\n"
-#~ "* Date\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Aşağıda belirtilen kriterlere göre otomatik olarak analiz hesabı seçilmesini "
-#~ "sağlar:\n"
-#~ "* Ürün\n"
-#~ "* Paydaş\n"
-#~ "* Kullanıcı\n"
-#~ "* Firma\n"
-#~ "* Tarih\n"
-#~ "    "
-
-#~ msgid ""
-#~ "select a user which will use analytical account specified in analytic default"
-#~ msgstr ""
-#~ "Varsayılan analizde belilenen analiz hesabı kullanacak bir kullanıcı seçin"
-
-#~ msgid ""
-#~ "select a partner which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "partner, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "Varsayılan analizde belirlenen analiz hesabında kullanacak bir paydaş seçin "
-#~ "(örneğin; yeni bir müşteri faturası oluşturun ya da Satış sipariş, eğer bu "
-#~ "paydaşı seçersek bu otomatik olarak analiz hesabı olarak alınır)"
-
-#~ msgid ""
-#~ "select a company which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "company, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "Varsayılan analizde belirlenen analiz hesabında kullanacak bir firma seçin "
-#~ "(örneğin; yeni bir müşteri faturası oluşturun ya da Satış sipariş, eğer bu "
-#~ "paydaşı seçersek bu otomatik olarak analiz hesabı olarak alınır)"
-
-#~ msgid ""
-#~ "select a product which will use analytical account specified in analytic "
-#~ "default (eg. create new cutomer invoice or Sale order if we select this "
-#~ "product, it will automatically take this as an analytical account)"
-#~ msgstr ""
-#~ "Varsayılan analizde belirlenen analiz hesabında kullanacak bir ürün seçin "
-#~ "(örneğin; yeni bir müşteri faturası oluşturun ya da Satış sipariş, eğer bu "
-#~ "paydaşı seçersek bu otomatik olarak analiz hesabı olarak alınır)"
-
-#~ msgid "Current"
-#~ msgstr "Geçerli"
-
-#~ msgid "Account Analytic Default"
-#~ msgstr "Varsayılan Analiz Hesabı"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referans her şirket için tekil olmalı!"
-
-#~ msgid "Analytical defaults whose end date is greater than today or None"
-#~ msgstr "Bitiş tarihi bugünden sonra ya da boş olan Analitik varsayılanlar"
+#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: field:account.analytic.default,user_id:0
+msgid "User"
+msgstr "Kullanıcı"

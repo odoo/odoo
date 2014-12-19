@@ -124,7 +124,7 @@
 -
   !workflow {model: purchase.order, ref: purchase_order_001, action: purchase_confirm}
 -
-  Reception is ready for process so now done the reception.
+  Receipt is ready for process so now we do it.
 -
   !python {model: stock.picking}: |
     picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001"), context=context).picking_ids[0]
@@ -198,8 +198,8 @@
         product_uom_qty: 1.0
         product_uom: product.product_uom_unit
         location_dest_id: stock.stock_location_customers
-        invoice_state: 2binvoiced
     move_type: direct
+    invoice_state: 2binvoiced
     picking_type_id: stock.picking_type_out
 -
   I need to check the availability of the product, So I make my picking order for processing later.

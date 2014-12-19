@@ -1,0 +1,134 @@
+{% extends "basic/layout.html" %}
+
+{% set script_files = script_files + [
+  '_static/bootstrap/js/scrollspy.js',
+  '_static/bootstrap/js/affix.js',
+  '_static/bootstrap/js/tooltip.js',
+  '_static/bootstrap/js/collapse.js',
+  '_static/bootstrap/js/dropdown.js',
+  '_static/zeroclipboard-2.1.6/ZeroClipboard.min.js',
+  '_static/app.js'
+] %}
+
+{%- block doctype -%}
+<!doctype html>
+{%- endblock -%}
+
+{%- block htmltitle -%}
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ super() }}
+{%- endblock -%}
+
+{%- block extrahead -%}
+  {%- if canonical -%}
+    <link rel="canonical" href="{{ canonical }}"/>
+  {%- endif -%}
+{%- endblock -%}
+
+{%- block content -%}
+  <div class="document-super {% if meta is defined %}{{ meta.classes }}{% endif %}">
+    {{ super() }}
+  </div>
+{%- endblock -%}
+
+{# sidebar to the left, except sidebar1 is *outside* div.document where
+   sidebar2 is inside, so inject sidebar into document block #}
+{%- block document -%}
+  <div class="sphinxsidebar">
+    <div class="sphinxsidebarwrapper">
+      {{ toctree(maxdepth=4, collapse=False, includehidden=True,
+                 navbar='side', titles_only=False) }}
+      {% if github_link %}
+        <p><a href="{{ github_link(mode='edit') }}" class="github">
+          Edit on GitHub
+        </a></p>
+      {% endif %}
+    </div>
+  </div>
+  {{ super() }}
+{%- endblock -%}
+{%- block sidebar1 -%}{%- endblock -%}
+{%- block sidebar2 -%}{%- endblock -%}
+
+{%- block relbar1 -%}
+<header class="navbar navbar-default navbar-static-top docs-nav" id="top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="{{ pathto(master_doc) }}" class="o_logo navbar-brand">
+        <span class="o_logo_main">odoo</span><span class="o_logo_app">doc</span>
+      </a>
+      {% if versions %}
+        <div class="versions navbar-brand">
+          <a class="dropdown-toggle" data-toggle="dropdown">
+            {{ version }} <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {% for name, url in versions %}
+              <li><a href="{{ url }}">{{ name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+    <nav class="collapse navbar-collapse navbar-main" role="navigation">
+      {{ toctree(titles_only=True, maxdepth=2, includehidden=True,
+                 collapse=False, navbar='main') }}
+    </nav>
+  </div>
+</header>
+{%- endblock -%}
+{%- block relbar2 -%}{%- endblock -%}
+
+{%- block footer %}
+    <div class="footer">
+      <div class="container">
+        <ul class="docs-footer-links muted">
+          {%- if show_copyright %}
+            <li>
+              {%- if hasdoc('copyright') %}
+                {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> <a href="https://odoo.com">{{ copyright }}</a>{% endtrans %}
+              {%- else %}
+                {% trans copyright=copyright|e %}&copy; Copyright <a href="https://odoo.com">{{ copyright }}</a>.{% endtrans %}
+              {%- endif %}
+            </li>
+          {%- endif %}
+          {%- if show_copyright and (last_updated or show_sphinx) -%}
+            <li>·</li>
+          {%- endif -%}
+          {%- if last_updated %}
+            <li>{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}</li>
+          {%- endif %}
+          {%- if last_updated and show_sphinx -%}
+            <li>·</li>
+          {%- endif -%}
+          {%- if show_sphinx %}
+            <li>{% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}</li>
+          {%- endif %}
+        </ul>
+      <p>
+        odoo docs theme based on <a href="http://getbootstrap.com">Bootstrap
+        3.2 documentation</a> adapted to
+        <a href="http://sphinx-doc.org/">Sphinx</a> output with branding and
+        color changes.
+      </p>
+      </div>
+    </div>
+    {%- if google_analytics_key -%}
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{ google_analytics_key }}', 'auto');
+    ga('send','pageview');
+    </script>
+    {%- endif -%}
+{%- endblock %}

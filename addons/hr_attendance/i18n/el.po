@@ -1,65 +1,30 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_attendance
+# Greek translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-01-25 17:41+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
-"Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:14+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Country: GREECE\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_month
-msgid "Print Monthly Attendance Report"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.employee,last_sign:0
-msgid "Last Sign"
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Παρουσίες"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:34
-#, python-format
-msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-
-#. module: hr_attendance
-#: help:hr.action.reason,name:0
-msgid "Specifies the reason for Signing In/Signing Out."
-msgstr ""
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
@@ -67,35 +32,44 @@ msgstr ""
 "καταγράφηκε."
 
 #. module: hr_attendance
-#: view:hr.attendance.month:0
-msgid "Print Attendance Report Monthly"
+#: selection:hr.employee,state:0
+msgid "Absent"
+msgstr "Απών/ούσα"
+
+#. module: hr_attendance
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Κίνηση"
+
+#. module: hr_attendance
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:120
-#, python-format
-msgid "Attendances by Week"
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Αναχώρηση"
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
+msgstr ""
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr "Καθυστέρηση"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Analysis Information"
+msgstr "Πληροφορίες Ανάλυσης"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Ομαδοποίηση ανά..."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Οκτώβριος"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: view:hr.attendance:hr_attendance.view_hr_attendance_graph
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Παρουσίες"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
@@ -103,56 +77,32 @@ msgid "Attendance Access"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign Out"
-msgstr "Αναχώρηση"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records are found for your selection!"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
+msgid "Attendance Analysis"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
+msgid "Attendance Error Report"
+msgstr "Σφάλματα Παρουσιολογίου"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Attendance Errors:"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
-#: model:ir.model,name:hr_attendance.model_hr_employee
-msgid "Employee"
-msgstr "Υπάλληλος"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Αιτιολογίες Παρουσιολογίου"
 
 #. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Μήνας"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr "Ημερ/νία Εγγραφής"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign In"
-msgstr "Προσέλευση"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Ημερομηνία Εκκίνησης"
+#: view:hr.action.reason:hr_attendance.view_attendance_reason
+msgid "Attendance reasons"
+msgstr "Αιτιολογίες Παρουσιολογίου"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -162,45 +112,184 @@ msgid "Attendances"
 msgstr "Παρουσίες"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Μάρτιος"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "Πέραν αυτής της καθυστέρησης, το σφάλμα θεωρείται εκούσιο"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "Αύγουστος"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Cancel"
+msgstr "Ακύρωση"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:35
 #, python-format
-msgid "Warning"
-msgstr "Warning"
-
-#. module: hr_attendance
-#: help:hr.config.settings,group_hr_attendance:0
-msgid "Allocates attendance group to all users."
+msgid "Click to Sign In at %s."
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
+#: field:hr.action.reason,create_uid:0
+#: field:hr.attendance,create_uid:0
+#: field:hr.attendance.error,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,create_date:0
+#: field:hr.attendance,create_date:0
+#: field:hr.attendance.error,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Current Month"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.attendance,name:0
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Recorded"
+msgstr "Ημερ/νία Εγγραφής"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Signed"
+msgstr "Ημερ/νία Υπογραφής"
+
+#. module: hr_attendance
+#: view:hr.action.reason:hr_attendance.edit_attendance_reason
+msgid "Define attendance reason"
+msgstr "Ορισμός Αιτιολογίας Παρουσιολογίου"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Delay"
+msgstr "Καθυστέρηση"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: field:hr.attendance,employee_id:0
+#: model:ir.model,name:hr_attendance.model_hr_employee
+msgid "Employee"
+msgstr "Υπάλληλος"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_attendance_form
+#: view:hr.attendance:hr_attendance.view_attendance_tree
+#: view:hr.attendance:hr_attendance.view_attendance_who
+msgid "Employee attendances"
+msgstr "Παρουσίες Υπαλλήλου"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+msgid "Ending Date"
+msgstr "Λήξη"
+
+#. module: hr_attendance
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Group By"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Hr Attendance Search"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,id:0
+#: field:hr.attendance,id:0
+#: field:hr.attendance.error,id:0
+#: field:report.hr_attendance.report_attendanceerrors,id:0
+msgid "ID"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_uid:0
+#: field:hr.attendance,write_uid:0
+#: field:hr.attendance.error,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_date:0
+#: field:hr.attendance,write_date:0
+#: field:hr.attendance.error,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:33
+#, python-format
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Μέγιστη Καθυστέρηση"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Min Delay"
+msgstr "Ελάχιστη Καθυστέρηση"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Month"
+msgstr "Μήνας"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "My Attendance"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Ιούνιος"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:190
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid "Attendances by Month"
+msgid "No Data Available!"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
+#, python-format
+msgid "No records are found for your selection!"
+msgstr ""
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Operation"
+msgstr "Λειτουργία"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Παρών/ούσα"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print Attendance Report Error"
 msgstr ""
 
 #. module: hr_attendance
@@ -209,105 +298,25 @@ msgid "Print Error Attendance Report"
 msgstr ""
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Σύνολο περιόδου:"
-
-#. module: hr_attendance
 #: field:hr.action.reason,name:0
 msgid "Reason"
 msgstr "Αιτιολογία"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr ""
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign In"
+msgstr "Προσέλευση"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Σήμερα"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Ημερ/νία Υπογραφής"
-
-#. module: hr_attendance
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Ημερομηνία"
-
-#. module: hr_attendance
-#: field:hr.config.settings,group_hr_attendance:0
-msgid "Track attendances for all employees"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Ιούλιος"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Σφάλματα Παρουσιολογίου"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Ημέρα"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Παρών/ούσα"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Απών/ούσα"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "February"
-msgstr "Φεβρουάριος"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "Έτος"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Ελάχιστη Καθυστέρηση"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Παρουσίες Υπαλλήλου"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Ορισμός Αιτιολογίας Παρουσιολογίου"
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign Out"
+msgstr "Αναχώρηση"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -315,153 +324,9 @@ msgid "Sign in"
 msgstr "Προσέλευση"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Πληροφορίες Ανάλυσης"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-msgid "Attendances By Month"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Ιανουάριος"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available !"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "Απρίλιος"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr ""
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Σφάλματα Παρουσιολογίου"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Κίνηση"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Katagraf;h Xr;onoy"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Αιτιολογίες Παρουσιολογίου"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "Νοέμβριος"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Πέραν αυτής της καθυστέρησης, το σφάλμα θεωρείται εκούσιο"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Μέγιστη Καθυστέρηση"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Λήξη"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "Σεπτέμβριος"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Αιτιολογίες Παρουσιολογίου"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:36
-#, python-format
-msgid "Click to Sign In at %s."
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Μάιος"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the HR Manager to correct attendances."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Δεκέμβριος"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Cancel"
-msgstr "Ακύρωση"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Λειτουργία"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "or"
-msgstr ""
+#: selection:hr.action.reason,action_type:0
+msgid "Sign out"
+msgstr "Αναχώρηση"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
@@ -469,141 +334,59 @@ msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr ""
 
+#. module: hr_attendance
+#: help:hr.action.reason,name:0
+msgid "Specifies the reason for Signing In/Signing Out."
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+msgid "Starting Date"
+msgstr "Ημερομηνία Εκκίνησης"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using Odoo's web service features."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Katagraf;h Xr;onoy"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Today"
+msgstr "Σήμερα"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Total period"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid ""
-#~ "You tried to sign with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
-#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
+msgid "Warning"
+msgstr "Warning"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalid XML for View Architecture!"
+#. module: hr_attendance
+#: field:hr.attendance,worked_hours:0
+msgid "Worked Hours"
+msgstr ""
 
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr ""
-#~ "Είστε έτοιμοι να εισαχθείτε ή να εξέλθετε από την Επαλήθευση Παρουσιών"
-
-#~ msgid "Employee's name"
-#~ msgstr "Όνομα Υπαλλήλου"
-
-#~ msgid "Print Attendance Error Report"
-#~ msgstr "Εκτύπωση Σφαλμάτων Παρουσιολογίου"
-
-#~ msgid "Select a time span"
-#~ msgstr "Επιλέξτε εύρος χρόνου"
-
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid ""
-#~ "You tried to sign out with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
-#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
-
-#~ msgid "Action reason"
-#~ msgstr "Αιτιολογία ενέργειας"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Παρουσίες Υπαλλήλων"
-
-#~ msgid "Current state"
-#~ msgstr "Παρούσα κατάσταση"
-
-#~ msgid "Print Attendance Report"
-#~ msgstr "Εκτύπωση Παρουσιολογίου"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "UserError"
-
-#~ msgid "Select a starting and a end date"
-#~ msgstr "Επιλέξτε Ημερ/νία έναρξης και λήξης"
-
-#~ msgid "Employee attendance"
-#~ msgstr "Παρουσίες Υπαλλήλων"
-
-#~ msgid "Select a month"
-#~ msgstr "Επιλέξτε μήνα"
-
-#~ msgid "This module aims to manage employee's attendances."
-#~ msgstr "Αυτό το μodule διαχειρίζεται το Παρουσιολόγιο Υπαλλήλων"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign in with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
-#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Προσέλευση / Αναχώρηση"
-
-#~ msgid "Print Timesheet"
-#~ msgstr "Εκτύπωση Φύλλου Xρόνου Eργασίας"
-
-#~ msgid "Print Timesheet by week"
-#~ msgstr "Εκτύπωση Εβδομαδιαίου Φύλλου Xρόνου Eργασίας"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "Η Αναχώρηση πρέπει να είναι μετά από την Προσέλευση!"
-
-#~ msgid "Print Timesheet by month"
-#~ msgstr "Εκτύπωση Μηνιαίου Φύλλου Xρόνου Eργασίας"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Σφάλμα: Η Προσέλευση (ή Αναχώρηση ) ακολουθείται μόνο από Αναχώρηση "
-#~ "(Προσέλευση)"
-
-#, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "Η Ημερ/νία Αναχώρησης πρέπει να είναι στο παρελθόν"
-
-#~ msgid ""
-#~ "You did not signed out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Δεν έχετε εξέλθει από το σύστημα. Παρακαλώ καταχωρήστε την Ημερ/νία και ώρα "
-#~ "Αναχώρησής σας."
-
-#~ msgid "Your last sign out"
-#~ msgstr "Η τελευταία σας Αναχώρηση"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "Η ημερ/νία Προσέλευσης πρέπει να είναι παρελθοντική"
-
-#~ msgid "Action's type"
-#~ msgstr "Τύπος Κίνησης"
-
-#~ msgid ""
-#~ "You did not signed in the last time. Please enter the date and time you "
-#~ "signed in."
-#~ msgstr ""
-#~ "Δεν έχετε εισαχθεί στο σύστημα. Παρακαλώ καταχωρήστε την Ημερ/νία και ώρα "
-#~ "Προσέλευσής σας."
-
-#~ msgid "Your last sign in"
-#~ msgstr "Τελευταία Προσέλευση:"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "Προσέλευση αμέσως μετά την Αναχώρηση !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#~ msgid "Ok"
-#~ msgstr "Εντάξει"
-
-#~ msgid "Employees name"
-#~ msgstr "Όνομα Εργαζομένου"
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""

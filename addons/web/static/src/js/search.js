@@ -487,7 +487,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     setup_global_completion: function () {
         var self = this;
-
         this.autocomplete = new instance.web.search.AutoComplete(this, {
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
@@ -599,6 +598,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data;
+        this.view_id = this.view_id || data.view_id;
         if (data.type !== 'search' ||
             data.arch.tag !== 'search') {
                 throw new Error(_.str.sprintf(
@@ -782,6 +782,7 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     start: function() {
         var self = this;
+        if (this.searchview.headless) return $.when(this._super(), this.searchview.ready);
         var filters_ready = this.searchview.fields_view_get
                                 .then(this.proxy('prepare_filters'));
         return $.when(this._super(), filters_ready).then(function () {
@@ -1572,7 +1573,19 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         return instance.web.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
-        var d = Date.parse(needle);
+        var d;
+        try {
+            var t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
+            var v = instance.web.parse_value(needle, {'widget': t});
+            if (t === 'datetime'){
+                d = instance.web.str_to_datetime(v);
+            }
+            else{
+                d = instance.web.str_to_date(v);
+            }
+        } catch (e) {
+            // pass
+        }
         if (!d) { return $.when(null); }
         var date_string = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
@@ -1623,7 +1636,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: value, value: value}]
+                values: [{label: value, value: value, operator: 'ilike'}]
             },
             expand: this.expand.bind(this),
         }]);
@@ -1636,8 +1649,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             'contexts', [this.view.dataset.get_context()]);
         return this.model.call('name_search', [], {
             name: needle,
-            args: instance.web.pyeval.eval(
-                'domains', this.attrs.domain ? [this.attrs.domain] : [], context),
+            args: (typeof this.attrs.domain === 'string') ? [] : this.attrs.domain,
             limit: 8,
             context: context
         }).then(function (results) {
@@ -1671,9 +1683,13 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return facetValue.get('label');
     },
     make_domain: function (name, operator, facetValue) {
+        operator = facetValue.get('operator') || operator;
+
         switch(operator){
         case this.default_operator:
             return [[name, '=', facetValue.get('value')]];
+        case 'ilike':
+            return [[name, 'ilike', facetValue.get('value')]];
         case 'child_of':
             return [[name, 'child_of', facetValue.get('value')]];
         }
@@ -1683,7 +1699,10 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         var values = facet.values;
         if (_.isEmpty(this.attrs.context) && values.length === 1) {
             var c = {};
-            c['default_' + this.attrs.name] = values.at(0).get('value');
+            var v = values.at(0);
+            if (v.get('operator') !== 'ilike') {
+                c['default_' + this.attrs.name] = v.get('value');
+            }
             return c;
         }
         return this._super(facet);
@@ -1962,7 +1981,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
                     context: this.view.dataset.context
                 }).done(function(data) {
                     self.fields = {
-                        id: { string: 'ID', type: 'id' }
+                        id: { string: 'ID', type: 'id', searchable: true }
                     };
                     _.each(data, function(field_def, field_name) {
                         if (field_def.selectable !== false && field_name != 'id') {
@@ -2036,7 +2055,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
+            .filter(function (field) { return !field.deprecated && field.searchable; })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
@@ -2347,6 +2366,14 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 ev.preventDefault();
                 return;
             }
+            // ENTER is caugth at KeyUp rather than KeyDown to avoid firing
+            // before all regular keystrokes have been processed
+            if (ev.which === $.ui.keyCode.ENTER) {
+                if (self.current_result && self.get_search_string().length) {
+                    self.select_item(ev);
+                }
+                return;
+            }
             if (!self.searching) {
                 self.searching = true;
                 return;
@@ -2361,9 +2388,11 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         });
         this.$input.on('keydown', function (ev) {
             switch (ev.which) {
+                // TAB and direction keys are handled at KeyDown because KeyUp
+                // is not guaranteed to fire.
+                // See e.g. https://github.com/aef-/jquery.masterblaster/issues/13
                 case $.ui.keyCode.TAB:
-                case $.ui.keyCode.ENTER:
-                    if (self.get_search_string().length) {
+                    if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }
                     break;

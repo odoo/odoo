@@ -1,104 +1,31 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-28 13:56+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:26+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Ветчина"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Дата предупреждения"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Коровье молоко"
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr "Время жизни продукции"
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr ""
-"Это дата, на которую товары с этим серийным номером должны быть удалены из "
-"запаса."
-
-#. module: product_expiry
-#: help:product.product,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"При присвоении нового серийного номера, это количество дней до того, как "
-"товары должны быть удалены из запаса."
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr "Время использования продукта"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "ТМЦ"
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"При присвоении нового серийного номера, это количество дней, прежде чем "
-"товар начинает ухудшаться, еще не будучи опасным."
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Время удаления продукта"
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr ""
-"Это дата, на которую посылается оповещение о товаре с этим серийным номером."
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Serial Number"
-msgstr "Серийный номер"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"При присвоении нового серийного номера, это количество дней до оповещения."
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Дата удаления"
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Срок годности"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -106,7 +33,13 @@ msgid "Bread"
 msgstr "Хлеб"
 
 #. module: product_expiry
-#: view:product.product:0
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Коровье молоко"
+
+#. module: product_expiry
+#: view:product.template:product_expiry.view_product_form_expiry
+#: view:stock.production.lot:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "Даты"
 
@@ -116,37 +49,63 @@ msgid "End of Life Date"
 msgstr "Дата конца жизни"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
-msgid "Best before Date"
-msgstr "Срок годности"
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camenbert"
-msgstr "Французский сыр camenbert"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
+msgid "French cheese Camembert"
 msgstr ""
-"При присвоении нового серийного номера, это количество дней , прежде чем "
-"товар может стать опасным и не должен потребляться."
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Дата предупреждения"
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ветчина"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid ""
-"This is the date on which the goods with this Serial Number start "
-"deteriorating, without being dangerous yet."
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Lot/Serial"
 msgstr ""
-"Это дата, на которую товар с этим серийным номером начинается ухудшаться, "
-"еще не будучи опасным."
+
+#. module: product_expiry
+#: field:product.template,alert_time:0
+msgid "Product Alert Time"
+msgstr "Время оповещения товара"
+
+#. module: product_expiry
+#: field:product.template,life_time:0
+msgid "Product Life Time"
+msgstr "Время жизни продукции"
+
+#. module: product_expiry
+#: field:product.template,removal_time:0
+msgid "Product Removal Time"
+msgstr "Время удаления продукта"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.template,use_time:0
+msgid "Product Use Time"
+msgstr "Время использования продукта"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+#: field:stock.quant,removal_date:0
+msgid "Removal Date"
+msgstr "Дата удаления"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
+msgstr ""
+"Это дата, на которую посылается оповещение о товаре с этим серийным номером."
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
@@ -158,56 +117,54 @@ msgstr ""
 "должен потребляться."
 
 #. module: product_expiry
-#: field:product.product,alert_time:0
-msgid "Product Alert Time"
-msgstr "Время оповещения товара"
+#: help:stock.production.lot,removal_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
+msgstr ""
+"Это дата, на которую товары с этим серийным номером должны быть удалены из "
+"запаса."
 
-#~ msgid "Production lot"
-#~ msgstr "Партия изделий"
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr ""
+"Это дата, на которую товар с этим серийным номером начинается ухудшаться, "
+"еще не будучи опасным."
 
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
-#~ "категорию."
+#. module: product_expiry
+#: help:product.template,alert_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней до оповещения."
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
+#. module: product_expiry
+#: help:product.template,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней , прежде чем "
+"товар может стать опасным и не должен потребляться."
 
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Ошибка: Неправильный штрих-код"
+#. module: product_expiry
+#: help:product.template,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней до того, как "
+"товары должны быть удалены из запаса."
 
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
-#~ "категориям."
-
-#~ msgid "Products date of expiry"
-#~ msgstr "Срок годности продукции"
-
-#~ msgid ""
-#~ "The number of days after which an alert should be notified about the "
-#~ "production lot."
-#~ msgstr ""
-#~ "Количество дней, после которых должно быть предупреждение об опасности "
-#~ "партии продукции."
-
-#~ msgid ""
-#~ "The date on which the lot may become dangerous and should not be consumed."
-#~ msgstr ""
-#~ "Дата, на которую партия продукции может стать опасной и не должна "
-#~ "употребляться."
-
-#~ msgid ""
-#~ "The combination of serial number and internal reference must be unique !"
-#~ msgstr ""
-#~ "Комбинация серийного номера и внутренней ссылки должна быть уникальной !"
-
-#~ msgid "The date on which the lot should be removed."
-#~ msgstr "Дата, на которую партия должна быть удалена."
-
-#~ msgid "LTR"
-#~ msgstr "Слева направо"
-
-#~ msgid "The number of days before a production lot should be removed."
-#~ msgstr "Количество дней до которого партия продукции должна быть удалена."
+#. module: product_expiry
+#: help:product.template,use_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"При присвоении нового серийного номера, это количество дней, прежде чем "
+"товар начинает ухудшаться, еще не будучи опасным."

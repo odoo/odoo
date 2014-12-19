@@ -22,12 +22,12 @@
 import time
 from datetime import datetime
 
-
 from openerp import workflow
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import tools
+from openerp.report import report_sxw
 import openerp
 
 class account_move_line(osv.osv):
@@ -187,11 +187,11 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context=None):
         acc_ana_line_obj = self.pool.get('account.analytic.line')
         for obj_line in self.browse(cr, uid, ids, context=context):
+            if obj_line.analytic_lines:
+                acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                if obj_line.analytic_lines:
-                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -274,8 +274,13 @@ class account_move_line(osv.osv):
             journal_data = journal_obj.browse(cr, uid, context['journal_id'], context=context)
             account = total > 0 and journal_data.default_credit_account_id or journal_data.default_debit_account_id
             #map the account using the fiscal position of the partner, if needed
-            part = data.get('partner_id') and partner_obj.browse(cr, uid, data['partner_id'], context=context) or False
-            if account and data.get('partner_id'):
+            if isinstance(data.get('partner_id'), (int, long)):
+                part = partner_obj.browse(cr, uid, data['partner_id'], context=context)
+            elif isinstance(data.get('partner_id'), (tuple, list)):
+                part = partner_obj.browse(cr, uid, data['partner_id'][0], context=context)
+            else:
+                part = False
+            if account and part:
                 account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
                 account = account_obj.browse(cr, uid, account, context=context)
             data['account_id'] =  account and account.id or False
@@ -332,12 +337,12 @@ class account_move_line(osv.osv):
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
             invoice_ids.append(invoice_id)
-        invoice_names = {False: ''}
+        invoice_names = {}
         for invoice_id, name in invoice_obj.name_get(cursor, user, invoice_ids, context=context):
             invoice_names[invoice_id] = name
         for line_id in res.keys():
             invoice_id = res[line_id]
-            res[line_id] = (invoice_id, invoice_names[invoice_id])
+            res[line_id] = invoice_id and (invoice_id, invoice_names[invoice_id]) or False
         return res
 
     def name_get(self, cr, uid, ids, context=None):
@@ -434,7 +439,7 @@ class account_move_line(osv.osv):
                 move[line.move_id.id] = True
         move_line_ids = []
         if move:
-            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('journal_id','in',move.keys())], context=context)
+            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('move_id','in',move.keys())], context=context)
         return move_line_ids
 
 
@@ -583,7 +588,7 @@ class account_move_line(osv.osv):
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
-            if l.account_id.type == 'view':
+            if l.account_id.type in ('view', 'consolidation'):
                 return False
         return True
 
@@ -635,7 +640,7 @@ class account_move_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You cannot create journal items on an account of type view.', ['account_id']),
+        (_check_no_view, 'You cannot create journal items on an account of type view or consolidation.', ['account_id']),
         (_check_no_closed, 'You cannot create journal items on closed account.', ['account_id']),
         (_check_company_id, 'Account and Period must belong to the same company.', ['company_id']),
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
@@ -752,6 +757,91 @@ class account_move_line(osv.osv):
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
+    def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
+        """ Returns move lines formatted for the manual/bank reconciliation widget
+
+            :param target_currency: curreny you want the move line debit/credit converted into
+            :param target_date: date to use for the monetary conversion
+        """
+        if not lines:
+            return []
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        currency_obj = self.pool.get('res.currency')
+        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+        rml_parser = report_sxw.rml_parse(cr, uid, 'reconciliation_widget_aml', context=context)
+        ret = []
+
+        for line in lines:
+            partial_reconciliation_siblings_ids = []
+            if line.reconcile_partial_id:
+                partial_reconciliation_siblings_ids = self.search(cr, uid, [('reconcile_partial_id', '=', line.reconcile_partial_id.id)], context=context)
+                partial_reconciliation_siblings_ids.remove(line.id)
+
+            ret_line = {
+                'id': line.id,
+                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
+                'ref': line.move_id.ref,
+                'account_code': line.account_id.code,
+                'account_name': line.account_id.name,
+                'account_type': line.account_id.type,
+                'date_maturity': line.date_maturity,
+                'date': line.date,
+                'period_name': line.period_id.name,
+                'journal_name': line.journal_id.name,
+                'partner_id': line.partner_id.id,
+                'partner_name': line.partner_id.name,
+                'is_partially_reconciled': bool(line.reconcile_partial_id),
+                'partial_reconciliation_siblings_ids': partial_reconciliation_siblings_ids,
+            }
+
+            # Amount residual can be negative
+            debit = line.debit
+            credit = line.credit
+            amount = line.amount_residual
+            amount_currency = line.amount_residual_currency
+            if line.amount_residual < 0:
+                debit, credit = credit, debit
+                amount = -amount
+                amount_currency = -amount_currency
+
+            # Get right debit / credit:
+            target_currency = target_currency or company_currency
+            line_currency = line.currency_id or company_currency
+            amount_currency_str = ""
+            total_amount_currency_str = ""
+            if line_currency != company_currency:
+                total_amount = line.amount_currency
+                actual_debit = debit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and amount_currency or 0.0
+            else:
+                total_amount = abs(debit - credit)
+                actual_debit = debit > 0 and amount or 0.0
+                actual_credit = credit > 0 and amount or 0.0
+            if line_currency != target_currency:
+                amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
+                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                ret_line['credit_currency'] = actual_credit
+                ret_line['debit_currency'] = actual_debit
+                ctx = context.copy()
+                if target_date:
+                    ctx.update({'date': target_date})
+                total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
+                actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
+                actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
+            amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
+            total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
+
+            ret_line['debit'] = actual_debit
+            ret_line['credit'] = actual_credit
+            ret_line['amount_str'] = amount_str
+            ret_line['total_amount_str'] = total_amount_str
+            ret_line['amount_currency_str'] = amount_currency_str
+            ret_line['total_amount_currency_str'] = total_amount_currency_str
+            ret.append(ret_line)
+        return ret
+
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
@@ -817,11 +907,14 @@ class account_move_line(osv.osv):
         if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        }, context=context)
-        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
+        }, context=reconcile_context)
+        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
         return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
@@ -946,11 +1039,14 @@ class account_move_line(osv.osv):
                 writeoff_line_ids = [writeoff_line_ids[1]]
             ids += writeoff_line_ids
 
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
-        })
+        }, context=reconcile_context)
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
@@ -1038,6 +1134,8 @@ class account_move_line(osv.osv):
         all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
+                raise osv.except_osv(_('Warning!'),
+                    _('Opening Entries have already been generated.  Please run "Cancel Closing Entries" wizard to cancel those entries and then run this wizard.'))
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
             if len(all_moves) >= 2:
@@ -1099,7 +1197,7 @@ class account_move_line(osv.osv):
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
-        if check:
+        if check and not context.get('novalidate'):
             done = []
             for line in self.browse(cr, uid, ids):
                 if line.move_id.id not in done:
@@ -1295,7 +1393,7 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and not context.get('novalidate') and ((not context.get('no_store_function')) or journal.entry_posted):
+        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)

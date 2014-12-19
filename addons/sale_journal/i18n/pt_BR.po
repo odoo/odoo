@@ -1,53 +1,52 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-07 16:45+0000\n"
-"Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-06 20:35+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@zupy.com.br>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-07 07:48+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Observação"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Ativo"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Tipo de Fatura"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
-"Este tipo de faturamento será utilizado como padrão em faturas do parceiro "
-"atual."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr "Criado em"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Vendas & Compras"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Gerar fatura baseada na opção selecionada."
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Faturamento"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupado"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Recebimentos"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -59,19 +58,15 @@ msgstr ""
 "mesmo sem ser removida."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Observações"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Método de faturamento"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Lista de Separação"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo de Fatura"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -79,16 +74,6 @@ msgstr "Lista de Separação"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Tipos de Fatura"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Não agrupado"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Agrupado"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -103,28 +88,44 @@ msgstr ""
 "cada Quarta-Feira, mensalmente, etc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Gerar fatura baseada na opção selecionada."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Faturamento"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr "Tipo de Fatura"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Ativo"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Método de faturamento"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Não agrupado"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Observação"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Observações"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -132,110 +133,24 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Lista de Separação"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Vendas & Compras"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Pedido de Venda"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Ordens de Entrega"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalido XML para Arquitetura da View"
-
-#~ msgid "All Months"
-#~ msgstr "Todos os meses"
-
-#~ msgid "Reporting"
-#~ msgstr "Relatórios"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "This Month"
-#~ msgstr "Este mes"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Método de Faturamento"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referência de Pedido deve ser única !"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Erro ! Você não pode criar membros recursivos associados."
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Gerenciar vendas e entregas por diário"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "Tipo de diário usado para vendas e separação"
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    O módulos de diários de venda permitem que você categorize suas\n"
-#~ "    vendas e entregas (listas de separação) em diferentes diários.\n"
-#~ "    Este módulo é muito útil para grandes empresas que\n"
-#~ "    trabalham por departamentos.\n"
-#~ "\n"
-#~ "    Você pode usar um diário para diferentes propósitos, alguns exemplos:\n"
-#~ "    * isolar vendas de diferentes departamentos\n"
-#~ "    * diários de entregas por caminhão ou por UPS\n"
-#~ "\n"
-#~ "    Diários tem um responsável e passam por diferentes status:\n"
-#~ "    * provisório, aberto, cancelado, concluído.\n"
-#~ "\n"
-#~ "    Operações em lote podem ser processadas em diferentes diários para\n"
-#~ "    confirmar todas as vendas de uma só vez, para validar ou faturar "
-#~ "embalagem, ...\n"
-#~ "\n"
-#~ "    Também suportam métodos de faturamento em lote que podem ser "
-#~ "configurados por\n"
-#~ "    parceiros e pedidos de venda. Exemplos:\n"
-#~ "    * faturamento diário,\n"
-#~ "    * faturamento mensal, ...\n"
-#~ "\n"
-#~ "    Algumas estatísticas por diários também são fornecidas.\n"
-#~ "    "
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "A referência deve ser única por empresa!"
-
-#~ msgid ""
-#~ "This invoicing type will be used, by default, for invoicing the current "
-#~ "partner."
-#~ msgstr ""
-#~ "Este tipo de fatura será usada, por padrão, para faturar o parceiro atual."
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Erro! Você não pode criar membros associados recursivamente."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "A Referência do Pedido deve ser única por Empresa!"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+"Este tipo de faturamento será utilizado como padrão em faturas do parceiro "
+"atual."

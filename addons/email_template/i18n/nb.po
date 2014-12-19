@@ -1,65 +1,224 @@
 # Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-04-06 17:19+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Fra"
-
-#. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Mal"
-
-#. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "sidepanelet-knappen for å åpne sidepanelets handling."
-
-#. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Utgående e-post tjenere."
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Legg til signatur."
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Vedlegg"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Automatisk Slett."
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Innhold"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Carbon Copy mottakere (plassholdere kan brukes her)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Kopi"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
 msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+"Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
-"Sidepanel handling for å gjøre denne malen tilgjengelig på registreringer av "
-"den relaterte dokument modellen."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "Komma - separert mottakeradressene (plassholdere kan brukes her)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Sletting av handlingen posten mislyktes."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Forhåndsvisning av e-post"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "E-post mal"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "E-post Mal Forhåndsvisning."
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "E-post maler"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -68,58 +227,31 @@ msgid "Field"
 msgstr "Felt"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Avsenderadresse (plassholdere kan brukes her)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Valgfri foretrukne server for utgående e-post. Hvis ikke angitt, vil den "
-"høyeste prioritet en benyttes."
+"Avsluttende plassholder uttrykk, som skal kopier - limt i det ønskete mal "
+"feltet."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Rapporter Filnavn."
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Fra"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr ""
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Grupper etter..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Svar-til"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Innhold"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
 msgstr ""
 
 #. module: email_template
@@ -133,29 +265,41 @@ msgstr ""
 "av meldingene."
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "SMTP-tjener"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"Når et forhold er valgt som første felt, dette felte viser dokumentet som "
-"modellen forholdet går til."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "E-post maler"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Språk"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Modell"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Navn"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -169,10 +313,25 @@ msgstr ""
 "Utvidelsen kan utelates og vil da komme fra rapport type."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Sidepanel handling"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Valgfri foretrukne server for utgående e-post. Hvis ikke angitt, vil den "
+"høyeste prioritet en benyttes."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Valgfri rapport til å skrive ut og feste."
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -180,18 +339,135 @@ msgstr "Sidepanel handling"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Valgfri oversettelse språk (ISO-kode) for å velge når du sender ut en e-"
-"post. Hvis det ikke er angitt, vil den engelske versjonen brukes. Dette bør "
-"vanligvis være en plassholder uttrykk som gir riktig språkkode, f.eks $ "
-"{object.partner_id.lang.code}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Valgfri verdi som skal brukes hvis målet feltet er tomt."
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Utgående e-post tjenere."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr ""
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "Slette denne e-posten etter å ha sendt det, for å spare plass."
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Foretrukket respons adresse (plassholdere kan anvendes her)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr ""
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr ""
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Svar-til"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Rapporter Filnavn."
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "Rich-text/HTML versjon av meldingen (plassholdere kan brukes her)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP-tjener"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Eksempel Dokument."
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Lagre som en ny mal."
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -206,112 +482,26 @@ msgstr ""
 "destinasjonen av forholdet."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr ""
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Send e-post(%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Forhåndsvisning av mal"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Lagre som en ny mal."
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Carbon Copy mottakere (plassholdere kan brukes her)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "Komma - separert mottakeradressene (plassholdere kan brukes her)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Avansert"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr ""
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Maler"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Navn"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Språk"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "E-post Mal Forhåndsvisning."
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Forhåndsvisning av e-post"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Sub-modell."
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Subject (plassholdere kan brukes her)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Foretrukket respons adresse (plassholdere kan anvendes her)"
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -320,101 +510,26 @@ msgid "Sidebar Button"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Valgfri rapport til å skrive ut og feste."
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Sidepanel handling"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "Valgfri verdi som skal brukes hvis målet feltet er tomt."
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Modell"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Automatisk Slett."
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Avsluttende plassholder uttrykk, som skal kopier - limt i det ønskete mal "
-"feltet."
+"Sidepanel handling for å gjøre denne malen tilgjengelig på registreringer av "
+"den relaterte dokument modellen."
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr ""
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Vedlegg"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Sletting av handlingen posten mislyktes."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Kopi"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr ""
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "sidepanelet-knappen for å åpne sidepanelets handling."
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -423,35 +538,89 @@ msgid "Sub-field"
 msgstr "Sub-feltet"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "E-post detaljer."
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Sub-modell."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Send e-post(%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Emne"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
-msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Subject (plassholdere kan brukes her)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
 msgstr ""
-"Hvis det er merket, vil denne partneren ikke motta noen automatiserte e-"
-"postmeldinger, for eksempel tilgjengeligheten av fakturaer."
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "Slette denne e-posten etter å ha sendt det, for å spare plass."
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Forhåndsvisning av mal"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Grupper etter..."
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Maler"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr ""
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
+msgstr ""
+
+#. module: email_template
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr ""
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Advarsel"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -464,27 +633,14 @@ msgstr ""
 "målet feltet innen måldokumentet modellen (sub-modell)."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Advarsel"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Legg til signatur."
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 msgstr ""
+"Når et forhold er valgt som første felt, dette felte viser dokumentet som "
+"modellen forholdet går til."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -497,484 +653,12 @@ msgstr ""
 "er opprettet fra denne malen."
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
-msgstr "Rich-text/HTML versjon av meldingen (plassholdere kan brukes her)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Contents"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
 msgstr ""
 
 #. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Emne"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Slett e-poster permanent etter sending"
-
-#~ msgid "Email Account Configuration"
-#~ msgstr "E-post konto konfigurasjon"
-
-#~ msgid "Personal Emails"
-#~ msgstr "Personlig e-post"
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Send e-post veiviser"
-
-#~ msgid "Send now"
-#~ msgstr "Send nå"
-
-#~ msgid "Email Accounts"
-#~ msgstr "E-post kontoer"
-
-#~ msgid "Send all mails"
-#~ msgstr "Send alle e-poster"
-
-#~ msgid "Approved"
-#~ msgstr "Godkjent"
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "HTML code"
-#~ msgstr "HTML kode"
-
-#~ msgid "Send Mail"
-#~ msgstr "Send e-post"
-
-#~ msgid "Email Account"
-#~ msgstr "E-post konto"
-
-#~ msgid "Wizard Complete"
-#~ msgstr "Veiviser fullført"
-
-#~ msgid "Approve Account"
-#~ msgstr "Godkjenn konto"
-
-#~ msgid "Both HTML & Text (Mixed)"
-#~ msgstr "Både HTML & Tekst(Miks)"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Attached Files"
-#~ msgstr "Vedlagte filer"
-
-#~ msgid "SSL/TLS (only in python 2.6)"
-#~ msgstr "SSL/TLS(bare i python 2.6)"
-
-#~ msgid "From Email"
-#~ msgstr "Fra e-post"
-
-#~ msgid "Accounts"
-#~ msgstr "Kontoer"
-
-#~ msgid "Body(Text)"
-#~ msgstr "Bod"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Wizard Button"
-#~ msgstr "Veiviser knapp"
-
-#~ msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-#~ msgstr "f.eks 'ola@nordmann.no' eller Ola Nordmann<ola@nordmann.no>'"
-
-#~ msgid "Mako Templates"
-#~ msgstr "Mako maler"
-
-#~ msgid "Sent Items"
-#~ msgstr "Sendte elementer"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Test utgående forbindelse"
-
-#~ msgid "User account"
-#~ msgstr "Brukerkonto"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "Legg til signaturen min på e-poster"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Rapport"
-
-#~ msgid "My Emails"
-#~ msgstr "Mine e-post"
-
-#~ msgid "HTML Body"
-#~ msgstr "HTML innhold"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "Denne verdien blir brukt dersom feltet er tomt"
-
-#~ msgid "Preview Template"
-#~ msgstr "Forhåndsvis malen"
-
-#~ msgid "Server"
-#~ msgstr "Server"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "Innhold (HTML)"
-
-#~ msgid "Signature"
-#~ msgstr "Signatur"
-
-#~ msgid "Options"
-#~ msgstr "Alternativer"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Innhold(Ren tekst)"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Innhold(tekst)"
-
-#~ msgid "Server Information"
-#~ msgstr "Serverinformasjon"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "Antall genererte e-poster"
-
-#~ msgid "Mail Details"
-#~ msgstr "E-post detaljer"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SMTP SERVER eller PORT ikke angitt"
-
-#~ msgid "Related User"
-#~ msgstr "Assosiert bruker"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "Drafts"
-#~ msgstr "Utkast"
-
-#~ msgid "No"
-#~ msgstr "Nei"
-
-#~ msgid "SMTP Port"
-#~ msgstr "SMTP Port"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "Malnavnet må være unikt !"
-
-#~ msgid "BCC"
-#~ msgstr "BCC"
-
-#~ msgid "Plain Text"
-#~ msgstr "Ren tekst"
-
-#~ msgid "Draft"
-#~ msgstr "Utkast"
-
-#~ msgid "Message-ID"
-#~ msgstr "Meldings-ID"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Outgoing"
-#~ msgstr "Utgående"
-
-#~ msgid "From Account"
-#~ msgstr "Fra konto"
-
-#~ msgid "User Name"
-#~ msgstr "Brukernavn"
-
-#~ msgid "User"
-#~ msgstr "Bruker"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Avanserte alternativer"
-
-#~ msgid "Outbox"
-#~ msgstr "Utboks"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Lagre som utkast"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "E-post mal"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Send/Motta"
-
-#~ msgid "Suspended"
-#~ msgstr "Suspendert"
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Bare brukere fra disse gruppene vil ha rettigheter til å sende e-post fra "
-#~ "denne malen"
-
-#~ msgid "To"
-#~ msgstr "Til"
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Kopi av mal "
-
-#~ msgid "Close"
-#~ msgstr "Lukk"
-
-#, python-format
-#~ msgid "Error sending mail: %s"
-#~ msgstr "Feil ved sending av e-post: %s"
-
-#~ msgid "Sending"
-#~ msgstr "Sender"
-
-#~ msgid "User Information"
-#~ msgstr "Brukerinformasjon"
-
-#~ msgid "Trash"
-#~ msgstr "Søppel"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "E-post postkasse"
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Manglende e-post konto"
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "E-post mal for OpenERP"
-
-#~ msgid "Description"
-#~ msgstr "Beskrivelse"
-
-#~ msgid "Null Value"
-#~ msgstr "Null verdi"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Sent"
-#~ msgstr "Sendt"
-
-#~ msgid "Another setting already exists with this email ID !"
-#~ msgstr "En annen innstilling med samme ID eksisterer allerede !"
-
-#~ msgid "Password"
-#~ msgstr "Passord"
-
-#~ msgid "Emails"
-#~ msgstr "E-poster"
-
-#~ msgid "Report Name"
-#~ msgstr "Rapportnavn"
-
-#~ msgid "Existing files"
-#~ msgstr "Eksisterende filer"
-
-#~ msgid "Body (HTML)"
-#~ msgstr "Innhold (HTML)"
-
-#~ msgid "email_template.account"
-#~ msgstr "email_template.account"
-
-#~ msgid "Addresses"
-#~ msgstr "Adresser"
-
-#~ msgid "Folder"
-#~ msgstr "Mappe"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Firmakontoer"
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Skriv inn port nummer, f.eks 25 eller 587"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Har vedlegg"
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Ingen beskrivelse"
-
-#~ msgid "Message type"
-#~ msgstr "Meldings type."
-
-#~ msgid "Sidebar button"
-#~ msgstr "Sidepanel knapp."
-
-#~ msgid "Received"
-#~ msgstr "Motatt"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr "Fjern sidepanel knappen som vises på relaterte dokumenter."
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr ""
-#~ "Vise en knapp i sidefeltet i relaterte dokumenter for å åpne en komposisjon "
-#~ "veiviser med denne malen."
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Type meldinger, vanligvis 'html' eller 'vanlig', som brukes til å velge "
-#~ "klartekst eller rik tekst innholdet tilsvarende."
-
-#~ msgid "Email Content"
-#~ msgstr "E-post innhold."
-
-#~ msgid "Cancelled"
-#~ msgstr "Kansellert"
-
-#~ msgid "Related partner"
-#~ msgstr "Relatert partner"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Fest eksisterende filer."
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "Dynamiske verdier Produsent."
-
-#~ msgid "Related Document ID"
-#~ msgstr "Relaterte dokumenter ID"
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Aktiver dette du ønsker å inkludere en spesiell sporing markør i utgående e-"
-#~ "post, slik at du kan identifisere svar og knytte dem tilbake til den "
-#~ "tilsvarende ressurs posten. Dette er nyttig for CRM fører for eksempel."
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Veiviser for opprettelse av e-post"
-
-#~ msgid "Use Template"
-#~ msgstr "Bruk mal."
-
-#~ msgid "Related Document model"
-#~ msgstr "Relaterte dokumenter modell."
-
-#~ msgid "Language Selection"
-#~ msgstr "Språkvalg"
-
-#~ msgid "Null value"
-#~ msgstr "Nullverdi"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Merk: Dette er Raw HTML."
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(kopi)"
-
-#~ msgid "Use a message template"
-#~ msgstr "Bruk en meldingsmal."
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Klartekst versjon av meldingen (plassholdere kan anvendes her)"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr ""
-#~ "Opprinnelige versjonen av meldingen, som det ble sendt på nettverket."
-
-#~ msgid "Files to attach"
-#~ msgstr "Filer til å feste."
-
-#~ msgid "Related document model"
-#~ msgstr "Relatert dokument modell."
-
-#~ msgid "Message-Id"
-#~ msgstr "Melding - ID"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "Legg til sidepanelet knapp."
-
-#~ msgid "Date"
-#~ msgstr "Dato"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Kropp  (Rich/HTML)"
-
-#~ msgid "Expression"
-#~ msgstr "Uttrykk"
-
-#~ msgid "Original"
-#~ msgstr "Original"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Rik tekst innholdet."
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Fullstendige meldingshoder, f.eks SMTP-økt overskrifter (vanligvis "
-#~ "tilgjengelig på innkommende meldinger bare)"
-
-#~ msgid "References"
-#~ msgstr "Referanser"
-
-#~ msgid "Text contents"
-#~ msgstr "Tekst innholdet."
-
-#~ msgid "Display Text"
-#~ msgstr "Vise tekst"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Ressurs Sporing."
-
-#~ msgid "Related user"
-#~ msgstr "relatert bruker."
-
-#~ msgid "Opt-out"
-#~ msgstr "Opt-ut"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "Blindkopi mottakere (plassholdere kan brukes her)"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "Melding-ID SMTP topptekst å bruke i utgående meldinger basert på denne "
-#~ "malen. Vennligst merk at dette overstyrer 'ressurs Sporing alternativet, så "
-#~ "hvis du bare trenger å spore svar på utgående e-post, må du aktivere dette "
-#~ "alternativet i stedet.\n"
-#~ "Plassholdere må brukes her, som denne verdien alltid må være unik!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Feil! Du kan ikke opprette rekursive tilknyttede medlemmer."
-
-#~ msgid "Bcc"
-#~ msgstr "Blind Kopi"
-
-#~ msgid "Message headers"
-#~ msgstr "Melding topptekst."
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "Fjern sidepanel knappen."
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Melding referanser som identifikatorer av tidligere beskjeder."
-
-#~ msgid "Attach Report"
-#~ msgstr "Fest Rapporter."
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Levering mislyktes."
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr ""

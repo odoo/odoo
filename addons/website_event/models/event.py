@@ -31,6 +31,12 @@ from openerp.addons.website.models.website import slug
 class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
+    _track = {
+        'website_published': {
+            'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
+            'website_event.mt_event_unpublished': lambda self, cr, uid, obj, ctx=None: not obj.website_published
+        },
+    }
 
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}

@@ -60,7 +60,8 @@
         self.pool._init = False
 
         # Force partner_categ.copy() to copy children
-        self.pool['res.partner.category']._columns['child_ids'].copy = True
+        self._fields['child_ids'].copy = True
+        self._columns['child_ids'].copy = True
 -
     "1.0 Setup test partner categories: parent root"
 -
@@ -145,7 +146,8 @@
 -
     !python {model: res.partner.category}: |
         self.pool._init = True
-        self.pool['res.partner.category']._columns['child_ids'].copy = False
+        self._fields['child_ids'].copy = False
+        self._columns['child_ids'].copy = False
 
 -
     "Float precision tests: verify that float rounding methods are working correctly via res.currency"
@@ -203,8 +205,8 @@
 -
     !python {model: res.currency}: |
         from openerp.tools import float_compare, float_is_zero, float_round, float_repr
-        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr):
-            result = float_repr(float_round(amount, precision_digits=precision_digits),
+        def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr, rounding_method='HALF-UP'):
+            result = float_repr(float_round(amount, precision_digits=precision_digits, rounding_method=rounding_method),
                                 precision_digits=precision_digits)
             assert result == expected, 'Rounding error: got %s, expected %s' % (result, expected)
         try_round(2.6745, '2.675')
@@ -217,6 +219,18 @@
         try_round(-357.4555, '-357.456')
         try_round(457.4554, '457.455')
         try_round(-457.4554, '-457.455')
+
+        # Try some rounding value with rounding method UP instead of HALF-UP
+        # We use 8.175 because when normalizing 8.175 with precision_digits=3 it gives
+        # us 8175,0000000001234 as value, and if not handle correctly the rounding UP
+        # value will be incorrect (should be 8,175 and not 8,176)
+        try_round(8.175, '8.175', rounding_method='UP')
+        try_round(8.1751, '8.176', rounding_method='UP')
+        try_round(-8.175, '-8.175', rounding_method='UP')
+        try_round(-8.1751, '-8.176', rounding_method='UP')
+        try_round(-6.000, '-6.000', rounding_method='UP')
+        try_round(1.8, '2', 0, rounding_method='UP')
+        try_round(-1.8, '-2', 0, rounding_method='UP')
 
         # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
         fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]

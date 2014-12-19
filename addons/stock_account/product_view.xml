@@ -25,22 +25,8 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='weight']" position="after">
-                    <group string="Accounting Entries">
-                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_product_standard_price_form" model="ir.ui.view">
-            <field name="name">product.product.standard.price.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
-                    <field name="cost_method" groups="stock_account.group_inventory_valuation"/>
+                    <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
@@ -49,17 +35,8 @@
                             class="oe_link" groups="stock_account.group_inventory_valuation"/>
                     </div>
                 </field>
-            </field>
-        </record>
-
-        <record id="view_normal_property_acc_form" model="ir.ui.view">
-            <field name="name">product.normal.stock.acc.property.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="priority">26</field>
-            <field name="arch" type="xml">
                 <xpath expr="//group[@name='properties']" position="before">
-                    <group groups="stock_account.group_inventory_valuation">
+                    <group groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
@@ -73,6 +50,7 @@
                     </group>
                     <newline/>
                 </xpath>
+
             </field>
         </record>
     </data>

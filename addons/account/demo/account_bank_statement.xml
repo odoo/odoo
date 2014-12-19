@@ -26,7 +26,7 @@
             <field name="partner_id" ref="base.res_partner_9"/>
         </record>
         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
-            <field name="ref">SAJ2014002</field>
+            <field name="ref"></field>
             <field name="statement_id" ref="demo_bank_statement_1"/>
             <field name="sequence" eval="2"/>
             <field name="company_id" ref="base.main_company"/>
@@ -70,15 +70,15 @@
             <field name="name">Bank Fees</field>
             <field name="account_id" ref="a_expense"></field>
             <field name="label">Bank Fees</field>
-            <field name="amount_type">fixed</field>
-            <field name="amount"></field>
+            <field name="amount_type">percentage_of_balance</field>
+            <field name="amount">100.0</field>
         </record>
         <record id="statement_operation_template_3" model="account.statement.operation.template">
             <field name="name">Profit / Loss</field>
             <field name="account_id" ref="a_sale"></field>
             <field name="label">Profit / Loss</field>
-            <field name="amount_type">fixed</field>
-            <field name="amount"></field>
+            <field name="amount_type">percentage_of_balance</field>
+            <field name="amount">100.0</field>
         </record>
     </data>
 </openerp>

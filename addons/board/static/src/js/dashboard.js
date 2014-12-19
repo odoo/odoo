@@ -329,15 +329,19 @@ instance.web.form.tags.add('board', 'instance.web.form.DashBoard');
 instance.board.AddToDashboard = instance.web.search.Input.extend({
     template: 'SearchView.addtodashboard',
     _in_drawer: true,
+    init: function (parent) {
+        this._super(parent);
+        this.is_loaded = null;
+    },
     start: function () {
         var self = this;
         this.$el
-            .on('click', 'h4', this.proxy('show_option'))
+            .on('click', 'h4', this.proxy('load_and_show_option'))
             .on('submit', 'form', function (e) {
                 e.preventDefault();
                 self.add_dashboard();
             });
-        return this.load_data().done(this.proxy("render_data"));
+        return $.when();
     },
     load_data:function(){
         var board = new instance.web.Model('board.board');
@@ -406,12 +410,18 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
             }
         });
     },
-    show_option:function(){
+    load_and_show_option: function(){
+        if (!this.is_loaded) {
+            this.is_loaded = this.load_data().done(this.proxy("render_data"));
+        }
+        this.is_loaded.done(this.proxy('show_option'));
+    },
+    show_option: function () {
         this.$el.toggleClass('oe_opened');
         if (! this.$el.hasClass('oe_opened'))
             return;
         this.$("input").val(this.view.fields_view.name || "" );
-    }
+    },
 });
 
 
@@ -419,7 +429,7 @@ instance.web.SearchViewDrawer.include({
     add_common_inputs: function() {
         this._super();
         var vm = this.getParent().getParent();
-        if (vm.inner_action && vm.inner_action.views) {
+        if (vm.inner_action && vm.inner_action.id && vm.inner_action.views) {
             (new instance.board.AddToDashboard(this));
         }
     }

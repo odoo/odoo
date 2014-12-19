@@ -1,674 +1,31 @@
 # French translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-03 20:30+0000\n"
-"Last-Translator: Frederic Clementi - Camptocamp "
-"<frederic.clementi@camptocamp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:45+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in draft and open states"
-msgstr "Immobilisations à l'état brouillon et ouvert"
-
-#. module: account_asset
-#: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0
-#: field:asset.modify,method_end:0
-msgid "Ending date"
-msgstr "Date de Fin"
-
-#. module: account_asset
-#: field:account.asset.asset,value_residual:0
-msgid "Residual Value"
-msgstr "Valeur résiduelle"
-
-#. module: account_asset
-#: field:account.asset.category,account_expense_depreciation_id:0
-msgid "Depr. Expense Account"
-msgstr "Compte de dépréciation (charge)"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Group By..."
-msgstr "Regrouper par..."
-
-#. module: account_asset
-#: field:asset.asset.report,gross_value:0
-msgid "Gross Amount"
-msgstr "Coût d'acquisition"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0
-#: field:account.move.line,asset_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,asset_id:0
-#: model:ir.model,name:account_asset.model_account_asset_asset
-msgid "Asset"
-msgstr "Immobilisation"
-
-#. module: account_asset
-#: help:account.asset.asset,prorata:0
-#: help:account.asset.category,prorata:0
-msgid ""
-"Indicates that the first depreciation entry for this asset have to be done "
-"from the purchase date instead of the first January"
+#: field:account.asset.asset,entry_count:0
+msgid "# Asset Entries"
 msgstr ""
-"Indiquez si la première dépréciation doit être calculée à partir de la date "
-"d'achat ou à partir du premier jour de l'exercice comptable."
 
 #. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Linéaire"
-
-#. module: account_asset
-#: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,company_id:0
-msgid "Company"
-msgstr "Société"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Modify"
-msgstr "Modifier"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Running"
-msgstr "En cours"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Draft"
-msgstr "Mettre à l'état \"Brouillon\""
-
-#. module: account_asset
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
-#: model:ir.model,name:account_asset.model_asset_asset_report
-#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
-msgid "Assets Analysis"
-msgstr "Analyse des immobilisations"
-
-#. module: account_asset
-#: field:asset.modify,name:0
-msgid "Reason"
-msgstr "Motif"
-
-#. module: account_asset
-#: field:account.asset.asset,method_progress_factor:0
-#: field:account.asset.category,method_progress_factor:0
-msgid "Degressive Factor"
-msgstr "Taux dégréssif"
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
-msgid "Asset Categories"
-msgstr "Catégories d'immobilisations"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,account_move_line_ids:0
-#: field:account.move.line,entry_ids:0
-#: model:ir.actions.act_window,name:account_asset.act_entries_open
-msgid "Entries"
-msgstr "Ecritures"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,depreciation_line_ids:0
-msgid "Depreciation Lines"
-msgstr "Lignes de dépréciation"
-
-#. module: account_asset
-#: help:account.asset.asset,salvage_value:0
-msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr "Il s'agit de la part non dépréciable de l'immobilisation."
-
-#. module: account_asset
-#: help:account.asset.asset,method_period:0
-msgid "The amount of time between two depreciations, in months"
-msgstr "La durée entre deux amortissements, en mois"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_date:0
-msgid "Depreciation Date"
-msgstr "Date de dépréciation"
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You cannot create recursive assets."
-msgstr "erreur ! Vous ne pouvez pas créer des immobilisations récursivement"
-
-#. module: account_asset
-#: field:asset.asset.report,posted_value:0
-msgid "Posted Amount"
-msgstr "Montant comptabilisé"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.asset.report:0
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
-#: model:ir.ui.menu,name:account_asset.menu_finance_assets
-#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
-msgid "Assets"
-msgstr "Immobilisations"
-
-#. module: account_asset
-#: field:account.asset.category,account_depreciation_id:0
-msgid "Depreciation Account"
-msgstr "Compte de dépréciation"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:account.asset.category:0
-#: view:account.asset.history:0
-#: view:asset.modify:0
-#: field:asset.modify,note:0
-msgid "Notes"
-msgstr "Commentaires"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_id:0
-msgid "Depreciation Entry"
-msgstr "Ecriture de dépreciation"
-
-#. module: account_asset
-#: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "Nb. de lignes de dépréciation"
-
-#. module: account_asset
-#: field:account.asset.asset,method_period:0
-msgid "Number of Months in a Period"
-msgstr "Nombre de mois dans une période"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in draft state"
-msgstr "Actifs en état brouillon"
-
-#. module: account_asset
-#: field:account.asset.asset,method_end:0
-#: selection:account.asset.asset,method_time:0
-#: selection:account.asset.category,method_time:0
-#: selection:account.asset.history,method_time:0
-msgid "Ending Date"
-msgstr "Date de fin"
-
-#. module: account_asset
-#: field:account.asset.asset,code:0
-msgid "Reference"
-msgstr "Référence"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Account Asset"
-msgstr "Compte d'actif"
-
-#. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
-#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
-msgid "Compute Assets"
-msgstr "Calculer les amortissements"
-
-#. module: account_asset
-#: field:account.asset.category,method_period:0
-#: field:account.asset.history,method_period:0
-#: field:asset.modify,method_period:0
-msgid "Period Length"
-msgstr "Durée de la période"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: view:asset.asset.report:0
-#: selection:asset.asset.report,state:0
-msgid "Draft"
-msgstr "Brouilon"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of asset purchase"
-msgstr "Date d'achat de l'actif"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Change Duration"
-msgstr "Modifier la durée"
-
-#. module: account_asset
-#: help:account.asset.asset,method_number:0
-#: help:account.asset.category,method_number:0
-#: help:account.asset.history,method_number:0
-msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
-"Le nombre d'amortissements nécessaire pour amortir votre immobilisation"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Analytic Information"
-msgstr "Information pour l'analytique"
-
-#. module: account_asset
-#: field:account.asset.category,account_analytic_id:0
-msgid "Analytic account"
-msgstr "Compte Analytique"
-
-#. module: account_asset
-#: field:account.asset.asset,method:0
-#: field:account.asset.category,method:0
-msgid "Computation Method"
-msgstr "Méthode de calcul"
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid ""
-"Prorata temporis can be applied only for time method \"number of "
-"depreciations\"."
-msgstr ""
-"Prorata temporis peut être appliqué seulement pour la méthode linéaire "
-"(unité de temps)"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,remaining_value:0
-msgid "Next Period Depreciation"
-msgstr "Période d'amortissement suivante"
-
-#. module: account_asset
-#: help:account.asset.history,method_period:0
-msgid "Time in month between two depreciations"
-msgstr "Temps en mois entre deux dépréciations"
-
-#. module: account_asset
-#: view:asset.modify:0
-#: model:ir.actions.act_window,name:account_asset.action_asset_modify
-#: model:ir.model,name:account_asset.model_asset_modify
-msgid "Modify Asset"
-msgstr "Modifier l'immobilisation"
-
-#. module: account_asset
-#: field:account.asset.asset,salvage_value:0
-msgid "Salvage Value"
-msgstr "Valeur résiduelle"
-
-#. module: account_asset
-#: field:account.asset.asset,category_id:0
-#: view:account.asset.category:0
-#: field:account.invoice.line,asset_category_id:0
-#: view:asset.asset.report:0
-msgid "Asset Category"
-msgstr "Catégorie d'immobilisation"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Assets in closed state"
-msgstr "Amortissements terminés"
-
-#. module: account_asset
-#: field:account.asset.asset,parent_id:0
-msgid "Parent Asset"
-msgstr "Immobilisation parente"
-
-#. module: account_asset
-#: view:account.asset.history:0
-#: model:ir.model,name:account_asset.model_account_asset_history
-msgid "Asset history"
-msgstr "Historique de l'immobilisation"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
-msgstr "Recherche une catérogie d'immobilisation"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "months"
-msgstr "mois"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Lignes de facture"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Depreciation Board"
-msgstr "Tableau des amortissements"
-
-#. module: account_asset
-#: field:asset.asset.report,unposted_value:0
-msgid "Unposted Amount"
-msgstr "Montant non comptabilisé"
-
-#. module: account_asset
-#: field:account.asset.asset,method_time:0
-#: field:account.asset.category,method_time:0
-#: field:account.asset.history,method_time:0
-msgid "Time Method"
-msgstr "Méthode de temps"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "or"
-msgstr "ou"
-
-#. module: account_asset
-#: field:account.asset.asset,note:0
-#: field:account.asset.category,note:0
-#: field:account.asset.history,note:0
-msgid "Note"
-msgstr "Remarque"
-
-#. module: account_asset
-#: help:account.asset.history,method_time:0
-msgid ""
-"The method to use to compute the dates and number of depreciation lines.\n"
-"Number of Depreciations: Fix the number of depreciation lines and the time "
-"between 2 depreciations.\n"
-"Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"La méthode à utiliser pour calculer les dates et le nombre de lignes "
-"d'amortissement.\n"
-"Nombre d'amortissements : déterminer le nombre de lignes d'amortissement et "
-"le temps entre 2 amortissements.\n"
-"Date de fin : choisissez le temps entre 2 amortissements et la date de fin "
-"des amortissements."
-
-#. module: account_asset
-#: help:account.asset.asset,method_time:0
-#: help:account.asset.category,method_time:0
-msgid ""
-"Choose the method to use to compute the dates and number of depreciation "
-"lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the "
-"time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the "
-"depreciations won't go beyond."
-msgstr ""
-"Choisissez la méthode à utiliser pour calculer les dates et le nombre de "
-"lignes d'amortissement.\n"
-"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps "
-"entre 2 amortissements.\n"
-"    * Date de fin : choisissez le temps entre 2 amortissements et la date de "
-"fin d'amortissement."
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets in running state"
-msgstr "Immobilisation en cours"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Closed"
-msgstr "Fermé"
-
-#. module: account_asset
-#: help:account.asset.asset,state:0
-msgid ""
-"When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that status."
-msgstr ""
-"Lorsqu'une immobilisation est créée, le statut est 'Brouillon'.\n"
-"A la confirmation, le statut passe à 'En cours' et les amortissement peuvent "
-"être passé en comptabilité.\n"
-"Vous pouvez cloturer manuellement une immobilisation.. \n"
-"Lors de la comptabilisation du dernier amortissement, le statut passe "
-"automatiquement à ''Terminé'"
-
-#. module: account_asset
-#: field:account.asset.asset,state:0
-#: field:asset.asset.report,state:0
-msgid "Status"
-msgstr "Statut"
-
-#. module: account_asset
-#: field:account.asset.asset,partner_id:0
-#: field:asset.asset.report,partner_id:0
-msgid "Partner"
-msgstr "Partenaire"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Posted depreciation lines"
-msgstr "Lignes d'amortissement comptabilisées"
-
-#. module: account_asset
-#: field:account.asset.asset,child_ids:0
-msgid "Children Assets"
-msgstr "Immobilisation enfant"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Date of depreciation"
-msgstr "Date d'amortissement"
-
-#. module: account_asset
-#: field:account.asset.history,user_id:0
-msgid "User"
-msgstr "Utilisateur"
-
-#. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Compte d'immobilisation"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Extended Filters..."
-msgstr "Filtres étendus..."
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute"
-msgstr "Calculer"
-
-#. module: account_asset
-#: view:account.asset.history:0
-msgid "Asset History"
-msgstr "Historique de l'immobilisation"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
-msgid "asset.depreciation.confirmation.wizard"
-msgstr "asset.depreciation.confirmation.wizard"
-
-#. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Actif"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,parent_state:0
-msgid "State of Asset"
-msgstr "Statut de l'immobilisation"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,name:0
-msgid "Depreciation Name"
-msgstr "Nom de l'amortissement"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-#: field:account.asset.asset,history_ids:0
-msgid "History"
-msgstr "Hstorique"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Calcul des amortissements"
-
-#. module: account_asset
-#: field:asset.depreciation.confirmation.wizard,period_id:0
-msgid "Period"
-msgstr "Période"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "General"
-msgstr "Général"
-
-#. module: account_asset
-#: field:account.asset.asset,prorata:0
-#: field:account.asset.category,prorata:0
-msgid "Prorata Temporis"
-msgstr "Prorata temporis"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_invoice
-msgid "Invoice"
-msgstr "Facture"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr "Fermer"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-#: view:asset.modify:0
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: account_asset
-#: selection:account.asset.asset,state:0
-#: selection:asset.asset.report,state:0
-msgid "Close"
-msgstr "Fermer"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move_line
-msgid "Journal Items"
-msgstr "Écritures comptables"
-
-#. module: account_asset
-#: view:asset.modify:0
-msgid "Asset Durations to Modify"
-msgstr "Durées d'amortissement à modifier"
-
-#. module: account_asset
-#: field:account.asset.asset,purchase_date:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,purchase_date:0
-msgid "Purchase Date"
-msgstr "Date d'acquisition"
-
-#. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Degressive"
-msgstr "Dégressif"
-
-#. module: account_asset
-#: help:asset.depreciation.confirmation.wizard,period_id:0
-msgid ""
-"Choose the period for which you want to automatically post the depreciation "
-"lines of running assets"
-msgstr ""
-"Choisissez la période pour laquelle vous souhaitez comptabiliser "
-"automatiquement les lignes d'amortissement des immobilisations en cours"
-
-#. module: account_asset
-#: view:account.asset.asset:0
-msgid "Current"
-msgstr "En cours"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Method"
-msgstr "Méthode d'amortissement"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,amount:0
-msgid "Current Depreciation"
-msgstr "Amortissement courant"
-
-#. module: account_asset
-#: field:account.asset.asset,name:0
-msgid "Asset Name"
-msgstr "Nom de l'immobilisation"
-
-#. module: account_asset
-#: field:account.asset.category,open_asset:0
-msgid "Skip Draft State"
-msgstr "Passer l'état brouillon"
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Depreciation Dates"
-msgstr "Dates d'amortissement"
-
-#. module: account_asset
-#: field:account.asset.asset,currency_id:0
-msgid "Currency"
-msgstr "Devise"
-
-#. module: account_asset
-#: field:account.asset.category,journal_id:0
-msgid "Journal"
-msgstr "Journal"
-
-#. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr "Nom de l'historique"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,depreciated_value:0
-msgid "Amount Already Depreciated"
-msgstr "Montant déjà ammorti"
-
-#. module: account_asset
-#: help:account.asset.asset,method:0
-#: help:account.asset.category,method:0
-msgid ""
-"Choose the method to use to compute the amount of depreciation lines.\n"
-"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
-msgstr ""
-"Veuillez choisir la méthode pour calculer le montant des lignes "
-"d'amortissement.\n"
-"  * Linéaire : Calculé sur la base de : Valeur brute / Nombre "
-"d'amortissements\n"
-"  * Dégressif : Calculé sur la base de : Valeur résiduelle * Taux dégressif"
-
-#. module: account_asset
-#: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0
-#: field:asset.asset.report,move_check:0
-msgid "Posted"
-msgstr "Comptabilisé"
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
@@ -689,14 +46,160 @@ msgstr ""
 "        "
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_value:0
-msgid "Gross Value"
-msgstr "Valeur brute"
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Account Asset"
+msgstr "Compte d'actif"
 
 #. module: account_asset
-#: field:account.asset.category,name:0
-msgid "Name"
-msgstr "Nom"
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Add an internal note here..."
+msgstr "Ajouter une note interne ici…"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciated_value:0
+msgid "Amount Already Depreciated"
+msgstr "Montant déjà ammorti"
+
+#. module: account_asset
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
+msgstr "Montant des lignes d'amortissement"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Analytic Information"
+msgstr "Information pour l'analytique"
+
+#. module: account_asset
+#: field:account.asset.category,account_analytic_id:0
+msgid "Analytic account"
+msgstr "Compte Analytique"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.asset:account_asset.view_account_asset_search
+#: field:account.asset.depreciation.line,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,asset_id:0
+#: model:ir.model,name:account_asset.model_account_asset_asset
+msgid "Asset"
+msgstr "Immobilisation"
+
+#. module: account_asset
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Compte d'immobilisation"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
+msgid "Asset Categories"
+msgstr "Catégories d'immobilisations"
+
+#. module: account_asset
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:account_asset.view_account_asset_category_search
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Asset Category"
+msgstr "Catégorie d'immobilisation"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Asset Durations to Modify"
+msgstr "Durées d'amortissement à modifier"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
+msgid "Asset Hierarchy"
+msgstr "Hiérarchie des immobilisations"
+
+#. module: account_asset
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+msgid "Asset History"
+msgstr "Historique de l'immobilisation"
+
+#. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr "Nom de l'immobilisation"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.category:account_asset.view_account_asset_category_tree
+#: field:asset.asset.report,asset_category_id:0
+#: model:ir.model,name:account_asset.model_account_asset_category
+msgid "Asset category"
+msgstr "Catégorie d'immobilisation"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
+msgid "Asset depreciation line"
+msgstr "Ligne d'amortissement"
+
+#. module: account_asset
+#: view:account.asset.history:account_asset.view_account_asset_history_tree
+#: model:ir.model,name:account_asset.model_account_asset_history
+msgid "Asset history"
+msgstr "Historique de l'immobilisation"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_hierarchy_tree
+#: view:account.asset.asset:account_asset.view_account_asset_asset_tree
+#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
+#: model:ir.ui.menu,name:account_asset.menu_finance_assets
+#: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
+msgid "Assets"
+msgstr "Immobilisations"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.action_account_asset_report_graph
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
+#: model:ir.model,name:account_asset.model_asset_asset_report
+#: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
+msgid "Assets Analysis"
+msgstr "Analyse des immobilisations"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in closed state"
+msgstr "Amortissements terminés"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Assets in draft and open states"
+msgstr "Immobilisations à l'état brouillon et ouvert"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in draft state"
+msgstr "Actifs en état brouillon"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Assets in running state"
+msgstr "Immobilisation en cours"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Change Duration"
+msgstr "Modifier la durée"
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -708,48 +211,410 @@ msgstr ""
 "immobilisations de cette catégorie lorsqu'elles sont créées par des factures."
 
 #. module: account_asset
-#: field:asset.asset.report,name:0
-msgid "Year"
-msgstr "Année"
+#: field:account.asset.asset,child_ids:0
+msgid "Children Assets"
+msgstr "Immobilisation enfant"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
-msgid "Asset depreciation line"
-msgstr "Ligne d'amortissement"
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
+msgid ""
+"Choose the method to use to compute the amount of depreciation lines.\n"
+"  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
+msgstr ""
+"Veuillez choisir la méthode pour calculer le montant des lignes "
+"d'amortissement.\n"
+"  * Linéaire : Calculé sur la base de : Valeur brute / Nombre "
+"d'amortissements\n"
+"  * Dégressif : Calculé sur la base de : Valeur résiduelle * Taux dégressif"
 
 #. module: account_asset
-#: view:account.asset.category:0
-#: field:asset.asset.report,asset_category_id:0
-#: model:ir.model,name:account_asset.model_account_asset_category
-msgid "Asset category"
-msgstr "Catégorie d'immobilisation"
+#: help:account.asset.asset,method_time:0
+#: help:account.asset.category,method_time:0
+msgid ""
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"Choisissez la méthode à utiliser pour calculer les dates et le nombre de "
+"lignes d'amortissement.\n"
+"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps "
+"entre 2 amortissements.\n"
+"    * Date de fin : choisissez le temps entre 2 amortissements et la date de "
+"fin d'amortissement."
 
 #. module: account_asset
-#: view:asset.asset.report:0
-#: field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr "Montant des lignes d'amortissement"
+#: help:asset.depreciation.confirmation.wizard,period_id:0
+msgid ""
+"Choose the period for which you want to automatically post the depreciation "
+"lines of running assets"
+msgstr ""
+"Choisissez la période pour laquelle vous souhaitez comptabiliser "
+"automatiquement les lignes d'amortissement des immobilisations en cours"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
+msgid "Close"
+msgstr "Fermer"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Closed"
+msgstr "Fermé"
+
+#. module: account_asset
+#: field:account.asset.asset,company_id:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,company_id:0
+msgid "Company"
+msgstr "Société"
+
+#. module: account_asset
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
+msgid "Computation Method"
+msgstr "Méthode de calcul"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute"
+msgstr "Calculer"
+
+#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:account_asset.view_asset_depreciation_confirmation_wizard
+msgid "Compute Asset"
+msgstr "Calcul des amortissements"
+
+#. module: account_asset
+#: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
+#: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
+msgid "Compute Assets"
+msgstr "Calculer les amortissements"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Confirm Asset"
+msgstr "Confirmer l'immobilisation"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Create Move"
+msgstr "Créer l'écriture"
+
+#. module: account_asset
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Écritures d'amortissement créées"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence"
-msgstr "Séquence"
+#: field:account.asset.asset,create_uid:0
+#: field:account.asset.category,create_uid:0
+#: field:account.asset.depreciation.line,create_uid:0
+#: field:account.asset.history,create_uid:0
+#: field:asset.depreciation.confirmation.wizard,create_uid:0
+#: field:asset.modify,create_uid:0
+msgid "Created by"
+msgstr ""
 
 #. module: account_asset
-#: help:account.asset.category,method_period:0
-msgid "State here the time between 2 depreciations, in months"
-msgstr "Définir ici le temps (en mois) entre 2 amortissements"
+#: field:account.asset.asset,create_date:0
+#: field:account.asset.category,create_date:0
+#: field:account.asset.depreciation.line,create_date:0
+#: field:account.asset.history,create_date:0
+#: field:asset.depreciation.confirmation.wizard,create_date:0
+#: field:asset.modify,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,currency_id:0
+msgid "Currency"
+msgstr "Devise"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_search
+msgid "Current"
+msgstr "En cours"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,amount:0
+msgid "Current Depreciation"
+msgstr "Amortissement courant"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
 msgid "Date"
 msgstr "Date"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of asset purchase"
+msgstr "Date d'achat de l'actif"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Date of depreciation"
+msgstr "Date d'amortissement"
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Degressive"
+msgstr "Dégressif"
+
+#. module: account_asset
+#: field:account.asset.asset,method_progress_factor:0
+#: field:account.asset.category,method_progress_factor:0
+msgid "Degressive Factor"
+msgstr "Taux dégréssif"
+
+#. module: account_asset
+#: field:account.asset.category,account_expense_depreciation_id:0
+msgid "Depr. Expense Account"
+msgstr "Compte de dépréciation (charge)"
+
+#. module: account_asset
+#: field:account.asset.category,account_depreciation_id:0
+msgid "Depreciation Account"
+msgstr "Compte de dépréciation"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Depreciation Board"
+msgstr "Tableau des amortissements"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,depreciation_date:0
+#: field:asset.asset.report,depreciation_date:0
+msgid "Depreciation Date"
+msgstr "Date de dépréciation"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Dates"
+msgstr "Dates d'amortissement"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_id:0
+msgid "Depreciation Entry"
+msgstr "Ecriture de dépreciation"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,depreciation_line_ids:0
+msgid "Depreciation Lines"
+msgstr "Lignes de dépréciation"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+msgid "Depreciation Method"
+msgstr "Méthode d'amortissement"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Depreciation Month"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,name:0
+msgid "Depreciation Name"
+msgstr "Nom de l'amortissement"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Draft"
+msgstr "Brouilon"
+
+#. module: account_asset
+#: field:account.asset.asset,method_end:0
+#: selection:account.asset.asset,method_time:0
+#: selection:account.asset.category,method_time:0
+#: selection:account.asset.history,method_time:0
+msgid "Ending Date"
+msgstr "Date de fin"
+
+#. module: account_asset
+#: field:account.asset.category,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
+msgid "Ending date"
+msgstr "Date de Fin"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,account_move_line_ids:0
+#: model:ir.actions.act_window,name:account_asset.act_entries_open
+msgid "Entries"
+msgstr "Ecritures"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
+msgstr "erreur ! Vous ne pouvez pas créer des immobilisations récursivement"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "Error!"
+msgstr "Erreur!"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Extended Filters..."
+msgstr "Filtres étendus..."
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "General"
+msgstr "Général"
+
+#. module: account_asset
+#: field:asset.asset.report,gross_value:0
+msgid "Gross Amount"
+msgstr "Coût d'acquisition"
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_value:0
+msgid "Gross Value"
+msgstr "Valeur brute"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Group By"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: field:account.asset.asset,history_ids:0
+msgid "History"
+msgstr "Hstorique"
+
+#. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Nom de l'historique"
+
+#. module: account_asset
+#: field:account.asset.asset,id:0
+#: field:account.asset.category,id:0
+#: field:account.asset.depreciation.line,id:0
+#: field:account.asset.history,id:0
+#: field:asset.asset.report,id:0
+#: field:asset.depreciation.confirmation.wizard,id:0
+#: field:asset.modify,id:0
+msgid "ID"
+msgstr ""
+
+#. module: account_asset
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
+msgid ""
+"Indicates that the first depreciation entry for this asset have to be done "
+"from the purchase date instead of the first January"
+msgstr ""
+"Indiquez si la première dépréciation doit être calculée à partir de la date "
+"d'achat ou à partir du premier jour de l'exercice comptable."
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Lignes de facture"
+
+#. module: account_asset
+#: help:account.asset.asset,salvage_value:0
+msgid "It is the amount you plan to have that you cannot depreciate."
+msgstr "Il s'agit de la part non dépréciable de l'immobilisation."
+
+#. module: account_asset
+#: field:account.asset.category,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:349
+#: model:ir.model,name:account_asset.model_account_move_line
+#, python-format
+msgid "Journal Items"
+msgstr "Écritures comptables"
+
+#. module: account_asset
+#: field:account.asset.asset,write_uid:0
+#: field:account.asset.category,write_uid:0
+#: field:account.asset.depreciation.line,write_uid:0
+#: field:account.asset.history,write_uid:0
+#: field:asset.depreciation.confirmation.wizard,write_uid:0
+#: field:asset.modify,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,write_date:0
+#: field:account.asset.category,write_date:0
+#: field:account.asset.depreciation.line,write_date:0
+#: field:account.asset.history,write_date:0
+#: field:asset.depreciation.confirmation.wizard,write_date:0
+#: field:asset.modify,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_asset
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Linéaire"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "Modify"
+msgstr "Modifier"
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+#: model:ir.actions.act_window,name:account_asset.action_asset_modify
+#: model:ir.model,name:account_asset.model_asset_modify
+msgid "Modify Asset"
+msgstr "Modifier l'immobilisation"
+
+#. module: account_asset
+#: field:account.asset.category,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,remaining_value:0
+msgid "Next Period Depreciation"
+msgstr "Période d'amortissement suivante"
+
+#. module: account_asset
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
+#: field:account.asset.history,note:0
+msgid "Note"
+msgstr "Remarque"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+#: view:account.asset.category:account_asset.view_account_asset_category_form
+#: view:account.asset.history:account_asset.view_account_asset_history_form
+#: view:asset.modify:account_asset.asset_modify_form
+#: field:asset.modify,note:0
+msgid "Notes"
+msgstr "Commentaires"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -763,270 +628,225 @@ msgid "Number of Depreciations"
 msgstr "Nombre d'amortissements"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Create Move"
-msgstr "Créer l'écriture"
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
+msgstr "Nombre de mois dans une période"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Confirm Asset"
-msgstr "Confirmer l'immobilisation"
+#: field:account.asset.asset,parent_id:0
+msgid "Parent Asset"
+msgstr "Immobilisation parente"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
-#: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
-msgid "Asset Hierarchy"
-msgstr "Hiérarchie des immobilisations"
-
-#~ msgid "Change duration"
-#~ msgstr "Changer la durée"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de modèle invalide pour la définition de l'action."
-
-#~ msgid "Progressive"
-#~ msgstr "Progressif"
-
-#~ msgid "Depreciation entries"
-#~ msgstr "Écritures d'amortissement"
-
-#~ msgid "Generated entries"
-#~ msgstr "Écritures générées"
-
-#~ msgid "Depreciation duration"
-#~ msgstr "Durée de l'amortissement"
-
-#~ msgid "Other information"
-#~ msgstr "Autre information"
-
-#~ msgid "Depreciation methods"
-#~ msgstr "Méthodes d'amortissement"
-
-#~ msgid "Cumul. value"
-#~ msgstr "Valeur cumulée"
-
-#~ msgid "Confirm asset"
-#~ msgstr "Confirmer l'immobilisation"
-
-#~ msgid "Date created"
-#~ msgstr "Date de création"
-
-#~ msgid "Asset property"
-#~ msgstr "Propriété de l'immobilisation"
-
-#~ msgid "Modify asset"
-#~ msgstr "Modifier l'immobilisation"
-
-#~ msgid "Compute assets"
-#~ msgstr "Calculer les immobilisations"
-
-#~ msgid "Normal"
-#~ msgstr "Standard"
-
-#~ msgid "Method"
-#~ msgstr "Méthode"
-
-#~ msgid "Asset account"
-#~ msgstr "Compte d'immobilisation"
-
-#~ msgid "Depr. method type"
-#~ msgstr "Type de méthode d'immobilisation"
-
-#~ msgid "Progressif factor"
-#~ msgstr "Facteur progressif"
-
-#~ msgid "Net value"
-#~ msgstr "Valeur nette"
-
-#~ msgid "Localisation"
-#~ msgstr "Emplacement"
-
-#~ msgid "Depreciation account"
-#~ msgstr "Comte d'amortissement"
-
-#~ msgid "Global state"
-#~ msgstr "État global"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer par \"x_\" et ne pas contenir de "
-#~ "charactères spéciaux !"
-
-#~ msgid "Open"
-#~ msgstr "Ouvrir"
-
-#~ msgid "Depreciation"
-#~ msgstr "Amortissement"
-
-#~ msgid "Method name"
-#~ msgstr "Nom de méthode"
-
-#~ msgid "Analytic journal"
-#~ msgstr "Journal analytique"
-
-#~ msgid "Change history"
-#~ msgstr "Historique des modifications"
-
-#~ msgid "Number of interval"
-#~ msgstr "Période"
-
-#~ msgid "Gross value"
-#~ msgstr "Valeur brute"
-
-#~ msgid "State"
-#~ msgstr "État"
-
-#~ msgid "Computation method"
-#~ msgstr "Méthode de calcul"
-
-#~ msgid "Total value"
-#~ msgstr "Valeur totale"
-
-#~ msgid "View"
-#~ msgstr "Vue"
-
-#~ msgid "Indirect"
-#~ msgstr "Indirect"
-
-#~ msgid "End of asset"
-#~ msgstr "Fin de l'immobilisation"
-
-#~ msgid "Residual value"
-#~ msgstr "Valeur résiduelle"
-
-#~ msgid "Depreciation Amount"
-#~ msgstr "Montant de dépréciation"
-
-#~ msgid ""
-#~ "This wizard will post the depreciation lines of running assets that belong "
-#~ "to the selected period."
-#~ msgstr ""
-#~ "Enregistrement comptable des dépréciations sur les immobilisations à l'état "
-#~ "'en cours' pour la période sélectionnée."
-
-#~ msgid "Sequence of the depreciation"
-#~ msgstr "Séquence de la dépréciation"
-
-#~ msgid "Calculates Depreciation within specified interval"
-#~ msgstr "Calcule la dépréciation dans une période spécifique"
-
-#~ msgid "Asset durations to modify"
-#~ msgstr "Durées d'amortissement à modifier"
-
-#~ msgid ""
-#~ "Choose the method to use to compute the amount of depreciation lines.\n"
-#~ "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
-#~ "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"
-#~ msgstr ""
-#~ "Choisir la méthode à utiliser pour calculer le montant des lignes "
-#~ "d'amortissement.\n"
-#~ "  * Linéaire: Calculé sur la base : Montant total / nombre d'amortissements\n"
-#~ "  * Dégressif: Calculé sur la base: Valeur résiduelle * taux d'amortissement "
-#~ "* facteur d'amortissement"
-
-#~ msgid "Analytic information"
-#~ msgstr "Information pour l'analytique"
-
-#~ msgid "Assets purchased in current year"
-#~ msgstr "Immobilisations acquises dans l'année en cours"
-
-#~ msgid "Close asset"
-#~ msgstr "Fermer l'immobilisation"
-
-#~ msgid "Amount to Depreciate"
-#~ msgstr "Montant de l'amortissement"
-
-#~ msgid "Gross value "
-#~ msgstr "Valeur brute "
-
-#~ msgid "Accounting information"
-#~ msgstr "Information comptable"
-
-#~ msgid "Assets purchased in last month"
-#~ msgstr "Immobilisations achetées le mois dernier"
-
-#~ msgid "Error ! You can not create recursive assets."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer des immobilisations récurcives."
-
-#~ msgid "Assets purchased in current month"
-#~ msgstr "Immobilisations acquises ce mois"
-
-#~ msgid "Review Asset Categories"
-#~ msgstr "Définir les catégories d'amortissement"
-
-#~ msgid "State here the time during 2 depreciations, in months"
-#~ msgstr "Durée en mois entre 2 amortissements"
-
-#~ msgid ""
-#~ "When an asset is created, the state is 'Draft'.\n"
-#~ "If the asset is confirmed, the state goes in 'Running' and the depreciation "
-#~ "lines can be posted in the accounting.\n"
-#~ "You can manually close an asset when the depreciation is over. If the last "
-#~ "line of depreciation is posted, the asset automatically goes in that state."
-#~ msgstr ""
-#~ "A sa création,une immobilisation est à l' état  «brouillon».\n"
-#~ "Si l'immobilisation est confirmée, son état devient \"en cours\" et des "
-#~ "lignes d'amortissement peuvent être comptabilisées.\n"
-#~ "Vous pouvez fermer manuellement une immobilisation lorsque son amortissement "
-#~ "est terminé.\n"
-#~ "Lorsque la dernière ligne de l'amortissement est comptabilisée, "
-#~ "l'immobilisation se met automatiquement dans l'état terminé."
-
-#~ msgid ""
-#~ "From this report, you can have an overview on all depreciation. The tool "
-#~ "search can also be used to personalise your Assets reports and so, match "
-#~ "this analysis to your needs;"
-#~ msgstr ""
-#~ "Avec ce rapport, vous pouvez avoir un aperçu sur tous les amortissements. "
-#~ "L'outil de recherche peut également être utilisé pour personnaliser vos "
-#~ "rapports sur les amortissements en fonction de vos besoins;"
-
-#~ msgid "Post Depreciation Lines"
-#~ msgstr "Comptabiliser les lignes d'amortissement"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML incorrect pour l'architecture de la vue !"
-
-#~ msgid "Other Information"
-#~ msgstr "Autre information"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Structure de communication BBA incorrecte !"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
-
-#~ msgid "Month"
-#~ msgstr "Mois"
-
-#~ msgid "You can not create journal items on an account of type view."
-#~ msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
-
-#~ msgid ""
-#~ "The date of your Journal Entry is not in the defined period! You should "
-#~ "change the date or remove this constraint from the journal."
-#~ msgstr ""
-#~ "La date de votre écriture ne correspond pas à la période définie ! Vous "
-#~ "devez modifier la date ou supprimer la contrainte de date du journal."
-
-#~ msgid "Company must be the same for its related account and period."
-#~ msgstr "La société doit être la même pour son compte et la période liée."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or select "
-#~ "a multi-currency view on the journal."
-#~ msgstr ""
-#~ "Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
-#~ "devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
-#~ "sélectionner une vue multi-devise sur le journal."
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "Le numéro de facture doit être unique par société !"
-
-#~ msgid "Month-1"
-#~ msgstr "Mois -1"
-
-#~ msgid "You can not create journal items on closed account."
-#~ msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
+#: field:account.asset.asset,partner_id:0
+#: field:asset.asset.report,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: account_asset
+#: field:asset.depreciation.confirmation.wizard,period_id:0
+msgid "Period"
+msgstr "Période"
+
+#. module: account_asset
+#: field:account.asset.category,method_period:0
+#: field:account.asset.history,method_period:0
+#: field:asset.modify,method_period:0
+msgid "Period Length"
+msgstr "Durée de la période"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,move_check:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: field:asset.asset.report,move_check:0
+msgid "Posted"
+msgstr "Comptabilisé"
+
+#. module: account_asset
+#: field:asset.asset.report,posted_value:0
+msgid "Posted Amount"
+msgstr "Montant comptabilisé"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Posted depreciation lines"
+msgstr "Lignes d'amortissement comptabilisées"
+
+#. module: account_asset
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
+msgid "Prorata Temporis"
+msgstr "Prorata temporis"
+
+#. module: account_asset
+#: constraint:account.asset.asset:0
+msgid ""
+"Prorata temporis can be applied only for time method \"number of "
+"depreciations\"."
+msgstr ""
+"Prorata temporis peut être appliqué seulement pour la méthode linéaire "
+"(unité de temps)"
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: field:asset.asset.report,purchase_date:0
+msgid "Purchase Date"
+msgstr "Date d'acquisition"
+
+#. module: account_asset
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+msgid "Purchase Month"
+msgstr ""
+
+#. module: account_asset
+#: field:asset.modify,name:0
+msgid "Reason"
+msgstr "Motif"
+
+#. module: account_asset
+#: field:account.asset.asset,code:0
+msgid "Reference"
+msgstr "Référence"
+
+#. module: account_asset
+#: field:account.asset.asset,value_residual:0
+msgid "Residual Value"
+msgstr "Valeur résiduelle"
+
+#. module: account_asset
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:account_asset.view_asset_asset_report_search
+#: selection:asset.asset.report,state:0
+msgid "Running"
+msgstr "En cours"
+
+#. module: account_asset
+#: field:account.asset.asset,salvage_value:0
+msgid "Salvage Value"
+msgstr "Valeur résiduelle"
+
+#. module: account_asset
+#: view:account.asset.category:account_asset.view_account_asset_category_search
+msgid "Search Asset Category"
+msgstr "Recherche une catérogie d'immobilisation"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Close"
+msgstr "Fermer"
+
+#. module: account_asset
+#: view:account.asset.asset:account_asset.view_account_asset_asset_form
+msgid "Set to Draft"
+msgstr "Mettre à l'état \"Brouillon\""
+
+#. module: account_asset
+#: field:account.asset.category,open_asset:0
+msgid "Skip Draft State"
+msgstr "Passer l'état brouillon"
+
+#. module: account_asset
+#: help:account.asset.category,method_period:0
+msgid "State here the time between 2 depreciations, in months"
+msgstr "Définir ici le temps (en mois) entre 2 amortissements"
+
+#. module: account_asset
+#: field:account.asset.depreciation.line,parent_state:0
+msgid "State of Asset"
+msgstr "Statut de l'immobilisation"
+
+#. module: account_asset
+#: field:account.asset.asset,state:0
+#: field:asset.asset.report,state:0
+msgid "Status"
+msgstr "Statut"
+
+#. module: account_asset
+#: help:account.asset.asset,method_period:0
+msgid "The amount of time between two depreciations, in months"
+msgstr "La durée entre deux amortissements, en mois"
+
+#. module: account_asset
+#: help:account.asset.history,method_time:0
+msgid ""
+"The method to use to compute the dates and number of depreciation lines.\n"
+"Number of Depreciations: Fix the number of depreciation lines and the time "
+"between 2 depreciations.\n"
+"Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
+msgstr ""
+"La méthode à utiliser pour calculer les dates et le nombre de lignes "
+"d'amortissement.\n"
+"Nombre d'amortissements : déterminer le nombre de lignes d'amortissement et "
+"le temps entre 2 amortissements.\n"
+"Date de fin : choisissez le temps entre 2 amortissements et la date de fin "
+"des amortissements."
+
+#. module: account_asset
+#: help:account.asset.asset,method_number:0
+#: help:account.asset.category,method_number:0
+#: help:account.asset.history,method_number:0
+msgid "The number of depreciations needed to depreciate your asset"
+msgstr ""
+"Le nombre d'amortissements nécessaire pour amortir votre immobilisation"
+
+#. module: account_asset
+#: field:account.asset.asset,method_time:0
+#: field:account.asset.category,method_time:0
+#: field:account.asset.history,method_time:0
+msgid "Time Method"
+msgstr "Méthode de temps"
+
+#. module: account_asset
+#: help:account.asset.history,method_period:0
+msgid "Time in month between two depreciations"
+msgstr "Temps en mois entre deux dépréciations"
+
+#. module: account_asset
+#: field:asset.asset.report,unposted_value:0
+msgid "Unposted Amount"
+msgstr "Montant non comptabilisé"
+
+#. module: account_asset
+#: field:account.asset.history,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+"Lorsqu'une immobilisation est créée, le statut est 'Brouillon'.\n"
+"A la confirmation, le statut passe à 'En cours' et les amortissement peuvent "
+"être passé en comptabilité.\n"
+"Vous pouvez cloturer manuellement une immobilisation.. \n"
+"Lors de la comptabilisation du dernier amortissement, le statut passe "
+"automatiquement à ''Terminé'"
+
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "Année"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:81
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
+"Vous ne pouvez pas supprimer une immobilisation qui contient des lignes de "
+"dépréciations comptabilisées."
+
+#. module: account_asset
+#: view:asset.modify:account_asset.asset_modify_form
+msgid "months"
+msgstr "mois"

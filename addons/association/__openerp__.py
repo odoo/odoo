@@ -38,5 +38,6 @@ membership products (schemes).
     'installable': True,
     'auto_install': False,
     'images': ['images/association1.jpeg'],
+    'website': 'https://www.odoo.com'
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

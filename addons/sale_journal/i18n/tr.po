@@ -1,52 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* sale_journal
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-01-25 00:15+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-02 11:26+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-03 06:51+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Not"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Etkin"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Faturalama Türü"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
-"Bu faturalama tipi seçilen cari için varsayılan olarak kullanılacaktır."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr "Oluşturulma"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Satışlar & Satınalmalar"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Faturaları seçilen kurala göre oluştur"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Faturalama"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Gruplanmış"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Gelen Sevkiyatlar"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -58,19 +57,15 @@ msgstr ""
 "saklamanıza yardımcı olur."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Notlar"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Faturalama yöntemi"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Toplama Listesi"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Fatura Türü"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -78,16 +73,6 @@ msgstr "Toplama Listesi"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Fatura Türleri"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Gruplanmamış"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Gruplanmış"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -101,28 +86,44 @@ msgstr ""
 "faturalama günlüğü oluşturabilirsiniz: günlük, her Çarşamba, aylık, vb."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Faturaları seçilen kurala göre oluştur"
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Faturalama"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Fatura Türü"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Faturalama Türü"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Etkin"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Faturalama yöntemi"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Gruplanmamış"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Not"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Notlar"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -130,320 +131,23 @@ msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Toplama Listesi"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Satış & Satınalma"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Satış Siparişi"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Teslimat Emirleri"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Satış İstatistikleri"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Aylık Satışlar"
-
-#~ msgid "waiting"
-#~ msgstr "bekliyor"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Ayrılan Sevkiyat Paketlemesi"
-
-#~ msgid "assigned"
-#~ msgstr "Atanan"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Bekliyen Planlama"
-
-#~ msgid "to be invoiced"
-#~ msgstr "Faturalanacak"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Satış Yevmiyesi"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Taslak olarak Ayarla"
-
-#~ msgid "Journal date"
-#~ msgstr "Yevmiye Tarihi"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Sevkiyat Fatura Yöntemi"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Günlük Sevkiyat Paketlemeleri"
-
-#~ msgid "My open journals"
-#~ msgstr "Açık Yevmiyelerim (Bana Ait)"
-
-#~ msgid "# of Lines"
-#~ msgstr "Kalem Sayısı"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Tüm Açık Yevmiyeler"
-
-#~ msgid "done"
-#~ msgstr "Tamamlandı"
-
-#~ msgid "Average Price"
-#~ msgstr "Ortalama Fiyat"
-
-#~ msgid "State"
-#~ msgstr "Durum"
-
-#~ msgid "All Months"
-#~ msgstr "Tüm Aylar"
-
-#~ msgid "Total Price"
-#~ msgstr "Toplam Fiyat"
-
-#~ msgid "Packing journals"
-#~ msgstr "Günlük Sevkiyat Paketlemeleri"
-
-#~ msgid "Reporting"
-#~ msgstr "Raporlama"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Açık Günlük Paketlemelerim"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Satış Sipariş Yevmiyesi"
-
-#~ msgid "Open journals"
-#~ msgstr "Açık Yevmiyeler"
-
-#~ msgid "Packing"
-#~ msgstr "Sevkiyat Paketlemesi"
-
-#~ msgid "None"
-#~ msgstr "Yok"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Günlük Satışlar (Bu Ay)"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Manuel İşlem Devam Ediyor"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Günlük Sevkiyat Paketlemesi"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Paket İptal"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Onaylanan Sevkiyat Paketlemesi"
-
-#~ msgid "In progress"
-#~ msgstr "İşlem Devam Ediyor"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Günlük Çeki Listeleri"
-
-#~ msgid "Month"
-#~ msgstr "Ay"
-
-#~ msgid "Invoice state"
-#~ msgstr "Fatura Durumu"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Sevkiyat Fatura Yöntemi"
-
-#~ msgid "Order State"
-#~ msgstr "Sipariş Durumu"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "İstisnai Sevkiyat"
-
-#~ msgid "Draft"
-#~ msgstr "Taslak"
-
-#~ msgid "cancel"
-#~ msgstr "İptal"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Fatura Muafiyeti"
-
-#~ msgid "Validation date"
-#~ msgstr "Geçerlilik Tarihi"
-
-#~ msgid "draft"
-#~ msgstr "Taslak"
-
-#~ msgid "Draft sales"
-#~ msgstr "Açık Satışlar"
-
-#~ msgid "Quotation"
-#~ msgstr "Teklif"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Satış Yevmiyeleri"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Satışları Onayla"
-
-#~ msgid "Creation date"
-#~ msgstr "Oluşturma Tarihi"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Faturalama Yöntemi"
-
-#~ msgid "Code"
-#~ msgstr "Kodu"
-
-#~ msgid "Open Journal"
-#~ msgstr "Yevmiye Aç"
-
-#~ msgid "Sales"
-#~ msgstr "Satışlar"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Günlük Sevkiyat Paketlemesi"
-
-#~ msgid "Done"
-#~ msgstr "Bitti"
-
-#~ msgid "Cancel"
-#~ msgstr "İptal"
-
-#~ msgid "Open"
-#~ msgstr "Açık"
-
-#~ msgid "Responsible"
-#~ msgstr "Sorumlu"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Açık Yevmiyelerim (Bana Ait)"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Sevkiyattan Faturaya İstatistiği"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Satışlar İptal"
-
-#~ msgid "invoiced"
-#~ msgstr "Faturalanmış"
-
-#~ msgid "confirmed"
-#~ msgstr "Onaylandı"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Günlük Çeki Listesi"
-
-#~ msgid "Quantities"
-#~ msgstr "Miktarlar"
-
-#~ msgid "Journal"
-#~ msgstr "Yevmiye"
-
-#~ msgid "This Month"
-#~ msgstr "Bu Ay"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Günlük Satışlar"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Faturalama Yöntemleri"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Faturalanacak Sevkiyat"
-
-#~ msgid "Journal Information"
-#~ msgstr "Yevmiye Bilgisi"
-
-#~ msgid "States"
-#~ msgstr "Durumlar"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Günlük Sevkiyat Paketlemesi"
-
-#~ msgid "Close Journal"
-#~ msgstr "Yevmiye Kapat"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Faturalanacak Sevkiyat"
-
-#~ msgid "Approved sales"
-#~ msgstr "Onaylanan Satışlar"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Sipariş referans no'su tek olmalı !"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "Satış ve paketleme için kullanılan yayın türü."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Hata! Yinelemeli üyeler oluşturamazsınız."
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Satış Yevmiyesi Modülü, farklı yevmiyelerdeki satış ve teslimatlarınızı\n"
-#~ "    (toplama listeleri) sınıflandırmanızı sağlar.\n"
-#~ "    Bu modül bölümlerce çalışan büyük firmalar\n"
-#~ "    için çok yararlıdır.\n"
-#~ "\n"
-#~ "    Yevmiyeyi farklı amaçlar için kullanabilirsiniz, örneğin:\n"
-#~ "    * farklı bölümlerin satışlarını ayırma\n"
-#~ "    * kamyon ile ya da UPS (kargo) ile yapılan sevkiyat yevmiyeleri\n"
-#~ "\n"
-#~ "    yevmiyelerin bir sorumlusu vrdır ve farklı durumlara göre değişir:\n"
-#~ "    * taslak, aç, vazgeç, bitti.\n"
-#~ "\n"
-#~ "    Tüm satışların bir seferde onaylanması, paketlemeyi doğrulamak ya da \n"
-#~ "    faturalandırmak, ... için farklı yevmiyelere toplu işlemler "
-#~ "uygulanabilir.\n"
-#~ "\n"
-#~ "    Paydaşlara, satış siparişlerine göre yapılandırılabilen toplu\n"
-#~ "    faturalandırma yöntemlerini destekler, örnekler:\n"
-#~ "    * günlük faturalandırma,\n"
-#~ "    * aylık faturalandırma, ...\n"
-#~ "\n"
-#~ "    Yevmiyelere göre bazı istatistikler elde edilir.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "This invoicing type will be used, by default, for invoicing the current "
-#~ "partner."
-#~ msgstr ""
-#~ "Bu faturalama türü, geçerli paydaşı faturalandırmak için varsayılan olarak "
-#~ "kullanılacaktır."
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Hata ! Özyinelemeli ilişkili üyeler oluşturamazsınız."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Sipariş Referansı Her Firma için benzersiz olmalı!"
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referans her şirket için benzersiz olmalı!"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+"Bu faturalama tipi seçilen cari için varsayılan olarak kullanılacaktır."

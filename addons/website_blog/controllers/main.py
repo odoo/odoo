@@ -135,9 +135,7 @@ class WebsiteBlog(http.Controller):
         pager_end = page * self._blog_post_per_page
         blog_posts = blog_posts[pager_begin:pager_end]
 
-        tag_obj = request.registry['blog.tag']
-        tag_ids = tag_obj.search(cr, uid, [], context=context)
-        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+        tags = blog.all_tags()[blog.id]
 
         values = {
             'blog': blog,
@@ -244,7 +242,6 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post = request.registry['blog.post']
         partner_obj = request.registry['res.partner']
-        thread_obj = request.registry['mail.thread']
 
         if uid != request.website.user_id.id:
             partner_ids = [user.partner_id.id]
@@ -261,7 +258,7 @@ class WebsiteBlog(http.Controller):
             subtype='mt_comment',
             author_id=partner_ids[0],
             path=post.get('path', False),
-            context=dict(context, mail_create_nosubcribe=True))
+            context=context)
         return message_id
 
     @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
@@ -303,14 +300,13 @@ class WebsiteBlog(http.Controller):
     @http.route('/blogpost/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].create(cr, uid, {
             'blog_id': blog_id,
             'name': _("Blog Post Title"),
             'subtitle': _("Subtitle"),
             'content': '',
             'website_published': False,
-        }, context=create_context)
+        }, context=context)
         new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
@@ -342,6 +338,14 @@ class WebsiteBlog(http.Controller):
         if count:
             return ids
         return self._get_discussion_detail(ids, publish, **post)
+
+    @http.route('/blogpost/get_discussions/', type='json', auth="public", website=True)
+    def discussions(self, post_id=0, paths=None, count=False, **post):
+        ret = []
+        for path in paths:
+            result = self.discussion(post_id=post_id, path=path, count=count, **post)
+            ret.append({"path": path, "val": result})
+        return ret
 
     @http.route('/blogpost/change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, image=None, **post):

@@ -36,8 +36,8 @@ class ir_logging(osv.Model):
         'create_uid': fields.integer('Uid', readonly=True),  # Integer not m2o is intentionnal
         'name': fields.char('Name', required=True),
         'type': fields.selection(EXCEPTIONS_TYPE, string='Type', required=True, select=True),
-        'dbname': fields.char('Database Name'),
-        'level': fields.char('Level'),
+        'dbname': fields.char('Database Name', select=True),
+        'level': fields.char('Level', select=True),
         'message': fields.text('Message', required=True),
         'path': fields.char('Path', required=True),
         'func': fields.char('Function', required=True),

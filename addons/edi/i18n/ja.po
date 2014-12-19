@@ -1,42 +1,27 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-04-20 23:50+0000\n"
-"Last-Translator: Masaki Yamaya <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr ""
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr ""
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr ""
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' は、無効な外部IDです。"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,33 +35,26 @@ msgstr "通貨"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
 msgstr ""
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
+#: field:edi.edi,id:0
+msgid "ID"
 msgstr ""
-"この文書を取り込むにはOpenERP `%s` "
-"アプリケーションが必要です。それをインストールしてから、アドミニストレータとして接続して、設定アシスタントを開いてください。"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' は、無効な外部IDです。"
+msgid "Missing Application."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -84,214 +62,31 @@ msgid "Partner"
 msgstr "パートナ"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
+#, python-format
+msgid "Reason:"
 msgstr ""
 
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "通貨コードは会社ごとに固有でなければいけません。"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "会社名は固有でなければいけません。"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "取引先住所"
-
-#~ msgid "EDI token"
-#~ msgstr "EDIトークン"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "エラー：重複したメンバーを作ることはできません。"
-
-#~ msgid "EDI Tokens must be unique!"
-#~ msgstr "EDIトークンは固有でなければいけません。"
-
-#~ msgid "Unique identifier for retrieving an EDI document."
-#~ msgstr "EDI文書を検索するための固有の識別番号"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "エラー：会社を重複して作ることはできません。"
-
-#~ msgid "Import this document"
-#~ msgstr "この文書を取り込む"
-
-#~ msgid "View/Print"
-#~ msgstr "表示 / 印刷"
-
-#~ msgid "Document"
-#~ msgstr "文書"
-
-#~ msgid "EDI document content"
-#~ msgstr "EDI文書の内容"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI文書"
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "それを既存のOpenERPインスタンスとして取り込む"
-
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "アプリケーションがありません。"
+msgid "Sorry, the document could not be imported."
+msgstr ""
 
-#~ msgid ""
-#~ "OpenERP's Electronic Data Interchange documents are based on a generic and "
-#~ "language\n"
-#~ "                            independent"
-#~ msgstr "OpenERPの電子データ交換の文書は、汎用的であり言語に依存していません。"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr ""
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "新しいOpenERPインスタンスとして作る"
-
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "新しいOpernERPのオンラインインスタンスとして取り込む"
-
-#~ msgid "Import"
-#~ msgstr "取り込む"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "OpenERPインスタンスのアドレス"
-
-#~ msgid "Import into another application"
-#~ msgstr "他のアプリケーションへ取り込む"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid ""
-#~ "serialization of the document's attribute.\n"
-#~ "                            It is usually very quick and straightforward to "
-#~ "create a small plug-in for your preferred\n"
-#~ "                            application that will be capable of importing "
-#~ "any OpenERP EDI document.\n"
-#~ "                            You can find out more details about how to do "
-#~ "this and what the content of OpenERP EDI documents\n"
-#~ "                            is like in the"
-#~ msgstr ""
-#~ "OpenERPの文書を取り込むアプリケーションのための小さなプラグインを作るのは簡単です。その作り方とOpenERP文書の内容の詳細は、マニュアルを参照し"
-#~ "てください。"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERPの解説書"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "直ぐに始めるには、"
-
-#~ msgid "Description"
-#~ msgstr "詳細"
-
-#~ msgid "Invoice"
-#~ msgstr "請求書"
-
-#~ msgid "Your Reference"
-#~ msgstr "参照"
-
-#~ msgid "Date"
-#~ msgstr "日付"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "ここでEDIの原文書をダウンロードすることができます。"
-
-#~ msgid "Download"
-#~ msgstr "ダウンロードする"
-
-#~ msgid "Powered by"
-#~ msgstr "Powered by"
-
-#~ msgid "Product Description"
-#~ msgstr "製品の詳細"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Quantity"
-#~ msgstr "数量"
-
-#~ msgid "Discount"
-#~ msgstr "割引き"
-
-#~ msgid "Unit Price"
-#~ msgstr "単価"
-
-#~ msgid "Net Total:"
-#~ msgstr "合計："
-
-#~ msgid "Price"
-#~ msgstr "価格"
-
-#~ msgid "Total:"
-#~ msgstr "合計:"
-
-#~ msgid "Taxes:"
-#~ msgstr "税"
-
-#~ msgid "Amount"
-#~ msgstr "金額"
-
-#~ msgid "Tax"
-#~ msgstr "税金"
-
-#~ msgid "Base Amount"
-#~ msgstr "基本金額"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr "PayPalの安全な支払いゲートウェイを使って、この請求を直接支払うことができます。"
-
-#~ msgid "Order"
-#~ msgstr "順序"
-
-#~ msgid "on the transfer:"
-#~ msgstr "送金中"
-
-#~ msgid "Please transfer"
-#~ msgstr "送金願います"
-
-#~ msgid "to"
-#~ msgstr "宛先"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "銀行送金"
-
-#~ msgid "Pay Online"
-#~ msgstr "オンライン支払"
-
-#~ msgid "Paypal"
-#~ msgstr "PayPal"
-
-#~ msgid "Notes:"
-#~ msgstr "注記："
-
-#~ msgid "Salesman"
-#~ msgstr "販売担当"
-
-#~ msgid ""
-#~ "(postal address on the order header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the document\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "（受注の見出しの住所）\n"
-#~ "　　　　下記の未払い勘定を指定して、文書を参照すること。"
-
-#~ msgid "Payment terms"
-#~ msgstr "支払い期限"
-
-#~ msgid "Discount(%)"
-#~ msgstr "割引率 (%)"
-
-#~ msgid "see is all it takes to use this EDI document in Python"
-#~ msgstr "このEDI文書をPythinで　（原文がおかしい！）"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr "PayPalの安全な支払ゲートウェイを使って、この注文をオンラインで直接支払うことができます。"
-
-#~ msgid ""
-#~ "(postal address on the invoice header)\n"
-#~ "                     using one of the following bank accounts. Be sure to "
-#~ "mention the invoice\n"
-#~ "                     reference"
-#~ msgstr ""
-#~ "（請求書の見出しの住所）\n"
-#~ "　　　　　　下記の未払い勘定の請求書を参照して明記すると良いでしょう。"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

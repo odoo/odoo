@@ -1,21 +1,332 @@
 # Japanese translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-09-21 14:08+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:266
+#, python-format
+msgid "(n/a)"
+msgstr "（利用不可）"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_delivery:0
+msgid "Allow adding shipping costs"
+msgstr "配送費用を計算"
+
+#. module: sale_stock
+#: help:sale.config.settings,module_delivery:0
+msgid ""
+"Allows you to add delivery methods in sales orders and delivery orders.\n"
+"You can define your own carrier and delivery grids for prices.\n"
+"-This installs the module delivery."
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_route_so_lines:0
+msgid "Allows you to choose a delivery route on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_mrp_properties:0
+msgid "Allows you to tag sales order lines with properties."
+msgstr "属性を持つ受注明細をタグ付けすることができます。"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Cancel Order"
+msgstr "オーダ取消"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:160
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr "受注を取り消せません。"
+
+#. module: sale_stock
+#: field:sale.config.settings,group_route_so_lines:0
+msgid "Choose MTO, drop shipping,... on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
+#, python-format
+msgid "Configuration Error!"
+msgstr "設定エラー"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr "コンタクトの詳細"
+
+#. module: sale_stock
+#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+msgid "Default Options"
+msgstr "デフォルトオプション"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_picking_policy:0
+msgid "Deliver all at once when all products are available."
+msgstr "一括出荷をデフォルトとする"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver all products at once"
+msgstr "全ての製品を一緒に配達"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver each product when available"
+msgstr "利用可能になった時に各製品を配達"
+
+#. module: sale_stock
+#: field:sale.order,shipped:0
+msgid "Delivered"
+msgstr "配達済"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
+msgstr "請求対象配送"
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_invoice_deli_orders
+msgid "Enable Invoicing Delivery orders"
+msgstr "請求配送を有効化"
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_route_so_lines
+msgid "Enable Route on Sales Order Line"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,group_invoice_deli_orders:0
+msgid "Generate invoices after and based on delivery orders"
+msgstr "配送に基づいた請求書を後で生成"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Ignore Exception"
+msgstr "例外を無視"
+
+#. module: sale_stock
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "インコターム"
+
+#. module: sale_stock
+#: help:sale.order,incoterm:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr "国際取引条件は国際間の取り引きで使用する、事前に定義された取引条件をまとめたものです。"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_location_route
+msgid "Inventory Routes"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on deliveries"
+msgstr "配達基準の請求書"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,task_work:0
+msgid ""
+"Lets you transfer the entries under tasks defined for Project Management to "
+"the Timesheet line entries for particular date and particular user  with the "
+"effect of creating, editing and deleting either ways and to automatically "
+"creates project tasks from procurement lines.\n"
+"-This installs the modules project_timesheet and sale_service."
+msgstr ""
+
+#. module: sale_stock
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr "顧客に約束した日付の許容誤差。サプライチェーンの予想外の遅延に対処するため、製品は実際に約束した日より何日も前にスケジュールされます。"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:346
+#, python-format
+msgid "Not enough stock ! : "
+msgstr "在庫不足です： "
+
+#. module: sale_stock
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr "パッケージ数"
+
+#. module: sale_stock
+#: code:addons/sale_stock/res_config.py:78
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "梱包"
+
+#. module: sale_stock
+#: help:sale.order,picking_policy:0
+msgid ""
+"Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr "分納が可能な場合は「入手できた時に各製品を配送」を選びます。"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:275
+#, python-format
+msgid "Picking Information ! : "
+msgstr "ピッキング情報： "
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Picking List"
+msgstr "ピッキングリスト"
+
+#. module: sale_stock
+#: field:sale.order,picking_ids:0
+msgid "Picking associated to this sale"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,task_work:0
+msgid "Prepare invoices based on task's activities"
+msgstr "タスクの活動に基づいて請求書を準備"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,group_mrp_properties:0
+msgid "Product properties on order lines"
+msgstr "受注明細上の品目属性"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_project_timesheet:0
+msgid "Project Timesheet"
+msgstr "プロジェクトタイムシート"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Recreate Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,route_id:0
+msgid "Route"
+msgstr ""
+
+#. module: sale_stock
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "受注"
+
+#. module: sale_stock
+#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+msgid "Sale Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,module_sale_service:0
+msgid "Sale Service"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Sales Order"
+msgstr "受注"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "受注明細"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "受注統計"
+
+#. module: sale_stock
+#: help:sale.config.settings,default_picking_policy:0
+msgid ""
+"Sales order by default will be configured to deliver all products at once "
+"instead of delivering each product when it is available. This may have an "
+"impact on the shipping price."
+msgstr ""
+
+#. module: sale_stock
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr "安全日数"
+
+#. module: sale_stock
+#: field:stock.location.route,sale_selectable:0
+msgid "Selectable on Sales Order Line"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped"
+msgstr "出荷済"
+
+#. module: sale_stock
+#: field:sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr "出荷方針"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_order_policy:0
+msgid "The default invoicing method is"
+msgstr "デフォルト請求方法は"
+
+#. module: sale_stock
+#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
+msgid "To Invoice"
+msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -25,29 +336,41 @@ msgid ""
 msgstr "「配送から請求」メニューを使用して配送のための送り状を作成できるようにします。"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "配送オーダ"
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "View Delivery Order"
+msgstr "配送オーダ照会"
 
 #. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "請求対象配送"
+#: field:sale.order,warehouse_id:0
+#: field:sale.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "倉庫"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:570
+#: help:sale.config.settings,default_order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr "受注オーダー基準、または出荷基準の請求書を生成します。"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
-msgid "Picking Information ! : "
-msgstr "ピッキング情報： "
+msgid ""
+"You must first cancel all delivery order(s) attached to this sales order."
+msgstr "始めにこの受注に紐づく配送オーダを取り消してください。"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_packinglist0
-msgid "Pick List"
-msgstr "ピックリスト"
+#: code:addons/sale_stock/sale_stock.py:342
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+"受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能です。\n"
+"実在庫は %.2f %s です（予約を除く）。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:565
+#: code:addons/sale_stock/sale_stock.py:270
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -61,554 +384,16 @@ msgstr ""
 "EAN：%s　数量：%s　単位のタイプ：%s"
 
 #. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "製造品へのあるいは顧客への移動のドキュメント"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_multiple_shops:0
-msgid "Manage multiple shops"
-msgstr "複数店舗を管理"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_validate0
-msgid "Validate"
-msgstr "確認"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:209
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr "始めにこの受注に紐づく配送オーダを取り消してください。"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "調達オーダーの作成"
-
-#. module: sale_stock
-#: field:stock.picking.out,sale_id:0
-msgid "Sale Order"
-msgstr "受注"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr "全ての受注オーダー行について、調達オーダーは販売された製品の供給を作成します。"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,picking_policy:0
-msgid "Shipping Policy"
-msgstr "出荷方針"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "店舗"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr "全ての受注オーダー行のために調達オーダーを駆動します。"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_move
-msgid "Stock Move"
-msgstr "在庫移動"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
-#, python-format
-msgid "Invalid Action!"
-msgstr "操作は無効です。"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "プロジェクトタイムシート"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_sale_delivery_address:0
-msgid "Allow a different address for delivery and invoicing "
-msgstr "配送と請求のために異なるアドレスを許可 "
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:572
-#: code:addons/sale_stock/sale_stock.py:623
-#, python-format
-msgid "Configuration Error!"
-msgstr "設定エラー"
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr "調達オーダー"
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "配達基準の請求書"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr "受注"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "配送"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "受注明細"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-"受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行"
-"による１つの集荷リストは部品の入手可能性とともに展開します。"
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr "これは安全目的のために顧客に約束するために加える日数です。"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "ピッキングリスト"
-
-#. module: sale_stock
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "倉庫"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "強制割当"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "デフォルト請求方法は"
-
-#. module: sale_stock
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr "配達リードタイム"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "顧客への移動のドキュメント"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "View Delivery Order"
-msgstr "配送オーダ照会"
-
-#. module: sale_stock
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "在庫移動"
-
-#. module: sale_stock
-#: view:sale.config.settings:0
-msgid "Default Options"
-msgstr "デフォルトオプション"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_mrp:0
-msgid "Project MRP"
-msgstr "プロジェクトMRP"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr "出荷方針が集荷時に請求または配達後に請求の場合は、請求書は自動的に作成されます。"
-
-#. module: sale_stock
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "調達"
-
-#. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "出荷済"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "テスト状態では不正なモード"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-"調達オーダーは、受注オーダーが確認された、または請求書が支払われた時に自動的に作成されます。それは支払と製品の製造のルールと受注オーダーのパラメータに関し"
-"て制御します。 "
-
-#. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
-msgid "Allows you to tag sales order lines with properties."
-msgstr "属性を持つ受注明細をタグ付けすることができます。"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_invoice_deli_orders:0
-msgid "Generate invoices after and based on delivery orders"
-msgstr "配送に基づいた請求書を後で生成"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "配送費用を計算"
-
-#. module: sale_stock
-#: view:sale.order:0
+#: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "日数"
 
 #. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "梱包"
-
-#. module: sale_stock
-#: help:sale.order,incoterm:0
+#: view:sale.order:sale_stock.view_order_form_inherit
 msgid ""
-"International Commercial Terms are a series of predefined commercial terms "
-"used in international transactions."
-msgstr "国際取引条件は国際間の取り引きで使用する、事前に定義された取引条件をまとめたものです。"
-
-#. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
-msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
-"                This installs the module delivery."
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
 msgstr ""
 
-#. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
-msgstr "一括出荷をデフォルトとする"
-
-#. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "請求配送を有効化"
-
-#. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "安全日数"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "受注済材料の調達"
-
-#. module: sale_stock
-#: help:sale.order,picking_policy:0
-msgid ""
-"Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr "分納が可能な場合は「入手できた時に各製品を配送」を選びます。"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:208
-#, python-format
-msgid "Cannot cancel sales order!"
-msgstr "受注を取り消せません。"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_shop
-msgid "Sales Shop"
-msgstr "販売店"
-
-#. module: sale_stock
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
-msgstr "これは受注オーダーが配達されたことを示します。この項目はスケジューラが起動された後にのみ更新されます。"
-
-#. module: sale_stock
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "属性"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_mrp_properties:0
-msgid "Product properties on order lines"
-msgstr "受注明細上の品目属性"
-
-#. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr "受注オーダー基準、または出荷基準の請求書を生成します。"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "受注統計"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_company
-msgid "Companies"
-msgstr "会社"
-
-#. module: sale_stock
-#: help:sale.config.settings,task_work:0
-msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
-"                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"プロジェクト管理のために定義されたタスクの項目を特定の日付とユーザーのタイムシートに転送して、調達明細からプロジェクトタスクを自動的に作成します。\n"
-"                project_timesheetとproject_mrpモジュールがインストールされます。"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_sale_delivery_address:0
-msgid ""
-"Allows you to specify different delivery and invoice addresses on a sales "
-"order."
-msgstr "受注とは別のアドレスを配送と請求に指定できます。"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleprocurement0
-msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr "各受注オーダー行と各構成部品のための１つの調達オーダー"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_assign0
-msgid "Assign"
-msgstr "割当"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:618
-#, python-format
-msgid "Not enough stock ! : "
-msgstr "在庫不足です： "
-
-#. module: sale_stock
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,default_picking_policy:0
-msgid ""
-"Sales order by default will be configured to deliver all products at once "
-"instead of delivering each product when it is available. This may have an "
-"impact on the shipping price."
-msgstr ""
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "請求書"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-msgid "Cancel"
-msgstr "キャンセル"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
-#, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it.\n"
-"To do so, you must first cancel related picking for delivery orders."
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "パッケージ数"
-
-#. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "配達済"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
-msgid "Create Invoice"
-msgstr "請求書作成"
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "タスクの活動に基づいて請求書を準備"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "受注前払請求書"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:523
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr "最初にこの受注オーダー行に付随する在庫移動をキャンセルする必要があります。"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:561
-#, python-format
-msgid "(n/a)"
-msgstr "（利用不可）"
-
-#. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "インコターム"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:522
-#, python-format
-msgid "Cannot cancel sales order line!"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "割当のキャンセル"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "出荷またはオーダー数量基準"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "全ての製品を一緒に配達"
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "関連する集荷"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of delivery orders that has been generated for this sales "
-"order."
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "受注オーダー依頼"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "配達オーダーの作成"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "例外を無視"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:614
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"受注の計画量は %.2f %s。しかし %.2f %s のみ利用可能です。\n"
-"実在庫は %.2f %s です（予約を除く）。"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Recreate Delivery Order"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,group_multiple_shops:0
-msgid "This allows to configure and use multiple shops."
-msgstr "複数店舗を設定して使用することができます。"
-
-#. module: sale_stock
-#: field:sale.order,picked_rate:0
-msgid "Picked"
-msgstr "集荷"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "利用可能になった時に各製品を配達"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_packing0
-msgid "Create Pick List"
-msgstr "集荷リストの作成"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_deliver0
-msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
-msgstr "製造品場所の設定によって、製造領域と顧客の間の移動は、手動または自動的な配達オーダーを通して実施されます。"
+#~ msgid "Picked"
+#~ msgstr "集荷"

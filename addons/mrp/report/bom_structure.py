@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from openerp.osv import osv
 from openerp.report import report_sxw
 
@@ -28,8 +27,7 @@ class bom_structure(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(bom_structure, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
-            'time': time,
-            'get_children':self.get_children,
+            'get_children': self.get_children,
         })
 
     def get_children(self, object, level=0):
@@ -38,18 +36,17 @@ class bom_structure(report_sxw.rml_parse):
         def _get_rec(object, level):
             for l in object:
                 res = {}
-                res['name'] = l.name
                 res['pname'] = l.product_id.name
                 res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
                 res['uname'] = l.product_uom.name
-                res['code'] = l.code
                 res['level'] = level
+                res['code'] = l.bom_id.code
                 result.append(res)
-                if l.child_complete_ids:
+                if l.child_line_ids:
                     if level<6:
                         level += 1
-                    _get_rec(l.child_complete_ids,level)
+                    _get_rec(l.child_line_ids,level)
                     if level>0 and level<6:
                         level -= 1
             return result
@@ -59,10 +56,10 @@ class bom_structure(report_sxw.rml_parse):
         return children
 
 
-class report_lunchorder(osv.AbstractModel):
+class report_mrpbomstructure(osv.AbstractModel):
     _name = 'report.mrp.report_mrpbomstructure'
     _inherit = 'report.abstract_report'
-    _template = 'mpr.report_mrpbomstructure'
+    _template = 'mrp.report_mrpbomstructure'
     _wrapped_report_class = bom_structure
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,39 +1,27 @@
 # Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-27 03:05+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:14+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_payroll_account
-#: field:hr.salary.rule,account_credit:0
-msgid "Credit Account"
-msgstr "贷方科目"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:104
-#, python-format
-msgid "Payslip of %s"
-msgstr "%s 的工资条"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr "费用账簿 \"%s\"未配置正确的贷方科目"
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "会计"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -41,31 +29,11 @@ msgid "Accounting Entry"
 msgstr "会计凭证"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr "费用账簿 \"%s\"未配置正确的借方科目"
-
-#. module: hr_payroll_account
-#: field:hr.salary.rule,account_tax_id:0
-msgid "Tax Code"
-msgstr "税代码"
-
-#. module: hr_payroll_account
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "强制会计期间"
-
-#. module: hr_payroll_account
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
-msgstr "为空使用这个期间审核(工资单)日期"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr "合同"
+msgid "Adjustment Entry"
+msgstr "调整凭证"
 
 #. module: hr_payroll_account
 #: field:hr.contract,analytic_account_id:0
@@ -74,14 +42,31 @@ msgid "Analytic Account"
 msgstr "辅助核算项"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
+#, python-format
+msgid "Configuration Error!"
+msgstr "设置错误!"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "合同"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "贷方科目"
+
+#. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
 msgid "Debit Account"
 msgstr "借方科目"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr "工资条批处理"
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "强制会计期间"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -89,22 +74,9 @@ msgid "Generate payslips for all selected employees"
 msgstr "为已选的所有员工生成工资单"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
-#, python-format
-msgid "Configuration Error!"
-msgstr "设置错误!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll_account
-#: view:hr.contract:0
-#: view:hr.salary.rule:0
-msgid "Accounting"
-msgstr "会计"
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "为空使用这个期间审核(工资单)日期"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -112,11 +84,15 @@ msgid "Pay Slip"
 msgstr "工资单"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:159
-#: code:addons/hr_payroll_account/hr_payroll_account.py:175
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "工资条批处理"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
 #, python-format
-msgid "Adjustment Entry"
-msgstr "调整凭证"
+msgid "Payslip of %s"
+msgstr "%s 的工资条"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
@@ -125,164 +101,21 @@ msgstr "调整凭证"
 msgid "Salary Journal"
 msgstr "工资账簿"
 
-#~ msgid "Analytic Account for Salary Analysis"
-#~ msgstr "薪酬分析的辅助核算项"
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "税代码"
 
-#~ msgid "Period"
-#~ msgstr "期间"
-
-#~ msgid "Employee"
-#~ msgstr "员工"
-
-#~ msgid "Contribution Register Line"
-#~ msgstr "捐款记录明细"
-
-#~ msgid "Contribution Register"
-#~ msgstr "捐款记录"
-
-#~ msgid "Accounting Informations"
-#~ msgstr "会计信息"
-
-#~ msgid "Description"
-#~ msgstr "描述"
-
-#~ msgid "Other Informations"
-#~ msgstr "其它信息"
-
-#~ msgid "Salary Account"
-#~ msgstr "薪酬科目"
-
-#~ msgid "Payroll Register"
-#~ msgstr "工资表记录"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:150
 #, python-format
-#~ msgid "Please Confirm all Expense Invoice appear for Reimbursement"
-#~ msgstr "请确认所有报销的费用发票"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "费用账簿 \"%s\"未配置正确的贷方科目"
 
-#~ msgid "Account"
-#~ msgstr "科目"
-
-#~ msgid "Human Resource Payroll Accounting"
-#~ msgstr "人力资源工资表会计部分"
-
-#~ msgid "Payment Lines"
-#~ msgstr "付款明细"
-
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:166
 #, python-format
-#~ msgid "Please define fiscal year for perticular contract"
-#~ msgstr "请定义财务年的会计期间"
-
-#~ msgid "Account Lines"
-#~ msgstr "明细"
-
-#~ msgid "Name"
-#~ msgstr "名称"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "警告！"
-
-#~ msgid "Bank Advice Note"
-#~ msgstr "银行通知单备注"
-
-#~ msgid "Expense Entries"
-#~ msgstr "费用分录"
-
-#~ msgid "Sequence"
-#~ msgstr "序列"
-
-#~ msgid "General Account"
-#~ msgstr "一般科目"
-
-#~ msgid "Total By Employee"
-#~ msgstr "员工合计"
-
-#~ msgid "Accounting Details"
-#~ msgstr "会计细节"
-
-#~ msgid "Total By Company"
-#~ msgstr "公司合计"
-
-#~ msgid "Salary Structure"
-#~ msgstr "薪酬结构"
-
-#~ msgid "Year"
-#~ msgstr "年"
-
-#~ msgid "Bank Journal"
-#~ msgstr "银行日记账"
-
-#~ msgid "Expense Journal"
-#~ msgstr "费用账簿"
-
-#~ msgid "Accounting Lines"
-#~ msgstr "明细"
-
-#~ msgid "Expense account when Salary Expense will be recorded"
-#~ msgstr "薪酬将记录在费用科目"
-
-#~ msgid "Account Move Link to Pay Slip"
-#~ msgstr "分录链接到工资单"
-
-#~ msgid "Bank Account"
-#~ msgstr "银行科目"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "错误！您不能创建循环的员工等级。"
-
-#~ msgid "Accounting vouchers"
-#~ msgstr "会计原始凭证"
-
-#~ msgid ""
-#~ "Generic Payroll system Integrated with Accountings\n"
-#~ "    * Expense Encoding\n"
-#~ "    * Payment Encoding\n"
-#~ "    * Company Contribution Management\n"
-#~ "    "
-#~ msgstr ""
-#~ "通用工资表系统整合会计\n"
-#~ "    * 费用编码\n"
-#~ "    * 付款编码\n"
-#~ "    * 公司捐款管理\n"
-#~ "    "
-
-#~ msgid "Accounting Vouchers"
-#~ msgstr "会计原始凭证"
-
-#~ msgid "Payslip Line"
-#~ msgstr "工资单明细"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "错误！您不用为他选择一部门因为他是总经理(CEO)。"
-
-#~ msgid "Employee Payable Account"
-#~ msgstr "员工应付科目"
-
-#~ msgid "Leave Type"
-#~ msgstr "准假类型"
-
-#~ msgid "Employee Account"
-#~ msgstr "员工科目"
-
-#, python-format
-#~ msgid "Fiscal Year is not defined for slip date %s"
-#~ msgstr "这工资单日期  %s 财务年度没定义"
-
-#, python-format
-#~ msgid "Please Configure Partners Receivable Account!!"
-#~ msgstr "请定义业务伙伴应收款科目！"
-
-#, python-format
-#~ msgid "Please Configure Partners Payable Account!!"
-#~ msgstr "请定义业务伙伴应付款科目！"
-
-#, python-format
-#~ msgid "Period is not defined for slip date %s"
-#~ msgstr "这工资单日期  %s 会计期间没定义。"
-
-#~ msgid "Payslip 'Date From' must be before 'Date To'."
-#~ msgstr "工资条的开始日期必须在结束日期之前"
-
-#~ msgid "Error! contract start-date must be lower then contract end-date."
-#~ msgstr "错误！合同开始日期必须小于结束日期。"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "费用账簿 \"%s\"未配置正确的借方科目"

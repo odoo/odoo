@@ -1,114 +1,89 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-04 20:16+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-11-15 15:12+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:50+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-16 06:19+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: auth_signup
-#: field:res.partner,signup_type:0
-msgid "Signup Token Type"
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to "
+"\"${object.company_id.name}\" in order to get access to your documents in "
+"Odoo.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 msgstr ""
-
-#. module: auth_signup
-#: field:base.config.settings,auth_signup_uninvited:0
-msgid "Allow external users to sign up"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
-#, python-format
-msgid "Confirm Password"
-msgstr "Parolayı Doğrula"
-
-#. module: auth_signup
-#: help:base.config.settings,auth_signup_uninvited:0
-msgid "If unchecked, only invited users may sign up."
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model,name:auth_signup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:266
-#, python-format
-msgid "Cannot send email: user has no email address."
-msgstr "Eposta gönderilemiyor: kullanıcının eposta adresi yok."
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
-#, python-format
-msgid "Reset password"
-msgstr "Parolayı sıfırla"
-
-#. module: auth_signup
-#: field:base.config.settings,auth_signup_template_user_id:0
-msgid "Template user for new users created through signup"
-msgstr ""
-
-#. module: auth_signup
-#: model:email.template,subject:auth_signup.reset_password_email
-msgid "Password reset"
-msgstr "Parola sıfırlandı"
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
-#, python-format
-msgid "Please enter a password and confirm it."
-msgstr ""
-
-#. module: auth_signup
-#: view:res.users:0
-msgid "Send an email to the user to (re)set their password."
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
-#, python-format
-msgid "Sign Up"
-msgstr "Üye Ol"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "New"
-msgstr "Yeni"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:258
-#, python-format
-msgid "Mail sent to:"
-msgstr "Eposta buna gönderildi:"
-
-#. module: auth_signup
-#: field:res.users,state:0
-msgid "Status"
-msgstr "Durumu"
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Odoo'da belgelerinize erişim izni almak için "
+"\"${object.company_id.name}\" bağlantısına bağlanmak için davet edildiniz.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Davet kabul etmek için aşağıdaki bağlantıya "
+"tıklayın:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Bu daveti kabul "
+"edin \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Teşekkürler,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
 msgid ""
 "\n"
-"<p>A password reset was requested for the OpenERP account linked to this "
+"<p>A password reset was requested for the Odoo account linked to this "
 "email.</p>\n"
 "\n"
 "<p>You may change your password by following <a "
@@ -116,18 +91,163 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Bu epostaya bağlantılı Odoo hesabı için bir parola sıfırlaması "
+"istendi.</p>\n"
+"\n"
+"<p>Parolanızı aşağıdaki bu bağlantıdan <a "
+"href=\"${object.signup_url}\">değiştirebilirsiniz</a>.</p>\n"
+"\n"
+"<p>Not:Bunu düşünmüyorsanız, bu e-postayı güvenle yok sayabilirsiniz.</p>"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on Odoo"
+msgstr "${object.company_id.name} Odoo'ya bağlanmak için davet"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr ""
+"Bu kullanıcı için bir parola sıfırlanması istendi. Aşağıdaki bağlantıyı "
+"içeren bir eposta gönderilmiştir."
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr "Etkinleştirildi"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_uninvited:0
+msgid "Allow external users to sign up"
+msgstr "Dış kullanıcıların kayıt olmasına izin ver"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:78
 #, python-format
-msgid "Please enter a name."
-msgstr "Lütfen bir isim girin"
+msgid "An email has been sent with credentials to reset your password"
+msgstr ""
+"Parolanızı sıfırlamak için kimlik bilgileri içerenbir e-posta gönderildi"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_users
-msgid "Users"
-msgstr "Kullanıcılar"
+#: view:res.users:auth_signup.res_users_form_view
+msgid ""
+"An invitation email containing the following subscription link has been sent:"
+msgstr ""
+"Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderilmiştir:"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:125
+#, python-format
+msgid "Authentification Failed."
+msgstr "Kimlik Doğrulama Hatalı."
+
+#. module: auth_signup
+#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.signup
+msgid "Back to Login"
+msgstr "Girişe Dön"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:295
+#, python-format
+msgid "Cannot send email: user has no email address."
+msgstr "Eposta gönderilemiyor: kullanıcının eposta adresi yok."
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "Confirm Password"
+msgstr "Parolayı Doğrula"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:80
+#, python-format
+msgid "Could not reset your password"
+msgstr "Parolanız sıfırlanamıyor"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_reset_password:0
+msgid "Enable password reset from Login page"
+msgstr "Kullanıcı girişi sayfasından parolanız sıfırlanamıyor"
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_uninvited:0
+msgid "If unchecked, only invited users may sign up."
+msgstr "İşaretli değilse, yalnızca davetli kullanıcılar kayıt olabilir."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:109
+#, python-format
+msgid "Invalid signup token"
+msgstr "Geçersiz kayıt belirteci"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr "Hiç bağlanmadı"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "Password"
+msgstr "Parola"
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr "Parola sıfırlandı"
+
+#. module: auth_signup
+#: view:website:web.login
+msgid "Reset Password"
+msgstr "Parolayı Sıfırla"
+
+#. module: auth_signup
+#: view:website:auth_signup.reset_password
+msgid "Reset password"
+msgstr "Parolayı sıfırla"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid "Send Reset Password Instructions"
+msgstr "Parola Sıfırlama Yönergelerini gönder"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid "Send an Invitation Email"
+msgstr "Bir Davet Epostası gönder"
+
+#. module: auth_signup
+#: view:website:auth_signup.signup
+#: view:website:web.login
+msgid "Sign up"
+msgstr "Kayıt ol"
+
+#. module: auth_signup
+#: field:res.partner,signup_expiration:0
+msgid "Signup Expiration"
+msgstr "Kayıt Olma Süresi Aşımı"
+
+#. module: auth_signup
+#: field:res.partner,signup_token:0
+msgid "Signup Token"
+msgstr "Kayıt Olma Belirteçi"
+
+#. module: auth_signup
+#: field:res.partner,signup_type:0
+msgid "Signup Token Type"
+msgstr "Kayıt Olma Belirteçi Türü"
+
+#. module: auth_signup
+#: field:res.partner,signup_valid:0
+msgid "Signup Token is Valid"
+msgstr "Kayıt Olma Belirteçi Geçerli"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
@@ -135,145 +255,40 @@ msgid "Signup URL"
 msgstr "Kayıt URL"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
-#, python-format
-msgid "Please enter a username."
-msgstr "Lütfen bir kullanıcı adı girin."
+#: field:res.users,state:0
+msgid "Status"
+msgstr "Durumu"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Active"
-msgstr "Etkin"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:270
-#, python-format
-msgid ""
-"Cannot send email: no outgoing email server configured.\n"
-"You can configure it under Settings/General Settings."
+#: field:base.config.settings,auth_signup_template_user_id:0
+msgid "Template user for new users created through signup"
 msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
-#, python-format
-msgid "Username"
-msgstr "Kullanıcı Adı"
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:8
-#, python-format
-msgid "Name"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:173
-#, python-format
-msgid "Please enter a username or email address."
-msgstr ""
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
-#, python-format
-msgid "Username (Email)"
-msgstr ""
-
-#. module: auth_signup
-#: field:res.partner,signup_expiration:0
-msgid "Signup Expiration"
-msgstr ""
+"Yeni kullanıcılar için kayıt olma içinden oluşturulan şablon kullanıcı"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
+"Bu, kullanıcıların Giriş sayfasından bir parola sıfırlamasını başlatmasını "
+"sağlar"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
-#, python-format
-msgid "Log in"
-msgstr ""
+#: model:ir.model,name:auth_signup.model_res_users
+msgid "Users"
+msgstr "Kullanıcılar"
 
 #. module: auth_signup
-#: field:res.partner,signup_valid:0
-msgid "Signup Token is Valid"
-msgstr ""
+#: view:website:auth_signup.fields
+#: view:website:auth_signup.reset_password
+msgid "Your Email"
+msgstr "Epostanız"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
-#: code:addons/auth_signup/static/src/js/auth_signup.js:123
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
-#: code:addons/auth_signup/static/src/js/auth_signup.js:173
-#, python-format
-msgid "Login"
-msgstr ""
+#: view:website:auth_signup.fields
+msgid "Your Name"
+msgstr "Adınız"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:97
-#, python-format
-msgid "Invalid signup token"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:123
-#, python-format
-msgid "Passwords do not match; please retype them."
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
-#, python-format
-msgid "No database selected !"
-msgstr ""
-
-#. module: auth_signup
-#: view:res.users:0
-msgid "Reset Password"
-msgstr "Parolayı Sıfırla"
-
-#. module: auth_signup
-#: field:base.config.settings,auth_signup_reset_password:0
-msgid "Enable password reset from Login page"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
-#, python-format
-msgid "Back to Login"
-msgstr ""
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
-#, python-format
-msgid "Sign up"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_partner
-msgid "Partner"
-msgstr ""
-
-#. module: auth_signup
-#: field:res.partner,signup_token:0
-msgid "Signup Token"
-msgstr ""
+#: view:website:auth_signup.fields
+msgid "e.g. John Doe"
+msgstr "Örn. John Doe"

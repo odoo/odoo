@@ -1,65 +1,32 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 17:36+0000\n"
-"Last-Translator: Nikola Stojanoski <nstojanoski@vion.mk>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-28 10:56+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:48+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_month
-msgid "Print Monthly Attendance Report"
-msgstr "Испечатете Месечен Извештај за Присутноста"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Пребарајте во апликацијата за Присутност"
-
-#. module: hr_attendance
-#: field:hr.employee,last_sign:0
-msgid "Last Sign"
-msgstr "Последен знак"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Присутност"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:34
-#, python-format
-msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr "Последна најава: %s,<br />%s.<br />Кликнете за да се одјавите."
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
-"Грешка ! Најавата (соодветно Одјавата) мора да следи после Одјавата "
-"(соодветно Најавата)"
+"(*) Приказот на негативен параметар значи дека вработениот одработил повеќе "
+"(во смисла на поминато време на работното место) од задолжителното."
 
 #. module: hr_attendance
-#: help:hr.action.reason,name:0
-msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Специфицирајте ја причината за Најавата/Одјавата."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
@@ -67,35 +34,44 @@ msgstr ""
 "(во смисла на поминато време на работното место) од задолжителното."
 
 #. module: hr_attendance
-#: view:hr.attendance.month:0
-msgid "Print Attendance Report Monthly"
-msgstr "Испечатете Извештај за Присутноста по Месец"
+#: selection:hr.employee,state:0
+msgid "Absent"
+msgstr "Отсутен"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:120
-#, python-format
-msgid "Attendances by Week"
-msgstr "Присуства по недела"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Акција"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Одјава"
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Причина за Акцијата"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr "Доцнење"
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Тип на Акција"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Групирај По..."
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
+msgstr "Распределува група за присуство на сите корисници."
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Октомври"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Analysis Information"
+msgstr "Аналитички Информации"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: view:hr.attendance:hr_attendance.view_hr_attendance_graph
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Присутност"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
@@ -103,56 +79,32 @@ msgid "Attendance Access"
 msgstr "Пристап за присутност"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign Out"
-msgstr "Одјава"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
+msgid "Attendance Analysis"
+msgstr "Анализа на присутност"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records are found for your selection!"
-msgstr "Не се пронајдени записи за вашиот избор!"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
+msgid "Attendance Error Report"
+msgstr "Извештај за грешки во  присутноста"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Испечати"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Attendance Errors:"
+msgstr "Грешки од присутност:"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
-#: model:ir.model,name:hr_attendance.model_hr_employee
-msgid "Employee"
-msgstr "Вработен"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Причини за Присутноста"
 
 #. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Месец"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr "Забележан Датум"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign In"
-msgstr "Најава"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Почетен датум"
+#: view:hr.action.reason:hr_attendance.view_attendance_reason
+msgid "Attendance reasons"
+msgstr "Причини за Присутноста"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -162,87 +114,40 @@ msgid "Attendances"
 msgstr "Редовност"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Март"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "По овој датум, евидентирантие грешки ќе се сметаат за доброволни"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "Август"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:35
 #, python-format
-msgid "Warning"
-msgstr "Предупредување"
+msgid "Click to Sign In at %s."
+msgstr "Кликнете за да се најавите на %s."
 
 #. module: hr_attendance
-#: help:hr.config.settings,group_hr_attendance:0
-msgid "Allocates attendance group to all users."
-msgstr "Распределува група за присуство на сите корисници."
+#: field:hr.action.reason,create_uid:0
+#: field:hr.attendance,create_uid:0
+#: field:hr.attendance.error,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Моја Редовност"
+#: field:hr.action.reason,create_date:0
+#: field:hr.attendance,create_date:0
+#: field:hr.attendance.error,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Јуни"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:190
-#, python-format
-msgid "Attendances by Month"
-msgstr "Присуства по месеци"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Редовност по Недела"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Испечати го Извештајот за грешки во Присутноста"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Вкупен Период:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Причина"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Испечатете ги грешките во Извештајот за Присутност"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-"Функционалноста за следење на работното време има за цел да раководи со "
-"присутноста на вработените. Дополнителни можете да ја поврзете оваа "
-"функционалност со надворешен уред на евиденција."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Денес"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Датум на потпис"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Current Month"
+msgstr "Тековен месец"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -250,135 +155,94 @@ msgid "Date"
 msgstr "Датум"
 
 #. module: hr_attendance
-#: field:hr.config.settings,group_hr_attendance:0
-msgid "Track attendances for all employees"
-msgstr "Следи ги присуствата за сите вработени"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Recorded"
+msgstr "Забележан Датум"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Јули"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Signed"
+msgstr "Датум на потпис"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Извештај за грешки во  присутноста"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Ден"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Присутен"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Отсутен"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "February"
-msgstr "Февруари"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Причина за Акцијата"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "Година"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Минимум доцнење"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Присутност на Вработениот"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
+#: view:hr.action.reason:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
 msgstr "Дефинирајте причини за присутност (Службено, Одмор итн.)"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign in"
-msgstr "Најава"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Delay"
+msgstr "Доцнење"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Аналитички Информации"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: field:hr.attendance,employee_id:0
+#: model:ir.model,name:hr_attendance.model_hr_employee
+msgid "Employee"
+msgstr "Вработен"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-msgid "Attendances By Month"
-msgstr "Присутност по Месец"
+#: view:hr.attendance:hr_attendance.view_attendance_form
+#: view:hr.attendance:hr_attendance.view_attendance_tree
+#: view:hr.attendance:hr_attendance.view_attendance_who
+msgid "Employee attendances"
+msgstr "Присутност на Вработениот"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Јануари"
+#: field:hr.attendance.error,end_date:0
+msgid "Ending Date"
+msgstr "Заклучно Со"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+"Грешка ! Најавата (соодветно Одјавата) мора да следи после Одјавата "
+"(соодветно Најавата)"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Group By"
+msgstr "Групирање според"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Hr Attendance Search"
+msgstr "Пребарајте во апликацијата за Присутност"
+
+#. module: hr_attendance
+#: field:hr.action.reason,id:0
+#: field:hr.attendance,id:0
+#: field:hr.attendance.error,id:0
+#: field:report.hr_attendance.report_attendanceerrors,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_attendance
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr "Последен знак"
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_uid:0
+#: field:hr.attendance,write_uid:0
+#: field:hr.attendance.error,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: hr_attendance
+#: field:hr.action.reason,write_date:0
+#: field:hr.attendance,write_date:0
+#: field:hr.attendance.error,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:33
 #, python-format
-msgid "No Data Available !"
-msgstr "Нема достапни податоци !"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "Април"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Испечати го Неделниот извештај за редовност"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Грешки во Присутноста"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Акција"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Евиденција на Работното Време"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Причини за Присутноста"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "Ноември"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "По овој датум, евидентирантие грешки ќе се сметаат за доброволни"
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr "Последна најава: %s,<br />%s.<br />Кликнете за да се одјавите."
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -386,90 +250,87 @@ msgid "Max. Delay (Min)"
 msgstr "Максимум Доцнење (Мин.)"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Заклучно Со"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Min Delay"
+msgstr "Минимум доцнење"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "Септември"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Month"
+msgstr "Месец"
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Причини за Присутноста"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "My Attendance"
+msgstr "Моја Редовност"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Испечатете Неделен Извештај за Присутноста"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr "hr.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:36
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid "Click to Sign In at %s."
-msgstr "Кликнете за да се најавите на %s."
+msgid "No Data Available!"
+msgstr "Не постојат информации!"
 
 #. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Тип на Акција"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Мај"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the HR Manager to correct attendances."
-msgstr ""
-"Вие пробавте да %s со датум кој претходи на друг настан !\n"
-"Контактирајте го менаџерот за човечки ресурси за да ги корегирате "
-"присуствата."
+msgid "No records are found for your selection!"
+msgstr "Не се пронајдени записи за вашиот избор!"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Декември"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Cancel"
-msgstr "Откажи"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid "Operation"
 msgstr "Операција"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Приказот на негативен параметар значи дека вработениот одработил повеќе "
-"(во смисла на поминато време на работното место) од задолжителното."
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Присутен"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "or"
-msgstr "или"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print"
+msgstr "Испечати"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print Attendance Report Error"
+msgstr "Испечатете ги грешките во Извештајот за Присутност"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Испечати го Извештајот за грешки во Присутноста"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Причина"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign In"
+msgstr "Најава"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign Out"
+msgstr "Одјава"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Најава"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign out"
+msgstr "Одјава"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
@@ -479,143 +340,65 @@ msgstr ""
 "Ги специфицира причините за Најава/Одјава во случај на дополнително "
 "одрбаотени работни часови."
 
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Не се одјавивте правилно последниот пат кога го користевте системот. Ве "
-#~ "молиме внесете го датумот и времето на последната ваша одјава."
+#. module: hr_attendance
+#: help:hr.action.reason,name:0
+msgid "Specifies the reason for Signing In/Signing Out."
+msgstr "Специфицирајте ја причината за Најавата/Одјавата."
 
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+msgid "Starting Date"
+msgstr "Почетен датум"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using Odoo's web service features."
+msgstr ""
+"Функционалноста за следење на време има за цел да управува со присутноста на "
+"вработените од Влез/Излез акциите. Исто така можете да ја поврзете оваа "
+"функција со уред за работно време преку вебсервис можностите на Odoo."
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Евиденција на Работното Време"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Today"
+msgstr "Денес"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Total period"
+msgstr "Вкупен период"
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr "Следи ги присуствата за сите вработени"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "Времето на одјава мора да биде веќе завршен период"
+msgid "Warning"
+msgstr "Предупредување"
 
-#~ msgid "Ok"
-#~ msgstr "Во Ред"
+#. module: hr_attendance
+#: field:hr.attendance,worked_hours:0
+msgid "Worked Hours"
+msgstr "Работено часови"
 
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "Побарајте Влез/Излез"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Грешка! Не можете да одберете сектор во кој вработениот во исто време е и "
-#~ "Менаџер."
-
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "Најавата мора да биде извршена пред да пробате да се Одјавите"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "Корисничка Грешка"
-
-#~ msgid "Employee attendance"
-#~ msgstr "Присутност по вработен"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "Времето на Најава мора да е веќе поминат термин"
-
-#~ msgid "Employees name"
-#~ msgstr "Име на Вработениот"
-
-#, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Најава / Одјава"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "Најава Одјава"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "Одјавата мора да биде извршена по Најавата"
-
-#~ msgid "My Attendances"
-#~ msgstr "Моја Присутност"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Присутност на Вработените"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Грешка! Не можете да креирате рекурзивна хиерархија на вработените."
-
-#~ msgid "Empoyee ID"
-#~ msgstr "Идентификационен Број на Вработениот"
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "Доколку имате потреба, вашите вработени мануелно да се најавуваат и "
-#~ "одјавуваат по истекот на работното време, OpenERP Апликацијата за Човечки "
-#~ "Ресурси ви го овозможува истото со оваа алатка. Доколку за секој вработен "
-#~ "има креирано системски корисник (корисничко име), вработените можат "
-#~ "Најавата/Одјавата да ја извршат директно преку Бизнис Апликацијата."
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr "Одјавата мора да следи по Најавата"
-
-#~ msgid "Employee ID"
-#~ msgstr "Идентификационен Број на Вработениот"
-
-#~ msgid "Your last sign out"
-#~ msgstr "Вашата последна одјава"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Пробавте да %s со претходен датум поврзан со друг настан !\\n\n"
-#~ "Ве молиме контактирајте го администраторот за точниот преглед на присутноста."
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "Најва / Одјава. Во одделни фирми, вработените мора да се најават по "
-#~ "доаѓањето на работното место и да се одјават по заминувањето. Доколку за "
-#~ "секој вработен има креирано системски корисник (корисничко име), вработените "
-#~ "можат Најавата/Одјавата да ја извршат директно преку Бизнис Апликацијата."
-
-#~ msgid "Employee's Name"
-#~ msgstr "Име на Вработениот"
-
-#~ msgid "Action's type"
-#~ msgstr "Тип на Акција"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "Не се најавивте последниот пат. Ве молиме внесете го датумот и времето на "
-#~ "вашата последна најава."
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "Не се пронајдени записи во однос на вашата селекција!"
-
-#~ msgid "Current state"
-#~ msgstr "Тековен статус"
-
-#~ msgid "Your last sign in"
-#~ msgstr "Вашата последна најава"
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "hr.sign.in.out.ask"
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Грешка: По Најава мора да следи Одјава, и по Одјава мора да следи Најава"
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "Нема достапни податоци"
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""
+"Вие пробавте да %s со датум кој претходи на друг настан !\n"
+"Контактирајте го менаџерот за човечки ресурси за да ги корегирате "
+"присуствата."

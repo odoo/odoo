@@ -1,40 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * base_vat
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-02-02 18:32+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-06 14:32+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:02+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base_vat
-#: view:res.partner:0
+#: view:res.partner:base_vat.view_partner_form
 msgid "Check Validity"
 msgstr "Érvényesség ellenőrzés"
-
-#. module: base_vat
-#: code:addons/base_vat/base_vat.py:152
-#, python-format
-msgid ""
-"This VAT number does not seem to be valid.\n"
-"Note: the expected format is %s"
-msgstr ""
-"Az adószám nem érvényes.\n"
-"Az elvárt formátum a következő: %s"
-
-#. module: base_vat
-#: field:res.company,vat_check_vies:0
-msgid "VIES VAT Check"
-msgstr "VIES  - Közösségi adószám érvényesség ellenőrzés"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -42,23 +28,10 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:113
+#: code:addons/base_vat/base_vat.py:114
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
-
-#. module: base_vat
-#: help:res.partner,vat_subjected:0
-msgid ""
-"Check this box if the partner is subjected to the VAT. It will be used for "
-"the VAT legal statement."
-msgstr ""
-"Jelölje be, ha a partner ÁFA-alany. A rendszer az ÁFA-bevallásnál használja."
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Partner"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -71,44 +44,43 @@ msgstr ""
 "formátum ellenőrzés helyett. (http://ec.europa.eu/taxation_customs/vies/)"
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "ÁFA-bevallás"
-
-#~ msgid "Base VAT - To check VAT number validity"
-#~ msgstr "Adószám érvényességének ellenőrzése"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number.\n"
-#~ "\n"
-#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
-#~ "for\n"
-#~ "    checking the validity of VAT Number assigned to partners in European "
-#~ "countries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Partner adószámának engedélyezése. Az adószám érvényességének "
-#~ "ellenőrzése.\n"
-#~ "\n"
-#~ "    Ez a modul a http://sima-pc.com/nif.php oldalon lévő módszert követi az "
-#~ "európai\n"
-#~ "    partnerek adószáma érvényességének ellenőrzésére.\n"
-#~ "    "
-
+#: code:addons/base_vat/base_vat.py:130
 #, python-format
-#~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something like "
-#~ "this %s"
-#~ msgstr ""
-#~ "Az ÁFA nem tűnik helyesnek. Valami ehhez hasonlót kellett volna megadnia: %s"
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "A betöltött adószám [%s] érvénytelen !"
 
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
 #, python-format
-#~ msgid "The VAT is invalid, It should begin with the country code"
-#~ msgstr ""
-#~ "A közösségi/nemzetközi adószám érvénytelen, az országkóddal kell kezdődnie!"
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+"Az adószám [%s] ehhez a partnerhez [%s] tartozik, de nem tűnik érvényesnek. "
+"\n"
+"Megjegyzés: a helyes formátum így néz ki %s"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+"At adószám [%s] ehhez a partnerhez [%s] vagy ne ment át a VIES közösségi "
+"adószám érvényesítésen vagy nem a megfelelő formátumú %s."
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES  - Közösségi adószám érvényesség ellenőrzés"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "pl.: BE0477472701"

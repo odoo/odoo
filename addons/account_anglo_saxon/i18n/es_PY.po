@@ -1,26 +1,33 @@
 # Spanish (Paraguay) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2011-03-02 23:26+0000\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:23+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_category
-msgid "Product Category"
-msgstr "Categoría de Producto"
+#: help:account.invoice.line,move_id:0
+msgid ""
+"If the invoice was generated from a stock.picking, reference to the related "
+"move line."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -28,14 +35,14 @@ msgid "Invoice Line"
 msgstr "Línea factura"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_purchase_order
-msgid "Purchase Order"
-msgstr "Pedido de compra"
+#: field:account.invoice.line,move_id:0
+msgid "Move line"
+msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_product_template
-msgid "Product Template"
-msgstr "Plantilla de producto"
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Nota de Remisión"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -44,14 +51,19 @@ msgid "Price Difference Account"
 msgstr "Diferencia en el Valor de la Cuenta"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_account_invoice
-msgid "Invoice"
-msgstr "Factura"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Categoría de Producto"
 
 #. module: account_anglo_saxon
-#: model:ir.model,name:account_anglo_saxon.model_stock_picking
-msgid "Picking List"
-msgstr "Nota de Remisión"
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Pedido de compra"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,20 +74,3 @@ msgid ""
 msgstr ""
 "Esta cuenta se utilizará para valorar la diferencia de precios entre el "
 "precio de compra y precio de coste"
-
-#~ msgid " Accounting Property"
-#~ msgstr " Propriedad Contable"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "¡La referencia del pedido debe ser única!"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "¡Error! Tú no puedes crear categorías recursivas"
-
-#~ msgid "Stock Accounting for Anglo Saxon countries"
-#~ msgstr "Stock contable para países anglo-sajones"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Error: UdM por defecto y UdM de compra deben estar en la misma categoría."

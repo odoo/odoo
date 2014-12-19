@@ -1,20 +1,57 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * fetchmail
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-28 00:07+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-19 08:16+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:29+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-20 07:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "E-mailek száma"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "Bejövő levél lekérdező művelet"
+
+#. module: fetchmail
+#: field:fetchmail.server,active:0
+msgid "Active"
+msgstr "Aktív"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "Speciális"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr "Haladó beállítások"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: field:fetchmail.server,configuration:0
+msgid "Configuration"
+msgstr "Beállítás"
+
+#. module: fetchmail
+#: view:base.config.settings:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr "A bejövő e-mail átjáró beállítása"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -22,20 +59,10 @@ msgid "Confirmed"
 msgstr "Megerősítve"
 
 #. module: fetchmail
-#: field:fetchmail.server,server:0
-msgid "Server Name"
-msgstr "Kiszolgálónév"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP"
-msgstr "POP"
-
-#. module: fetchmail
-#: help:fetchmail.server,priority:0
-msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
-"Feldolgozás sorrendjének meghatározása, alacsonyabb érték magasabb prioritás"
+#: code:addons/fetchmail/fetchmail.py:163
+#, python-format
+msgid "Connection test failed!"
+msgstr "Csatlakozás teszt nem sikerült!"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -47,147 +74,32 @@ msgstr ""
 "(alapértelmezett: IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
-#: field:fetchmail.server,attach:0
-msgid "Keep Attachments"
-msgstr "Melléklet megtartása"
+#: field:fetchmail.server,object_id:0
+msgid "Create a New Record"
+msgstr "Új rekord létrehozása"
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
+#: field:fetchmail.config.settings,create_uid:0
+#: field:fetchmail.server,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
 
 #. module: fetchmail
-#: help:fetchmail.server,original:0
-msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
+#: field:fetchmail.config.settings,create_date:0
+#: field:fetchmail.server,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: fetchmail
+#: help:fetchmail.server,priority:0
+msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Megőrizze-e az összes e-mail példányát hivatkozási mellékletként a "
-"feldolgozott üzenetekhez. Ez általában megkétszerezi az üzenet adatbázis "
-"nagyságát."
+"Feldolgozás sorrendjének meghatározása, alacsonyabb érték magasabb prioritás"
 
 #. module: fetchmail
-#: view:base.config.settings:0
-msgid "Configure the incoming email gateway"
-msgstr "A bejövő e-mail átjáró beállítása"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Letöltés most"
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Incoming Mail Servers"
-msgstr "Bejövő e-mail  szerver"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr "Szerver típus IMAP."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "POP/IMAP Servers"
-msgstr "POP/IMAP Szerverek"
-
-#. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "Local Server"
-msgstr "Lokális szerver"
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "Status"
-msgstr "Állapot"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_server
-msgid "POP/IMAP Server"
-msgstr "POP/IMAP Szerver"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Reset Confirmation"
-msgstr "Beállítás alaphelyzetbe állítása"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "SSL"
-msgstr "SSL"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"
-
-#. module: fetchmail
-#: field:fetchmail.server,date:0
-msgid "Last Fetch Date"
-msgstr "Utolsó letöltés időpontja"
-
-#. module: fetchmail
-#: help:fetchmail.server,action_id:0
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-"Egyedi szerver művelet lehetőség az összes bejövő e-mail kapcsolásához,  az "
-"ezzel az e-maillel létrehozott vagy frissített rekordon."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "# of emails"
-msgstr "E-mailek száma"
-
-#. module: fetchmail
-#: field:fetchmail.server,original:0
-msgid "Keep Original"
-msgstr "Eredeti megtartása"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
-msgstr "Haladó beállítások"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-#: field:fetchmail.server,configuration:0
-msgid "Configuration"
-msgstr "Beállítás"
-
-#. module: fetchmail
-#: field:fetchmail.server,script:0
-msgid "Script"
-msgstr "Szkript"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Incoming Mail Server"
-msgstr "Bejövő levelek kiszolgálója"
-
-#. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:163
-#, python-format
-msgid "Connection test failed!"
-msgstr "Csatlakozás teszt nem sikerült!"
-
-#. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr "Felhasználónév"
-
-#. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
-msgstr "Levelező szerver hostneve vagy IP címe"
-
-#. module: fetchmail
-#: field:fetchmail.server,name:0
-msgid "Name"
-msgstr "Név"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
@@ -200,19 +112,84 @@ msgstr ""
 " %s."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Test & Confirm"
-msgstr "Test & Megerősítés"
+#: help:fetchmail.server,server:0
+msgid "Hostname or IP of the mail server"
+msgstr "Levelező szerver hostneve vagy IP címe"
 
 #. module: fetchmail
-#: field:fetchmail.server,action_id:0
-msgid "Server Action"
-msgstr "Szerverművelet"
+#: field:fetchmail.config.settings,id:0
+#: field:fetchmail.server,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP Szerver"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "Ha SSL szükséges."
 
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
 msgstr "Beérkező e-mail szerver"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "Bejövő levelek kiszolgálója"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "Bejövő e-mail  szerver"
+
+#. module: fetchmail
+#: field:fetchmail.server,attach:0
+msgid "Keep Attachments"
+msgstr "Melléklet megtartása"
+
+#. module: fetchmail
+#: field:fetchmail.server,original:0
+msgid "Keep Original"
+msgstr "Eredeti megtartása"
+
+#. module: fetchmail
+#: field:fetchmail.server,date:0
+msgid "Last Fetch Date"
+msgstr "Utolsó letöltés időpontja"
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_uid:0
+#: field:fetchmail.server,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: fetchmail
+#: field:fetchmail.config.settings,write_date:0
+#: field:fetchmail.server,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "Lokális szerver"
+
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "Bejelentkezési információk"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -221,23 +198,23 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Search Incoming Mail Servers"
-msgstr "Bejövő e-mail szerver keresése"
+#: field:fetchmail.server,name:0
+msgid "Name"
+msgstr "Név"
 
 #. module: fetchmail
-#: field:fetchmail.server,active:0
-msgid "Active"
-msgstr "Aktív"
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "Nincs megerősítve"
 
 #. module: fetchmail
-#: help:fetchmail.server,attach:0
+#: help:fetchmail.server,action_id:0
 msgid ""
-"Whether attachments should be downloaded. If not enabled, incoming emails "
-"will be stripped of any attachments before being processed"
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
 msgstr ""
-"Letöltse-e az e-mail mellékleteket. Ha nincs beállítva, a Beérkező "
-"levelekről le lesz választva a melléklet a műveletek elvégzése előtt."
+"Egyedi szerver művelet lehetőség az összes bejövő e-mail kapcsolásához,  az "
+"ezzel az e-maillel létrehozott vagy frissített rekordon."
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -245,24 +222,24 @@ msgid "Outgoing Mails"
 msgstr "Elküldött levelek"
 
 #. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "Szerver prioritás"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
-msgid "IMAP Server"
-msgstr "IMAP Szerver"
+msgid "POP Server"
+msgstr "POP Szerver"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "IMAP"
-msgstr "IMAP"
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAP Szerver"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type POP."
-msgstr "Szerver típusa: POP3"
+#: view:fetchmail.server:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP Szerverek"
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -270,39 +247,9 @@ msgid "Password"
 msgstr "Jelszó"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Actions to Perform on Incoming Mails"
-msgstr "Bejövő levél lekérdező művelet"
-
-#. module: fetchmail
-#: field:fetchmail.server,type:0
-msgid "Server Type"
-msgstr "Szervertípus"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Login Information"
-msgstr "Bejelentkezési információk"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server Information"
-msgstr "Szerver információk"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "If SSL required."
-msgstr "Ha SSL szükséges."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced"
-msgstr "Speciális"
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server & Login"
-msgstr "Szerver & Bejelentkezés"
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "Port"
 
 #. module: fetchmail
 #: help:fetchmail.server,object_id:0
@@ -317,120 +264,101 @@ msgstr ""
 "(dokumentumokhoz)"
 
 #. module: fetchmail
-#: field:fetchmail.server,object_id:0
-msgid "Create a New Record"
-msgstr "Új rekord létrehozása"
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "Beállítás alaphelyzetbe állítása"
 
 #. module: fetchmail
-#: selection:fetchmail.server,state:0
-msgid "Not Confirmed"
-msgstr "Nincs megerősítve"
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
 
 #. module: fetchmail
-#: selection:fetchmail.server,type:0
-msgid "POP Server"
-msgstr "POP Szerver"
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
-msgstr "Port"
+#: field:fetchmail.server,script:0
+msgid "Script"
+msgstr "Szkript"
 
-#~ msgid "User Name"
-#~ msgstr "Felhasználónév"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "Bejövő e-mail szerver keresése"
 
-#~ msgid "Confirm"
-#~ msgstr "Megerősítés"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "Szerver & Bejelentkezés"
 
-#~ msgid "Group By..."
-#~ msgstr "Csoportosítás..."
+#. module: fetchmail
+#: field:fetchmail.server,action_id:0
+msgid "Server Action"
+msgstr "Szerverművelet"
 
-#~ msgid "Type"
-#~ msgstr "Típus"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "Szerver információk"
 
-#~ msgid "State"
-#~ msgstr "Állapot"
+#. module: fetchmail
+#: field:fetchmail.server,server:0
+msgid "Server Name"
+msgstr "Kiszolgálónév"
 
-#~ msgid "Description"
-#~ msgstr "Leírás"
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "Szerver prioritás"
 
-#~ msgid "User"
-#~ msgstr "Felhasználó"
+#. module: fetchmail
+#: field:fetchmail.server,type:0
+msgid "Server Type"
+msgstr "Szervertípus"
 
-#~ msgid "Add Attachments ?"
-#~ msgstr "Valóban szeretne hozzáadni mellékleteket ?"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "Szerver típus IMAP."
 
-#~ msgid "Waiting for Verification"
-#~ msgstr "Ellenőrzésre várva"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "Szerver típusa: POP3"
 
-#~ msgid "Date"
-#~ msgstr "Dátum"
+#. module: fetchmail
+#: field:fetchmail.server,state:0
+msgid "Status"
+msgstr "Állapot"
 
-#~ msgid "Fetchmail Server"
-#~ msgstr "Fetchmail Szerver"
+#. module: fetchmail
+#: view:fetchmail.server:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "Test & Megerősítés"
 
-#~ msgid "Set to Draft"
-#~ msgstr "Beállítás tervezetnek"
+#. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "Felhasználónév"
 
-#~ msgid "Emails"
-#~ msgstr "E-mailek"
+#. module: fetchmail
+#: help:fetchmail.server,original:0
+msgid ""
+"Whether a full original copy of each email should be kept for referenceand "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
+"Megőrizze-e az összes e-mail példányát hivatkozási mellékletként a "
+"feldolgozott üzenetekhez. Ez általában megkétszerezi az üzenet adatbázis "
+"nagyságát."
 
-#~ msgid "Auto Reply?"
-#~ msgstr "Automata válasz küldése?"
-
-#~ msgid "Search Email Servers"
-#~ msgstr "E-mail szerverek keresése"
-
-#~ msgid "Mailgateway Message"
-#~ msgstr "Mailgateway üzenet"
-
-#~ msgid "Warning! Can't have duplicate server configuration!"
-#~ msgstr "Figyelem! Nem lehet párhuzamos szerver konfiguráció!"
-
-#~ msgid "Server"
-#~ msgstr "Szerver"
-
-#~ msgid "Model"
-#~ msgstr "Modell"
-
-#~ msgid "Process Parameter"
-#~ msgstr "Folyamat paraméter"
-
-#~ msgid "SSL ?"
-#~ msgstr "SSL ?"
-
-#~ msgid ""
-#~ "Fetchmail: \n"
-#~ "    * Fetch email from Pop / IMAP server\n"
-#~ "    * Support SSL\n"
-#~ "    * Integrated with all Modules\n"
-#~ "    * Automatic Email Receive\n"
-#~ "    * Email based Records (Add, Update)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Fetchmail: \n"
-#~ "    * Letölti a leveleket  Pop / IMAP szerverről\n"
-#~ "    * SSL-támogatés\n"
-#~ "    * Integrált az összes modillal\n"
-#~ "    * E-mailek automatikus fogadása\n"
-#~ "    * E-mailen alapuló rekordok (hozzáadás, frissítés)\n"
-#~ "    "
-
-#~ msgid "Email Server Action"
-#~ msgstr "E-mail Szerverművelet"
-
-#~ msgid "Fetches mail with attachments if true."
-#~ msgstr "Letölti a levelet mellékletekkel."
-
-#~ msgid "Mail Server"
-#~ msgstr "Levelezőszerver"
-
-#~ msgid "Fetch Emails"
-#~ msgstr "E-mailek letöltése"
-
-#~ msgid ""
-#~ "Warning! Record for selected Model can not be created\n"
-#~ "Please choose valid Model"
-#~ msgstr ""
-#~ "Figyelem! A rekord a kiválasztott modellel nem hozható létre\n"
-#~ "Kérjük, válasszon érvényes modellt"
+#. module: fetchmail
+#: help:fetchmail.server,attach:0
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr ""
+"Letöltse-e az e-mail mellékleteket. Ha nincs beállítva, a Beérkező "
+"levelekről le lesz választva a melléklet a műveletek elvégzése előtt."

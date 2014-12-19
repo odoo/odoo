@@ -7,30 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2014-03-31 21:25+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-20 19:29+0000\n"
+"Last-Translator: Fredrik Arvas <fredrik.arvas@smart-eu.org>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:52+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "or view"
-msgstr "eller visa"
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "Nothing to invoice, create"
-msgstr "Inget att fakturera, skapa"
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
-msgid "expenses"
-msgstr "utlägg"
+"X-Launchpad-Export-Date: 2014-10-21 07:52+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: analytic_contract_hr_expense
 #: model:ir.model,name:analytic_contract_hr_expense.model_account_analytic_account
@@ -38,16 +23,46 @@ msgid "Analytic Account"
 msgstr "Objektkonto"
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:144
+#: field:account.analytic.account,charge_expenses:0
+msgid "Charge Expenses"
+msgstr "Debitera utläggen"
+
+#. module: analytic_contract_hr_expense
+#: field:account.analytic.account,est_expenses:0
+msgid "Estimation of Expenses to Invoice"
+msgstr "Uppskattning av utlägg att fakturera"
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Expenses"
+msgstr "Utlägg"
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Expenses and Timesheet Invoicing Ratio"
+msgstr "Andel utlägg och tidrapport på faktura"
+
+#. module: analytic_contract_hr_expense
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:135
+#, python-format
+msgid "Expenses of %s"
+msgstr "Utlägg av %s"
+
+#. module: analytic_contract_hr_expense
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:143
 #, python-format
 msgid "Expenses to Invoice of %s"
 msgstr "Utlägg att fakturera av %s"
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:136
-#, python-format
-msgid "Expenses of %s"
-msgstr "Utlägg av %s"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "Nothing to invoice, create"
+msgstr "Inget att fakturera, skapa"
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "or view"
+msgstr "eller visa"
 
 #. module: analytic_contract_hr_expense
 #: field:account.analytic.account,expense_invoiced:0
@@ -57,16 +72,33 @@ msgid "unknown"
 msgstr "okänd"
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,est_expenses:0
-msgid "Estimation of Expenses to Invoice"
-msgstr "Uppskattning av utlägg att fakturera"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid ""
+"{'invisible': "
+"[('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
+msgstr ""
+"{'invisible': "
+"[('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,charge_expenses:0
-msgid "Charge Expenses"
-msgstr "Debitera utläggen"
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], "
+"'invisible':[('invoice_on_timesheets','=',False), "
+"('charge_expenses','=',False)]}"
+msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:0
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+msgstr ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "⇒ Invoice"
 msgstr "⇒ Faktura"

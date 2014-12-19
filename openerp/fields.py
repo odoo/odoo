@@ -21,15 +21,13 @@
 
 """ High-level objects for fields. """
 
-from copy import copy
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
+from types import NoneType
 import logging
 import pytz
 import xmlrpclib
-
-from types import NoneType
 
 from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -39,7 +37,6 @@ DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 _logger = logging.getLogger(__name__)
-
 
 class SpecialValue(object):
     """ Encapsulates a value in the cache in place of a normal value. """
@@ -68,18 +65,6 @@ def resolve_all_mro(cls, name, reverse=False):
     for klass in klasses:
         if name in klass.__dict__:
             yield klass.__dict__[name]
-
-
-def default_compute(field, value):
-    """ Return a compute function for the given default `value`; `value` is
-        either a constant, or a unary function returning the default value.
-    """
-    name = field.name
-    func = value if callable(value) else lambda rec: value
-    def compute(recs):
-        for rec in recs:
-            rec[name] = func(rec)
-    return compute
 
 
 class MetaField(type):
@@ -125,11 +110,23 @@ class Field(object):
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value
 
-        :param states: a dictionary mapping state values to lists of attribute-value
-            pairs; possible attributes are: 'readonly', 'required', 'invisible'
+        :param states: a dictionary mapping state values to lists of UI attribute-value
+            pairs; possible attributes are: 'readonly', 'required', 'invisible'.
+            Note: Any state-based condition requires the ``state`` field value to be
+            available on the client-side UI. This is typically done by including it in
+            the relevant views, possibly made invisible if not relevant for the
+            end-user.
 
         :param groups: comma-separated list of group xml ids (string); this
             restricts the field access to the users of the given groups only
+
+        :param bool copy: whether the field value should be copied when the record
+            is duplicated (default: ``True`` for normal fields, ``False`` for
+            ``one2many`` and computed fields, including property fields and
+            related fields)
+
+        :param string oldname: the previous name of this field, so that ORM can rename
+            it automatically at migration
 
         .. _field-computed:
 
@@ -205,9 +202,12 @@ class Field(object):
 
         :param related: sequence of field names
 
-        The value of some attributes from related fields are automatically taken
-        from the source field, when it makes sense. Examples are the attributes
-        `string` or `selection` on selection fields.
+        Some field attributes are automatically copied from the source field if
+        they are not redefined: `string`, `help`, `readonly`, `required` (only
+        if all fields in the sequence are required), `groups`, `digits`, `size`,
+        `translate`, `sanitize`, `selection`, `comodel_name`, `domain`,
+        `context`. All semantic-free attributes are copied from the source
+        field.
 
         By default, the values of related fields are not stored to the database.
         Add the attribute ``store=True`` to make it stored, just like computed
@@ -228,11 +228,12 @@ class Field(object):
 
         .. rubric:: Incremental definition
 
-        A field is defined as class attribute on a model class. If the model is
-        extended (see :class:`BaseModel`), one can also extend the field
-        definition by redefining a field with the same name and same type on the
-        subclass. In that case, the attributes of the field are taken from the
-        parent class and overridden by the ones given in subclasses.
+        A field is defined as class attribute on a model class. If the model
+        is extended (see :class:`~openerp.models.Model`), one can also extend
+        the field definition by redefining a field with the same name and same
+        type on the subclass. In that case, the attributes of the field are
+        taken from the parent class and overridden by the ones given in
+        subclasses.
 
         For instance, the second class below only adds a tooltip on the field
         ``state``::
@@ -252,26 +253,30 @@ class Field(object):
     _free_attrs = None          # list of semantic-free attribute names
 
     automatic = False           # whether the field is automatically created ("magic" field)
-    _origin = None              # the column or field interfaced by self, if any
+    inherited = False           # whether the field is inherited (_inherits)
+    column = None               # the column corresponding to the field
+    setup_done = False          # whether the field has been set up
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
     relational = False          # whether the field is a relational one
     model_name = None           # name of the model of this field
     comodel_name = None         # name of the model of values (if relational)
-    inverse_field = None        # inverse field (object), if it exists
+    inverse_fields = None       # list of inverse fields (objects)
 
     store = True                # whether the field is stored in database
     index = False               # whether the field is indexed in database
-    copyable = True             # whether the field is copied over by BaseModel.copy()
+    manual = False              # whether the field is a custom field
+    copy = True                 # whether the field is copied over by BaseModel.copy()
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
+    related_sudo = True         # whether related fields should be read as admin
     company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default value
+    default = None              # default(recs) returns the default value
 
     string = None               # field label
     help = None                 # field tooltip
@@ -279,18 +284,17 @@ class Field(object):
     required = False
     states = None
     groups = False              # csv list of group xml ids
+    change_default = None       # whether the field may trigger a "user-onchange"
+    deprecated = None           # whether the field is ... deprecated
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
         self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
         self._free_attrs = []
 
-    def copy(self, **kwargs):
-        """ make a copy of `self`, possibly modified with parameters `kwargs` """
-        field = copy(self)
-        field._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        field._free_attrs = list(self._free_attrs)
-        return field
+    def new(self, **kwargs):
+        """ Return a field of the same type as `self`, with its own parameters. """
+        return type(self)(**kwargs)
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of `self`. """
@@ -315,19 +319,67 @@ class Field(object):
         if attrs.get('related'):
             # by default, related fields are not stored
             attrs['store'] = attrs.get('store', False)
-        if 'copy' in attrs:
-            # attribute is copyable because there is also a copy() method
-            attrs['copyable'] = attrs.pop('copy')
+
+        # fix for function fields overridden by regular columns
+        if not isinstance(attrs.get('column'), (NoneType, fields.function)):
+            attrs.pop('store', None)
 
         for attr, value in attrs.iteritems():
             if not hasattr(self, attr):
                 self._free_attrs.append(attr)
             setattr(self, attr, value)
 
-        if not self.string:
+        if not self.string and not self.related:
+            # related fields get their string from their parent field
             self.string = name.replace('_', ' ').capitalize()
 
+        # determine self.default and cls._defaults in a consistent way
+        self._determine_default(cls, name)
+
         self.reset()
+
+    def _determine_default(self, cls, name):
+        """ Retrieve the default value for `self` in the hierarchy of `cls`, and
+            determine `self.default` and `cls._defaults` accordingly.
+        """
+        self.default = None
+
+        # traverse the class hierarchy upwards, and take the first field
+        # definition with a default or _defaults for self
+        for klass in cls.__mro__:
+            if name in klass.__dict__:
+                field = klass.__dict__[name]
+                if not isinstance(field, type(self)):
+                    # klass contains another value overridden by self
+                    return
+
+                if 'default' in field._attrs:
+                    # take the default in field, and adapt it for cls._defaults
+                    value = field._attrs['default']
+                    if callable(value):
+                        from openerp import api
+                        self.default = value
+                        cls._defaults[name] = api.model(
+                            lambda recs: self.convert_to_write(value(recs))
+                        )
+                    else:
+                        self.default = lambda recs: value
+                        cls._defaults[name] = value
+                    return
+
+            defaults = klass.__dict__.get('_defaults') or {}
+            if name in defaults:
+                # take the value from _defaults, and adapt it for self.default
+                value = defaults[name]
+                if callable(value):
+                    func = lambda recs: value(recs._model, recs._cr, recs._uid, recs._context)
+                else:
+                    func = lambda recs: value
+                self.default = lambda recs: self.convert_to_cache(
+                    func(recs), recs, validate=False,
+                )
+                cls._defaults[name] = value
+                return
 
     def __str__(self):
         return "%s.%s" % (self.model_name, self.name)
@@ -342,22 +394,22 @@ class Field(object):
 
     def reset(self):
         """ Prepare `self` for a new setup. """
-        self._setup_done = False
+        self.setup_done = False
         # self._triggers is a set of pairs (field, path) that represents the
         # computed fields that depend on `self`. When `self` is modified, it
         # invalidates the cache of each `field`, and registers the records to
         # recompute based on `path`. See method `modified` below for details.
         self._triggers = set()
-        self.inverse_field = None
+        self.inverse_fields = []
 
     def setup(self, env):
         """ Complete the setup of `self` (dependencies, recomputation triggers,
             and other properties). This method is idempotent: it has no effect
             if `self` has already been set up.
         """
-        if not self._setup_done:
-            self._setup_done = True
+        if not self.setup_done:
             self._setup(env)
+            self.setup_done = True
 
     def _setup(self, env):
         """ Do the actual setup of `self`. """
@@ -374,6 +426,7 @@ class Field(object):
         # put invalidation triggers on model dependencies
         for dep_model_name, field_names in model._depends.iteritems():
             dep_model = env[dep_model_name]
+            dep_model._setup_fields()
             for field_name in field_names:
                 field = dep_model._fields[field_name]
                 field._triggers.add((self, None))
@@ -388,12 +441,17 @@ class Field(object):
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
-        # determine the related field, and make sure it is set up
+        # determine the chain of fields, and make sure they are all set up
         recs = env[self.model_name]
-        for name in self.related[:-1]:
+        fields = []
+        for name in self.related:
+            recs._setup_fields()
+            field = recs._fields[name]
+            field.setup(env)
             recs = recs[name]
-        field = self.related_field = recs._fields[self.related[-1]]
-        field.setup(env)
+            fields.append(field)
+
+        self.related_field = field
 
         # check type consistency
         if self.type != field.type:
@@ -403,22 +461,40 @@ class Field(object):
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         self.inverse = self._inverse_related
-        self.search = self._search_related
+        if field._description_searchable:
+            # allow searching on self only if the related field is searchable
+            self.search = self._search_related
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
+        for attr in field._free_attrs:
+            if attr not in self._free_attrs:
+                self._free_attrs.append(attr)
+                setattr(self, attr, getattr(field, attr))
+
+        # special case for states: copy it only for inherited fields
+        if not self.states and self.inherited:
+            self.states = field.states
+
+        # special case for required: check if all fields are required
+        if not self.store and not self.required:
+            self.required = all(field.required for field in fields)
+
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
-        for record in records:
-            # bypass access rights check when traversing the related path
-            value = record.sudo() if record.id else record
-            # traverse the intermediate fields, and keep at most one record
+        # when related_sudo, bypass access rights checks when reading values
+        others = records.sudo() if self.related_sudo else records
+        for record, other in zip(records, others):
+            if not record.id:
+                # draft record, do not switch to another environment
+                other = record
+            # traverse the intermediate fields; follow the first record at each step
             for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+                other = other[name][:1]
+            record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """
@@ -435,10 +511,16 @@ class Field(object):
         return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
+    _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
+
+    @property
+    def base_field(self):
+        """ Return the base field of an inherited field, or `self`. """
+        return self.related_field if self.inherited else self
 
     #
     # Setup of non-related fields
@@ -450,10 +532,6 @@ class Field(object):
 
         def make_depends(deps):
             return tuple(deps(recs) if callable(deps) else deps)
-
-        # transform self.default into self.compute
-        if self.default is not None and self.compute is None:
-            self.compute = default_compute(self, self.default)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
@@ -479,6 +557,7 @@ class Field(object):
         env = model.env
         head, tail = path1[0], path1[1:]
 
+        model._setup_fields()
         if head == '*':
             # special case: add triggers on all fields of model (except self)
             fields = set(model._fields.itervalues()) - set([self])
@@ -496,10 +575,10 @@ class Field(object):
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
 
-            # add trigger on inverse field, too
-            if field.inverse_field:
-                #_logger.debug("Add trigger on %s to recompute %s", field.inverse_field, self)
-                field.inverse_field._triggers.add((self, '.'.join(path0 + [head])))
+            # add trigger on inverse fields, too
+            for invf in field.inverse_fields:
+                #_logger.debug("Add trigger on %s to recompute %s", invf, self)
+                invf._triggers.add((self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
@@ -519,23 +598,18 @@ class Field(object):
     def get_description(self, env):
         """ Return a dictionary that describes the field `self`. """
         desc = {'type': self.type}
-        # determine 'store'
-        if self.store:
-            # if the corresponding column is a function field, check the column
-            column = env[self.model_name]._columns.get(self.name)
-            desc['store'] = bool(getattr(column, 'store', True))
-        else:
-            desc['store'] = False
-        # determine other attributes
         for attr, prop in self.description_attrs:
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
-            if value:
+            if value is not None:
                 desc[attr] = value
+
         return desc
 
     # properties used by get_description()
+    _description_store = property(attrgetter('store'))
+    _description_manual = property(attrgetter('manual'))
     _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
@@ -543,10 +617,21 @@ class Field(object):
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
+    _description_change_default = property(attrgetter('change_default'))
+    _description_deprecated = property(attrgetter('deprecated'))
+
+    @property
+    def _description_searchable(self):
+        return bool(self.store or self.search or (self.column and self.column._fnct_search))
+
+    @property
+    def _description_sortable(self):
+        return self.store or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
-            name = "%s,%s" % (self.model_name, self.name)
+            field = self.base_field
+            name = "%s,%s" % (field.model_name, field.name)
             trans = env['ir.translation']._get_source(name, 'field', env.lang)
             return trans or self.string
         return self.string
@@ -565,11 +650,9 @@ class Field(object):
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
-        assert self.store
-        if self._origin:
-            assert isinstance(self._origin, fields._column)
-            return self._origin
+        assert self.store or self.column
 
+        # determine column parameters
         _logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
@@ -581,19 +664,28 @@ class Field(object):
             # company-dependent fields are mapped to former property fields
             args['type'] = self.type
             args['relation'] = self.comodel_name
-            return fields.property(**args)
+            self.column = fields.property(**args)
+        elif self.column:
+            # let the column provide a valid column for the given parameters
+            self.column = self.column.new(**args)
+        else:
+            # create a fresh new column of the right type
+            self.column = getattr(fields, self.type)(**args)
 
-        return getattr(fields, self.type)(**args)
+        return self.column
 
     # properties used by to_column() to create a column instance
-    _column_copy = property(attrgetter('copyable'))
+    _column_copy = property(attrgetter('copy'))
     _column_select = property(attrgetter('index'))
+    _column_manual = property(attrgetter('manual'))
     _column_string = property(attrgetter('string'))
     _column_help = property(attrgetter('help'))
     _column_readonly = property(attrgetter('readonly'))
     _column_required = property(attrgetter('required'))
     _column_states = property(attrgetter('states'))
     _column_groups = property(attrgetter('groups'))
+    _column_change_default = property(attrgetter('change_default'))
+    _column_deprecated = property(attrgetter('deprecated'))
 
     ############################################################################
     #
@@ -604,18 +696,27 @@ class Field(object):
         """ return the null value for this field in the given environment """
         return False
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         """ convert `value` to the cache level in `env`; `value` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
+
+            :param record: the target record for the assignment, or an empty recordset
+
+            :param bool validate: when True, field-specific validation of
+                `value` will be performed
         """
         return value
 
     def convert_to_read(self, value, use_name_get=True):
         """ convert `value` from the cache to a value as returned by method
             :meth:`BaseModel.read`
+
+            :param bool use_name_get: when True, value's diplay name will
+                be computed using :meth:`BaseModel.name_get`, if relevant
+                for the field
         """
-        return value
+        return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
         """ convert `value` from the cache to a valid value for method
@@ -672,8 +773,8 @@ class Field(object):
             # normal record -> read or compute value for this field
             self.determine_value(record)
         else:
-            # new record -> compute default value for this field
-            record.add_default_value(self)
+            # draft record -> compute the value or let it be null
+            self.determine_draft_value(record)
 
         # the result should be in cache now
         return record._cache[self]
@@ -686,7 +787,7 @@ class Field(object):
         record.ensure_one()
 
         # adapt value to the cache level
-        value = self.convert_to_cache(value, env)
+        value = self.convert_to_cache(value, record)
 
         if env.in_draft or not record.id:
             # determine dependent fields
@@ -695,9 +796,9 @@ class Field(object):
             # set value in cache, inverse field, and mark record as dirty
             record._cache[self] = value
             if env.in_onchange:
-                if self.inverse_field:
-                    self.inverse_field._update(value, record)
-                record._dirty = True
+                for invf in self.inverse_fields:
+                    invf._update(value, record)
+                record._set_dirty(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -716,11 +817,9 @@ class Field(object):
 
     def _compute_value(self, records):
         """ Invoke the compute method on `records`. """
-        # mark the computed fields failed in cache, so that access before
-        # computation raises an exception
-        exc = Warning("Field %s is accessed before being computed." % self)
+        # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
-            records._cache[field] = FailedValue(exc)
+            records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
         self.compute(records)
         for field in self.computed_fields:
@@ -731,16 +830,20 @@ class Field(object):
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
-            except MissingError:
-                # some record is missing, retry on existing records only
-                self._compute_value(records.exists())
+            except (AccessError, MissingError):
+                # some record is forbidden or missing, retry record by record
+                for record in records:
+                    try:
+                        self._compute_value(record)
+                    except Exception as exc:
+                        record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
         env = record.env
 
-        if self.store and not (self.depends and env.in_draft):
-            # this is a stored field
+        if self.column and not (self.depends and env.in_draft):
+            # this is a stored field or an old-style function field
             if self.depends:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
@@ -753,7 +856,7 @@ class Field(object):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in self.computed_fields
-                                })
+                                }, validate=False)
                             except MissingError as e:
                                 values = FailedValue(e)
                             target._cache.update(values)
@@ -776,8 +879,8 @@ class Field(object):
             # this is a non-stored non-computed field
             record._cache[self] = self.null(env)
 
-    def determine_default(self, record):
-        """ determine the default value of field `self` on `record` """
+    def determine_draft_value(self, record):
+        """ Determine the value of `self` for the given draft `record`. """
         if self.compute:
             self._compute_value(record)
         else:
@@ -845,17 +948,10 @@ class Field(object):
         return spec
 
 
-class Any(Field):
-    """ Field for arbitrary Python values. """
-    # Warning: no storage is defined for this type of field!
-    type = 'any'
-
-
 class Boolean(Field):
-    """ Boolean field. """
     type = 'boolean'
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
     def convert_to_export(self, value, env):
@@ -865,10 +961,17 @@ class Boolean(Field):
 
 
 class Integer(Field):
-    """ Integer field. """
     type = 'integer'
+    group_operator = None       # operator for aggregating values
 
-    def convert_to_cache(self, value, env):
+    _related_group_operator = property(attrgetter('group_operator'))
+
+    _column_group_operator = property(attrgetter('group_operator'))
+
+    def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            return value.get('id', False)
         return int(value or 0)
 
     def convert_to_read(self, value, use_name_get=True):
@@ -884,31 +987,42 @@ class Integer(Field):
 
 
 class Float(Field):
-    """ Float field. The precision digits are given by the attribute
+    """ The precision digits are given by the attribute
 
-        :param digits: a pair (total, decimal), or a function taking a database
-            cursor and returning a pair (total, decimal)
-
+    :param digits: a pair (total, decimal), or a function taking a database
+                   cursor and returning a pair (total, decimal)
     """
     type = 'float'
     _digits = None              # digits argument passed to class initializer
     digits = None               # digits as computed by setup()
+    group_operator = None       # operator for aggregating values
 
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    def _setup_digits(self, env):
+        """ Setup the digits for `self` and its corresponding column """
+        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        if self.digits:
+            assert isinstance(self.digits, (tuple, list)) and len(self.digits) >= 2, \
+                "Float field %s with digits %r, expecting (total, decimal)" % (self, self.digits)
+        if self.column:
+            self.column.digits_change(env.cr)
+
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
+        self._setup_digits(env)
 
     _related_digits = property(attrgetter('digits'))
+    _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
+    _column_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -926,50 +1040,59 @@ class _String(Field):
 
 
 class Char(_String):
-    """ Char field.
+    """ Basic string field, can be length-limited, usually displayed as a
+    single-line string in clients
 
-        :param size: the maximum size of values stored for that field (integer,
-            optional)
-
-        :param translate: whether the value of the field has translations
-            (boolean, by default ``False``)
-
+    :param int size: the maximum size of values stored for that field
+    :param bool translate: whether the values of this field can be translated
     """
     type = 'char'
     size = None
+
+    def _setup(self, env):
+        super(Char, self)._setup(env)
+        assert isinstance(self.size, (NoneType, int)), \
+            "Char field %s with non-integer size %r" % (self, self.size)
 
     _column_size = property(attrgetter('size'))
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env):
-        return bool(value) and ustr(value)[:self.size]
-
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return False
+        return ustr(value)[:self.size]
 
 class Text(_String):
-    """ Text field. Very similar to :class:`Char`, but typically for longer
-        contents.
+    """ Very similar to :class:`~.Char` but used for longer contents, does not
+    have a size and usually displayed as a multiline text box.
 
-        :param translate: whether the value of the field has translations
-            (boolean, by default ``False``)
-
+    :param translate: whether the value of this field can be translated
     """
     type = 'text'
 
-    def convert_to_cache(self, value, env):
-        return bool(value) and ustr(value)
-
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return False
+        return ustr(value)
 
 class Html(_String):
-    """ Html field. """
     type = 'html'
+    sanitize = True                     # whether value must be sanitized
 
-    def convert_to_cache(self, value, env):
-        return bool(value) and html_sanitize(value)
+    _column_sanitize = property(attrgetter('sanitize'))
+    _related_sanitize = property(attrgetter('sanitize'))
+    _description_sanitize = property(attrgetter('sanitize'))
+
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return False
+        if validate and self.sanitize:
+            return html_sanitize(value)
+        return value
 
 
 class Date(Field):
-    """ Date field. """
     type = 'date'
 
     @staticmethod
@@ -1013,12 +1136,15 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
         if isinstance(value, basestring):
-            value = self.from_string(value)
-        return value.strftime(DATE_FORMAT)
+            if validate:
+                # force parsing for validation
+                self.from_string(value)
+            return value[:DATE_LENGTH]
+        return self.to_string(value)
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
@@ -1027,7 +1153,6 @@ class Date(Field):
 
 
 class Datetime(Field):
-    """ Datetime field. """
     type = 'datetime'
 
     @staticmethod
@@ -1078,12 +1203,18 @@ class Datetime(Field):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
         if isinstance(value, basestring):
-            value = self.from_string(value)
-        return value.strftime(DATETIME_FORMAT)
+            if validate:
+                # force parsing for validation
+                self.from_string(value)
+            value = value[:DATETIME_LENGTH]
+            if len(value) == DATE_LENGTH:
+                value += " 00:00:00"
+            return value
+        return self.to_string(value)
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
@@ -1092,23 +1223,24 @@ class Datetime(Field):
 
 
 class Binary(Field):
-    """ Binary field. """
     type = 'binary'
 
 
 class Selection(Field):
-    """ Selection field.
+    """
+    :param selection: specifies the possible values for this field.
+        It is given as either a list of pairs (`value`, `string`), or a
+        model method, or a method name.
+    :param selection_add: provides an extension of the selection in the case
+        of an overridden field. It is a list of pairs (`value`, `string`).
 
-        :param selection: specifies the possible values for this field.
-            It is given as either a list of pairs (`value`, `string`), or a
-            model method, or a method name.
-
-        The attribute `selection` is mandatory except in the case of related
-        fields (see :ref:`field-related`) or field extensions
-        (see :ref:`field-incremental-definition`).
+    The attribute `selection` is mandatory except in the case of
+    :ref:`related fields <field-related>` or :ref:`field extensions
+    <field-incremental-definition>`.
     """
     type = 'selection'
-    selection = None        # [(value, string), ...], model method or method name
+    selection = None        # [(value, string), ...], function or method name
+    selection_add = None    # [(value, string), ...]
 
     def __init__(self, selection=None, string=None, **kwargs):
         if callable(selection):
@@ -1116,11 +1248,31 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def _setup(self, env):
+        super(Selection, self)._setup(env)
+        assert self.selection is not None, "Field %s without selection" % self
+
     def _setup_related(self, env):
         super(Selection, self)._setup_related(env)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
+
+    def set_class_name(self, cls, name):
+        super(Selection, self).set_class_name(cls, name)
+        # determine selection (applying 'selection_add' extensions)
+        selection = None
+        for field in resolve_all_mro(cls, name, reverse=True):
+            if isinstance(field, type(self)):
+                # We cannot use field.selection or field.selection_add here
+                # because those attributes are overridden by `set_class_name`.
+                if 'selection' in field._attrs:
+                    selection = field._attrs['selection']
+                if 'selection_add' in field._attrs:
+                    selection = selection + field._attrs['selection_add']
+            else:
+                selection = None
+        self.selection = selection
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1137,7 +1289,7 @@ class Selection(Field):
             name = "%s,%s" % (self.model_name, self.name)
             translate = partial(
                 env['ir.translation']._get_source, name, 'selection', env.lang)
-            return [(value, translate(label)) for value, label in selection]
+            return [(value, translate(label) if label else label) for value, label in selection]
         else:
             return selection
 
@@ -1158,8 +1310,10 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
-    def convert_to_cache(self, value, env):
-        if value in self.get_values(env):
+    def convert_to_cache(self, value, record, validate=True):
+        if not validate:
+            return value or False
+        if value in self.get_values(record.env):
             return value
         elif not value:
             return False
@@ -1176,33 +1330,29 @@ class Selection(Field):
 
 
 class Reference(Selection):
-    """ Reference field.
-
-        :param selection: specifies the possible model names for this field.
-            It is given as either a list of pairs (`value`, `string`), or a
-            model method, or a method name.
-
-        The attribute `selection` is mandatory except in the case of related
-        fields (see :ref:`field-related`) or field extensions
-        (see :ref:`field-incremental-definition`).
-    """
     type = 'reference'
-    size = 128
+    size = None
 
     def __init__(self, selection=None, string=None, **kwargs):
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
+
+    def _setup(self, env):
+        super(Reference, self)._setup(env)
+        assert isinstance(self.size, (NoneType, int)), \
+            "Reference field %s with non-integer size %r" % (self, self.size)
 
     _related_size = property(attrgetter('size'))
 
     _column_size = property(attrgetter('size'))
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
-            if value._name in self.get_values(env) and len(value) <= 1:
-                return value.with_env(env) or False
+            if ((not validate or value._name in self.get_values(record.env))
+                    and len(value) <= 1):
+                return value.with_env(record.env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
-            return env[res_model].browse(int(res_id))
+            return record.env[res_model].browse(int(res_id))
         elif not value:
             return False
         raise ValueError("Wrong value for %s: %r" % (self, value))
@@ -1223,6 +1373,24 @@ class _Relational(Field):
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 
+    def _setup(self, env):
+        super(_Relational, self)._setup(env)
+        if self.comodel_name not in env.registry:
+            _logger.warning("Field %s with unknown comodel_name %r"
+                            % (self, self.comodel_name))
+            self.comodel_name = '_unknown'
+
+    @property
+    def _related_domain(self):
+        if callable(self.domain):
+            # will be called with another model than self's
+            return lambda recs: self.domain(recs.env[self.model_name])
+        else:
+            # maybe not correct if domain is a string...
+            return self.domain
+
+    _related_context = property(attrgetter('context'))
+
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
 
@@ -1237,38 +1405,38 @@ class _Relational(Field):
         return env[self.comodel_name]
 
     def modified(self, records):
-        # Invalidate cache for self.inverse_field, too. Note that recomputation
-        # of fields that depend on self.inverse_field is already covered by the
+        # Invalidate cache for self.inverse_fields, too. Note that recomputation
+        # of fields that depend on self.inverse_fields is already covered by the
         # triggers (see above).
         spec = super(_Relational, self).modified(records)
-        if self.inverse_field:
-            spec.append((self.inverse_field, None))
+        for invf in self.inverse_fields:
+            spec.append((invf, None))
         return spec
 
 
 class Many2one(_Relational):
-    """ Many2one field; the value of such a field is a recordset of size 0 (no
-        record) or 1 (a single record).
+    """ The value of such a field is a recordset of size 0 (no
+    record) or 1 (a single record).
 
-        :param comodel_name: name of the target model (string)
+    :param comodel_name: name of the target model (string)
 
-        :param domain: an optional domain to set on candidate values on the
-            client side (domain or string)
+    :param domain: an optional domain to set on candidate values on the
+        client side (domain or string)
 
-        :param context: an optional context to use on the client side when
-            handling that field (dictionary)
+    :param context: an optional context to use on the client side when
+        handling that field (dictionary)
 
-        :param ondelete: what to do when the referred record is deleted;
-            possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
+    :param ondelete: what to do when the referred record is deleted;
+        possible values are: ``'set null'``, ``'restrict'``, ``'cascade'``
 
-        :param auto_join: whether JOINs are generated upon search through that
-            field (boolean, by default ``False``)
+    :param auto_join: whether JOINs are generated upon search through that
+        field (boolean, by default ``False``)
 
-        :param delegate: set it to ``True`` to make fields of the target model
-            accessible from the current model (corresponds to ``_inherits``)
+    :param delegate: set it to ``True`` to make fields of the target model
+        accessible from the current model (corresponds to ``_inherits``)
 
-        The attribute `comodel_name` is mandatory except in the case of related
-        fields or field extensions.
+    The attribute `comodel_name` is mandatory except in the case of related
+    fields or field extensions.
     """
     type = 'many2one'
     ondelete = 'set null'               # what to do when value is deleted
@@ -1278,13 +1446,11 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_regular(self, env):
-        super(Many2one, self)._setup_regular(env)
-
-        # self.inverse_field is determined by the corresponding One2many field
-
+    def set_class_name(self, cls, name):
+        super(Many2one, self).set_class_name(cls, name)
         # determine self.delegate
-        self.delegate = self.name in env[self.model_name]._inherits.values()
+        if not self.delegate:
+            self.delegate = name in cls._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
@@ -1293,31 +1459,35 @@ class Many2one(_Relational):
         """ Update the cached value of `self` for `records` with `value`. """
         records._cache[self] = value
 
-    def convert_to_cache(self, value, env):
-        if isinstance(value, (NoneType, int)):
-            return env[self.comodel_name].browse(value)
+    def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, (NoneType, int, long)):
+            return record.env[self.comodel_name].browse(value)
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value.with_env(env)
+                return value.with_env(record.env)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return env[self.comodel_name].browse(value[0])
+            return record.env[self.comodel_name].browse(value[0])
         elif isinstance(value, dict):
-            return env[self.comodel_name].new(value)
+            return record.env[self.comodel_name].new(value)
         else:
-            return env[self.comodel_name].browse(value)
+            return self.null(record.env)
 
     def convert_to_read(self, value, use_name_get=True):
         if use_name_get and value:
             # evaluate name_get() as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            return value.sudo().name_get()[0]
+            try:
+                return value.sudo().name_get()[0]
+            except MissingError:
+                # Should not happen, unless the foreign key is missing.
+                return False
         else:
             return value.id
 
     def convert_to_write(self, value, target=None, fnames=None):
-        return bool(value) and (value.id or value._convert_to_write(value._cache))
+        return value.id
 
     def convert_to_onchange(self, value):
         return value.id
@@ -1328,14 +1498,21 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value):
         return ustr(value.display_name)
 
-    def determine_default(self, record):
-        super(Many2one, self).determine_default(record)
-        if self.delegate:
-            # special case: fields that implement inheritance between models
-            value = record[self.name]
-            if not value:
-                # the default value cannot be null, use a new record instead
-                record[self.name] = record.env[self.comodel_name].new()
+
+class UnionUpdate(SpecialValue):
+    """ Placeholder for a value update; when this value is taken from the cache,
+        it returns ``record[field.name] | value`` and stores it in the cache.
+    """
+    def __init__(self, field, record, value):
+        self.args = (field, record, value)
+
+    def get(self):
+        field, record, value = self.args
+        # in order to read the current field's value, remove self from cache
+        del record._cache[field]
+        # read the current field's value, and update it in cache only
+        record._cache[field] = new_value = record[field.name] | value
+        return new_value
 
 
 class _RelationalMulti(_Relational):
@@ -1344,29 +1521,36 @@ class _RelationalMulti(_Relational):
     def _update(self, records, value):
         """ Update the cached value of `self` for `records` with `value`. """
         for record in records:
-            record._cache[self] = record[self.name] | value
+            if self in record._cache:
+                record._cache[self] = record[self.name] | value
+            else:
+                record._cache[self] = UnionUpdate(self, record, value)
 
-    def convert_to_cache(self, value, env):
+    def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value.with_env(env)
+                return value.with_env(record.env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
-            result = env[self.comodel_name]
+            if not record.id:
+                record = record.browse()        # new record has no value
+            result = record[self.name]
+            # modify result with the commands;
+            # beware to not introduce duplicates in result
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
                         result += result.new(command[2])
                     elif command[0] == 1:
-                        record = result.browse(command[1])
-                        record.update(command[2])
-                        result += record
+                        result.browse(command[1]).update(command[2])
+                        result += result.browse(command[1]) - result
                     elif command[0] == 2:
-                        pass
+                        # note: the record will be deleted by write()
+                        result -= result.browse(command[1])
                     elif command[0] == 3:
-                        pass
+                        result -= result.browse(command[1])
                     elif command[0] == 4:
-                        result += result.browse(command[1])
+                        result += result.browse(command[1]) - result
                     elif command[0] == 5:
                         result = result.browse()
                     elif command[0] == 6:
@@ -1374,10 +1558,10 @@ class _RelationalMulti(_Relational):
                 elif isinstance(command, dict):
                     result += result.new(command)
                 else:
-                    result += result.browse(command)
+                    result += result.browse(command) - result
             return result
         elif not value:
-            return self.null(env)
+            return self.null(record.env)
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_read(self, value, use_name_get=True):
@@ -1395,20 +1579,21 @@ class _RelationalMulti(_Relational):
             add_existing = lambda id: result.append((4, id))
 
         if fnames is None:
-            # take all fields in cache, except the inverse of self
+            # take all fields in cache, except the inverses of self
             fnames = set(value._fields) - set(MAGIC_COLUMNS)
-            if self.inverse_field:
-                fnames.discard(self.inverse_field.name)
+            for invf in self.inverse_fields:
+                fnames.discard(invf.name)
 
         # add new and existing records
         for record in value:
-            if not record.id or record._dirty:
-                values = dict((k, v) for k, v in record._cache.iteritems() if k in fnames)
+            if not record.id:
+                values = {k: v for k, v in record._cache.iteritems() if k in fnames}
                 values = record._convert_to_write(values)
-                if not record.id:
-                    result.append((0, 0, values))
-                else:
-                    result.append((1, record.id, values))
+                result.append((0, 0, values))
+            elif record._is_dirty():
+                values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
+                values = record._convert_to_write(values)
+                result.append((1, record.id, values))
             else:
                 add_existing(record.id)
 
@@ -1419,6 +1604,15 @@ class _RelationalMulti(_Relational):
 
     def convert_to_display_name(self, value):
         raise NotImplementedError()
+
+    def _compute_related(self, records):
+        """ Compute the related field `self` on `records`. """
+        for record in records:
+            value = record
+            # traverse the intermediate fields, and keep at most one record
+            for name in self.related[:-1]:
+                value = value[name][:1]
+            record[self.name] = value[self.related[-1]]
 
 
 class One2many(_RelationalMulti):
@@ -1449,7 +1643,7 @@ class One2many(_RelationalMulti):
     inverse_name = None                 # name of the inverse field
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    copyable = False                    # o2m are not copied by default
+    copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
@@ -1464,9 +1658,15 @@ class One2many(_RelationalMulti):
 
         if self.inverse_name:
             # link self to its inverse field and vice-versa
-            invf = env[self.comodel_name]._fields[self.inverse_name]
-            self.inverse_field = invf
-            invf.inverse_field = self
+            comodel = env[self.comodel_name]
+            comodel._setup_fields()
+            invf = comodel._fields[self.inverse_name]
+            # In some rare cases, a `One2many` field can link to `Int` field
+            # (res_model/res_id pattern). Only inverse the field if this is
+            # a `Many2one` field.
+            if isinstance(invf, Many2one):
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1525,19 +1725,18 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if self.store and not self.relation:
-            model = env[self.model_name]
-            column = model._columns[self.name]
-            if not isinstance(column, fields.function):
-                self.relation, self.column1, self.column2 = column._sql_names(model)
+        if not self.relation:
+            if isinstance(self.column, fields.many2many):
+                self.relation, self.column1, self.column2 = \
+                    self.column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:
-                self.inverse_field = invf
-                invf.inverse_field = self
+                self.inverse_fields.append(invf)
+                invf.inverse_fields.append(self)
             else:
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
@@ -1551,13 +1750,15 @@ class Many2many(_RelationalMulti):
 class Id(Field):
     """ Special case for field 'id'. """
     store = True
+    #: Can't write this!
     readonly = True
 
     def __init__(self, string=None, **kwargs):
         super(Id, self).__init__(type='integer', string=string, **kwargs)
 
     def to_column(self):
-        return fields.integer('ID')
+        self.column = fields.integer('ID')
+        return self.column
 
     def __get__(self, record, owner):
         if record is None:
@@ -1572,6 +1773,6 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from .exceptions import Warning, MissingError
+from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

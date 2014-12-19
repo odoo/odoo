@@ -38,7 +38,7 @@ Dashboard / Reports for Warehouse Management includes:
 ------------------------------------------------------
 * Stock Inventory Value at given date (support dates in the past)
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/warehouse',
     'images': [],
     'depends': ['stock', 'account'],
     'category': 'Hidden',
@@ -63,6 +63,5 @@ Dashboard / Reports for Warehouse Management includes:
 
     ],
     'installable': True,
-    'application': True,
     'auto_install': True,
 }

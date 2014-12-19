@@ -1,82 +1,31 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * report_intrastat
-# Drazen Bosak <drazen.bosak@gmail.com>, 2010.
+# Croatian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-08-03 09:02+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
-"Language-Team: Vinteh\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: hr\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Cancelled Invoice"
-msgstr "Otkazani račun"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (inclu. taxes):"
-msgstr "Ukupno (uklj. poreze)"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Disc. (%)"
-msgstr "Popust (%)"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Invoice"
-msgstr "Ulazni račun"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Unit Price"
-msgstr "Jed. cijena"
-
-#. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Import"
-msgstr "Uvoz"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "VAT :"
-msgstr "OIB/VAT"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Document"
-msgstr "Dokument"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "PRO-FORMA"
-msgstr "Pro-forma"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes:"
-msgstr "Porezi:"
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Amount"
+msgstr "Iznos"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "March"
-msgstr "Ožujak"
+msgid "April"
+msgstr "Travanj"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -84,39 +33,150 @@ msgid "August"
 msgstr "Kolovoz"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "May"
-msgstr "Svibanj"
-
-#. module: report_intrastat
-#: field:report.intrastat,type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
-msgid "Invoice Intrastat"
-msgstr "Intrastat Račun"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice Date"
-msgstr "Datum računa"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Lipanj"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tel. :"
-msgstr "Tel:"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
 msgid "Base"
 msgstr "Osnovica"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Cancelled Invoice"
+msgstr "Otkazani račun"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Comment:"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr "Država"
+
+#. module: report_intrastat
+#: field:report.intrastat,code:0
+msgid "Country code"
+msgstr "Kod Zemlje"
+
+#. module: report_intrastat
+#: field:report.intrastat.code,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat.code,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,currency_id:0
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "December"
+msgstr "Prosinac"
+
+#. module: report_intrastat
+#: field:report.intrastat.code,description:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Description"
+msgstr "Opis"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Discount (%)"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Document:"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Draft Invoice"
+msgstr "Nacrt računa"
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Export"
+msgstr "Izvoz"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "February"
+msgstr "Veljača"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Fiscal Position:"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,id:0
+#: field:report.intrastat.code,id:0
+msgid "ID"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,type:0
+msgid "Import"
+msgstr "Uvoz"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Intrastat"
+msgstr "Intrastat"
+
+#. module: report_intrastat
+#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_form
+#: field:report.intrastat.code,name:0
+msgid "Intrastat Code"
+msgstr "Intrastat Kod"
+
+#. module: report_intrastat
+#: view:report.intrastat:report_intrastat.view_report_intrastat_search
+#: view:report.intrastat:report_intrastat.view_report_intrastat_tree
+msgid "Intrastat Data"
+msgstr "Intrastat Podaci"
+
+#. module: report_intrastat
+#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+msgid "Intrastat Invoices"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:report_intrastat.view_report_intrastat_code_tree
+msgid "Intrastat code"
+msgstr "Intrastat Kod"
+
+#. module: report_intrastat
+#: field:res.country,intrastat:0
+msgid "Intrastat member"
+msgstr "Intarstat Član"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat
+msgid "Intrastat report"
+msgstr "Intrastat Izvještaj"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Invoice Date:"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -129,145 +189,29 @@ msgid "July"
 msgstr "Lipanj"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Quantity"
-msgstr "Količina"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Lipanj"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Partner Ref."
-msgstr "Referenca Partnera"
+#: field:report.intrastat.code,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat.code,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "February"
-msgstr "Veljača"
+msgid "March"
+msgstr "Ožujak"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
-msgid "October"
-msgstr "Listopad"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat
-msgid "Intrastat report"
-msgstr "Intrastat Izvještaj"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Invoice"
-msgstr "Račun"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_res_country
-msgid "Country"
-msgstr "Država"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "September"
-msgstr "Rujan"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Taxes"
-msgstr "Porezi"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "April"
-msgstr "Travanj"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Amount"
-msgstr "Iznos"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "Intrastat Data"
-msgstr "Intrastat Podaci"
-
-#. module: report_intrastat
-#: field:report.intrastat,value:0
-msgid "Value"
-msgstr "Vrijednost"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
-msgid "Intrastat"
-msgstr "Intrastat"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Draft Invoice"
-msgstr "Nacrt računa"
-
-#. module: report_intrastat
-#: field:report.intrastat,supply_units:0
-msgid "Supply Units"
-msgstr "Jedinice Dobave"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "November"
-msgstr "Studeni"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Intrastat Kod"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "Povrat novca"
-
-#. module: report_intrastat
-#: field:report.intrastat,ref:0
-msgid "Source document"
-msgstr "Izvorni dokument"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fiscal Position Remark :"
-msgstr "Komentar fiskalne pozicije:"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat,weight:0
-msgid "Weight"
-msgstr "Težina"
-
-#. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_product_template
-msgid "Product Template"
-msgstr "Predložak proizvoda"
-
-#. module: report_intrastat
-#: field:res.country,intrastat:0
-msgid "Intrastat member"
-msgstr "Intarstat Član"
-
-#. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "December"
-msgstr "Prosinac"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
-msgstr "Porez"
-
-#. module: report_intrastat
-#: field:report.intrastat,code:0
-msgid "Country code"
-msgstr "Kod Zemlje"
+msgid "May"
+msgstr "Svibanj"
 
 #. module: report_intrastat
 #: field:report.intrastat,month:0
@@ -275,76 +219,117 @@ msgid "Month"
 msgstr "Mjesec"
 
 #. module: report_intrastat
-#: field:report.intrastat,currency_id:0
-msgid "Currency"
-msgstr "Valuta"
+#: selection:report.intrastat,month:0
+msgid "November"
+msgstr "Studeni"
 
 #. module: report_intrastat
-#: selection:report.intrastat,type:0
-msgid "Export"
-msgstr "Izvoz"
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr "Listopad"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Fax :"
-msgstr "Fax :"
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "PRO-FORMA"
+msgstr "Pro-forma"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Partner Ref.:"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Payment Term:"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_product_template
+msgid "Product Template"
+msgstr "Predložak proizvoda"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Refund"
+msgstr "Povrat novca"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "September"
+msgstr "Rujan"
+
+#. module: report_intrastat
+#: field:report.intrastat,ref:0
+msgid "Source document"
+msgstr "Izvorni dokument"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Supplier Invoice"
+msgstr "Ulazni račun"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Supplier Refund"
+msgstr "Odobrenje dobavljača"
+
+#. module: report_intrastat
+#: field:report.intrastat,supply_units:0
+msgid "Supply Units"
+msgstr "Jedinice Dobave"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Tax"
+msgstr "Porez"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Taxes"
+msgstr "Porezi"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Total"
+msgstr ""
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Total Without Taxes"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,type:0
+msgid "Type"
+msgstr "Tip"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Unit Price"
+msgstr "Jed. cijena"
+
+#. module: report_intrastat
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Unit of measure"
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,value:0
+msgid "Value"
+msgstr "Vrijednost"
+
+#. module: report_intrastat
+#: field:report.intrastat,weight:0
+#: view:website:report_intrastat.report_intrastatinvoice_document
+msgid "Weight"
+msgstr "Težina"
 
 #. module: report_intrastat
 #: field:report.intrastat,name:0
 msgid "Year"
 msgstr "Godina"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Supplier Refund"
-msgstr "Odobrenje dobavljača"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Total (excl. taxes):"
-msgstr "Ukupno (bez poreza):"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Price"
-msgstr "Cijena"
-
-#. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
-#: view:report.intrastat.code:0
-#: field:report.intrastat.code,name:0
-msgid "Intrastat Code"
-msgstr "Intrastat Kod"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
-
-#~ msgid "Canceled Invoice"
-#~ msgstr "Poništen Račun"
-
-#~ msgid "Intrastat (this month)"
-#~ msgstr "Intrastat (Ovaj mjesec)"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nepravilno ime modela u definiciji radnje."
-
-#~ msgid "Period"
-#~ msgstr "Razdoblje"
-
-#~ msgid "All Months"
-#~ msgstr "Svi mjeseci"
-
-#~ msgid "Intrastat Reporting - Reporting"
-#~ msgstr "Intrastat Izvještavanje - Izvještavanje"
-
-#~ msgid "This Month"
-#~ msgstr "Ovaj mjesec"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za Arhitekturu Prikaza!"
-
-#~ msgid "Origin"
-#~ msgstr "Porijeklo"

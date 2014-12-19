@@ -27,21 +27,21 @@
             <field name="name">CLASSE 1</field>
             <field name="code">1</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
         <record id="a10" model="account.account.template">
             <field name="name">CAPITAL</field>
             <field name="code">10</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
         </record>
         <record id="a100" model="account.account.template">
             <field name="name">Capital souscrit ou capital personnel</field>
             <field name="code">100</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a10" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_capitalsouscrit3'))]"/>
         </record>
@@ -71,7 +71,7 @@
             <field name="name">Compte de l'exploitant</field>
             <field name="code">109</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a10" name="parent_id"/>
         </record>
         <record id="a1090" model="account.account.template">
@@ -107,7 +107,7 @@
             <field name="name">PLUS-VALUES DE REEVALUATION</field>
             <field name="code">12</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_plusvaluesdervaluation2'))]"/>
         </record>
@@ -115,7 +115,7 @@
             <field name="name">Plus-values de réévaluation sur immobilisations incorporelles</field>
             <field name="code">120</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a12" name="parent_id"/>
         </record>
         <record id="a1200" model="account.account.template">
@@ -136,7 +136,7 @@
             <field name="name">Plus-values de réévaluation sur immobilisations corporelles</field>
             <field name="code">121</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
 
             <field ref="a12" name="parent_id"/>
         </record>
@@ -158,7 +158,7 @@
             <field name="name">Plus-values de réévaluation sur immobilisations financières</field>
             <field name="code">122</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a12" name="parent_id"/>
         </record>
         <record id="a1220" model="account.account.template">
@@ -193,14 +193,14 @@
             <field name="name">RESERVES</field>
             <field name="code">13</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
         </record>
         <record id="a130" model="account.account.template">
             <field name="name">Réserve légale</field>
             <field name="code">130</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a13" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rservelgale3'))]"/>
         </record>
@@ -208,7 +208,7 @@
             <field name="name">Réserves indisponibles</field>
             <field name="code">131</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a13" name="parent_id"/>
         </record>
         <record id="a1310" model="account.account.template">
@@ -239,7 +239,7 @@
             <field name="name">Réserves disponibles</field>
             <field name="code">133</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a13" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rservesdisponibles3'))]"/>
         </record>
@@ -268,7 +268,7 @@
             <field name="name">BENEFICE (PERTE) REPORTE(E)</field>
             <field name="code">14</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
         </record>
         <record id="a140" model="account.account.template">
@@ -291,7 +291,7 @@
             <field name="name">SUBSIDES EN CAPITAL</field>
             <field name="code">15</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_subsidesencapital2'))]"/>
         </record>
@@ -310,19 +310,27 @@
             <field ref="a15" name="parent_id"/>
         </record>
         <record id="a16" model="account.account.template">
-            <field name="name">PROVISIONS POUR RISQUES ET CHARGES</field>
+            <field name="name">PROVISIONS ET IMPOTS DIFFERES</field>
             <field name="code">16</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
-        <record id="a160" model="account.account.template">
+        <record id="a1600" model="account.account.template">
             <field name="name">Provisions pour pensions et obligations similaires</field>
-            <field name="code">160</field>
+            <field name="code">1600</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
+        </record>
+        <record id="a1601" model="account.account.template">
+            <field name="name">Provisions pour prépensions</field>
+            <field name="code">1601</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a161" model="account.account.template">
             <field name="name">Provisions pour charges fiscales</field>
@@ -330,6 +338,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a162" model="account.account.template">
             <field name="name">Provisions pour grosses réparations et gros entretiens</field>
@@ -337,6 +346,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a163" model="account.account.template">
             <field name="name">Provisions pour autres risques et charges</field>
@@ -344,111 +354,63 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field ref="a16" name="parent_id"/>
-        </record>
-        <record id="a164" model="account.account.template">
-            <field name="name">Provisions pour sûretés personnelles ou réelles constituées à l'appui de dettes et d'engagements de tiers</field>
-            <field name="code">164</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a16" name="parent_id"/>
-        </record>
-        <record id="a165" model="account.account.template">
-            <field name="name">Provisions pour engagements relatifs à l'acquisition ou à la cession d'immobilisations</field>
-            <field name="code">165</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a16" name="parent_id"/>
-        </record>
-        <record id="a166" model="account.account.template">
-            <field name="name">Provisions pour exécution de commandes passées ou reçues</field>
-            <field name="code">166</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a16" name="parent_id"/>
-        </record>
-        <record id="a167" model="account.account.template">
-            <field name="name">Provisions pour positions et marchés à terme en devises ou positions et marchés à terme en marchandises</field>
-            <field name="code">167</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_provisionspourrisquesetcharges2'))]"/>
         </record>
         <record id="a168" model="account.account.template">
-            <field name="name">Provisions pour garanties techniques attachées aux ventes et prestations déjà effectuées par l'entreprise</field>
+            <field name="name">Impôts différés</field>
             <field name="code">168</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a16" name="parent_id"/>
-        </record>
-        <record id="a169" model="account.account.template">
-            <field name="name">Provisions pour autres risques et charges</field>
-            <field name="code">169</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a16" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptsdiffrs2'))]"/>
         </record>
-        <record id="a1690" model="account.account.template">
-            <field name="name">Pour litiges en cours</field>
-            <field name="code">1690</field>
+        <record id="a1680" model="account.account.template">
+            <field name="name">Impôts différés afférents à des subsides en capital</field>
+            <field name="code">1680</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
+            <field ref="a168" name="parent_id"/>
         </record>
-        <record id="a1691" model="account.account.template">
-            <field name="name">Pour amendes, doubles droits, pénalités</field>
-            <field name="code">1691</field>
+        <record id="a1681" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur immobilisations incorporelles</field>
+            <field name="code">1681</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
+            <field ref="a168" name="parent_id"/>
         </record>
-        <record id="a1692" model="account.account.template">
-            <field name="name">Pour propre assureur</field>
-            <field name="code">1692</field>
+        <record id="a1682" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur immobilisations corporelles</field>
+            <field name="code">1682</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
+            <field ref="a168" name="parent_id"/>
         </record>
-        <record id="a1693" model="account.account.template">
-            <field name="name">Pour risques inhérents aux opérations de crédits à moyen ou long terme</field>
-            <field name="code">1693</field>
+        <record id="a1687" model="account.account.template">
+            <field name="name">Impôts différés afférents à des plus-values réalisées sur titres émis par le secteur public belge</field>
+            <field name="code">1687</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
+            <field ref="a168" name="parent_id"/>
         </record>
-        <record id="a1695" model="account.account.template">
-            <field name="name">Provision pour charge de liquidation</field>
-            <field name="code">1695</field>
+        <record id="a1688" model="account.account.template">
+            <field name="name">Impôts différés étrangers</field>
+            <field name="code">1688</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
-        </record>
-        <record id="a1696" model="account.account.template">
-            <field name="name">Provision pour départ de personnel</field>
-            <field name="code">1696</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
-        </record>
-        <record id="a1699" model="account.account.template">
-            <field name="name">Pour risques divers </field>
-            <field name="code">1699</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-            <field ref="a169" name="parent_id"/>
+            <field ref="a168" name="parent_id"/>
         </record>
         <record id="a17" model="account.account.template">
             <field name="name">DETTES A PLUS D'UN AN</field>
             <field name="code">17</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1" name="parent_id"/>
         </record>
         <record id="a170" model="account.account.template">
             <field name="name">Emprunts subordonnés</field>
             <field name="code">170</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
         </record>
         <record id="a1700" model="account.account.template">
@@ -469,7 +431,7 @@
             <field name="name">Emprunts obligataires non subordonnés</field>
             <field name="code">171</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
         </record>
         <record id="a1710" model="account.account.template">
@@ -490,7 +452,7 @@
             <field name="name">Dettes de location-financement et assimilés</field>
             <field name="code">172</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_etablissementcredits4'))]"/>
         </record>
@@ -519,7 +481,7 @@
             <field name="name">Etablissements de crédit</field>
             <field name="code">173</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_etablissementcredits4'))]"/>
         </record>
@@ -527,7 +489,7 @@
             <field name="name">Dettes en compte</field>
             <field name="code">1730</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a173" name="parent_id"/>
         </record>
         <record id="a17300" model="account.account.template">
@@ -548,8 +510,7 @@
             <field name="name">Promesses</field>
             <field name="code">1731</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
-
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a173" name="parent_id"/>
         </record>
         <record id="a17310" model="account.account.template">
@@ -570,7 +531,7 @@
             <field name="name">Crédits d'acceptation</field>
             <field name="code">1732</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a173" name="parent_id"/>
         </record>
         <record id="a17320" model="account.account.template">
@@ -599,7 +560,7 @@
             <field name="name">Dettes commerciales</field>
             <field name="code">175</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_dettescommerciales5'))]"/>
         </record>
@@ -607,14 +568,14 @@
             <field name="name">Fournisseurs : dettes en compte</field>
             <field name="code">1750</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a175" name="parent_id"/>
         </record>
         <record id="a17500" model="account.account.template">
             <field name="name">Entreprises apparentées</field>
             <field name="code">17500</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1750" name="parent_id"/>
         </record>
         <record id="a175000" model="account.account.template">
@@ -635,7 +596,7 @@
             <field name="name">Fournisseurs ordinaires</field>
             <field name="code">17501</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1750" name="parent_id"/>
         </record>
         <record id="a175010" model="account.account.template">
@@ -663,14 +624,14 @@
             <field name="name">Effets à payer</field>
             <field name="code">1751</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a175" name="parent_id"/>
         </record>
         <record id="a17510" model="account.account.template">
             <field name="name">Entreprises apparentées</field>
             <field name="code">17510</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1751" name="parent_id"/>
         </record>
         <record id="a175100" model="account.account.template">
@@ -691,7 +652,7 @@
             <field name="name">Fournisseurs ordinaires</field>
             <field name="code">17511</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a1751" name="parent_id"/>
         </record>
         <record id="a175110" model="account.account.template">
@@ -735,7 +696,7 @@
             <field name="name">Dettes diverses</field>
             <field name="code">179</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a17" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_autresdettes6'))]"/>
         </record>
@@ -792,14 +753,14 @@
             <field name="name">CLASSE 2. FRAIS D'ETABLISSEMENT. ACTIFS IMMOBILISES ET CREANCES A PLUS D'UN AN</field>
             <field name="code">2</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
         <record id="a20" model="account.account.template">
             <field name="name">FRAIS D'ETABLISSEMENT</field>
             <field name="code">20</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_fraisdtablissements1'))]"/>
         </record>
@@ -807,7 +768,7 @@
             <field name="name">Frais de constitution et d'augmentation de capital</field>
             <field name="code">200</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a20" name="parent_id"/>
         </record>
         <record id="a2000" model="account.account.template">
@@ -828,7 +789,7 @@
             <field name="name">Frais d'émission d'emprunts et primes de remboursement</field>
             <field name="code">201</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a20" name="parent_id"/>
         </record>
         <record id="a2010" model="account.account.template">
@@ -849,7 +810,7 @@
             <field name="name">Autres frais d'établissement</field>
             <field name="code">202</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a20" name="parent_id"/>
         </record>
         <record id="a2020" model="account.account.template">
@@ -870,7 +831,7 @@
             <field name="name">Intérêts intercalaires</field>
             <field name="code">203</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a20" name="parent_id"/>
         </record>
         <record id="a2030" model="account.account.template">
@@ -891,7 +852,7 @@
             <field name="name">Frais de restructuration</field>
             <field name="code">204</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a20" name="parent_id"/>
         </record>
         <record id="a2040" model="account.account.template">
@@ -912,7 +873,7 @@
             <field name="name">IMMOBILISATIONS INCORPORELLES</field>
             <field name="code">21</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_immobilisationsincorporelles1'))]"/>
         </record>
@@ -920,7 +881,7 @@
             <field name="name">Frais de recherche et de développement</field>
             <field name="code">210</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a21" name="parent_id"/>
         </record>
         <record id="a2100" model="account.account.template">
@@ -948,7 +909,7 @@
             <field name="name">Concessions, brevets, licences, savoir-faire, marques et droits similaires</field>
             <field name="code">211</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a21" name="parent_id"/>
         </record>
         <record id="a2110" model="account.account.template">
@@ -976,7 +937,7 @@
             <field name="name">Goodwill</field>
             <field name="code">212</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a21" name="parent_id"/>
         </record>
         <record id="a2120" model="account.account.template">
@@ -1011,7 +972,7 @@
             <field name="name">TERRAINS ET CONSTRUCTIONS</field>
             <field name="code">22</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_terrainsetconstructions2'))]"/>
         </record>
@@ -1019,7 +980,7 @@
             <field name="name">Terrains</field>
             <field name="code">220</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a22" name="parent_id"/>
         </record>
         <record id="a2200" model="account.account.template">
@@ -1047,7 +1008,7 @@
             <field name="name">Amortissements et réductions de valeur</field>
             <field name="code">2209</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a220" name="parent_id"/>
         </record>
         <record id="a22090" model="account.account.template">
@@ -1068,7 +1029,7 @@
             <field name="name">Constructions</field>
             <field name="code">221</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a22" name="parent_id"/>
         </record>
         <record id="a2210" model="account.account.template">
@@ -1117,7 +1078,7 @@
             <field name="name">Plus-values actées</field>
             <field name="code">2218</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a221" name="parent_id"/>
         </record>
         <record id="a22180" model="account.account.template">
@@ -1152,7 +1113,7 @@
             <field name="name">Amortissements sur constructions</field>
             <field name="code">2219</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a221" name="parent_id"/>
         </record>
         <record id="a22190" model="account.account.template">
@@ -1201,14 +1162,14 @@
             <field name="name">Terrains bâtis</field>
             <field name="code">222</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a22" name="parent_id"/>
         </record>
         <record id="a2220" model="account.account.template">
             <field name="name">Valeur d'acquisition</field>
             <field name="code">2220</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a222" name="parent_id"/>
         </record>
         <record id="a22200" model="account.account.template">
@@ -1250,7 +1211,7 @@
             <field name="name">Plus-values actées</field>
             <field name="code">2228</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a222" name="parent_id"/>
         </record>
         <record id="a22280" model="account.account.template">
@@ -1285,7 +1246,7 @@
             <field name="name">Amortissements sur terrains bâtis</field>
             <field name="code">2229</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a222" name="parent_id"/>
         </record>
         <record id="a22290" model="account.account.template">
@@ -1327,7 +1288,7 @@
             <field name="name">Autres droits réels sur des immeubles</field>
             <field name="code">223</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a22" name="parent_id"/>
         </record>
         <record id="a2230" model="account.account.template">
@@ -1355,7 +1316,7 @@
             <field name="name">INSTALLATIONS, MACHINES ET OUTILLAGE</field>
             <field name="code">23</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_installationsmachinesetoutillage2'))]"/>
         </record>
@@ -1363,7 +1324,7 @@
             <field name="name">Installations</field>
             <field name="code">230</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a23" name="parent_id"/>
         </record>
         <record id="a2300" model="account.account.template">
@@ -1419,7 +1380,7 @@
             <field name="name">Machines</field>
             <field name="code">231</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a23" name="parent_id"/>
         </record>
         <record id="a2310" model="account.account.template">
@@ -1440,7 +1401,7 @@
             <field name="name">Outillage</field>
             <field name="code">237</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a23" name="parent_id"/>
         </record>
         <record id="a2370" model="account.account.template">
@@ -1461,7 +1422,7 @@
             <field name="name">Plus-values actées</field>
             <field name="code">238</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a23" name="parent_id"/>
         </record>
         <record id="a2380" model="account.account.template">
@@ -1489,7 +1450,7 @@
             <field name="name">Amortissements</field>
             <field name="code">239</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a23" name="parent_id"/>
         </record>
         <record id="a2390" model="account.account.template">
@@ -1517,7 +1478,7 @@
             <field name="name">MOBILIER ET MATERIEL ROULANT</field>
             <field name="code">24</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_mobilieretmatrielroulant2'))]"/>
         </record>
@@ -1525,14 +1486,14 @@
             <field name="name">Mobilier</field>
             <field name="code">240</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a24" name="parent_id"/>
         </record>
         <record id="a2400" model="account.account.template">
             <field name="name">Mobilier</field>
             <field name="code">2400</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a240" name="parent_id"/>
         </record>
         <record id="a24000" model="account.account.template">
@@ -1567,7 +1528,7 @@
             <field name="name">Matériel de bureau et de service social</field>
             <field name="code">2401</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a240" name="parent_id"/>
         </record>
         <record id="a24010" model="account.account.template">
@@ -1602,7 +1563,7 @@
             <field name="name">Plus-values actées</field>
             <field name="code">2408</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a240" name="parent_id"/>
         </record>
         <record id="a24080" model="account.account.template">
@@ -1623,7 +1584,7 @@
             <field name="name">Amortissements</field>
             <field name="code">2409</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a240" name="parent_id"/>
         </record>
         <record id="a24090" model="account.account.template">
@@ -1644,14 +1605,14 @@
             <field name="name">Matériel roulant</field>
             <field name="code">241</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a24" name="parent_id"/>
         </record>
         <record id="a2410" model="account.account.template">
             <field name="name">Matériel automobile</field>
             <field name="code">2410</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a241" name="parent_id"/>
         </record>
         <record id="a24100" model="account.account.template">
@@ -1700,7 +1661,7 @@
             <field name="name">Plus-values sur matériel roulant</field>
             <field name="code">2418</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a241" name="parent_id"/>
         </record>
         <record id="a24180" model="account.account.template">
@@ -1742,7 +1703,7 @@
             <field name="name">Amortissements sur matériel roulant</field>
             <field name="code">2419</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a241" name="parent_id"/>
         </record>
         <record id="a24190" model="account.account.template">
@@ -1784,7 +1745,7 @@
             <field name="name">IMMOBILISATION DETENUES EN LOCATION-FINANCEMENT ET DROITS SIMILAIRES</field>
             <field name="code">25</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_locationfinancementetdroitssimilaires2'))]"/>
         </record>
@@ -1792,7 +1753,7 @@
             <field name="name">Terrains et constructions</field>
             <field name="code">250</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a25" name="parent_id"/>
         </record>
         <record id="a2500" model="account.account.template">
@@ -1827,7 +1788,7 @@
             <field name="name">Installations, machines et outillage</field>
             <field name="code">251</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a25" name="parent_id"/>
         </record>
         <record id="a2510" model="account.account.template">
@@ -1869,7 +1830,7 @@
             <field name="name">Mobilier et matériel roulant</field>
             <field name="code">252</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a25" name="parent_id"/>
         </record>
         <record id="a2520" model="account.account.template">
@@ -1904,7 +1865,7 @@
             <field name="name">AUTRES IMMOBILISATIONS CORPORELLES</field>
             <field name="code">26</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_autresimmobilisationscorporelles2'))]"/>
         </record>
@@ -1954,7 +1915,7 @@
             <field name="name">Amortissements sur autres immobilisations corporelles</field>
             <field name="code">269</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a26" name="parent_id"/>
         </record>
         <record id="a2690" model="account.account.template">
@@ -1996,7 +1957,7 @@
             <field name="name">IMMOBILISATIONS CORPORELLES EN COURS ET ACOMPTES VERSES</field>
             <field name="code">27</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_immobilisationsencoursetacomptesverss2'))]"/>
         </record>
@@ -2004,7 +1965,7 @@
             <field name="name">Immobilisations en cours</field>
             <field name="code">270</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a27" name="parent_id"/>
         </record>
         <record id="a2700" model="account.account.template">
@@ -2046,7 +2007,7 @@
             <field name="name">IMMOBILISATIONS FINANCIERES</field>
             <field name="code">28</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_immobilisationsfinancires1'))]"/>
         </record>
@@ -2054,7 +2015,7 @@
             <field name="name">Participations dans des entreprises liées</field>
             <field name="code">280</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2800" model="account.account.template">
@@ -2089,7 +2050,7 @@
             <field name="name">Créances sur des entreprises liées</field>
             <field name="code">281</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2810" model="account.account.template">
@@ -2131,7 +2092,7 @@
             <field name="name">Participations dans des entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">282</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2820" model="account.account.template">
@@ -2166,7 +2127,7 @@
             <field name="name">Créances sur des entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">283</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2830" model="account.account.template">
@@ -2208,7 +2169,7 @@
             <field name="name">Autres actions et parts</field>
             <field name="code">284</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2840" model="account.account.template">
@@ -2243,7 +2204,7 @@
             <field name="name">Autres créances</field>
             <field name="code">285</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2850" model="account.account.template">
@@ -2285,7 +2246,7 @@
             <field name="name">Cautionnements versés en numéraires</field>
             <field name="code">288</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a28" name="parent_id"/>
         </record>
         <record id="a2880" model="account.account.template">
@@ -2327,14 +2288,14 @@
             <field name="name">CREANCES A PLUS D'UN AN</field>
             <field name="code">29</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a2" name="parent_id"/>
         </record>
         <record id="a290" model="account.account.template">
             <field name="name">Créances commerciales</field>
             <field name="code">290</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a29" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_crancescommerciales3'))]"/>
         </record>
@@ -2342,7 +2303,7 @@
             <field name="name">Clients</field>
             <field name="code">2900</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a290" name="parent_id"/>
         </record>
         <record id="a29000" model="account.account.template">
@@ -2391,7 +2352,7 @@
             <field name="name">Effets à recevoir</field>
             <field name="code">2901</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a290" name="parent_id"/>
         </record>
         <record id="a29010" model="account.account.template">
@@ -2461,7 +2422,7 @@
             <field name="name">Autres créances</field>
             <field name="code">291</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a29" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_autrescrances3'))]"/>
         </record>
@@ -2469,7 +2430,7 @@
             <field name="name">Créances en compte</field>
             <field name="code">2910</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a291" name="parent_id"/>
         </record>
         <record id="a29100" model="account.account.template">
@@ -2497,7 +2458,7 @@
             <field name="name">Effets à recevoir</field>
             <field name="code">2911</field>
             <field name="type">view</field>
-            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a291" name="parent_id"/>
         </record>
         <record id="a29110" model="account.account.template">
@@ -2546,14 +2507,14 @@
             <field name="name">CLASSE 3. STOCK ET COMMANDES EN COURS D'EXECUTION</field>
             <field name="code">3</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
         <record id="a30" model="account.account.template">
             <field name="name">APPROVISIONNEMENTS - MATIERES PREMIERES</field>
             <field name="code">30</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2575,7 +2536,7 @@
             <field name="name">APPROVISIONNEMENTS ET FOURNITURES</field>
             <field name="code">31</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2583,7 +2544,7 @@
             <field name="name">Valeur d'acquisition</field>
             <field name="code">310</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a31" name="parent_id"/>
         </record>
         <record id="a3100" model="account.account.template">
@@ -2632,8 +2593,7 @@
             <field name="name">Emballages commerciaux</field>
             <field name="code">3106</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
-
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a310" name="parent_id"/>
         </record>
         <record id="a31060" model="account.account.template">
@@ -2661,7 +2621,7 @@
             <field name="name">EN COURS DE FABRICATION</field>
             <field name="code">32</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2669,7 +2629,7 @@
             <field name="name">Valeur d'acquisition</field>
             <field name="code">320</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a32" name="parent_id"/>
         </record>
         <record id="a3200" model="account.account.template">
@@ -2725,14 +2685,15 @@
             <field name="name">PRODUITS FINIS</field>
             <field name="code">33</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
         <record id="a330" model="account.account.template">
             <field name="name">Valeur d'acquisition</field>
             <field name="code">330</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a33" name="parent_id"/>
         </record>
         <record id="a3300" model="account.account.template">
@@ -2753,7 +2714,7 @@
             <field name="name">MARCHANDISES</field>
             <field name="code">34</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2761,7 +2722,7 @@
             <field name="name">Valeur d'acquisition</field>
             <field name="code">340</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a34" name="parent_id"/>
         </record>
         <record id="a3400" model="account.account.template">
@@ -2789,7 +2750,7 @@
             <field name="name">IMMEUBLES DESTINES A LA VENTE</field>
             <field name="code">35</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2797,7 +2758,7 @@
             <field name="name">Valeur d'acquisition</field>
             <field name="code">350</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a35" name="parent_id"/>
         </record>
         <record id="a3500" model="account.account.template">
@@ -2818,7 +2779,7 @@
             <field name="name">Immeubles construits en vue de leur revente</field>
             <field name="code">351</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a35" name="parent_id"/>
         </record>
         <record id="a3510" model="account.account.template">
@@ -2846,7 +2807,7 @@
             <field name="name">ACOMPTES VERSES SUR ACHATS POUR STOCKS</field>
             <field name="code">36</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_stocks2'))]"/>
         </record>
@@ -2868,7 +2829,7 @@
             <field name="name">COMMANDES EN COURS D'EXECUTION</field>
             <field name="code">37</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a3" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_commandesencoursdexcution2'))]"/>
         </record>
@@ -4459,11 +4420,18 @@
         <record id="a58" model="account.account.template">
             <field name="name">VIREMENTS INTERNES</field>
             <field name="code">58</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.data_account_type_cash"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_view"/>
             <field ref="a5" name="parent_id"/>
             <field name="financial_report_ids" eval="[(4,ref('account_financial_report_valeursdisponibles1'))]"/>
         </record>
+        <record id="a580" model="account.account.template">
+            <field name="name">Transferts</field>
+            <field name="code">580</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_cash"/>
+            <field ref="a58" name="parent_id"/>
+        </record>        
         <record id="a6" model="account.account.template">
             <field name="name">CLASSE 6. - CHARGES</field>
             <field name="code">6</field>
@@ -4478,7 +4446,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a_expense" model="account.account.template">
             <field name="name">Achats de matières premières</field>
@@ -4570,7 +4538,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_appro_mbsd3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a610" model="account.account.template">
             <field name="name">Loyers et charges locatives</field>
@@ -4949,7 +4917,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rmunrationschargessocialesetpensions2')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_rmunrationschargessocialesetpensions2')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a620" model="account.account.template">
             <field name="name">Rémunérations et avantages sociaux directs</field>
@@ -5160,7 +5128,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a630" model="account.account.template">
             <field name="name">Dotations aux amortissements et aux réductions de valeur sur immobilisations</field>
@@ -5365,7 +5333,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a640" model="account.account.template">
             <field name="name">Charges fiscales d'exploitation</field>
@@ -5483,7 +5451,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesfinancires1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesfinancires1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a650" model="account.account.template">
             <field name="name">Charges des dettes</field>
@@ -5596,7 +5564,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesexceptionnelles1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chargesexceptionnelles1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a660" model="account.account.template">
             <field name="name">Amortissements et réductions de valeur exceptionnels</field>
@@ -5716,7 +5684,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a6" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a670" model="account.account.template">
             <field name="name">Impôts belges sur le résultat de l'exercice</field>
@@ -5789,11 +5757,28 @@
             <field ref="a67" name="parent_id"/>
         </record>
         <record id="a68" model="account.account.template">
-            <field name="name">TRANSFERTS AUX RESERVES IMMUNISEES</field>
+            <field name="name">TRANSFERT AUX RESERVES IMMUNISEES ET IMPOTS DIFFERES</field>
             <field name="code">68</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_view"/>
+            <field ref="a6" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
+        </record>
+        <record id="a680" model="account.account.template">
+            <field name="name">Transfert aux impôts différés</field>
+            <field name="code">680</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
-            <field ref="a6" name="parent_id"/>
+            <field ref="a68" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_transfertauximptsdiffrs1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+        </record>
+        <record id="a689" model="account.account.template">
+            <field name="name">Transfert aux réserves immunisées</field>
+            <field name="code">689</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field ref="a68" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_transfertauxrservesimmunises1'))]"/>
         </record>
         <record id="a69" model="account.account.template">
             <field name="name">AFFECTATION DES RESULTATS</field>
@@ -5865,7 +5850,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a7" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chiffredaffaires3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_chiffredaffaires3')),(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a700" model="account.account.template">
             <field name="name">Ventes de marchandises</field>
@@ -6047,7 +6032,7 @@
             <field name="code">71</field>
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
             <field ref="a7" name="parent_id"/>
         </record>
         <record id="a712" model="account.account.template">
@@ -6161,7 +6146,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a7" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedexploitation1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a740" model="account.account.template">
             <field name="name">Subsides d'exploitation et montants compensatoires</field>
@@ -6253,7 +6238,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a7" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsfinanciers1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsfinanciers1')),(4,ref('account_financial_report_bnficepertecouranteavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a750" model="account.account.template">
             <field name="name">Produits des immobilisations financières</field>
@@ -6338,7 +6323,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a7" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsexceptionnels1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_produitsexceptionnels1')),(4,ref('account_financial_report_bnficepertedelexcerciceavantimpts1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a760" model="account.account.template">
             <field name="name">Reprises d'amortissements et de réductions de valeur</field>
@@ -6416,7 +6401,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="user_type_view"/>
             <field ref="a7" name="parent_id"/>
-            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_imptssurlersultat1')),(4,ref('account_financial_report_bnficepertedelexcercice1')),(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
         </record>
         <record id="a771" model="account.account.template">
             <field name="name">Impôts belges sur le résultat</field>
@@ -6452,6 +6437,30 @@
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_income"/>
             <field ref="a77" name="parent_id"/>
+        </record>
+        <record id="a78" model="account.account.template">
+            <field name="name">PRELEVEMENTS SUR RESERVES IMMUNISEES ET IMPOTS DIFFERES</field>
+            <field name="code">78</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_view"/>
+            <field ref="a7" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_bnficepertedelexerciceaffecter1'))]"/>
+        </record>
+        <record id="a780" model="account.account.template">
+            <field name="name">Prélèvements sur les impôts différés</field>
+            <field name="code">780</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field ref="a78" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_prlvementssurlesimptsdiffrs1')),(4,ref('account_financial_report_bnficepertedelexcercice1'))]"/>
+        </record>
+        <record id="a789" model="account.account.template">
+            <field name="name">Prélèvements sur les réserves immunisées</field>
+            <field name="code">789</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field ref="a78" name="parent_id"/>
+            <field name="financial_report_ids" eval="[(4,ref('account_financial_report_prlvementssurlesrservesimmunises1'))]"/>
         </record>
         <record id="a79" model="account.account.template">
             <field name="name">AFFECTATION AUX RESULTATS</field>

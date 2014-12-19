@@ -1,86 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * project_timesheet
+# Hungarian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-17 11:12+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-16 16:34+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr "Feladatok felhasználó szerint"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by year of date"
-msgstr "Csoportosítás év szerint"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "Június"
-
-#. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
-msgstr "Kapcsolt időbeosztás ID"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid ""
-"You cannot delete a partner which is assigned to project, but you can "
-"uncheck the active box."
-msgstr ""
-"Nem törölhet olyan partnert aki hozzá van rendelve egy projekthez, de az "
-"aktív négyzet jelölését törölheti."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
-msgstr "Projektfeladat munka"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Nem választhat olyan analitikai/Gyűjtő számlát amelyik zárt vagy "
-"érvénytelenített."
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group By..."
-msgstr "Csoportosítás..."
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
-msgstr "Október"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
-#: view:project.project:0
-#, python-format
-msgid "Timesheets"
-msgstr "Munkaidő kimutatások"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable"
-msgstr "Számlázható"
+"X-Launchpad-Export-Date: 2014-11-17 06:26+0000\n"
+"X-Generator: Launchpad (build 17241)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -103,128 +38,14 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic Account/Project"
-msgstr "Analitikus&Gyüjtő számlák/Projektek"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic account/project"
-msgstr "Gyűjtőkód/projekt"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
-msgid "Customer Projects"
-msgstr "Ügyfél projektek"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:89
+#: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the HR Settings tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-"Kérem határozzon meg termék és termék kategória jellemzői számlát az ide "
-"vonatkozó munkavállaló részére.\n"
-"A HR beállítás tábla részét töltse ki a munkavállaló részleteinél."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Gyűjtőkód tétel"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "August"
-msgstr "Augusztus"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
-msgid "Task invoice"
-msgstr "Feladathoz tartozó számla"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_taskwork0
-msgid "Task Work"
-msgstr "Feladatmunka"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "May"
-msgstr "Május"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:93
-#, python-format
-msgid ""
-"Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Kérem határozzon meg jelentést a kapcsolódó munkavállalóhoz.\n"
-"A munkavállaló időkimutatás tábláját töltse ki."
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Projektbe bejelentkezés/kijelentkezés"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable Project"
-msgstr "Számlázandó projekt"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
-msgid "Contracts to Renew"
-msgstr "Megújítandó szerződések"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Hours"
-msgstr "Órák"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by month of date"
-msgstr "Csoportosítás hónap szerint"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr "Feladat"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
-msgstr "Felhasználó"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
-msgstr "Dátum"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "July"
-msgstr "Július"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_timesheettask0
-msgid "Complete Your Timesheet."
-msgstr "Az Ön munkaidő-kimutatásának befejezése."
-
-#. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Feladattal eltöltött órák száma"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "Február"
+"<p class=\"oe_view_nocontent_create\">Rögzítsen időkimutatást a projekthez "
+"'%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -247,19 +68,128 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Munkaidő-kimutatás feladat"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"<p>Timesheets on this project may be invoiced to %s, according to the terms "
+"defined in the contract.</p>"
+msgstr ""
+"<p>Ennek a projektnek az időkimutatásai számlázhatóak lehetnek ehhez %s, a "
+"meghatározott szerződési feltételeknek megfelelően.</p>"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskencoding0
-msgid "Task encoding"
-msgstr "Feladat berögzítése"
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+msgid "Analytic Account/Project"
+msgstr "Analitikus&Gyüjtő számlák/Projektek"
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
-msgid "Task summary is comes into the timesheet line"
-msgstr "A feladat összesítés a munkaidő-kimutatás sorába kerül."
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Gyűjtőkód tétel"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+msgid "Analytic account/project"
+msgstr "Gyűjtőkód/projekt"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "Április"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "August"
+msgstr "Augusztus"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:82
+#: code:addons/project_timesheet/project_timesheet.py:86
+#: code:addons/project_timesheet/project_timesheet.py:90
+#: code:addons/project_timesheet/project_timesheet.py:97
+#, python-format
+msgid "Bad Configuration!"
+msgstr "Rossz konfiguráció!"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.project_invoice_search
+msgid "Billable"
+msgstr "Számlázható"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr "Megújítandó szerződések"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
+msgstr "Ügyfél projektek"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "Dátum"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "December"
+msgstr "December"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "Február"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by month of date"
+msgstr "Csoportosítás hónap szerint"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by year of date"
+msgstr "Csoportosítás év szerint"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.view_project_kanban_inherited
+msgid "Hours"
+msgstr "Órák"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:264
+#, python-format
+msgid "Invalid Action!"
+msgstr "Érvénytelen lépés!"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
+#, python-format
+msgid "Invalid Analytic Account!"
+msgstr "Érvénytelen elemző főkönyvi számla!"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
+msgid "Invoice Tasks"
+msgstr "Számlázási feladatok"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
+msgid "Invoicing"
+msgstr "Számlázás"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -267,9 +197,30 @@ msgid "January"
 msgstr "Január"
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger Invoice"
-msgstr "Számla készítése"
+#: selection:report.timesheet.task.user,month:0
+msgid "July"
+msgstr "Július"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "Június"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Március"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "May"
+msgstr "Május"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "Hónap"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -278,36 +229,8 @@ msgstr "November"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Március"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_project
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
-msgstr "Április"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "report.timesheet.task.user"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Annak berögzítése, hogy mennyi időt fordított Ön a feladatra."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:85
-#, python-format
-msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Kérem munkavállaló meghatározását ehhez a felhasználóhoz \"%s\". Létre kell "
-"hoznia egyet."
+msgid "October"
+msgstr "Október"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -315,37 +238,37 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:83
 #, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Nem létező analitikus/gyüjtű számla!"
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+"Kérem munkavállaló meghatározását ehhez a felhasználóhoz \"%s\". Létre kell "
+"hoznia egyet."
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Havi jelentés - munkaidő/feladattal eltöltött órák száma"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
+#: code:addons/project_timesheet/project_timesheet.py:91
 #, python-format
-msgid "Bad Configuration !"
-msgstr "Rossz konfiguráció !"
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Kérem határozzon meg jelentést a kapcsolódó munkavállalóhoz.\n"
+"A munkavállaló időkimutatás tábláját töltse ki."
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
-msgid "Invoicing"
-msgstr "Számlázás"
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
+"Kérem határozzon meg termék és termék kategória jellemzői számlát az ide "
+"vonatkozó munkavállaló részére.\n"
+"A HR beállítás tábla részét töltse ki a munkavállaló részleteinél."
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sales order lines"
-msgstr "A vevői rendelések sorai alapján készítsen számlát"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:100
+#: code:addons/project_timesheet/project_timesheet.py:98
 #, python-format
 msgid ""
 "Please define product and product category property account on the related "
@@ -357,32 +280,19 @@ msgstr ""
 "A időkimutatás táblát töltse ki a munkavállaló részleteinél."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:60
-#, python-format
-msgid ""
-"<p>Timesheets on this project may be invoiced to %s, according to the terms "
-"defined in the contract.</p>"
-msgstr ""
-"<p>Ennek a projektnek az időkimutatásai számlázhatóak lehetnek ehhez %s, a "
-"meghatározott szerződési feltételeknek megfelelően.</p>"
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "Projekt"
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Feladaton lévő munka"
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "Projektfeladat munka"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
-msgid "Invoice Tasks"
-msgstr "Számlázási feladatok"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Feladattal eltöltött órák száma/hónap"
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "Kapcsolt időbeosztás ID"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -390,36 +300,31 @@ msgid "September"
 msgstr "Szeptember"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "December"
-msgstr "December"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by Project"
+msgstr "Projektenkénti Beléptetés / Kiléptetés"
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
-msgid "After task is completed, Create its invoice."
-msgstr "A feladat befejezése után hozza létre annak számláját is."
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "Feladat"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid "Invalid Action!"
-msgstr "Érvénytelen lépés!"
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Feladattal eltöltött órák száma"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr "Hónap"
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
+msgid "Task Hours Per Month"
+msgstr "Feladattal eltöltött órák száma/hónap"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
-#, python-format
-msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">Rögzítsen időkimutatást a projekthez "
-"'%s'.</p>"
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Tasks by User"
+msgstr "Feladatok felhasználó szerint"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -427,126 +332,39 @@ msgid "Timesheet Hours"
 msgstr "Munkaidő-kimutatás órái"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
+#: code:addons/project_timesheet/project_timesheet.py:67
+#: view:project.project:project_timesheet.project_invoice_form
+#, python-format
+msgid "Timesheets"
+msgstr "Munkaidő kimutatások"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Év"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
-msgid "Fill Timesheet"
-msgstr "Munkaidő-kimutatás kitöltése"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr ""
-#~ "Hiba! A projekt kezdő dátumának előbbinek kell lennie, mint a projekt "
-#~ "befejező dátumának."
-
-#~ msgid " Year "
-#~ msgstr " Év "
-
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
-
-#~ msgid "Project Timesheet"
-#~ msgstr "Projekt munkaidő-kimutatása"
-
-#~ msgid "Working Hours"
-#~ msgstr "Munkaórák"
-
-#~ msgid "Customer"
-#~ msgstr "Vevő"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Feladatmunkák kiszámlázása"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Számlázási adatok"
-
-#~ msgid " Month "
-#~ msgstr " Hónap "
-
-#~ msgid "My Timesheet"
-#~ msgstr "Munkaidőm"
-
-#~ msgid ""
-#~ "This lists show you every task work you can invoice to the customer. Select "
-#~ "the lines in order to generate the invoices automatically."
-#~ msgstr ""
-#~ "Ez a lista megjelenít minden feladatmunkát, amelyet ki lehet számlázni a "
-#~ "vevőknek. Válassza ki a sorokat a számlák automatikus előállításához!"
-
+#: code:addons/project_timesheet/project_timesheet.py:264
 #, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Érvénytelen művelet !"
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
+"Nem törölhet olyan partnert aki hozzá van rendelve egy projekthez, de az "
+"aktív négyzet jelölését törölheti."
 
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
 #, python-format
-#~ msgid "No employee defined for user \"%s\". You must create one."
-#~ msgstr ""
-#~ "\"%s\" felhasználóra nem állítottak be alkalmazottat. Kérem, hozza létre."
-
-#~ msgid "Invoice Tasks Work"
-#~ msgstr "Feladatmunka számlázása"
-
-#~ msgid "Invoiceable"
-#~ msgstr "Számlázható"
-
-#~ msgid " Month-1 "
-#~ msgstr " Előző hónap "
-
-#~ msgid "Invoice Task Work"
-#~ msgstr "Feladatmunka számlázása"
-
-#, python-format
-#~ msgid ""
-#~ "No journal defined on the related employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Nincs napló meghatározva ehhez az alkalmazotthoz.\n"
-#~ "Töltse ki a munkaidő-kimutatás fület az alkalmazotti űrlapon."
-
-#, python-format
-#~ msgid "Cannot delete Partner which is Assigned to project  !"
-#~ msgstr ""
-#~ "Nem lehet törölni olyan partnert, amelyet egy projekthez hozzárendeltek!"
-
-#, python-format
-#~ msgid ""
-#~ "No product defined on the related employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Nincs termék meghatározva ehhez az alkalmazotthoz.\n"
-#~ "Töltse ki a munkaidő-kimutatás fület az alkalmazotti űrlapon."
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module lets you transfer the entries under tasks defined for "
-#~ "Project Management to\n"
-#~ "        the Timesheet line entries for particular date and particular user  "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Ez a modul lehetővé teszi a projektfeladatok tételeinek áthelyezését "
-#~ "a munkaidő-kimutatás\n"
-#~ "        sorokba adott dátumra és felhasználóra. Ezek a tételek "
-#~ "szerkeszthetőek és törölhetőek.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Vevői megrendelés sorokból számlák készítése"
-
-#, python-format
-#~ msgid ""
-#~ "No product and product category property account defined on the related "
-#~ "employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Az alkalmazotthoz nem határoztak meg terméket és termék kategória főkönyvi "
-#~ "számlát.\n"
-#~ "Töltse ki a munkaidő-kimutatás fület az alkalmazotti űrlapon."
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Nem választhat olyan analitikai/Gyűjtő számlát amelyik zárt vagy "
+"érvénytelenített."

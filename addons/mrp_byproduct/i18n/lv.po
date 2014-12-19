@@ -1,21 +1,57 @@
 # Latvian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-14 15:48+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Recepte"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "Recepte"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
+msgid "Byproduct"
+msgstr "Blakusprodukts"
+
+#. module: mrp_byproduct
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
+#: field:mrp.bom,sub_products:0
+msgid "Byproducts"
+msgstr "Blakusprodukti"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "Mainīt produktu daudzumu"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_date:0
+msgid "Created on"
+msgstr ""
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -30,14 +66,24 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Produkts"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Fiksēts"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "Produkta mērvienība"
+#: field:mrp.subproduct,id:0
+msgid "ID"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -45,25 +91,9 @@ msgid "Manufacturing Order"
 msgstr "Ražošanas orderis"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Mainīt produktu daudzumu"
-
-#. module: mrp_byproduct
-#: view:mrp.bom:0
-#: field:mrp.bom,sub_products:0
-msgid "Byproducts"
-msgstr "Blakusprodukti"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Daudzuma tips"
-
-#. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Recepte"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Produkts"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
@@ -71,25 +101,14 @@ msgid "Product Qty"
 msgstr "Produkta daudzums"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
-#, python-format
-msgid "Warning"
-msgstr "Uzmanību"
+#: field:mrp.subproduct,product_uom:0
+msgid "Product Unit of Measure"
+msgstr "Produkta mērvienība"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
-msgstr "Recepte"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Mainīgais"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fiksēts"
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Daudzuma tips"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -101,6 +120,12 @@ msgstr ""
 "Izvēlētās produkta mērvienības kategorija ir citādāka, nekā produkta formā."
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
-msgid "Byproduct"
-msgstr "Blakusprodukts"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Mainīgais"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#, python-format
+msgid "Warning"
+msgstr "Uzmanību"

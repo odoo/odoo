@@ -22,29 +22,38 @@ from openerp.osv import fields
 from openerp.osv import osv
 
 
-class product_product(osv.osv):
-    _name = 'product.product'
-    _inherit = 'product.product'
+class product_template(osv.osv):
+    _name = 'product.template'
+    _inherit = 'product.template'
 
 
-    def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting = False, context=None):
+    def compute_price(self, cr, uid, product_ids, template_ids=False, recursive=False, test=False, real_time_accounting = False, context=None):
         '''
         Will return test dict when the test = False
         Multiple ids at once?
         testdict is used to inform the user about the changes to be made
         '''
         testdict = {}
+        if product_ids:
+            ids = product_ids
+            model = 'product.product'
+        else:
+            ids = template_ids
+            model = 'product.template'
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
-            bom_ids = bom_obj.search(cr, uid, [('product_id','=', prod_id), ('bom_line_ids', '!=', False)], context=context)
-            if bom_ids:
-                bom_id = bom_ids[0]
+            if model == 'product.product':
+                bom_id = bom_obj._bom_find(cr, uid, product_id=prod_id, context=context)
+            else:
+                bom_id = bom_obj._bom_find(cr, uid, product_tmpl_id=prod_id, context=context)
+            if bom_id:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:
                     #Search the products that are components of this bom of prod_id
-                    boms = bom_obj.search(cr, uid, [('bom_id', '=', bom_id)], context=context)
+                    bom = bom_obj.browse(cr, uid, bom_id, context=context)
+
                     #Call compute_price on these subproducts
-                    prod_set = set([x.product_id.id for x in bom_obj.browse(cr, uid, boms, context=context)])
+                    prod_set = set([x.product_id.id for x in bom.bom_line_ids])
                     res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
                     if test: 
                         testdict.update(res)
@@ -63,9 +72,11 @@ class product_product(osv.osv):
             context={}
         price = 0
         uom_obj = self.pool.get("product.uom")
-        if bom.bom_line_ids:
-            for sbom in bom.bom_line_ids:
-                my_qty = sbom.bom_line_ids and 1.0 or sbom.product_qty
+        tmpl_obj = self.pool.get('product.template')
+        for sbom in bom.bom_line_ids:
+            my_qty = sbom.product_qty
+            if not sbom.attribute_value_ids:
+                # No attribute_value_ids means the bom line is not variant specific
                 price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
@@ -79,20 +90,20 @@ class product_product(osv.osv):
         #Convert on product UoM quantities
         if price > 0:
             price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price / bom.product_qty, bom.product_id.uom_id.id)
-            product = self.pool.get("product.product").browse(cr, uid, bom.product_id.id, context=context)
+
+        product = tmpl_obj.browse(cr, uid, bom.product_tmpl_id.id, context=context)
         if not test:
             if (product.valuation != "real_time" or not real_time_accounting):
-                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price}, context=context)
+                tmpl_obj.write(cr, uid, [product.id], {'standard_price' : price}, context=context)
             else:
                 #Call wizard function here
                 wizard_obj = self.pool.get("stock.change.standard.price")
                 ctx = context.copy()
-                ctx.update({'active_id': bom.product_id.id})
+                ctx.update({'active_id': product.id, 'active_model': 'product.template'})
                 wiz_id = wizard_obj.create(cr, uid, {'new_price': price}, context=ctx)
                 wizard_obj.change_price(cr, uid, [wiz_id], context=ctx)
         return price
 
-product_product()
 
 class product_bom(osv.osv):
     _inherit = 'mrp.bom'

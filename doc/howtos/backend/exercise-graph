@@ -1,0 +1,57 @@
+# HG changeset patch
+# Parent a6fe4d3923db1f8f5dff2c39a711a814b0a0f549
+
+Index: addons/openacademy/models.py
+===================================================================
+--- addons.orig/openacademy/models.py	2014-08-28 14:21:55.039015659 +0200
++++ addons/openacademy/models.py	2014-08-28 14:21:55.031015659 +0200
+@@ -62,6 +62,9 @@
+     hours = fields.Float(string="Duration in hours",
+                          compute='_get_hours', inverse='_set_hours')
+ 
++    attendees_count = fields.Integer(
++        string="Attendees count", compute='_get_attendees_count', store=True)
++
+     @api.one
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+@@ -121,6 +124,11 @@
+         self.duration = self.hours / 24
+ 
+     @api.one
++    @api.depends('attendee_ids')
++    def _get_attendees_count(self):
++        self.attendees_count = len(self.attendee_ids)
++
++    @api.one
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         if self.instructor_id and self.instructor_id in self.attendee_ids:
+Index: addons/openacademy/views/openacademy.xml
+===================================================================
+--- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:55.039015659 +0200
++++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:55.031015659 +0200
+@@ -158,11 +158,22 @@
+             </field>
+         </record>
+ 
++        <record model="ir.ui.view" id="openacademy_session_graph_view">
++            <field name="name">openacademy.session.graph</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <graph string="Participations by Courses">
++                    <field name="course_id"/>
++                    <field name="attendees_count" type="measure"/>
++                </graph>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form,calendar,gantt</field>
++            <field name="view_mode">tree,form,calendar,gantt,graph</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

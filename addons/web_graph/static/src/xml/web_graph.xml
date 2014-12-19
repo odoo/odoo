@@ -57,35 +57,22 @@
     	<div class="graph_main_content"></div>
     </div>
 
-	<div t-name="field_selection" class="btn-group">
+	<div t-name="field_selection" class="dropdown">
 		<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu multi-level" role="menu">
 	    	<t t-foreach="fields" t-as="field">
                 <t t-if="(field.type === 'date') || (field.type === 'datetime')">
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'day'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (day)'"/>
+                    <li class="graph-dropdown-submenu">
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'month'" href="#">
+                            <t t-esc="field.value"/>
                         </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'week'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (week)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'month'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (month)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'quarter'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (quarter)'"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'year'" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value + ' (year)'"/>
-                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'day'">Day</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'week'">Week</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'month'">Month</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'quarter'">Quarter</a></li>
+                            <li><a href="#" class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" t-att-data-interval="'year'">Year</a></li>
+                        </ul>
                     </li>
                 </t>
 

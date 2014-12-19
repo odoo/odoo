@@ -5,7 +5,8 @@
 <template id="follow">
     <div class="input-group js_follow" t-att-data-id="object.id"
               t-att-data-object="object._name"
-              t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'">
+              t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'"
+              t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
         <input
               type="email" name="email"
               class="js_follow_email form-control"
@@ -20,9 +21,15 @@
 </template>
 
 <template id="head" inherit_id="website.assets_frontend" name="Mail customization">
-    <xpath expr="/t" position="inside">
+    <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_mail/static/src/js/follow.js"></script>
         <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.css'/>
+    </xpath>
+</template>
+
+<template id="editor" inherit_id="website.assets_editor" name="Editor assets for Mail customization">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
     </xpath>
 </template>
 

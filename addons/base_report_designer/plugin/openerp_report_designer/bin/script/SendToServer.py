@@ -90,7 +90,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
 
             report_name = docinfo.getUserFieldValue(3) + "." + result
         else:
-            ErrorDialog("Please select appropriate module...","Note: use OpenERP Report -> Open a new Report", "Module selection ERROR");
+            ErrorDialog("Please select appropriate module...","Note: use Odoo Report -> Open a new Report", "Module selection ERROR");
             exit(1)
 
         self.win = DBModalDialog(60, 50, 180, 100, "Send To Server")

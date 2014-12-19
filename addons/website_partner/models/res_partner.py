@@ -24,5 +24,5 @@ class WebsiteResPartner(osv.Model):
     }
 
     _defaults = {
-        'website_published': False
+        'website_published': True
     }

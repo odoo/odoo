@@ -87,6 +87,20 @@
                 </xpath>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="product_template_view_default_analytic_button">
+            <field name="name">product.template.stock.move</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" name= "action_view_rules" type="object" 
+                        groups="analytic.group_analytic_accounting" icon="fa-xing">
+                        <field string="Analytic Rules" name="rules_count" widget="statinfo" />
+                    </button>
+                </xpath>
+            </field>
+        </record>
 
         <act_window
             name="Entries"

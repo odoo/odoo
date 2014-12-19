@@ -55,6 +55,19 @@ def check_cycle(self, cr, uid, ids, context=None):
         level -= 1
     return True
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]",),
+    }
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
@@ -669,7 +682,7 @@ class account_account(osv.osv):
 
     # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
     # the code of an account if journal entries have been already posted on this account. This cannot be simply 
-    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    # 'configurable' since it can lead to a lack of confidence in Odoo and this is what we want to change.
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
@@ -1139,6 +1152,19 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            WHERE       state = 'valid'
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
 
     def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
         '''
@@ -1633,7 +1659,7 @@ class account_move_reconcile(osv.osv):
         return True
 
     _constraints = [
-        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id', 'line_partial_ids']),
     ]
     
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
@@ -1647,7 +1673,8 @@ class account_move_reconcile(osv.osv):
         if not total:
             self.pool.get('account.move.line').write(cr, uid,
                 map(lambda x: x.id, rec.line_partial_ids),
-                {'reconcile_id': rec.id }
+                {'reconcile_id': rec.id },
+                context=context
             )
         return True
 
@@ -2008,7 +2035,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner, 'quantity': quantity}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
@@ -2488,7 +2515,7 @@ class account_account_template(osv.osv):
             ('other','Regular'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+            "special effects in Odoo: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
@@ -3390,9 +3417,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
         if obj_wizard.purchase_tax and taxes_ref:
-            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.template', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)

@@ -1,62 +1,25 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-06-08 10:31+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-10 12:31+0000\n"
+"Last-Translator: Miku Laitinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-11 08:01+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: warning
-#: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.product,purchase_line_warn:0
-msgid "Purchase Order Line"
-msgstr "Ostotilausrivi"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Vastaanotot"
-
-#. module: warning
-#: field:product.product,purchase_line_warn_msg:0
-msgid "Message for Purchase Order Line"
-msgstr "Viesti ostotilausriville"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Keräilyluettelo"
-
-#. module: warning
-#: view:product.product:0
-msgid "Warning when Purchasing this Product"
-msgstr "Varoitus tätä tuotetta ostettaessa"
-
-#. module: warning
-#: model:ir.model,name:warning.model_product_product
-msgid "Product"
-msgstr "Tuote"
-
-#. module: warning
-#: view:product.product:0
-#: view:res.partner:0
-msgid "Warnings"
-msgstr "Varoitukset"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -65,13 +28,44 @@ msgid "Blocking Message"
 msgstr "Estoviesti"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Invoice"
-msgstr "Varoitus laskulle"
+#: model:ir.model,name:warning.model_account_invoice
+#: field:res.partner,invoice_warn:0
+msgid "Invoice"
+msgstr "Lasku"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Viesti laskulle"
+
+#. module: warning
+#: field:res.partner,purchase_warn_msg:0
+msgid "Message for Purchase Order"
+msgstr "Viesti ostotilaukselle"
+
+#. module: warning
+#: field:product.template,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr "Viesti ostotilausriville"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Viesti myyntitilaukselle"
+
+#. module: warning
+#: field:product.template,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Viesti myyntitilausriville"
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
+msgstr "Varoitus varastokeräilylle"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -80,20 +74,19 @@ msgid "No Message"
 msgstr "Ei viestiä"
 
 #. module: warning
-#: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
-msgid "Invoice"
-msgstr "Lasku"
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Kumppani"
 
 #. module: warning
-#: view:product.product:0
-msgid "Warning when Selling this Product"
-msgstr "Varoitus myytäessä tätä tuotetta"
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Keräilyluettelo"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Varatokeräily"
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr "Tuotteen malli"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -102,14 +95,27 @@ msgid "Purchase Order"
 msgstr "Ostotilaus"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
-msgid "Message for Purchase Order"
-msgstr "Viesti ostotilaukselle"
+#: model:ir.model,name:warning.model_purchase_order_line
+#: field:product.template,purchase_line_warn:0
+msgid "Purchase Order Line"
+msgstr "Ostotilausrivi"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
+#: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: field:product.template,sale_line_warn:0
+msgid "Sales Order Line"
+msgstr "Myyntitilauksen Rivi"
+
+#. module: warning
+#: code:addons/warning/warning.py:31
+#: help:product.template,purchase_line_warn:0
+#: help:product.template,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
@@ -128,64 +134,13 @@ msgstr ""
 "Kirjoita näytettävä viesti seuraavaan kenttään."
 
 #. module: warning
-#: code:addons/warning/warning.py:67
-#: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
-#, python-format
-msgid "Alert for %s !"
-msgstr "Varoita %s !"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Varatokeräily"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sales Order"
-msgstr "Varoitus myyntitilauksella"
-
-#. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Viesti laskulle"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sales Order"
-msgstr "Viesti myyntitilaukselle"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Picking"
-msgstr "Varoitus keräilyyn"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Purchase Order"
-msgstr "Varoitus ostotilaukselle"
-
-#. module: warning
-#: code:addons/warning/warning.py:68
-#: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:193
-#: code:addons/warning/warning.py:219
-#: code:addons/warning/warning.py:267
-#: code:addons/warning/warning.py:300
-#, python-format
-msgid "Warning for %s"
-msgstr "Varoitus %s"
-
-#. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sales Order Line"
-msgstr "Viesti myyntitilausriville"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -194,67 +149,48 @@ msgid "Warning"
 msgstr "Varoitus"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
-msgid "Message for Stock Picking"
-msgstr "Varoitus varastokeräilylle"
+#: code:addons/warning/warning.py:64
+#: code:addons/warning/warning.py:92
+#: code:addons/warning/warning.py:128
+#: code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:209
+#: code:addons/warning/warning.py:241
+#, python-format
+msgid "Warning for %s"
+msgstr "Varoitus %s"
 
 #. module: warning
-#: model:ir.model,name:warning.model_res_partner
-msgid "Partner"
-msgstr "Kumppani"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "Varoitus laskulle"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
-msgid "Sales Order"
-msgstr "Myyntitilaus"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "Varoitus keräilyyn"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Toimitustilaukset"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "Varoitus ostotilaukselle"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
-#: field:product.product,sale_line_warn:0
-msgid "Sales Order Line"
-msgstr "Myyntitilauksen Rivi"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "Varoitus myyntitilauksella"
 
-#~ msgid "Message for Sale Order Line"
-#~ msgstr "Vietsi myyntitilausriville"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "Varoitus tätä tuotetta ostettaessa"
 
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "Varoitus myytäessä tätä tuotetta"
 
-#~ msgid "Sale Order Line"
-#~ msgstr "Myyntitilausrivi"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Tilauksen viite tulee olla yksilöllinen!"
-
-#~ msgid "Sale Order"
-#~ msgstr "Myyntitilaus"
-
-#~ msgid "Warning on the Sale Order"
-#~ msgstr "Varoitus ostotilaukselle"
-
-#~ msgid "Message for Sale Order"
-#~ msgstr "Viesti myyntitilaukselle"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Virhe: Väärä EAN-koodi"
-
-#~ msgid "Invalid BBA Structured Communication !"
-#~ msgstr "Virheellinen BBA rakenteen kommunikointi !"
-
-#~ msgid "Invoice Number must be unique per Company!"
-#~ msgstr "laskun numeron tulee olla uniikki yrityskohtaisesti!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "Varoitukset"

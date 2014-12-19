@@ -24,6 +24,7 @@ from lxml import etree
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -83,22 +84,21 @@ class account_invoice(models.Model):
         return journal.currency or journal.company_id.currency_id
 
     @api.model
-    @api.returns('account.analytic.journal')
+    @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
-        journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
+        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        journal_type = type2journal.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
-        return journal
+        return journal[0]
 
     @api.one
     @api.depends('account_id', 'move_id.line_id.account_id', 'move_id.line_id.reconcile_id')
     def _compute_reconciled(self):
         self.reconciled = self.test_paid()
-        if not self.reconciled and self.state == 'paid':
-            self.signal_workflow('open_test')
 
     @api.model
     def _get_reference_type(self):
@@ -109,43 +109,42 @@ class account_invoice(models.Model):
         'state', 'currency_id', 'invoice_line.price_subtotal',
         'move_id.line_id.account_id.type',
         'move_id.line_id.amount_residual',
+        # Fixes the fact that move_id.line_id.amount_residual, being not stored and old API, doesn't trigger recomputation
+        'move_id.line_id.reconcile_id',
         'move_id.line_id.amount_residual_currency',
         'move_id.line_id.currency_id',
         'move_id.line_id.reconcile_partial_id.line_partial_ids.invoice.type',
     )
+    # An invoice's residual amount is the sum of its unreconciled move lines and,
+    # for partially reconciled move lines, their residual amount divided by the
+    # number of times this reconciliation is used in an invoice (so we split
+    # the residual amount between all invoice)
     def _compute_residual(self):
-        nb_inv_in_partial_rec = max_invoice_id = 0
         self.residual = 0.0
-        for line in self.move_id.line_id:
-            if line.account_id.type in ('receivable', 'payable'):
-                if line.currency_id == self.currency_id:
-                    self.residual += line.amount_residual_currency
-                else:
-                    # ahem, shouldn't we use line.currency_id here?
-                    from_currency = line.company_id.currency_id.with_context(date=line.date)
-                    self.residual += from_currency.compute(line.amount_residual, self.currency_id)
-                # we check if the invoice is partially reconciled and if there
-                # are other invoices involved in this partial reconciliation
+        # Each partial reconciliation is considered only once for each invoice it appears into,
+        # and its residual amount is divided by this number of invoices
+        partial_reconciliations_done = []
+        for line in self.sudo().move_id.line_id:
+            if line.account_id.type not in ('receivable', 'payable'):
+                continue
+            if line.reconcile_partial_id and line.reconcile_partial_id.id in partial_reconciliations_done:
+                continue
+            # Get the correct line residual amount
+            if line.currency_id == self.currency_id:
+                line_amount = line.currency_id and line.amount_residual_currency or line.amount_residual
+            else:
+                from_currency = line.company_id.currency_id.with_context(date=line.date)
+                line_amount = from_currency.compute(line.amount_residual, self.currency_id)
+            # For partially reconciled lines, split the residual amount
+            if line.reconcile_partial_id:
+                partial_reconciliation_invoices = set()
                 for pline in line.reconcile_partial_id.line_partial_ids:
                     if pline.invoice and self.type == pline.invoice.type:
-                        nb_inv_in_partial_rec += 1
-                        # store the max invoice id as for this invoice we will
-                        # make a balance instead of a simple division
-                        max_invoice_id = max(max_invoice_id, pline.invoice.id)
-        if nb_inv_in_partial_rec:
-            # if there are several invoices in a partial reconciliation, we
-            # split the residual by the number of invoices to have a sum of
-            # residual amounts that matches the partner balance
-            new_value = self.currency_id.round(self.residual / nb_inv_in_partial_rec)
-            if self.id == max_invoice_id:
-                # if it's the last the invoice of the bunch of invoices
-                # partially reconciled together, we make a balance to avoid
-                # rounding errors
-                self.residual = self.residual - ((nb_inv_in_partial_rec - 1) * new_value)
-            else:
-                self.residual = new_value
-        # prevent the residual amount on the invoice to be less than 0
-        self.residual = max(self.residual, 0.0)            
+                        partial_reconciliation_invoices.update([pline.invoice.id])
+                line_amount = self.currency_id.round(line_amount / len(partial_reconciliation_invoices))
+                partial_reconciliations_done.append(line.reconcile_partial_id.id)
+            self.residual += line_amount
+        self.residual = max(self.residual, 0.0)
 
     @api.one
     @api.depends(
@@ -167,7 +166,7 @@ class account_invoice(models.Model):
             elif data_line.reconcile_partial_id:
                 lines = data_line.reconcile_partial_id.line_partial_ids
             else:
-                lines = self.env['account_move_line']
+                lines = self.env['account.move.line']
             partial_lines += data_line
             self.move_lines = lines - partial_lines
 
@@ -179,6 +178,8 @@ class account_invoice(models.Model):
     def _compute_payments(self):
         partial_lines = lines = self.env['account.move.line']
         for line in self.move_id.line_id:
+            if line.account_id != self.account_id:
+                continue
             if line.reconcile_id:
                 lines |= line.reconcile_id.line_id
             elif line.reconcile_partial_id:
@@ -317,16 +318,26 @@ class account_invoice(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
         context = self._context
+
+        def get_view_id(xid, name):
+            try:
+                return self.env['ir.model.data'].xmlid_to_res_id('account.' + xid, raise_if_not_found=True)
+            except ValueError:
+                try:
+                    return self.env['ir.ui.view'].search([('name', '=', name)], limit=1).id
+                except Exception:
+                    return False    # view not found
+
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             partner = self.env['res.partner'].browse(context['active_ids'])[0]
             if not view_type:
-                view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.tree')]).id
+                view_id = get_view_id('invoice_tree', 'account.invoice.tree')
                 view_type = 'tree'
             elif view_type == 'form':
                 if partner.supplier and not partner.customer:
-                    view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.supplier.form')]).id
+                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form')
                 elif partner.customer and not partner.supplier:
-                    view_id = self.env['ir.ui.view'].search([('name', '=', 'account.invoice.form')]).id
+                    view_id = get_view_id('invoice_form', 'account.invoice.form')
 
         res = super(account_invoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
@@ -379,7 +390,7 @@ class account_invoice(models.Model):
         assert len(self) == 1, 'This option should only be used for a single id at a time.'
         template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(self._context,
+        ctx = dict(
             default_model='account.invoice',
             default_res_id=self.id,
             default_use_template=bool(template),
@@ -449,7 +460,7 @@ class account_invoice(models.Model):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term.id
             fiscal_position = p.property_account_position.id
-            bank_id = p.bank_ids.id
+            bank_id = p.bank_ids and p.bank_ids[0].id or False
 
         result = {'value': {
             'account_id': account_id,
@@ -488,7 +499,7 @@ class account_invoice(models.Model):
     @api.multi
     def onchange_payment_term_date_invoice(self, payment_term_id, date_invoice):
         if not date_invoice:
-            date_invoice = fields.Date.today()
+            date_invoice = fields.Date.context_today(self)
         if not payment_term_id:
             # To make sure the invoice due date should contain due date which is
             # entered by user when there is no payment term defined
@@ -574,8 +585,8 @@ class account_invoice(models.Model):
             if 'journal_id' in journal_defaults:
                 values['journal_id'] = journal_defaults['journal_id']
             if not values.get('journal_id'):
-                field_desc = journals.fields_get(['journal_id'])
-                type_label = next(t for t, label in field_desc['journal_id']['selection'] if t == journal_type)
+                field_desc = journals.fields_get(['type'])
+                type_label = next(t for t, label in field_desc['type']['selection'] if t == journal_type)
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _('Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration') % type_label
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
@@ -645,10 +656,6 @@ class account_invoice(models.Model):
                 invoice.check_total = invoice.amount_total
         return True
 
-    @staticmethod
-    def _convert_ref(ref):
-        return (ref or '').replace('/','')
-
     @api.multi
     def _get_analytic_lines(self):
         """ Return a list of dict for creating analytic lines for self[0] """
@@ -661,7 +668,7 @@ class account_invoice(models.Model):
                 if self.type in ('in_invoice', 'in_refund'):
                     ref = self.reference
                 else:
-                    ref = self._convert_ref(self.number)
+                    ref = self.number
                 if not self.journal_id.analytic_journal_id:
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
@@ -709,15 +716,16 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
         else:
             tax_key = []
+            precision = self.env['decimal.precision'].precision_get('Account')
             for tax in self.tax_line:
                 if tax.manual:
                     continue
-                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
                 tax_key.append(key)
                 if key not in compute_taxes:
                     raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > company_currency.rounding:
+                if float_compare(abs(base - tax.base), company_currency.rounding, precision_digits=precision) == 1:
                     raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
@@ -729,7 +737,7 @@ class account_invoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.today())
+                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
                 line['currency_id'] = currency.id
                 line['amount_currency'] = line['price']
                 line['price'] = currency.compute(line['price'], company_currency)
@@ -793,7 +801,10 @@ class account_invoice(models.Model):
                 continue
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
-            date_invoice = inv.date_invoice or fields.Date.context_today(self)
+
+            if not inv.date_invoice:
+                inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            date_invoice = inv.date_invoice
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -803,8 +814,7 @@ class account_invoice(models.Model):
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
-            group_check_total = self.env.ref('account.group_supplier_inv_check_total')
-            if self.env.user in group_check_total.users:
+            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
@@ -825,7 +835,7 @@ class account_invoice(models.Model):
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -889,7 +899,7 @@ class account_invoice(models.Model):
                 'ref': inv.reference or inv.name,
                 'line_id': line,
                 'journal_id': journal.id,
-                'date': date,
+                'date': inv.date_invoice,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
             }
@@ -906,7 +916,6 @@ class account_invoice(models.Model):
             move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
             vals = {
-                'date_invoice': date_invoice,
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
@@ -954,11 +963,11 @@ class account_invoice(models.Model):
 
             if inv.type in ('in_invoice', 'in_refund'):
                 if not inv.reference:
-                    ref = self._convert_ref(inv.number)
+                    ref = inv.number
                 else:
                     ref = inv.reference
             else:
-                ref = self._convert_ref(inv.number)
+                ref = inv.number
 
             self._cr.execute(""" UPDATE account_move SET ref=%s
                            WHERE id=%s AND (ref IS NULL OR ref = '')""",
@@ -1005,15 +1014,18 @@ class account_invoice(models.Model):
         #TODO: implement messages system
         return True
 
-    @api.one
-    def _compute_display_name(self):
+    @api.multi
+    def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
             'in_invoice': _('Supplier Invoice'),
             'out_refund': _('Refund'),
             'in_refund': _('Supplier Refund'),
         }
-        self.display_name = "%s %s" % (self.number or TYPES[self.type], self.name or '')
+        result = []
+        for inv in self:
+            result.append((inv.id, "%s %s" % (inv.number or TYPES[inv.type], inv.name or '')))
+        return result
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -1083,7 +1095,7 @@ class account_invoice(models.Model):
         values['journal_id'] = journal.id
 
         values['type'] = TYPE2REFUND[invoice['type']]
-        values['date_invoice'] = date or fields.Date.today()
+        values['date_invoice'] = date or fields.Date.context_today(invoice)
         values['state'] = 'draft'
         values['number'] = False
 
@@ -1113,7 +1125,7 @@ class account_invoice(models.Model):
         SIGN = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = SIGN[self.type]
         # take the chosen date
-        date = self._context.get('date_p') or fields.Date.today()
+        date = self._context.get('date_p') or fields.Date.context_today(self)
 
         # Take the amount in currency and the currency of the payment
         if self._context.get('amount_currency') and self._context.get('currency_id'):
@@ -1127,7 +1139,7 @@ class account_invoice(models.Model):
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
-            ref = self._convert_ref(self.number)
+            ref = self.number
         partner = self.partner_id._find_accounting_partner(self.partner_id)
         name = name or self.invoice_line.name or self.number
         # Pay attention to the sign for both debit/credit AND amount_currency
@@ -1249,7 +1261,7 @@ class account_invoice_line(models.Model):
     uos_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
-        ondelete='set null', index=True)
+        ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('type', 'not in', ['view', 'closed'])],
         default=_default_account,
@@ -1290,8 +1302,8 @@ class account_invoice_line(models.Model):
     @api.multi
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
-            context=None, company_id=None):
-        context = context or {}
+            company_id=None):
+        context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id, force_company=company_id)
 
@@ -1358,14 +1370,14 @@ class account_invoice_line(models.Model):
 
     @api.multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
-            fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        context = context or {}
+            fposition_id=False, price_unit=False, currency_id=False, company_id=None):
+        context = self._context
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
             product, uom, qty, name, type, partner_id, fposition_id, price_unit,
-            currency_id, context=context, company_id=company_id,
+            currency_id, company_id=company_id,
         )
         warning = {}
         if not uom:
@@ -1392,8 +1404,7 @@ class account_invoice_line(models.Model):
         res = []
         for line in inv.invoice_line:
             mres = self.move_line_get_item(line)
-            if not mres:
-                continue
+            mres['invl_id'] = line.id
             res.append(mres)
             tax_code_found = False
             taxes = line.invoice_line_tax_id.compute_all(
@@ -1502,7 +1513,7 @@ class account_invoice_tax(models.Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.today())
+            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             base = currency.compute(base * factor, company.currency_id, round=False)
         return {'value': {'base_amount': base}}
 
@@ -1512,14 +1523,14 @@ class account_invoice_tax(models.Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.with_context(date=date_invoice or fields.Date.today())
+            currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount * factor, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.v8
     def compute(self, invoice):
         tax_grouped = {}
-        currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.today())
+        currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.context_today(invoice))
         company_currency = invoice.company_id.currency_id
         for line in invoice.invoice_line:
             taxes = line.invoice_line_tax_id.compute_all(
@@ -1549,7 +1560,15 @@ class account_invoice_tax(models.Model):
                     val['account_id'] = tax['account_paid_id'] or line.account_id.id
                     val['account_analytic_id'] = tax['account_analytic_paid_id']
 
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                # If the taxes generate moves on the same financial account as the invoice line
+                # and no default analytic account is defined at the tax level, propagate the
+                # analytic account from the invoice line to the tax line. This is necessary
+                # in situations were (part of) the taxes cannot be reclaimed,
+                # to ensure the tax move is allocated to the proper analytic account.
+                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
+                    val['account_analytic_id'] = line.account_analytic_id.id
+
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
                 if not key in tax_grouped:
                     tax_grouped[key] = val
                 else:
@@ -1601,7 +1620,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices',
-        readonly=True)
+        readonly=True, copy=False)
 
     def _find_accounting_partner(self, partner):
         '''
@@ -1619,8 +1638,8 @@ class mail_compose_message(models.Model):
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
             invoice = invoice.with_context(mail_post_autofollow=True)
-            self.write({'sent': True})
-            self.message_post(body=_("Invoice sent"))
+            invoice.write({'sent': True})
+            invoice.message_post(body=_("Invoice sent"))
         return super(mail_compose_message, self).send_mail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,398 +1,96 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_analytic_analysis
+# Mongolian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-15 10:57+0000\n"
-"Last-Translator: gobi <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:57+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 08:55+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No order to invoice, create"
-msgstr "Нэхэмжлэх, үүсгэх захиалга алга"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Group By..."
-msgstr "Бүлэглэх..."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "To Invoice"
-msgstr "Үнийн нэхэмжлэл"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Remaining"
-msgstr "Үлдэгдэл"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress"
-msgstr "Боловсруулагдаж байгаа гэрээ"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
+#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
 msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr "1"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_worked_date:0
-msgid "Date of Last Cost/Work"
-msgstr "Эцсийн өртөг/Ажлын огноо"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr "Нэхэмжлэгдээгүй дүн"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-"Цагийн хуудас дээр нэхэмжлэхэд, OpenERP нь ажилчин бүрт тодорхойлогдсон цаг "
-"бүртгэлийн \n"
-"                          барааны гэрээний үнийн хүснэгтийг хэрэглэж "
-"захиалагчид нэхэмжилдэг."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "⇒ Invoice"
-msgstr "⇒ Нэхэмжлэл"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_invoiced:0
-msgid "Invoiced Amount"
-msgstr "Нэхэмжлэлийн дүн"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_worked_invoiced_date:0
-msgid "Date of Last Invoiced Cost"
-msgstr "Эцсийн өртөгийг нэхэмжилсэн огноо"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,fix_price_to_invoice:0
-msgid "Sum of quotations for this contract."
-msgstr "Энэ гэрээний ханшийн нийлбэр."
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,ca_invoiced:0
-msgid "Total customer invoiced amount for this account."
-msgstr "Бүх хэрэглэгчидийн нэхэмжилсэн дансны хэмжээ"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Sum of timesheet lines invoiced for this contract."
-msgstr "Энэ гэрээнд нэхэмжлэгдсэн цагийн хуудсын мөрийн нийлбэр"
-
-#. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
-#, python-format
-msgid "Sales Order Lines of %s"
-msgstr "%s-н Борлуулалтын Захиалгын Мөрүүд"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,revenue_per_hour:0
-msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr "Тооцоололт хийсэн томъёо: Нэхэмжилсэн дүн / Нийт Дүн"
-
-#. module: account_analytic_analysis
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Шинжилгээний Данс"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Partner"
-msgstr "Харилцагч"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts that are not assigned to an account manager."
-msgstr "Дансны менежертэй холбогдоогүй гэрээнүүд."
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new contract.\n"
-"              </p><p>\n"
-"                You will find here the contracts to be renewed because the\n"
-"                end date is passed or the working effort is higher than the\n"
-"                maximum authorized one.\n"
-"              </p><p>\n"
-"                OpenERP automatically sets contracts to be renewed in a "
-"pending\n"
-"                state. After the negociation, the salesman should close or "
-"renew\n"
-"                pending contracts.\n"
-"              </p>\n"
+"\n"
+"Hello ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Customer</th>\n"
+"        <th>Contract</th>\n"
+"        <th>Dates</th>\n"
+"        <th>Prepaid Units</th>\n"
+"        <th>Contact</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts just expired: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>The following expired contracts are still not processed: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts will expire in less than one month: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    You can check all contracts to be renewed using the menu:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"Odoo Automatic Email\n"
+"</pre>\n"
+"\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Шинэ гэрээ тодорхойлохдоо дарна.\n"
-"              </p><p>\n"
-"                Энд шинэчлэх шаардлагатай гэрээнүүд байна. Өөрөөр хэлбэл "
-"дуусах өдөр хэтэрсэн эсвэл зөвшөөрөгдсөн хүн хүч хэтэрсэн гэрээнүүд юм.\n"
-"              </p><p>\n"
-"                OpenERP нь автоматаар шинэчлэх шаардлагатай гэрээнүүдийг "
-"шийд хүлээсэн төлөвт оруулдаг. Тохиролцол явагдсан дараагаар борлуулалтын "
-"ажилтан гэрээг хаах юмуу шинэчилдэг.\n"
-"              </p>\n"
-"            "
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "End Date"
-msgstr "Дуусан огноо"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Account Manager"
-msgstr "Дансны менежер"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours_to_invoice:0
-msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
-msgstr "Дараах томъёогоор тооцоологддог: Максимум цаг - Бүх нэхэмжилсэн цаг"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Expected"
-msgstr "Тооцоолсон"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Гэрээнүүд оноогдоогүй байна"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,theorical_margin:0
-msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr "Дараах томъёогоор тооцоологддог: Онолын Орлого - Нийт Өртөг"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_invoiced:0
-msgid "Invoiced Time"
-msgstr "Нэхэмжилсэн Цаг"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,fix_price_to_invoice:0
-#: field:account.analytic.account,remaining_hours:0
-#: field:account.analytic.account,remaining_hours_to_invoice:0
-#: field:account.analytic.account,timesheet_ca_invoiced:0
-msgid "Remaining Time"
-msgstr "Үлдсэн хугацаа"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
-"'normal','template'])]}"
-msgstr ""
-"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
-"'normal','template'])]}"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Бодит бохир ашгийн харьцаа (%)"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours:0
-msgid "Computed using the formula: Maximum Time - Total Worked Time"
-msgstr ""
-"Тооцоололд ашиглагдсан томъёо: Хамгийн их хугацаа - Нийт ажилласан хугацаа"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_quantity:0
-msgid ""
-"Number of time you spent on the analytic account (from timesheet). It "
-"computes quantities on all journal of type 'general'."
-msgstr ""
-"Шинжилгээний данс дээрх таны зарцуулсан хугацаа (цагийн хуваариас). Энэ нь "
-"'ерөнхий' төрөлтэй бүх журналь дээр тооцоололт хийдэг."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Nothing to invoice, create"
-msgstr "Нэхэмжлэх, үүсгэх зүйлс алга"
-
-#. module: account_analytic_analysis
-#: model:res.groups,name:account_analytic_analysis.group_template_required
-msgid "Mandatory use of templates in contracts"
-msgstr "Гэрээн дах үлгэрийн зайлшгүй хэрэглээ"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Total Worked Time"
-msgstr "Нийт ажилласан хугацаа"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin:0
-msgid "Real Margin"
-msgstr "Бодит бохир ашиг"
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
-msgid "Hours summary by month"
-msgstr "Сарын цагийн хураангуй"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin_rate:0
-msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Томъёог ашиглан тооцоолох: (Бодит бохир ашиг/ Нийт өртөг)*100"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "or view"
-msgstr "эсвэл үзэх"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr "Захиалагчийн гэрээнүүд"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Parent"
-msgstr "Эцэг"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,month_ids:0
-#: field:account_analytic_analysis.summary.month,month:0
-msgid "Month"
-msgstr "Сар"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
-msgid "Time & Materials to Invoice"
-msgstr "Хугацаа & Нэхэмжлэлийн материал"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr "Гэрээнүүд"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Start Date"
-msgstr "Эхлэх огноо"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoiced"
-msgstr "Нэхэмжилсэн"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"The contracts to be renewed because the deadline is passed or the working "
-"hours are higher than the allocated hours"
-msgstr ""
-"Гэрээ шинэчлэгдэх хэрэгтэй учир нь дуусах хугацаа хэтэрсэн эсвэл ажилласан "
-"цаг нь хуваарилсан цагаас хэтэрсэн"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts to renew with your customer"
-msgstr "Захиалагчтай шинэчлэхээр хүлээж байгаа гэрээнүүд"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Timesheets"
-msgstr "Цагийн хуудас"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-"Хэрэв шинжилгээний данс дээр суурилж байгаа бол нэхэмжлэж болох хугацаа "
-"(цаг/өдөр) ('ерөнхий' төрөлтэй журналаас)."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr "Хүлээгдэж буй"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,is_overdue_quantity:0
-msgid "Overdue Quantity"
-msgstr "Тоо ширхэг хязгаараас давсан"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Status"
-msgstr "Төлөв"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theoretical Revenue"
-msgstr "Онолын Орлого"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "To Renew"
-msgstr "Шинэчлэх"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"A contract in OpenERP is an analytic account having a partner set on it."
-msgstr "OpenERP-д гэрээ нь харилцагч бүхий шинжилгээний данс юм."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
-msgid "Sales Orders"
-msgstr "Борлуулалтын захиалгууд"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
-"Хэрэв өртөгөөс нэхэмжлэх бол энэ нь хамгийн сүүлийн нэхэмжилсэн огноо."
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,ca_theorical:0
-msgid ""
-"Based on the costs you had on the project, what would have been the revenue "
-"if all these costs have been invoiced at the normal sale price provided by "
-"the pricelist."
-msgstr ""
-"Based on the costs you had on the project, what would have been the revenue "
-"if all these costs have been invoiced at the normal sale price provided by "
-"the pricelist."
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,user_ids:0
-#: field:account_analytic_analysis.summary.user,user:0
-msgid "User"
-msgstr "Хэрэглэгч"
+#: help:account.analytic.account,toinvoice_total:0
+msgid " Sum of everything that could be invoiced for this contract."
+msgstr " Энэ гэрээнд нэхэмжилж болох бүх зүйлсийн нийлбэр."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -417,37 +115,6 @@ msgstr ""
 "            "
 
 #. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours Summary by User"
-msgstr "Хэрэглэгчээр багцалсан цаг"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contract"
-msgstr "Гэрээ"
-
-#. module: account_analytic_analysis
-#: help:sale.config.settings,group_template_required:0
-msgid ""
-"Allows you to set the template field as required when creating an analytic "
-"account or a contract."
-msgstr ""
-"Шинжилгээний данс болон гэрээг үүсгэхэд үлгэр талбарыг заавал шаардагдах "
-"болгох боломжийг олгодог."
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_invoiced:0
-msgid ""
-"Number of time (hours/days) that can be invoiced plus those that already "
-"have been invoiced."
-msgstr "Нэхэмжлэгдсэн болон нэхэмжлэх ёстой хугацааны нийлбэр (цаг/өдөр)"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,revenue_per_hour:0
-msgid "Revenue per Time (real)"
-msgstr "Орлого Хугацаагаар (бодит)"
-
-#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -455,58 +122,55 @@ msgid ""
 "                </p><p>\n"
 "                    Use contracts to follow tasks, issues, timesheets or "
 "invoicing based on\n"
-"                    work done, expenses and/or sales orders. OpenERP will "
+"                    work done, expenses and/or sales orders. Odoo will "
 "automatically manage\n"
 "                    the alerts for the renewal of the contracts to the right "
 "salesperson.\n"
 "                </p>\n"
 "            "
 msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    Шинэ гэрээ үүсгэхдээ дарна.\n"
-"                </p><p>\n"
-"                    Гэрээг ашиглан даалгавар, асуудал, цагийн хуудас, "
-"хийгдсэн ажил дээрх нэхэмжлэл, зардал, борлуулалтын захиалга зэрэгийг хянаж "
-"дагаж болно. OpenERP нь автоматаар зөв борлуулалтынажилтанд гэрээг шинэчлэх "
-"талаар автомат сануулгыг хэлэх явдлыг менежмент хийдэг.\n"
-"                </p>\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Борлуулалтын захиалга руу хөрвүүлж болох үнийн саналыг "
+"үүсгэхээр бол дарна уу.\n"
+"              </p><p>\n"
+"                Гэрээн дээр тогтмол үнээр нэхэмжилж болох бүх зүйлийг "
+"хөтлөхдөө \n"
+"                борлуулалтын захиалгыг ашиглана уу.\n"
+"              </p>\n"
 "            "
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,toinvoice_total:0
-msgid "Total to Invoice"
-msgstr "Нийт нэхэмжлэл"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Борлуулалтын захиалга"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Open"
-msgstr "Нээх"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,invoiced_total:0
-msgid "Total Invoiced"
-msgstr "Нийт нэхэмжлэл"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_ca:0
-msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new contract.\n"
+"              </p><p>\n"
+"                You will find here the contracts to be renewed because the\n"
+"                end date is passed or the working effort is higher than the\n"
+"                maximum authorized one.\n"
+"              </p><p>\n"
+"                Odoo automatically sets contracts to be renewed in a "
+"pending\n"
+"                state. After the negociation, the salesman should close or "
+"renew\n"
+"                pending contracts.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Томъёг ашиглан тооцоолох:  Нэхэмжлэх үнийн дээд хэмжээ - Нэхэмжилсэн хэмжээ"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Сүүлийн нэхэмжлэлийн огноо"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Remaining"
-msgstr "Нэгжийн үлдэгдэл"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -529,19 +193,221 @@ msgstr ""
 "            "
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_non_invoiced:0
-msgid "Uninvoiced Time"
-msgstr "Нэхэмжлээгүй Хугацаа"
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Account Analytic Lines"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoicing"
-msgstr "Нэхэмжлэх"
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Account Manager"
+msgstr "Дансны менежер"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,total_cost:0
-msgid "Total Costs"
-msgstr "Нийт зардал"
+#: help:sale.config.settings,group_template_required:0
+msgid ""
+"Allows you to set the template field as required when creating an analytic "
+"account or a contract."
+msgstr ""
+"Шинжилгээний данс болон гэрээг үүсгэхэд үлгэр талбарыг заавал шаардагдах "
+"болгох боломжийг олгодог."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,analytic_account_id:0
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Шинжилгээний Данс"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,ca_theorical:0
+msgid ""
+"Based on the costs you had on the project, what would have been the revenue "
+"if all these costs have been invoiced at the normal sale price provided by "
+"the pricelist."
+msgstr ""
+"Based on the costs you had on the project, what would have been the revenue "
+"if all these costs have been invoiced at the normal sale price provided by "
+"the pricelist."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Cancelled"
+msgstr "Цуцалсан"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Cancelled contracts"
+msgstr "Цуцалсан гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Closed"
+msgstr "Хаасан"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Closed contracts"
+msgstr "Хаагдсан Гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours_to_invoice:0
+msgid ""
+"Computed using the formula: Expected on timesheets - Total invoiced on "
+"timesheets"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,real_margin:0
+msgid "Computed using the formula: Invoiced Amount - Total Costs."
+msgstr "Томъёг ашиглан тооцоолох:  Нэхэмжилсэн хэмжээ - Нийт өртөг."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,revenue_per_hour:0
+msgid "Computed using the formula: Invoiced Amount / Total Time"
+msgstr "Тооцоололт хийсэн томъёо: Нэхэмжилсэн дүн / Нийт Дүн"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_ca:0
+msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
+msgstr ""
+"Томъёг ашиглан тооцоолох:  Нэхэмжлэх үнийн дээд хэмжээ - Нэхэмжилсэн хэмжээ"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours:0
+msgid "Computed using the formula: Maximum Time - Total Worked Time"
+msgstr ""
+"Тооцоололд ашиглагдсан томъёо: Хамгийн их хугацаа - Нийт ажилласан хугацаа"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,theorical_margin:0
+msgid "Computed using the formula: Theoretical Revenue - Total Costs"
+msgstr "Дараах томъёогоор тооцоологддог: Онолын Орлого - Нийт Өртөг"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,real_margin_rate:0
+msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
+msgstr "Томъёог ашиглан тооцоолох: (Бодит бохир ашиг/ Нийт өртөг)*100"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Contract"
+msgstr "Гэрээ"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr "Гэрээний загвар"
+
+#. module: account_analytic_analysis
+#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
+msgid "Contract expiration reminder ${user.company_id.name}"
+msgstr "Гэрээний хугацаа дуусах сануулга ${user.company_id.name}"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Contracts assigned to a customer."
+msgstr "Захиалагчид оноогдсон гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Contracts in progress (open, draft)"
+msgstr "Боловсруулагдаж буй гэрээнүүд (нээлттэй, ноорог)"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Contracts not assigned"
+msgstr "Гэрээнүүд оноогдоогүй байна"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Contracts that are not assigned to an account manager."
+msgstr "Дансны менежертэй холбогдоогүй гэрээнүүд."
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
+msgid "Contracts to Renew"
+msgstr "Шинэчлэх Гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Customer Contracts"
+msgstr "Захиалагчийн гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_worked_date:0
+msgid "Date of Last Cost/Work"
+msgstr "Эцсийн өртөг/Ажлын огноо"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_worked_invoiced_date:0
+msgid "Date of Last Invoiced Cost"
+msgstr "Эцсийн өртөгийг нэхэмжилсэн огноо"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_next_date:0
+msgid "Date of Next Invoice"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Энэ данс дээр хйигдсэн сүүлийн ажлын огноо."
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Day(s)"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,name:0
+msgid "Description"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "End Month"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "End date is in the next month"
+msgstr "Дуусах огноо дараа сард"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "End date passed or prepaid unit consumed"
+msgstr "Дуусах огноо хэтэрсэн буюу урьдчилан төлсөн нэгж хангагдсан"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:674
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_est:0
+msgid "Estimation of Hours to Invoice"
+msgstr "Нэхэмжлэх цагийн тооцоолол"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -555,35 +421,19 @@ msgstr ""
 "'Нэхэмжлэх'-н хоорондын хамгийн ялгаагаар тооцоологдоно."
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
-msgid "Contracts to Renew"
-msgstr "Шинэчлэх Гэрээнүүд"
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Expected"
+msgstr "Тооцоолсон"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,toinvoice_total:0
-msgid " Sum of everything that could be invoiced for this contract."
-msgstr " Энэ гэрээнд нэхэмжилж болох бүх зүйлсийн нийлбэр."
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Expired or consumed"
+msgstr "Хугацаа дууссан эсвэл хангагдсан"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theoretical Margin"
-msgstr "Онолын Хязгаар"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,remaining_total:0
-msgid "Total Remaining"
-msgstr "Нийт үлдэгдэл"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin:0
-msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Томъёг ашиглан тооцоолох:  Нэхэмжилсэн хэмжээ - Нийт өртөг."
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_est:0
-msgid "Estimation of Hours to Invoice"
-msgstr "Нэхэмжлэх цагийн тооцоолол"
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Expiring soon"
+msgstr "Удахгүй хугацаа дуусна"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
@@ -591,49 +441,31 @@ msgid "Fixed Price"
 msgstr "Тогтмол үнэ"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Энэ данс дээр хйигдсэн сүүлийн ажлын огноо."
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: account_analytic_analysis
-#: field:sale.config.settings,group_template_required:0
-msgid "Mandatory use of templates."
-msgstr "Үлгэрүүдийн зайлшгүй хэрэглээ"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Contract Template"
-msgstr "Гэрээний загвар"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Done"
-msgstr "Хийгдсэн Нэгжүүд"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,total_cost:0
-msgid ""
-"Total of costs for this account. It includes real costs (from invoices) and "
-"indirect costs, like time spent on timesheets."
+#: field:account.analytic.account,recurring_invoices:0
+msgid "Generate recurring invoices automatically"
 msgstr ""
-"Энэ дансны нийт өртөг. Бодит өртөгийг ба дагалдах өртөгийг (нэхэмжлэлээс) "
-"багтаасан."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,est_total:0
-msgid "Total Estimation"
-msgstr "Нийт таамаг тооцоо"
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Group By"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,remaining_ca:0
-msgid "Remaining Revenue"
-msgstr "Үлдэх орлого"
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
+msgstr "Хэрэглэгчээр багцалсан цаг"
+
+#. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
+msgid "Hours summary by month"
+msgstr "Сарын цагийн хураангуй"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,id:0
+#: field:account_analytic_analysis.summary.month,id:0
+#: field:account_analytic_analysis.summary.user,id:0
+msgid "ID"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -645,10 +477,428 @@ msgstr ""
 "the customer based on the total costs."
 
 #. module: account_analytic_analysis
+#: help:account.analytic.account,last_invoice_date:0
+msgid "If invoice from the costs, this is the date of the latest invoiced."
+msgstr ""
+"Хэрэв өртөгөөс нэхэмжлэх бол энэ нь хамгийн сүүлийн нэхэмжилсэн огноо."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
+msgstr "1"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "In Progress"
+msgstr "Хийгдэж буй"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_invoice_line_ids:0
+msgid "Invoice Lines"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,recurring_rule_type:0
+msgid "Invoice automatically repeat at specified interval"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Invoiced"
+msgstr "Нэхэмжилсэн"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_invoiced:0
+msgid "Invoiced Amount"
+msgstr "Нэхэмжлэлийн дүн"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_invoiced:0
+msgid "Invoiced Time"
+msgstr "Нэхэмжилсэн Цаг"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Invoicing"
+msgstr "Нэхэмжлэх"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Сүүлийн нэхэмжлэлийн огноо"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:res.groups,name:account_analytic_analysis.group_template_required
+msgid "Mandatory use of templates in contracts"
+msgstr "Гэрээн дах үлгэрийн зайлшгүй хэрэглээ"
+
+#. module: account_analytic_analysis
+#: field:sale.config.settings,group_template_required:0
+msgid "Mandatory use of templates."
+msgstr "Үлгэрүүдийн зайлшгүй хэрэглээ"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,month_ids:0
+#: field:account_analytic_analysis.summary.month,month:0
+msgid "Month"
+msgstr "Сар"
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Month(s)"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#, python-format
+msgid "No Customer Defined!"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "No order to invoice, create"
+msgstr "Нэхэмжлэх, үүсгэх захиалга алга"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Nothing to invoice, create"
+msgstr "Нэхэмжлэх, үүсгэх зүйлс алга"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Хэрэв шинжилгээний данс дээр суурилж байгаа бол нэхэмжлэж болох хугацаа "
+"(цаг/өдөр) ('ерөнхий' төрөлтэй журналаас)."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_invoiced:0
+msgid ""
+"Number of time (hours/days) that can be invoiced plus those that already "
+"have been invoiced."
+msgstr "Нэхэмжлэгдсэн болон нэхэмжлэх ёстой хугацааны нийлбэр (цаг/өдөр)"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_quantity:0
+msgid ""
+"Number of time you spent on the analytic account (from timesheet). It "
+"computes quantities on all journal of type 'general'."
+msgstr ""
+"Шинжилгээний данс дээрх таны зарцуулсан хугацаа (цагийн хуваариас). Энэ нь "
+"'ерөнхий' төрөлтэй бүх журналь дээр тооцоололт хийдэг."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,invoice_on_timesheets:0
+msgid "On Timesheets"
+msgstr "Цагийн хуудсуудад"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,is_overdue_quantity:0
+msgid "Overdue Quantity"
+msgstr "Тоо ширхэг хязгаараас давсан"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Parent"
+msgstr "Эцэг"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Pending contracts"
+msgstr "Шийд хүлээсэн гэрээнүүд"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:675
+#, python-format
+msgid "Please define a sale journal for the company \"%s\"."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Pricelist"
+msgstr "Үнийн жагсаалт"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,product_id:0
+msgid "Product"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,quantity:0
+msgid "Quantity"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin:0
+msgid "Real Margin"
+msgstr "Бодит бохир ашиг"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Бодит бохир ашгийн харьцаа (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_rule_type:0
+msgid "Recurrency"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Recurring Invoices"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Remaining"
+msgstr "Үлдэгдэл"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,remaining_ca:0
+msgid "Remaining Revenue"
+msgstr "Үлдэх орлого"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,fix_price_to_invoice:0
+#: field:account.analytic.account,remaining_hours:0
+#: field:account.analytic.account,remaining_hours_to_invoice:0
+#: field:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Remaining Time"
+msgstr "Үлдсэн хугацаа"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,recurring_interval:0
+msgid "Repeat Every"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,recurring_interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,revenue_per_hour:0
+msgid "Revenue per Time (real)"
+msgstr "Орлого Хугацаагаар (бодит)"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:543
+#, python-format
+msgid "Sales Order Lines to Invoice of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
+msgid "Sales Orders"
+msgstr "Борлуулалтын захиалгууд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Start Month"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,price_subtotal:0
+msgid "Sub Total"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,fix_price_to_invoice:0
+msgid "Sum of quotations for this contract."
+msgstr "Энэ гэрээний ханшийн нийлбэр."
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,timesheet_ca_invoiced:0
+msgid "Sum of timesheet lines invoiced for this contract."
+msgstr "Энэ гэрээнд нэхэмжлэгдсэн цагийн хуудсын мөрийн нийлбэр"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "Template"
+msgstr "Үлгэр"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Онолын Хязгаар"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Онолын Орлого"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
+msgid "Time & Materials to Invoice"
+msgstr "Хугацаа & Нэхэмжлэлийн материал"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Timesheets"
+msgstr "Цагийн хуудас"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:652
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr "%s-н нэхэмжлэх цаг бүртгэлүүд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "To Invoice"
+msgstr "Үнийн нэхэмжлэл"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
+msgid "To Renew"
+msgstr "Шинэчлэх"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Total"
+msgstr "Нийт"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,total_cost:0
+msgid "Total Costs"
+msgstr "Нийт зардал"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,est_total:0
+msgid "Total Estimation"
+msgstr "Нийт таамаг тооцоо"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,invoiced_total:0
+msgid "Total Invoiced"
+msgstr "Нийт нэхэмжлэл"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,remaining_total:0
+msgid "Total Remaining"
+msgstr "Нийт үлдэгдэл"
+
+#. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
 msgstr "Нийт хугацаа"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Total Worked Time"
+msgstr "Нийт ажилласан хугацаа"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,ca_invoiced:0
+msgid "Total customer invoiced amount for this account."
+msgstr "Бүх хэрэглэгчидийн нэхэмжилсэн дансны хэмжээ"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,total_cost:0
+msgid ""
+"Total of costs for this account. It includes real costs (from invoices) and "
+"indirect costs, like time spent on timesheets."
+msgstr ""
+"Энэ дансны нийт өртөг. Бодит өртөгийг ба дагалдах өртөгийг (нэхэмжлэлээс) "
+"багтаасан."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,toinvoice_total:0
+msgid "Total to Invoice"
+msgstr "Нийт нэхэмжлэл"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
+msgstr "Нэхэмжлэгдээгүй дүн"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_non_invoiced:0
+msgid "Uninvoiced Time"
+msgstr "Нэхэмжлээгүй Хугацаа"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,price_unit:0
+msgid "Unit Price"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.invoice.line,uom_id:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Units Consumed"
+msgstr "Хангагдсан Нэгжүүд"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "Units Remaining"
+msgstr "Нэгжийн үлдэгдэл"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,user_ids:0
+#: field:account_analytic_analysis.summary.user,user:0
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Week(s)"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid ""
+"When reinvoicing costs, Odoo uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: selection:account.analytic.account,recurring_rule_type:0
+msgid "Year(s)"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:669
+#, python-format
+msgid "You must first select a Customer for Contract %s!"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "or view"
+msgstr "эсвэл үзэх"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
@@ -658,193 +908,28 @@ msgstr ""
 "үлгэрийн талбар нь шинжилгээний данс болон гэрээнд заавал шаардагдана."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,invoice_on_timesheets:0
-msgid "On Timesheets"
-msgstr "Цагийн хуудсуудад"
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid ""
+"{'required': "
+"[('type','=','contract'),'|','|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Total"
-msgstr "Нийт"
+#: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_template_required
+msgid ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
+msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
-#~ msgid ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
-#~ msgstr ""
-#~ "Number of hours that can be invoiced plus those that already have been "
-#~ "invoiced."
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "⇒ Invoice"
+msgstr "⇒ Нэхэмжлэл"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "The Object name must start with x_ and not contain any special character !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Энэ үйлдэлийн зарлалтанд тохирхогүй моделийн нэр."
-
-#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-#~ msgstr "Томъёг ашиглан тооцоолох:  Дээд хэмжээ - Нийт цаг"
-
-#~ msgid "Theorical Revenue"
-#~ msgstr "Хийсвэр орлого"
-
-#~ msgid "Date of the last invoice created for this analytic account."
-#~ msgstr "Энэ аналитик дансыг үүсэгсэн сүүлийн нэхэмжлэлийн огноо"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module is for modifying account analytic view to show\n"
-#~ "important data to project manager of services companies.\n"
-#~ "Adds menu to show relevant information to each manager..\n"
-#~ "\n"
-#~ "You can also view the report of account analytic summary\n"
-#~ "user-wise as well as month wise.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "important data to project manager of services companies.\n"
-#~ "Adds menu to show relevant information to each manager..\n"
-#~ "\n"
-#~ "You can also view the report of account analytic summary\n"
-#~ "user-wise as well as month wise.\n"
-
-#~ msgid "Computed using the formula: Theorial Revenue - Total Costs"
-#~ msgstr "Томъёг ашиглан тооцоолох:  Хийсвэр орлого - Нийт өртөг"
-
-#~ msgid "Theorical Margin"
-#~ msgstr "Хийсвэр зөрүү"
-
-#~ msgid "Billing"
-#~ msgstr "Тооцоо"
-
-#~ msgid ""
-#~ "Number of hours you spent on the analytic account (from timesheet). It "
-#~ "computes on all journal of type 'general'."
-#~ msgstr ""
-#~ "Number of hours you spent on the analytic account (from timesheet). It "
-#~ "computes on all journal of type 'general'."
-
-#~ msgid "Remaining Hours"
-#~ msgstr "Үлдсэн хугацаа"
-
-#~ msgid "Uninvoiced Hours"
-#~ msgstr "Үл нэхэмжлэгдсэн цаг"
-
-#~ msgid "report_account_analytic"
-#~ msgstr "Аналитик дансны тайлан"
-
-#~ msgid "Invoiced Hours"
-#~ msgstr "Нэхэмжилсэн цаг"
-
-#~ msgid ""
-#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
-#~ "invoice based on analytic account."
-#~ msgstr ""
-#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
-#~ "invoice based on analytic account."
-
-#~ msgid "Analytic accounts"
-#~ msgstr "Аналитик данс"
-
-#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-#~ msgstr "Томъёг ашиглан тооцоолох:  Нэхэмжилсэн хэмжээ / Нийт цаг"
-
-#~ msgid "Revenue per Hours (real)"
-#~ msgstr "Цаг тутмын орлого (бодит)"
-
-#~ msgid "Overpassed Accounts"
-#~ msgstr "Overpassed Accounts"
-
-#~ msgid "All Uninvoiced Entries"
-#~ msgstr "Бүх нэхэмжлэгдээгүй гүйлгээнүүд"
-
-#~ msgid "Hours Tot"
-#~ msgstr "Нийт цаг"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "My Current Accounts"
-#~ msgstr "Миний одоогийн дансдууд"
-
-#~ msgid "New Analytic Account"
-#~ msgstr "Шинэ аналитик данс"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "Нэхэмжлээгүй бичлэгүүд"
-
-#~ msgid "Hours summary by user"
-#~ msgstr "Хэрэглэгч бүрээрхи цагийн товчоо"
-
-#~ msgid "My Accounts"
-#~ msgstr "Миний дансдууд"
-
-#~ msgid "All Analytic Accounts"
-#~ msgstr "Бүх аналитик дансууд"
-
-#~ msgid "Financial Project Management"
-#~ msgstr "Санхүүгийн төслийн удирдлага"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Хүлээгдэж буй аналитик дансууд"
-
-#~ msgid "Analytic Accounts"
-#~ msgstr "Аналитик дансууд"
-
-#~ msgid "My Pending Accounts"
-#~ msgstr "Миний хүлээгдэж буй дансууд"
-
-#~ msgid ""
-#~ "Modify account analytic view to show\n"
-#~ "important data for project manager of services companies.\n"
-#~ "Add menu to show relevant information for each manager."
-#~ msgstr ""
-#~ "Төслийн менежерт зориулан аналитик \n"
-#~ "шинжилгээний дансдын харагдах байдлыг өөрчлөнө.\n"
-#~ "Менежер бүрт зориулсан мэдээллийг харуулах цэс нэмнэ."
-
-#~ msgid "Current Analytic Accounts"
-#~ msgstr "Одоогийн аналитик дансууд"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
-
-#, python-format
-#~ msgid "You try to bypass an access rule (Document type: %s)."
-#~ msgstr "Хандалтын журмыг алгасах гэж оролдож байна (Баримтын төрөл: %s)"
-
-#, python-format
-#~ msgid "AccessError"
-#~ msgstr "ХандалтынАлдаа"
-
-#~ msgid "Create Invoice"
-#~ msgstr "Нэхэмжлэл үүсгэх"
-
-#~ msgid "Manager"
-#~ msgstr "Менежер"
-
-#~ msgid "Analytic Accounts with a past deadline in one month."
-#~ msgstr "Дуусах хугацаа нь сараар хэтэрсэн шинжилгээний данс"
-
-#~ msgid ""
-#~ "You will find here the contracts to be renewed because the deadline is "
-#~ "passed or the working hours are higher than the allocated hours. OpenERP "
-#~ "automatically sets these analytic accounts to the pending state, in order to "
-#~ "raise a warning during the timesheets recording. Salesmen should review all "
-#~ "pending accounts and reopen or close the according to the negotiation with "
-#~ "the customer."
-#~ msgstr ""
-#~ "Дуусах хугацаа хэтэрсэн болон хуваарилсан хугацаанаасаа давсан шалтгааны "
-#~ "улмаас шинэчлэх шаардлагатай болсон гэрээнүүдийг эндээс олно. OpenERP нь ийм "
-#~ "төрлийн дансдыг автоматаар хүлээгдэж байгаа төлөвтэй болгодог бөгөөд "
-#~ "ингэснээр цагийн хуваарийн гүйцэтгэл бичих үед анхааруулга өгдөг. "
-#~ "Борлуулалтын ажилтан эдгээр хүлээгдэж байгаа төлөвтэй дансдыг хянаж "
-#~ "захиалагчтай тохиролцоо хийсний үндсэн дээр хаах юм дахин нээж байх хэрэгтэй."
-
-#~ msgid "Associated Partner"
-#~ msgstr "Холбогдох харилцагч"
-
-#~ msgid " +1 Month"
-#~ msgstr " +1 Сар"
-
-#~ msgid "Computed using the formula: Maximum Time - Total Time"
-#~ msgstr "Тооцоололт хийсэн томъёо: Максимум Хугацаа - Бүх Хугацаа"
+#. module: account_analytic_analysis
+#: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
+msgid "⇒ create invoices"
+msgstr ""

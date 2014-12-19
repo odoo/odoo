@@ -41,7 +41,7 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <label for="partner_ids" class="oe_edit_only"/>
+                        <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
                                 context="{'force_email':True}"
@@ -204,7 +204,8 @@
             <tree string="Meetings" fonts="bold:message_unread==True">
                 <field name="name" string="Subject"/>
                 <field name="allday" invisible="True"/>
-                <field name="display_start" string="Date" />
+                <field name="start_date" string="Date"/>
+                <field name="start_datetime" string="Date"/>
                 <field name="user_id"/>
                 <field name="location"/>
                 <field name="show_as"/>
@@ -240,7 +241,7 @@
         <field name="name">CRM - Meetings Gantt</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <gantt date_delay="duration" date_start="date" string="Meetings"/>
+            <gantt date_delay="duration" date_start="start" string="Meetings"/>
         </field>
     </record>
 

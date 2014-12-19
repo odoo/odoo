@@ -15,16 +15,12 @@
                         </group>
                         <group name="properties">
                             <group>
-                                <field name="property_account_income" domain="[('type','=','other')]" groups="account.group_account_user"
-                                    attrs="{'readonly': [('is_product_variant', '=', True)]}"/>
-                                <field name="taxes_id" colspan="2" widget="many2many_tags"
-                                    attrs="{'readonly':[ '|', ('sale_ok','=',0), ('is_product_variant', '=', True)]}"/>
+                                <field name="property_account_income" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="property_account_expense" domain="[('type','=','other')]" groups="account.group_account_user"
-                                    attrs="{'readonly': [('is_product_variant', '=', True)]}"/>
-                                <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"
-                                    attrs="{'readonly': [('is_product_variant', '=', True)]}"/>
+                                <field name="property_account_expense" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"/>
                             </group>
                         </group>
                     </page>

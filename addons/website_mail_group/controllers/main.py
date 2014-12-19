@@ -34,12 +34,13 @@ class MailGroup(http.Controller):
         groups = group_obj.browse(cr, uid, group_ids, context)
         # compute statistics
         month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
-        group_data = dict.fromkeys(group_ids, dict())
+        group_data = dict()
         for group in groups:
-            group_data[group.id]['monthly_message_nbr'] = mail_message_obj.search(
-                cr, SUPERUSER_ID,
-                [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
-                count=True, context=context)
+            group_data[group.id] = {
+                'monthly_message_nbr': mail_message_obj.search(
+                    cr, SUPERUSER_ID,
+                    [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
+                    count=True, context=context)}
         values = {'groups': groups, 'group_data': group_data}
         return request.website.render('website_mail_group.mail_groups', values)
 

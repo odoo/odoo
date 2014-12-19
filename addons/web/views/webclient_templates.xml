@@ -123,7 +123,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP</title>
+                    <title>Odoo</title>
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
@@ -214,7 +214,7 @@
                     </script>
                 </t>
 
-                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="icon-bar"></span>
@@ -230,7 +230,7 @@
                     <table class="oe_webclient">
                         <tr>
                             <td class="oe_leftbar" valign="top">
-                                <div>
+                                <div groups="base.group_user,base.group_portal">
                                     <t t-call="web.menu_secondary"/>
                                 </div>
                             </td>
@@ -250,7 +250,7 @@
                 <t t-set="body_classname" t-value="'oe_single_form'"/>
                 <div class="oe_single_form_container modal-content">
                     <div class="oe_single_form_logo">
-                        <img src="/web/binary/company_logo"/>
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
                     </div>
                     <hr/>
                     <t t-raw="0"/>
@@ -260,7 +260,7 @@
                             <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
                             <span class="oe_footer_seperator"> | </span>
                         </t>
-                        <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
                     </div>
                 </div>
             </t>
@@ -323,7 +323,7 @@
                 <head>
                     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
                     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-                    <title>OpenERP Web Tests</title>
+                    <title>Odoo Web Tests</title>
 
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>

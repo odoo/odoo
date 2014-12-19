@@ -1,57 +1,36 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_crm
+# Spanish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-22 11:38+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-18 11:59+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 06:25+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-19 07:05+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "Insufficient Data!"
-msgstr "¡Datos insuficientes!"
+#: field:sale.order,campaign_id:0
+msgid "Campaign"
+msgstr "Campaña"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Convertir a presupuesto"
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Estadísticas de facturas"
-
-#. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Mark Won"
-msgstr "Marcar como ganado"
-
-#. module: sale_crm
-#: field:res.users,default_section_id:0
-msgid "Default Sales Team"
-msgstr "Equipo de ventas por defecto"
-
-#. module: sale_crm
-#: view:sale.order:0
-msgid "My Sales Team(s)"
-msgstr "Mi equipo de ventas"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Usuarios"
+#: field:sale.order,medium_id:0
+msgid "Channel"
+msgstr "Canal"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -62,21 +41,25 @@ msgstr ""
 "venta."
 
 #. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "Presupuesto enviado"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "Convert to Quotation"
+msgstr "Convertir a presupuesto"
 
 #. module: sale_crm
-#: field:sale.order,categ_ids:0
-msgid "Categories"
-msgstr "Categorías"
+#: view:crm.lead:sale_crm.crm_case_form_view_oppor
+msgid "Create Quotation"
+msgstr "Crear presupuesto"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:127
-#: code:addons/sale_crm/wizard/crm_make_sale.py:138
-#, python-format
-msgid "Quotation"
-msgstr "Presupuesto"
+#: field:crm.make.sale,create_uid:0
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: sale_crm
+#: field:crm.make.sale,create_date:0
+msgid "Created on"
+msgstr "Creado en"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -84,62 +67,25 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Crear"
+#: field:crm.make.sale,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Crear ventas"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "Factura"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:95
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
 #, python-format
-msgid "Opportunity: %s"
-msgstr "Oportunidad: %s"
+msgid "Insufficient Data!"
+msgstr "¡Datos insuficientes!"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:113
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr ""
-"La oportunidad ha sido <b>convertida</> en el presupuesto <em>%s</em>."
+#: field:crm.make.sale,write_uid:0
+msgid "Last Updated by"
+msgstr "Última actualización de"
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Tienda"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
-#, python-format
-msgid "No addresse(s) defined for this customer."
-msgstr "No se han definido direcciones para este cliente."
-
-#. module: sale_crm
-#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
-msgid "Sales Order Confirmed"
-msgstr "Pedido de venta confirmado"
-
-#. module: sale_crm
-#: view:account.invoice:0
-#: field:account.invoice,section_id:0
-#: field:account.invoice.report,section_id:0
-#: view:sale.order:0
-#: field:sale.order,section_id:0
-msgid "Sales Team"
-msgstr "Equipo de ventas"
-
-#. module: sale_crm
-#: view:crm.lead:0
-msgid "Create Quotation"
-msgstr "Crear presupuesto"
+#: field:crm.make.sale,write_date:0
+msgid "Last Updated on"
+msgstr "Última actualización en"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -147,9 +93,40 @@ msgid "Make Quotation"
 msgstr "Realizar un presupuesto"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Crear ventas"
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr "Marcar como ganado"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:91
+#, python-format
+msgid "No address(es) defined for this customer."
+msgstr "No se ha definido ninguna dirección para este cliente."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:111
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
+"La oportunidad ha sido <b>convertida</> en el presupuesto <em>%s</em>."
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:94
+#, python-format
+msgid "Opportunity: %s"
+msgstr "Oportunidad: %s"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:125
+#: code:addons/sale_crm/wizard/crm_make_sale.py:136
+#, python-format
+msgid "Quotation"
+msgstr "Presupuesto"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -157,199 +134,41 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "or"
-msgstr "o"
+#: field:sale.order,source_id:0
+msgid "Source"
+msgstr "Origen"
 
-#~ msgid "All at once"
-#~ msgstr "Todo junto"
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Tags"
+msgstr "Etiquetas"
 
-#~ msgid "Crm opportunity quotation"
-#~ msgstr "Presupuesto oportunidad CRM"
+#. module: sale_crm
+#: help:sale.order,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr ""
+"Éste es un nombre que facilita la búsqueda de los diferentes esfuerzos de "
+"campañas. Por ejemplo: campaña de Navidad, rebajas de otoño"
 
-#~ msgid "Opportunity Analytic"
-#~ msgstr "Oportunidad - Analítica"
+#. module: sale_crm
+#: help:sale.order,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr ""
+"Éste es el método de envío. Por ejemplo: carta postal, correo electrónico, "
+"publicidad web"
 
-#~ msgid "Use this partner if there is no partner on the case"
-#~ msgstr "Utilizar esta empresa si no hay empresa asociada al caso"
+#. module: sale_crm
+#: help:sale.order,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"Ésta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o "
+"nombre de unos lista de correos"
 
-#~ msgid "Create"
-#~ msgstr "Crear"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid "Opportunity goes into the quotation"
-#~ msgstr "Oportunidad se convierte en presupuesto"
-
-#~ msgid "Analytic account"
-#~ msgstr "Cuenta analítica"
-
-#~ msgid "Convert opportunity to quotation"
-#~ msgstr "Convertir oportunidad en presupuesto"
-
-#~ msgid "Your action"
-#~ msgstr "Su acción"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Política de empaquetado"
-
-#~ msgid "Create Quote"
-#~ msgstr "Crear presupuesto"
-
-#~ msgid "Contract Volume (pricelist)"
-#~ msgstr "Volumen de contrato (tarifa)"
-
-#~ msgid "CRM Opportunity"
-#~ msgstr "Oportunidad CRM"
-
-#~ msgid "Opportunity convert into quotation"
-#~ msgstr "Convertir oportunidad en presupuesto"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Envío directo"
-
-#~ msgid "Opportunity Quotation"
-#~ msgstr "Oportunidad - Presupuesto"
-
-#~ msgid "Convert to Quote"
-#~ msgstr "Convertir a presupuesto"
-
-#~ msgid "Check this to close the case after having created the sale order."
-#~ msgstr ""
-#~ "Marque esta opción para cerrar el caso después de haber creado el pedido de "
-#~ "venta."
-
-#~ msgid "Opporunity convert to the Pricelist"
-#~ msgstr "Convertir oportunidad a la tarifa"
-
-#~ msgid "User Responsible"
-#~ msgstr "Usuario responsable"
-
-#~ msgid "Reflect the contract made with customer"
-#~ msgstr "Reflejar el contrato hecho con el cliente"
-
-#~ msgid "Products"
-#~ msgstr "Productos"
-
-#~ msgid "Close Case"
-#~ msgstr "Cerrar caso"
-
-#~ msgid "Make Case"
-#~ msgstr "Realizar caso"
-
-#~ msgid "The CRM Opportunity can lead to a quotation."
-#~ msgstr "La oportunidad CRM puede convertirse a un presupuesto."
-
-#~ msgid "Opportunity Pricelist"
-#~ msgstr "Oportunidad - Tarifa"
-
-#~ msgid "Contract Pricelist"
-#~ msgstr "Tarifa contrato"
-
-#~ msgid "Case Description"
-#~ msgstr "Descripción del caso"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Cuenta analítica"
-
-#~ msgid "Case Section"
-#~ msgstr "Sección del caso"
-
-#, python-format
-#~ msgid "Data Insufficient!"
-#~ msgstr "¡Datos insuficientes!"
-
-#, python-format
-#~ msgid "Customer has no addresses defined!"
-#~ msgstr "¡El cliente no tiene definidas direcciones!"
-
-#~ msgid "Sale CRM Stuff"
-#~ msgstr "Herramientas CRM para ventas"
-
-#~ msgid ""
-#~ "Check this to close the opportunity after having created the sale order."
-#~ msgstr ""
-#~ "Marque esta opción para cerrar la oportunidad después de haber creado el "
-#~ "pedido de venta."
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "se ha convertido a presupuesto."
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Volumen mensual"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Convertido a presupuesto de venta (id: %s)."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Oportunidad "
-
-#~ msgid "Close Opportunity"
-#~ msgstr "Cerrar oportunidad"
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Crea pedido de venta desde oportunidad"
-
-#~ msgid "My Quotations"
-#~ msgstr "Mis presupuestos"
-
-#~ msgid "Quotations"
-#~ msgstr "Presupuestos"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Oportunidades por etapa"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Este módulo añade un acceso directo a uno o varios casos de oportunidades en "
-#~ "el CRM.\n"
-#~ "Este acceso directo le permite generar un pedido de venta a partir del caso "
-#~ "seleccionado.\n"
-#~ "Si están abiertos distintos casos (una lista), genera un pedido de venta "
-#~ "por\n"
-#~ "caso.\n"
-#~ "El caso se cierra y es enlazado al pedido ventas generado.\n"
-#~ "\n"
-#~ "Le sugerimos que instale este módulo si ha instalado ambos módulos sale y "
-#~ "crm.\n"
-#~ "    "
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "¡La referencia del pedido debe ser única!"
-
-#, python-format
-#~ msgid "Opportunity  '%s' is converted to Quotation."
-#~ msgstr "La oportunidad '%s' se ha convertido en presupuesto."
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(%s)."
-#~ msgstr "Convertido a presupuesto de venta (%s)."
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "¡La referencia del pedido debe ser única por compañía!"
-
-#~ msgid "Category"
-#~ msgstr "Categoría"
-
-#~ msgid "My Opportunities"
-#~ msgstr "Mis oportunidades"
-
-#~ msgid "My Planned Revenues by Stage"
-#~ msgstr "Mis ingresos previstos por etapa"
+#. module: sale_crm
+#: view:crm.make.sale:sale_crm.view_crm_make_sale
+msgid "_Create"
+msgstr "_Crear"

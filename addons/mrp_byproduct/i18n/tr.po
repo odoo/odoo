@@ -1,20 +1,57 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* mrp_subproduct
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-01-23 22:32+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-11 07:09+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:19+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-12 07:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Ürün Ağacı"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "BoM"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
+msgid "Byproduct"
+msgstr "Yan Ürün"
+
+#. module: mrp_byproduct
+#: view:mrp.bom:mrp_byproduct.mrp_subproduct_view
+#: field:mrp.bom,sub_products:0
+msgid "Byproducts"
+msgstr "Yan Ürünler"
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr "Ürün Miktarını Değiştir"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -35,14 +72,24 @@ msgstr ""
 "ayarlanan ürün miktarı * üretim emrinde üretilen ürün miktarı)' demektir."
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Ürün"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Sabit"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product Unit of Measure"
-msgstr "Ürün Ölçü Birimi"
+#: field:mrp.subproduct,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -50,25 +97,9 @@ msgid "Manufacturing Order"
 msgstr "Üretim Emri"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Ürün Miktarını Değiştir"
-
-#. module: mrp_byproduct
-#: view:mrp.bom:0
-#: field:mrp.bom,sub_products:0
-msgid "Byproducts"
-msgstr "Yan ürünler"
-
-#. module: mrp_byproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Miktar Tipi"
-
-#. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Ürün Ağacı"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Ürün"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
@@ -76,25 +107,14 @@ msgid "Product Qty"
 msgstr "Ürün Mik"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/mrp_byproduct.py:63
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
+#: field:mrp.subproduct,product_uom:0
+msgid "Product Unit of Measure"
+msgstr "Ürün Ölçü Birimi"
 
 #. module: mrp_byproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
-msgstr "Ürün Ağacı"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Değişken"
-
-#. module: mrp_byproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Sabit"
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Miktar Tipi"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -107,6 +127,12 @@ msgstr ""
 "sahiptir."
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
-msgid "Byproduct"
-msgstr "Yan ürün"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Değişken"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:63
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"

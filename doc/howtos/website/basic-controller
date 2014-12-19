@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent 78b4476f35cbef86ee4f858daf843e3b932fb9fa
+diff -r 78b4476f35cb -r d5ad2ad84a5d academy/__init__.py
+--- a/academy/__init__.py	Mon Aug 11 16:09:21 2014 +0200
++++ b/academy/__init__.py	Mon Aug 11 16:12:38 2014 +0200
+@@ -0,0 +1,1 @@
++from . import controllers
+diff -r 78b4476f35cb -r d5ad2ad84a5d academy/controllers.py
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/academy/controllers.py	Mon Aug 11 16:12:38 2014 +0200
+@@ -0,0 +1,8 @@
++# -*- coding: utf-8 -*-
++from openerp import http
++
++class Academy(http.Controller):
++    @http.route('/academy/', auth='public')
++    def index(self):
++        return "Hello, world!"
++

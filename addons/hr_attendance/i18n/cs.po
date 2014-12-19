@@ -1,98 +1,75 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_attendance
+# Czech translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 18:15+0000\n"
-"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
-"Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:14+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"X-Poedit-Language: czech\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:08+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_month
-msgid "Print Monthly Attendance Report"
-msgstr "Tisknout měsíční výkaz docházky"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Vyhledávání v docházce"
-
-#. module: hr_attendance
-#: field:hr.employee,last_sign:0
-msgid "Last Sign"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
+"(*) Záporné zpoždění znamená, že zaměstnanec pracoval déle než bylo zadáno."
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Docházka"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:34
-#, python-format
-msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-
-#. module: hr_attendance
-#: help:hr.action.reason,name:0
-msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Určuje důvod pro Přihlášení/Odhlášení."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 "(*) Kladné zpoždění znamená, že zaměstnanec pracoval méně než zaznamenáno."
 
 #. module: hr_attendance
-#: view:hr.attendance.month:0
-msgid "Print Attendance Report Monthly"
-msgstr "Tisknout výkaz docházky měsíčně"
+#: selection:hr.employee,state:0
+msgid "Absent"
+msgstr "Nepřítomen"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:120
-#, python-format
-msgid "Attendances by Week"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Akce"
+
+#. module: hr_attendance
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Důvod akce"
+
+#. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Typ akce"
+
+#. module: hr_attendance
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign out"
-msgstr "Odhlásit"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Analysis Information"
+msgstr "Analytické informace"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr "Zpoždění"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Seskupit podle..."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Říjen"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: view:hr.attendance:hr_attendance.view_hr_attendance_graph
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Docházka"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
@@ -100,56 +77,32 @@ msgid "Attendance Access"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign Out"
-msgstr "Odhlášení"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records are found for your selection!"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_graph
+msgid "Attendance Analysis"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Tisk"
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
+msgid "Attendance Error Report"
+msgstr "Výkaz chyb docházky"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,employee_id:0
-#: model:ir.model,name:hr_attendance.model_hr_employee
-msgid "Employee"
-msgstr "Zaměstnanec"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Attendance Errors:"
+msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Měsíc"
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Dovody docházky"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr "Datum zaznamenání"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:154
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-#, python-format
-msgid "Sign In"
-msgstr "Přihlášení"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Počáteční datum"
+#: view:hr.action.reason:hr_attendance.view_attendance_reason
+msgid "Attendance reasons"
+msgstr "Důvody docházky"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -159,87 +112,40 @@ msgid "Attendances"
 msgstr "Docházka"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Březen"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "Pod tímto zpožděním, chyba je považována za úmyslnou"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "Srpen"
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Cancel"
+msgstr "Zrušit"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:35
 #, python-format
-msgid "Warning"
-msgstr "Varování"
-
-#. module: hr_attendance
-#: help:hr.config.settings,group_hr_attendance:0
-msgid "Allocates attendance group to all users."
+msgid "Click to Sign In at %s."
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Moje docházka"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Červen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:190
-#, python-format
-msgid "Attendances by Month"
+#: field:hr.action.reason,create_uid:0
+#: field:hr.attendance,create_uid:0
+#: field:hr.attendance.error,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Docházka podle týdne"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Tisknout chybový výkaz docházky"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Celkové období:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Důvod"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Tisknout Výkaz chyba docházky"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
+#: field:hr.action.reason,create_date:0
+#: field:hr.attendance,create_date:0
+#: field:hr.attendance.error,create_date:0
+msgid "Created on"
 msgstr ""
-"Funkce sledování času má za cíl spravovat docházku zaměstnanců pomocí akcí "
-"Přihlášení/Odhlášení. Můžete napojit tuto schopnost k docházkovému zařízení "
-"s použitím možností webové služby OpenERP."
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Dnes"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Datum přihlášení"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Current Month"
+msgstr ""
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -247,135 +153,92 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_attendance
-#: field:hr.config.settings,group_hr_attendance:0
-msgid "Track attendances for all employees"
-msgstr ""
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Recorded"
+msgstr "Datum zaznamenání"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Červenec"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Date Signed"
+msgstr "Datum přihlášení"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Výkaz chyb docházky"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Den"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Přítomný"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr "Nepřítomen"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "February"
-msgstr "Únor"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Důvod akce"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "Rok"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Min. zpoždění"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Docházka zaměstnance"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
+#: view:hr.action.reason:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
 msgstr "Určuje důvod docházky"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-msgid "Sign in"
-msgstr "Přihlásit"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Delay"
+msgstr "Zpoždění"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Analytické informace"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+#: field:hr.attendance,employee_id:0
+#: model:ir.model,name:hr_attendance.model_hr_employee
+msgid "Employee"
+msgstr "Zaměstnanec"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-msgid "Attendances By Month"
-msgstr "Docházka podle měsíce"
+#: view:hr.attendance:hr_attendance.view_attendance_form
+#: view:hr.attendance:hr_attendance.view_attendance_tree
+#: view:hr.attendance:hr_attendance.view_attendance_who
+msgid "Employee attendances"
+msgstr "Docházka zaměstnance"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Leden"
+#: field:hr.attendance.error,end_date:0
+msgid "Ending Date"
+msgstr "Koncové datum"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available !"
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "Duben"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Group By"
+msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Tisknout týdenní výkaz docházky"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Hr Attendance Search"
+msgstr "Vyhledávání v docházce"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Chyby docházky"
+#: field:hr.action.reason,id:0
+#: field:hr.attendance,id:0
+#: field:hr.attendance.error,id:0
+#: field:report.hr_attendance.report_attendanceerrors,id:0
+msgid "ID"
+msgstr ""
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Akce"
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Časové sledování"
+#: field:hr.action.reason,write_uid:0
+#: field:hr.attendance,write_uid:0
+#: field:hr.attendance.error,write_uid:0
+msgid "Last Updated by"
+msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Dovody docházky"
+#: field:hr.action.reason,write_date:0
+#: field:hr.attendance,write_date:0
+#: field:hr.attendance.error,write_date:0
+msgid "Last Updated on"
+msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "Listopad"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Pod tímto zpožděním, chyba je považována za úmyslnou"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:33
+#, python-format
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr ""
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -383,86 +246,87 @@ msgid "Max. Delay (Min)"
 msgstr "Max. zpoždění (minut)"
 
 #. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Koncové datum"
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Min Delay"
+msgstr "Min. zpoždění"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "Září"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Month"
+msgstr "Měsíc"
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Důvody docházky"
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "My Attendance"
+msgstr "Moje docházka"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Tisknout týdení výkaz docházky"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_config_settings
-msgid "hr.config.settings"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/attendance.js:36
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid "Click to Sign In at %s."
+msgid "No Data Available!"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Typ akce"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Květen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:161
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:50
 #, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the HR Manager to correct attendances."
+msgid "No records are found for your selection!"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Prosinec"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Cancel"
-msgstr "Zrušit"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
+#: view:website:hr_attendance.report_attendanceerrors
 msgid "Operation"
 msgstr "Operace"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Záporné zpoždění znamená, že zaměstnanec pracoval déle než bylo zadáno."
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Přítomný"
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "or"
-msgstr ""
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print"
+msgstr "Tisk"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
+msgid "Print Attendance Report Error"
+msgstr "Tisknout Výkaz chyba docházky"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Tisknout chybový výkaz docházky"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Důvod"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign In"
+msgstr "Přihlášení"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:175
+#: selection:hr.attendance,action:0
+#: view:hr.employee:hr_attendance.hr_attendance_employee
+#, python-format
+msgid "Sign Out"
+msgstr "Odhlášení"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Přihlásit"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign out"
+msgstr "Odhlásit"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
@@ -470,170 +334,59 @@ msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Určuje důvod pro Přihlášení/Odhlášení v případě hodin navíc."
 
+#. module: hr_attendance
+#: help:hr.action.reason,name:0
+msgid "Specifies the reason for Signing In/Signing Out."
+msgstr "Určuje důvod pro Přihlášení/Odhlášení."
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+msgid "Starting Date"
+msgstr "Počáteční datum"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using Odoo's web service features."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Časové sledování"
+
+#. module: hr_attendance
+#: view:hr.attendance:hr_attendance.view_hr_attendance_filter
+msgid "Today"
+msgstr "Dnes"
+
+#. module: hr_attendance
+#: view:website:hr_attendance.report_attendanceerrors
+msgid "Total period"
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr ""
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "Sign in / Sign out"
-#~ msgstr "Přihlásit / Odhlásit"
+msgid "Warning"
+msgstr "Varování"
 
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr ""
-#~ "Teď jste schopni se přihlašovat/odhlašovat(You are now ready to sign in or "
-#~ "out of the attendance follow up)"
+#. module: hr_attendance
+#: field:hr.attendance,worked_hours:0
+msgid "Worked Hours"
+msgstr ""
 
-#~ msgid "Employee's name"
-#~ msgstr "Jméno zaměstnance(Employee's name)"
-
-#~ msgid ""
-#~ "You did not signed out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
-
-#~ msgid ""
-#~ "You did not signed in the last time. Please enter the date and time you "
-#~ "signed in."
-#~ msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
-
-#~ msgid ""
-#~ "You did not sign out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Posledně jste se neodhlásil. Prosíme zadejte datum a čas vašeho odhlášení."
-
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:182
 #, python-format
-#~ msgid "The sign-out date must be in the past"
-#~ msgstr "Datum odhlášení musí být v minulosti"
-
-#~ msgid "Ask for Sign In Out"
-#~ msgstr "Zeptat se na odhlášení"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr "Chyba ! Nemůžete vybrat oddělení, pro které je zaměstnanec vedoucím."
-
-#~ msgid "Employees name"
-#~ msgstr "Jméno zaměstnance"
-
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "UserError"
-
-#~ msgid "Employee attendance"
-#~ msgstr "Docházka zaměstnance"
-
-#, python-format
-#~ msgid "The Sign-in date must be in the past"
-#~ msgstr "Datum přihlášení musí být v minulosti"
-
-#, python-format
-#~ msgid "A sign-in must be right after a sign-out !"
-#~ msgstr "Přihlášení musí být ihned po odhlášení !"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module aims to manage employee's attendances.\n"
-#~ "    Keeps account of the attendances of the employees on the basis of the\n"
-#~ "    actions(Sign in/Sign out) performed by them.\n"
-#~ "       "
-#~ msgstr ""
-#~ "\n"
-#~ "    Tento modul se zaměřuje na správu docházky zaměstnanců.\n"
-#~ "    Udržuje docházkové účty zaměstnanců na základě\n"
-#~ "    jimi vykonaných akcí (Přihlásit/Odhlásit).\n"
-#~ "       "
-
-#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-#~ msgstr ""
-#~ "Chyba: Přihlášení (resp. Odhlášení) musé následovat za Odhlášením (resp. "
-#~ "Přihlášením)"
-
-#, python-format
-#~ msgid "No Data Available"
-#~ msgstr "Žádná data"
-
-#~ msgid "Sign In Sign Out"
-#~ msgstr "Přihlásit Odhlásit"
-
-#~ msgid "hr.sign.out.ask"
-#~ msgstr "hr.sign.out.ask"
-
-#, python-format
-#~ msgid "A sign-out must be right after a sign-in !"
-#~ msgstr "Odhlášení musí být hned po přihlášení !"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Docházky zaměstnanců"
-
-#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
-#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní Hierarchii zaměstnanců"
-
-#~ msgid "My Attendances"
-#~ msgstr "Moje docházka"
-
-#~ msgid "Sign-Out Entry must follow Sign-In."
-#~ msgstr "Položka Odhlášení musí následovat za Přihlášením."
-
-#~ msgid ""
-#~ "If you need your staff to sign in when they arrive at work and sign out "
-#~ "again at the end of the day, OpenERP allows you to manage this with this "
-#~ "tool. If each employee has been linked to a system user, then they can "
-#~ "encode their time with this action button."
-#~ msgstr ""
-#~ "Pokud potřebujete, aby se vaši zaměstnanci přihlašovali při příchodu do "
-#~ "práce a zase odhlašovali na konci dne, OpenERP vám pomocí tohoto nástroje "
-#~ "toto umožní spravovat. Pokud byl každý zaměstnanec napojen na systémový "
-#~ "účet, pak může vkládat svůj čas pomocí tohoto tlačítka."
-
-#~ msgid "Employee ID"
-#~ msgstr "ID zaměstnance"
-
-#~ msgid "Empoyee ID"
-#~ msgstr "ID zaměstance"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to %s with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Pokusili jste se %s s datem dřívějším než jiné události !\n"
-#~ "Zkuste kontaktovat správce pro opravu docházky."
-
-#~ msgid "Your last sign out"
-#~ msgstr "Vaše poslední odhlášení"
-
-#~ msgid "Your last sign in"
-#~ msgstr "Vaše poslední přihlášení"
-
-#~ msgid ""
-#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
-#~ "arrive at work and sign out again at the end of the day. If each employee "
-#~ "has been linked to a system user, then they can encode their time with this "
-#~ "action button."
-#~ msgstr ""
-#~ "Přihlášení / Odhlášení. V některých společnostech, pracovníci se musí "
-#~ "přihlásit, když dorazí do práce a zase odhlásit na konci dne. Pokud byl "
-#~ "každý zaměstnanec napojen na systémový účet, pak může zadávat svůj čas "
-#~ "pomocí tohoto akčního tlačítka."
-
-#~ msgid "Employee's Name"
-#~ msgstr "Jméno zaměstnance"
-
-#~ msgid "Action's type"
-#~ msgstr "Typ akce"
-
-#~ msgid "Current state"
-#~ msgstr "Současný stav"
-
-#, python-format
-#~ msgid "No records found for your selection!"
-#~ msgstr "Pro výběr roku nebyly nalezeny žádné záznamy!"
-
-#~ msgid ""
-#~ "You did not sign in the last time. Please enter the date and time you signed "
-#~ "in."
-#~ msgstr ""
-#~ "Naposledy jste se nepřihlásil. Prosíme zadejte datum a čas vašeho přihlášení."
-
-#~ msgid "hr.sign.in.out.ask"
-#~ msgstr "hr.sign.in.out.ask"
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""

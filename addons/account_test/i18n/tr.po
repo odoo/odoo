@@ -1,24 +1,131 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-11 08:26+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"PO-Revision-Date: 2014-10-11 18:35+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:52+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-10-12 07:19+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: account_test
-#: view:accounting.assert.test:0
+#: model:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create Accounting Test.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Muhasebe Testini başlatmak için tıklayın.\n"
+"              </p>\n"
+"            "
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr "Muhasebe Tsetleri"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Accouting tests on"
+msgstr "Bunun için Muhasebe testi"
+
+#. module: account_test
+#: field:accounting.assert.test,active:0
+msgid "Active"
+msgstr "Etkin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid ""
+"Check if movement lines are balanced and have the same date and period"
+msgstr ""
+"Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu "
+"denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_02
+msgid ""
+"Check if the balance of the new opened fiscal year matches with last year's "
+"balance"
+msgstr ""
+"Yeni açılan mali yılın bakiyesinin geçen yılın bakiyesi ile eşleştiğini "
+"denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_04
+msgid "Check if the totally reconciled movements are balanced"
+msgstr "Tamamen uzlaştırılmış hareketleri denk olduğunu denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri "
+"toplamı olduğunu denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_08
+msgid "Check that general accounts and partners on account moves are active"
+msgstr "Hesap hareketlerindeki genel hesapları ve paydaşları denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr ""
+"Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığını denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+"Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin "
+"uzlaştırılmış faturalara ait olduğunu denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında "
+"uzlaştırılmış girişler olup olmadığını denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06_1
+msgid "Check that there's no move for any account with « View » account type"
+msgstr ""
+"« View » Hesap türündeki herhangi bir hesap için hiç hareket olmadığını "
+"denetleyin"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Bakiyeyi denetle: Borç Toplamı = Alacak toplamı"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Code Help"
+msgstr "Kod Yardımı"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your "
 "test, that can be a list or\n"
@@ -74,36 +181,65 @@ msgstr ""
 "    result = cr.dictfetchall()"
 
 #. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_02
-msgid "Test 2: Opening a fiscal year"
-msgstr "Test 2: Bir mali yılın açılışı"
+#: field:accounting.assert.test,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
 
 #. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_05
-msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
-"Payable and Receivable Accounts"
-msgstr ""
-"Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında "
-"uzlaştırılmış girişler olup olmadığını denetleyin"
+#: field:accounting.assert.test,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
 
 #. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_03
-msgid ""
-"Check if movement lines are balanced and have the same date and period"
-msgstr ""
-"Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu "
-"denetleyin"
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Description"
+msgstr "Açıklama"
 
 #. module: account_test
-#: field:accounting.assert.test,name:0
-msgid "Test Name"
-msgstr "Test Adı"
+#: view:website:account_test.report_accounttest
+msgid "Description:"
+msgstr "Açıklama:"
 
 #. module: account_test
-#: report:account.test.assert.print:0
-msgid "Accouting tests on"
-msgstr "Bunun için Muhasebe testi"
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Expression"
+msgstr "Anlatım"
+
+#. module: account_test
+#: field:accounting.assert.test,id:0
+#: field:report.account_test.report_accounttest,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_test
+#: field:accounting.assert.test,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_test
+#: field:accounting.assert.test,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Name:"
+msgstr "Adı:"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Python Code"
+msgstr "Python Kodu"
+
+#. module: account_test
+#: field:accounting.assert.test,code_exec:0
+msgid "Python code"
+msgstr "Python kodu"
+
+#. module: account_test
+#: field:accounting.assert.test,sequence:0
+msgid "Sequence"
+msgstr "Sıra"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
@@ -111,74 +247,19 @@ msgid "Test 1: General balance"
 msgstr "Test 1: Genel bilanço"
 
 #. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_06
-msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
-"Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığını denetleyin"
+#: model:accounting.assert.test,name:account_test.account_test_02
+msgid "Test 2: Opening a fiscal year"
+msgstr "Test 2: Bir mali yılın açılışı"
 
 #. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid ""
-"Check that reconciled account moves, that define Payable and Receivable "
-"accounts, are belonging to reconciled invoices"
-msgstr ""
-"Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin "
-"uzlaştırılmış faturalara ait olduğunu denetleyin"
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr "Test 3: Hareket kalemleri"
 
 #. module: account_test
-#: view:accounting.assert.test:0
-msgid "Tests"
-msgstr "Testler"
-
-#. module: account_test
-#: field:accounting.assert.test,desc:0
-msgid "Test Description"
-msgstr "Test Açıklaması"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Description"
-msgstr "Açıklama"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_06_1
-msgid "Check that there's no move for any account with « View » account type"
-msgstr ""
-"« View » Hesap türündeki herhangi bir hesap için hiç hareket olmadığını "
-"denetleyin"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_08
-msgid "Test 9 : Accounts and partners on account moves"
-msgstr "Test 9 : Hesap hareketlerindeki hesaplar ve paydaşlar"
-
-#. module: account_test
-#: model:ir.actions.act_window,name:account_test.action_accounting_assert
-#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
-#: model:ir.ui.menu,name:account_test.menu_action_license
-msgid "Accounting Tests"
-msgstr "Muhasebe Tsetleri"
-
-#. module: account_test
-#: code:addons/account_test/report/account_test_report.py:74
-#, python-format
-msgid "The test was passed successfully"
-msgstr "Testler başarıyla geçildi"
-
-#. module: account_test
-#: field:accounting.assert.test,active:0
-msgid "Active"
-msgstr "Etkin"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_06
-msgid "Test 6 : Invoices status"
-msgstr "Test 6 : Fatura durumu"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
+#: model:accounting.assert.test,name:account_test.account_test_04
+msgid "Test 4: Totally reconciled mouvements"
+msgstr "Test 4: Tamamen uzlaşıltırılmış hareketler"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
@@ -187,90 +268,14 @@ msgid ""
 msgstr "Test 5.1 : Uzlaştırılmış faturaların Borç ve Alacak hesap kalemleri"
 
 #. module: account_test
-#: field:accounting.assert.test,code_exec:0
-msgid "Python code"
-msgstr "Python kodu"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_07
-msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of "
-"statement lines"
-msgstr ""
-"Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri "
-"toplamı olduğunu denetleyin"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_07
-msgid "Test 8 : Closing balance on bank statements"
-msgstr "Test 8 : Banka hesap özetlerindeki kapanış bakiyesi"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_03
-msgid "Test 3: Movement lines"
-msgstr "Test 3: Hareket kalemleri"
-
-#. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
 msgstr "Test 5.2 : Uzlaştırılmış faturalar be Borç/Alacak hesapları"
 
 #. module: account_test
-#: view:accounting.assert.test:0
-msgid "Expression"
-msgstr "Anlatım"
-
-#. module: account_test
-#: model:accounting.assert.test,name:account_test.account_test_04
-msgid "Test 4: Totally reconciled mouvements"
-msgstr "Test 4: Tamamen uzlaşıltırılmış hareketler"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_04
-msgid "Check if the totally reconciled movements are balanced"
-msgstr "Tamamen uzlaştırılmış hareketleri denk olduğunu denetleyin"
-
-#. module: account_test
-#: field:accounting.assert.test,sequence:0
-msgid "Sequence"
-msgstr "Sıra"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_02
-msgid ""
-"Check if the balance of the new opened fiscal year matches with last year's "
-"balance"
-msgstr ""
-"Yeni açılan mali yılın bakiyesinin geçen yılın bakiyesi ile eşleştiğini "
-"denetleyin"
-
-#. module: account_test
-#: view:accounting.assert.test:0
-msgid "Python Code"
-msgstr "Python Kodu"
-
-#. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create Accounting Test.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Muhasebe Testini başlatmak için tıklayın.\n"
-"              </p>\n"
-"            "
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_01
-msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Bakiyeyi denetle: Borç Toplamı = Alacak toplamı"
-
-#. module: account_test
-#: model:accounting.assert.test,desc:account_test.account_test_08
-msgid "Check that general accounts and partners on account moves are active"
-msgstr "Hesap hareketlerindeki genel hesapları ve paydaşları denetleyin"
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr "Test 6 : Fatura durumu"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
@@ -278,6 +283,33 @@ msgid "Test 7: « View  » account type"
 msgstr "Test 7: « Görünüm  » hesap türü"
 
 #. module: account_test
-#: view:accounting.assert.test:0
-msgid "Code Help"
-msgstr "Kod Yardımı"
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 8 : Closing balance on bank statements"
+msgstr "Test 8 : Banka hesap özetlerindeki kapanış bakiyesi"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_08
+msgid "Test 9 : Accounts and partners on account moves"
+msgstr "Test 9 : Hesap hareketlerindeki hesaplar ve paydaşlar"
+
+#. module: account_test
+#: field:accounting.assert.test,desc:0
+msgid "Test Description"
+msgstr "Test Açıklaması"
+
+#. module: account_test
+#: field:accounting.assert.test,name:0
+msgid "Test Name"
+msgstr "Test Adı"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:account_test.account_assert_tree
+msgid "Tests"
+msgstr "Testler"
+
+#. module: account_test
+#: code:addons/account_test/report/account_test_report.py:78
+#, python-format
+msgid "The test was passed successfully"
+msgstr "Testler başarıyla geçildi"

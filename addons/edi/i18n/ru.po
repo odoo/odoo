@@ -1,42 +1,27 @@
 # Russian translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-05-30 13:32+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:47+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:67
+#: code:addons/edi/models/edi.py:46
 #, python-format
-msgid "Reason:"
-msgstr "Причина:"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:60
-#, python-format
-msgid "The document has been successfully imported!"
-msgstr "Документ был успешно импортирован!"
-
-#. module: edi
-#. openerp-web
-#: code:addons/edi/static/src/js/edi.js:65
-#, python-format
-msgid "Sorry, the document could not be imported."
-msgstr "Извините, документ не может быть импортирован."
+msgid "'%s' is an invalid external ID"
+msgstr "'%s' это неверный внешний идентификатор"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_company
@@ -50,34 +35,26 @@ msgstr "Валюта"
 
 #. module: edi
 #. openerp-web
-#: code:addons/edi/static/src/js/edi.js:71
+#: code:addons/edi/static/src/js/edi.js:61
 #, python-format
 msgid "Document Import Notification"
 msgstr "Уведомление об импорте документа"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:130
-#, python-format
-msgid "Missing application."
-msgstr "Отсутствующее приложение."
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
+msgstr "Подсистема электронного документооборота"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:131
-#, python-format
-msgid ""
-"The document you are trying to import requires the OpenERP `%s` application. "
-"You can install it by connecting as the administrator and opening the "
-"configuration assistant."
+#: field:edi.edi,id:0
+msgid "ID"
 msgstr ""
-"Документу, который вы пытаетесь импортировать, необходимо OpenERP приложение "
-"'%s'. Вы можете установить его, выполнив вход под администратором и открыв "
-"настройки."
 
 #. module: edi
-#: code:addons/edi/models/edi.py:47
+#: code:addons/edi/models/edi.py:129
 #, python-format
-msgid "'%s' is an invalid external ID"
-msgstr "'%s' это неверный внешний идентификатор"
+msgid "Missing Application."
+msgstr ""
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_partner
@@ -85,160 +62,31 @@ msgid "Partner"
 msgstr "Контрагент"
 
 #. module: edi
-#: model:ir.model,name:edi.model_edi_edi
-msgid "EDI Subsystem"
-msgstr "Подсистема электронного документооборота"
-
-#~ msgid "The currency code must be unique per company!"
-#~ msgstr "Код валюты должен быть уникальным в компании!"
-
-#~ msgid "The company name must be unique !"
-#~ msgstr "Название компании должно быть уникальным!"
-
-#~ msgid "Partner Addresses"
-#~ msgstr "Адреса контрагентов"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Ошибка ! Нельзя создать рекурсивные организации."
-
-#~ msgid "Import it into an existing OpenERP instance"
-#~ msgstr "Импорт в существующую OpenERP"
-
-#~ msgid "Import this document"
-#~ msgstr "Импорт этого документа"
-
-#~ msgid "View/Print"
-#~ msgstr "Просмотр/Печать"
-
-#~ msgid "Document"
-#~ msgstr "Документ"
-
-#~ msgid "EDI Document"
-#~ msgstr "EDI документ"
-
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:57
 #, python-format
-#~ msgid "Missing Application"
-#~ msgstr "Отсутствие приложения"
+msgid "Reason:"
+msgstr "Причина:"
 
-#~ msgid "Import into another application"
-#~ msgstr "Импорт в другое приложение"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:55
+#, python-format
+msgid "Sorry, the document could not be imported."
+msgstr "Извините, документ не может быть импортирован."
 
-#~ msgid "Create my new OpenERP instance"
-#~ msgstr "Создать мой новый экземпляр OpenERP"
+#. module: edi
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:50
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr "Документ был успешно импортирован!"
 
-#~ msgid "Import it into a new OpenERP Online instance"
-#~ msgstr "Импорт в новый онлайн экземпляр OpenERP"
-
-#~ msgid "Import"
-#~ msgstr "Импорт"
-
-#~ msgid "OpenERP instance address:"
-#~ msgstr "Адрес этой OpenERP:"
-
-#~ msgid "JSON"
-#~ msgstr "JSON"
-
-#~ msgid "OpenERP documentation"
-#~ msgstr "OpenERP документация"
-
-#~ msgid "To get started immediately,"
-#~ msgstr "Чтобы приступить к работе немедленно,"
-
-#~ msgid "Description"
-#~ msgstr "Описание"
-
-#~ msgid "Invoice"
-#~ msgstr "Счет"
-
-#~ msgid "Your Reference"
-#~ msgstr "Ваша ссылка"
-
-#~ msgid "Date"
-#~ msgstr "Дата"
-
-#~ msgid "Product Description"
-#~ msgstr "Описание товара"
-
-#~ msgid "You can download the raw EDI document here:"
-#~ msgstr "Вы можете скачать исходный документ EDI здесь:"
-
-#~ msgid "Download"
-#~ msgstr "Скачать"
-
-#~ msgid "Powered by"
-#~ msgstr "На базе"
-
-#~ msgid "OpenERP"
-#~ msgstr "OpenERP"
-
-#~ msgid "Quantity"
-#~ msgstr "Количество"
-
-#~ msgid "Discount"
-#~ msgstr "Скидка"
-
-#~ msgid "Unit Price"
-#~ msgstr "Цена за ед."
-
-#~ msgid "Net Total:"
-#~ msgstr "Чистый итог:"
-
-#~ msgid "Price"
-#~ msgstr "Цена"
-
-#~ msgid "Total:"
-#~ msgstr "Итого:"
-
-#~ msgid "Taxes:"
-#~ msgstr "Налоги:"
-
-#~ msgid "Tax"
-#~ msgstr "Налог"
-
-#~ msgid "Base Amount"
-#~ msgstr "Базовая сумма"
-
-#~ msgid "Amount"
-#~ msgstr "Сумма"
-
-#~ msgid "Order"
-#~ msgstr "Заказ"
-
-#~ msgid "Please transfer"
-#~ msgstr "Пожалуйста, переведите"
-
-#~ msgid ""
-#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Вы можете напрямую оплатить этот счет в режиме онлайн через безопасный "
-#~ "платежный шлюз PayPal:"
-
-#~ msgid "Bank Wire Transfer"
-#~ msgstr "Банковский перевод"
-
-#~ msgid "Pay Online"
-#~ msgstr "Оплата онлайн"
-
-#~ msgid "Paypal"
-#~ msgstr "Paypal"
-
-#~ msgid "Notes:"
-#~ msgstr "Примечания:"
-
-#~ msgid "Discount(%)"
-#~ msgstr "Скидка ( %)"
-
-#~ msgid "Salesman"
-#~ msgstr "Менеджер продаж"
-
-#~ msgid ""
-#~ "You may directly pay this order online via Paypal's secure payment gateway:"
-#~ msgstr ""
-#~ "Вы можете напрямую оплатить этот заказ он-лайн через безопасный платежный "
-#~ "шлюз PayPal:"
-
-#~ msgid "Payment terms"
-#~ msgstr "Условия платежа"
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid ""
+"The document you are trying to import requires the Odoo `%s` application. "
+"You can install it by connecting as the administrator and opening the "
+"configuration assistant."
+msgstr ""

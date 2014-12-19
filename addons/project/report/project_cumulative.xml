@@ -7,8 +7,10 @@
             <field name="model">project.task.history.cumulative</field>
             <field name="arch" type="xml">
                 <graph string="Project Tasks" type="bar" stacked="True">
-                    <field name="date" type="row"/>
                     <field name="type_id" type="row"/>
+                    <field name="kanban_state" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="nbr_tasks" type="measure"/>
                     <field name="planned_hours" type="measure"/>
                     <field name="remaining_hours" type="measure"/>
                 </graph>
@@ -32,6 +34,15 @@
                     <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"/>
                     <separator/>
                     <filter string="My Projects" domain="[('project_id.user_id','=',uid)]"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" context="{'group_by':'task_id'}"/>
+                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Stage" context="{'group_by':'type_id'}"/>
+                        <filter string="Status" context="{'group_by':'kanban_state'}"/>
+                        <separator/>
+                        <filter string="Month" context="{'group_by':'date:month'}" help="Creation Date"/>
+                    </group>
                 </search>
             </field>
         </record>

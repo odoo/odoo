@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 import copy
-import re
-import simplejson
-import werkzeug
 
 from lxml import etree, html
 
@@ -18,9 +15,11 @@ class view(osv.osv):
         'website_meta_title': fields.char("Website meta title", size=70, translate=True),
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
+        'customize_show': fields.boolean("Show As Optional Inherit"),
     }
     _defaults = {
         'page': False,
+        'customize_show': False,
     }
 
 
@@ -68,15 +67,14 @@ class view(osv.osv):
         extensions = view.inherit_children_ids
         if not options:
             # only active children
-            extensions = (v for v in view.inherit_children_ids
-                          if v.application in ('always', 'enabled'))
+            extensions = (v for v in view.inherit_children_ids if v.active)
 
         # Keep options in a deterministic order regardless of their applicability
         for extension in sorted(extensions, key=lambda v: v.id):
             for r in self._views_get(
                     cr, uid, extension,
                     # only return optional grandchildren if this child is enabled
-                    options=extension.application in ('always', 'enabled'),
+                    options=extension.active,
                     context=context, root=False):
                 if r not in result:
                     result.append(r)
@@ -89,10 +87,8 @@ class view(osv.osv):
         Model = self.pool[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
-        column = Model._all_columns[field].column
-        converter = self.pool['website.qweb'].get_converter_for(
-            el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, column, el)
+        converter = self.pool['website.qweb'].get_converter_for(el.get('data-oe-type'))
+        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
 
         if value is not None:
             # TODO: batch writes?
@@ -142,12 +138,14 @@ class view(osv.osv):
             if not context:
                 context = {}
 
+            company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
+
             qcontext = dict(
                 context.copy(),
                 website=request.website,
                 url_for=website.url_for,
                 slug=website.slug,
-                res_company=request.website.company_id,
+                res_company=company,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
                 translatable=context.get('lang') != request.website.default_lang_code,
                 editable=request.website.is_publisher(),
@@ -159,7 +157,10 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            context = dict(context, inherit_branding=qcontext.get('editable', False))
+            if qcontext.get('editable'):
+                context = dict(context, inherit_branding=True)
+            elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+                context = dict(context, inherit_branding_auto=True)
 
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:
@@ -212,3 +213,4 @@ class view(osv.osv):
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
+

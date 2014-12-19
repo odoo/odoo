@@ -1,0 +1,39 @@
+# HG changeset patch
+# Parent 122340f4360287bbc53f54e53ac609a8e7237796
+diff -r 122340f43602 -r 91ffd360f3ff academy/controllers.py
+--- a/academy/controllers.py	Tue Aug 12 16:52:38 2014 +0200
++++ b/academy/controllers.py	Tue Aug 12 17:02:14 2014 +0200
+@@ -9,7 +9,9 @@ class Academy(http.Controller):
+             'teachers': Teachers.search([]),
+         })
+ 
+-    @http.route('/academy/<int:id>/', auth='public', website=True)
+-    def teacher(self, id):
+-        return '<h1>{} ({})</h1>'.format(id, type(id).__name__)
++    @http.route('/academy/<model("academy.teachers"):teacher>/', auth='public', website=True)
++    def teacher(self, teacher):
++        return http.request.render('academy.biography', {
++            'person': teacher
++        })
+ 
+diff -r 122340f43602 -r 91ffd360f3ff academy/templates.xml
+--- a/academy/templates.xml	Tue Aug 12 16:52:38 2014 +0200
++++ b/academy/templates.xml	Tue Aug 12 17:02:14 2014 +0200
+@@ -11,4 +11,17 @@
+       </div>
+     </t>
+   </template>
++
++  <template id="biography">
++    <t t-call="website.layout">
++      <t t-set="title">Academy</t>
++      <div class="oe_structure"/>
++      <div class="oe_structure">
++        <div class="container">
++          <p><t t-esc="person.id"/> <t t-esc="person.name"/></p>
++        </div>
++      </div>
++      <div class="oe_structure"/>
++    </t>
++  </template>
+ </data></openerp>

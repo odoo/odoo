@@ -1,64 +1,231 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* email_template
+# German translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-16 10:57+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-15 18:06+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-16 08:34+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Von"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copy)"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Vorlage"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "Hinzufügen"
 
 #. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Sidebar -Button, um eine Sidebar-Aktion zu starten"
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Signatur hinzufügen"
 
 #. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "Opt-Out"
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "Erweiterte Einstellung"
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "An (E-Mails)"
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Gilt für"
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Postausgangsserver"
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Anhänge"
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "Verfassersignatur (nur Massenmail)"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Autom. Löschen"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Für Massenversand von Mails verfügbar"
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Hauptteil"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Carbon Copy-Empfänger  (Platzhalter können verwendet werden)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "CC"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "Wählen Sie eine Vorlage zur Platzhalter Anzeige."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "Wählen Sie ein Beispiel"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr "Komma separierte Carbon-Copy Emailempfängerliste"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr "Komma separierte ID's Liste der Emailempfänger"
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
 msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+"Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
-"Sidebaraktion, um diese Vorlage für alle Datensätze des zugehörigen "
-"Datenmodells verfügbar zu machen."
+"Kommagetrennte Liste mit ids der verbundenen Partner (Platzhalter müssen "
+"eingesetzt werden)."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr "Komma separierte Emailempfängeradressen"
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr ""
+"Komma-getrennte Empfängeradressen (Platzhalter können verwendet werden)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "Inhalt"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "Kontextaktion"
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "Erstellt durch"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Standardwert"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr "Standardempfänger"
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+"Standardempfänger des Datensatz:\n"
+"- Partner (durch Verwendung der Felder id oder partner_id) oder\n"
+"- E-Mail (durch Verwendung der Felder email_from oder email)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Das Löschen des Datensatzes schlug fehl."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr "Anzeige einer Option, einen Assistenten zu finden."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr "Dynamischer Platzhaltergenerator"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr "E-Mail"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "E-Mail Konfiguration"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "E-Mail-Vorschau"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "Vorlage der Email"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Email Vorlagevorschau"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "E-Mail-Vorlagen"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "E-Mail Assistent"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -67,59 +234,32 @@ msgid "Field"
 msgstr "Feld"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Absenderadresse (Platzhalter können verwendet werden)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr "Kontextaktion entfernen"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Optional bevorzugter Server für ausgehende E-Mails. Wenn nicht gesetzt, wird "
-"der Server mit der höchten Priorität verwendet."
+"Endgültiger Platzhalterausdruck, der mit copy/paste in das entsprechende "
+"Vorlagenfeld kopiert werden muss"
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Report Dateiname"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Von"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "Vorschau"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Gruppierung..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Antwort an"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Benutze Vorlage"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Hauptteil"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (copy)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -132,29 +272,44 @@ msgstr ""
 "Nachricht angehängt"
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "Postausgang-Server (SMTP)"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Als neue Vorlage speichern"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"Wenn eine Relation als erstes Feld verwendet wird, wird der Modellname der "
-"Relation angezeigt."
+"Wenn opt-out ausgewählt ist, hat dieser Empfänger den Erhalt von Massenmails "
+"abgelehnt. Der Filter \"Verfügbar für Massenversand von EMails\" erlaubt es "
+"dem Benutzer die Partner entsprechend zu heraus zu filtern."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "E-Mail-Vorlagen"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Sprache"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Modul"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Bezeichn."
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -167,10 +322,25 @@ msgstr ""
 "Die Endung kann weggelassen werden und wird dann automatisch bestimmt."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Sidebar-Aktion"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Opt-Out"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Optional bevorzugter Server für ausgehende E-Mails. Wenn nicht gesetzt, wird "
+"der Server mit der höchten Priorität verwendet."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Optionaler zu druckender und anzuhängender Report"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -178,17 +348,146 @@ msgstr "Sidebar-Aktion"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Optionaler ISO Sprachcode für ausgehende E-Mails. Standard ist englisch. "
-"Üblicherweise wird das ein Platzhalter sein z.B. "
-"${object.partner_id.lang.code}."
+"Optionale Übersetzung (ISO Code) zur Auswahl beim E-Mailversand. Falls es "
+"keinen Eintrag gibt, wird die Englische Version verwendet. Es sollte sich "
+"normalerweise um einen Platzhalter Ausdruck handeln, der die passende "
+"Sprache enthält, z.B. ${object.partner_id.lang}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Optionaler Wert, wenn das Zielfeld leer ist."
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Postausgangsserver"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr "Überschreibe die E-Mail des Verfassers"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+"Partner, die die Aufnahme in die Massen-E-Mail-Kampagnen nicht erbeten haben"
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Dauerhaftes Löschen dieser E-Mail nach dem Absenden, um Platz zu sparen"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Platzhalterausdruck"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr ""
+"Bitte definieren Sie das base Datenmodell vor weiterer Festlegung von "
+"Aktionsdetails."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr "Bevorzugte Antwortadresse"
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Bevorzugte Antwort-Adresse (Platzhalter können verwendet werden)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Vorschau"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Vorschau von"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr "Empfänger"
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Zugehöriges Dokumenten-Modell"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr "Entfernen"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr ""
+"Entfernen Sie die Aktion, um diese Vorlage für bestimmte Dokumente zu "
+"verwenden"
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Antwort an"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Report Dateiname"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr ""
+"Rich-text/HTML Version der Nachricht /Platzhalter können verwendet werden)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "Postausgang-Server (SMTP)"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Beispieldokument"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Als neue Vorlage speichern"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Als neue Vorlage speichern"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -203,115 +502,32 @@ msgstr ""
 "auswählen."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "Dynamischer Werte-Builder"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Mail (%s) versenden"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Vorlagenvorschau"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Als neue Vorlage speichern"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
-msgstr "Anzeige einer Option, einen Assistenten zu finden."
-
-#. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Carbon Copy-Empfänger  (Platzhalter können verwendet werden)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
-"Komma-getrennte Empfängeradressen (Platzhalter können verwendet werden)"
+"Versenderadresse (Platzhalter können eingesetzt werden). Wenn nicht gesetzt, "
+"wird des Autors EMail-Alias sofern vorhanden als Vorgabewert eingestellt, "
+"ansonsten dessen EMail-Adresse."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Weiterführend"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Vorschau von"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Benutzen Sie das Beispieldokument"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Vorlagen"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Bezeichn."
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Sprache"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Email Vorlagevorschau"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "E-Mail-Vorschau"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
 msgstr ""
-"Entfernen Sie die Aktion, um diese Vorlage für bestimmte Dokumente zu "
-"verwenden"
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "Platzhalterausdruck"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Sub-Modul"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Betreff (Platzhalter können verwendet werden)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Bevorzugte Antwort-Adresse (Platzhalter können verwendet werden)"
+"Die E-Mail Adresse des Versenders fehlt oder ist nach der Anwendung einer "
+"Vorlage unausgefüllt. Spezifizieren Sie zur Auslieferung einer Nachricht "
+"mindestens einen E-Mailversender."
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -320,103 +536,26 @@ msgid "Sidebar Button"
 msgstr "Sidebar-Button"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Optionaler zu druckender und anzuhängender Report"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Sidebar-Aktion"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "Optionaler Wert, wenn das Zielfeld leer ist."
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Modul"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-Mail Assistent"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "Kontextaktion hinzufügen"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Dokument, das mit diesem Template genutzt werden kann"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "An (Partner)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Autom. Löschen"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Endgültiger Platzhalterausdruck, der mit copy/paste in das entsprechende "
-"Vorlagenfeld kopiert werden muss"
+"Sidebaraktion, um diese Vorlage für alle Datensätze des zugehörigen "
+"Datenmodells verfügbar zu machen."
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "Zugehöriges Dokumenten-Modell"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "Anschrift"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Kommagetrennte Liste mit ids der verbundenen Partner (Platzhalter müssen "
-"eingesetzt werden)."
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Anhänge"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Das Löschen des Datensatzes schlug fehl."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "CC"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "Gilt für"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Sidebar -Button, um eine Sidebar-Aktion zu starten"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -425,36 +564,92 @@ msgid "Sub-field"
 msgstr "Untergeordnetes Feld"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "E-Mail-Details"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Sub-Modul"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "Mail (%s) versenden"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Betreff"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Betreff (Platzhalter können verwendet werden)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Lieferanten"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Vorlagenvorschau"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Vorlagen"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Dokument, das mit diesem Template genutzt werden kann"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
-"Wenn aktiviert, wird erhält dieser Partner keine automatische Email-"
-"Benachrichtigung, wie z.B. die Verfügbarkeit von Rechnungen."
+"Die unten stehenden Werte werden zu Informationszwecken dargestellt. Beim "
+"Versand einer E-Mail, werden die\n"
+"                                Werte der E-Mailvorlage genommen."
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
-"Dauerhaftes Löschen dieser E-Mail nach dem Absenden, um Platz zu sparen"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "An (E-Mails)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Gruppierung..."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "An (Partner)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Benutze Vorlage"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr "Warnung!"
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -467,27 +662,14 @@ msgstr ""
 "Zielfeld der Relation auswählen (sub-model)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Warnung"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "Signatur hinzufügen"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "Standardwert"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"Wenn eine Relation als erstes Feld verwendet wird, wird der Modellname der "
+"Relation angezeigt."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -500,940 +682,14 @@ msgstr ""
 "basierend auf dieser Vorlage, versandt werden."
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
 msgstr ""
-"Rich-text/HTML Version der Nachricht /Platzhalter können verwendet werden)"
+"Ihre Vorlage beinhaltet kein email_from. Bitte aktualisieren Sie Ihre "
+"Vorlage."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "Inhalte"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Betreff"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Immer EMails nach Versendung löschen"
-
-#~ msgid "Email Account Configuration"
-#~ msgstr "EMail Konto Konfiguration"
-
-#, python-format
-#~ msgid "Emails for multiple items saved in outbox."
-#~ msgstr "E-Mails für mehrere Elemente in Postausgang gespeichert"
-
-#~ msgid "Personal Emails"
-#~ msgstr "Persönl. Emails"
-
-#~ msgid "Email Content  "
-#~ msgstr "EMail Inhalt  "
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Assistent EMail Versand"
-
-#~ msgid "Plain Text & HTML with no attachments"
-#~ msgstr "Klartext & HTML ohne Anhänge"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed on login. Probable Reason:Could not login to "
-#~ "server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Fehler bei Anmeldung mit EMailkonto  %s . Eventuelle Ursache: Login an "
-#~ "Server nicht möglich\n"
-#~ "Fehler: %s"
-
-#, python-format
-#~ msgid "Deletion of Record failed"
-#~ msgstr "Löschen des Eintrag fehlgeschlagen"
-
-#~ msgid ""
-#~ "Select if this mail account does not belong to specific user but to the "
-#~ "organization as a whole. eg: info@companydomain.com"
-#~ msgstr ""
-#~ "Auswählen wenn dieses EMail Konto nicht zu einem spezif. Benutzer gehört, "
-#~ "sondern zum Unternehmen oder Bereich selbst."
-
-#~ msgid "Send now"
-#~ msgstr "Sende Jetzt"
-
-#~ msgid "Not Applicable"
-#~ msgstr "Nicht anwendbar"
-
-#~ msgid "Email Accounts"
-#~ msgstr "EMail Konten"
-
-#~ msgid "Send all mails"
-#~ msgstr "Sende alle EMails"
-
-#~ msgid "Server Reference of mail"
-#~ msgstr "Server Referenz der Mail"
-
-#, python-format
-#~ msgid "Reason: %s"
-#~ msgstr "Grund: %s"
-
-#~ msgid "Approved"
-#~ msgstr "Akzeptiert"
-
-#~ msgid ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
-#~ "e.g. ${object.email_cc}"
-#~ msgstr ""
-#~ "Durch Komma separierte Carbon Copy (CC) Adressen. Platzhalter können hierzu "
-#~ "auch eingesetzt werden, z.B. ${object.email_cc}"
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "HTML code"
-#~ msgstr "HTML Quellen"
-
-#~ msgid ""
-#~ "The description is used as the Sender name along with the provided From "
-#~ "Email, unless it is already specified in the From Email, e.g: John Doe "
-#~ "<john@doe.com>"
-#~ msgstr ""
-#~ "Die Beschreibung wird parallel als Absender-Name zusammen mit der E-Mail "
-#~ "verwendet, es sei denn, es ist bereits in der E-Mail versendet worden."
-
-#~ msgid "Email Account"
-#~ msgstr "EMail Konto"
-
-#, python-format
-#~ msgid "Email sending failed for one or more objects."
-#~ msgstr "EMail Versand scheitert für ein o. mehrere Objekte."
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Hinzufügen aller Anhänge des aktuellen Dokuments, die Sie in EMail verweden "
-#~ "sollen."
-
-#~ msgid ""
-#~ "The default language for the email. Placeholders can be used here. eg. "
-#~ "${object.partner_id.lang}"
-#~ msgstr ""
-#~ "Die Standard EMail Spracheinstellung. Platzhalter können hier ersetzt "
-#~ "werden, e.g. $${object.partner_id.lang"
-
-#~ msgid ""
-#~ "When you choose relationship fields this field will specify the sub value "
-#~ "you can use."
-#~ msgstr ""
-#~ "Wenn Sie die beiden Beziehungen als Felder auswählen,  können Sie einen "
-#~ "individuellen  Zwischenwert bestimmen."
-
-#~ msgid "Wizard Complete"
-#~ msgstr "Assistent Fertig"
-
-#~ msgid "Delete Action"
-#~ msgstr "Lösche Aktion"
-
-#~ msgid "Approve Account"
-#~ msgstr "Bestätige Konto"
-
-#~ msgid "Referred Document"
-#~ msgstr "Verknüpftes Dokument"
-
-#~ msgid "Complete Success"
-#~ msgstr "Erfolgreich abgeschlossen"
-
-#~ msgid "Both HTML & Text (Mixed)"
-#~ msgstr "HTML & Text parallel (Mix)"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Both HTML & Text (Alternative)"
-#~ msgstr "HTML & Text parallel (Alternative)"
-
-#~ msgid "No of requested Mails"
-#~ msgstr "Anzahl angefragte Benutzer"
-
-#~ msgid "Standard Body (Text)"
-#~ msgstr "Standard Hauptteil (Text)"
-
-#~ msgid "Attached Files"
-#~ msgstr "Angehängte Dateien"
-
-#~ msgid "Standard Body"
-#~ msgstr "EMail Haupttext"
-
-#~ msgid "From Email"
-#~ msgstr "Von EMail"
-
-#~ msgid "Accounts"
-#~ msgstr "Konten"
-
-#~ msgid "Body(Text)"
-#~ msgstr "Textbereich"
-
-#~ msgid "Company Emails"
-#~ msgstr "Unternehmens EMails"
-
-#~ msgid ""
-#~ "Tip: Multiple emails are sent in the same language (the first one is "
-#~ "proposed). We suggest you send emails in groups according to language."
-#~ msgstr ""
-#~ "Hinweis: Multiple Mails werden in derselben Sprache (die erste Sprache in "
-#~ "Liste) versendet. Wir empfehlen Ihnen EMails zu gruppieren unddann sukzessiv "
-#~ "für verschiedene Sprachen zu versenden."
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here."
-#~ msgstr ""
-#~ "Die Adresse an die geantwortet werden soll, falls sich diese von der "
-#~ "Absenderemail unterscheidet.  Hierzu können Platzhalter angewendet werden."
-
-#~ msgid "My Emails"
-#~ msgstr "Meine EMails"
-
-#~ msgid "Sending"
-#~ msgstr "Versende"
-
-#~ msgid "Insert Simple Field"
-#~ msgstr "Einfügen Feld"
-
-#~ msgid "Body(Html)"
-#~ msgstr "Haupttext (Html)"
-
-#~ msgid ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here. e.g. ${object.email_bcc}"
-#~ msgstr ""
-#~ "Blind Carbon Copy Adressen, Komma separiert. Hierzu können Platzhalter "
-#~ "angewendet werden, z.B. ${object.email_bcc}"
-
-#~ msgid "Body (Text-Web Client Only)"
-#~ msgstr "Hauptteil (Text- Web Client)"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Wizard Button"
-#~ msgstr "Assistent Button"
-
-#~ msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-#~ msgstr "z.B.: 'john@doe.com' oder 'John Doe <john@doe.com>'"
-
-#~ msgid "Resource"
-#~ msgstr "Ressource"
-
-#, python-format
-#~ msgid "Out going connection test failed"
-#~ msgstr "Ausgehende Verbindung fehlgeschlagen"
-
-#, python-format
-#~ msgid "Mail from Account %s successfully Sent."
-#~ msgstr "EMail von Konto %s erfolgreich versendet."
-
-#~ msgid "Mako Templates"
-#~ msgstr "Mako Vorlagen"
-
-#, python-format
-#~ msgid " (Email Attachment)"
-#~ msgstr " (Email Anhang)"
-
-#~ msgid "Sent Items"
-#~ msgstr "Versendete EMails"
-
-#, python-format
-#~ msgid ""
-#~ "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "Versand der EMail %s ist fehlgeschlagen. Möglicher Grund: Kein Server Login "
-#~ "möglich\n"
-#~ "Fehler: %s"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Test Ausgehende Verbindung"
-
-#~ msgid "The text version of the mail"
-#~ msgstr "Text Version der EMail"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-#~ msgstr ""
-#~ "Die Adresse an die geantwortet werden soll, wenn sich diese von der "
-#~ "Versender EMail unterscheidet. Die Platzhalter können hierzu genutzt werden, "
-#~ "z.B. ${object.email_reply_to}"
-
-#~ msgid ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-#~ msgstr ""
-#~ "Button in der Seitenleiste der Formular Ansicht. Die Resource kann auch "
-#~ "durch eine entsprechende Aktion gestartet werden"
-
-#~ msgid "User account"
-#~ msgstr "Benutzer"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "Signatur zu eMail anhängen"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Bericht"
-
-#~ msgid ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-#~ msgstr ""
-#~ "Wähle das Feld des Moduls welches genutzt werden soll.\n"
-#~ "Falls dieses Datenfeld ein Feld mit Verknüpfung ist, können zu "
-#~ "referenzierende Werte in der Box unten gewählt werden \n"
-#~ "(Hinweis: Sollten Sie keine Werte sehen können, stellen Sie sicher, dass Sie "
-#~ "das richtige Modul gewählt haben.)"
-
-#~ msgid "Expression Builder"
-#~ msgstr "Abfrage Generator"
-
-#~ msgid "HTML Body"
-#~ msgstr "EMail Haupttext"
-
-#~ msgid "Suspend Account"
-#~ msgstr "Auflösen Konto"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "Dieser Wert wird genutzt, wenn Feld leer bleibt"
-
-#~ msgid "Preview Template"
-#~ msgstr "Vorschau Vorlage"
-
-#~ msgid "Server"
-#~ msgstr "Server"
-
-#~ msgid ""
-#~ "Copy and paste the value in the location you want to use a system value."
-#~ msgstr ""
-#~ "Kopiere den Wert und füge ihn dort wieder ein, wo er als Wert genutzt werden "
-#~ "soll."
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Aktiviere Option, wenn Sie einen besonderen Marker für zu versendende EMails "
-#~ "nutzen wollen, um hierdurch Rückantworten zu identifizierenund an die "
-#~ "korrespondierende Ressource als Eintrag für die Historie zu nutzen. Als "
-#~ "Beispiel kann dieses beim Leadmanagement ideal genutzt werden"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "Hauptteil EMail (Pures Html)"
-
-#~ msgid "Signature"
-#~ msgstr "Signatur"
-
-#~ msgid "Options"
-#~ msgstr "Einstellungen"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Haupttext (Klartext)"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Textbereich"
-
-#~ msgid "Rec/Sent Date"
-#~ msgstr "Empfang /Sende Datum"
-
-#~ msgid "Report to send"
-#~ msgstr "Zu versend. Anhang"
-
-#~ msgid "Server Information"
-#~ msgstr "Server Information"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "Anzahl generierter EMails"
-
-#~ msgid "Mail Details"
-#~ msgstr "EMail Details"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SMTP Server oder Port nicht spezifiziert"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Hinweis: Dieses ist Html Quelltext"
-
-#~ msgid "Multiple Mail Wizard Step 1"
-#~ msgstr "Assistent Massenemail Schritt 1"
-
-#~ msgid "Related User"
-#~ msgstr "Benutzerbezug"
-
-#~ msgid "Body (Rich Text Clients Only)"
-#~ msgstr "Haupttext (Nur Klartext Ansicht)"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "Window Action"
-#~ msgstr "Fenster Aktion"
-
-#~ msgid "HTML, otherwise Text"
-#~ msgstr "HTML, alternativ Text"
-
-#~ msgid "Drafts"
-#~ msgstr "Entwürfe"
-
-#~ msgid "No"
-#~ msgstr "Nein"
-
-#~ msgid "SMTP Port"
-#~ msgstr "SMTP Port"
-
-#~ msgid "Mail Contents"
-#~ msgstr "Mail Inhalte"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "Die Vorlage muss eindeutig sein !"
-
-#~ msgid "BCC"
-#~ msgstr "BCC"
-
-#~ msgid "Plain Text"
-#~ msgstr "Klartext"
-
-#~ msgid "Draft"
-#~ msgstr "Entwurf"
-
-#~ msgid "Model Internal Name"
-#~ msgstr "Modul Interne Bezeichnung"
-
-#~ msgid "Message-ID"
-#~ msgstr "Nachricht-ID"
-
-#~ msgid "Applicable for inward items only"
-#~ msgstr "Anzuwenden nur für eingehende Mails"
-
-#~ msgid ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-#~ msgstr ""
-#~ "Nach dem Klick auf Sende alle Emails werden diese in den Postausgang "
-#~ "transferiert und dann beim nächsten Versende / Empfange Vorgangabgeschickt."
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Outgoing"
-#~ msgstr "Postausgang"
-
-#~ msgid "Initiated"
-#~ msgstr "Initialisiert"
-
-#~ msgid "the signature from the User details will be appended to the mail"
-#~ msgstr "die Signatur aus den Benutzer Details wird an die EMail angehängt"
-
-#~ msgid "From Account"
-#~ msgstr "Von Email"
-
-#~ msgid "Intermixed content"
-#~ msgstr "Gemischter Inhalt"
-
-#~ msgid "Request Re-activation"
-#~ msgstr "Anfrage Reaktivierung"
-
-#~ msgid "User Name"
-#~ msgstr "Benutzer Name"
-
-#~ msgid "Sub Field"
-#~ msgstr "Sub Feld"
-
-#~ msgid ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-#~ msgstr ""
-#~ "Sie können vorhandene Dateien als Anhang zur Vorlage verwenden, um diese "
-#~ "dann zur Verwendung in allen Email auf Basis dieser Vorlag zu nutzen"
-
-#~ msgid "User"
-#~ msgstr "Benutzer"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Erweiterte Optionen.."
-
-#~ msgid "Outbox"
-#~ msgstr "Postausgang"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Speichern als Entwurf"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "Vorlage der Email"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Sende / Empfange"
-
-#~ msgid "Send Mail"
-#~ msgstr "Sende EMail"
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Nur Benutzer dieser Gruppe dürfen Emails auf Basis dieses Templates versenden"
-
-#~ msgid "The subject of email. Placeholders can be used here."
-#~ msgstr ""
-#~ "Der Betreff dieser Email. Platzhalter können hierzu verwendet werden."
-
-#~ msgid "Report File Name"
-#~ msgstr "Report Datei"
-
-#~ msgid "Expression"
-#~ msgstr "Ausdruck"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "To"
-#~ msgstr "An"
-
-#~ msgid "Text, otherwise HTML"
-#~ msgstr "Text, alternativ HTML"
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Kopie der Vorlage "
-
-#~ msgid "Discard Mail"
-#~ msgstr "Verwerfe EMail"
-
-#~ msgid "Email Templates for Models"
-#~ msgstr "EMail Vorlagen f. Module"
-
-#~ msgid "Body (HTML-Web Client Only)"
-#~ msgstr "Haupttext (HTML - Nur Web-Client)"
-
-#, python-format
-#~ msgid "%s (Email Attachment)"
-#~ msgstr "%s (Email Anhang)"
-
-#, python-format
-#~ msgid ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-#~ msgstr ""
-#~ "Keine eigenes EMailkonto ist für Sie definiert.\n"
-#~ "Entweder erfragen Sie ein Konto für dieses Template bei Ihrem Administrator "
-#~ "oder beantragen ein persönliches Mailkonto für die Versendung."
-
-#~ msgid "Allowed User Groups"
-#~ msgstr "Berechtigte Benutzer Gruppe"
-
-#~ msgid "User Information"
-#~ msgstr "Benutzer Information"
-
-#~ msgid "Suspended"
-#~ msgstr "Schwebend"
-
-#~ msgid ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Name der erzeugten Report Datei. Platzhalter können für den Dateinamen "
-#~ "verwendet werden, z.B. 2009_S0003.pdf"
-
-#~ msgid "Folder"
-#~ msgstr "Verzeichnis"
-
-#~ msgid "Trash"
-#~ msgstr "Müll"
-
-#~ msgid "Date on which Email Sent or Received"
-#~ msgstr "Datum an dem EMail gesendet werden soll"
-
-#~ msgid ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-#~ msgstr ""
-#~ "Spezifizieren Sie den Benutzernamen wenn Ihr SMTP Server diese "
-#~ "Authentifizier benötigt, alternativ tragen Sie nichts ein."
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Fehlendes EMail Konto"
-
-#, python-format
-#~ msgid "SMTP Test Connection Was Successful"
-#~ msgstr "SMTP Test Verbindung war erfolgreich"
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "Email Vorlage für OpenERP"
-
-#~ msgid "Description"
-#~ msgstr "Beschreibung"
-
-#~ msgid "Create Action"
-#~ msgstr "Erzeuge Aktion"
-
-#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-#~ msgstr "Erfasse Bezeichnung für Versandserver, z.B. smtp.yourname.com"
-
-#~ msgid ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-#~ msgstr ""
-#~ "Wenn hier ein Relationsfeld genutzt wird, erfolgt in diesem eine Anzeige des "
-#~ "ausgewählten Daten Typs."
-
-#~ msgid ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Spezifiziere Message_ID SMTP header für die Nutzung im Mailversand. Bitte "
-#~ "vermerken Sie, dass hierdruch die Historisierung zu einer Ressource"
-
-#~ msgid "Recipient (To)"
-#~ msgstr "Empfänger (An)"
-
-#~ msgid "Null Value"
-#~ msgstr "Null Wert"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "EMail Eingang"
-
-#~ msgid "Templating Language"
-#~ msgstr "Vorlage Sprache"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Sent"
-#~ msgstr "Gesendet"
-
-#~ msgid "Action that will open this email template on Resource records"
-#~ msgstr ""
-#~ "Aktion durch die EMail Vorlage zur Vorlage der Ressource geöffnet wird"
-
-#~ msgid "Password"
-#~ msgstr "Passwort"
-
-#~ msgid ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-#~ msgstr ""
-#~ "Message-ID Header Wert, falls dieser Spezif. werden soll, z.B. um Antworten "
-#~ "später nachzuvollziehen. Platzholder können hier genutzt werden."
-
-#~ msgid "Emails"
-#~ msgstr "EMails"
-
-#~ msgid "Report Name"
-#~ msgstr "Report Bez."
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Ressource Historie"
-
-#~ msgid ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-#~ msgstr ""
-#~ "Der Empfang von EMail. Platzhalter können hier verwendet werden, z.B. "
-#~ "${object.email_to}"
-
-#~ msgid "Existing files"
-#~ msgstr "Vorhandene Daten"
-
-#~ msgid "SSL/TLS (only in python 2.6)"
-#~ msgstr "SSL/TLS (only in pathon 2.6)"
-
-#~ msgid "Body (HTML)"
-#~ msgstr "Haupttext (HTML)"
-
-#~ msgid ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-#~ msgstr ""
-#~ "Kopiere diesen html Quellcode zur Verwendung der Nachrichten Vorlage für "
-#~ "diese Mail."
-
-#, python-format
-#~ msgid "Core connection for the given ID does not exist"
-#~ msgstr "Kern Verbindung für die vorgegebene ID existiert nicht"
-
-#~ msgid "Corporate"
-#~ msgstr "Gesellschaft"
-
-#~ msgid "This is the wizard for sending mail"
-#~ msgstr "Assistent für den Versand der EMail"
-
-#~ msgid "Addresses"
-#~ msgstr "Adressen"
-
-#~ msgid "Emails will be sent from this approved account."
-#~ msgstr "EMails werden von genehmigtem Konto versendet"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Mail von Konto %s ist fehlgeschlagen. Mögliche Ursache:MIME Fehler\n"
-#~ "Beschreibung:%s"
-
-#~ msgid "Mail Format"
-#~ msgstr "Mail Format"
-
-#~ msgid "Actions"
-#~ msgstr "Aktionen"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Unternehmenskonten"
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Gebe Port Nummer ien, z.B. 25 oder 587"
-
-#, python-format
-#~ msgid "email-template"
-#~ msgstr "EMail Vorlage"
-
-#, python-format
-#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
-#~ msgstr ""
-#~ "EMail von Konto %s fehlgeschlagen. Möglicher Grund: Neues Konto nicht "
-#~ "genehmigt."
-
-#~ msgid "Simple Mail Wizard Step 1"
-#~ msgstr "Einfache EMail Prozess Step 1"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Hat Dateianhang"
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Keine Beschreibung"
-
-#, python-format
-#~ msgid "Error sending mail: %s"
-#~ msgstr "Fehler beim Senden der E-Mail: %s"
-
-#, python-format
-#~ msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
-#~ msgstr "Datumzeit Extraktion fehlgeschlagen.Datum:%s \tFehler:%s"
-
-#, python-format
-#~ msgid ""
-#~ "Server Send Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Server Sendefehler\n"
-#~ "Beschreibung:%s"
-
-#~ msgid "Another setting already exists with this email ID !"
-#~ msgstr "Ein anderes Konto existiert bereits für diese Adresse !"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason: Server Send Error\n"
-#~ " Description: %s"
-#~ msgstr ""
-#~ "Die EMail vom Konto %s ist fehlgeschlagen. Mögliche Ursache: Server "
-#~ "Sendefehler\n"
-#~ " Beschreibung:%s"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Email Template is extraction of Power Email basically just to send the "
-#~ "emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Das Modul EMail Template ist eine Extraktion der Erweiterung Power EMail "
-#~ "zur Nutzung für den Mailversand.\n"
-#~ "    "
-
-#~ msgid "email_template.account"
-#~ msgstr "email_template.account"
-
-#~ msgid "Error: You are not allowed to have more than 1 account."
-#~ msgstr "Fehler: Sie dürfen nicht mehr als ein Konto haben."
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it according to specific customer "
-#~ "profile fields, so that a partner name or other partner related information "
-#~ "may be inserted automatically."
-#~ msgstr ""
-#~ "Eine Emailvorlage ist ein Template für den Emailversand im Rahmen einer "
-#~ "Marketingkampagne. Emails können personalisiert werden und automatisch zu "
-#~ "bestimmten Zeiten versendet werden. Die Vorlagen oder auch Details der "
-#~ "Abläufe können angepasst werden, Informationen mit Partnerbezug könnten "
-#~ "dabei automatisch eingetragen werden."
-
-#~ msgid "Email Content"
-#~ msgstr "Email Inhalt"
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "Email-Zusammensetzung Assistent"
-
-#~ msgid "Language Selection"
-#~ msgstr "Sprachauswahl"
-
-#~ msgid "Use Template"
-#~ msgstr "Vorlage verwenden"
-
-#~ msgid "Use a message template"
-#~ msgstr "Verwenden Sie eine Nachrichten-Vorlage"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Original"
-#~ msgstr "Original"
-
-#~ msgid "Text contents"
-#~ msgstr "Text Inhalt"
-
-#~ msgid "Display Text"
-#~ msgstr "Anzeige Text"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "Blindkopie Empfänger (Platzhalter können verwendet werden)"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Nachricht Referenzen, wie z. B. Kennungen von vorherigen Nachrichten"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
-
-#~ msgid "Message type"
-#~ msgstr "Mitteilung Typ"
-
-#~ msgid "Received"
-#~ msgstr "Empfangen"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr ""
-#~ "Entferne des seitlichen Abschnitts der auf den zugehörigen Dokumenten "
-#~ "angezeigt wird."
-
-#~ msgid "Sidebar button"
-#~ msgstr "Sidebar Schaltfläche"
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr ""
-#~ "Zeige eine Schaltfläche in der Seitenleiste des zugehörigen Dokuments um den "
-#~ "Erstellungs-Assistenten mit dieser Vorlage zu öffnen"
-
-#~ msgid "Cancelled"
-#~ msgstr "Abgebrochen"
-
-#~ msgid "Related partner"
-#~ msgstr "Zugehörige Partner"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Hänge bestehende Dateien an"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr "Auswahl des Typs der Nachricht, 'HTML' oder 'Text'."
-
-#~ msgid "Related Document ID"
-#~ msgstr "zugehörige Dokumenten-ID"
-
-#~ msgid "Files to attach"
-#~ msgstr "Anzuhängende Dateien"
-
-#~ msgid "Related document model"
-#~ msgstr "Zugehöriges Dokument Modell"
-
-#~ msgid "Related Document model"
-#~ msgstr "zugehöriges Dokumenten-Modell"
-
-#~ msgid "Null value"
-#~ msgstr "Null-Wert"
-
-#~ msgid "Message-Id"
-#~ msgstr "Nachricht-ID"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(Kopie)"
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Text-Version der Nachricht (Platzhalter können verwendet werden)"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "Originalversion der Nachricht, wie sie über das Netz versendet wurde"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Textkörper (Rich/HTML)"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "Füge seitliche Leiste hinzu"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Rich-Text Inhalt"
-
-#~ msgid "References"
-#~ msgstr "Referenzen"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Kompletter Nachrichtenvorspann, zB SMTP Session Header (normalerweise nur "
-#~ "für einlangende EMails)"
-
-#~ msgid "Related user"
-#~ msgstr "zugehöriger Benutzer"
-
-#~ msgid "Opt-out"
-#~ msgstr "abmelden"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "Nachrichten-ID SMTP Vorspann für ausgehende Emails basierend auf dieser "
-#~ "Vorlage. Dies überschreibt die \"Resource Verfolgungs\" Option.\n"
-#~ "Wenn Sie lediglich Antworten auf ausgehende Emails verfolgen wollen "
-#~ "aktivieren Sie diese andere Option."
-
-#~ msgid "Bcc"
-#~ msgstr "Bcc"
-
-#~ msgid "Message headers"
-#~ msgstr "Nachrichten-Vorspann"
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "Sidebar Schaltfläche entfernen"
-
-#~ msgid "Attach Report"
-#~ msgstr "Hänge Bericht an"
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "Dynamische Werte Erzeugung"
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Auslieferung gescheitert"
-
-#~ msgid "Close"
-#~ msgstr "Abschließen"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr "Datensatz:"

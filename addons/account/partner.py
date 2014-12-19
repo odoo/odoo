@@ -47,6 +47,16 @@ class account_fiscal_position(osv.osv):
         'active': True,
     }
 
+    def _check_country(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        if obj.country_id and obj.country_group_id:
+            return False
+        return True
+
+    _constraints = [
+        (_check_country, 'You can not select a country and a group of countries', ['country_id', 'country_group_id']),
+    ]
+
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
         if not taxes:
@@ -65,16 +75,17 @@ class account_fiscal_position(osv.osv):
                 result.add(t.id)
         return list(result)
 
-    @api.v8
+    @api.v8     # noqa
     def map_tax(self, taxes):
-        result = taxes.browse()
+        result = self.env['account.tax'].browse()
         for tax in taxes:
-            found = False
+            tax_count = 0
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
-                    result |= t.tax_dest_id
-                    found = True
-            if not found:
+                    tax_count += 1
+                    if t.tax_dest_id:
+                        result |= t.tax_dest_id
+            if not tax_count:
                 result |= tax
         return result
 
@@ -115,10 +126,17 @@ class account_fiscal_position(osv.osv):
         domain = [
             ('auto_apply', '=', True),
             '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
-            '|', ('country_id', '=', None), ('country_id', '=', delivery.country_id.id),
-            '|', ('country_group_id', '=', None), ('country_group_id.country_ids', '=', delivery.country_id.id)
         ]
-        fiscal_position_ids = self.search(cr, uid, domain, context=context)
+
+        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
+        if fiscal_position_ids:
+            return fiscal_position_ids[0]
+
+        fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
+        if fiscal_position_ids:
+            return fiscal_position_ids[0]
+
+        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
         if fiscal_position_ids:
             return fiscal_position_ids[0]
         return False
@@ -222,7 +240,8 @@ class res_partner(osv.osv):
         result = {}
         account_invoice_report = self.pool.get('account.invoice.report')
         for partner in self.browse(cr, uid, ids, context=context):
-            invoice_ids = account_invoice_report.search(cr, uid, [('partner_id','child_of',partner.id)], context=context)
+            domain = [('partner_id', 'child_of', partner.id)]
+            invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
             invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
             result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
         return result
@@ -267,7 +286,8 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
-        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
+        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float', groups='account.group_account_invoice'),
+
         'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
         'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(

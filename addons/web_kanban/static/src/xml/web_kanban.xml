@@ -45,8 +45,8 @@
                     <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
                         <li><a data-action="toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.view.grouped_by_m2o and widget.value">
-                            <li t-if="parent.is_action_enabled('group_edit')"><a data-action="edit" href="#">Edit</a></li>
-                            <li t-if="parent.is_action_enabled('group_delete')"><a data-action="delete" href="#">Delete</a></li>
+                            <li t-if="parent &amp;&amp; parent.is_action_enabled('group_edit')"><a data-action="edit" href="#">Edit</a></li>
+                            <li t-if="parent &amp;&amp; parent.is_action_enabled('group_delete')"><a data-action="delete" href="#">Delete</a></li>
                         </t>
                     </ul>
                 </div>

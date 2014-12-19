@@ -1,64 +1,231 @@
 # Turkish translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-05-10 18:31+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-11-01 07:14+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:31+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:19+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: email_template
-#: field:email.template,email_from:0
-#: field:email_template.preview,email_from:0
-msgid "From"
-msgstr "Kimden"
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopya)"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Şablon"
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "Ekle"
 
 #. module: email_template
-#: help:email.template,ref_ir_value:0
-#: help:email_template.preview,ref_ir_value:0
-msgid "Sidebar button to open the sidebar action"
-msgstr "Kenar çubuğu işlevini açacak kenar çubuğu düğmesi"
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "İmza Ekle"
 
 #. module: email_template
-#: field:res.partner,opt_out:0
-msgid "Opt-Out"
-msgstr "Çekildi"
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "Gelişmiş Ayarlar"
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Kime (Epostalar)"
+#: field:email.template,model_id:0
+#: field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Buna uygulanır"
 
 #. module: email_template
-#: field:email.template,mail_server_id:0
-#: field:email_template.preview,mail_server_id:0
-msgid "Outgoing Mail Server"
-msgstr "Giden Posta Sunucusu"
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Ekler"
 
 #. module: email_template
-#: help:email.template,ref_ir_act_window:0
-#: help:email_template.preview,ref_ir_act_window:0
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "Yazanın İmzası (yalnızca toplu postalarda)"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Otomatik Sil"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Toplu posta için kullanılabilir"
+
+#. module: email_template
+#: field:email.template,body_html:0
+#: field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Gövde"
+
+#. module: email_template
+#: help:email.template,email_cc:0
+#: help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Alıcı karbon kopyası (burada yer tutucular kullanılabilir)"
+
+#. module: email_template
+#: field:email.template,email_cc:0
+#: field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "Değerlerini görüntülemek için bir şablon seçin."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "Bir örnek seçin"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr "Virgülle ayrılmış karbon kopya alıcı adresleri"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr "Alıcı iş ortakların kimlikleri virgülle ayrılmış"
+
+#. module: email_template
+#: help:email.template,partner_to:0
+#: help:email_template.preview,partner_to:0
 msgid ""
-"Sidebar action to make this template available on records of the related "
-"document model"
+"Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
-"Kenar çubuğu bu şablonun ilgili belge modellerinde kullanılmasını sağlar"
+"Alıcı iş ortaklarının virgülle ayrılmıi id leri (burada yer tutucular "
+"kullanılabilir)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr "Virgülle ayrılmış alıcı adresleri"
+
+#. module: email_template
+#: help:email.template,email_to:0
+#: help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "Virgülle ayrılmış alıcı adresleri (burada yertutucular kullanılır)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "İçerek"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "Bağlam Eylemi"
+
+#. module: email_template
+#: field:email.template,create_uid:0
+#: field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "Oluşturulma"
+
+#. module: email_template
+#: field:email.template,null_value:0
+#: field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Varsayılan Değer"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr "Varsayılan alıcılar"
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr ""
+"Raporun varsayılan alıcıları:\n"
+"- is ortağı (iş ortağı veya iş ortağı_id alanı kullanılarak) VEYA\n"
+"- eposta (eposta gönderen veya eposta alanı kullanılarak)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Eylem kaydı silinemedi."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr ""
+"Bu şablon ile bir yazma sihirbazı açmak için ilgili belgelerde bir seçenek "
+"göster"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr "Dinamik Yertutucu Oluşturucu"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr "E-posta"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "E-Posta Yapılandırma"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "Eposta Önizle"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "E-posta Şablonu"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "E-posta Şablonu Önizleme"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "Eposta Şablonları"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Eposta yazma sihirbazı"
 
 #. module: email_template
 #: field:email.template,model_object_field:0
@@ -67,59 +234,31 @@ msgid "Field"
 msgstr "Alan"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Gönderici adresi (burada yer tutucular kullanılabilir)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Remove context action"
-msgstr "İçerik Eylemini Kaldır"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
+#: help:email.template,copyvalue:0
+#: help:email_template.preview,copyvalue:0
 msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 msgstr ""
-"Giden postalar için yeğlenen seçimli sunucu. Eğer ayarlanmaışsa, en yüksek "
-"öncelikli olan kullanılacaktır."
+"Son yer tutucu tanımı, istenen şablon alanına kopyalanıp-yapıştırılmak üzere."
 
 #. module: email_template
-#: field:email.template,report_name:0
-#: field:email_template.preview,report_name:0
-msgid "Report Filename"
-msgstr "Rapor Dosyası Adı"
+#: field:email.template,email_from:0
+#: field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Kimden"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Preview"
-msgstr "Önizle"
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Gruplandır..."
 
 #. module: email_template
-#: field:email.template,reply_to:0
-#: field:email_template.preview,reply_to:0
-msgid "Reply-To"
-msgstr "Buna Yanıtla"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Use template"
-msgstr "Şablon kullan"
-
-#. module: email_template
-#: field:email.template,body_html:0
-#: field:email_template.preview,body_html:0
-msgid "Body"
-msgstr "Gövde"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:247
-#, python-format
-msgid "%s (copy)"
-msgstr "%s (kopya)"
+#: field:email.template,id:0
+#: field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -132,29 +271,44 @@ msgstr ""
 "eklenecektir"
 
 #. module: email_template
-#: view:email.template:0
-msgid "SMTP Server"
-msgstr "SMTP Sunucusu"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as new template"
-msgstr "Yeni şablon olarak kaydet"
-
-#. module: email_template
-#: help:email.template,sub_object:0
-#: help:email_template.preview,sub_object:0
+#: help:res.partner,opt_out:0
 msgid ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
-"İlk alan olarak bir ilişki alanı seçldiğinde, bu alan ilişkinin gideceği "
-"belge modelini gösterir."
+"Eğer çekildi işaretliyse, bu kişi toplu postalama ve pazarlama kampanyası "
+"epostaları almayı reddetmiştir. 'Toplu Postalama için Uygun' süzgeci, "
+"kullanıcıların toplu postalama uygularken adayları süzmelerini sağlar."
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template
-msgid "Email Templates"
-msgstr "Eposta Şablonları"
+#: field:email.template,lang:0
+#: field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Dil"
+
+#. module: email_template
+#: field:email.template,write_uid:0
+#: field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncellemeye Göre"
+
+#. module: email_template
+#: field:email.template,write_date:0
+#: field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: field:email.template,name:0
+#: field:email_template.preview,name:0
+msgid "Name"
+msgstr "Adı"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -167,10 +321,25 @@ msgstr ""
 "Uzantı atlanabilir ve sonra rapor türünden gelebilir."
 
 #. module: email_template
-#: field:email.template,ref_ir_act_window:0
-#: field:email_template.preview,ref_ir_act_window:0
-msgid "Sidebar action"
-msgstr "Kenar Çubuğu işlemi"
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Çekildi"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr ""
+"Giden postalar için yeğlenen seçimli sunucu. Eğer ayarlanmaışsa, en yüksek "
+"öncelikli olan kullanılacaktır."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Yazdırıp eklemek için seçmeli rapor"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -178,18 +347,140 @@ msgstr "Kenar Çubuğu işlemi"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
-"Bir eposta gönderilirken seçilecek seçime bağlı çeviri dili (ISO kodu). Eğer "
-"ayarlanmamışsa, İngilizce sürümü kullanılacaktır. Bu genellikle uygun dil "
-"kodunu belirten bir yertutucu ifadesi olabilir, örneğin; "
-"${object.partner_id.lang.code}."
+"Bir posta gönderirken seçilecek isteğe bağlı çeviri dili (ISO kodu). Eğer "
+"ayarlanmamışsa, ingilizce sürümü kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yrttutucu ifadesidir, örn. ${object.partner_id.lang}."
+
+#. module: email_template
+#: help:email.template,null_value:0
+#: help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Hedef alanı boşsa kullanılacak seçimli değer"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Giden Posta Sunucusu"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr "Yazarın e-postasını geçersiz kılar."
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
+"İş Otaklarına sorulmadan toplu posta kampanyaları dahil edilmeyecekler"
+
+#. module: email_template
+#: help:email.template,auto_delete:0
+#: help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "Bu mesajı gönderdikten sonra yer kazanmak için kalıcı olarak sil"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+#: field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Yertutucu Tanımı"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr "Eylem ayrıntılarını ayarlamadan önce Tabanı Modeli ayarlayın."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr "Tercih cevap adresi"
+
+#. module: email_template
+#: help:email.template,reply_to:0
+#: help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Yeğlenen yanıtlama adresi (burada yertutucular kullanılır)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Önizle"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Bunun önizlemesi"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr "Alıcılar"
+
+#. module: email_template
+#: field:email.template,model:0
+#: field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "İlgili Döküman Modeli"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr "Kaldır"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Remove the contextual action to use this template on related documents"
+msgstr "İlgili belgelerde bu şablonu kullanmak için içeriksel eylemi kaldır"
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Buna Yanıtla"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Rapor Dosyası Adı"
+
+#. module: email_template
+#: help:email.template,body_html:0
+#: help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr ""
+"Mesajın Zengin-metin/HTML sürümü (burada yertutucular kullanılmalıdır)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP Sunucusu"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
 msgstr "Örnek Belge"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Yeni bir şablon olarak kaydet"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Yeni şablon olarak kaydet"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -204,114 +495,29 @@ msgstr ""
 "seçebilmelisiniz ."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Dynamic Value Builder"
-msgstr "Dinamik Değer Oluşturucu"
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "İletiyi Gönder (%s)"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
-msgid "Template Preview"
-msgstr "Şablon Önizleme"
-
-#. module: email_template
-#: view:mail.compose.message:0
-msgid "Save as a new template"
-msgstr "Yeni bir şablon olarak kaydet"
-
-#. module: email_template
-#: view:email.template:0
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
 msgid ""
-"Display an option on related documents to open a composition wizard with "
-"this template"
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
-"Bu şablon ile bir yazma sihirbazı açmak için ilgili belgelerde bir seçenek "
-"göster"
+"Gönderici adresi (burada yer tutucular kullanılabilir). Ayarlanmamışsa, "
+"varsayılan değer yazanın eposta rumuzu (eğer yapılandırılmışsa) ya da eposta "
+"adresidir."
 
 #. module: email_template
-#: help:email.template,email_cc:0
-#: help:email_template.preview,email_cc:0
-msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "Alıcı karbon kopyası (burada yer tutucular kullanılabilir)"
-
-#. module: email_template
-#: help:email.template,email_to:0
-#: help:email_template.preview,email_to:0
-msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr "Virgülle ayrılmış alıcı adresleri (burada yertutucular kullanılır)"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Advanced"
-msgstr "Gelişmiş"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Bunun önizlemesi"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Using sample document"
-msgstr "Örnek belge kullanımı"
-
-#. module: email_template
-#: view:email.template:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
-#: model:ir.ui.menu,name:email_template.menu_email_templates
-msgid "Templates"
-msgstr "Şablonlar"
-
-#. module: email_template
-#: field:email.template,name:0
-#: field:email_template.preview,name:0
-msgid "Name"
-msgstr "Adı"
-
-#. module: email_template
-#: field:email.template,lang:0
-#: field:email_template.preview,lang:0
-msgid "Language"
-msgstr "Dil"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "E-posta Şablonu Önizleme"
-
-#. module: email_template
-#: view:email_template.preview:0
-msgid "Email Preview"
-msgstr "Eposta Önizle"
-
-#. module: email_template
-#: view:email.template:0
+#: code:addons/email_template/email_template.py:551
+#, python-format
 msgid ""
-"Remove the contextual action to use this template on related documents"
-msgstr "İlgili belgelerde bu şablonu kullanmak için içeriksel eylemi kaldır"
-
-#. module: email_template
-#: field:email.template,copyvalue:0
-#: field:email_template.preview,copyvalue:0
-msgid "Placeholder Expression"
-msgstr "Yertutucu Tanımı"
-
-#. module: email_template
-#: field:email.template,sub_object:0
-#: field:email_template.preview,sub_object:0
-msgid "Sub-model"
-msgstr "Alt-model"
-
-#. module: email_template
-#: help:email.template,subject:0
-#: help:email_template.preview,subject:0
-msgid "Subject (placeholders may be used here)"
-msgstr "Konu (burada yer tutucular kullanılabilir)"
-
-#. module: email_template
-#: help:email.template,reply_to:0
-#: help:email_template.preview,reply_to:0
-msgid "Preferred response address (placeholders may be used here)"
-msgstr "Yeğlenen yanıtlama adresi (burada yertutucular kullanılır)"
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr "Gönderen epostası eksiktir veya şablonun yapılmasından sonra boştur."
 
 #. module: email_template
 #: field:email.template,ref_ir_value:0
@@ -320,102 +526,25 @@ msgid "Sidebar Button"
 msgstr "Kenar Çubuğu Düğmesi"
 
 #. module: email_template
-#: field:email.template,report_template:0
-#: field:email_template.preview,report_template:0
-msgid "Optional report to print and attach"
-msgstr "Yazdırıp eklemek için seçmeli rapor"
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Kenar Çubuğu işlemi"
 
 #. module: email_template
-#: help:email.template,null_value:0
-#: help:email_template.preview,null_value:0
-msgid "Optional value to use if the target field is empty"
-msgstr "Hedef alanı boşsa kullanılacak seçimli değer"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Model"
-msgstr "Model"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Eposta yazma sihirbazı"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Add context action"
-msgstr "İçerik işlemi ekle"
-
-#. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Belge cinsi bu şablon ile kullanılabilir"
-
-#. module: email_template
-#: field:email.template,email_recipients:0
-#: field:email_template.preview,email_recipients:0
-msgid "To (Partners)"
-msgstr "Kime (İş Ortakları)"
-
-#. module: email_template
-#: field:email.template,auto_delete:0
-#: field:email_template.preview,auto_delete:0
-msgid "Auto Delete"
-msgstr "Otomatik Sil"
-
-#. module: email_template
-#: help:email.template,copyvalue:0
-#: help:email_template.preview,copyvalue:0
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
 msgid ""
-"Final placeholder expression, to be copy-pasted in the desired template "
-"field."
+"Sidebar action to make this template available on records of the related "
+"document model"
 msgstr ""
-"Son yer tutucu tanımı, istenen şablon alanına kopyalanıp-yapıştırılmak üzere."
+"Kenar çubuğu bu şablonun ilgili belge modellerinde kullanılmasını sağlar"
 
 #. module: email_template
-#: field:email.template,model:0
-#: field:email_template.preview,model:0
-msgid "Related Document Model"
-msgstr "İlgili Döküman Modeli"
-
-#. module: email_template
-#: view:email.template:0
-msgid "Addressing"
-msgstr "Adresleme"
-
-#. module: email_template
-#: help:email.template,email_recipients:0
-#: help:email_template.preview,email_recipients:0
-msgid ""
-"Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
-"Alıcı iş ortaklarının virgülle ayrılmıi id leri (burada yer tutucular "
-"kullanılabilir)"
-
-#. module: email_template
-#: field:email.template,attachment_ids:0
-#: field:email_template.preview,attachment_ids:0
-msgid "Attachments"
-msgstr "Ekler"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Deletion of the action record failed."
-msgstr "Eylem kaydı silinemedi."
-
-#. module: email_template
-#: field:email.template,email_cc:0
-#: field:email_template.preview,email_cc:0
-msgid "Cc"
-msgstr "Cc"
-
-#. module: email_template
-#: field:email.template,model_id:0
-#: field:email_template.preview,model_id:0
-msgid "Applies to"
-msgstr "Buna uygulanır"
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Kenar çubuğu işlevini açacak kenar çubuğu düğmesi"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
@@ -424,35 +553,91 @@ msgid "Sub-field"
 msgstr "Alt-alan"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Email Details"
-msgstr "Eposta Ayrıntıları"
+#: field:email.template,sub_object:0
+#: field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Alt-model"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:199
-#, python-format
-msgid "Send Mail (%s)"
-msgstr "İletiyi Gönder (%s)"
+#: field:email.template,subject:0
+#: field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Konu"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0
+#: help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Konu (burada yer tutucular kullanılabilir)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Tedarakçiler"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Şablon Önizleme"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Şablonlar"
+
+#. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Belge cinsi bu şablon ile kullanılabilir"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"The values displayed hereunder are informative. When sending the email, the "
+"values\n"
+"                                will be taken from the email template."
 msgstr ""
-"Eğer işaretlenirse, bu iş ortağı kesilen fatura bildirimleri gibi otomatik "
-"eposta bildirimleri almayacaktır."
+"Burada gösterilen değerler bilgi amaçlıdır. Eposta gönderirken, değerle\n"
+"                                eposta şablonundan alınacaktır."
 
 #. module: email_template
-#: help:email.template,auto_delete:0
-#: help:email_template.preview,auto_delete:0
-msgid "Permanently delete this email after sending it, to save space"
-msgstr "Bu mesajı gönderdikten sonra yer kazanmak için kalıcı olarak sil"
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Kime (Epostalar)"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Group by..."
-msgstr "Gruplandır..."
+#: field:email.template,partner_to:0
+#: field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Kime (İş Ortakları)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Şablon kullan"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -465,27 +650,14 @@ msgstr ""
 "hedef alanını seçmenizi sağlar."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:234
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
-
-#. module: email_template
-#: field:email.template,user_signature:0
-#: field:email_template.preview,user_signature:0
-msgid "Add Signature"
-msgstr "İmza Ekle"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_res_partner
-msgid "Partner"
-msgstr "İş Ortağı"
-
-#. module: email_template
-#: field:email.template,null_value:0
-#: field:email_template.preview,null_value:0
-msgid "Default Value"
-msgstr "Varsayılan Değer"
+#: help:email.template,sub_object:0
+#: help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr ""
+"İlk alan olarak bir ilişki alanı seçldiğinde, bu alan ilişkinin gideceği "
+"belge modelini gösterir."
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -498,925 +670,14 @@ msgstr ""
 "eklenmek üzere"
 
 #. module: email_template
-#: help:email.template,body_html:0
-#: help:email_template.preview,body_html:0
-msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
 msgstr ""
-"Mesajın Zengin-metin/HTML sürümü (burada yertutucular kullanılmalıdır)"
+"Şablonunuzda tanımlanmış herhangi bir eposta_kimden yok. Lütfen şablonunuzu "
+"güncelleyin."
 
 #. module: email_template
-#: view:email.template:0
-msgid "Contents"
-msgstr "İçindekiler"
-
-#. module: email_template
-#: field:email.template,subject:0
-#: field:email_template.preview,subject:0
-msgid "Subject"
-msgstr "Konu"
-
-#, python-format
-#~ msgid ""
-#~ "No personal email accounts are configured for you. \n"
-#~ "Either ask admin to enforce an account for this template or get yourself a "
-#~ "personal email account."
-#~ msgstr ""
-#~ "Sizin için bir e-posta hesabı tanımlanmamış \n"
-#~ "Bu şablona tanımlaması için sistem yöneticisine başvurabilir ya da kendiniz "
-#~ "bir e-posta hesabı edinebilirsiniz."
-
-#~ msgid "Personal Emails"
-#~ msgstr "Kişisel E-postalar"
-
-#~ msgid "Approved"
-#~ msgstr "Onaylandı"
-
-#~ msgid "Send now"
-#~ msgstr "Şimdi gönder"
-
-#~ msgid "HTML code"
-#~ msgstr "HTML Kodu"
-
-#~ msgid "Account"
-#~ msgstr "Hesap"
-
-#~ msgid "Send Mail"
-#~ msgstr "İletiyi Gönder"
-
-#~ msgid "Both HTML & Text (Mixed)"
-#~ msgstr "HTML ve Düz metin (Karışık)"
-
-#~ msgid "Delete Action"
-#~ msgstr "Eylemi Sil"
-
-#~ msgid "Approve Account"
-#~ msgstr "Hesabı Onayla"
-
-#~ msgid "OK"
-#~ msgstr "Tamam"
-
-#~ msgid "Referred Document"
-#~ msgstr "Atıfta Bulunulan Belge"
-
-#~ msgid "Complete Success"
-#~ msgstr "Başarıyla Tamamlandı"
-
-#~ msgid "Both HTML & Text (Alternative)"
-#~ msgstr "HTML ve Düz metin (Alternatif)"
-
-#~ msgid "Wizard Complete"
-#~ msgstr "Sihirbaz Tamamlandı"
-
-#~ msgid "Body(Text)"
-#~ msgstr "İleti Metni (Düz metin)"
-
-#~ msgid "Accounts"
-#~ msgstr "Hesaplar"
-
-#~ msgid "From Email"
-#~ msgstr "Gönderen E-Posta"
-
-#~ msgid "SSL/TLS (only in python 2.6)"
-#~ msgstr "SSL/TLS (Yalnızca Python 2.6 için)"
-
-#~ msgid "Company Emails"
-#~ msgstr "Şirket E-postaları"
-
-#~ msgid "Attached Files"
-#~ msgstr "Ekli Dosyalar"
-
-#~ msgid "No of requested Mails"
-#~ msgstr "İstenen E-Posta Sayısı"
-
-#~ msgid "Standard Body (Text)"
-#~ msgstr "Standart Gövde (Metin)"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason: Server Send Error\n"
-#~ " Description: %s"
-#~ msgstr ""
-#~ "%s hesabından gönderim başarısız. Olası neden: Sunucu Gönderim Hatası\n"
-#~ " Açıklama: %s"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here."
-#~ msgstr ""
-#~ "İletiyi alanların yanıtlarken farklı bir adres kullanmalarını istiyorsanız "
-#~ "burada belirtebilirsiniz. Yer tutucular kullanılabilir."
-
-#~ msgid ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here. e.g. ${object.email_bcc}"
-#~ msgstr ""
-#~ "Gizli alıcılar virgülle ayrılır. Yertutucular kullanılabilir. Ör: "
-#~ "${object.email_bcc}"
-
-#, python-format
-#~ msgid "Reason: %s"
-#~ msgstr "Neden: %s"
-
-#~ msgid "Insert Simple Field"
-#~ msgstr "Basit Alan Gir"
-
-#~ msgid "Body(Html)"
-#~ msgstr "İleti metni (HTML)"
-
-#~ msgid "Standard Body"
-#~ msgstr "Standart Gövde"
-
-#, python-format
-#~ msgid "Mail from Account %s successfully Sent."
-#~ msgstr "%s hesabından başarıyla gönderildi."
-
-#~ msgid "The text version of the mail"
-#~ msgstr "E-Posta'nın salt metin hali"
-
-#~ msgid "Mako Templates"
-#~ msgstr "Mako Şablonu"
-
-#~ msgid "Body (Text-Web Client Only)"
-#~ msgstr "Gövde (Metin - Sadece Web Arayüzünde)"
-
-#, python-format
-#~ msgid "Out going connection test failed"
-#~ msgstr "İleti gönderme testi başarısız."
-
-#~ msgid "Wizard Button"
-#~ msgstr "Sihirbaz Tuşu"
-
-#~ msgid "Resource"
-#~ msgstr "Kaynak"
-
-#~ msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
-#~ msgstr "Ör: 'john@doe.com' ya da 'John Doe <john@doe.com>'"
-
-#~ msgid "State"
-#~ msgstr "Durum"
-
-#~ msgid "Sent Items"
-#~ msgstr "Gönderilmiş Öğeler"
-
-#, python-format
-#~ msgid " (Email Attachment)"
-#~ msgstr " (E-posta Ekleri)"
-
-#~ msgid "Sub Field"
-#~ msgstr "Alt Alan"
-
-#, python-format
-#~ msgid "Report"
-#~ msgstr "Rapor"
-
-#~ msgid "User account"
-#~ msgstr "Kullanıcı Hesabı"
-
-#~ msgid "Attach my signature to mail"
-#~ msgstr "E-Postaya imzamı iliştir"
-
-#~ msgid "Test Outgoing Connection"
-#~ msgstr "Gönderim bağlantısını sına"
-
-#~ msgid ""
-#~ "The address recipients should reply to, if different from the From address. "
-#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
-#~ msgstr ""
-#~ "İletiyi alanların yanıtlarken kullanacakları e-posta adresi farklı ise "
-#~ "burada belirtin. Yer tutucular kullanılabilir. Ör: ${object.email_reply_to}"
-
-#~ msgid ""
-#~ "Button in the side bar of the form view of this Resource that will invoke "
-#~ "the Window Action"
-#~ msgstr ""
-#~ "Bu kaynağı düzenlediğiniz formun kenar çubuğunda bulunan buton Pencere "
-#~ "Eylemini çağırır."
-
-#~ msgid "My Emails"
-#~ msgstr "İletilerim"
-
-#~ msgid ""
-#~ "Copy and paste the value in the location you want to use a system value."
-#~ msgstr ""
-#~ "Bir sistem değeri kullanmak istediğiniz yere değeri kopyala yapıştır yapınız."
-
-#~ msgid "Suspend Account"
-#~ msgstr "Hesabı Etkisiz Hale Getir"
-
-#~ msgid "HTML Body"
-#~ msgstr "HTML Gövde"
-
-#~ msgid "Expression Builder"
-#~ msgstr "İfade Oluşturucu"
-
-#~ msgid "Server"
-#~ msgstr "Sunucu"
-
-#~ msgid "Preview Template"
-#~ msgstr "Şablon Önizleme"
-
-#~ msgid "This Value is used if the field is empty"
-#~ msgstr "Alan boşsa bu değer kullanılır"
-
-#~ msgid ""
-#~ "When a relation field is used this field will show you the type of field you "
-#~ "have selected"
-#~ msgstr ""
-#~ "İlişkili bir alan kullanıldığında bu alan seçilen alanın türünü gösterir"
-
-#~ msgid "Body (Text)"
-#~ msgstr "Gövde (Metin)"
-
-#~ msgid "Rec/Sent Date"
-#~ msgstr "Geliş/Gidiş Tarihi"
-
-#~ msgid "Report to send"
-#~ msgstr "Gönderilecek Rapor"
-
-#~ msgid "Body (Raw HTML)"
-#~ msgstr "İleti metni (Ham HTML)"
-
-#~ msgid "Signature"
-#~ msgstr "İmza"
-
-#~ msgid "Body (Plain Text)"
-#~ msgstr "Gövde (Salt Metin)"
-
-#~ msgid "Options"
-#~ msgstr "Seçenekler"
-
-#~ msgid "Initiated"
-#~ msgstr "Başlatılmış"
-
-#~ msgid "Note: This is Raw HTML."
-#~ msgstr "Not: Bu ham HTML kodudur."
-
-#~ msgid "Multiple Mail Wizard Step 1"
-#~ msgstr "Birden Fazla E-Posta Sihirbazı Adım 1"
-
-#~ msgid "Mail Details"
-#~ msgstr "E-posta Ayrıntıları"
-
-#, python-format
-#~ msgid "SMTP SERVER or PORT not specified"
-#~ msgstr "SMTP Sunucusu ya da bağlantı noktası belirtilmedi"
-
-#~ msgid "Yes"
-#~ msgstr "Evet"
-
-#~ msgid "Related User"
-#~ msgstr "İlgili Kullanıcı"
-
-#~ msgid "Body (Rich Text Clients Only)"
-#~ msgstr "İleti metni (yalnızca zengin metin işlemcileri)"
-
-#~ msgid "Server Information"
-#~ msgstr "Sunucu Bilgisi"
-
-#~ msgid "No of generated Mails"
-#~ msgstr "Oluşturulan E-Posta sayısı"
-
-#~ msgid "Window Action"
-#~ msgstr "Pencere Eylemi"
-
-#~ msgid "Mail Contents"
-#~ msgstr "E-Posta İçeriği"
-
-#~ msgid "Drafts"
-#~ msgstr "Taslaklar"
-
-#~ msgid "HTML, otherwise Text"
-#~ msgstr "HTML ya da düz metin"
-
-#~ msgid "No"
-#~ msgstr "Hayır"
-
-#~ msgid "BCC"
-#~ msgstr "BCC"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "Şablon adı benzersiz olmalı !"
-
-#~ msgid "Plain Text"
-#~ msgstr "Düz Metin"
-
-#~ msgid "Draft"
-#~ msgstr "Taslak"
-
-#~ msgid "SMTP Port"
-#~ msgstr "SMTP bağlantı noktası"
-
-#~ msgid "From Account"
-#~ msgstr "Gönderen Hesap"
-
-#, python-format
-#~ msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
-#~ msgstr "Tarih saat ayırması başarısız. Tarih:%s \tHata:%s"
-
-#~ msgid "Intermixed content"
-#~ msgstr "Karışık içerik"
-
-#~ msgid "Status"
-#~ msgstr "Durum"
-
-#~ msgid "Outgoing"
-#~ msgstr "Giden"
-
-#~ msgid "the signature from the User details will be appended to the mail"
-#~ msgstr "Kullanıcı detaylarındaki imza iletinin sonuna eklenecektir."
-
-#~ msgid "Model Internal Name"
-#~ msgstr "Model İç Kullanım Adı"
-
-#~ msgid "Message-ID"
-#~ msgstr "İleti-Numarası"
-
-#~ msgid "Applicable for inward items only"
-#~ msgstr "Sadece gelen ögeler için geçerlidir"
-
-#~ msgid ""
-#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
-#~ "next Send/Recieve"
-#~ msgstr ""
-#~ "Bütün E-Postaları gönder tuşune bastıktan sonra E-Postalar Giden kutusuna "
-#~ "gönderilip bir sonraki Gönder/Al işleminde temizlenecektir."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "%s hesabından gönderim başarısız. Olası neden: MIME hatası.\n"
-#~ "Açıklama: %s"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid "User Name"
-#~ msgstr "Kullanıcı Adı"
-
-#~ msgid "Request Re-activation"
-#~ msgstr "Yeniden Etkinleştirme İste"
-
-#~ msgid "Save in Drafts"
-#~ msgstr "Taslaklara Kaydet"
-
-#~ msgid "Outbox"
-#~ msgstr "Giden Kutusu"
-
-#~ msgid "User"
-#~ msgstr "Kullanıcı"
-
-#~ msgid "Advanced Options"
-#~ msgstr "Gelişmiş Seçenekler"
-
-#~ msgid "Report File Name"
-#~ msgstr "Rapor Dosya Adı"
-
-#, python-format
-#~ msgid "Email Template"
-#~ msgstr "E-posta Şablonu"
-
-#~ msgid "Suspended"
-#~ msgstr "Askıya Alındı"
-
-#~ msgid "The subject of email. Placeholders can be used here."
-#~ msgstr "İleti konusu. Yer tutucular kullanılabilir."
-
-#~ msgid "Expression"
-#~ msgstr "İfade"
-
-#~ msgid "History"
-#~ msgstr "Geçmiş"
-
-#~ msgid ""
-#~ "Only users from these groups will be allowed to send mails from this Template"
-#~ msgstr ""
-#~ "Sadece bu grubun kullanıcıları bu şablonu kullanarak E-Posta gönderebilirler"
-
-#~ msgid "Send/Receive"
-#~ msgstr "Gönder/Al"
-
-#~ msgid "Body (HTML-Web Client Only)"
-#~ msgstr "Gövde (HTML - Sadece Web Arayüzünde)"
-
-#~ msgid "Close"
-#~ msgstr "Kapat"
-
-#, python-format
-#~ msgid "Copy of template "
-#~ msgstr "Şablon kopyası "
-
-#~ msgid "Text, otherwise HTML"
-#~ msgstr "Düz metin ya da HTML"
-
-#~ msgid "Email Templates for Models"
-#~ msgstr "Modeller için e-posta şablonları"
-
-#~ msgid "Discard Mail"
-#~ msgstr "İletiyi yok et"
-
-#~ msgid "To"
-#~ msgstr "Kime"
-
-#~ msgid "Error: You are not allowed to have more than 1 account."
-#~ msgstr "Hata: Birden fazla hesab kullanmanıza izin verilmiyor."
-
-#, python-format
-#~ msgid "Error sending mail: %s"
-#~ msgstr "İleti gönderiminde hata: %s"
-
-#, python-format
-#~ msgid ""
-#~ "Server Send Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Sunucu Gönderme Hatası\n"
-#~ "Açıklama: %s"
-
-#, python-format
-#~ msgid "%s (Email Attachment)"
-#~ msgstr "%s (İleti eki)"
-
-#~ msgid "Allowed User Groups"
-#~ msgstr "İzin Verilen Kullanıcı Grupları"
-
-#~ msgid "User Information"
-#~ msgstr "Kullanıcı Bilgisi"
-
-#~ msgid "Actions"
-#~ msgstr "Eylemler"
-
-#~ msgid "Date on which Email Sent or Received"
-#~ msgstr "E-posta gönderme alma tarihleri"
-
-#~ msgid ""
-#~ "Name of the generated report file. Placeholders can be used in the filename. "
-#~ "eg: 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Üretilen rapor dosyasının adı. Dosya adında yer tutucular kullanılabilir. "
-#~ "Ör: 2009_SO003.pdf"
-
-#~ msgid "Sending"
-#~ msgstr "Gönderiliyor"
-
-#~ msgid "Trash"
-#~ msgstr "Çöp"
-
-#~ msgid "Email Mailbox"
-#~ msgstr "E-Posta Kutusu"
-
-#~ msgid "Create Action"
-#~ msgstr "Eylem Oluştur"
-
-#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
-#~ msgstr "Giden e-posta sunucusu adı. Ör: smtp.yourdomain.com"
-
-#~ msgid "Description"
-#~ msgstr "Açıklama"
-
-#~ msgid "Email Template for OpenERP"
-#~ msgstr "OpenERP için E-posta  Şablonu"
-
-#, python-format
-#~ msgid "SMTP Test Connection Was Successful"
-#~ msgstr "SMTP bağlandı denemesi başarılı."
-
-#, python-format
-#~ msgid "Missing mail account"
-#~ msgstr "Eksik e-posta hesabı"
-
-#~ msgid ""
-#~ "You may attach existing files to this template, so they will be added in all "
-#~ "emails created from this template"
-#~ msgstr ""
-#~ "Bu şablona varolan bir dosyayı eklerseniz, bu şablon kullanılarak "
-#~ "oluşturulan tüm iletilere otomatik olarak eklenecektir."
-
-#, python-format
-#~ msgid ""
-#~ "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "%s e-posta gönderimi başarısız. Olası neden: Sunucuda oturum açılamadı.\n"
-#~ "Hata: %s"
-
-#~ msgid "Another setting already exists with this email ID !"
-#~ msgstr "Bu e-posta ID'si için zaten ayarlanmış bir değer var !"
-
-#~ msgid ""
-#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
-#~ "that this overrides the Resource tracking option! Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Belirteceğiniz İleti-Kimlik bilgisi SMTP üst bilgisinde kullanılacaktır. "
-#~ "Unutmayın ! Bu ayarlama kaynak izleme seçeneğine baskındır. Yer tutucular "
-#~ "kullanılabilir."
-
-#~ msgid "Action that will open this email template on Resource records"
-#~ msgstr "Eylem, kaynak kayıtlar için e-posta şablonunu açacak"
-
-#~ msgid "Null Value"
-#~ msgstr "Null Değeri"
-
-#~ msgid "CC"
-#~ msgstr "CC"
-
-#~ msgid "Templating Language"
-#~ msgstr "Şablon Dili"
-
-#~ msgid "Sent"
-#~ msgstr "Gönderildi"
-
-#~ msgid "Password"
-#~ msgstr "Parola"
-
-#~ msgid "Recipient (To)"
-#~ msgstr "Alıcı (Kime)"
-
-#~ msgid "Resource Tracking"
-#~ msgstr "Kaynak İzleme"
-
-#~ msgid ""
-#~ "The Recipient of email. Placeholders can be used here. e.g. "
-#~ "${object.email_to}"
-#~ msgstr ""
-#~ "E-posta alıcıları. Yer tutucular kullanılabilir. Ör: ${object.email_to}"
-
-#~ msgid "Existing files"
-#~ msgstr "Var olan dosya"
-
-#~ msgid "Emails"
-#~ msgstr "E-postalar"
-
-#~ msgid "Report Name"
-#~ msgstr "Rapor Adı"
-
-#~ msgid "This is the wizard for sending mail"
-#~ msgstr "Bu email gönderme sihirbazıdır."
-
-#~ msgid "Emails will be sent from this approved account."
-#~ msgstr "E-postalar bu onaylanmış hesaptan gönderilecek."
-
-#~ msgid ""
-#~ "Copy this html code to your HTML message body for displaying the info in "
-#~ "your mail."
-#~ msgstr ""
-#~ "Bilginin E-Postanızda görülmesi için bu html kodunu HTML E-Posta gövdesine "
-#~ "kopyalayın."
-
-#~ msgid "Body (HTML)"
-#~ msgstr "İleti metni (HTML)"
-
-#~ msgid "email_template.account"
-#~ msgstr "email_template.account"
-
-#~ msgid "Corporate"
-#~ msgstr "Ticari Şirket"
-
-#, python-format
-#~ msgid "Core connection for the given ID does not exist"
-#~ msgstr "Verilen ID için merkezi bağlantı bulunmuyor."
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed on login. Probable Reason:Could not login to "
-#~ "server\n"
-#~ "Error: %s"
-#~ msgstr ""
-#~ "%s hesabından gönderim sırasında oturum açılamadı.\n"
-#~ "Hata: %s"
-
-#~ msgid "Addresses"
-#~ msgstr "Adresler"
-
-#~ msgid "Simple Mail Wizard Step 1"
-#~ msgstr "Basit E-Posta Sihirbazı Adım 1"
-
-#~ msgid "Folder"
-#~ msgstr "Dizin"
-
-#~ msgid "Mail Format"
-#~ msgstr "E-Posta Biçimi"
-
-#~ msgid "Company Accounts"
-#~ msgstr "Şirket Hesapları"
-
-#~ msgid "Enter port number, eg: 25 or 587"
-#~ msgstr "Bağlantı noktası giriniz. Ör: 25 ya da 587"
-
-#, python-format
-#~ msgid "email-template"
-#~ msgstr "email-template"
-
-#, python-format
-#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
-#~ msgstr "%s hesabından gönderim başarısız. Olası neden: Hesap onaylanmamış."
-
-#, python-format
-#~ msgid "No Description"
-#~ msgstr "Açıklama Yok"
-
-#~ msgid "Has Attachments"
-#~ msgstr "Ek Var"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Gönderdikten sonra epostaları kalıcı olarak sil."
-
-#~ msgid "Email Content  "
-#~ msgstr "Eposta İçeriği  "
-
-#~ msgid ""
-#~ "Select the field from the model you want to use.\n"
-#~ "If it is a relationship field you will be able to choose the nested values "
-#~ "in the box below\n"
-#~ "(Note:If there are no values make sure you have selected the correct model)"
-#~ msgstr ""
-#~ "Kullanmak istediğiniz modelden alanı seçiniz.\n"
-#~ "Eğer ilintili bir alansa içiçe değerleri aşağıdaki kutudan seçebilirsiniz.\n"
-#~ "(Not: Eğer herhangi bir değer yoksa doğru modeli seçtiğinizden emin olun)"
-
-#, python-format
-#~ msgid "Emails for multiple items saved in outbox."
-#~ msgstr "Çoklu öğeler için epostalar giden kutusuna kaydedildi."
-
-#~ msgid "Email Account Configuration"
-#~ msgstr "Eposta Hesapları Yapılandırma"
-
-#~ msgid "Send mail Wizard"
-#~ msgstr "Posta Gönderim Sihirbazı"
-
-#~ msgid "Plain Text & HTML with no attachments"
-#~ msgstr "Düz Metin ve Eklentisiz HTML"
-
-#~ msgid "Email Accounts"
-#~ msgstr "Eposta Hesapları"
-
-#~ msgid "Send all mails"
-#~ msgstr "Tüm postaları gönder"
-
-#~ msgid "Server Reference of mail"
-#~ msgstr "Posta Sunucu Referansı"
-
-#, python-format
-#~ msgid "Deletion of Record failed"
-#~ msgstr "Kayıt Silinemedi"
-
-#~ msgid ""
-#~ "Select if this mail account does not belong to specific user but to the "
-#~ "organization as a whole. eg: info@companydomain.com"
-#~ msgstr ""
-#~ "Bu posta hesabı belirli bir kullanıcıya ait değilde bir kurumun geneline "
-#~ "aitse seçin. Ör: info@companydomain.com"
-
-#~ msgid "Not Applicable"
-#~ msgstr "Uygulanabilir Değil"
-
-#~ msgid ""
-#~ "Specify the username if your SMTP server requires authentication, otherwise "
-#~ "leave it empty."
-#~ msgstr ""
-#~ "SMTP sunucunuz kimlik doğrulama gerektiriyorsa kullanıcı adınızı yazınız, "
-#~ "gerektirmiyorsa boş bırakınız."
-
-#~ msgid "Email Account"
-#~ msgstr "Eposta Hesabı"
-
-#~ msgid ""
-#~ "The default language for the email. Placeholders can be used here. eg. "
-#~ "${object.partner_id.lang}"
-#~ msgstr ""
-#~ "Eposta için varsayılan dil. Burada yertutucular kullanılabilir. Örneğin, "
-#~ "${object.partner_id.lang}"
-
-#, python-format
-#~ msgid "Email sending failed for one or more objects."
-#~ msgstr "Bir ya da daha çok nesne için eposta gönderimi başarısız."
-
-#~ msgid ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
-#~ "e.g. ${object.email_cc}"
-#~ msgstr ""
-#~ "Karbon Kopya adres(ler) virgülle ayrılı. Yertutucular burada kullanılabilir. "
-#~ "Örn. ${object.email_cc}"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "Email."
-#~ msgstr ""
-#~ "Epostada yer almasını istediğiniz dökümana ait tüm ekleri buraya ekleyiniz."
-
-#~ msgid ""
-#~ "When you choose relationship fields this field will specify the sub value "
-#~ "you can use."
-#~ msgstr ""
-#~ "İlişkili alanları seçtiğinizde bu alan kullanabileceğiniz alt değeri "
-#~ "belirtecektir"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Email Template is extraction of Power Email basically just to send the "
-#~ "emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Eposta Şablonu, temel olarak epostaların gönderimi için Power Epostanın "
-#~ "özüdür.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Tip: Multiple emails are sent in the same language (the first one is "
-#~ "proposed). We suggest you send emails in groups according to language."
-#~ msgstr ""
-#~ "İpucu: Çoklu epostalar aynı dilde gönderilir (ilk olan önerilir). Epsotaları "
-#~ "grup olarak dile göre göndermenizi öneririz."
-
-#~ msgid ""
-#~ "The description is used as the Sender name along with the provided From "
-#~ "Email, unless it is already specified in the From Email, e.g: John Doe "
-#~ "<john@doe.com>"
-#~ msgstr ""
-#~ "Kimden Epostasında beliritlmemişse, açıklama Epostadan alındığı gibi "
-#~ "Gönderen Adı olarak kullanılır. Örneğin: John Doe <john@doe.com>"
-
-#~ msgid "Message type"
-#~ msgstr "Mesaj tipi"
-
-#~ msgid "Received"
-#~ msgstr "Alındı"
-
-#~ msgid "Dynamic Values Builder"
-#~ msgstr "Dinamik Değerler Oluşturucusu"
-
-#~ msgid ""
-#~ "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
-#~ "text contents accordingly"
-#~ msgstr ""
-#~ "Mesaj tipi, genellikle HTML ya da düz-metin, düz-metin ya da HTML içerikleri "
-#~ "seçmek için kullanılır."
-
-#~ msgid "E-mail composition wizard"
-#~ msgstr "E-posta oluşturma sihirbazı"
-
-#~ msgid "Email Content"
-#~ msgstr "E-posta İçeriği"
-
-#~ msgid "Cancelled"
-#~ msgstr "İptal edildi"
-
-#~ msgid "Related partner"
-#~ msgstr "İlgili Cari"
-
-#~ msgid "Attach existing files"
-#~ msgstr "Varolan dosyaları ekle"
-
-#~ msgid "Related Document ID"
-#~ msgstr "İlgili Döküman ID"
-
-#~ msgid "Related Document model"
-#~ msgstr "İlgili Döküman Modeli"
-
-#~ msgid "Language Selection"
-#~ msgstr "Dil Seçimi"
-
-#~ msgid "Files to attach"
-#~ msgstr "Eklenecek Dosyalar"
-
-#~ msgid "Use Template"
-#~ msgstr "Şablon Kullan"
-
-#~ msgid "Related document model"
-#~ msgstr "İlgili döküman modeli"
-
-#~ msgid "Null value"
-#~ msgstr "Boş değer"
-
-#, python-format
-#~ msgid "(copy)"
-#~ msgstr "(Kopya)"
-
-#~ msgid "Use a message template"
-#~ msgstr "Bir mesaj şablonu kullan"
-
-#~ msgid "Original version of the message, as it was sent on the network"
-#~ msgstr "Mesajın networkte gönderildiği orjinal hali"
-
-#~ msgid "Body (Rich/HTML)"
-#~ msgstr "Mesaj Metni (Zengin/HTML)"
-
-#~ msgid "Date"
-#~ msgstr "Tarih"
-
-#~ msgid "Message-Id"
-#~ msgstr "Mesaj-Id"
-
-#~ msgid "Add sidebar button"
-#~ msgstr "Kenar çubuğu butonu ekle"
-
-#~ msgid "Original"
-#~ msgstr "Orjinal"
-
-#~ msgid "Rich-text contents"
-#~ msgstr "Zengin-metin İçerikler"
-
-#~ msgid "References"
-#~ msgstr "Referanslar"
-
-#~ msgid "Text contents"
-#~ msgstr "Metin içeriği"
-
-#~ msgid ""
-#~ "Full message headers, e.g. SMTP session headers (usually available on "
-#~ "inbound messages only)"
-#~ msgstr ""
-#~ "Tam mesaj başlığı, ör: SMTP oturum başlıkları (genelde sadece gelen "
-#~ "mesajlarda bulunur)"
-
-#~ msgid "Related user"
-#~ msgstr "İlgili Kullanıcı"
-
-#~ msgid "Display Text"
-#~ msgstr "Metin Göster"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
-
-#~ msgid "Bcc"
-#~ msgstr "Bcc"
-
-#~ msgid "Message headers"
-#~ msgstr "Mesaj Başlıkları"
-
-#~ msgid "Remove sidebar button"
-#~ msgstr "Kenar Çubuğu butonunu kaldır"
-
-#~ msgid "Message references, such as identifiers of previous messages"
-#~ msgstr "Mesaj referansları, tanımlayıcılar ya da önceki mesajlar"
-
-#~ msgid "Attach Report"
-#~ msgstr "Rapor Ekle"
-
-#~ msgid "Delivery Failed"
-#~ msgstr "Gönderim Başarısız"
-
-#~ msgid "Sidebar button"
-#~ msgstr "Kenar Çubuğu Butonu"
-
-#~ msgid "Remove the sidebar button currently displayed on related documents"
-#~ msgstr "İlgili dokümanlarda gösterilen kenar çubuğu butonunu kaldır"
-
-#~ msgid ""
-#~ "The Message-ID header value, if you need tospecify it, for example to "
-#~ "automatically recognize the replies later. Placeholders can be used here."
-#~ msgstr ""
-#~ "Mesaj-Kimlik başlık değeri, eğer belirtmek isterseniz, örneğin yanıtları "
-#~ "sonradan otomatik olarak tanımak için. Burada yertutucular kullanılabilir."
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it according to specific customer "
-#~ "profile fields, so that a partner name or other partner related information "
-#~ "may be inserted automatically."
-#~ msgstr ""
-#~ "Eposta şablonu, bir pazarlama kampanyasının bir parçası gönderilecek bir "
-#~ "eposta belgesidir. Özel müşteri alanlarına uygun olarak "
-#~ "kişiselleştirebilirsiniz, böylece; bir paydaş adı ya da paydaşla ilintili "
-#~ "bilgiler otomatik olarak eklenir."
-
-#~ msgid ""
-#~ "Enable this is you wish to include a special tracking marker in outgoing "
-#~ "emails so you can identify replies and link them back to the corresponding "
-#~ "resource record. This is useful for CRM leads for example"
-#~ msgstr ""
-#~ "Giden epostalarına özel bir izleme işareti koymak isterseniz bunu "
-#~ "etkinleştirin, böylece yanıtları belirleyebilirsiniz ve onları uygun kaynak "
-#~ "kayıtlarına geri bağlantılayabilirsiniz. Örneğin; bu işlem CRM adayları için "
-#~ "kullanışlıdır"
-
-#~ msgid "Plaintext version of the message (placeholders may be used here)"
-#~ msgstr "Mesajın düz metin biçimi (burada yer tutucular kullanılabilir)"
-
-#~ msgid ""
-#~ "Display a button in the sidebar of related documents to open a composition "
-#~ "wizard with this template"
-#~ msgstr ""
-#~ "Bu şablon ile bir yazım sihirbazı açmak için ilgili dökümanın kenar "
-#~ "çubuğunda bir düğme göster"
-
-#~ msgid "Opt-out"
-#~ msgstr "Ayrılma"
-
-#~ msgid "Blind carbon copy recipients (placeholders may be used here)"
-#~ msgstr "Alıcıların görğnmez karbon kopyası (burada yer tutucular kullanılr)"
-
-#~ msgid ""
-#~ "Message-ID SMTP header to use in outgoing messages based on this template. "
-#~ "Please note that this overrides the 'Resource Tracking' option, so if you "
-#~ "simply need to track replies to outgoing emails, enable that option "
-#~ "instead.\n"
-#~ "Placeholders must be used here, as this value always needs to be unique!"
-#~ msgstr ""
-#~ "Giden mesajlarda Mesaj-SMTP Kimliği bu şablonu temel alır. Lütfen bunun "
-#~ "'Kaynak İzleme' seçeneğini gçersiz kılacağını not edin, bunun yerine giden "
-#~ "epostaların yanıtlarını izlemek için o seçeneği etkinleştirin.\n"
-#~ "Bu değer her zaman benzersiz olacağından burada yertutucular kullanılmalıdır!"
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr "kayıt:"

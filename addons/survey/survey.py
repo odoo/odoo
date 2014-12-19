@@ -125,8 +125,10 @@ class survey_survey(osv.Model):
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a public URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/start/%s" % slug(survey))
@@ -141,7 +143,10 @@ class survey_survey(osv.Model):
 
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/print/%s" % slug(survey))
@@ -149,8 +154,10 @@ class survey_survey(osv.Model):
 
     def _get_result_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes an URL for the survey results """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
-            'web.base.url')
+        if context and context.get('relative_url'):
+            base_url = '/'
+        else:
+            base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         res = {}
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
@@ -280,7 +287,7 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+    def filter_input_ids(self, cr, uid, survey, filters, finished=False, context=None):
         '''If user applies any filters, then this function returns list of
            filtered user_input_id and label's strings for display data in web.
            :param filters: list of dictionary (having: row_id, ansewr_id)
@@ -308,7 +315,7 @@ class survey_survey(osv.Model):
         if finished:
             user_input = self.pool.get('survey.user_input')
             if not filtered_input_ids:
-                current_filters = user_input.search(cr, uid, [], context=context)
+                current_filters = user_input.search(cr, uid, [('survey_id', '=', survey.id)], context=context)
                 user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
             else:
                 user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)
@@ -340,23 +347,26 @@ class survey_survey(osv.Model):
         ''' Compute statistical data for questions by counting number of vote per choice on basis of filter '''
         current_filters = current_filters if current_filters else []
         context = context if context else {}
+        result_summary = {}
 
         #Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            result_summary = []
-            for label in question.labels_ids:
-                count = 0
-                for input_line in question.user_input_line_ids:
-                    if input_line.answer_type == 'suggestion' and input_line.value_suggested.id == label.id and (not current_filters or input_line.user_input_id.id in current_filters):
-                        count = count + 1
-                label_summary = {'text': label.value, 'count': count, 'answer_id': label.id}
-                result_summary = result_summary + [label_summary]
+            answers = {}
+            comments = []
+            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            for input_line in question.user_input_line_ids:
+                if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    answers[input_line.value_suggested.id]['count'] += 1
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers.values(), 'comments': comments}
 
         #Calculate and return statistics for matrix
         if question.type == 'matrix':
             rows = OrderedDict()
             answers = OrderedDict()
             res = dict()
+            comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows.keys(), answers.keys()):
@@ -364,7 +374,9 @@ class survey_survey(osv.Model):
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
-            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+                if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    comments.append(input_line)
+            result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         #Calculate and return statistics for free_text, textbox, datetime
         if question.type in ['free_text', 'textbox', 'datetime']:
@@ -385,6 +397,7 @@ class survey_survey(osv.Model):
                 result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
                                        'max': round(max(all_inputs), 2),
                                        'min': round(min(all_inputs), 2),
+                                       'sum': sum(all_inputs),
                                        'most_comman': Counter(all_inputs).most_common(5)})
         return result_summary
 
@@ -409,7 +422,8 @@ class survey_survey(osv.Model):
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -457,7 +471,8 @@ class survey_survey(osv.Model):
     def action_print_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey printable view '''
         trail = ""
-        if context and 'survey_token' in context:
+        context = dict(context or {}, relative_url=True)
+        if 'survey_token' in context:
             trail = "/" + context['survey_token']
         return {
             'type': 'ir.actions.act_url',
@@ -468,6 +483,7 @@ class survey_survey(osv.Model):
 
     def action_result_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey results view '''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
@@ -477,6 +493,7 @@ class survey_survey(osv.Model):
 
     def action_test_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form into test mode'''
+        context = dict(context or {}, relative_url=True)
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
@@ -1134,11 +1151,14 @@ class survey_user_input_line(osv.Model):
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
             vals.update({'answer_type': None, 'skipped': True})
-        self.create(cr, uid, vals, context=context)
+
+        # '-1' indicates 'comment count as an answer' so do not need to record it
+        if post.get(answer_tag) and post.get(answer_tag) != '-1':
+            self.create(cr, uid, vals, context=context)
 
         comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'skipped': False, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
 
         return True
@@ -1162,10 +1182,12 @@ class survey_user_input_line(osv.Model):
         comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
-                vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
-                self.create(cr, uid, vals, context=context)
+                # '-1' indicates 'comment count as an answer' so do not need to record it
+                if a != ('%s_%s' % (answer_tag, '-1')):
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
+                    self.create(cr, uid, vals, context=context)
         if comment_answer:
-            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            vals.update({'answer_type': 'text', 'value_text': comment_answer, 'value_suggested': False})
             self.create(cr, uid, vals, context=context)
         if not ca and not comment_answer:
             vals.update({'answer_type': None, 'skipped': True})

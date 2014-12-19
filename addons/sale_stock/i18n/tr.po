@@ -1,304 +1,45 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* sale
+# Turkish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-09-21 14:26+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-31 12:10+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:49+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-01 07:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
-msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
-msgstr ""
-"Satış Temsilcinize 'Faturalanacak Teslimatlar' menüsünü kullanarak Teslim "
-"Emirleri için fatura yapma izin verir."
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Teslimat Emri"
-
-#. module: sale_stock
-#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Faturalanacak Teslimatlar"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:570
+#: code:addons/sale_stock/sale_stock.py:266
 #, python-format
-msgid "Picking Information ! : "
-msgstr "Toplama Bilgisi ! : "
+msgid "(n/a)"
+msgstr "(yok)"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_packinglist0
-msgid "Pick List"
-msgstr "Toplama Listesi"
+#: field:sale.config.settings,module_delivery:0
+msgid "Allow adding shipping costs"
+msgstr "Sevkiyat maliyetlerini eklemeye izin verme"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:565
-#, python-format
+#: help:sale.config.settings,module_delivery:0
 msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
+"Allows you to add delivery methods in sales orders and delivery orders.\n"
+"You can define your own carrier and delivery grids for prices.\n"
+"-This installs the module delivery."
 msgstr ""
-"%d Biriminde miktar seçtiniz.\n"
-"Ancak bu seçilen paketlemeyle uyumlu değil.\n"
-"Burada paketlemeye uygun olarak önerilen miktarlar var:\n"
-"EAN: %s Miktar: %s ul Tipi: %s"
 
 #. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "Çıkışa ya da müşteriye yapılan hareket belgesi."
-
-#. module: sale_stock
-#: field:sale.config.settings,group_multiple_shops:0
-msgid "Manage multiple shops"
-msgstr "Birden çok mağaza yönet"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_validate0
-msgid "Validate"
-msgstr "Doğrula"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:209
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Önce bu satış siparişine bağlı tüm teslimat sipariş(ler)ini iptal etmeniz "
-"gerekir."
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "Tedarik Siparişi Oluştur"
-
-#. module: sale_stock
-#: field:stock.picking.out,sale_id:0
-msgid "Sale Order"
-msgstr "Satış Siparişi"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-"Her satış siparişi kalemi için, satılan ürünü temin edebilmek için tedarik "
-"siparişi hazırlanır."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr "Hata!"
-
-#. module: sale_stock
-#: field:sale.order,picking_policy:0
-msgid "Shipping Policy"
-msgstr "Sevkiyat Politikası"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"'teslimattan sonra Otomatik Fatura' olarak tanımlanan bir satış siparişi "
-"için avans oluşturamazsınız."
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "Mağaza"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr "Her Satış siparişi kalemi için tedarik emri yürütür."
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_move
-msgid "Stock Move"
-msgstr "Stok Hareketi"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
-#, python-format
-msgid "Invalid Action!"
-msgstr "Geçersiz İşlem!"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr "Proje Zaman Çizelgesi"
-
-#. module: sale_stock
-#: field:sale.config.settings,group_sale_delivery_address:0
-msgid "Allow a different address for delivery and invoicing "
-msgstr "Teslimat ve faturalama için farklı bir adrese izin verir "
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:572
-#: code:addons/sale_stock/sale_stock.py:623
-#, python-format
-msgid "Configuration Error!"
-msgstr "Yapılandırma Hatası!"
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr "Tedarik Siparişi"
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Teslimatlara göre fatura"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr "Satış Siparişi"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Teslimat Emirleri"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "Satış Siparişi Kalemi"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-"Satış siparişi onaylanır onaylanmaz, tedarik siparişi ile eş zamanlı olarak "
-"Toplama Listesi oluşturulur. Bu parçaların satış siparişine atanmasını "
-"temsil eder. Satış sipariş kalemi içinde parçaların stokta bulunabilirliği "
-"ile bağlantılı olarak bir toplama listesi vardır."
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-"Bu bölüm, emniyet açısından müşterilere söz verilecek teslimat süresine "
-"eklenecek gün sayısı."
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr "Toplama Listesi"
-
-#. module: sale_stock
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Depo"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Güç Tahsisi"
-
-#. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr "Varsayılan faturalama yöntemi"
-
-#. module: sale_stock
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr "Teslimat Süresi"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Müşteriye yapılan işlemin belgesi"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "View Delivery Order"
-msgstr "Teslimat Emrini Görüntüle"
-
-#. module: sale_stock
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Stok Hareketleri"
-
-#. module: sale_stock
-#: view:sale.config.settings:0
-msgid "Default Options"
-msgstr "Varsayılan Seçenekler"
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_mrp:0
-msgid "Project MRP"
-msgstr "MRP Projesi"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr ""
-"Teslimat politikası 'Toplamaya göre faturalama' ya da 'Teslimat sonrası "
-"siparişten faturalama' ise faturalar kendiliğinden oluşturulur."
-
-#. module: sale_stock
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Tedarik"
-
-#. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Gönderildi"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "test_durumu için geçersiz mod"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-"Satış siparişi onaylandığı ya da fatura ödendiği anda tedarik siparişi "
-"otomatik olarak oluşturulur. Bu satış siparişi parametrelerini ve kuralları "
-"göz önünde bulundurarak satın alma ve ürünlerin üretimini yönetir. "
+#: help:sale.config.settings,group_route_so_lines:0
+msgid "Allows you to choose a delivery route on sales order lines"
+msgstr "Satış sipariş satırları üzerinde teslim rota seçmenize olanak verir"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -307,24 +48,93 @@ msgstr ""
 "Satış siparişi kalemlerini özellikleri ile etiketlemenize izni verir."
 
 #. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Cancel Order"
+msgstr "Siparişi İptal Et"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:160
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr "Satış siparişi iptal edilemiyor!"
+
+#. module: sale_stock
+#: field:sale.config.settings,group_route_so_lines:0
+msgid "Choose MTO, drop shipping,... on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
+#, python-format
+msgid "Configuration Error!"
+msgstr "Yapılandırma Hatası!"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr "Kontak Ayrıntıları"
+
+#. module: sale_stock
+#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+msgid "Default Options"
+msgstr "Varsayılan Seçenekler"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_picking_policy:0
+msgid "Deliver all at once when all products are available."
+msgstr "Tüm ürünler mevcut olduğunda bir kerede teslim et."
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver all products at once"
+msgstr "Tüm ürünleri tek seferde teslim et"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver each product when available"
+msgstr "Her ürün hazır olduğunda teslim et"
+
+#. module: sale_stock
+#: field:sale.order,shipped:0
+msgid "Delivered"
+msgstr "Teslim Edildi"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
+msgstr "Faturalanacak Teslimatlar"
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_invoice_deli_orders
+msgid "Enable Invoicing Delivery orders"
+msgstr "Teslimat Emirlerinde Faturalamayı Etkinleştirme"
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_route_so_lines
+msgid "Enable Route on Sales Order Line"
+msgstr "Satış Sipariş Satırın'da Rotayı Etkinleştirme"
+
+#. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "Faturaları sonra ve teslim emirlerine göre oluştur"
+msgstr "Faturaları sonra ve teslim emirlerine göre oluşturma"
 
 #. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Sevkiyat maliyetlerini eklemeye izin verir"
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Ignore Exception"
+msgstr "İstisnayı Gözardı Et"
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "days"
-msgstr "günler"
-
-#. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Paketleme"
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Teslim Şekli"
 
 #. module: sale_stock
 #: help:sale.order,incoterm:0
@@ -336,38 +146,62 @@ msgstr ""
 "tanımlanmış ticari  dizinlerdir."
 
 #. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
+#: model:ir.model,name:sale_stock.model_stock_location_route
+msgid "Inventory Routes"
+msgstr "Envanter Rotaları"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on deliveries"
+msgstr "Teslimatlara göre fatura"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
+msgstr "Satış siparişlerine göre fatura"
+
+#. module: sale_stock
+#: help:sale.config.settings,task_work:0
 msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
-"                This installs the module delivery."
+"Lets you transfer the entries under tasks defined for Project Management to "
+"the Timesheet line entries for particular date and particular user  with the "
+"effect of creating, editing and deleting either ways and to automatically "
+"creates project tasks from procurement lines.\n"
+"-This installs the modules project_timesheet and sale_service."
 msgstr ""
-"Satış siparişleri ve teslimat emirlerine teslimat yöntemleri eklemenize "
-"sağlar.\n"
-"                Kendi nakliyecinizi ve teslimat tablolarınızı "
-"tanımlayabilirsiniz.\n"
-"                Bu, delivery modülünü kurar."
 
 #. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
-msgstr "Tüm ürünler mevcut olduğunda bir kerede teslim et."
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
+"Müşterilere söz verilen tarihlerin hata payı. Teadrik zincirinde umulmadık "
+"gecikmelerle karşılaşmamak için ürünlerin tedarik ve teslimatları için "
+"gerçek söz verilen tarihlerden bbir çok gün erken planlanacaktır."
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
-msgstr "Teslimat emirlerini faturalamayı etkinleştir"
+#: code:addons/sale_stock/sale_stock.py:346
+#, python-format
+msgid "Not enough stock ! : "
+msgstr "Yeterli stok yok !: "
 
 #. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Emniyet Günleri"
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr "Paket Numaraları"
 
 #. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "Satılan malzemenin tedarik edilmesi"
+#: code:addons/sale_stock/res_config.py:78
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr "Yalnızca yöneticiler ayarları değiştirebilir"
+
+#. module: sale_stock
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "Paketleme"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -378,105 +212,85 @@ msgstr ""
 "seçin."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:208
+#: code:addons/sale_stock/sale_stock.py:275
 #, python-format
-msgid "Cannot cancel sales order!"
-msgstr "Satış siparişi iptal edilemiyor!"
+msgid "Picking Information ! : "
+msgstr "Toplama Bilgisi ! : "
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_shop
-msgid "Sales Shop"
-msgstr "Satış Mağazası"
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Picking List"
+msgstr "Toplama Listesi"
 
 #. module: sale_stock
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
+#: field:sale.order,picking_ids:0
+msgid "Picking associated to this sale"
 msgstr ""
-"Satış siparişinin teslim edildiğini gösterir. Bu alan sadece planlayıcı(lar) "
-"başlatıldığı zaman güncellenir."
 
 #. module: sale_stock
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "Özellikler"
+#: field:sale.config.settings,task_work:0
+msgid "Prepare invoices based on task's activities"
+msgstr "Görev faaliyetlerine göre faturalar hazırlama"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr "Ürün"
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
+msgstr "Ürün Şablonu"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr "Sipariş kalemlerindeki ürün özellikleri"
+msgstr "Sipariş satırında ürün özellikleri"
 
 #. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Satış siparişlerine ya da sevkiyatlara göre faturalar oluşturabilirsiniz."
+#: field:sale.config.settings,module_project_timesheet:0
+msgid "Project Timesheet"
+msgstr "Proje Zaman Çizelgesi"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Recreate Delivery Order"
+msgstr "Teslimat Siparişini Yeniden Oluştur"
+
+#. module: sale_stock
+#: field:sale.order.line,route_id:0
+msgid "Route"
+msgstr "Rota"
+
+#. module: sale_stock
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "Satış Siparişi"
+
+#. module: sale_stock
+#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+msgid "Sale Order Lines"
+msgstr "Satış Sipariş Satırları"
+
+#. module: sale_stock
+#: field:sale.config.settings,module_sale_service:0
+msgid "Sale Service"
+msgstr "Satış Hizmeti"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Sipariş Satırı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
 msgstr "Satış Siparişi İstatistikleri"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
-
-#. module: sale_stock
-#: help:sale.config.settings,task_work:0
-msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
-"                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-"Belirli bir tarih ve belirli bir kullanıcı için yapılan Zaman Çizelgesi "
-"kayıtlarını\n"
-"               oluşturma, düzenleme ve silme olanağı vererek proje yönetimi "
-"için tanımlanan görevler\n"
-"altında kayıtları transfer etmenize izin verir\n"
-"               ve tedarik kalemlerinden kendiliğinden proje görevleri "
-"oluşturur.\n"
-"               Bu, project_timesheet ve project_mrp modüllerini kurar."
-
-#. module: sale_stock
-#: help:sale.config.settings,group_sale_delivery_address:0
-msgid ""
-"Allows you to specify different delivery and invoice addresses on a sales "
-"order."
-msgstr ""
-"Satış siparişlerinde farklı teslimat ve fatura adreslerini belirtmenize "
-"olanak verir."
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleprocurement0
-msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr "Her satış siparişi kalemi ve her bileşen için bir Tedarik Siparişi."
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_assign0
-msgid "Assign"
-msgstr "Ata"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:618
-#, python-format
-msgid "Not enough stock ! : "
-msgstr "Yeterli stok yok !: "
-
-#. module: sale_stock
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
-msgstr "Sipariş onayı ve ürünlerin müşteriye sevkiyatı arasındaki gün sayısı"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -490,132 +304,79 @@ msgstr ""
 "sevkiyat fiyatı üzerinde bir etkisi olabilir."
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr "Satış siparişlerine göre fatura"
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr "Emniyet Günleri"
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "Fatura"
+#: field:stock.location.route,sale_selectable:0
+msgid "Selectable on Sales Order Line"
+msgstr "Satış Sipariş Satır'dan Seçilebilir"
 
 #. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-msgid "Cancel"
-msgstr "İptal"
+#: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped"
+msgstr "Gönderildi"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
+#: field:sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr "Sevkiyat Politikası"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_order_policy:0
+msgid "The default invoicing method is"
+msgstr "Varsayılan faturalama yöntemi"
+
+#. module: sale_stock
+#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
+msgid "To Invoice"
+msgstr "Faturalanacak"
+
+#. module: sale_stock
+#: help:sale.config.settings,group_invoice_deli_orders:0
+msgid ""
+"To allow your salesman to make invoices for Delivery Orders using the menu "
+"'Deliveries to Invoice'."
+msgstr ""
+"Satış Temsilcinize 'Faturalanacak Teslimatlar' menüsünü kullanarak Teslim "
+"Emirleri için fatura yapma izin verir."
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "View Delivery Order"
+msgstr "Teslimat Emrini Görüntüle"
+
+#. module: sale_stock
+#: field:sale.order,warehouse_id:0
+#: field:sale.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "Depo"
+
+#. module: sale_stock
+#: help:sale.config.settings,default_order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr ""
+"Satış siparişlerine ya da sevkiyatlara göre faturalar oluşturabilirsiniz."
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
-"In order to delete a confirmed sales order, you must cancel it.\n"
-"To do so, you must first cancel related picking for delivery orders."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-"Onaylı bir satış siparişini silmek için onu iptal etmelisiniz.\n"
-"Bunu yapmak için, önce teslim emirlerindeki ilgili toplamaları iptal "
-"etmelisiniz."
+"Önce bu satış siparişine bağlı tüm teslimat sipariş(ler)ini iptal etmeniz "
+"gerekir."
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Paketleri Numarala"
-
-#. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Teslim Edildi"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
-msgid "Create Invoice"
-msgstr "Fatura Oluştur"
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr "Görevlerin eylemlerine göre fatura hazırla"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Peşin Ödemeli Satış Faturası"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:523
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Öncelikle bu satış siparişi kalemine bağlı olan stok hareketlerini iptal "
-"etmelisiniz."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:561
-#, python-format
-msgid "(n/a)"
-msgstr "(yok)"
-
-#. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Teslim Şekli"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:522
-#, python-format
-msgid "Cannot cancel sales order line!"
-msgstr "Satış siparişi kalemi iptal edilemiyor!"
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Atamayı iptal Et"
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "Sevkedilen ya da sipariş edilen miktara göre."
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Tüm ürünleri tek seferde teslim et"
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "İlişkili Toplama"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: sale_stock
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of delivery orders that has been generated for this sales "
-"order."
-msgstr ""
-"Bu, bu satış siparişi için oluşturulan teslimat emirlerinin listesidir."
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "Satış Sipariş İsteği"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "Teslimat Emri Oluştur"
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "İstisnayı Gözardı Et"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:614
+#: code:addons/sale_stock/sale_stock.py:342
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -625,36 +386,32 @@ msgstr ""
 "Gerçek Stok %.2f%s. (ayrılmışlar hariç)"
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Recreate Delivery Order"
-msgstr "Teslimat Siparişini Yeniden Oluştur"
-
-#. module: sale_stock
-#: help:sale.config.settings,group_multiple_shops:0
-msgid "This allows to configure and use multiple shops."
-msgstr "Bu birden çok mağza yapılandırmayı ve kullanmayı sağlar."
-
-#. module: sale_stock
-#: field:sale.order,picked_rate:0
-msgid "Picked"
-msgstr "Toplandı"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Her ürün hazır olduğunda teslim et"
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_packing0
-msgid "Create Pick List"
-msgstr "Toplama Listesi Oluştur"
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_deliver0
+#: code:addons/sale_stock/sale_stock.py:270
+#, python-format
 msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
-"Çıkış konumunun yapılandırmasına bağlı olarak, müşteri ile çıkış konumu "
-"arasındaki hareket Teslimat Emri yoluyla elle ya da otomatik olarak yapılır."
+"%d Biriminde miktar seçtiniz.\n"
+"Ancak bu seçilen paketlemeyle uyumlu değil.\n"
+"Burada paketlemeye uygun olarak önerilen miktarlar var:\n"
+"EAN: %s Miktar: %s ul Tipi: %s"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "days"
+msgstr "gün"
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
+msgstr ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
+
+#~ msgid "Picked"
+#~ msgstr "Toplandı"

@@ -1,28 +1,106 @@
 # Macedonian translation for openobject-addons
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-01 17:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-11-07 07:56+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:44+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:21+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
+
+#. module: pad
+#: model:ir.model,name:pad.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: pad
+#: field:pad.common,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: pad
+#: field:pad.common,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: pad
+#: code:addons/pad/pad.py:50
+#, python-format
+msgid "Error"
+msgstr "Грешка"
+
+#. module: pad
+#: help:res.company,pad_key:0
+msgid "Etherpad lite api key."
+msgstr "Api клуч на Etherpad lite."
+
+#. module: pad
+#: help:res.company,pad_server:0
+msgid "Etherpad lite server. Example: beta.primarypad.com"
+msgstr "Сервер на Etherpad lite. Пример: beta.primarypad.com"
+
+#. module: pad
+#: field:pad.common,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: pad
+#: field:pad.common,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: pad
+#: field:pad.common,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: pad
+#: field:res.company,pad_key:0
+msgid "Pad Api Key"
+msgstr "Api клуч на pad"
+
+#. module: pad
+#: field:res.company,pad_server:0
+msgid "Pad Server"
+msgstr "Сервер на Pad"
+
+#. module: pad
+#: code:addons/pad/pad.py:50
+#, python-format
+msgid ""
+"Pad creation failed,                 either there is a problem with your pad "
+"server URL or with your connection."
+msgstr ""
+"Креирањето на Pad е неуспешно,                 или имате проблем со адресата "
+"на pad серверот или со вашата врска."
+
+#. module: pad
+#: view:res.company:pad.view_company_form_with_pad
+msgid "Pads"
+msgstr "Pad-ови"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:18
+#: code:addons/pad/static/src/js/pad.js:48
 #, python-format
-msgid "&Ntilde;"
-msgstr ""
+msgid "This pad will be initialized on first edit"
+msgstr "Овој pad ќе биде иницијализиран при првото уредување"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:45
+#, python-format
+msgid "Unable to load pad"
+msgstr "Не може да се вчита pad-от"
 
 #. module: pad
 #. openerp-web
@@ -32,38 +110,10 @@ msgid ""
 "You must configure the etherpad through the menu Settings > Companies > "
 "Companies, in the configuration tab of your company."
 msgstr ""
+"Мора да го конфигурирате etherpad преку менито Подесувања > Компании > "
+"Компании, во табот за конфигурација на вашата компанија."
 
 #. module: pad
-#: help:res.company,pad_key:0
-msgid "Etherpad lite api key."
-msgstr ""
-
-#. module: pad
-#: model:ir.model,name:pad.model_res_company
-msgid "Companies"
-msgstr "Компании"
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr "pad.common"
-
-#. module: pad
-#: view:res.company:0
-msgid "Pads"
-msgstr ""
-
-#. module: pad
-#: field:res.company,pad_server:0
-msgid "Pad Server"
-msgstr ""
-
-#. module: pad
-#: field:res.company,pad_key:0
-msgid "Pad Api Key"
-msgstr ""
-
-#. module: pad
-#: help:res.company,pad_server:0
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr ""
+#: view:res.company:pad.view_company_form_with_pad
+msgid "e.g. beta.primarypad.com"
+msgstr "пр. beta.primarypad.com"

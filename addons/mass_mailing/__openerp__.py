@@ -29,7 +29,7 @@ professional emails and reuse templates in a few clicks.
     """,
     'version': '2.0',
     'author': 'OpenERP',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing',
     'depends': [
         'mail',
@@ -44,6 +44,7 @@ professional emails and reuse templates in a few clicks.
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/test_mailing.xml',
+        'views/mass_mailing_report.xml',
         'views/mass_mailing.xml',
         'views/res_config.xml',
         'views/res_partner.xml',

@@ -204,8 +204,8 @@
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
-                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyse Answers</a></t>
+                                        <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
+                                        <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
                                 </ul></div>
                             </div>
@@ -344,7 +344,7 @@
                                     <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>
                                     <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 </group>
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">

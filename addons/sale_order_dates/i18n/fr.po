@@ -1,41 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_order_dates
+# French translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2011-01-13 12:19+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:40+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: sale_order_dates
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Dates"
+"X-Launchpad-Export-Date: 2014-08-15 07:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
 msgid "Commitment Date"
 msgstr "Date d'engagement"
-
-#. module: sale_order_dates
-#: field:sale.order,effective_date:0
-msgid "Effective Date"
-msgstr "Date effective"
-
-#. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which the first Delivery Order was created."
-msgstr ""
 
 #. module: sale_order_dates
 #: help:sale.order,requested_date:0
@@ -50,16 +35,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_order_dates
-#: field:sale.order,requested_date:0
-msgid "Requested Date"
-msgstr "Date demandée"
-
-#. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sales Order"
-msgstr "Commande de ventes"
-
-#. module: sale_order_dates
 #: help:sale.order,commitment_date:0
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you "
@@ -67,44 +42,40 @@ msgid ""
 msgstr ""
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:90
+#: help:sale.order,effective_date:0
+msgid "Date on which the first Delivery Order was created."
+msgstr ""
+
+#. module: sale_order_dates
+#: view:sale.order:sale_order_dates.view_sale_orderfor
+msgid "Dates"
+msgstr "Dates"
+
+#. module: sale_order_dates
+#: field:sale.order,effective_date:0
+msgid "Effective Date"
+msgstr "Date effective"
+
+#. module: sale_order_dates
+#: field:sale.order,requested_date:0
+msgid "Requested Date"
+msgstr "Date demandée"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
 msgstr ""
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:91
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Sales Order"
+msgstr "Commande de ventes"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/sale_order_dates.py:77
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
-
-#~ msgid "Date on which delivery of products is to be made."
-#~ msgstr "Date à laquelle la livraison des produits doit être faite."
-
-#~ msgid ""
-#~ "\n"
-#~ "Add commitment, requested and effective dates on the sales order.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ajoute les dates d'engagement, demandée et effective sur le bon de "
-#~ "commande.\n"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "La référence de la commande doit être unique !"
-
-#~ msgid "Date on which customer has requested for sales."
-#~ msgstr "Date à laquelle le client souhaite recevoir sa commande."
-
-#~ msgid "Sales Order Dates"
-#~ msgstr "Dates de commandes de vente"
-
-#~ msgid "Date on which picking is created."
-#~ msgstr "Date à laquelle l'expédition a été faite."
-
-#~ msgid "Date requested by the customer for the sale."
-#~ msgstr "Date de vente demandée par le client."
-
-#~ msgid "Committed date for delivery."
-#~ msgstr "Date d'engagement de la livraison."

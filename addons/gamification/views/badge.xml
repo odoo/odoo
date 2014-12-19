@@ -40,7 +40,6 @@
                 <form string="Badge">
                     <header>
                         <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
-                        <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
@@ -76,7 +75,7 @@
                             </div>
                         </group>
                         <group string="Rewards for challenges">
-                            <field name="challenge_ids" widget="many2many_kanban" nolabel="1" />
+                            <field name="challenge_ids" widget="many2many_kanban" nolabel="1" context="{'default_reward_id': active_id}" />
                         </group>
                         <group string="Statistics">
                             <group>

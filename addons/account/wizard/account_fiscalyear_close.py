@@ -133,7 +133,7 @@ class account_fiscalyear_close(osv.osv_memory):
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
-              AND a.type != 'view'
+              AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'unreconciled', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
@@ -184,7 +184,7 @@ class account_fiscalyear_close(osv.osv_memory):
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
-              AND a.type != 'view'
+              AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'detail', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
@@ -213,7 +213,7 @@ class account_fiscalyear_close(osv.osv_memory):
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
-              AND a.type != 'view'
+              AND a.type not in ('view', 'consolidation')
               AND a.company_id = %s
               AND t.close_method = %s''', (company_id, 'balance', ))
         account_ids = map(lambda x: x[0], cr.fetchall())

@@ -67,7 +67,7 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         data = read_data_from_file( get_absolute_file_path( doc.getURL()[7:] ) )
         file_type = doc.getURL()[7:].split(".")[-1]
         if docinfo.getUserFieldValue(2) == "":
-            ErrorDialog("Please Save this file on server","Use Send To Server Option in OpenERP Report Menu","Error")
+            ErrorDialog("Please Save this file on server","Use Send To Server Option in Odoo Report Menu","Error")
             exit(1)
         filename = self.GetAFileName()
         if not filename:
@@ -89,7 +89,7 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         sFilePickerArgs = Array(10)
         oFileDialog = createUnoService("com.sun.star.ui.dialogs.FilePicker")
         oFileDialog.initialize(sFilePickerArgs)
-        oFileDialog.appendFilter("OpenERP Report File Save To ....","*.rml")
+        oFileDialog.appendFilter("Odoo Report File Save To ....","*.rml")
 
         f_path = "OpenERP-"+ os.path.basename( tempfile.mktemp("","") ) + ".rml"
         initPath = tempfile.gettempdir()

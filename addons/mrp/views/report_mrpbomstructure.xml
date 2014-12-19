@@ -6,12 +6,10 @@
         <t t-call="report.internal_layout">
             <div class="page">
                 <h2>BOM Structure</h2>
-
                 <table class="table table-condensed">
                     <thead>
                         <tr>
                             <th>BOM Name</th>
-                            <th>Product Name</th>
                             <th>Quantity</th>
                             <th>BOM Ref</th>
                         </tr>
@@ -19,21 +17,23 @@
                     <tbody>
                         <t t-foreach="docs" t-as="o">
                             <tr style="font-weight: bold;">
-                                <td><span t-field="o.name"/></td>
-                                <td><span t-field="o.product_id.default_code"/><span t-field="o.product_id.name"/></td>
+                                <td>
+                                    <span t-field="o.product_id.default_code"/>
+                                    <span t-field="o.name"/>
+                                </td>
                                 <td>
                                     <span t-field="o.product_qty"/>
                                     <span groups="product.group_uom" t-field="o.product_uom.name"/>
                                 </td>
-                                <td><span t-field="o.code"/></td>
+                                <td>
+                                    <span t-field="o.code"/>
+                                </td>
                             </tr>
                             <tr t-foreach="get_children(o.bom_line_ids)" t-as="l">
-                                <td>
-                                    <span style="color: white;" t-esc="'... '*(l['level'])"/>
-                                </td>
-                                 <td>
-                                        [ <span t-esc="l['pcode']"/> ]
-                                        <span t-esc="l['pname']"/>
+                                <td style="padding-left: 20px;">
+                                    <span style="color: white;" t-esc="'... '*(l['level'])"/>[
+                                    <span t-esc="l['pcode']"/>]
+                                    <span t-esc="l['pname']"/>
                                 </td>
                                 <td>
                                     <span t-esc="formatLang(l['pqty'])"/>

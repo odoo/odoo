@@ -123,7 +123,6 @@ class mrp_production_workcenter_line(osv.osv):
         else:
             open_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
-
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
@@ -208,17 +207,17 @@ class mrp_production(osv.osv):
                 result[prod.id] = max(line.date_planned_end, result[prod.id])
         return result
 
-    def action_production_end(self, cr, uid, ids):
+    def action_production_end(self, cr, uid, ids, context=None):
         """ Finishes work order if production order is done.
         @return: Super method
         """
-        obj = self.browse(cr, uid, ids)[0]
+        obj = self.browse(cr, uid, ids, context=context)[0]
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for workcenter_line in obj.workcenter_lines:
             if workcenter_line.state == 'draft':
                 workcenter_line.signal_workflow('button_start_working')
             workcenter_line.signal_workflow('button_done')
-        return super(mrp_production,self).action_production_end(cr, uid, ids)
+        return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
 
     def action_in_production(self, cr, uid, ids):
         """ Changes state to In Production and writes starting date.
@@ -289,7 +288,7 @@ class mrp_production(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
-            todo = po.move_lines
+            todo = list(po.move_lines)
             dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
                 l = todo.pop(0)

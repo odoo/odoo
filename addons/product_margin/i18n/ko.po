@@ -1,79 +1,26 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2009-09-08 16:38+0000\n"
-"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:15+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-15 07:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
-msgid "Turnover"
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
 msgstr ""
-
-#. module: product_margin
-#: field:product.product,expected_margin_rate:0
-msgid "Expected Margin (%)"
-msgstr "예상 마진 (%)"
-
-#. module: product_margin
-#: field:product.margin,from_date:0
-msgid "From"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,total_cost:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
-msgstr ""
-
-#. module: product_margin
-#: field:product.margin,to_date:0
-msgid "To"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnover - Standard price"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin Rate(%)"
-msgstr ""
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Draft, Open and Paid"
-msgstr "초안, 오픈 그리고 결제됨"
-
-#. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "상품 마진"
-
-#. module: product_margin
-#: field:product.product,purchase_avg_price:0
-#: field:product.product,sale_avg_price:0
-msgid "Avg. Unit Price"
-msgstr "평균 단가"
 
 #. module: product_margin
 #: field:product.product,sale_num_invoiced:0
@@ -81,77 +28,14 @@ msgid "# Invoiced in Sale"
 msgstr ""
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Catalog Price"
-msgstr "카타로그 가격"
-
-#. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
-msgid "Paid"
-msgstr "결제됨"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "판매 갭"
-
-#. module: product_margin
-#: help:product.product,sales_gap:0
-msgid "Expected Sale - Turn Over"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "예상 판매"
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Standard Price"
-msgstr "표준 가격"
-
-#. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "공급자 인보이스에서 수량 합계"
-
-#. module: product_margin
-#: field:product.product,date_to:0
-msgid "Margin Date To"
-msgstr ""
-
-#. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "분석 범주"
-
-#. module: product_margin
-#: view:product.product:0
-#: field:product.product,total_cost:0
-msgid "Total Cost"
-msgstr "총 원가"
-
-#. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
-msgstr ""
-
-#. module: product_margin
-#: field:product.product,expected_margin:0
-msgid "Expected Margin"
-msgstr "예상 마진"
-
-#. module: product_margin
-#: view:product.product:0
+#: view:product.product:product_margin.view_product_margin_tree
 msgid "#Purchased"
 msgstr "#구매됨"
 
 #. module: product_margin
-#: help:product.product,expected_margin_rate:0
-msgid "Expected margin * 100 / Expected Sale"
-msgstr "예상 마진 * 100 / 예상 판매"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Analysis Criteria"
+msgstr "분석 범주"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
@@ -164,52 +48,51 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "공급자 인보이스의 평균 가격 "
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
-msgid "Invoice State"
-msgstr "인보이스 상태"
+#: field:product.product,purchase_avg_price:0
+#: field:product.product,sale_avg_price:0
+msgid "Avg. Unit Price"
+msgstr "평균 단가"
 
 #. module: product_margin
-#: help:product.product,purchase_gap:0
-msgid "Normal Cost - Total Cost"
-msgstr "보통 원가 - 총 원가"
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Cancel"
+msgstr "취소"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Catalog Price"
+msgstr "카타로그 가격"
+
+#. module: product_margin
+#: field:product.margin,create_uid:0
+msgid "Created by"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,total_margin:0
-msgid "Total Margin"
-msgstr "총 마진"
-
-#. module: product_margin
-#: field:product.product,date_from:0
-msgid "Margin Date From"
+#: field:product.margin,create_date:0
+msgid "Created on"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Draft, Open and Paid"
+msgstr "초안, 오픈 그리고 결제됨"
 
 #. module: product_margin
-#: field:product.product,normal_cost:0
-msgid "Normal Cost"
-msgstr "보통 원가"
+#: field:product.product,expected_margin:0
+msgid "Expected Margin"
+msgstr "예상 마진"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Purchases"
-msgstr "구매"
+#: field:product.product,expected_margin_rate:0
+msgid "Expected Margin (%)"
+msgstr "예상 마진 (%)"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-msgid "# Invoiced in Purchase"
-msgstr ""
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "예상 판매"
 
 #. module: product_margin
 #: help:product.product,expected_margin:0
@@ -217,17 +100,73 @@ msgid "Expected Sale - Normal Cost"
 msgstr ""
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Properties categories"
+#: help:product.product,sales_gap:0
+msgid "Expected Sale - Turn Over"
 msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_margin_rate:0
-msgid "Total margin * 100 / Turnover"
-msgstr "총 마진 * 100 / 회전율"
+#: help:product.product,expected_margin_rate:0
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "예상 마진 * 100 / 예상 판매"
 
 #. module: product_margin
-#: view:product.margin:0
+#: field:product.margin,from_date:0
+msgid "From"
+msgstr ""
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "General Information"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,invoice_state:0
+#: field:product.product,invoice_state:0
+msgid "Invoice State"
+msgstr "인보이스 상태"
+
+#. module: product_margin
+#: field:product.margin,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_margin
+#: field:product.margin,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
+
+#. module: product_margin
+#: field:product.product,date_to:0
+msgid "Margin Date To"
+msgstr ""
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Margins"
+msgstr "마진"
+
+#. module: product_margin
+#: field:product.product,normal_cost:0
+msgid "Normal Cost"
+msgstr "보통 원가"
+
+#. module: product_margin
+#: help:product.product,purchase_gap:0
+msgid "Normal Cost - Total Cost"
+msgstr "보통 원가 - 총 원가"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
 msgid "Open Margins"
 msgstr "오픈 마진"
 
@@ -238,9 +177,10 @@ msgid "Open and Paid"
 msgstr "오픈 및 결제됨"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Sales"
-msgstr "판매"
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Paid"
+msgstr "결제됨"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -248,8 +188,24 @@ msgid "Product"
 msgstr ""
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "General Information"
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
+msgstr ""
+
+#. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:84
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:product_margin.view_product_margin_form
+#: view:product.product:product_margin.view_product_margin_graph
+#: view:product.product:product_margin.view_product_margin_tree
+#, python-format
+msgid "Product Margins"
+msgstr "상품 마진"
+
+#. module: product_margin
+#: view:product.margin:product_margin.product_margin_form_view
+msgid "Properties categories"
 msgstr ""
 
 #. module: product_margin
@@ -258,14 +214,48 @@ msgid "Purchase Gap"
 msgstr "구매 갭"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "Cancel"
-msgstr "취소"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Purchases"
+msgstr "구매"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Margins"
-msgstr "마진"
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Sales"
+msgstr "판매"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "판매 갭"
+
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_form
+msgid "Standard Price"
+msgstr "표준 가격"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,total_cost:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: help:product.product,sale_num_invoiced:0
@@ -273,53 +263,43 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "고객 인보이스 내 수량 합계"
 
 #. module: product_margin
-#: view:product.margin:0
-msgid "or"
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "공급자 인보이스에서 수량 합계"
+
+#. module: product_margin
+#: field:product.margin,to_date:0
+msgid "To"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_margin
-msgid "Product Margin"
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,total_cost:0
+msgid "Total Cost"
+msgstr "총 원가"
+
+#. module: product_margin
+#: field:product.product,total_margin:0
+msgid "Total Margin"
+msgstr "총 마진"
+
+#. module: product_margin
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
 msgstr ""
 
-#~ msgid ""
-#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-#~ msgstr "판매 카타로그 가격과 고객 인보이스 수량을 곱한 액수"
+#. module: product_margin
+#: help:product.product,total_margin_rate:0
+msgid "Total margin * 100 / Turnover"
+msgstr "총 마진 * 100 / 회전율"
 
-#~ msgid "Margins in Product"
-#~ msgstr "상품 마진"
+#. module: product_margin
+#: view:product.product:product_margin.view_product_margin_tree
+#: field:product.product,turnover:0
+msgid "Turnover"
+msgstr ""
 
-#~ msgid "Reporting"
-#~ msgstr "리포팅"
-
-#~ msgid "# Invoiced"
-#~ msgstr "# 인보이스됨"
-
-#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-#~ msgstr "원가 가격과 공급자 인보이스 수량을 곱한 금액"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-#~ msgstr "인보이스 가격과 공급자 인보이스 수량을 곱한 액수 "
-
-#~ msgid "Excepted Sale - Turn Over"
-#~ msgstr "예상 판매 - Turn Over"
-
-#~ msgid "Excepted Sale - Normal Cost"
-#~ msgstr "제외된 판매 - 일반 원가"
-
-#~ msgid ""
-#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
-#~ msgstr "인보이스 가격과 고객 인보이스의 수량을 곱한 금액"
-
-#~ msgid "Avg. Price in Customer Invoices)"
-#~ msgstr "고액 인보이스의 평균 가격"
-
-#~ msgid "Select "
-#~ msgstr "선택 "
-
-#~ msgid "Total Margin (%)"
-#~ msgstr "총 마진 (%)"
-
-#~ msgid "View Stock of Products"
-#~ msgstr "상품 재고 보기"
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""

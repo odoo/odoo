@@ -255,6 +255,7 @@ class account_analytic_account(osv.osv):
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
+        'manager_id': lambda self, cr, uid, ctx: ctx.get('manager_id', False),
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'currency_id': _get_default_currency,
     }
@@ -307,7 +308,7 @@ class account_analytic_account(osv.osv):
                 dom = []
                 for name2 in name.split('/'):
                     name = name2.strip()
-                    account_ids = self.search(cr, uid, dom + [('name', 'ilike', name)] + args, limit=limit, context=context)
+                    account_ids = self.search(cr, uid, dom + [('name', operator, name)] + args, limit=limit, context=context)
                     if not account_ids: break
                     dom = [('parent_id','in',account_ids)]
         else:

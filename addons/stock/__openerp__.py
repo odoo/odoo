@@ -50,7 +50,7 @@ Dashboard / Reports for Warehouse Management will include:
 * Last Product Inventories
 * Moves Analysis
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.odoo.com/page/warehouse',
     'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg'],
     'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline'],
     'category': 'Warehouse Management',
@@ -75,6 +75,7 @@ Dashboard / Reports for Warehouse Management will include:
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
+        'wizard/stock_transfer_details.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',
@@ -86,7 +87,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_package_barcode.xml',
         'views/report_lot_barcode.xml',
         'views/report_location_barcode.xml',
-        'views/report_stockpicking.xml',    
+        'views/report_stockpicking.xml',
         'views/report_stockinventory.xml',
         'views/stock.xml',
     ],

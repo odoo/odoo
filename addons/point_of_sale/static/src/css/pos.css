@@ -6,14 +6,18 @@
 }
 
 /* --- Styling of OpenERP Elements --- */
-.ui-dialog{
+.ui-dialog, .modal-dialog {
     background: white;
     padding: 10px;
     border-radius: 3px;
     font-family: sans-serif;
     box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+    position: absolute;
+    top: 30px;
+    height: 400px;
+    overflow: scroll;
 }
-.ui-dialog button{
+.ui-dialog button, .modal-dialog button {
     padding: 8px;
     min-width: 48px;
 }
@@ -254,7 +258,7 @@ td {
     left:0;
     top:0;
     width: 100%;
-    height: 34px;
+    height: 48px;
     margin:0;
     padding:0;
     color: gray;
@@ -278,9 +282,9 @@ td {
     vertical-align: middle;
 }
 .pos .pos-logo {
-    height: 32px;
-    width: 116px;
-    margin-left:5px;
+    height: 35px;
+    margin-left: 7px;
+    margin-top: 2px;
     vertical-align:middle;
 } 
 .pos .pos-branding .username{
@@ -288,7 +292,7 @@ td {
     color:#DDD;
     font-size:16px;
     margin-right:32px;
-    margin-top:10px;
+    line-height: 48px;
     font-style:italic;
 }
 
@@ -307,7 +311,7 @@ td {
     display: inline-block;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    height: 32px;
+    height: 46px;
     padding: 4px 8px;
     margin: 3px;
     margin-bottom: 0px;
@@ -317,17 +321,17 @@ td {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     vertical-align: top;
-    line-height: 26px;
+    line-height: 42px;
     text-align: center;
     box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
     cursor: pointer;
-    min-width: 34px;
+    min-width: 45px;
 }
 .pos .order-button.selected{
     font-weight: 900;
     background: #EEEEEE;
     color: rgb(75,75,75);
-    height: 31px;
+    height: 45px;
     border-bottom: solid 1px rgb(196, 196, 196);
     box-shadow: none;
 }
@@ -349,10 +353,11 @@ td {
 }
 
 .pos .order-button.square{
-    width: 34px;
     margin-left:1px;
     background: #5c5c5c;
     color: rgb(160,160,160);
+    font-size: 18px;
+    line-height: 45px;
 }
 .pos .order-button:not(.square) > .fa {
     font-size: 16px;
@@ -366,6 +371,11 @@ td {
 
 .pos .order-selector {
     display: inline-block;
+    max-width: 640px;
+    max-height: 48px;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-x: auto;
 }
 .pos .orders {
     display: inline-block;
@@ -376,15 +386,15 @@ td {
 /*  c) The session buttons */
 
 .pos .pos-rightheader .header-button{
-    float:right;
-    height:32px;
-    padding-left:10px;
-    padding-right:10px;
-    border-right:  1px solid #292929;
-    border-left:  1px solid #292929;
-    color:#DDD;
-    line-height:32px;
-    text-align:center;
+    float: right;
+    height: 48px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-right: 1px solid #292929;
+    border-left: 1px solid #292929;
+    color: #DDD;
+    line-height: 48px;
+    text-align: center;
     cursor: pointer;
 
     -webkit-transition-property: background;
@@ -398,15 +408,20 @@ td {
     background: rgba(0,0,0,0.2);
     color:#EEE;
 }
+.pos .pos-rightheader .header-button.confirm {
+    background: #359766;
+    color: white;
+    font-weight: bold;
+}
 
 /*  c) The notifications indicator */
 
 .pos .oe_status{
     float:right; 
     color: rgba(255,255,255,0.4);
-    padding: 8px;
-    line-height:16px;
-    font-size:16px;
+    padding: 14px;
+    line-height: 20px;
+    font-size: 20px;
     vertical-align:middle;
     font-style: italic;
     cursor:pointer;
@@ -438,7 +453,7 @@ td {
 .pos .pos-content {
     width: 100%;
     position: absolute;
-    top: 34px;
+    top: 48px;
     bottom: 0;
     background: #F0EEEE;
 }
@@ -675,18 +690,29 @@ td {
 
 .pos .categories {
     position: relative;
-    border-bottom: 1px solid #cecece;
 }
 .pos .categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
 
-.pos .category-list{
+.pos .category-list {
     text-align: left;
     padding: 10px;
     background: rgb(229, 229, 229);
+    border-bottom: 1px solid #cecece;
 }
+.pos .category-list.simple {
+    padding: 0px;
+    background: #cecece;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    border-bottom: none;
+}
+
+
 /*  d) the category button */
 
 .pos .category-button {
@@ -708,20 +734,18 @@ td {
     position: relative;
     display: inline-block;
     font-size: 14px;
-    margin-right:10px;
+    margin-right: 1px;
+    margin-bottom: 1px;
     padding: 5px 12px;
-    line-height: 24px;
-    border-radius: 3px;
-
+    line-height: 32px;
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
     cursor: pointer;
-    border: 1px solid #cacaca;
-
     background: #e2e2e2;
 }
 .pos .category-simple-button:active{
     color: white;
     background: #7f82ac;
-    border: 1px solid #7f82ac;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -1094,7 +1118,14 @@ td {
     word-wrap: break-word;
 }
 
+@page {
+    margin: 0;
+}
+
 @media print {
+    * {
+        color: black !important;
+    }
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
@@ -1241,15 +1272,47 @@ td {
     float: left;
     margin-right: 16px;
     background: white;
+    position: relative;
 }
-.pos .clientlist-screen .client-picture > img{
-    vertical-align: middle;
+.pos .clientlist-screen .client-picture > img {
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    left: -9999px;
     max-height: 64px;
+    margin: auto;
 }
-.pos .clientlist-screen .client-name{
+.pos .clientlist-screen .client-picture > .fa {
+    line-height: 64px;
+    font-size: 32px;
+}
+.pos .clientlist-screen .client-picture .image-uploader {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.pos .clientlist-screen .client-name {
     font-size: 32px;
     line-height: 64px;
     margin-bottom:16px;
+}
+.pos .clientlist-screen .edit-buttons {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+}
+.pos .clientlist-screen .edit-buttons .button{
+    display: inline-block;
+    margin-left: 16px;
+    color: rgb(128,128,128);
+    cursor: pointer;
+    font-size: 36px;
 }
 .pos .clientlist-screen .client-details-box{
     position: relative;
@@ -1269,9 +1332,29 @@ td {
 .pos .clientlist-screen .client-detail > .label{
     font-weight: bold;
     display: inline-block;
-    width: 64px;
+    width: 75px;
     text-align: right;
     margin-right: 8px;
+}
+.pos .clientlist-screen .client-details input,
+.pos .clientlist-screen .client-details select
+{
+    padding: 4px;
+    border-radius: 3px;
+    border: solid 1px #cecbcb;
+    margin-bottom: 4px;
+    background: white;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    width: 340px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.pos .clientlist-screen .client-details input.client-name {
+    font-size: 24px;
+    line-height: 24px;
+    margin: 18px 6px;
+    width: 340px;
 }
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
@@ -1284,6 +1367,10 @@ td {
 }
 .pos .clientlist-screen .searchbox input{
     width: 120px;
+}
+.pos .clientlist-screen .button.new-customer {
+    left: 50%;
+    margin-left: 120px;
 }
 
 
@@ -1664,6 +1751,17 @@ td {
     font-weight: normal;
     font-size: 18px;
     margin: 0px 16px;
+}
+.pos .popup .comment.traceback {
+    height: 264px;
+    overflow: auto;
+    font-size: 12px;
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: 'Inconsolata';
+    -webkit-user-select: text;
+       -moz-user-select: text;
+            user-select: text;
 }
 .pos .popup .footer{
     position:absolute;

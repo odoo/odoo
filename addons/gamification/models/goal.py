@@ -81,6 +81,8 @@ class gamification_goal_definition(osv.Model):
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
+        'model_inherited_model_ids': fields.related('model_id', 'inherited_model_ids', type="many2many", obj="ir.model",
+            string="Inherited models", readonly="True"),
         'field_id': fields.many2one('ir.model.fields',
             string='Field to Sum',
             help='The field containing the value to evaluate'),
@@ -160,6 +162,13 @@ class gamification_goal_definition(osv.Model):
 
         return res
 
+    def on_change_model_id(self, cr, uid, ids, model_id, context=None):
+        """Prefill field model_inherited_model_ids"""
+        if not model_id:
+            return {'value': {'model_inherited_model_ids': []}}
+        model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
+        # format (6, 0, []) to construct the domain ('model_id', 'in', m and m[0] and m[0][2])
+        return {'value': {'model_inherited_model_ids': [(6, 0, [m.id for m in model.inherited_model_ids])]}}
 
 class gamification_goal(osv.Model):
     """Goal instance for a user
@@ -194,7 +203,7 @@ class gamification_goal(osv.Model):
 
     _columns = {
         'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
-        'user_id': fields.many2one('res.users', string='User', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True, auto_join=True, ondelete="cascade"),
         'line_id': fields.many2one('gamification.challenge.line', string='Challenge Line', ondelete="cascade"),
         'challenge_id': fields.related('line_id', 'challenge_id',
             string="Challenge",
@@ -239,7 +248,7 @@ class gamification_goal(osv.Model):
         'state': 'draft',
         'start_date': fields.date.today,
     }
-    _order = 'create_date desc, end_date desc, definition_id, id'
+    _order = 'start_date desc, end_date desc, definition_id, id'
 
     def _check_remind_delay(self, cr, uid, goal, context=None):
         """Verify if a goal has not been updated for some time and send a

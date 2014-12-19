@@ -69,7 +69,66 @@ class PaymentAcquirerOgone(osv.Model):
             if inout == 'in':
                 return True
             else:
-                keys = "ORDERID CURRENCY AMOUNT PM ACCEPTANCE STATUS CARDNO ALIAS ED CN TRXDATE PAYID NCERROR BRAND ECI IP COMPLUS".split()
+                # SHA-OUT keys
+                # source https://viveum.v-psp.com/Ncol/Viveum_e-Com-BAS_EN.pdf
+                keys = [
+                    'AAVADDRESS',
+                    'AAVCHECK',
+                    'AAVMAIL',
+                    'AAVNAME',
+                    'AAVPHONE',
+                    'AAVZIP',
+                    'ACCEPTANCE',
+                    'ALIAS',
+                    'AMOUNT',
+                    'BIC',
+                    'BIN',
+                    'BRAND',
+                    'CARDNO',
+                    'CCCTY',
+                    'CN',
+                    'COMPLUS',
+                    'CREATION_STATUS',
+                    'CURRENCY',
+                    'CVCCHECK',
+                    'DCC_COMMPERCENTAGE',
+                    'DCC_CONVAMOUNT',
+                    'DCC_CONVCCY',
+                    'DCC_EXCHRATE',
+                    'DCC_EXCHRATESOURCE',
+                    'DCC_EXCHRATETS',
+                    'DCC_INDICATOR',
+                    'DCC_MARGINPERCENTAGE',
+                    'DCC_VALIDHOURS',
+                    'DIGESTCARDNO',
+                    'ECI',
+                    'ED',
+                    'ENCCARDNO',
+                    'FXAMOUNT',
+                    'FXCURRENCY',
+                    'IBAN',
+                    'IP',
+                    'IPCTY',
+                    'NBREMAILUSAGE',
+                    'NBRIPUSAGE',
+                    'NBRIPUSAGE_ALLTX',
+                    'NBRUSAGE',
+                    'NCERROR',
+                    'NCERRORCARDNO',
+                    'NCERRORCN',
+                    'NCERRORCVC',
+                    'NCERRORED',
+                    'ORDERID',
+                    'PAYID',
+                    'PM',
+                    'SCO_CATEGORY',
+                    'SCORING',
+                    'STATUS',
+                    'SUBBRAND',
+                    'SUBSCRIPTION_ID',
+                    'TRXDATE',
+                    'VC'
+                ]
                 return key.upper() in keys
 
         items = sorted((k.upper(), v) for k, v in values.items())
@@ -165,10 +224,10 @@ class PaymentTxOgone(osv.Model):
     def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
         invalid_parameters = []
 
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        # TODO: txn_id: should be false at draft, set afterwards, and verified with txn details
         if tx.acquirer_reference and data.get('PAYID') != tx.acquirer_reference:
             invalid_parameters.append(('PAYID', data.get('PAYID'), tx.acquirer_reference))
-        # check what is buyed
+        # check what is bought
         if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
         if data.get('currency') != tx.currency_id.name:

@@ -27,6 +27,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
 
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
+    }
+
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -237,8 +243,9 @@ class sale_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group', copy=False),
-
+        'product_id': fields.related('order_line', 'product_id', type='many2one', relation='product.product', string='Product'),
     }
+
     _defaults = {
         'date_order': fields.datetime.now,
         'order_policy': 'manual',
@@ -269,7 +276,7 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy_quotation(self, cr, uid, ids, context=None):
-        id = self.copy(cr, uid, ids[0], context=None)
+        id = self.copy(cr, uid, ids[0], context=context)
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = view_ref and view_ref[1] or False,
         return {
@@ -589,22 +596,8 @@ class sale_order(osv.osv):
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.signal_workflow(cr, uid, ids, 'order_confirm')
-
-        # redisplay the record as a sales order
-        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
-        view_id = view_ref and view_ref[1] or False,
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
-            'res_model': 'sale.order',
-            'res_id': ids[0],
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': view_id,
-            'target': 'current',
-            'nodestroy': True,
-        }
-
+        return True
+        
     def action_wait(self, cr, uid, ids, context=None):
         context = context or {}
         for o in self.browse(cr, uid, ids):
@@ -632,7 +625,7 @@ class sale_order(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False 
-        ctx = dict(context)
+        ctx = dict()
         ctx.update({
             'default_model': 'sale.order',
             'default_res_id': ids[0],
@@ -709,7 +702,7 @@ class sale_order(osv.osv):
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
             if not order.procurement_group_id:
                 group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
-                order.write({'procurement_group_id': group_id}, context=context)
+                order.write({'procurement_group_id': group_id})
 
             for line in order.order_line:
                 #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
@@ -718,11 +711,12 @@ class sale_order(osv.osv):
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
                     line.refresh()
                     #run again procurement that are in exception in order to trigger another move
-                    proc_ids += [x.id for x in line.procurement_ids if x.state == 'exception']
+                    proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
+                    procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
-                    vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
+                    vals = self._prepare_order_line_procurement(cr, uid, order, line, group_id=order.procurement_group_id.id, context=context)
                     proc_id = procurement_obj.create(cr, uid, vals, context=context)
                     proc_ids.append(proc_id)
             #Confirm procurement order such that rules will be applied on it
@@ -741,49 +735,7 @@ class sale_order(osv.osv):
                 order.write(val)
         return True
 
-    # if mode == 'finished':
-    #   returns True if all lines are done, False otherwise
-    # if mode == 'canceled':
-    #   returns True if there is at least one canceled line, False otherwise
-    def test_state(self, cr, uid, ids, mode, *args):
-        assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
-        finished = True
-        canceled = False
-        write_done_ids = []
-        write_cancel_ids = []
-        for order in self.browse(cr, uid, ids, context={}):
 
-            #TODO: Need to rethink what happens when cancelling
-            for line in order.order_line:
-                states =  [x.state for x in line.procurement_ids]
-                cancel = states and all([x == 'cancel' for x in states])
-                doneorcancel = all([x in ('done', 'cancel') for x in states])
-                if cancel:
-                    canceled = True
-                    if line.state != 'exception':
-                            write_cancel_ids.append(line.id)
-                if not doneorcancel:
-                    finished = False 
-                if doneorcancel and not cancel:
-                    write_done_ids.append(line.id)
-
-        if write_done_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
-        if write_cancel_ids:
-            self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
-            
-        if mode == 'finished':
-            return finished
-        elif mode == 'canceled':
-            return canceled
-
-
-    def procurement_lines_get(self, cr, uid, ids, *args):
-        res = []
-        for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                res += [x.id for x in line.procurement_ids]
-        return res
 
     def onchange_fiscal_position(self, cr, uid, ids, fiscal_position, order_lines, context=None):
         '''Update taxes of order lines for each line where a product is defined
@@ -828,6 +780,20 @@ class sale_order(osv.osv):
                 order_line.append(line)
         return {'value': {'order_line': order_line}}
 
+    def test_procurements_done(self, cr, uid, ids, context=None):
+        for sale in self.browse(cr, uid, ids, context=context):
+            for line in sale.order_line:
+                if not all([x.state == 'done' for x in line.procurement_ids]):
+                    return False
+        return True
+
+    def test_procurements_except(self, cr, uid, ids, context=None):
+        for sale in self.browse(cr, uid, ids, context=context):
+            for line in sale.order_line:
+                if any([x.state == 'cancel' for x in line.procurement_ids]):
+                    return True
+        return False
+
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
@@ -837,6 +803,10 @@ class sale_order_line(osv.osv):
     def need_procurement(self, cr, uid, ids, context=None):
         #when sale is installed only, there is no need to create procurements, that's only
         #further installed modules (sale_service, sale_stock) that will change this.
+        prod_obj = self.pool.get('product.product')
+        for line in self.browse(cr, uid, ids, context=context):
+            if prod_obj.need_procurement(cr, uid, [line.product_id.id], context=context):
+                return True
         return False
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
@@ -874,6 +844,11 @@ class sale_order_line(osv.osv):
                                     WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
         return [i[0] for i in cr.fetchall()]
 
+    def _get_price_reduce(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0.0)
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.price_subtotal / line.product_uom_qty
+        return res
 
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
@@ -890,6 +865,7 @@ class sale_order_line(osv.osv):
             }),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_reduce': fields.function(_get_price_reduce, type='float', string='Price Reduce', digits_compute=dp.get_precision('Product Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner',help="A partner to whom the particular product needs to be allotted."),
         'product_uom_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -923,6 +899,8 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
         'delay': 0.0,
     }
+
+
 
     def _get_line_qty(self, cr, uid, line, context=None):
         if line.product_uos:
@@ -1056,6 +1034,8 @@ class sale_order_line(osv.osv):
                 flag=False,  # Force name update
                 context=context
             )['value']
+            if defaults.get('tax_id'):
+                defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
             values = dict(defaults, **values)
         return super(sale_order_line, self).create(cr, uid, values, context=context)
 
@@ -1191,12 +1171,6 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
-class res_company(osv.Model):
-    _inherit = "res.company"
-    _columns = {
-        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
-    }
-
 
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
@@ -1268,6 +1242,20 @@ class procurement_order(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', string='Sale Order Line'),
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        res = super(procurement_order, self).write(cr, uid, ids, vals, context=context)
+        from openerp import workflow
+        if vals.get('state') in ['done', 'cancel', 'exception']:
+            for proc in self.browse(cr, uid, ids, context=context):
+                if proc.sale_line_id and proc.sale_line_id.order_id:
+                    order_id = proc.sale_line_id.order_id.id
+                    if self.pool.get('sale.order').test_procurements_done(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'sale.order', order_id, 'ship_end', cr)
+                    if self.pool.get('sale.order').test_procurements_except(cr, uid, [order_id], context=context):
+                        workflow.trg_validate(uid, 'sale.order', order_id, 'ship_except', cr)
+        return res
 
 class product_product(osv.Model):
     _inherit = 'product.product'
@@ -1278,10 +1266,36 @@ class product_product(osv.Model):
             product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
             for product_id in ids
         }
+
     _columns = {
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
 
     }
 
+class product_template(osv.Model):
+    _inherit = 'product.template'
+
+    def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for template in self.browse(cr, uid, ids, context=context):
+            res[template.id] = sum([p.sales_count for p in template.product_variant_ids])
+        return res
+    
+    def action_view_sales(self, cr, uid, ids, context=None):
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        product_ids = []
+        for template in self.browse(cr, uid, ids, context=context):
+            product_ids += [x.id for x in template.product_variant_ids]
+        result = mod_obj.xmlid_to_res_id(cr, uid, 'sale.action_order_line_product_tree',raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, product_ids)) + "])]"
+        return result
+    
+    
+    _columns = {
+        'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
+
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

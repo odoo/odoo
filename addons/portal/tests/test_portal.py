@@ -131,12 +131,11 @@ class test_portal(TestMail):
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._build_email_kwargs_list:
             self.assertEqual(sent_email.get('subject'), 'Invitation to follow Discussion group: Pigs',
-                            'invite: subject of invitation email is incorrect')
+                             'invite: subject of invitation email is incorrect')
             self.assertIn('Administrator invited you to follow Discussion group document: Pigs', sent_email.get('body'),
-                            'invite: body of invitation email is incorrect')
-            invite_url = partner_carine._get_signup_url_for_action(model='mail.group', res_id=self.group_pigs_id)[partner_carine.id]
-            self.assertTrue(invite_url in sent_email.get('body'),
-                            'invite: body of invitation email does not contain signup url')
+                          'invite: body of invitation email is incorrect')
+            self.assertIn(partner_carine.signup_token, sent_email.get('body'),
+                          'invite: body of invitation email does not contain signup token')
 
     def test_20_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
@@ -157,8 +156,8 @@ class test_portal(TestMail):
 
         # Test: link for partner -> signup URL
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_bert)
-        self.assertIn(partner_bert.signup_url, url,
-                        'notification email: mails send to a not-user partner should contain the signup URL')
+        self.assertIn(partner_bert.signup_token, url,
+                        'notification email: mails send to a not-user partner should contain the signup token')
 
         # Test: link for user -> signin
         url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_raoul)

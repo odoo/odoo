@@ -5,6 +5,7 @@ import re
 import string
 import urllib2
 import logging
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
@@ -19,7 +20,7 @@ class pad_common(osv.osv_memory):
         return bool(user.company_id.pad_server)
 
     def pad_generate_url(self, cr, uid, context=None):
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
+        company = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).company_id
 
         pad = {
             "server" : company.pad_server,
@@ -36,7 +37,9 @@ class pad_common(osv.osv_memory):
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
         #path
-        path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
+        # etherpad hardcodes pad id length limit to 50
+        path = '-%s-%s' % (self._name, salt)
+        path = '%s%s' % (cr.dbname.replace('_','-')[0:50 - len(path)], path)
         # contruct the url
         url = '%s/p/%s' % (pad["server"], path)
 
@@ -51,13 +54,13 @@ class pad_common(osv.osv_memory):
 
             #get attr on the field model
             model = self.pool[context["model"]]
-            field = model._all_columns[context['field_name']]
-            real_field = field.column.pad_content_field
+            field = model._fields[context['field_name']]
+            real_field = field.pad_content_field
 
             #get content of the real field
             for record in model.browse(cr, uid, [context["object_id"]]):
                 if record[real_field]:
-                    myPad.setText(path, html2plaintext(record[real_field]))
+                    myPad.setText(path, (html2plaintext(record[real_field]).encode('utf-8')))
                     #Etherpad for html not functional
                     #myPad.setHTML(path, record[real_field])
 
@@ -93,15 +96,14 @@ class pad_common(osv.osv_memory):
     # Set the pad content in vals
     def _set_pad_value(self, cr, uid, vals, context=None):
         for k,v in vals.items():
-            field = self._all_columns[k].column
+            field = self._fields[k]
             if hasattr(field,'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)        
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        for k, v in self._all_columns.iteritems():
-            field = v.column
+        for k, field in self._fields.iteritems():
             if hasattr(field,'pad_content_field'):
                 pad = self.pad_generate_url(cr, uid, context)
                 default[k] = pad.get('url')

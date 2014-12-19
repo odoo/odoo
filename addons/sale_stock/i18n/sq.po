@@ -1,32 +1,107 @@
 # Albanian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-09-21 13:52+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:48+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_deli_orders:0
-msgid ""
-"To allow your salesman to make invoices for Delivery Orders using the menu "
-"'Deliveries to Invoice'."
+#: code:addons/sale_stock/sale_stock.py:266
+#, python-format
+msgid "(n/a)"
 msgstr ""
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_deliveryorder0
-msgid "Delivery Order"
+#: field:sale.config.settings,module_delivery:0
+msgid "Allow adding shipping costs"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,module_delivery:0
+msgid ""
+"Allows you to add delivery methods in sales orders and delivery orders.\n"
+"You can define your own carrier and delivery grids for prices.\n"
+"-This installs the module delivery."
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_route_so_lines:0
+msgid "Allows you to choose a delivery route on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_mrp_properties:0
+msgid "Allows you to tag sales order lines with properties."
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Cancel Order"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:160
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,group_route_so_lines:0
+msgid "Choose MTO, drop shipping,... on sales order lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:277
+#: code:addons/sale_stock/sale_stock.py:351
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.config.settings:sale_stock.view_sales_config_sale_stock
+msgid "Default Options"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,default_picking_policy:0
+msgid "Deliver all at once when all products are available."
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver each product when available"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order,shipped:0
+msgid "Delivered"
 msgstr ""
 
 #. module: sale_stock
@@ -36,251 +111,13 @@ msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:570
-#, python-format
-msgid "Picking Information ! : "
+#: model:res.groups,name:sale_stock.group_invoice_deli_orders
+msgid "Enable Invoicing Delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_packinglist0
-msgid "Pick List"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:565
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,group_multiple_shops:0
-msgid "Manage multiple shops"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_validate0
-msgid "Validate"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:209
-#, python-format
-msgid ""
-"You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr ""
-
-#. module: sale_stock
-#: field:stock.picking.out,sale_id:0
-msgid "Sale Order"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,picking_policy:0
-msgid "Shipping Policy"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_move
-msgid "Stock Move"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
-#, python-format
-msgid "Invalid Action!"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_timesheet:0
-msgid "Project Timesheet"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,group_sale_delivery_address:0
-msgid "Allow a different address for delivery and invoicing "
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:572
-#: code:addons/sale_stock/sale_stock.py:623
-#, python-format
-msgid "Configuration Error!"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr ""
-
-#. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on deliveries"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_picking
-msgid "Picking List"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,default_order_policy:0
-msgid "The default invoicing method is"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "View Delivery Order"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.config.settings:0
-msgid "Default Options"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,module_project_mrp:0
-msgid "Project MRP"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.report:0
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:265
-#, python-format
-msgid "invalid mode for test_state"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,group_mrp_properties:0
-msgid "Allows you to tag sales order lines with properties."
+#: model:res.groups,name:sale_stock.group_route_so_lines
+msgid "Enable Route on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
@@ -289,18 +126,13 @@ msgid "Generate invoices after and based on delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Ignore Exception"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "days"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
 msgstr ""
 
 #. module: sale_stock
@@ -311,32 +143,58 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,module_delivery:0
+#: model:ir.model,name:sale_stock.model_stock_location_route
+msgid "Inventory Routes"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on deliveries"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,task_work:0
 msgid ""
-"Allows you to add delivery methods in sales orders and delivery orders.\n"
-"                You can define your own carrier and delivery grids for "
-"prices.\n"
-"                This installs the module delivery."
+"Lets you transfer the entries under tasks defined for Project Management to "
+"the Timesheet line entries for particular date and particular user  with the "
+"effect of creating, editing and deleting either ways and to automatically "
+"creates project tasks from procurement lines.\n"
+"-This installs the modules project_timesheet and sale_service."
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.config.settings,default_picking_policy:0
-msgid "Deliver all at once when all products are available."
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_invoice_deli_orders
-msgid "Enable Invoicing Delivery orders"
+#: code:addons/sale_stock/sale_stock.py:346
+#, python-format
+msgid "Not enough stock ! : "
 msgstr ""
 
 #. module: sale_stock
-#: field:res.company,security_lead:0
-msgid "Security Days"
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
 msgstr ""
 
 #. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
+#: code:addons/sale_stock/res_config.py:78
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
 msgstr ""
 
 #. module: sale_stock
@@ -346,26 +204,34 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:208
+#: code:addons/sale_stock/sale_stock.py:275
 #, python-format
-msgid "Cannot cancel sales order!"
+msgid "Picking Information ! : "
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_shop
-msgid "Sales Shop"
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Picking List"
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
+#: field:sale.order,picking_ids:0
+msgid "Picking associated to this sale"
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
+#: field:sale.config.settings,task_work:0
+msgid "Prepare invoices based on task's activities"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,product_tmpl_id:0
+msgid "Product Template"
 msgstr ""
 
 #. module: sale_stock
@@ -374,63 +240,48 @@ msgid "Product properties on order lines"
 msgstr ""
 
 #. module: sale_stock
-#: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+#: field:sale.config.settings,module_project_timesheet:0
+msgid "Project Timesheet"
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "Recreate Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,route_id:0
+msgid "Route"
+msgstr ""
+
+#. module: sale_stock
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr ""
+
+#. module: sale_stock
+#: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
+msgid "Sale Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,module_sale_service:0
+msgid "Sale Service"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,task_work:0
-msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to\n"
-"                the Timesheet line entries for particular date and "
-"particular user  with the effect of creating, editing and deleting either "
-"ways\n"
-"                and to automatically creates project tasks from procurement "
-"lines.\n"
-"                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,group_sale_delivery_address:0
-msgid ""
-"Allows you to specify different delivery and invoice addresses on a sales "
-"order."
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_saleprocurement0
-msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_assign0
-msgid "Assign"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:618
-#, python-format
-msgid "Not enough stock ! : "
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation and the shipping of the "
-"products to the customer"
 msgstr ""
 
 #. module: sale_stock
@@ -442,126 +293,74 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
+#: field:res.company,security_lead:0
+msgid "Security Days"
 msgstr ""
 
 #. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
-msgid "Invoice"
+#: field:stock.location.route,sale_selectable:0
+msgid "Selectable on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-msgid "Cancel"
+#: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:163
+#: field:sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,default_order_policy:0
+msgid "The default invoicing method is"
+msgstr ""
+
+#. module: sale_stock
+#: view:stock.picking:sale_stock.view_picking_internal_search_inherit
+msgid "To Invoice"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_invoice_deli_orders:0
+msgid ""
+"To allow your salesman to make invoices for Delivery Orders using the menu "
+"'Deliveries to Invoice'."
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "View Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order,warehouse_id:0
+#: field:sale.report,warehouse_id:0
+msgid "Warehouse"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,default_order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
-"In order to delete a confirmed sales order, you must cancel it.\n"
-"To do so, you must first cancel related picking for delivery orders."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
 
 #. module: sale_stock
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
-msgid "Create Invoice"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,task_work:0
-msgid "Prepare invoices based on task's activities"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:523
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:561
-#, python-format
-msgid "(n/a)"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:522
-#, python-format
-msgid "Cannot cancel sales order line!"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr ""
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of delivery orders that has been generated for this sales "
-"order."
-msgstr ""
-
-#. module: sale_stock
-#: model:process.node,name:sale_stock.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:614
+#: code:addons/sale_stock/sale_stock.py:342
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -569,34 +368,23 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Recreate Delivery Order"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.config.settings,group_multiple_shops:0
-msgid "This allows to configure and use multiple shops."
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.order,picked_rate:0
-msgid "Picked"
-msgstr ""
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,name:sale_stock.process_transition_packing0
-msgid "Create Pick List"
-msgstr ""
-
-#. module: sale_stock
-#: model:process.transition,note:sale_stock.process_transition_deliver0
+#: code:addons/sale_stock/sale_stock.py:270
+#, python-format
 msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid "days"
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:sale_stock.view_order_form_inherit
+msgid ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
 msgstr ""

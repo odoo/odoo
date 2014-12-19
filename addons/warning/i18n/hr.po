@@ -1,62 +1,25 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# * warning
-# Drazen Bosak <drazen.bosak@gmail.com>, 2010.
+# Croatian translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-17 21:02+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
-"Language-Team: Vinteh\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-26 13:41+0000\n"
+"Last-Translator: Ivan Marijanović <Unknown>\n"
+"Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:18+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-"Language: hr\n"
+"X-Launchpad-Export-Date: 2014-09-27 06:38+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: warning
-#: model:ir.model,name:warning.model_purchase_order_line
-#: field:product.product,purchase_line_warn:0
-msgid "Purchase Order Line"
-msgstr "Stavka naloga nabave"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Primke"
-
-#. module: warning
-#: field:product.product,purchase_line_warn_msg:0
-msgid "Message for Purchase Order Line"
-msgstr "Poruka za stavku naloga za nabavu"
-
-#. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
-msgstr "Skladišni dokument"
-
-#. module: warning
-#: view:product.product:0
-msgid "Warning when Purchasing this Product"
-msgstr "Upozorenje kod kupnje ovog proizvoda"
-
-#. module: warning
-#: model:ir.model,name:warning.model_product_product
-msgid "Product"
-msgstr "Artikl"
-
-#. module: warning
-#: view:product.product:0
-#: view:res.partner:0
-msgid "Warnings"
-msgstr "Upozorenja"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -65,13 +28,44 @@ msgid "Blocking Message"
 msgstr "Blokiranje poruke"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Invoice"
-msgstr "Upozorenje na računu"
+#: model:ir.model,name:warning.model_account_invoice
+#: field:res.partner,invoice_warn:0
+msgid "Invoice"
+msgstr "Račun"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Poruka kod fakturiranja"
+
+#. module: warning
+#: field:res.partner,purchase_warn_msg:0
+msgid "Message for Purchase Order"
+msgstr "Poruka za narudžbu (nabave)"
+
+#. module: warning
+#: field:product.template,purchase_line_warn_msg:0
+msgid "Message for Purchase Order Line"
+msgstr "Poruka za stavku naloga za nabavu"
+
+#. module: warning
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Poruka za prodajni nalog"
+
+#. module: warning
+#: field:product.template,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Upozorenje za stavku prodajnog naloga"
+
+#. module: warning
+#: field:res.partner,picking_warn_msg:0
+msgid "Message for Stock Picking"
+msgstr "Poruka za skladišnicu"
+
+#. module: warning
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -80,20 +74,19 @@ msgid "No Message"
 msgstr "Nema poruke"
 
 #. module: warning
-#: model:ir.model,name:warning.model_account_invoice
-#: field:res.partner,invoice_warn:0
-msgid "Invoice"
-msgstr "Račun"
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Partner"
 
 #. module: warning
-#: view:product.product:0
-msgid "Warning when Selling this Product"
-msgstr "Upozorenje kod prodaje ovog proizvoda"
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Skladišni dokument"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Skladišnica"
+#: model:ir.model,name:warning.model_product_template
+msgid "Product Template"
+msgstr "Predložak proizvoda"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -102,14 +95,27 @@ msgid "Purchase Order"
 msgstr "Nalog za nabavu"
 
 #. module: warning
-#: field:res.partner,purchase_warn_msg:0
-msgid "Message for Purchase Order"
-msgstr "Poruka za narudžbu (nabave)"
+#: model:ir.model,name:warning.model_purchase_order_line
+#: field:product.template,purchase_line_warn:0
+msgid "Purchase Order Line"
+msgstr "Stavka naloga nabave"
 
 #. module: warning
-#: code:addons/warning/warning.py:32
-#: help:product.product,purchase_line_warn:0
-#: help:product.product,sale_line_warn:0
+#: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
+msgid "Sales Order"
+msgstr "Prodajni nalog"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+#: field:product.template,sale_line_warn:0
+msgid "Sales Order Line"
+msgstr "Stavka prodajnog naloga"
+
+#. module: warning
+#: code:addons/warning/warning.py:31
+#: help:product.template,purchase_line_warn:0
+#: help:product.template,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
@@ -125,64 +131,13 @@ msgstr ""
 "Poruku treba napisati u slijedećem polju."
 
 #. module: warning
-#: code:addons/warning/warning.py:67
-#: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:130
-#: code:addons/warning/warning.py:162
-#: code:addons/warning/warning.py:192
-#: code:addons/warning/warning.py:218
-#: code:addons/warning/warning.py:266
-#: code:addons/warning/warning.py:299
-#, python-format
-msgid "Alert for %s !"
-msgstr "Alarm za %s !"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Skladišnica"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sales Order"
-msgstr "Upozorenje na Prodajnom nalogu"
-
-#. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Poruka kod fakturiranja"
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sales Order"
-msgstr "Poruka za prodajni nalog"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Picking"
-msgstr "Upozorenje na skladišnicama"
-
-#. module: warning
-#: view:res.partner:0
-msgid "Warning on the Purchase Order"
-msgstr "Upozorenje kod naloga za nabavu"
-
-#. module: warning
-#: code:addons/warning/warning.py:68
-#: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:193
-#: code:addons/warning/warning.py:219
-#: code:addons/warning/warning.py:267
-#: code:addons/warning/warning.py:300
-#, python-format
-msgid "Warning for %s"
-msgstr "Upozorenje za %s"
-
-#. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sales Order Line"
-msgstr "Upozorenje za stavku prodajnog naloga"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
+#: selection:product.template,purchase_line_warn:0
+#: selection:product.template,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
@@ -191,55 +146,48 @@ msgid "Warning"
 msgstr "Upozorenje"
 
 #. module: warning
-#: field:res.partner,picking_warn_msg:0
-msgid "Message for Stock Picking"
-msgstr "Poruka za skladišnicu"
+#: code:addons/warning/warning.py:64
+#: code:addons/warning/warning.py:92
+#: code:addons/warning/warning.py:128
+#: code:addons/warning/warning.py:160
+#: code:addons/warning/warning.py:209
+#: code:addons/warning/warning.py:241
+#, python-format
+msgid "Warning for %s"
+msgstr "Upozorenje za %s"
 
 #. module: warning
-#: model:ir.model,name:warning.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Invoice"
+msgstr "Upozorenje na računu"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
-#: field:res.partner,sale_warn:0
-msgid "Sales Order"
-msgstr "Prodajni nalog"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Picking"
+msgstr "Upozorenje na skladišnicama"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Otpremnice"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Purchase Order"
+msgstr "Upozorenje kod naloga za nabavu"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
-#: field:product.product,sale_line_warn:0
-msgid "Sales Order Line"
-msgstr "Stavka prodajnog naloga"
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warning on the Sales Order"
+msgstr "Upozorenje na Prodajnom nalogu"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nepravilan XML format za View Architecture!"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Purchasing this Product"
+msgstr "Upozorenje kod kupnje ovog proizvoda"
 
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr "Module for Warnings form onchange Event"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+msgid "Warning when Selling this Product"
+msgstr "Upozorenje kod prodaje ovog proizvoda"
 
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Module for Warnings form onchange Event."
-
-#~ msgid "Message for Sale Order Line"
-#~ msgstr "Poruka za stavku prodajnog naloga"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Sale Order Line"
-
-#~ msgid "Sale Order"
-#~ msgstr "Sale Order"
-
-#~ msgid "Message for Sale Order"
-#~ msgstr "Poruka za prodajni nalog"
-
-#~ msgid "Warning on the Sale Order"
-#~ msgstr "Upozorenje vezano uz prodajni nalog"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Greška: Neispravan barkod!"
+#. module: warning
+#: view:product.template:warning.product_warning_form_view
+#: view:res.partner:warning.view_partner_warning_form
+msgid "Warnings"
+msgstr "Upozorenja"

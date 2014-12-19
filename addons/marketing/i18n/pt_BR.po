@@ -1,65 +1,63 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-18 17:48+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-09-06 19:22+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@zupy.com.br>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:33+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-09-07 07:48+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_config_settings
-msgid "marketing.config.settings"
-msgstr "marketing.config.settings"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
+msgstr "Aplicar"
 
 #. module: marketing
-#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid ""
-"Installs demo data like leads, campaigns and segments for Marketing "
-"Campaigns.\n"
-"                This installs the module marketing_campaign_crm_demo."
-msgstr ""
-"Instala dados de demonstração como prospectos, campanhas e segmentos para "
-"Campanhas de Marketing.\n"
-"                O módulo marketing_campaign_crm_demo será instalado."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_configuration
-#: view:marketing.config.settings:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Configure Marketing"
 msgstr "Configurar Marketing"
 
 #. module: marketing
-#: view:crm.lead:0
-#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
-msgid "Marketing"
-msgstr "Marketing"
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign:0
-msgid "Marketing campaigns"
-msgstr "Campanhas de Marketing"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
+msgstr "Criado em"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "or"
-msgstr "ou"
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns"
-msgstr "Campanhas"
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
 
 #. module: marketing
 #: model:res.groups,name:marketing.group_marketing_manager
@@ -67,129 +65,53 @@ msgid "Manager"
 msgstr "Gerente"
 
 #. module: marketing
-#: model:res.groups,name:marketing.group_marketing_user
-msgid "User"
-msgstr "Usuário"
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Campaigns Settings"
-msgstr "Configurações das Campanhas"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Marketing Campaigns"
+msgstr "Campanhas de Marketing"
 
 #. module: marketing
-#: field:marketing.config.settings,module_crm_profiling:0
-msgid "Track customer profile to focus your campaigns"
-msgstr "Acompanhar o perfil de cliente para focar suas campanhas"
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
+msgstr "Campanhas de Marketing"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
+msgstr "Email em Massa"
 
 #. module: marketing
-#: view:marketing.config.settings:0
-msgid "Apply"
-msgstr "Aplicar"
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
+msgstr ""
+"Fornece uma forma de enviar email em massa.\n"
+"- Isto instala o módulo mass_mailing."
 
 #. module: marketing
 #: help:marketing.config.settings,module_marketing_campaign:0
 msgid ""
-"Provides leads automation through marketing campaigns.\n"
-"                Campaigns can in fact be defined on any resource, not just "
-"CRM leads.\n"
-"                This installs the module marketing_campaign."
+"Provides leads automation through marketing campaigns. Campaigns can in fact "
+"be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
 msgstr ""
-"Fornece automação de prospectos através de campanhas de marketing.\n"
-"                As campanhas podem ser definidas em qualquer recurso, não "
-"somente nos prospectos.\n"
-"                O módulo marketing_campaign será instalado."
+"Fornece automação de prospectos por meio de campanhas de marketing. As "
+"campanhas podem de fato ser definida em qualquer recurso, não apenas para os "
+"prospectos de CRM. \n"
+"-Isto Instala o módulo marketing_campaign."
 
 #. module: marketing
-#: help:marketing.config.settings,module_crm_profiling:0
-msgid ""
-"Allows users to perform segmentation within partners.\n"
-"                This installs the module crm_profiling."
-msgstr ""
-"Permite aos usuários realizar segmentação dos parceiros.\n"
-"                O módulo crm_profiling será instalado."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
+msgstr "Configurações"
 
 #. module: marketing
-#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
-msgid "Demo data for marketing campaigns"
-msgstr "Dados de demonstração para campanhas de marketing"
-
-#~ msgid "Image"
-#~ msgstr "Imagem"
-
-#~ msgid "title"
-#~ msgstr "Título"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Configuração em Progresso"
-
-#~ msgid ""
-#~ "Helps you to manage marketing campaigns and automate actions and "
-#~ "communication steps."
-#~ msgstr ""
-#~ "Ajuda você a gerenciar campanhas de marketing, automatizar ações e etapas de "
-#~ "comunicação."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML inválido para Arquitetura da View"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "Menu for Marketing"
-#~ msgstr "Menu para Marketing"
-
-#~ msgid ""
-#~ "Helps you to design templates of emails and integrate them in your different "
-#~ "processes."
-#~ msgstr ""
-#~ "Ajuda você a desenhar modelos de email e integrá-los em seus diferentes "
-#~ "processos."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome de modelo inválido na definição da ação."
-
-#~ msgid ""
-#~ "Helps you to perform segmentation of partners and design segmentation "
-#~ "questionnaires"
-#~ msgstr ""
-#~ "Ajuda você a realizar segmentação de parceiros e desenhar questionários "
-#~ "segmentados"
-
-#~ msgid "marketing.installer"
-#~ msgstr "marketing.installer"
-
-#~ msgid "Marketing Campaigns"
-#~ msgstr "Campanhas de Marketing"
-
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "Configuração da Aplicação de Marketing"
-
-#~ msgid "Profiling Tools"
-#~ msgstr "Ferramentas para Perfilagem"
-
-#~ msgid "Configure"
-#~ msgstr "Configurar"
-
-#~ msgid "Marketing Application Configuration"
-#~ msgstr "Configuração do Sistema de Marketing"
-
-#~ msgid "Configure Your Marketing Application"
-#~ msgstr "Configure Seu Sistema de Marketing"
-
-#~ msgid "Automated E-Mails"
-#~ msgstr "E-Mails Automáticos"
-
-#~ msgid ""
-#~ "OpenERP provides Addons to better manage your sales and marketing processes. "
-#~ "Select the ones you would be interested in."
-#~ msgstr ""
-#~ "O OpenERP fornece Addons para gerenciar melhor suas vendas e processos de "
-#~ "marketing. Selecione aquele que você estiver interessado."
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
+msgstr "Usuário"

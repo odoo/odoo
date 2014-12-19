@@ -52,7 +52,7 @@ openerp.report = function(instance) {
                 var c = openerp.webclient.crashmanager;
 
                 if (action.report_type == 'qweb-html') {
-                    window.open(report_url, '_blank', 'height=900,width=1280');
+                    window.open(report_url, '_blank', 'scrollbars=1,height=900,width=1280');
                     instance.web.unblockUI();
                 } else if (action.report_type === 'qweb-pdf') {
                     // Trigger the download of the pdf/controller report

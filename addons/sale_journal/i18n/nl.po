@@ -1,53 +1,51 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Dutch translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-25 19:06+0000\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-16 18:20+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: \n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:00+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-17 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Notitie"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Actief"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Factuur soort"
+#: field:sale_journal.invoice.type,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
-"Standaard wordt deze facturatiemethode gebruikt om een factuur te maken voor "
-"de huidige relatie."
+#: field:sale_journal.invoice.type,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Verkopen & inkopen"
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Genereer facturen gebaseerd op de geselecteerde optie."
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturatie"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Gegroepeerd"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_in
-msgid "Incoming Shipments"
-msgstr "Inkomende leveringen"
+#: field:sale_journal.invoice.type,id:0
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -59,19 +57,15 @@ msgstr ""
 "deze te verwijderen."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Notities"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Facturatie-methode"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Verzamellijst"
+#: view:sale.order:sale_journal.view_sales_order_search
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Factuursoort"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -79,16 +73,6 @@ msgstr "Verzamellijst"
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Factuursoorten"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Niet gegroepeerd"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Gegroepeerd"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -103,28 +87,44 @@ msgstr ""
 "maandelijks, etc."
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
-msgid "Generate invoice based on the selected option."
-msgstr "Genereer facturen gebaseerd op de geselecteerde optie."
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Invoicing"
+msgstr "Facturatie"
 
 #. module: sale_journal
-#: view:sale.order:0
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
-#: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Factuursoort"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Factuur soort"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Actief"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Facturatie-methode"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatst aangepast door"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst aangepast op"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Niet gegroepeerd"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Notitie"
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+msgid "Notes"
+msgstr "Notities"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -132,341 +132,24 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Verzamellijst"
+
+#. module: sale_journal
+#: view:res.partner:sale_journal.view_partner_property_form
+msgid "Sales & Purchases"
+msgstr "Verkopen & inkopen"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking_out
-msgid "Delivery Orders"
-msgstr "Uitgaande leveringen"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor overzicht"
-
-#~ msgid "All Months"
-#~ msgstr "Alle maanden"
-
-#~ msgid "Reporting"
-#~ msgstr "Rapportering"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#~ msgid "This Month"
-#~ msgstr "Deze maand"
-
-#~ msgid "assigned"
-#~ msgstr "Toegewezen"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Maandelijkse verkoop"
-
-#~ msgid "Average Price"
-#~ msgstr "Gemiddelde prijs"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "None"
-#~ msgstr "Geen"
-
-#~ msgid "In progress"
-#~ msgstr "In behandeling"
-
-#~ msgid "Month"
-#~ msgstr "Maand"
-
-#~ msgid "Sales"
-#~ msgstr "Verkopen"
-
-#~ msgid "Done"
-#~ msgstr "Gereed"
-
-#~ msgid "Journal date"
-#~ msgstr "Dagboek-datum"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Verkoopdagboek"
-
-#~ msgid "waiting"
-#~ msgstr "wachtend"
-
-#~ msgid "Invoice state"
-#~ msgstr "Faktuurstatus"
-
-#~ msgid "done"
-#~ msgstr "gereed"
-
-#~ msgid "Total Price"
-#~ msgstr "Totaalprijs"
-
-#~ msgid "invoiced"
-#~ msgstr "gefaktureerd"
-
-#~ msgid "Quantities"
-#~ msgstr "Hoeveelheden"
-
-#~ msgid "Quotation"
-#~ msgstr "Offerte"
-
-#~ msgid "confirmed"
-#~ msgstr "bevestigd"
-
-#~ msgid "My open journals"
-#~ msgstr "Mijn open dagboeken"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Alle open dagboeken"
-
-#~ msgid "Packing"
-#~ msgstr "Verpakking"
-
-#~ msgid "Open journals"
-#~ msgstr "Open dagboeken"
-
-#~ msgid "Draft"
-#~ msgstr "Concept"
-
-#~ msgid "Draft sales"
-#~ msgstr "Concept verkopen"
-
-#~ msgid "Code"
-#~ msgstr "Code"
-
-#~ msgid "Open Journal"
-#~ msgstr "Open dagboek"
-
-#~ msgid "Creation date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Bevestig verkopen"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Annuleer verkopen"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Mijn open dagboeken"
-
-#~ msgid "Journal"
-#~ msgstr "Dagboek"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Dagboek statistieken"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuleren"
-
-#~ msgid "Close Journal"
-#~ msgstr "Sluit dagboek"
-
-#~ msgid "Approved sales"
-#~ msgstr "Goedgekeurde verkopen"
-
-#~ msgid "Journal Information"
-#~ msgstr "Dagboek informatie"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Verzendoverzicht"
-
-#~ msgid "States"
-#~ msgstr "Status"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Factuuruitzondering"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Verkoopstatistiek"
-
-#~ msgid "to be invoiced"
-#~ msgstr "te factureren"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Leveringsschema"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Verpakking comform fakturatie methode"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Toegewezen verpakking"
-
-#~ msgid "# of Lines"
-#~ msgstr "Aantal regels"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Verkopen bij dagboek (deze maand)"
-
-#~ msgid "Order State"
-#~ msgstr "Orderstatus"
-
-#~ msgid "Validation date"
-#~ msgstr "Validatiedatum"
-
-#~ msgid "draft"
-#~ msgstr "concept"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Verkoopdagboeken"
-
-#~ msgid "cancel"
-#~ msgstr "annuleren"
-
-#~ msgid "Responsible"
-#~ msgstr "Verantwoordelijke"
-
-#~ msgid "Open"
-#~ msgstr "Openen"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Facturering methoden"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Handmatig in bewerking"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Naar Concept"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Verpakking te factureren"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Statistieken verpakking te factureren"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Verpakking per dagboeken"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Verpakking per factuurmethode"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Bevestigde verpakkingen"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "sale_journal.invoice.type.tree"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "Verpakkingslijst per dagboek"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Verkopen per dagboek"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Verpakkingsdagboek"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Verzenduitzondering"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Verpakking per dagboek"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "Statistieken verpakking per factuurmethode"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Verpakking te factureren"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Annuleer verpakking"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "Het type dagboek gebruikt voor verkoop en verzending"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Verpakking per dagboek"
-
-#~ msgid "Packing journals"
-#~ msgstr "Verpakking dagboeken"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Mijn open verpakkingsdagboeken"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Verkooporders per dagboek"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Facturatie methode"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Orderreferentie moet uniek zijn!"
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "Het soort dagboek gebruikt voor verkopen en picking."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sales journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (picking lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Met de verkoop dagboek module categoriseert u verkopen\n"
-#~ "    en leveringen (picklijsten) tussen verschillende dagboeken.\n"
-#~ "    Deze module is handig voor grotere bedrijven die werken\n"
-#~ "    met afdelingen.\n"
-#~ "\n"
-#~ "    U kunt het dagboek op meer manieren gebruiken, bijv.:\n"
-#~ "    * isoleren verkopen van verschillende afdelingen\n"
-#~ "    * dagboek van leveringen per vrachtauto of per UPS\n"
-#~ "\n"
-#~ "    Dagboeken hebben een verantwoordelijke en doorlopen\n"
-#~ "    verschillende statussen: concept, open, geannuleerd, gereed.\n"
-#~ "\n"
-#~ "    Batch verwerkingen kunnen worden uitgevoerd op de\n"
-#~ "    verschillende dagboeken voor het bevestigen van alle verkopen\n"
-#~ "    ineens, het bevestigen of factureren van leveringen, ...\n"
-#~ "\n"
-#~ "    Het ondersteunt ook batch facturatie methoden die kunnen\n"
-#~ "    worden geconfigureerd per relatie, verkooporder, voorbeelden:\n"
-#~ "    * dagelijkse facturatie,\n"
-#~ "    * maandelijkse facturatie, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Beheer verkopen en verzendingen per dagboek"
-
-#~ msgid ""
-#~ "This invoicing type will be used, by default, for invoicing the current "
-#~ "partner."
-#~ msgstr ""
-#~ "Deze factuurmethode wordt standaard gebruikt bij het factureren van deze "
-#~ "relatie."
-
-#~ msgid "Reference must be unique per Company!"
-#~ msgstr "Referentie moet uniek zijn per bedrijf!"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr ""
-#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
-
-#~ msgid "Order Reference must be unique per Company!"
-#~ msgstr "Orderreferentie moet uniek zijn per bedrijf!"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+"Standaard wordt deze facturatiemethode gebruikt om een factuur te maken voor "
+"de huidige relatie."

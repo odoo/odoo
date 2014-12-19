@@ -1,85 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_timesheet
+# Swedish translation for openobject-addons
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.14\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2010-11-22 20:14+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-08-14 16:10+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-22 07:09+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr "Aktivitet per användare"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by year of date"
-msgstr "Gruppera per år och datum"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "June"
-msgstr "juni"
-
-#. module: project_timesheet
-#: field:project.task.work,hr_analytic_timesheet_id:0
-msgid "Related Timeline Id"
-msgstr "Relaterad tidradid"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid ""
-"You cannot delete a partner which is assigned to project, but you can "
-"uncheck the active box."
-msgstr ""
-"Du kan inte ta bort ett företag som har tilldelats projekt, men du kan "
-"avmarkera  aktiv-rutan."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task_work
-msgid "Project Task Work"
-msgstr "Projektaktivitetsarbete"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr ""
-"Du kan inte välja en objektkonto som är i stängt eller avbrutet läge."
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group By..."
-msgstr "Gruppera på..."
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
-msgstr "oktober"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
-#: view:project.project:0
-#, python-format
-msgid "Timesheets"
-msgstr "Tidrapporter"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable"
-msgstr "Debiterbar"
+"X-Launchpad-Export-Date: 2014-08-15 07:42+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -101,123 +37,14 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic Account/Project"
-msgstr "Objektkonto/projekt"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Analytic account/project"
-msgstr "Objektkonto/projekt"
-
-#. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
-msgid "Customer Projects"
-msgstr "Kundprojekt"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:89
+#: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the HR Settings tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr "Objektrad"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "August"
-msgstr "augusti"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
-msgid "Task invoice"
-msgstr "Aktivtetsfaktura"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_taskwork0
-msgid "Task Work"
-msgstr "Aktivitetsarbete"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "May"
-msgstr "maj"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:93
-#, python-format
-msgid ""
-"Please define journal on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Logga in till/Logga ut från projektet"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Billable Project"
-msgstr "Debiterabara projekt"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
-msgid "Contracts to Renew"
-msgstr "Avtal att förnya"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Hours"
-msgstr "Timmar"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Group by month of date"
-msgstr "Gruppera månadsvis"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr "Aktivitet"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
-msgstr "Användare"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "July"
-msgstr "juli"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_timesheettask0
-msgid "Complete Your Timesheet."
-msgstr "Slutför din tidrapport."
-
-#. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Aktivitetstimmar"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "februari"
+"<p class=\"oe_view_nocontent_create\">Registrera dina tidrapporter för "
+"projekt '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -239,113 +66,7 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Tidrapport aktivitet"
-
-#. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_taskencoding0
-msgid "Task encoding"
-msgstr "Aktivitetskodning"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
-msgid "Task summary is comes into the timesheet line"
-msgstr "Aktivitetssammanfattningen överförs till tidrapportraden"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "January"
-msgstr "januari"
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger Invoice"
-msgstr "Skapar faktura"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "november"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "mars"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_project
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
-msgstr "april"
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "report.timesheet.task.user"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Ange hur mycket tid du förbrukade på din aktivitet"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:85
-#, python-format
-msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
-"Vänligen definiera anställd för användaren \"%s\". Du måste skapa en."
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_res_partner
-msgid "Partner"
-msgstr "Företag"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Felaktigt objektkonto !"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Tidrapport/aktivitetstim-rapport per månad"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Felaktig konfiguration !"
-
-#. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
-msgid "Invoicing"
-msgstr "Fakturering"
-
-#. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sales order lines"
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:100
-#, python-format
-msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:60
+#: code:addons/project_timesheet/project_timesheet.py:59
 #, python-format
 msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
@@ -353,9 +74,107 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_taskwork0
-msgid "Work on task"
-msgstr "Arbete på aktiviteten"
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+msgid "Analytic Account/Project"
+msgstr "Objektkonto/projekt"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Objektrad"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+msgid "Analytic account/project"
+msgstr "Objektkonto/projekt"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "april"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "August"
+msgstr "augusti"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:82
+#: code:addons/project_timesheet/project_timesheet.py:86
+#: code:addons/project_timesheet/project_timesheet.py:90
+#: code:addons/project_timesheet/project_timesheet.py:97
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.project_invoice_search
+msgid "Billable"
+msgstr "Debiterbar"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr "Avtal att förnya"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
+msgstr "Kundprojekt"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "December"
+msgstr "december"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "februari"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group By"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by month of date"
+msgstr "Gruppera månadsvis"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by year of date"
+msgstr "Gruppera per år och datum"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.view_project_kanban_inherited
+msgid "Hours"
+msgstr "Timmar"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,id:0
+msgid "ID"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:264
+#, python-format
+msgid "Invalid Action!"
+msgstr "Ogiltig åtgärd"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
+#, python-format
+msgid "Invalid Analytic Account!"
+msgstr ""
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
@@ -364,11 +183,103 @@ msgid "Invoice Tasks"
 msgstr "Fakturera uppgifter"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Aktivitetstimmar per månad"
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
+msgid "Invoicing"
+msgstr "Fakturering"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "January"
+msgstr "januari"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "July"
+msgstr "juli"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "juni"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "mars"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "May"
+msgstr "maj"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "Månad"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "november"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "October"
+msgstr "oktober"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_res_partner
+msgid "Partner"
+msgstr "Företag"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:83
+#, python-format
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+"Vänligen definiera anställd för användaren \"%s\". Du måste skapa en."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:91
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:98
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "Projekt"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "Projektaktivitetsarbete"
+
+#. module: project_timesheet
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "Relaterad tidradid"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -376,36 +287,31 @@ msgid "September"
 msgstr "september"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "December"
-msgstr "december"
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
-msgid "After task is completed, Create its invoice."
-msgstr "Skapa en faktura när aktiviteten är avslutad"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
-#, python-format
-msgid "Invalid Action!"
-msgstr "Ogiltig åtgärd"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr "Månad"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
-#, python-format
-msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by Project"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">Registrera dina tidrapporter för "
-"projekt '%s'.</p>"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "Aktivitet"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Aktivitetstimmar"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
+msgid "Task Hours Per Month"
+msgstr "Aktivitetstimmar per månad"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Tasks by User"
+msgstr "Aktivitet per användare"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -413,134 +319,38 @@ msgid "Timesheet Hours"
 msgstr "Tidrapporttimmar"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
+#: code:addons/project_timesheet/project_timesheet.py:67
+#: view:project.project:project_timesheet.project_invoice_form
+#, python-format
+msgid "Timesheets"
+msgstr "Tidrapporter"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr "Användare"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "År"
 
 #. module: project_timesheet
-#: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
-msgid "Fill Timesheet"
-msgstr "Fyll i tidrapport"
-
-#~ msgid "Project Timesheet"
-#~ msgstr "Projekt tidrapport"
-
-#~ msgid "Error ! Task end-date must be greater then task start-date"
-#~ msgstr "Fel ! Aktivitetens slutdatum måste komma efter startdatumet"
-
-#~ msgid ""
-#~ "You will find here all works made on tasks that you can invoice.\n"
-#~ "In order to invoice the time spent on a project, you must define the\n"
-#~ "pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
-#~ "the project form."
-#~ msgstr ""
-#~ "Här hittar du allt arbete som gjorts på fakturerbara aktiviteter.\n"
-#~ "För att fakturera tid som förbrukats i ett projekt, måste du välja\n"
-#~ "prislista och fältet \"Faktura aktivitetsarbete\" på fliken \"Fakturering\" "
-#~ "i\n"
-#~ "i projektformuläret."
-
-#~ msgid "Task Hours in current month"
-#~ msgstr "Aktivitetstimmar i aktuell månad"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Utlös faktura från försäljningsorderrader"
-
-#~ msgid "Error! project start-date must be lower then project end-date."
-#~ msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
-
-#~ msgid "Timesheet Lines"
-#~ msgstr "Tidrapportrader"
-
+#: code:addons/project_timesheet/project_timesheet.py:264
 #, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Felaktig åtgärd !"
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
+"Du kan inte ta bort ett företag som har tilldelats projekt, men du kan "
+"avmarkera  aktiv-rutan."
 
-#~ msgid "Error ! You cannot create recursive tasks."
-#~ msgstr "Fel ! Du kan inte skapa rekursiva aktiviteter."
-
-#~ msgid "Invoice Tasks Work"
-#~ msgstr "Fakturera aktivitetsarbete"
-
-#~ msgid "Customer"
-#~ msgstr "Kund"
-
-#~ msgid "Task Hours in current year"
-#~ msgstr "Aktivitetstimmar i år"
-
-#~ msgid "Error! You cannot assign escalation to the same project!"
-#~ msgstr "Fel! Du kan inte eskalera till samma projekt"
-
-#~ msgid "Bill Tasks Works"
-#~ msgstr "Fakturera aktivitetsarbetet"
-
-#~ msgid "Error ! You cannot create recursive associated members."
-#~ msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
-
-#~ msgid "Invoicing Data"
-#~ msgstr "Fakturainformation"
-
-#~ msgid "Invoice Task Work"
-#~ msgstr "Fakturera aktivitetsarbete"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Min tidrapport"
-
-#~ msgid "You can not create analytic line on view account."
-#~ msgstr "Du kan inte skapa objekttransaktioner med rubrikkonton."
-
-#~ msgid " Month-1 "
-#~ msgstr " Månad-1 "
-
-#~ msgid "Task hours of last month"
-#~ msgstr "Aktivitetstimmar i månaden"
-
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:291
 #, python-format
-#~ msgid ""
-#~ "You cannot delete a partner which is assigned to project, we suggest you to "
-#~ "uncheck the active box!"
-#~ msgstr ""
-#~ "Du kan inte radera ett företag som är knutet till projekt, vi föreslår att "
-#~ "du inaktiverar företaget i stället!"
-
-#~ msgid ""
-#~ "You will find here the contracts related to your customer projects in order "
-#~ "to track the invoicing progress."
-#~ msgstr ""
-#~ "Här finns avtal relaterat till dina kundprojekt för att spåra faktureringen."
-
-#, python-format
-#~ msgid ""
-#~ "You cannot select a Analytic Account which is in Close or Cancelled state"
-#~ msgstr ""
-#~ "Du kan inte välja ett objektkonto som är stängt eller i status avbruten."
-
-#, python-format
-#~ msgid "No employee defined for user \"%s\". You must create one."
-#~ msgstr "Ingen anställd definierad för användaren \"%s\". Du måste skapa en."
-
-#, python-format
-#~ msgid ""
-#~ "No journal defined on the related employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Journal saknas för den relaterade anställda.\n"
-#~ "Fyll i tidrapportfliken i anställningsforumläret."
-
-#, python-format
-#~ msgid ""
-#~ "No product defined on the related employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Produkt saknas för den relaterade anställde.\n"
-#~ "Fyll i tidrapportfliken i anställningsformuläret."
-
-#, python-format
-#~ msgid ""
-#~ "No product and product category property account defined on the related "
-#~ "employee.\n"
-#~ "Fill in the timesheet tab of the employee form."
-#~ msgstr ""
-#~ "Produkt och produktkategorikonto saknas för den relaterade anställde.\n"
-#~ "Fyll i tidrapportfilken i anställningsformuläret."
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Du kan inte välja en objektkonto som är i stängt eller avbrutet läge."
