@@ -13,7 +13,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import ustr
 from openerp.osv import osv, fields
 
-URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
+URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
 
 
 class MassMailingCategory(osv.Model):
@@ -575,7 +575,6 @@ class MassMailing(osv.Model):
             dic = {'campaign_id': mass_mailing_campaign[0].campaign_id.id, 
                    'source_id': mass_mailing_campaign[0].source_id.id, 
                    'medium_id': mass_mailing_campaign[0].medium_id.id}
-            print dic
             return {'value': dic}
 
     #------------------------------------------------------
@@ -733,8 +732,11 @@ class MassMailing(osv.Model):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
             res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
+            
+            for match in re.findall(URL_REGEX, res[mass_mailing.id]):
+                href = match[0]
+                long_url = match[1]
 
-            for long_url in re.findall(URL_REGEX, res[mass_mailing.id]):
                 utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
 
                 vals = {'url': long_url}
@@ -750,7 +752,8 @@ class MassMailing(osv.Model):
                 shorten_url = website_links.browse(cr, uid, link_id, context=context)[0].short_url
 
                 if shorten_url:
-                    res[mass_mailing.id] = res[mass_mailing.id].replace(long_url, shorten_url)
+                    new_href = href.replace(long_url, shorten_url)
+                    res[mass_mailing.id] = res[mass_mailing.id].replace(href, new_href)
         return res
 
 
@@ -761,9 +764,11 @@ class MailMail(models.Model):
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
         if mail.mailing_id and mail.body_html:
-            urls = re.findall(URL_REGEX, mail.body_html)
-            
-            for url in urls:
-                mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+            for match in re.findall(URL_REGEX, mail.body_html):
+                href = match[0]
+                url = match[1]
+                if mail.statistics_ids:
+                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+                    mail.body_html = mail.body_html.replace(href, new_href)
 
         return super(MailMail, self).send_get_mail_body(mail, partner=partner)
