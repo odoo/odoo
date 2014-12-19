@@ -244,6 +244,18 @@ class hr_employee(osv.osv):
         super(hr_employee, self).unlink(cr, uid, ids, context=context)
         return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context.get('is_my_dept_employee'):
+            employee_id = self.search(cr, uid, [('user_id', '=', uid)], limit=1)
+            if employee_id:
+                department_id = self.browse(cr, uid, employee_id, context=context).department_id
+                args += [('department_id', '=', department_id.id)]
+            else:
+                args += [('id', '=', False)] #display blank result when user is not set.
+        return super(hr_employee, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order, context=context, count=count)
+
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)

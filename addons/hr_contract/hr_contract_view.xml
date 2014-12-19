@@ -50,6 +50,16 @@
                 </data>
             </field>
         </record>
+        <record id="view_employee_filter_inherit_contract" model="ir.ui.view">
+            <field name="name">hr.employee.search.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='message_unread']" position="after">
+                    <filter string="Managers" domain="[('manager', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
