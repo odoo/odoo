@@ -52,7 +52,7 @@ class ReportController(Controller):
             options_data = simplejson.loads(data['options'])
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it. 
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
             data_context = simplejson.loads(data['context'])
             if data_context.get('lang'):
                 del data_context['lang']
@@ -74,9 +74,9 @@ class ReportController(Controller):
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
     def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples: 
+        Samples:
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
-            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % 
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
