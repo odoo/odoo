@@ -26,6 +26,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
+        this.$el.addClass('o-dashboard');
 
         this.$('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
@@ -370,6 +371,7 @@ instance.web.search.FavoriteMenu.include({
         context.add({
             group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
         });
+        context.add(view_manager.active_view.controller.get_context());
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
