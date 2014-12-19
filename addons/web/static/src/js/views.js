@@ -605,9 +605,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$header_col = this.$header.find('.oe-header-title');
         this.$search_col = this.$header.find('.oe-view-manager-search-view');
         this.$switch_buttons.click(function (event) {
-            if (!$(event.target).hasClass('active')) {
-                self.switch_mode($(this).data('view-type'));
-            }
+            self.switch_mode($(this).data('view-type'));
         });
         var views_ids = {};
         _.each(this.views, function (view) {
