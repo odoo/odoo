@@ -54,7 +54,6 @@ class crm_phonecall(osv.osv):
                  'If the call is not applicable anymore, the status can be set to Cancelled.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
-        # phonecall fields
         'name': fields.char('Call Summary', required=True),
         'duration': fields.float('Duration', help='Duration in minutes and seconds.'),
         'categ_id': fields.many2one('crm.phonecall.category', 'Category'),
@@ -90,7 +89,7 @@ class crm_phonecall(osv.osv):
             if values.get('state') == 'done':
                 values['date_closed'] = fields.datetime.now()
                 self.compute_duration(cr, uid, ids, context=context)
-            elif values.get('state') == 'open':
+            elif values.get('state') == 'to_do':
                 values['date_open'] = fields.datetime.now()
                 values['duration'] = 0.0
         return super(crm_phonecall, self).write(cr, uid, ids, values, context=context)

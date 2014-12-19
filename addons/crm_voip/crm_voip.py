@@ -111,15 +111,16 @@ class crm_lead(models.Model):
     def create_call_center_call(self):
         for opp in self:
             phonecall = self.env['crm.phonecall'].create({
-                'name': opp.name
+                'name': opp.name,
+                'duration': 0,
+                'user_id': self.env.user[0].id,
+                'opportunity_id': opp.id,
+                'partner_id': opp.partner_id,
+                'state': 'to_do',
+                'partner_phone': opp.partner_id.phone,
+                'partner_mobile': opp.partner_id.mobile,
+                'in_queue': True,
             })
-            phonecall.user_id = self.env.user[0].id
-            phonecall.opportunity_id = opp.id
-            phonecall.partner_id = opp.partner_id
-            phonecall.state = 'to_do'
-            phonecall.partner_phone = opp.partner_id.phone
-            phonecall.partner_mobile = opp.partner_id.mobile
-            phonecall.in_queue = True
         return {
             'type': 'ir.actions.client',
             'tag': 'reload_panel',
@@ -164,15 +165,15 @@ class crm_lead(models.Model):
     @api.multi
     def log_new_phonecall(self):
         phonecall = self.env['crm.phonecall'].create({
-            'name': self.name
+            'name': self.name,
+            'user_id': self.env.user[0].id,
+            'opportunity_id': self.id,
+            'partner_id': self.partner_id,
+            'state': 'done',
+            'partner_phone': self.partner_id.phone,
+            'partner_mobile': self.partner_id.mobile,
+            'in_queue': False,
         })
-        phonecall.user_id = self.env.user[0].id
-        phonecall.opportunity_id = self.id
-        phonecall.partner_id = self.partner_id
-        phonecall.state = 'done'
-        phonecall.partner_phone = self.partner_id.phone
-        phonecall.partner_mobile = self.partner_id.mobile
-        phonecall.in_queue = False
         return {
             'name': 'Log a call',
             'type': 'ir.actions.act_window',
