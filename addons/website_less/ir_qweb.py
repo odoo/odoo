@@ -7,13 +7,10 @@ from subprocess import Popen, PIPE
 import openerp
 from openerp.osv import orm
 from openerp.tools import which
-from openerp.addons.base.ir.ir_qweb import AssetError, JavascriptAsset, QWeb, QWebException
+from openerp.addons.base.ir.ir_qweb import AssetError, JavascriptAsset, QWebException
 
 _logger = logging.getLogger(__name__)
 
-
-
-# QWeb.render_tag_call_assets = render_tag_call_assets_less
 
 class QWeb_less(orm.AbstractModel):
     _name = "website.qweb"
@@ -33,6 +30,24 @@ class QWeb_less(orm.AbstractModel):
         css = self.get_attr_bool(template_attributes.get('css'), default=True)
         js = self.get_attr_bool(template_attributes.get('js'), default=True)
         return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
+
+    def render_tag_snippet(self, element, template_attributes, generated_attributes, qwebcontext):
+        d = qwebcontext.copy()
+        d[0] = self.render_element(element, template_attributes, generated_attributes, d)
+        cr = d.get('request') and d['request'].cr or None
+        uid = d.get('request') and d['request'].uid or None
+
+        template = self.eval_format(template_attributes["snippet"], d)
+        elements = html.fragments_fromstring(self.render(cr, uid, template, d))
+
+        id = elements[0].get('data-oe-id', None)
+        if id:
+            elements[0].set('data-oe-name', self.pool['ir.ui.view'].browse(cr, uid, int(id), context=qwebcontext.context).name)
+            elements[0].set('data-oe-type', "snippet")
+
+        elements[0].set('data-oe-thumbnail', template_attributes.get('thumbnail', 'oe-thumbnail'))
+
+        return "".join(map(html.tostring, elements))
 
 
 class AssetsBundle(openerp.addons.base.ir.ir_qweb.AssetsBundle):
