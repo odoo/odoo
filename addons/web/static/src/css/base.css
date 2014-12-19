@@ -1050,7 +1050,7 @@
 .openerp .oe-view-manager-header .dropdown-menu li a {
   padding: 3px 25px;
 }
-.openerp .oe-view-manager-header .dropdown-menu .oe_searchview_custom_public a:after {
+.openerp .oe-view-manager-header .dropdown-menu .oe_searchview_custom_public a:after, .openerp .oe-view-manager-header .dropdown-menu .oe-share-filter:after {
   font-family: FontAwesome;
   content: "";
   color: #666;
@@ -1518,6 +1518,110 @@
 }
 .openerp .oe_view.oe_cannot_create .oe_view_nocontent_create {
   display: none;
+}
+.openerp .oe_pivot table {
+  width: auto;
+}
+.openerp .oe_pivot col.hover {
+  background-color: #f5f5f5;
+}
+.openerp .oe_pivot th {
+  background-color: #ffffff;
+  font-weight: normal;
+  vertical-align: top;
+  border: 1px solid #bfbfb6;
+  border-top: none;
+}
+.openerp .oe_pivot th.oe-total {
+  background-color: #f0eeee;
+  font-weight: bold;
+  vertical-align: bottom;
+}
+.openerp .oe_pivot td {
+  border: 1px solid #bfbfb6;
+  text-align: right;
+}
+.openerp .oe_pivot td.oe-closed, .openerp .oe_pivot td.oe-opened {
+  cursor: pointer;
+}
+.openerp .oe_pivot .oe-closed, .openerp .oe_pivot .oe-opened {
+  cursor: pointer;
+  background-color: #f0eeee;
+  border-left: none;
+  text-align: left;
+}
+.openerp .oe_pivot .oe-closed:hover, .openerp .oe_pivot .oe-opened:hover {
+  background-color: #e6e6e6;
+}
+.openerp .oe_pivot.oe-enable-linking td:not(.oe-closed):not(.oe-opened):not(.oe-empty) {
+  cursor: pointer;
+}
+.openerp .oe_pivot.oe-enable-linking td:not(.oe-closed):not(.oe-opened):not(.oe-empty):hover {
+  color: #428bca;
+}
+.openerp .oe_pivot .oe-closed:before {
+  font-family: FontAwesome;
+  margin-right: 5px;
+  content: "";
+}
+.openerp .oe_pivot .oe-opened:before {
+  font-family: FontAwesome;
+  margin-right: 5px;
+  content: "";
+  text-align: left;
+}
+.openerp .oe_pivot .measure-row {
+  background-color: #f0eeee;
+  cursor: pointer;
+}
+.openerp .oe_pivot .o-sorted:after {
+  font-family: FontAwesome;
+  margin-left: 5px;
+}
+.openerp .oe_pivot .o-sorted-asc:after {
+  content: "";
+}
+.openerp .oe_pivot .o-sorted-desc:after {
+  content: "";
+}
+.openerp .oe_pivot .dropdown-menu a {
+  color: black;
+}
+.openerp .oe_pivot .dropdown-menu .pivot-dropdown-submenu {
+  position: relative;
+}
+.openerp .oe_pivot .dropdown-menu .pivot-dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+}
+.openerp .oe_pivot .dropdown-menu .pivot-dropdown-submenu .field-selection:after {
+  content: "";
+  width: 3px;
+  float: right;
+  margin-left: 5px;
+  color: #333;
+  font-family: FontAwesome;
+}
+.openerp .oe_pivot .dropdown-menu .pivot-dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+.openerp .o-dashboard .oe_pivot th {
+  border-top: 1px solid #bfbfb6;
+}
+.openerp .o-dashboard .oe_pivot th, .openerp .o-dashboard .oe_pivot .oe-closed, .openerp .o-dashboard .oe_pivot .oe-opened {
+  border-left: 1px solid #bfbfb6;
+}
+.openerp .o-dashboard .oe_graph svg {
+  min-height: 250px;
+}
+.openerp .o-dashboard .oe_graph .nv-pieLabels {
+  display: none;
+}
+.openerp .oe_graph {
+  height: 100%;
+}
+.openerp .oe_graph > div {
+  height: 100%;
 }
 .openerp .oe_formview {
   background: white;

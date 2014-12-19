@@ -915,12 +915,11 @@ $sheet-padding: 16px
                 position: relative
                 a
                     padding: 3px 25px
-            .oe_searchview_custom_public
-                a:after
-                    font-family: FontAwesome
-                    content: "\f0c0"
-                    color: #666
-                    margin-left: 3px
+            .oe_searchview_custom_public a:after,.oe-share-filter:after
+                font-family: FontAwesome
+                content: "\f0c0"
+                color: #666
+                margin-left: 3px
         .selected
             display: block
             a
@@ -1294,6 +1293,96 @@ $sheet-padding: 16px
     .oe_view.oe_cannot_create
         .oe_view_nocontent_create
             display: none
+    // }}}
+    // PivotView.base and dynamic tags {{{
+    .oe_pivot
+        table
+            width: auto
+        col.hover
+            background-color: #f5f5f5    
+        th
+            background-color: #ffffff
+            font-weight: normal
+            vertical-align: top
+            border: 1px solid #bfbfb6
+            border-top: none
+        th.oe-total
+            background-color: #f0eeee
+            font-weight: bold
+            vertical-align: bottom
+        td
+            border: 1px solid #bfbfb6
+            text-align: right
+        td.oe-closed,td.oe-opened
+            cursor: pointer
+        .oe-closed, .oe-opened
+            cursor: pointer
+            background-color: #f0eeee
+            border-left: none
+            text-align: left
+            &:hover
+                background-color: #e6e6e6
+        &.oe-enable-linking 
+            td:not(.oe-closed):not(.oe-opened):not(.oe-empty)
+                cursor: pointer
+                &:hover
+                    color: #428bca
+        .oe-closed:before
+            font-family: FontAwesome
+            margin-right: 5px
+            content: "\f067"
+        .oe-opened:before
+            font-family: FontAwesome
+            margin-right: 5px
+            content: "\f068"
+            text-align: left
+        .measure-row
+            background-color: #f0eeee
+            cursor: pointer
+        .o-sorted:after
+            font-family: FontAwesome
+            margin-left: 5px
+        .o-sorted-asc:after
+            content: "\f0d7"
+        .o-sorted-desc:after
+            content: "\f0d8"
+        .dropdown-menu
+            a
+                color: black
+            .pivot-dropdown-submenu
+                position: relative
+                > .dropdown-menu
+                    top: 0
+                    left: 100%
+                .field-selection:after
+                    content: "\f0da"
+                    width: 3px
+                    float: right
+                    margin-left: 5px
+                    color: #333
+                    font-family: FontAwesome
+            .pivot-dropdown-submenu:hover
+                > .dropdown-menu
+                    display: block
+    .o-dashboard
+        .oe_pivot
+            th
+                border-top: 1px solid #bfbfb6
+            th, .oe-closed, .oe-opened
+                border-left: 1px solid #bfbfb6
+        .oe_graph
+            svg
+                min-height: 250px
+            .nv-pieLabels
+                display: none
+
+    // }}}
+    // GraphView.base and dynamic tags {{{
+    .oe_graph
+        height: 100%
+        > div
+            height: 100%
+
     // }}}
     // FormView.base and dynamic tags {{{
     .oe_formview

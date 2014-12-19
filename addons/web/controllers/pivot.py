@@ -11,12 +11,12 @@ except ImportError:
 
 class TableExporter(http.Controller):
 
-    @http.route('/web_graph/check_xlwt', type='json', auth='none')
+    @http.route('/web/pivot/check_xlwt', type='json', auth='none')
     def check_xlwt(self):
         return xlwt is not None
 
 
-    @http.route('/web_graph/export_xls', type='http', auth="user")
+    @http.route('/web/pivot/export_xls', type='http', auth="user")
     def export_xls(self, data, token):
         jdata = simplejson.loads(data)
         nbr_measures = jdata['nbr_measures']
@@ -63,7 +63,7 @@ class TableExporter(http.Controller):
             worksheet.write(y,0, '', header_plain)
             for measure in jdata['measure_row']:
                 style = header_bold if measure['is_bold'] else header_plain
-                worksheet.write(y, x, measure['text'], style);
+                worksheet.write(y, x, measure['measure'], style);
                 x = x + 1
             y = y + 1
 
@@ -71,7 +71,7 @@ class TableExporter(http.Controller):
         x = 0
         for row in jdata['rows']:
             worksheet.write(y, x, row['indent'] * '     ' + row['title'], header_plain)
-            for cell in row['cells']:
+            for cell in row['values']:
                 x = x + 1
                 if cell.get('is_bold', False):
                     worksheet.write(y, x, cell['value'], bold)
