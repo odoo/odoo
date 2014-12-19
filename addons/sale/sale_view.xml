@@ -34,10 +34,20 @@
             <field name="name">sale.order.graph</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <graph string="Sales Orders" type="bar">
-                    <field name="partner_id" type="row"/>
+                <graph string="Sales Orders">
+                    <field name="partner_id"/>
                     <field name="amount_total" type="measure"/>
                 </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_order_pivot">
+            <field name="name">sale.order.pivot</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Sales Orders">
+                    <field name="partner_id" type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -281,7 +291,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
@@ -326,7 +336,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
             <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>

@@ -911,12 +911,24 @@
             </field>
         </record>
 
+        <record id="view_move_pivot" model="ir.ui.view">
+            <field name="name">stock.move.pivot</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <pivot string="Stock Moves Analysis">
+                    <field name="product_id" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_move_graph" model="ir.ui.view">
             <field name="name">stock.move.graph</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
-                <graph string="Stock Moves Analysis" type="pivot">
-                    <field name="product_id" type="row"/>
+                <graph string="Stock Moves Analysis">
+                    <field name="product_id"/>
                     <field name="location_dest_id" groups="stock.group_locations" type="row"/>
                     <field name="product_uom_qty" type="measure"/>
                 </graph>
@@ -1170,11 +1182,18 @@
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
+        <record model="ir.actions.act_window.view" id="action_stock_move_pivot_all">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_move_pivot"/>
+            <field name="act_window_id" ref="action_move_form2"/>
+        </record>
+
         <record model="ir.actions.act_window.view" id="action_stock_move_graph_all">
             <field name="sequence" eval="3"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_move_graph"/>
-        <field name="act_window_id" ref="action_move_form2"/>
+            <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1" groups="stock.group_locations"/>

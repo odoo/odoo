@@ -32,7 +32,7 @@
             <field name="name">Stock Valuation</field>
             <field name="res_model">wizard.valuation.history</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
             <field name="view_id" ref="view_wizard_valuation_history"/>
             <field name="target">new</field>
         </record>
@@ -54,15 +54,25 @@
            </tree>
         </field>
     </record>
+    <record id="view_stock_history_report_pivot" model="ir.ui.view">
+        <field name="name">stock.history.value.pivot</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Stock Value At Date">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
     <record id="view_stock_history_report_graph" model="ir.ui.view">
         <field name="name">stock.history.value.graph</field>
         <field name="model">stock.history</field>
         <field name="arch" type="xml">
-            <graph string="Stock Value At Date" type="pivot">
-                <field name="product_id" type="row"/>
-                <field name="inventory_value" type="measure"/>
+            <graph string="Stock Value At Date">
+                <field name="product_id"/>
+                <field name="location_id"/>
                 <field name="quantity" type="measure"/>
-                <field name="location_id" type="row"/>
             </graph>
         </field>
     </record>
@@ -91,7 +101,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">tree,pivot,graph</field>
     </record>
     <menuitem action="action_history_tree"
             id="menu_action_history_tree"
