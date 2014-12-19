@@ -1339,10 +1339,16 @@ instance.web.View = instance.web.Widget.extend({
         this.embedded_view = embedded_view;
     },
     do_show: function () {
+        var self = this;
         this.$el.show();
+        setTimeout(function () {
+            self.$el.parent().addClass('in');
+        }, 0);
+
         instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
+        this.$el.parent().removeClass('in');
         this.$el.hide();
     },
     is_active: function () {
