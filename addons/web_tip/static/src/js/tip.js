@@ -264,7 +264,7 @@
         end_tip: function(tip) {
             var self = this;
             var Tips = new instance.web.Model('web.tip');
-            $('#' + self.$element.attr('aria-describedby')).remove();
+            self.$element.popover('destroy');
             self.$overlay.remove();
             self.$helper.remove();
             self.$element.removeClass('oe_tip_show_element');
