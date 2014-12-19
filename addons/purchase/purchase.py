@@ -1490,7 +1490,7 @@ class procurement_order(osv.osv):
 
             value_lines = self._get_po_line_values_from_procs(cr, uid, procurements, partner, schedule_date, context=context)
             line_values += [(0, 0, value_lines[x]) for x in value_lines.keys()]
-            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+            name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
             po_vals = {
