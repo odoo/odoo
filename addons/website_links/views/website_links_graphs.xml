@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <template id="assets_website_links_charts" inherit_id="website.assets_frontend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/web/static/lib/moment/moment.js"/>
-                <script type="text/javascript" src="/website_links/static/src/js/website_links_charts.js"/>
-                <script type="text/javascript" src="/website_links/static/src/js/ZeroClipboard.js"/>
-                <link rel="stylesheet" type="text/css" href="/website_links/static/src/css/website_links.css" />
-            </xpath>
-        </template>
+<odoo>
 
         <template id="assets_nvd3">
             <link href="/web_graph/static/src/css/nv.d3.css" rel="stylesheet" type="text/css"></link>
@@ -175,5 +166,5 @@
                 </div>
             </t>
         </template>
-    </data>
-</openerp>
+
+</odoo>
