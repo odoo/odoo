@@ -53,7 +53,7 @@
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
@@ -612,13 +612,24 @@
             </field>
         </record>
 
+        <record id="view_project_task_pivot" model="ir.ui.view">
+            <field name="name">project.task.pivot</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <pivot string="Project Tasks">
+                    <field name="project_id" type="row"/>
+                    <field name="stage_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="view_project_task_graph" model="ir.ui.view">
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" type="bar">
-                    <field name="project_id" type="row"/>
-                    <field name="stage_id" type="row"/>
+                <graph string="Project Tasks">
+                    <field name="project_id"/>
+                    <field name="stage_id"/>
                 </graph>
             </field>
         </record>
@@ -639,7 +650,7 @@
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
