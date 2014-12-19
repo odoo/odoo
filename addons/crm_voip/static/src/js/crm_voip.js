@@ -396,7 +396,6 @@ openerp.crm_voip = function(instance) {
         send_email: function(){
             var id = this.$(".oe_dial_selected_phonecall").data().id;
             var self = this;
-            debugger;
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
