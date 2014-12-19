@@ -1426,6 +1426,10 @@ class BaseModel(object):
         etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
         return view
 
+    def _get_default_pivot_view(self, cr, user, context=None):
+        view = etree.Element('pivot', string=self._description)
+        return view
+        
     def _get_default_calendar_view(self, cr, user, context=None):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names

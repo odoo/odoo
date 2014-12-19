@@ -1638,7 +1638,3 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
-
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
