@@ -156,8 +156,8 @@ class account_invoice_line(osv.osv):
                             valuation_price_unit = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, valuation_price_unit, context={'date': inv.date_invoice})
                         if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                             # price with discount and without tax included
-                            price_unit = self.pool['account.tax'].compute_all(cr, uid, line['taxes'],
-                                i_line.price_unit * (1-(i_line.discount or 0.0)/100.0), line['quantity'])['total']
+                            price_unit = self.pool['account.tax'].compute_all(cr, uid, line['taxes'], i_line.price_unit * (1-(i_line.discount or 0.0)/100.0),
+                                inv.currency_id.id, line['quantity'])['total_excluded']
                             price_line = round(valuation_price_unit * line['quantity'], account_prec)
                             price_diff = round(price_unit - price_line, account_prec)
                             line.update({'price': price_line})

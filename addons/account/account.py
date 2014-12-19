@@ -529,9 +529,9 @@ class account_tax(models.Model):
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 3))
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account',
-        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+        help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.")
     refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
-        help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
+        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.")
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -603,6 +603,11 @@ class account_tax(models.Model):
     def onchange_account_id(self):
         self.refund_account_id = self.account_id
 
+    @api.onchange('price_include')
+    def onchange_price_include(self):
+        if self.price_include == True:
+            self.include_base_amount = True
+
     @api.multi
     def normalized_set(self):
         """ Returns a recordset where groups are replaced by their children and each tax appears only once sorted by default sort order (sequence).
@@ -610,13 +615,13 @@ class account_tax(models.Model):
         return self.mapped(lambda r: r.amount_type == 'group' and r.children_tax_ids or r).sorted()
 
     @api.v8
-    def compute_all(self, price_unit, quantity=1.0, product=None, partner=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
 
         RETURN: {
-            'total_excluded': 0.0,           # Total without taxes
-            'total_includedi': 0.0,          # Total with taxes
-            'taxes': [{             # One dict for each tax in self and their children
+            'total_excluded': 0.0,    # Total without taxes
+            'total_included': 0.0,    # Total with taxes
+            'taxes': [{               # One dict for each tax in self and their children
                 'id': int,
                 'name': str,
                 'amount': float,
@@ -628,12 +633,11 @@ class account_tax(models.Model):
         } """
 
         taxes = []
-        # TODO: use currency rounding
-        prec = self.env['decimal.precision'].precision_get('Account')
-        total_excluded = total_included = base = round(price_unit * quantity, prec)
+        currency = currency or self.company_id.currency_id
+        total_excluded = total_included = base = currency.round(price_unit * quantity)
         for tax in self:
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, quantity)
+                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
                 base = ret['total_excluded']
                 total_included = ret['total_included']
@@ -649,7 +653,7 @@ class account_tax(models.Model):
                 tax_amount = base - (base / (1 + tax.amount / 100))
             elif tax.amount_type == 'division' and not tax.price_include:
                 tax_amount = base / (1 - tax.amount / 100) - base
-            tax_amount = round(tax_amount, prec)
+            tax_amount = currency.round(tax_amount)
             if tax.price_include:
                 total_excluded -= tax_amount
                 base -= tax_amount
@@ -669,16 +673,18 @@ class account_tax(models.Model):
 
         return {
             'taxes': taxes,
-            'total_excluded': round(total_excluded, prec),
-            'total_included': round(total_included, prec)
+            'total_excluded': currency.round(total_excluded),
+            'total_included': currency.round(total_included),
         }
 
     @api.v7
-    def compute_all(self, cr, uid, ids, price_unit, quantity=1.0, product=None, partner=None, context=None):
-        """ Called by RPC by the bank statement reconciliation widget """
+    def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, context=None):
+        currency = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context) or None
+        product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or None
+        partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, quantity, product, partner)
+        return recs.compute_all(price_unit, currency, quantity, product, partner)
 
 
 #  ---------------------------------------------------------------

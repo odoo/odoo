@@ -214,7 +214,7 @@ class account_move_line(models.Model):
     date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
-    tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True) # TODO : better string
+    tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
@@ -786,6 +786,8 @@ class account_move_line(models.Model):
         TaxObj = self.env['account.tax']
         MoveObj = self.env['account.move']
         context = dict(self._context or {})
+        amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+
         if vals.get('move_id', False):
             move = MoveObj.browse(vals['move_id'])
             if move.company_id:
@@ -811,7 +813,6 @@ class account_move_line(models.Model):
         move_id = vals.get('move_id', False)
         journal = self.env['account.journal'].browse(context['journal_id'])
         vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
-        vals['date'] = vals.get('date') or context.get('date')
         vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
             if not vals.get('move_id', False):
@@ -848,10 +849,16 @@ class account_move_line(models.Model):
                 ctx = {}
                 if 'date' in vals:
                     ctx['date'] = vals['date']
-                vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(
-                    vals.get('debit', 0.0) - vals.get('credit', 0.0), account.currency_id)
+                vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(amount, account.currency_id)
         if not ok:
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+
+        # WIP
+        # Create tax lines
+        # if vals.get('tax_ids') and vals['tax_ids']:
+            # Since create() receives ids instead of recordset, let's just use the old-api bridge
+            # taxes = TaxObj.compute_all(self._cr, self._uid, vals['tax_ids'], amount, vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
+
         result = super(account_move_line, self).create(vals)
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):

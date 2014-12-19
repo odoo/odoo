@@ -61,8 +61,6 @@ openerp.account = function (instance) {
             this.max_move_lines_displayed = 5;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
-            this.map_currency_id_rounding = {};
-            this.map_tax_id_amount = {};
             // We'll need to get the code of an account selected in a many2one field (which returns the id)
             this.map_account_id_code = {};
             // NB : for presets to work correctly, a field id must be the same string as a preset field
@@ -72,7 +70,7 @@ openerp.account = function (instance) {
                 account_id: {
                     id: "account_id",
                     index: 0, // position in the form
-                    corresponding_property: "account_id", // a account.move field name
+                    corresponding_property: "account_id", // a account.move.line field name
                     label: _t("Account"),
                     required: true,
                     tabindex: 10,
@@ -154,22 +152,6 @@ openerp.account = function (instance) {
                     .query(['id', 'code'])
                     .all().then(function(data) {
                         _.each(data, function(o) { self.map_account_id_code[o.id] = o.code });
-                    })
-                );
-
-                // Create a dict currency id -> rounding factor
-                deferred_promises.push(new instance.web.Model("res.currency")
-                    .query(['id', 'rounding'])
-                    .all().then(function(data) {
-                        _.each(data, function(o) { self.map_currency_id_rounding[o.id] = o.rounding });
-                    })
-                );
-
-                // Create a dict tax id -> amount
-                deferred_promises.push(new instance.web.Model("account.tax")
-                    .query(['id', 'amount'])
-                    .all().then(function(data) {
-                        _.each(data, function(o) { self.map_tax_id_amount[o.id] = o.amount });
                     })
                 );
 
@@ -422,8 +404,6 @@ openerp.account = function (instance) {
             this.aestetic_animation_speed = this.getParent().aestetic_animation_speed;
             this.model_res_users = this.getParent().model_res_users;
             this.model_tax = this.getParent().model_tax;
-            this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
-            this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.map_account_id_code = this.getParent().map_account_id_code;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
@@ -780,6 +760,7 @@ openerp.account = function (instance) {
             
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             _(self.get("mv_lines_selected")).each(function(line){
+                line.amount_str = self.formatCurrencies(Math.abs(line.debit + line.credit), self.get("currency_id"));
                 var $line = $(QWeb.render(template_name, {line: line, selected: true}));
                 self.bindPopoverTo($line.find(".line_info_button"));
                 if (line.propose_partial_reconcile) self.bindPopoverTo($line.find(".do_partial_reconcile_button"));
@@ -794,13 +775,20 @@ openerp.account = function (instance) {
             self.$(".tbody_created_lines").empty();
             
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_created_line") ? this.template_prefix : "") + "reconciliation_created_line";
+            var previous_line = undefined;
             _(self.getCreatedLines()).each(function(line){
+                line.amount_str = self.formatCurrencies(Math.abs(line.amount), self.get("currency_id"));
+                // Hack to show debit/credit 0 (can make sense for tax lines)
+                if (previous_line !== undefined && line.amount.toFixed(3) === "0.000" && previous_line.id === line.id)
+                    line.amount = 0.000001 * (previous_line.amount < 0 ? -1 : 1);
                 var $line = $(QWeb.render(template_name, {line: line}));
                 self.$(".tbody_created_lines").append($line);
                 if (line.no_remove_action) {
-                    // Then the previous line's remove button deletes this line too
-                    $line.hover(function(){ $(this).prev().addClass("active") },function(){ $(this).prev().removeClass("active") });
+                    // Only show the line_remove_button on the first line of the group
+                    var $first_line = self.$(".tbody_created_lines .created_line[data-lineid='"+line.id+"']").first();
+                    $line.hover(function(){this.addClass("active")}.bind($first_line),function(){this.removeClass("active")}.bind($first_line));
                 }
+                previous_line = line;
             });
         },
     
@@ -986,49 +974,38 @@ openerp.account = function (instance) {
             var deferred_tax = new $.Deferred();
             if (elt === self.tax_id_field || elt === self.amount_field) {
                 var amount = self.amount_field.get("value");
-                var tax = self.map_tax_id_amount[self.tax_id_field.get("value")];
-                if (amount && tax) {
+                var tax_id = self.tax_id_field.get("value");
+                if (amount && tax_id) {
                     deferred_tax = self.model_tax
-                        .call("compute_all", [self.tax_id_field.get("value"), amount])
+                        .call("compute_all", [tax_id, amount, self.get("currency_id")])
                         .then(function(data){
-                            line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
-                            line_created_being_edited[0].amount = (data.total.toFixed(4) === amount.toFixed(4) ? amount : data.total);
-                            var current_line_cursor = 1;
-                            $.each(data.taxes, function(index, tax){
-                                if (tax.amount !== 0.0) {
-                                    var tax_account_id = (amount > 0 ? tax.account_collected_id : tax.account_paid_id);
-                                    tax_account_id = tax_account_id !== false ? tax_account_id: line_created_being_edited[0].account_id;
-                                    line_created_being_edited[current_line_cursor] = {
-                                        id: line_created_being_edited[0].id,
-                                        account_id: tax_account_id,
-                                        account_num: self.map_account_id_code[tax_account_id],
-                                        label: tax.name,
-                                        amount: tax.amount,
-                                        no_remove_action: true,
-                                        is_tax_line: true
-                                    };
-                                    current_line_cursor = current_line_cursor + 1;
-                                }
+                            line_created_being_edited.length = 1; // remove tax lines
+                            line_created_being_edited[0].amount = data.total_excluded;
+                            line_created_being_edited[0].amount_tax_included = data.total_included;
+                            $.each(data.taxes, function(index, tax) {
+                                var tax_account_id = (amount > 0 ? tax.account_id : tax.refund_account_id);
+                                tax_account_id = tax_account_id !== false ? tax_account_id : line_created_being_edited[0].account_id;
+                                line_created_being_edited.push({
+                                    id: line_created_being_edited[0].id,
+                                    account_id: tax_account_id,
+                                    account_num: self.map_account_id_code[tax_account_id],
+                                    label: tax.name,
+                                    amount: tax.amount,
+                                    no_remove_action: true,
+                                    is_tax_line: true
+                                });
                             });
                         }
                     );
                 } else {
-                    line_created_being_edited.length = 1;
+                    line_created_being_edited.length = 1; // remove tax lines
                     deferred_tax.resolve();
                 }
             } else { deferred_tax.resolve(); }
         
-            return deferred_tax.then(function(){
-                // Format amounts
-                var rounding = 1/self.map_currency_id_rounding[self.get("currency_id") || self.st_line.currency_id];
-                $.each(line_created_being_edited, function(index, val) {
-                    if (val.amount) {
-                        line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
-                        line_created_being_edited[index].amount_str = self.formatCurrencies(Math.abs(val.amount), self.get("currency_id"));
-                    }
-                });
+            return deferred_tax.then(function() {
                 self.set("line_created_being_edited", line_created_being_edited);
-                self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
+                self.createdLinesChanged(); // For some reason, previous line doesn't trigger change handler
             });
         },
         
@@ -1064,10 +1041,11 @@ openerp.account = function (instance) {
                     account_id: line.account_id,
                     name: line.label
                 };
-                var amount = line.tax_id ? line.amount_with_tax: line.amount;
+                // If a tax is applied, send to process_reconciliation the amount tax included (so tax lines are properly created)
+                var amount = line.tax_id ? line.amount_tax_included : line.amount;
                 dict['credit'] = (amount > 0 ? amount : 0);
                 dict['debit'] = (amount < 0 ? -1 * amount : 0);
-                if (line.tax_id) dict['account_tax_id'] = line.tax_id;
+                if (line.tax_id) dict['tax_ids'] = [line.tax_id];
                 if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
                 return dict;
             });
@@ -1883,55 +1861,43 @@ openerp.account = function (instance) {
         /** Model */
 
         doPartialReconcileButtonClickHandler: function(e) {
-            var self = this;
-    
             var line_id = $(e.currentTarget).closest("tr").data("lineid");
-            var line = _.find(self.get("mv_lines_selected"), function(o) { return o.id == line_id });
-            self.partialReconcileLine(line);
+            var line = _.find(this.get("mv_lines_selected"), function(o) { return o.id == line_id });
+            this.partialReconcileLine(line);
     
             $(e.currentTarget).popover('destroy');
-            self.updateAccountingViewMatchedLines();
-            self.updateBalance();
+            this.updateAccountingViewMatchedLines();
+            this.updateBalance();
             e.stopPropagation();
         },
     
         partialReconcileLine: function(line) {
-            var self = this;
-            var balance = self.get("balance");
+            var balance = this.get("balance");
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
-            if (balance < 0) {
+            if (balance < 0)
                 line.debit += balance;
-                line.amount_str = self.formatCurrencies(line.debit, self.get("currency_id"));
-            } else {
+            else
                 line.credit -= balance;
-                line.amount_str = self.formatCurrencies(line.credit, self.get("currency_id"));
-            }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
         },
     
         undoPartialReconcileButtonClickHandler: function(e) {
-            var self = this;
-    
             var line_id = $(e.currentTarget).closest("tr").data("lineid");
-            var line = _.find(self.get("mv_lines_selected"), function(o) { return o.id == line_id });
-            self.unpartialReconcileLine(line);
+            var line = _.find(this.get("mv_lines_selected"), function(o) { return o.id == line_id });
+            this.unpartialReconcileLine(line);
     
             $(e.currentTarget).popover('destroy');
-            self.updateAccountingViewMatchedLines();
-            self.updateBalance();
+            this.updateAccountingViewMatchedLines();
+            this.updateBalance();
             e.stopPropagation();
         },
     
         unpartialReconcileLine: function(line) {
-            var self = this;
-            if (line.initial_amount > 0) {
+            if (line.initial_amount > 0)
                 line.debit = line.initial_amount;
-                line.amount_str = self.formatCurrencies(line.debit, self.get("currency_id"));
-            } else {
+            else
                 line.credit = -1 * line.initial_amount;
-                line.amount_str = self.formatCurrencies(line.credit, self.get("currency_id"));
-            }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
         },

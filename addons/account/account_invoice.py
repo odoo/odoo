@@ -1198,16 +1198,16 @@ class account_invoice_line(models.Model):
     @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity',
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
     def _compute_price(self):
+        currency = self.invoice_id and self.invoice_id.currency_id or None
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = self.invoice_line_tax_id.compute_all(price, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
+        taxes = self.invoice_line_tax_id.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = taxes['total_excluded']
-        if self.invoice_id:
-            self.price_subtotal = self.invoice_id.currency_id.round(self.price_subtotal)
 
     @api.model
     def _default_price_unit(self):
         if not self._context.get('check_total'):
             return 0
+        currency = self.invoice_id and self.invoice_id.currency_id or None
         total = self._context['check_total']
         for l in self._context.get('invoice_line', []):
             if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
@@ -1217,8 +1217,7 @@ class account_invoice_line(models.Model):
                 taxes = vals.get('invoice_line_tax_id')
                 if taxes and len(taxes[0]) >= 3 and taxes[0][2]:
                     taxes = self.env['account.tax'].browse(taxes[0][2])
-                    tax_res = taxes.compute_all(price, vals.get('quantity'),
-                        product=vals.get('product_id'), partner=self._context.get('partner_id'))
+                    tax_res = taxes.compute_all(price, currency, vals.get('quantity'), vals.get('product_id'), self._context.get('partner_id'))
                     for tax in tax_res['taxes']:
                         total = total - tax['amount']
         return total
@@ -1437,10 +1436,9 @@ class account_invoice_tax(models.Model):
     @api.v8
     def compute(self, invoice):
         tax_grouped = {} # Generate one journal item per tax, however many invoice lines it's applied to
-        currency = invoice.currency_id.with_context(date=invoice.date_invoice or fields.Date.context_today(invoice))
         for line in invoice.invoice_line:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_id.compute_all(price_unit, line.quantity, line.product_id, invoice.partner_id)['taxes']
+            taxes = line.invoice_line_tax_id.compute_all(price_unit, invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes']
             for tax in taxes:
                 val = {
                     'invoice_id': invoice.id,
@@ -1466,9 +1464,6 @@ class account_invoice_tax(models.Model):
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['amount'] += val['amount']
-
-        for t in tax_grouped.values():
-            t['amount'] = currency.round(t['amount'])
 
         return tax_grouped
 
@@ -1505,9 +1500,7 @@ class res_partner(models.Model):
         readonly=True, copy=False)
 
     def _find_accounting_partner(self, partner):
-        '''
-        Find the partner for which the accounting entries will be created
-        '''
+        ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
 
 

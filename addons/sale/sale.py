@@ -46,7 +46,7 @@ class sale_order(osv.osv):
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
-        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
+        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.currency_id, line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
 
@@ -816,9 +816,8 @@ class sale_order_line(osv.osv):
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
+            cur_id = line.order_id.pricelist_id.currency_id.id
+            res[line.id] = tax_obj.compute_all(cr, uid, line.tax_id, price, cur_id, line.product_uom_qty, line.product_id, line.order_id.partner_id)['total']
         return res
 
     def _get_uom_id(self, cr, uid, *args):

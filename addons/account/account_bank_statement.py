@@ -127,7 +127,7 @@ class account_bank_statement(models.Model):
                 moves.post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
         self.link_bank_to_partner()
-        return self.write({'state': 'confirm', 'date_close': time.strftime("%Y-%m-%d %H:%M:%S")})
+        return self.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     @api.multi
     def unlink(self):
@@ -566,7 +566,7 @@ class account_bank_statement_line(models.Model):
                     # ID of the move line to reconcile (partially if specified debit/credit is lower than move line's credit/debit)
                 # Only to create new journal items
                 - 'account_id'
-                - 'account_tax_id' # TODO : new tax design
+                - 'tax_ids'
                 - Possibly other account.move.line fields like analytic_account_id or analytics_id
             }
         """

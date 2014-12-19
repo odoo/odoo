@@ -115,14 +115,14 @@ class account_voucher(models.Model):
 
                 total = voucher_amount
                 if not tax[0].price_include:
-                    for tax_line in tax.compute_all((line.price_unit * line.quantity), 1).get('taxes', []):
+                    for tax_line in tax.compute_all((line.price_unit * line.quantity), self.currency_id).get('taxes', []):
                         total_tax += tax_line.get('amount', 0.0)
                     total += total_tax
                 else:
                     line_total = 0.0
                     line_tax = 0.0
 
-                    for tax_line in tax.compute_all((line.price_unit * line.quantity), 1).get('taxes', []):
+                    for tax_line in tax.compute_all((line.price_unit * line.quantity), self.currency_id).get('taxes', []):
                         line_tax += tax_line.get('amount', 0.0)
                         line_total += tax_line.get('price_unit')
                     total_tax += line_tax
@@ -388,7 +388,7 @@ class account_voucher_line(models.Model):
     @api.one
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')
     def _compute_subtotal(self):
-        taxes = self.tax_ids.compute_all(self.price_unit, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
+        taxes = self.tax_ids.compute_all(self.price_unit, self.voucher_id.currency_id, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
         self.price_subtotal = taxes['total_excluded']
 
     name = fields.Text(string='Description', required=True)
