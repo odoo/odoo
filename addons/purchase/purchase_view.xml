@@ -90,7 +90,7 @@
         <field name="name">On Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="view_mode">tree,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
@@ -163,13 +163,23 @@
                 </calendar>
             </field>
         </record>
+        <record model="ir.ui.view" id="purchase_order_pivot">
+            <field name="name">purchase.order.pivot</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Order" display_quantity="True">
+                    <field name="partner_id" type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
         <record model="ir.ui.view" id="purchase_order_graph">
             <field name="name">purchase.order.graph</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <graph string="Purchase Order" type="bar">
+                <graph string="Purchase Order">
                     <field name="partner_id"/>
-                    <field name="amount_total" operator="+"/>
+                    <field name="amount_total" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -363,7 +373,7 @@
             <field name="res_model">purchase.order</field>
             <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
-            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="view_mode">tree,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -386,7 +396,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="view_mode">tree,form,pivot,graph,calendar</field>
             <field name="context">{}</field>
             <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
