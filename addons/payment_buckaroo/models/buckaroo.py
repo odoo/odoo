@@ -57,6 +57,8 @@ class AcquirerBuckaroo(osv.Model):
                 return values[key]
             return ''
 
+        values = dict(values or {})
+
         if inout == 'out':
             if 'BRQ_SIGNATURE' in values:
                 del values['BRQ_SIGNATURE']
