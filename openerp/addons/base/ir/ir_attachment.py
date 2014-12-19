@@ -36,39 +36,48 @@ from openerp.tools.misc import ustr
 
 _logger = logging.getLogger(__name__)
 
-
-# optional python-magic import (https://github.com/ahupp/python-magic)
 try:
     import magic
 except ImportError:
     magic = None
 
+# We define our own guess_mimetype implementation and if magic is available we
+# use it instead.
+
+# However there are 2 python libs named 'magic' with incompatible api.
+# magic from pypi https://pypi.python.org/pypi/python-magic/
+# magic from file(1) https://packages.debian.org/squeeze/python-magic
+
 def guess_mimetype(bin_data):
-    if magic:
-        # if binary not identified or error, will return 'application/octet-stream'
-        return magic.from_buffer(bin_data, mime=True)
-    else:
-        # else, guess the type using the magic number of file hex signature (like magic, but more limited)
-        # see http://www.filesignatures.net/ for file signatures
-        mapping = {
-            # pdf
-            'application/pdf' : ['%PDF'],
-             # jpg, jpeg, png, gif
-            'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
-            'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
-            'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
-            # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-            'application/zip' : ['PK'],
-            # doc, xls
-            'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
-            'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
-        }
-        for mimetype in mapping.keys():
-            for signature in mapping[mimetype]:
-                if bin_data.startswith(signature):
-                    return mimetype
+    # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
+    # see http://www.filesignatures.net/ for file signatures
+    mapping = {
+        # pdf
+        'application/pdf' : ['%PDF'],
+         # jpg, jpeg, png, gif
+        'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
+        'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
+        'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
+        # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
+        'application/zip' : ['PK'],
+        # doc, xls
+        'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
+        'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
+    }
+    for mimetype in mapping.keys():
+        for signature in mapping[mimetype]:
+            if bin_data.startswith(signature):
+                return mimetype
     return 'application/octet-stream'
 
+# if available adapt magic from pypi
+if hasattr(magic,'from_buffer'):
+    guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
+# or if available adapt magic from file(1)
+elif hasattr(magic,'open'):
+    ms = magic.open(magic.MAGIC_MIME_TYPE)
+    ms.load()
+    guess_mimetype = ms.buffer
 
 
 class ir_attachment(osv.osv):
