@@ -216,6 +216,18 @@
         </field>
         </record>
 
+        <!-- CRM Lead Pivot View -->
+        <record model="ir.ui.view" id="crm_case_pivot_view_leads">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <pivot string="Opportunities" display_quantity="true">
+                    <field name="stage_id" type="row"/>
+                    <field name="planned_revenue" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <!-- CRM Lead Graph View -->
         <record model="ir.ui.view" id="crm_case_graph_view_leads">
             <field name="name">Opportunities</field>

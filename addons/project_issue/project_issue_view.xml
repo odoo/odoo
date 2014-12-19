@@ -245,6 +245,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="project_issue_pivot_view">
+            <field name="name">Project Issue Tracker Pivot</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <pivot string="Project Issues">
+                    <field name="project_id" type="row"/>
+                    <field name="stage_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="project_issue_graph_view">
             <field name="name">Project Issue Tracker Graph</field>
             <field name="model">project.issue</field>
