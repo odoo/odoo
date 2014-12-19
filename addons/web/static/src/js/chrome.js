@@ -1319,6 +1319,7 @@ instance.web.WebClient = instance.web.Client.extend({
                 result.views = [[false, 'form']];
                 result.flags = {
                     action_buttons: true,
+                    headless: true,
                 };
                 self.action_manager.do_action(result);
                 var form = self.action_manager.dialog_widget.views.form.controller;
