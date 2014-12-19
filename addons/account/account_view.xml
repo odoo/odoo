@@ -637,7 +637,7 @@
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
@@ -2456,6 +2456,17 @@
                 </form>
             </field>
         </record>
+        <record id="account_cash_statement_pivot" model="ir.ui.view">
+            <field name="name">account.bank.statement.pivot</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <pivot string="Account Statistics" >
+                    <field name="date" type="row"/>
+                    <field name="balance_start" type="measure"/>
+                    <field name="balance_end" type="measure"/>
+                </pivot>
+            </field>
+         </record>
         <record id="account_cash_statement_graph" model="ir.ui.view">
             <field name="name">account.bank.statement.graph</field>
             <field name="model">account.bank.statement</field>
@@ -2472,7 +2483,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
             <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
