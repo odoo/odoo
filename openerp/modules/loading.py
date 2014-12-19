@@ -225,8 +225,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry._init_modules.add(package.name)
         cr.commit()
 
-    registry.setup_models(cr, partial=True)
-
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
     # The query won't be valid for models created later (i.e. custom model
@@ -305,6 +303,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
+
+        if tools.config['load_language'] or update_module:
+            # some base models are used below, so make sure they are set up
+            registry.setup_models(cr, partial=True)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
