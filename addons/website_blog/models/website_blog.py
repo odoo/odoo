@@ -20,7 +20,6 @@ class Blog(osv.Model):
     _columns = {
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
-        'description': fields.text('Description'),
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
@@ -68,6 +67,9 @@ class BlogPost(osv.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'id DESC'
+
+    _mail_post_access = 'read'
+
 
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}

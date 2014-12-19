@@ -15,7 +15,7 @@ $(document).ready(function() {
                             .call('name_search', [], { context: website.get_context() });
                 },
             }).then(function (cat_id) {
-                document.location = '/blogpost/new?blog_id=' + cat_id;
+                document.location = '/blog/' + cat_id + '/post/new';
             });
         },
     });
@@ -32,7 +32,7 @@ $(document).ready(function() {
             save : function() {
                 var res = this._super();
                 if ($('.cover').length) {
-                    openerp.jsonRpc("/blogpost/change_background", 'call', {
+                    openerp.jsonRpc("/blog/post_change_background", 'call', {
                         'post_id' : $('#blog_post_name').attr('data-oe-id'),
                         'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
                     });
