@@ -296,7 +296,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 });
             });
         }
-        return shown.then(function() {
+        return $.when(shown, this._super()).then(function() {
             self._actualize_mode(options.mode || self.options.initial_mode);
             self.$el.css({
                 opacity: '1',
