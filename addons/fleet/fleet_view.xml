@@ -891,16 +891,40 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report'>
-            <field name="name">fleet.vehicle.cost.graph</field>
+        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report_pivot'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <graph string="Vehicles costs" type="pivot">
+                <pivot string="Vehicles costs">
                     <field name="vehicle_id" type="row"/>
                     <field name="cost_type" type="row"/>
                     <field name="date" interval="year" type="col"/>
                     <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_effective_costs_report'>
+            <field name="name">fleet.vehicle.cost.graph</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <graph string="Vehicles costs">
+                    <field name="vehicle_id"/>
+                    <field name="date" interval="year"/>
+                    <field name="amount" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_indicative_costs_report_pivot'>
+            <field name="name">fleet.vehicle.cost.pivot</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <pivot string="Vehicles costs" >
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -908,7 +932,7 @@
             <field name="name">fleet.vehicle.cost.graph</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <graph string="Vehicles costs" type="pivot">
+                <graph string="Vehicles costs">
                     <field name="parent_id" type="row"/>
                     <field name="cost_type" type="col"/>
                     <field name="amount" type="measure"/>
