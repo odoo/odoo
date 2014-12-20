@@ -48,35 +48,31 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
         },
 
+        /* ---- Gui: SCREEN MANIPULATION ---- */
+
+        // register a screen widget to the gui,
+        // it must have been inserted into the dom.
         add_screen: function(name, screen){
             screen.hide();
             this.screen_set[name] = screen;
         },
+
+        // sets the screen that will be displayed
+        // for new orders
         set_default_screen: function(name){ 
             this.default_screen = name;
         },
+
+        // sets the screen that will be displayed
+        // when no orders are present
         set_startup_screen: function(name) {
             this.startup_screen = name;
         },
-        add_popup: function(name, popup) {
-            popup.hide();
-            this.popup_set[name] = popup;
-        },
-        show_popup: function(name,options){
-            if(this.current_popup){
-                this.close_popup();
-            }
-            this.current_popup = this.popup_set[name];
-            this.current_popup.show(options);
-        },
-        close_popup: function(){
-            if(this.current_popup){
-                this.current_popup.close();
-                this.current_popup.hide();
-                this.current_popup = null;
-            }
-        },
 
+        // display the screen saved in an order,
+        // called when the user changes the current order
+        // no screen saved ? -> display default_screen
+        // no order ? -> display startup_screen
         show_saved_screen:  function(order,options) {
             options = options || {};
             this.close_popup();
@@ -90,9 +86,15 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
         },
 
-        show_screen: function(screen_name,params,refresh){
+        // display a screen. 
+        // If there is an order, the screen will be saved in the order
+        // - params: used to load a screen with parameters, for
+        // example loading a 'product_details' screen for a specific product.
+        // - refresh: if you want the screen to cycle trough show / hide even
+        // if you are already on the same screen.
+        show_screen: function(screen_name,params,refresh) {
             var screen = this.screen_set[screen_name];
-            if(!screen){
+            if (!screen) {
                 console.error("ERROR: show_screen("+screen_name+") : screen not found");
                 debugger;
             }
@@ -114,8 +116,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }
             }
 
-            if ( refresh || screen !== this.current_screen){
-                if(this.current_screen){
+            if (refresh || screen !== this.current_screen) {
+                if (this.current_screen) {
                     this.current_screen.close();
                     this.current_screen.hide();
                 }
@@ -123,18 +125,144 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.current_screen.show();
             }
         },
-        get_current_screen: function(){
+        
+        // returns the current screen.
+        get_current_screen: function() {
             return this.pos.get_order().get_screen_data('screen') || this.default_screen;
         },
-        back: function(){
+
+        // goes to the previous screen (as specified in the order). The history only
+        // goes 1 deep ...
+        back: function() {
             var previous = this.pos.get_order().get_screen_data('previous-screen');
-            if(previous){
+            if (previous) {
                 this.show_screen(previous);
             }
         },
-        get_current_screen_param: function(param){
+
+        // returns the parameter specified when this screen was displayed
+        get_current_screen_param: function(param) {
             var params = this.pos.get_order().get_screen_data('params');
             return params ? params[param] : undefined;
+        },
+
+        /* ---- Gui: POPUP MANIPULATION ---- */
+
+        // registers a new popup in the GUI.
+        // the popup must have been previously inserted
+        // into the dom.
+        add_popup: function(name, popup) {
+            popup.hide();
+            this.popup_set[name] = popup;
+        },
+
+        // displays a popup. Popup do not stack,
+        // are not remembered by the order, and are
+        // closed by screen changes or new popups.
+        show_popup: function(name,options) {
+            if (this.current_popup) {
+                this.close_popup();
+            }
+            this.current_popup = this.popup_set[name];
+            this.current_popup.show(options);
+        },
+
+        // close the current popup.
+        close_popup: function() {
+            if  (this.current_popup) {
+                this.current_popup.close();
+                this.current_popup.hide();
+                this.current_popup = null;
+            }
+        },
+
+        /* ---- Gui: ACCESS CONTROL ---- */
+
+        // A Generic UI that allow to select a user from a list.
+        // It returns a deferred that resolves with the selected user 
+        // upon success. Several options are available :
+        // - security: passwords will be asked
+        // - only_managers: restricts the list to managers
+        // - current_user: password will not be asked if this 
+        //                 user is selected.
+        // - message: The title of the user selection list. 
+        select_user: function(options){
+            options = options || {};
+            var self = this;
+            var def  = new $.Deferred();
+
+            var list = [];
+            for (var i = 0; i < this.pos.users.length; i++) {
+                var user = this.pos.users[i];
+                if (!options.only_managers || user.role === 'manager') {
+                    list.push({
+                        'label': user.name,
+                        'item':  user,
+                    });
+                }
+            }
+
+            this.show_popup('selection',{
+                'message': options.message || _t('Select User'),
+                list: list,
+                confirm: function(user){ def.resolve(user); },
+                cancel:  function(){ def.reject(); },
+            });
+
+            return def.then(function(user){
+                if (options.security && user !== options.current_user && user.pos_security_pin) {
+                    return self.ask_password(user.pos_security_pin).then(function(){
+                        return user;
+                    });
+                } else {
+                    return user;
+                }
+            });
+        },
+
+        // Ask for a password, and checks if it this
+        // the same as specified by the function call.
+        // returns a deferred that resolves on success,
+        // fails on failure.
+        ask_password: function(password) {
+            var self = this;
+            var ret = new $.Deferred();
+            if (password) {
+                this.gui.show_popup('password',{
+                    'message': _t('Password ?'),
+                    confirm: function(pw) {
+                        if (pw !== password) {
+                            self.show_popup('error',_t('Incorrect Password'));
+                            ret.reject();
+                        } else {
+                            ret.resolve();
+                        }
+                    },
+                });
+            } else {
+                ret.resolve();
+            }
+            return ret;
+        },
+
+        // checks if the current user (or the user provided) has manager
+        // access rights. If not, a popup is shown allowing the user to
+        // temporarily login as an administrator. 
+        // This method returns a deferred, that succeeds with the 
+        // manager user when the login is successfull.
+        sudo: function(user){
+            var def = new $.Deferred();
+            user = user || this.pos.get_cashier();
+
+            if (user.role === 'manager') {
+                return new $.Deferred().resolve(user);
+            } else {
+                return this.select_user({
+                    security:       true, 
+                    only_managers:  true,
+                    message:       _t('Login as a Manager'),
+                })
+            }
         },
     });
 
