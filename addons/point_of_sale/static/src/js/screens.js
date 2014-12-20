@@ -276,13 +276,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.hidden = false;
         },
 
-        help_button_action: function(){
-            this.gui.show_popup('help');
-        },
-
         barcode_product_screen:         'products',     //if defined, this screen will be loaded when a product is scanned
-
-        hotkeys_handlers: {},
 
         // what happens when a product is scanned : 
         // it will add the product to the order and go to barcode_product_screen. 
