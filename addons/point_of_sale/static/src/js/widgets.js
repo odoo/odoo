@@ -576,7 +576,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
         },
         click_username: function(){
             var self = this;
-            this.chrome.select_user({
+            this.gui.select_user({
                 'security':     true,
                 'current_user': this.pos.get_cashier(),
                 'message':      _t('Change Cashier'),
