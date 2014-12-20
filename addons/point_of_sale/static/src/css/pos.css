@@ -44,6 +44,7 @@ html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     font-family: sans-serif;
 }
+
 table {
     border-spacing: 0px;
     border-collapse: collapse;
@@ -1222,6 +1223,7 @@ td {
     }
     body {
         margin: 0;
+        color: white !important;
     }
     .oe_leftbar,
     .pos .pos-topheader, 
@@ -1861,27 +1863,16 @@ td {
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
 }
-.pos .popup .comment{
+.pos .popup .body {
     font-weight: normal;
     font-size: 18px;
     margin: 0px 16px 16px 16px;
 }
-.pos .popup .comment.traceback {
+.pos .popup .body.traceback {
     height: 264px;
     overflow: auto;
     font-size: 14px;
     text-align: left;
-    font-family: 'Inconsolata';
-    -webkit-user-select: text;
-       -moz-user-select: text;
-            user-select: text;
-}
-.pos .popup .comment.traceback {
-    height: 264px;
-    overflow: auto;
-    font-size: 12px;
-    text-align: left;
-    white-space: pre-wrap;
     font-family: 'Inconsolata';
     -webkit-user-select: text;
        -moz-user-select: text;
@@ -1964,7 +1955,7 @@ td {
     outline: none;
     box-shadow: 0px 0px 0px 3px #6EC89B;
 }
-.pos .popup.popup-selection .message {
+.pos .popup.popup-selection .title {
     margin-top: 0;
 }
 .pos .popup.popup-selection .selection {
@@ -1986,12 +1977,23 @@ td {
 .pos .popup.popup-selection .selection-item:nth-child(even) {
     background: rgb(247,247,247);
 }
+.pos .popup.popup-number {
+    width: 300px;
+    margin-left: -150px;
+}
+.pos .popup-number .footer{
+    text-align: center;
+}
+.pos .popup-number .footer .button{
+    float: none;
+    display: inline-block;
+}
 .pos .popup-numpad {
     margin: 12px auto;
     text-align: left;
-    width: 244px;
+    width: 250px;
 }
-.pos .popup-number .message {
+.pos .popup-number .title {
     margin-top: 0;
 }
 .pos .popup-numpad .input-button,
@@ -2013,20 +2015,27 @@ td {
 }
 
 .pos .popup.popup-password {
-    width: 238px;
-    margin-left: -119px;
+    width: 250px;
+    margin-left: -125;
 }
 .pos .popup-password .mode-button.add,
 .pos .popup-password .input-button.dot {
     display: none;
 }
 .pos .popup-password .popup-numpad {
-    width: 182px;
+    width: 190px;
 }
 .pos .popup-password .popup-input {
     width: 70%;
     -webkit-text-security: disc;
  }
+.pos .popup-password .footer{
+    text-align: center;
+}
+.pos .popup-password .footer .button{
+    float: none;
+    display: inline-block;
+}
 
 /*  ********* The Webkit Scrollbar  ********* */
 

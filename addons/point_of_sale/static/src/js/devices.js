@@ -417,8 +417,8 @@ openerp.point_of_sale.load_devices = function load_devices(instance,module){ //m
                         },function(error){
                             if (error) {
                                 self.pos.chrome.screen_selector.show_popup('error-traceback',{
-                                    'message': _t('Printing Error: ') + error.data.message,
-                                    'comment': error.data.debug,
+                                    'title': _t('Printing Error: ') + error.data.message,
+                                    'body':  error.data.debug,
                                 });
                                 return;
                             }

@@ -96,7 +96,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var screen = this.screen_set[screen_name];
             if (!screen) {
                 console.error("ERROR: show_screen("+screen_name+") : screen not found");
-                debugger;
             }
 
             this.close_popup();
@@ -185,7 +184,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         // - only_managers: restricts the list to managers
         // - current_user: password will not be asked if this 
         //                 user is selected.
-        // - message: The title of the user selection list. 
+        // - title: The title of the user selection list. 
         select_user: function(options){
             options = options || {};
             var self = this;
@@ -203,7 +202,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
 
             this.show_popup('selection',{
-                'message': options.message || _t('Select User'),
+                'title': options.title || _t('Select User'),
                 list: list,
                 confirm: function(user){ def.resolve(user); },
                 cancel:  function(){ def.reject(); },
@@ -229,7 +228,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var ret = new $.Deferred();
             if (password) {
                 this.gui.show_popup('password',{
-                    'message': _t('Password ?'),
+                    'title': _t('Password ?'),
                     confirm: function(pw) {
                         if (pw !== password) {
                             self.show_popup('error',_t('Incorrect Password'));
@@ -260,9 +259,57 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 return this.select_user({
                     security:       true, 
                     only_managers:  true,
-                    message:       _t('Login as a Manager'),
+                    title:       _t('Login as a Manager'),
                 })
             }
+        },
+
+        /* ---- Gui: KEYBOARD INPUT ---- */
+
+        // This is a helper to handle numpad keyboard input. 
+        // - buffer: an empty or number string
+        // - input:  '[0-9],'+','-','.','CLEAR','BACKSPACE'
+        // - options: 'firstinput' -> will clear buffer if
+        //     input is '[0-9]' or '.'
+        //  returns the new buffer containing the modifications
+        //  (the original is not touched) 
+        numpad_input: function(buffer, input, options) { 
+            var options = options || {};
+            var newbuf  = buffer.slice(0);
+
+            if (input === '.') {
+                if (options.firstinput) {
+                    newbuf = "0.";
+                }else if (!newbuf.length || newbuf === '-') {
+                    newbuf += "0.";
+                } else if (newbuf.indexOf('.') < 0){
+                    newbuf = newbuf + '.';
+                }
+            } else if (input === 'CLEAR') {
+                newbuf = ""; 
+            } else if (input === 'BACKSPACE') { 
+                newbuf = newbuf.substring(0,newbuf.length - 1);
+            } else if (input === '+') {
+                if ( newbuf[0] === '-' ) {
+                    newbuf = newbuf.substring(1,newbuf.length);
+                }
+            } else if (input === '-') {
+                if ( newbuf[0] === '-' ) {
+                    newbuf = newbuf.substring(1,newbuf.length);
+                } else {
+                    newbuf = '-' + newbuf;
+                }
+            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
+                newbuf = '' + ((parseFloat(newbuf) || 0) + parseFloat(input));
+            } else if (!isNaN(parseInt(input))) {
+                if (options.firstinput) {
+                    newbuf = '' + input;
+                } else {
+                    newbuf += input;
+                }
+            }
+
+            return newbuf;
         },
     });
 
@@ -391,70 +438,87 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
     });
 
     module.PopUpWidget = module.PosBaseWidget.extend({
-        show: function(){
+        init: function(parent, args) {
+            this._super(parent, args);
+            this.options = {};
+        },
+        events: {
+            'click .button.cancel':  'click_cancel',
+            'click .button.confirm': 'click_confirm',
+            'click .selection-item': 'click_item',
+            'click .input-button':   'click_numpad',
+            'click .mode-button':    'click_numpad',
+        },
+
+        // show the popup !  
+        show: function(options){
             if(this.$el){
                 this.$el.removeClass('oe_hidden');
             }
+            
+            if (typeof options === 'string') {
+                this.options = {title: options};
+            } else {
+                this.options = options || {};
+            }
+
+            this.renderElement();
+
+            // popups block the barcode reader ... 
+            if (this.pos.barcode_reader) {
+                this.pos.barcode_reader.save_callbacks();
+                this.pos.barcode_reader.reset_action_callbacks();
+            }
         },
-        /* called before hide, when a popup is closed */
+
+        // called before hide, when a popup is closed.
+        // extend this if you want a custom action when the 
+        // popup is closed.
         close: function(){
+            if (this.pos.barcode_reader) {
+                this.pos.barcode_reader.restore_callbacks();
+            }
         },
-        /* hides the popup. keep in mind that this is called in the initialization pass of the 
-         * pos instantiation, so you don't want to do anything fancy in here */
+
+        // hides the popup. keep in mind that this is called in 
+        // the initialization pass of the pos instantiation, 
+        // so you don't want to do anything fancy in here
         hide: function(){
-            if(this.$el){
+            if (this.$el) {
                 this.$el.addClass('oe_hidden');
             }
         },
-    });
 
-    module.FullscreenPopup = module.PopUpWidget.extend({
-        template:'FullscreenPopupWidget',
-        show: function(){
-            var self = this;
-            this._super();
-            this.renderElement();
-            this.$('.button.fullscreen').off('click').click(function(){
-                window.document.body.webkitRequestFullscreen();
-                self.gui.close_popup();
-            });
-            this.$('.button.cancel').off('click').click(function(){
-                self.gui.close_popup();
-            });
+        // what happens when we click cancel
+        // ( it should close the popup and do nothing )
+        click_cancel: function(){
+            this.gui.close_popup();
+            if (this.options.cancel) {
+                this.options.cancel.call(this);
+            }
         },
-        ismobile: function(){
-            return typeof window.orientation !== 'undefined'; 
-        }
-    });
 
+        // what happens when we confirm the action
+        click_confirm: function(){
+            this.gui.close_popup();
+            if (this.options.confirm) {
+                this.options.confirm.call(this);
+            }
+        },
+
+        // Since Widget does not support extending the events declaration
+        // we declared them all in the top class.
+        click_item: function(){},
+        click_numad: function(){},
+    });
 
     module.ErrorPopupWidget = module.PopUpWidget.extend({
         template:'ErrorPopupWidget',
         show: function(options){
-            options = options || {};
-            var self = this;
-            this._super();
+            this._super(options);
 
             $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
 
-            this.message = options.message || _t('Error');
-            this.comment = options.comment || '';
-
-            this.renderElement();
-
-            this.pos.barcode_reader.save_callbacks();
-            this.pos.barcode_reader.reset_action_callbacks();
-
-            this.$('.footer .button').click(function(){
-                self.gui.close_popup();
-                if ( options.confirm ) {
-                    options.confirm.call(self);
-                }
-            });
-        },
-        close:function(){
-            this._super();
-            this.pos.barcode_reader.restore_callbacks();
         },
     });
 
@@ -465,44 +529,19 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
     module.ErrorBarcodePopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorBarcodePopupWidget',
         show: function(barcode){
-            this.barcode = barcode;
-            this._super();
+            this._super({barcode: barcode});
         },
     });
 
     module.ConfirmPopupWidget = module.PopUpWidget.extend({
         template: 'ConfirmPopupWidget',
-        show: function(options){
-            options = options || {};
-            var self = this;
-            this._super();
-
-            this.message = options.message || '';
-            this.comment = options.comment || '';
-            this.renderElement();
-            
-            this.$('.button.cancel').click(function(){
-                self.gui.close_popup();
-                if( options.cancel ){
-                    options.cancel.call(self);
-                }
-            });
-
-            this.$('.button.confirm').click(function(){
-                self.gui.close_popup();
-                if( options.confirm ){
-                    options.confirm.call(self);
-                }
-            });
-        },
     });
 
     /**
      * A popup that allows the user to select one item from a list. 
      *
      * show_popup('selection',{
-     *  message: 'Pick an Option',
-     *      message: "Popup Title",
+     *      title: "Popup Title",
      *      list: [
      *          { label: 'foobar',  item: 45 },
      *          { label: 'bar foo', item: 'stuff' },
@@ -523,19 +562,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var self = this;
             this._super();
 
-            this.message = options.message || '';
             this.list    = options.list    || [];
             this.renderElement();
 
-            this.$('.button.cancel').click(function(){
-                self.gui.close_popup();
-                if (options.cancel){
-                    options.cancel.call(self);
-                }
-            });
-
             this.$('.selection-item').click(function(){
-                self.gui.close_popup();
                 if (options.confirm) {
                     var item = self.list[parseInt($(this).data('item-index'))];
                     item = item ? item.item : item;
@@ -543,6 +573,13 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }
             });
         },
+        click_item : function(event) {
+            this.gui.close_popup();
+            if (this.options.confirm) {
+                var item = self.list[parseInt($(event.target).data('item-index'))];
+                item = item ? item.item : item;
+            }
+        }
     });
 
     module.TextInputPopupWidget = module.PopUpWidget.extend({
@@ -552,26 +589,18 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var self = this;
             this._super();
 
-            this.message = options.message || '';
-            this.comment = options.comment || '';
-            this.value   = options.value   || '';
             this.renderElement();
             this.$('input,textarea').focus();
             
-            this.$('.button.cancel').click(function(){
-                self.gui.close_popup();
-                if( options.cancel ){
-                    options.cancel.call(self);
-                }
-            });
-
             this.$('.button.confirm').click(function(){
-                self.gui.close_popup();
-                var value = self.$('input,textarea').val();
-                if( options.confirm ){
-                    options.confirm.call(self,value);
-                }
             });
+        },
+        click_confirm: function(){
+            var value = self.$('input,textarea').val();
+            self.gui.close_popup();
+            if( this.options.confirm ){
+                this.options.confirm.call(self,value);
+            }
         },
     });
 
@@ -581,84 +610,40 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
     module.NumberPopupWidget = module.PopUpWidget.extend({
         template: 'NumberPopupWidget',
-        click_numpad_button: function($el,event){
-            this.numpad_input($el.data('action'));
-        },
-        numpad_input: function(input) { //FIXME -> Deduplicate code
-            var oldbuf = this.inputbuffer.slice(0);
-
-            if (input === '.') {
-                if (this.firstinput) {
-                    this.inputbuffer = "0.";
-                }else if (!this.inputbuffer.length || this.inputbuffer === '-') {
-                    this.inputbuffer += "0.";
-                } else if (this.inputbuffer.indexOf('.') < 0){
-                    this.inputbuffer = this.inputbuffer + '.';
-                }
-            } else if (input === 'CLEAR') {
-                this.inputbuffer = ""; 
-            } else if (input === 'BACKSPACE') { 
-                this.inputbuffer = this.inputbuffer.substring(0,this.inputbuffer.length - 1);
-            } else if (input === '+') {
-                if ( this.inputbuffer[0] === '-' ) {
-                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
-                }
-            } else if (input === '-') {
-                if ( this.inputbuffer[0] === '-' ) {
-                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
-                } else {
-                    this.inputbuffer = '-' + this.inputbuffer;
-                }
-            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
-                this.inputbuffer = '' + ((parseFloat(this.inputbuffer) || 0) + parseFloat(input));
-            } else if (!isNaN(parseInt(input))) {
-                if (this.firstinput) {
-                    this.inputbuffer = '' + input;
-                } else {
-                    this.inputbuffer += input;
-                }
-            }
-
-            this.firstinput = this.inputbuffer.length === 0;
-
-            if (this.inputbuffer !== oldbuf) {
-                this.$('.value').text(this.inputbuffer);
-            }
-        },
         show: function(options){
             options = options || {};
             var self = this;
             this._super();
 
-            this.message = options.message || '';
-            this.comment = options.comment || '';
             this.inputbuffer = options.value   || '';
             this.renderElement();
             this.firstinput = true;
-            
-            this.$('.input-button,.mode-button').click(function(event){
-                self.click_numpad_button($(this),event);
-            });
-            this.$('.button.cancel').click(function(){
-                self.gui.close_popup();
-                if( options.cancel ){
-                    options.cancel.call(self);
-                }
-            });
+        },
+        click_numpad: function(event){
+            var newbuf = this.gui.numpad_input(
+                this.inputbuffer, 
+                $(event.target).data('action'), 
+                {'firstinput': this.firstinput});
 
-            this.$('.button.confirm').click(function(){
-                self.gui.close_popup();
-                if( options.confirm ){
-                    options.confirm.call(self,self.inputbuffer);
-                }
-            });
+            this.firstinput = (newbuf.length === 0);
+            
+            if (newbuf !== this.inputbuffer) {
+                this.inputbuffer = newbuf;
+                this.$('.value').text(this.inputbuffer);
+            }
+        },
+        click_confirm: function(event){
+            this.gui.close_popup();
+            if( this.options.confirm ){
+                this.options.confirm.call(this,this.inputbuffer);
+            }
         },
     });
 
     module.PasswordPopupWidget = module.NumberPopupWidget.extend({
         renderElement: function(){
             this._super();
-            this.$('.popup').addClass('popup-password');    // HELLO HACK !
+            this.$('.popup').addClass('popup-password');    // WHY NOT ?!
         },
     });
 
@@ -1003,9 +988,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
 
             if (!fields.name) {
-                this.gui.show_popup('error',{
-                    message: _t('A Customer Name Is Required'),
-                });
+                this.gui.show_popup('error',_t('A Customer Name Is Required'));
                 return;
             }
             
@@ -1022,8 +1005,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             },function(err,event){
                 event.preventDefault();
                 self.gui.show_popup('error',{
-                    'message':_t('Error: Could not Save Changes'),
-                    'comment':_t('Your Internet connection is probably down.'),
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': _t('Your Internet connection is probably down.'),
                 });
             });
         },
@@ -1079,8 +1062,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var self = this;
             if (!file.type.match(/image.*/)) {
                 this.gui.show_popup('error',{
-                    message:_t('Unsupported File Format'),
-                    comment:_t('Only web-compatible Image formats such as .png or .jpeg are supported'),
+                    title: _t('Unsupported File Format'),
+                    body:  _t('Only web-compatible Image formats such as .png or .jpeg are supported'),
                 });
                 return;
             }
@@ -1094,8 +1077,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
             reader.onerror = function(){
                 self.gui.show_popup('error',{
-                    message:_t('Could Not Read Image'),
-                    comment:_t('The provided file could not be read due to an unknown error'),
+                    title :_t('Could Not Read Image'),
+                    body  :_t('The provided file could not be read due to an unknown error'),
                 });
             };
             reader.readAsDataURL(file);
@@ -1322,42 +1305,12 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         // a string that represents the key pressed.
         payment_input: function(input) {
             var oldbuf = this.inputbuffer.slice(0);
+            var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
-            if (input === '.') {
-                if (this.firstinput) {
-                    this.inputbuffer = "0.";
-                }else if (!this.inputbuffer.length || this.inputbuffer === '-') {
-                    this.inputbuffer += "0.";
-                } else if (this.inputbuffer.indexOf('.') < 0){
-                    this.inputbuffer = this.inputbuffer + '.';
-                }
-            } else if (input === 'CLEAR') {
-                this.inputbuffer = ""; 
-            } else if (input === 'BACKSPACE') { 
-                this.inputbuffer = this.inputbuffer.substring(0,this.inputbuffer.length - 1);
-            } else if (input === '+') {
-                if ( this.inputbuffer[0] === '-' ) {
-                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
-                }
-            } else if (input === '-') {
-                if ( this.inputbuffer[0] === '-' ) {
-                    this.inputbuffer = this.inputbuffer.substring(1,this.inputbuffer.length);
-                } else {
-                    this.inputbuffer = '-' + this.inputbuffer;
-                }
-            } else if (input[0] === '+' && !isNaN(parseFloat(input))) {
-                this.inputbuffer = '' + ((parseFloat(this.inputbuffer) || 0) + parseFloat(input));
-            } else if (!isNaN(parseInt(input))) {
-                if (this.firstinput) {
-                    this.inputbuffer = '' + input;
-                } else {
-                    this.inputbuffer += input;
-                }
-            }
-
-            this.firstinput = this.inputbuffer.length === 0;
-
-            if (this.inputbuffer !== oldbuf) {
+            this.firstinput = (newbuf.length === 0);
+            
+            if (newbuf !== this.inputbuffer) {
+                this.inputbuffer = newbuf;
                 var order = this.pos.get_order();
                 if (order.selected_paymentline) {
                     order.selected_paymentline.set_amount(parseFloat(this.inputbuffer));
@@ -1551,8 +1504,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             // process empty orders. This is not the right place to fix it.
             if (order.get_orderlines().length === 0) {
                 this.gui.show_popup('error',{
-                    'message': _t('Empty Order'),
-                    'comment': _t('There must be at least one product in your order before it can be validated'),
+                    'title': _t('Empty Order'),
+                    'body':  _t('There must be at least one product in your order before it can be validated'),
                 });
                 return;
             }
@@ -1569,8 +1522,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }
                 if (!cash) {
                     this.gui.show_popup('error',{
-                        message: _t('Cannot return change without a cash payment method'),
-                        comment: _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
+                        title: _t('Cannot return change without a cash payment method'),
+                        body:  _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
                     });
                     return;
                 }
@@ -1589,16 +1542,16 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     self.invoicing = false;
                     if (error === 'error-no-client') {
                         self.gui.show_popup('confirm',{
-                            message: _t('Please select the Customer'),
-                            comment: _t('You need to select the customer before you can invoice an order.'),
+                            'title': _t('Please select the Customer'),
+                            'body': _t('You need to select the customer before you can invoice an order.'),
                             confirm: function(){
                                 self.gui.show_screen('clientlist');
                             },
                         });
                     } else {
                         self.gui.show_popup('error',{
-                            message: _t('The order could not be sent'),
-                            comment: _t('Check your internet connection and try again.'),
+                            'title': _t('The order could not be sent'),
+                            'body': _t('Check your internet connection and try again.'),
                         });
                     }
                 });

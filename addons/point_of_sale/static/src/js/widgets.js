@@ -286,8 +286,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 return;
             } else if ( !order.is_empty() ){
                 this.gui.show_popup('confirm',{
-                    message: _t('Destroy Current Order ?'),
-                    comment: _t('You will lose any data associated with the current order'),
+                    'title': _t('Destroy Current Order ?'),
+                    'body': _t('You will lose any data associated with the current order'),
                     confirm: function(){
                         self.pos.delete_current_order();
                     },
@@ -579,7 +579,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             this.gui.select_user({
                 'security':     true,
                 'current_user': this.pos.get_cashier(),
-                'message':      _t('Change Cashier'),
+                'title':      _t('Change Cashier'),
             }).then(function(user){
                 self.pos.set_cashier(user);
                 self.renderElement();
@@ -724,8 +724,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             });
             this.$('.button.delete_orders').click(function(){
                 self.gui.show_popup('confirm',{
-                    message: _t('Delete Unsent Orders ?'),
-                    comment: _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
+                    'title': _t('Delete Unsent Orders ?'),
+                    'body':  _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
                     confirm: function(){
                         self.pos.db.remove_all_orders();
                         self.pos.set({synch: { state:'connected', pending: 0 }});
@@ -737,8 +737,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             });
             this.$('.button.delete_unpaid_orders').click(function(){
                 self.gui.show_popup('confirm',{
-                    message: _t('Delete Unpaid Orders ?'),
-                    comment: _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                    'title': _t('Delete Unpaid Orders ?'),
+                    'body':  _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
                     confirm: function(){
                         self.pos.db.remove_all_unpaid_orders();
                         window.location = '/';
@@ -867,6 +867,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             this.pos = new module.PosModel(this.session,{chrome:this});
             this.gui = new module.Gui({pos: this.pos, chrome: this});
             this.chrome = this; // So that chrome's childs have chrome set automatically
+            this.pos.gui = this.gui;
+
             this.widget = {};   // contains references to subwidgets instances
 
             this.numpad_visible = true;
@@ -875,7 +877,6 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             this.cashier_controls_visible = true;
 
             this.pos.ready.done(function(){
-                console.log('yeah');
                 self.build_chrome();
                 self.pos.on_chrome_started();
                 self.started.resolve();
@@ -928,23 +929,23 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
         loading_error: function(err){
             var self = this;
 
-            var message = err.message;
-            var comment = err.stack;
+            var title = err.message;
+            var body  = err.stack;
 
             if(err.message === 'XmlHttpRequestError '){
-                message = 'Network Failure (XmlHttpRequestError)';
-                comment = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
+                title = 'Network Failure (XmlHttpRequestError)';
+                body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
             }else if(err.message === 'OpenERP Server Error'){
-                message = err.data.message;
-                comment = err.data.debug;
+                title = err.data.message;
+                body  = err.data.debug;
             }
 
-            if( typeof comment !== 'string' ){
-                comment = 'Traceback not available.';
+            if( typeof body !== 'string' ){
+                body = 'Traceback not available.';
             }
 
             var popup = $(QWeb.render('ErrorTracebackPopupWidget',{
-                widget: { message: message, comment: comment },
+                widget: { title: title , body: body },
             }));
 
             popup.find('.button').click(function(){
@@ -984,8 +985,6 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
         loading_show: function(){
             this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
         },
-
-
 
         screens: {
             'products':     module.ProductScreenWidget,
@@ -1150,8 +1149,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 },function(err,event) {
                     event.preventDefault();
                     self.gui.show_popup('error',{
-                        'message': _t('Could not close the point of sale.'),
-                        'comment': _t('Your internet connection is probably down.'),
+                        'title': _t('Could not close the point of sale.'),
+                        'body':  _t('Your internet connection is probably down.'),
                     });
                     self.close_button.renderElement();
                 });

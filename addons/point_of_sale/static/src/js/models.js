@@ -733,8 +733,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                         delete error.data.debug;
                     }
                     self.gui.show_popup('error-traceback',{
-                        message: error.data.message,
-                        comment: error.data.debug
+                        'title': error.data.message,
+                        'body':  error.data.debug
                     });
                 }
                 // prevent an error popup creation by the rpc failure

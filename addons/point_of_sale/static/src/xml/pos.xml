@@ -157,7 +157,7 @@
             <button class="input-button number-char">0</button>
             <button class="input-button number-char">.</button>
             <button class="input-button numpad-backspace">
-                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
             <br />
         </div>
@@ -797,58 +797,15 @@
         </receipt>
     </t>
 
-    <t t-name="FullscreenPopupWidget">
-        <div class="modal-dialog">
-            <div class="popup popup-fullscreen">
-                <p class="message">Fullscreen Setup</p>
-
-                <t t-if='widget.ismobile()'>
-                    <p class="comment">
-                        The best way to make the point of sale fullscreen on mobile
-                        devices is to add the point of sale to your home screen. On 
-                        iPhone and iPad this is done by tapping <img src='/point_of_sale/static/src/img/ios-share-icon.png' />
-                        and then <i>Add to Homescreen</i>
-                    </p>
-                    <p class='comment'>
-                        This also works on Android with the Chrome Beta Browser, using the <i>Add to Homescreen</i> option 
-                        in the browser's menu.
-                    </p>
-                    <p class='comment'> 
-                        If you want to work in fullscreen just this time tap the <i>Go Fullscreen</i> button.
-                    </p>
-                </t>
-
-                <t t-if='!widget.ismobile()'>
-                    <p class="comment">
-                        The best way to make the point of sale fullscreen on desktop
-                        and laptops is to launch your browser in kiosk mode. Please
-                        refer to your browser's documentation for the specific 
-                        instructions.
-                    </p>
-                    <p class="comment">
-                        If you want to work in fullscreen just this time, click the <i> Go Fullscreen</i> button.
-                    </p>
-                </t>
-
-                <div class="footer">
-                    <div class="button fullscreen">
-                        Go Fullscreen
-                    </div>
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="ErrorInvoiceTransferPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-invoice">
-                <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
-                    in offline mode. Please check your internet connection and try again.</p>
+                <p class="title">
+                    The Order could not be sent to the server for invoicing. Invoices cannot be generated
+                    in offline mode. Please check your internet connection and try again.
+                </p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -859,10 +816,10 @@
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
-                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
-                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
+                <p class="body"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -873,10 +830,10 @@
     <t t-name="ErrorTracebackPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
-                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
-                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
+                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -887,10 +844,10 @@
     <t t-name="ErrorTracebackPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-error">
-                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
-                <p class="comment traceback"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
+                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -901,16 +858,16 @@
     <t t-name="ErrorBarcodePopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-barcode">
-                <p class="message">Unknown Barcode
+                <p class="title">Unknown Barcode
                     <br />
-                    <span class='barcode'><t t-esc="widget.barcode" /></span>
+                    <span class='barcode'><t t-esc="widget.options.barcode" /></span>
                 </p>
-                <p class="comment">
+                <p class="body">
                     The Point of Sale could not find any product, client, employee
                     or action associated with the scanned barcode.
                 </p>
                 <div class="footer">
-                    <div class="button">
+                    <div class="button cancel">
                         Ok
                     </div>
                 </div>
@@ -921,8 +878,8 @@
     <t t-name="ConfirmPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-confirm">
-                <p class="message"><t t-esc=" widget.message || 'Confirm ?' " /></p>
-                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Confirm ?' " /></p>
+                <p class="body"><t t-esc="  widget.options.body || '' "/></p>
                 <div class="footer">
                     <div class="button confirm">
                         Confirm 
@@ -938,8 +895,8 @@
     <t t-name="TextInputPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-textinput">
-                <p class="message"><t t-esc=" widget.message || '' " /></p>
-                <input type='text' t-att-value="widget.value || ''"></input>
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <input type='text' t-att-value="widget.options.value || ''"></input>
                 <div class="footer">
                     <div class="button confirm">
                         Ok 
@@ -955,8 +912,8 @@
     <t t-name="TextAreaPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-textinput">
-                <p class="message"><t t-esc=" widget.message || '' " /></p>
-                <textarea rows="10" cols="40"><t t-esc="widget.value" /></textarea>
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <textarea rows="10" cols="40"><t t-esc="widget.options.value" /></textarea>
                 <div class="footer">
                     <div class="button confirm">
                         Ok 
@@ -972,14 +929,14 @@
     <t t-name="UnsentOrdersPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-unsent-orders">
-                <p class="message">Unsent Orders</p>
+                <p class="title">Unsent Orders</p>
                 <t t-if='widget.pos.db.get_orders().length === 0'>
-                    <p class='comment'>
+                    <p class='body'>
                         There are no unsent orders
                     </p>
                 </t>
                 <t t-if='widget.pos.db.get_orders().length > 0'>
-                    <p class='comment traceback'>
+                    <p class='body traceback'>
                         <t t-esc='JSON.stringify(widget.pos.db.get_orders(),null,2)' />
                     </p>
                 </t>
@@ -995,14 +952,14 @@
     <t t-name="UnpaidOrdersPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-unpaid-orders">
-                <p class="message">Unpaid Orders</p>
+                <p class="title">Unpaid Orders</p>
                 <t t-if='widget.pos.db.get_unpaid_orders().length === 0'>
-                    <p class='comment'>
+                    <p class='body'>
                         There are no unpaid orders
                     </p>
                 </t>
                 <t t-if='widget.pos.db.get_unpaid_orders().length > 0'>
-                    <p class='comment traceback'>
+                    <p class='body traceback'>
                         <t t-esc='JSON.stringify(widget.pos.db.get_unpaid_orders(),null,2)' />
                     </p>
                 </t>
@@ -1018,7 +975,7 @@
     <t t-name="SelectionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-selection">
-                <p class="message"><t t-esc=" widget.message || 'Select' " /></p>
+                <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
                         <div class='selection-item' t-att-data-item-index='item_index'>
@@ -1038,7 +995,7 @@
     <t t-name="NumberPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-number">
-                <p class="message"><t t-esc=" widget.message || '' " /></p>
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
                 <div class='popup-input value active'>
                     <t t-esc='widget.inputbuffer' />
                 </div>
@@ -1062,7 +1019,7 @@
                     <button class="input-button number-char" data-action='0'>0</button>
                     <button class="input-button number-char dot" data-action='.'>.</button>
                     <button class="input-button numpad-backspace" data-action='BACKSPACE' >
-                        <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
                     </button>
                     <br />
                 </div>
