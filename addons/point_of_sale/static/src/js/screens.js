@@ -1,17 +1,17 @@
 
 // this file contains the screens definitions. Screens are the
 // content of the right pane of the pos, containing the main functionalities. 
-// screens are contained in the PosWidget, in pos_widget.js
+// screens are contained in the PosWidget, in chrome.js
 // all screens are present in the dom at all time, but only one is shown at the
 // same time. 
 //
-// transition between screens is made possible by the use of the screen_selector,
+// transition between screens is made possible by the use of the gui,
 // which is responsible of hiding and showing the screens, as well as maintaining
 // the state of the screens between different orders.
 //
 // all screens inherit from ScreenWidget. the only addition from the base widgets
 // are show() and hide() which shows and hides the screen but are also used to 
-// bind and unbind actions on widgets and devices. The screen_selector guarantees
+// bind and unbind actions on widgets and devices. The gui guarantees
 // that only one screen is shown at the same time and that show() is called after all
 // hide()s
 
@@ -23,37 +23,44 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
     var round_pr = instance.web.round_precision
 
-    module.ScreenSelector = instance.web.Class.extend({
+    module.Gui = instance.web.Class.extend({
         init: function(options){
-            this.pos = options.pos;
-            this.screen_set     = options.screen_set || {};
-            this.popup_set      = options.popup_set || {};
-            this.default_screen = options.default_screen;
-            this.startup_screen = options.startup_screen;
+            var self = this;
+            this.pos            = options.pos;
+            this.chrome         = options.chrome;
+            this.screen_set     = {};
+            this.popup_set      = {};
+            this.default_screen = null;
+            this.startup_screen = null;
             this.current_popup  = null;
-            this.current_mode   = options.default_mode || 'cashier';
             this.current_screen = null; 
 
-            for (var screen_name in this.screen_set) {
-                this.screen_set[screen_name].hide();
-            }
-            
-            for (var popup_name in this.popup_set) {
-                this.popup_set[popup_name].hide();
-            }
-
-            if (this.pos.get_order()) {
-                this.pos.get_order().set_screen_data({
-                    'screen': this.default_screen,
+            this.chrome.ready.then(function(){
+                var order = self.pos.get_order();
+                if (order) {
+                    self.show_saved_screen(order);
+                } else {
+                    self.show_screen(self.startup_screen);
+                }
+                self.pos.bind('change:selectedOrder', function(){
+                    self.show_saved_screen(self.pos.get_order());
                 });
-            }
-
-            this.pos.bind('change:selectedOrder', this.load_saved_screen, this);
+            });
         },
-        add_screen: function(screen_name, screen){
+
+        add_screen: function(name, screen){
             screen.hide();
-            this.screen_set[screen_name] = screen;
-            return this;
+            this.screen_set[name] = screen;
+        },
+        set_default_screen: function(name){ 
+            this.default_screen = name;
+        },
+        set_startup_screen: function(name) {
+            this.startup_screen = name;
+        },
+        add_popup: function(name, popup) {
+            popup.hide();
+            this.popup_set[name] = popup;
         },
         show_popup: function(name,options){
             if(this.current_popup){
@@ -69,29 +76,25 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.current_popup = null;
             }
         },
-        load_saved_screen:  function(options){
+
+        show_saved_screen:  function(order,options) {
             options = options || {};
             this.close_popup();
-            var selectedOrder = this.pos.get_order();
-            // FIXME : this changing screen behaviour is sometimes confusing ... 
-            this.set_current_screen(selectedOrder.get_screen_data('screen') || options.default_screen || this.default_screen,null,'refresh');
-            //this.set_current_screen(this.default_screen,null,'refresh');
-            
-        },
-        set_user_mode: function(user_mode){
-            if(user_mode !== this.current_mode){
-                this.close_popup();
-                this.current_mode = user_mode;
-                this.load_saved_screen();
+            if (order) {
+                this.show_screen(order.get_screen_data('screen') || 
+                                 options.default_screen || 
+                                 this.default_screen,
+                                 null,'refresh');
+            } else {
+                this.show_screen(this.startup_screen);
             }
         },
-        get_user_mode: function(){
-            return this.current_mode;
-        },
-        set_current_screen: function(screen_name,params,refresh){
+
+        show_screen: function(screen_name,params,refresh){
             var screen = this.screen_set[screen_name];
             if(!screen){
-                console.error("ERROR: set_current_screen("+screen_name+") : screen not found");
+                console.error("ERROR: show_screen("+screen_name+") : screen not found");
+                debugger;
             }
 
             this.close_popup();
@@ -126,18 +129,12 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         back: function(){
             var previous = this.pos.get_order().get_screen_data('previous-screen');
             if(previous){
-                this.set_current_screen(previous);
+                this.show_screen(previous);
             }
         },
         get_current_screen_param: function(param){
             var params = this.pos.get_order().get_screen_data('params');
             return params ? params[param] : undefined;
-        },
-        set_default_screen: function(){
-            this.set_current_screen(this.default_screen);
-        },
-        change_default_screen: function(screen){ 
-            this.default_screen = screen;
         },
     });
 
@@ -152,7 +149,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         },
 
         help_button_action: function(){
-            this.pos_widget.screen_selector.show_popup('help');
+            this.gui.show_popup('help');
         },
 
         barcode_product_screen:         'products',     //if defined, this screen will be loaded when a product is scanned
@@ -165,10 +162,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var self = this;
             if(self.pos.scan_product(code)){
                 if(self.barcode_product_screen){ 
-                    self.pos_widget.screen_selector.set_current_screen(self.barcode_product_screen);
+                    self.gui.show_screen(self.barcode_product_screen);
                 }
             }else{
-                self.pos_widget.screen_selector.show_popup('error-barcode',code.code);
+                self.gui.show_popup('error-barcode',code.code);
             }
         },
 
@@ -181,11 +178,11 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             for(var i = 0, len = users.length; i < len; i++){
                 if(users[i].barcode === code.code){
                     this.pos.set_cashier(users[i]);
-                    this.pos_widget.username.renderElement();
+                    this.chrome.widget.username.renderElement();
                     return true;
                 }
             }
-            this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
+            this.gui.show_popup('error-barcode',code.code);
             return false;
         },
         
@@ -199,7 +196,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.pos.get_order().set_client(partner);
                 return true;
             }
-            this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
+            this.gui.show_popup('error-barcode',code.code);
             return false;
         },
         
@@ -213,7 +210,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         },
         // What happens when an invalid barcode is scanned : shows an error popup.
         barcode_error_action: function(code){
-            this.pos_widget.screen_selector.show_popup('error-barcode',code.code);
+            this.gui.show_popup('error-barcode',code.code);
         },
 
         // this method shows the screen and sets up all the widget related to this screen. Extend this method
@@ -228,10 +225,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             var self = this;
 
-            this.pos_widget.set_numpad_visible(this.show_numpad);
-            this.pos_widget.set_leftpane_visible(this.show_leftpane);
+            this.chrome.set_numpad_visible(this.show_numpad);
+            this.chrome.set_leftpane_visible(this.show_leftpane);
 
-            this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
             this.pos.barcode_reader.set_action_callback({
                 'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
                 'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
@@ -298,10 +294,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.renderElement();
             this.$('.button.fullscreen').off('click').click(function(){
                 window.document.body.webkitRequestFullscreen();
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
             });
             this.$('.button.cancel').off('click').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
             });
         },
         ismobile: function(){
@@ -328,7 +324,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.pos.barcode_reader.reset_action_callbacks();
 
             this.$('.footer .button').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if ( options.confirm ) {
                     options.confirm.call(self);
                 }
@@ -364,14 +360,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.renderElement();
             
             this.$('.button.cancel').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if( options.cancel ){
                     options.cancel.call(self);
                 }
             });
 
             this.$('.button.confirm').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if( options.confirm ){
                     options.confirm.call(self);
                 }
@@ -410,14 +406,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.renderElement();
 
             this.$('.button.cancel').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if (options.cancel){
                     options.cancel.call(self);
                 }
             });
 
             this.$('.selection-item').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if (options.confirm) {
                     var item = self.list[parseInt($(this).data('item-index'))];
                     item = item ? item.item : item;
@@ -441,14 +437,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.$('input,textarea').focus();
             
             this.$('.button.cancel').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if( options.cancel ){
                     options.cancel.call(self);
                 }
             });
 
             this.$('.button.confirm').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 var value = self.$('input,textarea').val();
                 if( options.confirm ){
                     options.confirm.call(self,value);
@@ -522,14 +518,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 self.click_numpad_button($(this),event);
             });
             this.$('.button.cancel').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if( options.cancel ){
                     options.cancel.call(self);
                 }
             });
 
             this.$('.button.confirm').click(function(){
-                self.pos_widget.screen_selector.close_popup();
+                self.gui.close_popup();
                 if( options.confirm ){
                     options.confirm.call(self,self.inputbuffer);
                 }
@@ -579,21 +575,21 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.hotkey_handler = function(event){
                 if(event.which === 13){
                     self.order_product();
-                    self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+                    self.gui.show_screen(self.next_screen);
                 }else if(event.which === 27){
-                    self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
+                    self.gui.show_screen(self.previous_screen);
                 }
             };
 
             $('body').on('keyup',this.hotkey_handler);
 
             this.$('.back').click(function(){
-                self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
+                self.gui.show_screen(self.previous_screen);
             });
 
             this.$('.next,.buy-product').click(function(){
                 self.order_product();
-                self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+                self.gui.show_screen(self.next_screen);
             });
 
             queue.schedule(function(){
@@ -604,12 +600,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
         },
         get_product: function(){
-            var ss = this.pos_widget.screen_selector;
-            if(ss){
-                return ss.get_current_screen_param('product');
-            }else{
-                return undefined;
-            }
+            return this.gui.get_current_screen_param('product');
         },
         order_product: function(){
             this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
@@ -667,7 +658,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
                     if(product.to_weight && self.pos.config.iface_electronic_scale){
-                        self.pos_widget.screen_selector.set_current_screen('scale',{product: product});
+                        self.gui.show_screen('scale',{product: product});
                     }else{
                         self.pos.get_order().add_product(product);
                     }
@@ -684,20 +675,14 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
         show: function(){
             this._super();
-            var self = this;
-
             this.product_categories_widget.reset_category();
-
-            this.pos_widget.order_widget.set_editable(true);
+            this.chrome.widget.order.enable_numpad();
         },
 
         close: function(){
             this._super();
-
-            this.pos_widget.order_widget.set_editable(false);
-
-            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
-                this.pos_widget.onscreen_keyboard.hide();
+            if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
+                this.chrome.widget.keyboard.hide();
             }
         },
     });
@@ -724,12 +709,12 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.new_client = this.old_client;
 
             this.$('.back').click(function(){
-                self.pos_widget.screen_selector.back();
+                self.gui.back();
             });
 
-            this.$('.next').click(function(){
+            this.$('.next').click(function(){   
                 self.save_changes();
-                self.pos_widget.screen_selector.back();
+                self.gui.back();    // FIXME HUH ?
             });
 
             this.$('.new-customer').click(function(){
@@ -753,8 +738,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             var search_timeout = null;
 
-            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
-                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+            if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
+                this.chrome.widget.keyboard.connect(this.$('.searchbox input'));
             }
 
             this.$('.searchbox input').on('keyup',function(event){
@@ -785,7 +770,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 if ( associate_result && customers.length === 1){
                     this.new_client = customers[0];
                     this.save_changes();
-                    this.pos_widget.screen_selector.back();
+                    this.gui.back();
                 }
                 this.render_list(customers);
             }else{
@@ -896,7 +881,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
 
             if (!fields.name) {
-                this.pos_widget.screen_selector.show_popup('error',{
+                this.gui.show_popup('error',{
                     message: _t('A Customer Name Is Required'),
                 });
                 return;
@@ -914,7 +899,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 self.saved_client_details(partner_id);
             },function(err,event){
                 event.preventDefault();
-                self.pos_widget.screen_selector.show_popup('error',{
+                self.gui.show_popup('error',{
                     'message':_t('Error: Could not Save Changes'),
                     'comment':_t('Your Internet connection is probably down.'),
                 });
@@ -971,7 +956,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         load_image_file: function(file, callback){
             var self = this;
             if (!file.type.match(/image.*/)) {
-                this.pos_widget.screen_selector.show_popup('error',{
+                this.gui.show_popup('error',{
                     message:_t('Unsupported File Format'),
                     comment:_t('Only web-compatible Image formats such as .png or .jpeg are supported'),
                 });
@@ -986,7 +971,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 self.resize_image_to_dataurl(img,800,600,callback);
             }
             reader.onerror = function(){
-                self.pos_widget.screen_selector.show_popup('error',{
+                self.gui.show_popup('error',{
                     message:_t('Could Not Read Image'),
                     comment:_t('The provided file could not be read due to an unknown error'),
                 });
@@ -1349,10 +1334,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
         },
         click_set_customer: function(){
-            this.pos_widget.screen_selector.set_current_screen('clientlist');
+            this.gui.show_screen('clientlist');
         },
         click_back: function(){
-            this.pos_widget.screen_selector.set_current_screen('products');
+            this.gui.show_screen('products');
         },
         renderElement: function() {
             var self = this;
@@ -1443,7 +1428,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             // FIXME: this check is there because the backend is unable to
             // process empty orders. This is not the right place to fix it.
             if (order.get_orderlines().length === 0) {
-                this.pos_widget.screen_selector.show_popup('error',{
+                this.gui.show_popup('error',{
                     'message': _t('Empty Order'),
                     'comment': _t('There must be at least one product in your order before it can be validated'),
                 });
@@ -1461,7 +1446,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
                 }
                 if (!cash) {
-                    this.pos_widget.screen_selector.show_popup('error',{
+                    this.gui.show_popup('error',{
                         message: _t('Cannot return change without a cash payment method'),
                         comment: _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
                     });
@@ -1481,15 +1466,15 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 invoiced.fail(function(error){
                     self.invoicing = false;
                     if (error === 'error-no-client') {
-                        self.pos_widget.screen_selector.show_popup('confirm',{
+                        self.gui.show_popup('confirm',{
                             message: _t('Please select the Customer'),
                             comment: _t('You need to select the customer before you can invoice an order.'),
                             confirm: function(){
-                                self.pos_widget.screen_selector.set_current_screen('clientlist');
+                                self.gui.show_screen('clientlist');
                             },
                         });
                     } else {
-                        self.pos_widget.screen_selector.show_popup('error',{
+                        self.gui.show_popup('error',{
                             message: _t('The order could not be sent'),
                             comment: _t('Check your internet connection and try again.'),
                         });
@@ -1506,7 +1491,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     this.print_escpos_receipt();
                     order.finalize();    //finish order and go back to scan screen
                 } else {
-                    this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+                    this.gui.show_screen(this.next_screen);
                 }
             }
         },

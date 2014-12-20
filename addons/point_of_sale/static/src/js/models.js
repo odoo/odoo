@@ -3,7 +3,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
-    var barcode_parser_module = instance.barcodes;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -24,10 +23,14 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var  self = this;
             this.session = session;                 
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            this.pos_widget = attributes.pos_widget;
+            this.chrome = attributes.chrome;
+            this.gui    = attributes.gui;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});
+            this.chrome.ready.then(function(){
+                self.barcode_reader.connect();
+            });
 
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
@@ -73,16 +76,23 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.get('orders').bind('remove', function(order,_unused_,options){ 
                 self.on_removed_order(order,options.index,options.reason); 
             });
-            
+
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            this.ready = this.load_server_data()
-                .then(function(){
-                    if(self.config.use_proxy){
-                        return self.connect_to_proxy();
-                    }
-                });  // used to read barcodes);
+            this.ready = this.load_server_data();
+
+        },
+        on_chrome_started: function(){
+             this.barcode_reader.connect();
+             this.load_orders();
+             this.set_start_order();
+        },
+        on_chrome_ready: function(){
+             if(this.config.use_proxy){
+                 return this.connect_to_proxy();
+             }
+             this.push_order();
         },
 
         // releases ressources holds by the model at the end of life of the posmodel
@@ -97,14 +107,14 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var self = this;
             var  done = new $.Deferred();
             this.barcode_reader.disconnect_from_proxy();
-            this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            this.pos_widget.loading_skip(function(){
+            this.chrome.loading_message(_t('Connecting to the PosBox'),0);
+            this.chrome.loading_skip(function(){
                     self.proxy.stop_searching();
                 });
             this.proxy.autoconnect({
                     force_ip: self.config.proxy_ip || undefined,
                     progress: function(prog){ 
-                        self.pos_widget.loading_progress(prog);
+                        self.chrome.loading_progress(prog);
                     },
                 }).then(function(){
                     if(self.config.iface_scan_via_proxy){
@@ -119,7 +129,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         // helper function to load data from the server. Obsolete use the models loader below.
         fetch: function(model, fields, domain, ctx){
             this._load_progress = (this._load_progress || 0) + 0.05; 
-            this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
+            this.chrome.loading_message(_t('Loading')+' '+model,this._load_progress);
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
 
@@ -397,7 +407,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         }, {
             label: 'barcodes',
             loaded: function(self) {
-                var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
+                var barcode_parser = new instance.barcodes.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
                 self.barcode_reader.set_barcode_parser(barcode_parser);
                 return barcode_parser.is_loaded();
             },
@@ -417,7 +427,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     loaded.resolve();
                 }else{
                     var model = self.models[index];
-                    self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {
@@ -649,7 +659,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 transfer.pipe(function(order_server_id){    
 
                     // generate the pdf and download it
-                    self.pos_widget.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
+                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
                         active_ids:order_server_id,
                     }});
 
@@ -722,7 +732,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     if (error.data.exception_type == 'warning') {
                         delete error.data.debug;
                     }
-                    self.pos_widget.screen_selector.show_popup('error-traceback',{
+                    self.gui.show_popup('error-traceback',{
                         message: error.data.message,
                         comment: error.data.debug
                     });
@@ -1107,7 +1117,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.pos            = options.pos; 
             this.selected_orderline   = undefined;
             this.selected_paymentline = undefined;
-            this.screen_data    = {};  // see ScreenSelector
+            this.screen_data    = {};  // see Gui
             this.temporary      = options.temporary || false;
             this.creation_date  = new Date();
             this.to_invoice     = false;
@@ -1236,7 +1246,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                         qweb.default_dict = _.clone(QWeb.default_dict);
                         qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
                     
-                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.pos_widget,'order':self, 'receipt': receipt}) ;
+                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.chrome,'order':self, 'receipt': receipt}) ;
                 }
             }
 

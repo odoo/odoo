@@ -92,10 +92,10 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             var self = this;
             this._super();
             this.$('.pay').click(function(){
-                self.pos.pos_widget.screen_selector.set_current_screen('payment');
+                self.gui.show_screen('payment');
             });
             this.$('.set-customer').click(function(){
-                self.pos.pos_widget.screen_selector.set_current_screen('clientlist');
+                self.gui.show_screen('clientlist');
             });
         }
     });
@@ -112,7 +112,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                     return;
                 }
                 self.pos.get_order().select_orderline(this.orderline);
-                self.pos_widget.numpad.state.reset();
+                self.chrome.widget.numpad.state.reset();
             };
             this.client_change_handler = function(event){
                 self.update_summary();
@@ -123,7 +123,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
         },
         enable_numpad: function(){
             this.disable_numpad();  //ensure we don't register the callbacks twice
-            this.numpad_state = this.pos_widget.numpad.state;
+            this.numpad_state = this.chrome.widget.numpad.state;
             if(this.numpad_state){
                 this.numpad_state.reset();
                 this.numpad_state.bind('set_value',   this.set_value, this);
@@ -134,18 +134,6 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             if(this.numpad_state){
                 this.numpad_state.unbind('set_value',  this.set_value);
                 this.numpad_state.reset();
-            }
-        },
-        set_editable: function(editable){
-            var order = this.pos.get_order();
-            if (order) {
-                this.editable = editable;
-                if (editable) {
-                    this.enable_numpad();
-                }else{
-                    this.disable_numpad();
-                    order.deselect_orderline();
-                }
             }
         },
         set_value: function(val) {
@@ -224,7 +212,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             target.parentNode.replaceChild(this.el,target);
         },
         renderElement: function(scrollbottom){
-            this.pos_widget.numpad.state.reset();
+            this.chrome.widget.numpad.state.reset();    //FIXME WTF
 
             var order  = this.pos.get_order();
             if (!order) {
@@ -297,7 +285,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             if (!order) {
                 return;
             } else if ( !order.is_empty() ){
-                this.pos_widget.screen_selector.show_popup('confirm',{
+                this.gui.show_popup('confirm',{
                     message: _t('Destroy Current Order ?'),
                     comment: _t('You will lose any data associated with the current order'),
                     confirm: function(){
@@ -463,8 +451,8 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
 
             this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
-            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
-                this.pos_widget.onscreen_keyboard.connect($(this.el.querySelector('.searchbox input')));
+            if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
+                this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
             }
         },
         
@@ -578,10 +566,6 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             var options = options || {};
             this._super(parent,options);
         },
-        set_user_mode: function(mode){
-            this.mode = mode;
-            this.renderElement();
-        },
         renderElement: function(){
             var self = this;
             this._super();
@@ -592,7 +576,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
         },
         click_username: function(){
             var self = this;
-            this.pos_widget.select_user({
+            this.chrome.select_user({
                 'security':     true,
                 'current_user': this.pos.get_cashier(),
                 'message':      _t('Change Cashier'),
@@ -736,10 +720,10 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 self.pos.barcode_reader.scan(self.$('input.ean').val());
             });
             this.$('.button.show_orders').click(function(){
-                self.pos.pos_widget.screen_selector.show_popup('unsent-orders');
+                self.gui.show_popup('unsent-orders');
             });
             this.$('.button.delete_orders').click(function(){
-                self.pos.pos_widget.screen_selector.show_popup('confirm',{
+                self.gui.show_popup('confirm',{
                     message: _t('Delete Unsent Orders ?'),
                     comment: _t('This operation will permanently destroy all unsent orders from the local storage. You will lose all the data. This operation cannot be undone.'),
                     confirm: function(){
@@ -749,10 +733,10 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 });
             });
             this.$('.button.show_unpaid_orders').click(function(){
-                self.pos.pos_widget.screen_selector.show_popup('unpaid-orders');
+                self.gui.show_popup('unpaid-orders');
             });
             this.$('.button.delete_unpaid_orders').click(function(){
-                self.pos.pos_widget.screen_selector.show_popup('confirm',{
+                self.gui.show_popup('confirm',{
                     message: _t('Delete Unpaid Orders ?'),
                     comment: _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
                     confirm: function(){
@@ -862,30 +846,69 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
     });
 
 
-    // The PosWidget is the main widget that contains all other widgets in the PointOfSale.
+    // The Chrome is the main widget that contains all other widgets in the PointOfSale.
     // It is mainly composed of :
     // - a header, containing the list of orders
     // - a leftpane, containing the list of bought products (orderlines) 
     // - a rightpane, containing the screens (see pos_screens.js)
     // - popups
     // - an onscreen keyboard
-    // a screen_selector which controls the switching between screens and the showing/closing of popups
+    // a gui which controls the switching between screens and the showing/closing of popups
 
-    module.PosWidget = module.PosBaseWidget.extend({
-        template: 'PosWidget',
+    module.Chrome = module.PosBaseWidget.extend({
+        template: 'Chrome',
         init: function() { 
+            var self = this;
             this._super(arguments[0],{});
 
-            this.pos = new module.PosModel(this.session,{pos_widget:this});
-            this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
+            this.started  = new $.Deferred(); // resolves when DOM is onlyne
+            this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
+
+            this.pos = new module.PosModel(this.session,{chrome:this});
+            this.gui = new module.Gui({pos: this.pos, chrome: this});
+            this.chrome = this; // So that chrome's childs have chrome set automatically
+            this.widget = {};   // contains references to subwidgets instances
 
             this.numpad_visible = true;
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
 
+            this.pos.ready.done(function(){
+                console.log('yeah');
+                self.build_chrome();
+                self.pos.on_chrome_started();
+                self.started.resolve();
+                self.build_widgets();
+                self.pos.on_chrome_ready();
+                self.ready.resolve();
+                self.disable_rubberbanding();
+                self.loading_hide();
+            }).fail(function(err){   // error when loading models data from the backend
+                self.loading_error(err);
+            });
+        },
+
+        build_chrome: function() { 
+            // remove default webclient handlers that induce click delay
+            $(document).off();
+            $(window).off();
+            $('html').off();
+            $('body').off();
+            $(self.$el).parent().off();
+            $('document').off();
+            $('.oe_web_client').off();
+            $('.openerp_webclient_container').off();
+
             FastClick.attach(document.body);
 
+            instance.webclient.set_content_full_screen(true);
+
+            this.renderElement();
+
+            if(this.pos.config.iface_big_scrollbars){
+                this.$el.addClass('big-scrollbars');
+            }
         },
 
         disable_rubberbanding: function(){
@@ -902,49 +925,6 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             });
         },
 
-        start: function() {
-            var self = this;
-            return self.pos.ready.done(function() {
-                // remove default webclient handlers that induce click delay
-                $(document).off();
-                $(window).off();
-                $('html').off();
-                $('body').off();
-                $(self.$el).parent().off();
-                $('document').off();
-                $('.oe_web_client').off();
-                $('.openerp_webclient_container').off();
-
-                self.renderElement();
-                
-                self.pos.load_orders();
-                self.pos.set_start_order();
-
-                self.build_widgets();
-
-                if(self.pos.config.iface_big_scrollbars){
-                    self.$el.addClass('big-scrollbars');
-                }
-
-                self.screen_selector.set_default_screen();
-
-                self.pos.barcode_reader.connect();
-
-                instance.webclient.set_content_full_screen(true);
-
-                if(self.pos.config.iface_fullscreen && document.body.webkitRequestFullscreen && (
-                    window.screen.availWidth  > window.innerWidth ||
-                    window.screen.availHeight > window.innerHeight    )){
-                    self.screen_selector.show_popup('fullscreen');
-                }
-                self.loading_hide();
-
-                self.pos.push_order();
-
-            }).fail(function(err){   // error when loading models data from the backend
-                self.loading_error(err);
-            });
-        },
         loading_error: function(err){
             var self = this;
 
@@ -1029,7 +1009,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 }
             }
 
-            this.pos_widget.screen_selector.show_popup('selection',{
+            this.gui.show_popup('selection',{
                 'message': options.message || _t('Select User'),
                 list: list,
                 confirm: function(user){ def.resolve(user); },
@@ -1040,11 +1020,11 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                 if (options.security && user !== options.current_user && user.pos_security_pin) {
                     var ret = new $.Deferred();
 
-                    self.pos_widget.screen_selector.show_popup('password',{
+                    self.gui.show_popup('password',{
                         'message': _t('Password'),
                         confirm: function(password) {
                             if (password !== user.pos_security_pin) {
-                                this.pos_widget.screen_selector.show_popup('error',{
+                                this.gui.show_popup('error',{
                                     'message':_t('Password Incorrect'),
                                 });
                                 ret.reject();
@@ -1082,171 +1062,141 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
             }
         },
 
-        // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
-        // startup screen, etc, override this method.
+        screens: {
+            'products':     module.ProductScreenWidget,
+            'receipt':      module.ReceiptScreenWidget,
+            'payment':      module.PaymentScreenWidget,
+            'clientlist':   module.ClientListScreenWidget,
+            'scale':        module.ScaleScreenWidget,
+        },
+
+        popups: {
+            'error':            module.ErrorPopupWidget,
+            'error-barcode':    module.ErrorBarcodePopupWidget,
+            'error-traceback':  module.ErrorTracebackPopupWidget,
+            'textinput':        module.TextInputPopupWidget,
+            'textarea':         module.TextAreaPopupWidget,
+            'number':           module.NumberPopupWidget,
+            'password':         module.PasswordPopupWidget,
+            'confirm':          module.ConfirmPopupWidget,
+            'selection':        module.SelectionPopupWidget,
+            'unsent-orders':    module.UnsentOrdersPopupWidget,
+            'unpaid-orders':    module.UnpaidOrdersPopupWidget,
+        },
+
+        widgets: [
+            {
+                'name':   'order_selector',
+                'widget': module.OrderSelectorWidget,
+                'replace':  '.placeholder-OrderSelectorWidget',
+            },{
+                'name':   'proxy_status',
+                'widget': module.ProxyStatusWidget,
+                'append':  '.pos-rightheader',
+                'condition': function(self){ return self.pos.config.use_proxy },
+            },{
+                'name':   'notification',
+                'widget': module.SynchNotificationWidget,
+                'append':  '.pos-rightheader',
+            },{
+                'name':   'close_button',
+                'widget': module.HeaderButtonWidget,
+                'append':  '.pos-rightheader',
+                'args': {
+                    label: _t('Close'),
+                    action: function(){ 
+                        var self = this;
+                        if (!this.confirmed) {
+                            this.$el.addClass('confirm');
+                            this.$el.text(_t('Confirm'));
+                            this.confirmed = setTimeout(function(){
+                                self.$el.removeClass('confirm');
+                                self.$el.text(_t('Close'));
+                                self.confirmed = false;
+                            },2000);
+                        } else {
+                            clearTimeout(this.confirmed);
+                            this.chrome.close();
+                        }
+                    },
+                }
+            },{
+                'name':   'username',
+                'widget': module.UsernameWidget,
+                'replace':  '.placeholder-UsernameWidget',
+            },{
+                'name':  'actionpad',
+                'widget': module.ActionpadWidget,
+                'replace': '.placeholder-ActionpadWidget',
+            },{
+                'name':  'numpad',
+                'widget': module.NumpadWidget,
+                'replace': '.placeholder-NumpadWidget',
+            },{
+                'name':  'order',
+                'widget': module.OrderWidget,
+                'replace': '.placeholder-OrderWidget',
+            },{
+                'name':  'keyboard',
+                'widget': module.OnscreenKeyboardWidget,
+                'replace': '.placeholder-OnscreenKeyboardWidget',
+            },{
+                'name':  'debug',
+                'widget': module.DebugWidget,
+                'append': '.pos-content',
+                'condition': function(self){ return self.pos.debug },
+            },
+        ],
+
+        // This method instantiates all the screens, widgets, etc. 
         build_widgets: function() {
             var self = this;
 
-            // --------  Screens ---------
-
-            this.product_screen = new module.ProductScreenWidget(this,{});
-            this.product_screen.appendTo(this.$('.screens'));
-
-            this.receipt_screen = new module.ReceiptScreenWidget(this, {});
-            this.receipt_screen.appendTo(this.$('.screens'));
-
-            this.payment_screen = new module.PaymentScreenWidget(this, {});
-            this.payment_screen.appendTo(this.$('.screens'));
-
-            this.clientlist_screen = new module.ClientListScreenWidget(this, {});
-            this.clientlist_screen.appendTo(this.$('.screens'));
-
-            this.scale_screen = new module.ScaleScreenWidget(this,{});
-            this.scale_screen.appendTo(this.$('.screens'));
-
-
-            // --------  Popups ---------
-
-            this.error_popup = new module.ErrorPopupWidget(this, {});
-            this.error_popup.appendTo(this.$el);
-
-            this.error_barcode_popup = new module.ErrorBarcodePopupWidget(this, {});
-            this.error_barcode_popup.appendTo(this.$el);
-
-            this.error_traceback_popup = new module.ErrorTracebackPopupWidget(this,{});
-            this.error_traceback_popup.appendTo(this.$el);
-
-            this.confirm_popup = new module.ConfirmPopupWidget(this,{});
-            this.confirm_popup.appendTo(this.$el);
-
-            this.fullscreen_popup = new module.FullscreenPopup(this,{});
-            this.fullscreen_popup.appendTo(this.$el);
-
-            this.selection_popup = new module.SelectionPopupWidget(this,{});
-            this.selection_popup.appendTo(this.$el);
-
-            this.textinput_popup = new module.TextInputPopupWidget(this,{});
-            this.textinput_popup.appendTo(this.$el);
-
-            this.textarea_popup = new module.TextAreaPopupWidget(this,{});
-            this.textarea_popup.appendTo(this.$el);
-
-            this.number_popup = new module.NumberPopupWidget(this,{});
-            this.number_popup.appendTo(this.$el);
-
-            this.password_popup = new module.PasswordPopupWidget(this,{});
-            this.password_popup.appendTo(this.$el);
-
-            this.unsent_orders_popup = new module.UnsentOrdersPopupWidget(this,{});
-            this.unsent_orders_popup.appendTo(this.$el);
-
-            this.unpaid_orders_popup = new module.UnpaidOrdersPopupWidget(this,{});
-            this.unpaid_orders_popup.appendTo(this.$el);
-
-            // --------  Misc ---------
-
-            this.order_selector = new module.OrderSelectorWidget(this,{});
-            this.order_selector.replace(this.$('.placeholder-OrderSelectorWidget'));
-
-            if(this.pos.config.use_proxy){
-                this.proxy_status = new module.ProxyStatusWidget(this,{});
-                this.proxy_status.appendTo(this.$('.pos-rightheader'));
+            for (var name in this.screens) {
+                var screen = new this.screens[name](this,{});
+                    screen.appendTo(this.$('.screens'));
+                this.gui.add_screen(name, screen);
             }
 
-            this.notification = new module.SynchNotificationWidget(this,{});
-            this.notification.appendTo(this.$('.pos-rightheader'));
+            for (var name in this.popups) {
+                var popup = new this.popups[name](this,{});
+                    popup.appendTo(this.$el);   // FIXME .popups
+                this.gui.add_popup(name, popup);
+            }
 
-            this.close_button = new module.HeaderButtonWidget(this,{
-                label: _t('Close'),
-                action: function(){ 
-                    var self = this;
-                    if (!this.confirmed) {
-                        this.$el.addClass('confirm');
-                        this.$el.text(_t('Confirm'));
-                        this.confirmed = setTimeout(function(){
-                            self.$el.removeClass('confirm');
-                            self.$el.text(_t('Close'));
-                            self.confirmed = false;
-                        },2000);
+            for (var i = 0; i < this.widgets.length; i++) {
+                var def = this.widgets[i];
+                if ( !def.condition || def.condition(this) ) {
+                    var args = typeof def.args === 'function' ? def.args(this) : def.args;
+                    var w = new def.widget(this, args || {});
+                    if (def.replace) {
+                        w.replace(this.$(def.replace));
+                    } else if (def.append) {
+                        w.appendTo(this.$(def.append));
+                    } else if (def.prepend) {
+                        w.prependTo(this.$(def.prepend));
                     } else {
-                        clearTimeout(this.confirmed);
-                        this.pos_widget.close();
+                        w.appendTo(this.$el);
                     }
-                },
-            });
-            this.close_button.appendTo(this.$('.pos-rightheader'));
-
-
-
-            this.username   = new module.UsernameWidget(this,{});
-            this.username.replace(this.$('.placeholder-UsernameWidget'));
-
-            this.actionpad = new module.ActionpadWidget(this, {});
-            this.actionpad.replace(this.$('.placeholder-ActionpadWidget'));
-
-            this.numpad = new module.NumpadWidget(this);
-            this.numpad.replace(this.$('.placeholder-NumpadWidget'));
-
-            this.order_widget = new module.OrderWidget(this, {});
-            this.order_widget.replace(this.$('.placeholder-OrderWidget'));
-
-            this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
-                'keyboard_model': 'simple'
-            });
-            this.onscreen_keyboard.replace(this.$('.placeholder-OnscreenKeyboardWidget'));
-
-            // --------  Screen Selector ---------
-
-            this.screen_selector = new module.ScreenSelector({
-                pos: this.pos,
-                screen_set:{
-                    'products': this.product_screen,
-                    'payment' : this.payment_screen,
-                    'scale':    this.scale_screen,
-                    'receipt' : this.receipt_screen,
-                    'clientlist': this.clientlist_screen,
-                },
-                popup_set:{
-                    'error':            this.error_popup,
-                    'error-barcode':    this.error_barcode_popup,
-                    'error-traceback':  this.error_traceback_popup,
-                    'textinput':        this.textinput_popup,
-                    'textarea':         this.textarea_popup,
-                    'number':           this.number_popup,
-                    'password':         this.password_popup,
-                    'confirm':          this.confirm_popup,
-                    'fullscreen':       this.fullscreen_popup,
-                    'selection':        this.selection_popup,
-                    'unsent-orders':    this.unsent_orders_popup,
-                    'unpaid-orders':    this.unpaid_orders_popup,
-                },
-                default_screen: 'products',
-                default_mode: 'cashier',
-            });
-
-            if(this.pos.debug){
-                this.debug_widget = new module.DebugWidget(this);
-                this.debug_widget.appendTo(this.$('.pos-content'));
+                    this.widget[def.name] = w;
+                }
             }
 
-            this.disable_rubberbanding();
+            this.gui.set_startup_screen('products');
+            this.gui.set_default_screen('products');
 
         },
 
-        changed_pending_operations: function () {
-            var self = this;
-            this.synch_notification.on_change_nbr_pending(self.pos.get('nbr_pending_operations').length);
-        },
         // shows or hide the numpad and related controls like the paypad.
         set_numpad_visible: function(visible){
             if(visible !== this.numpad_visible){
                 this.numpad_visible = visible;
                 if(visible){
-                    this.numpad.show();
-                    this.actionpad.show();
+                    this.widget.numpad.show();
+                    this.widget.actionpad.show();
                 }else{
-                    this.numpad.hide();
-                    this.actionpad.hide();
+                    this.widget.numpad.hide();
+                    this.widget.actionpad.hide();
                 }
             }
         },
@@ -1274,7 +1224,7 @@ openerp.point_of_sale.load_widgets = function load_widgets(instance, module){ //
                     window.location = '/web#action=' + res[0]['res_id'];
                 },function(err,event) {
                     event.preventDefault();
-                    self.screen_selector.show_popup('error',{
+                    self.gui.show_popup('error',{
                         'message': _t('Could not close the point of sale.'),
                         'comment': _t('Your internet connection is probably down.'),
                     });

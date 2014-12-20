@@ -18,7 +18,7 @@ openerp.point_of_sale = function(openerp) {
 
     openerp.point_of_sale.load_widgets(openerp,module);    // import pos_widgets.js
 
-    openerp.web.client_actions.add('pos.ui', 'openerp.point_of_sale.PosWidget');
+    openerp.web.client_actions.add('pos.ui', 'openerp.point_of_sale.Chrome');
 };
 
     
