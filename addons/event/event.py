@@ -259,7 +259,7 @@ class event_event(osv.osv):
               'register_max': type_info.default_registration_max,
             }
             values.update(dic)
-        return values
+        return {'value' : values}
 
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
         values = {}
