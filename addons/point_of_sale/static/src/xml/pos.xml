@@ -18,41 +18,21 @@
 
             <div class="pos-content">
 
-                <div class="pos-leftpane">
-                    <div class='window'>
-                        <div class='subwindow'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix'>
-                                    <div class="placeholder-OrderWidget"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='subwindow collapsed'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix pads'>
-                                    <div class="control-buttons oe_hidden"></div>
-                                    <div class="placeholder-ActionpadWidget"></div>
-                                    <div class="placeholder-NumpadWidget"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="rightpane">
-                    <div class='window'>
-                        <div class='subwindow'>
-                            <div class='subwindow-container'>
-                                <div class='subwindow-container-fix screens'>
-                                </div>
+                <div class='window'>
+                    <div class='subwindow'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix screens'>
+                                <!-- here go the screens -->
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="placeholder-OnscreenKeyboardWidget"></div>
+            </div>
+
+            <div class='popups'>
+                <!-- here go the popups -->
             </div>
 
             <div class="loader">
@@ -67,18 +47,6 @@
                 </div>
             </div>
 
-            &lt;!--[if IE]&gt;
-            <div class='not-supported-browser'>
-                <div class='message'>
-                    <img src='/point_of_sale/static/src/img/pos_screenshot.jpg' />
-                    <p>
-                        The Point of Sale is not supported by Microsoft Internet Explorer. Please use
-                        a modern browser like <a href="http://www.mozilla.org/firefox/" target="_blank">Mozilla Firefox</a> 
-                        or <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>. 
-                    </p>
-                </div>
-            </div>
-            &lt;![endif]--&gt;
         </div>
     </t>
 
@@ -224,23 +192,47 @@
 
     <t t-name="ProductScreenWidget">
         <div class="product-screen screen">
-            <table class="layout-table">
-
-                <tr class="header-row">
-                    <td class="header-cell">
-                        <span class="placeholder-ProductCategoriesWidget" />
-                    </td>
-                </tr>
-
-                <tr class="content-row">
-                    <td class="content-cell">
-                        <div class="content-container">
-                            <span class="placeholder-ProductListWidget" />
+            <div class="leftpane">
+                <div class='window'>
+                    <div class='subwindow'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix'>
+                                <div class="placeholder-OrderWidget"></div>
+                            </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
 
-            </table>
+                    <div class='subwindow collapsed'>
+                        <div class='subwindow-container'>
+                            <div class='subwindow-container-fix pads'>
+                                <div class="control-buttons oe_hidden"></div>
+                                <div class="placeholder-ActionpadWidget"></div>
+                                <div class="placeholder-NumpadWidget"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="rightpane">
+                <table class="layout-table">
+
+                    <tr class="header-row">
+                        <td class="header-cell">
+                            <span class="placeholder-ProductCategoriesWidget" />
+                        </td>
+                    </tr>
+
+                    <tr class="content-row">
+                        <td class="content-cell">
+                            <div class="content-container">
+                                <span class="placeholder-ProductListWidget" />
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
         </div>
     </t>
 

@@ -408,7 +408,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             var self = this;
             this._super(arguments[0],{});
 
-            this.started  = new $.Deferred(); // resolves when DOM is onlyne
+            this.started  = new $.Deferred(); // resolves when DOM is online
             this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
             this.pos = new module.PosModel(this.session,{chrome:this});
@@ -417,11 +417,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             this.pos.gui = this.gui;
 
             this.widget = {};   // contains references to subwidgets instances
-
-            this.numpad_visible = true;
-            this.leftpane_visible = true;
-            this.leftpane_width   = '440px';
-            this.cashier_controls_visible = true;
 
             this.pos.ready.done(function(){
                 self.build_chrome();
@@ -596,18 +591,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 'widget': module.UsernameWidget,
                 'replace':  '.placeholder-UsernameWidget',
             },{
-                'name':  'actionpad',
-                'widget': module.ActionpadWidget,
-                'replace': '.placeholder-ActionpadWidget',
-            },{
-                'name':  'numpad',
-                'widget': module.NumpadWidget,
-                'replace': '.placeholder-NumpadWidget',
-            },{
-                'name':  'order',
-                'widget': module.OrderWidget,
-                'replace': '.placeholder-OrderWidget',
-            },{
                 'name':  'keyboard',
                 'widget': module.OnscreenKeyboardWidget,
                 'replace': '.placeholder-OnscreenKeyboardWidget',
@@ -631,7 +614,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
 
             for (var name in this.popups) {
                 var popup = new this.popups[name](this,{});
-                    popup.appendTo(this.$el);   // FIXME .popups
+                    popup.appendTo(this.$('.popups')); 
                 this.gui.add_popup(name, popup);
             }
 
@@ -658,32 +641,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
 
         },
 
-        // shows or hide the numpad and related controls like the paypad.
-        set_numpad_visible: function(visible){
-            if(visible !== this.numpad_visible){
-                this.numpad_visible = visible;
-                if(visible){
-                    this.widget.numpad.show();
-                    this.widget.actionpad.show();
-                }else{
-                    this.widget.numpad.hide();
-                    this.widget.actionpad.hide();
-                }
-            }
-        },
-        //shows or hide the leftpane (contains the list of orderlines, the numpad, the paypad, etc.)
-        set_leftpane_visible: function(visible){
-            if(visible !== this.leftpane_visible){
-                this.leftpane_visible = visible;
-                if(visible){
-                    this.$('.pos-leftpane').removeClass('oe_hidden');
-                    this.$('.rightpane').css({'left':this.leftpane_width});
-                }else{
-                    this.$('.pos-leftpane').addClass('oe_hidden');
-                    this.$('.rightpane').css({'left':'0px'});
-                }
-            }
-        },
         destroy: function() {
             this.pos.destroy();
             instance.webclient.set_content_full_screen(false);

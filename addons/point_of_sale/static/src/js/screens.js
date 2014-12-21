@@ -43,9 +43,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
     module.ScreenWidget = module.PosBaseWidget.extend({
 
-        show_numpad:     true,  
-        show_leftpane:   true,
-
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
@@ -119,11 +116,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             if(this.$el){
                 this.$el.removeClass('oe_hidden');
             }
-
-            var self = this;
-
-            this.chrome.set_numpad_visible(this.show_numpad);
-            this.chrome.set_leftpane_visible(this.show_leftpane);
 
             this.pos.barcode_reader.set_action_callback({
                 'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
@@ -235,8 +227,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         next_screen: 'products',
         previous_screen: 'products',
 
-        show_leftpane:   false,
-
         show: function(){
             this._super();
             var self = this;
@@ -341,7 +331,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         init: function(parent, options) {
             this._super(parent);
             this.state = new module.NumpadState();
-            window.numpadstate = this.state;
             var self = this;
         },
         start: function() {
@@ -402,40 +391,30 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         init: function(parent, options) {
             var self = this;
             this._super(parent,options);
-            this.editable = false;
+
+            this.numpad_state = options.numpad_state;
+            this.numpad_state.reset();
+            this.numpad_state.bind('set_value',   this.set_value, this);
+
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
+
             this.line_click_handler = function(event){
-                if(!self.editable){
-                    return;
-                }
                 self.pos.get_order().select_orderline(this.orderline);
-                self.chrome.widget.numpad.state.reset();
+                self.numpad_state.reset();
             };
+
             this.client_change_handler = function(event){
                 self.update_summary();
             }
+
             if (this.pos.get_order()) {
                 this.bind_order_events();
             }
-        },
-        enable_numpad: function(){
-            this.disable_numpad();  //ensure we don't register the callbacks twice
-            this.numpad_state = this.chrome.widget.numpad.state;
-            if(this.numpad_state){
-                this.numpad_state.reset();
-                this.numpad_state.bind('set_value',   this.set_value, this);
-            }
-                    
-        },
-        disable_numpad: function(){
-            if(this.numpad_state){
-                this.numpad_state.unbind('set_value',  this.set_value);
-                this.numpad_state.reset();
-            }
+
         },
         set_value: function(val) {
         	var order = this.pos.get_order();
-        	if (this.editable && order.get_selected_orderline()) {
+        	if (order.get_selected_orderline()) {
                 var mode = this.numpad_state.get('mode');
                 if( mode === 'quantity'){
                     order.get_selected_orderline().set_quantity(val);
@@ -449,6 +428,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         change_selected_order: function() {
             if (this.pos.get_order()) {
                 this.bind_order_events();
+                this.numpad_state.reset();
                 this.renderElement();
             }
         },
@@ -509,8 +489,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             target.parentNode.replaceChild(this.el,target);
         },
         renderElement: function(scrollbottom){
-            this.chrome.widget.numpad.state.reset();    //FIXME WTF
-
             var order  = this.pos.get_order();
             if (!order) {
                 return;
@@ -547,7 +525,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
-
         },
     });
 
@@ -821,20 +798,23 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
     module.ProductScreenWidget = module.ScreenWidget.extend({
         template:'ProductScreenWidget',
 
-        show_numpad:     true,
-        show_leftpane:   true,
+        start: function(){ 
 
-        start: function(){ //FIXME this should work as renderElement... but then the categories aren't properly set. explore why
             var self = this;
 
+            this.actionpad = new module.ActionpadWidget(this,{});
+            this.actionpad.replace(this.$('.placeholder-ActionpadWidget'));
+
+            this.numpad = new module.NumpadWidget(this,{});
+            this.numpad.replace(this.$('.placeholder-NumpadWidget'));
+
+            this.order_widget = new module.OrderWidget(this,{
+                numpad_state: this.numpad.state,
+            });
+            this.order_widget.replace(this.$('.placeholder-OrderWidget'));
+
             this.product_list_widget = new module.ProductListWidget(this,{
-                click_product_action: function(product){
-                    if(product.to_weight && self.pos.config.iface_electronic_scale){
-                        self.gui.show_screen('scale',{product: product});
-                    }else{
-                        self.pos.get_order().add_product(product);
-                    }
-                },
+                click_product_action: function(product){ self.click_product(product); },
                 product_list: this.pos.db.get_product_by_category(0)
             });
             this.product_list_widget.replace(this.$('.placeholder-ProductListWidget'));
@@ -845,10 +825,18 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.product_categories_widget.replace(this.$('.placeholder-ProductCategoriesWidget'));
         },
 
+        click_product: function(product) {
+           if(product.to_weight && this.pos.config.iface_electronic_scale){
+               this.gui.show_screen('scale',{product: product});
+           }else{
+               this.pos.get_order().add_product(product);
+           }
+        },
+
         show: function(){
             this._super();
             this.product_categories_widget.reset_category();
-            this.chrome.widget.order.enable_numpad();
+            this.numpad.state.reset();
         },
 
         close: function(){
@@ -874,8 +862,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this._super(parent, options);
             this.partner_cache = new module.DomCache();
         },
-
-        show_leftpane: false,
 
         auto_back: true,
 
@@ -1258,8 +1244,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
     module.ReceiptScreenWidget = module.ScreenWidget.extend({
         template: 'ReceiptScreenWidget',
-        show_numpad:     false,
-        show_leftpane:   false,
 
         show: function(){
             this._super();
@@ -1342,8 +1326,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         template:      'PaymentScreenWidget',
         back_screen:   'product',
         next_screen:   'receipt',
-        show_leftpane: false,
-        show_numpad:   false,
         init: function(parent, options) {
             var self = this;
             this._super(parent, options);
