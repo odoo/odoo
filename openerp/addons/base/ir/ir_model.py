@@ -62,6 +62,13 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
         result[k] = ', '.join(sorted(installed_modules & set(xml_id.split('.')[0] for xml_id in v)))
     return result
 
+class unknown(models.AbstractModel):
+    """
+    Abstract model used as a substitute for relational fields with an unknown
+    comodel.
+    """
+    _name = '_unknown'
+
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Models"
@@ -439,6 +446,7 @@ class ir_model_fields(osv.osv):
 
             for item in self.browse(cr, user, ids, context=context):
                 obj = self.pool.get(item.model)
+                field = getattr(obj, '_fields', {}).get(item.name)
 
                 if item.state != 'manual':
                     raise except_orm(_('Error!'),
@@ -474,12 +482,12 @@ class ir_model_fields(osv.osv):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj is not None:
+                if obj is not None and field is not None:
                     # find out which properties (per model) we need to update
                     for field_name, prop_name, func in model_props:
                         if field_name in vals:
                             prop_value = func(vals[field_name])
-                            if getattr(obj._fields[item.name], prop_name) != prop_value:
+                            if getattr(field, prop_name) != prop_value:
                                 patches[obj][final_name][prop_name] = prop_value
 
         # These shall never be written (modified)

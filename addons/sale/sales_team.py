@@ -7,7 +7,7 @@ import json
 
 from openerp import tools
 from openerp.osv import fields, osv
-
+from openerp.tools.float_utils import float_repr
 
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
@@ -37,7 +37,10 @@ class crm_case_section(osv.osv):
         res = {}
         for id in ids:
             created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
-            res[id] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context))
+            values = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
+            for value in values:
+                value['value'] = float_repr(value.get('value', 0), precision_digits=self.pool['decimal.precision'].precision_get(cr, uid, 'Account'))
+            res[id] = json.dumps(values)
         return res
 
     _columns = {

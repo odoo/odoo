@@ -247,19 +247,27 @@ class product_pricelist(osv.osv):
 
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
-            uom_price_already_computed = False
             results[product.id] = 0.0
-            price = False
             rule_id = False
+            price = False
+
+            # Final unit price is computed according to `qty` in the `qty_uom_id` UoM.
+            # An intermediary unit price may be computed according to a different UoM, in
+            # which case the price_uom_id contains that UoM.
+            # The final price will be converted to match `qty_uom_id`.
+            qty_uom_id = context.get('uom') or product.uom_id.id
+            price_uom_id = product.uom_id.id
+            qty_in_product_uom = qty
+            if qty_uom_id != product.uom_id.id:
+                try:
+                    qty_in_product_uom = product_uom_obj._compute_qty(
+                        cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
+                except except_orm:
+                    # Ignored - incompatible UoM in context, use default product UoM
+                    pass
+
             for rule in items:
-                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
-                    try:
-                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
-                    except except_orm:
-                        qty_in_product_uom = qty
-                else:
-                    qty_in_product_uom = qty
-                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
+                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
@@ -287,7 +295,7 @@ class product_pricelist(osv.osv):
                                 rule.base_pricelist_id, [(product,
                                 qty, False)], context=context)[product.id]
                         ptype_src = rule.base_pricelist_id.currency_id.id
-                        uom_price_already_computed = True
+                        price_uom_id = qty_uom_id
                         price = currency_obj.compute(cr, uid,
                                 ptype_src, pricelist.currency_id.id,
                                 price_tmp, round=False,
@@ -302,12 +310,10 @@ class product_pricelist(osv.osv):
                         seller = product.seller_ids[0]
                     if seller:
                         qty_in_seller_uom = qty
-                        from_uom = context.get('uom') or product.uom_id.id
-                        seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and from_uom and from_uom != seller_uom:
-                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
-                        else:
-                            uom_price_already_computed = True
+                        seller_uom = seller.product_uom.id
+                        if qty_uom_id != seller_uom:
+                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
+                        price_uom_id = seller_uom
                         for line in seller.pricelist_ids:
                             if line.min_quantity <= qty_in_seller_uom:
                                 price = line.price
@@ -317,34 +323,40 @@ class product_pricelist(osv.osv):
                         price_types[rule.base] = price_type_obj.browse(cr, uid, int(rule.base))
                     price_type = price_types[rule.base]
 
-                    uom_price_already_computed = True
-                    price = currency_obj.compute(cr, uid,
+                    # price_get returns the price in the context UoM, i.e. qty_uom_id
+                    price_uom_id = qty_uom_id
+                    price = currency_obj.compute(
+                            cr, uid,
                             price_type.currency_id.id, pricelist.currency_id.id,
-                            product_obj._price_get(cr, uid, [product],
-                            price_type.field, context=context)[product.id], round=False, context=context)
+                            product_obj._price_get(cr, uid, [product], price_type.field, context=context)[product.id],
+                            round=False, context=context)
 
                 if price is not False:
                     price_limit = price
                     price = price * (1.0+(rule.price_discount or 0.0))
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)
-                    if context.get('uom'):
-                        # compute price_surcharge based on reference uom
-                        factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
-                    else:
-                        factor = 1.0
-                    price += (rule.price_surcharge or 0.0) / factor
+
+                    convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
+                                                cr, uid, product.uom_id.id,
+                                                price, price_uom_id))
+                    if rule.price_surcharge:
+                        price_surcharge = convert_to_price_uom(rule.price_surcharge)
+                        price += price_surcharge
+
                     if rule.price_min_margin:
-                        price = max(price, price_limit+rule.price_min_margin)
+                        price_min_margin = convert_to_price_uom(rule.price_min_margin)
+                        price = max(price, price_limit + price_min_margin)
+
                     if rule.price_max_margin:
-                        price = min(price, price_limit+rule.price_max_margin)
+                        price_max_margin = convert_to_price_uom(rule.price_max_margin)
+                        price = min(price, price_limit + price_max_margin)
+
                     rule_id = rule.id
                 break
 
-            if price:
-                if 'uom' in context and not uom_price_already_computed:
-                    uom = product.uos_id or product.uom_id
-                    price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
+            # Final price conversion to target UoM
+            price = product_uom_obj._compute_price(cr, uid, price_uom_id, price, qty_uom_id)
 
             results[product.id] = (price, rule_id)
         return results

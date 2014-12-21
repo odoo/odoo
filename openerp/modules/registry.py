@@ -158,15 +158,20 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        # load custom models
+        ir_model = self['ir.model']
+        cr.execute('select model from ir_model where state=%s', ('manual',))
+        for (model_name,) in cr.fetchall():
+            ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
+
         # prepare the setup on all models
         for model in self.models.itervalues():
             model._prepare_setup_fields(cr, SUPERUSER_ID)
 
         # do the actual setup from a clean state
         self._m2m = {}
-        context = {'_setup_fields_partial': partial}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, context=context)
+            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
 
     def clear_caches(self):
         """ Clear the caches

@@ -64,6 +64,7 @@
                     <table class="accounting_view">
                         <caption>
                             <button class="button_ok"></button>
+                            <span class="tip_reconciliation_not_balanced">You must balance the reconciliation</span>
                             <span t-if="! line.has_no_partner" class="partner_name">
                                 <t t-esc="line.partner_name"/>
                                 <span class="change_partner glyphicon glyphicon-pencil"></span>
@@ -175,7 +176,7 @@
 
     <t t-name="bank_statement_reconciliation_created_line">
         <tr class="created_line" t-att-data-lineid="line.id">
-            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="line_remove_button glyphicon glyphicon-remove"></span></t></td>
+            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="glyphicon glyphicon-remove"></span></t></td>
             <td class="cell_account_code"><t t-esc="line.account_num"/></td>
             <td class="cell_due_date"></td>
             <td class="cell_label"><t t-esc="line.label"/></td>
@@ -190,7 +191,7 @@
             <td class="cell_action"><span class="toggle_create glyphicon glyphicon-play"></span></td>
             <td class="cell_account_code"><t t-esc="account_code"/></td>
             <td class="cell_due_date"></td>
-            <td class="cell_label js_open_balance">Open balance</td>
+            <td class="cell_label">Open balance</td>
             <td class="cell_debit"><t t-esc="debit"/></td>
             <td class="cell_credit"><t t-esc="credit"/></td>
             <td class="cell_info_popover"></td>
