@@ -794,6 +794,49 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         },
     });
 
+    /* -------- The Action Buttons -------- */
+
+    // Above the numpad and the actionpad, buttons
+    // for extra actions and controls by point of
+    // sale extensions modules. 
+
+    module.action_button_classes = [];
+    module.define_action_button = function(classe, options){
+        options = options || {};
+
+        var classes = module.action_button_classes;
+        var index   = classes.length;
+
+        if (options.after) {
+            for (var i = 0; i < classes.length; i++) {
+                if (classes[i].name === options.after) {
+                    index = i + 1;
+                }
+            }
+        } else if (options.before) {
+            for (var i = 0; i < classes.length; i++) {
+                if (classes[i].name === options.after) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        classes.splice(i,0,classe);
+    };
+
+    module.ActionButtonWidget = module.PosBaseWidget.extend({
+        template: 'ActionButtonWidget',
+        label: _t('Button'),
+        renderElement: function(){
+            var self = this;
+            this._super();
+            this.$el.click(function(){
+                self.button_click();
+            });
+        },
+        button_click: function(){},
+    });
+
     /* -------- The Product Screen -------- */
     
     module.ProductScreenWidget = module.ScreenWidget.extend({
@@ -824,6 +867,20 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 product_list_widget: this.product_list_widget,
             });
             this.product_categories_widget.replace(this.$('.placeholder-ProductCategoriesWidget'));
+
+            this.action_buttons = {};
+            var classes = module.action_button_classes;
+            for (var i = 0; i < classes.length; i++) {
+                var classe = classes[i];
+                if ( !classe.condition || classe.condition.call(this) ) {
+                    var widget = new classe.widget(this,{});
+                    widget.appendTo(this.$('.control-buttons'));
+                    this.action_buttons[classe.name] = widget;
+                }
+            }
+            if (_.size(this.action_buttons)) {
+                this.$('.control-buttons').removeClass('oe_hidden');
+            }
         },
 
         click_product: function(product) {

@@ -93,6 +93,12 @@
         <div>There are pending operations that could not be saved into the database, are you sure you want to exit?</div>
     </t>
 
+    <t t-name="ActionButtonWidget">
+        <div class='control-button'>
+            <t t-esc='widget.label' />
+        </div>
+    </t>
+
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button class='button set-customer'>
