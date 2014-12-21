@@ -348,7 +348,9 @@ class ir_attachment(osv.osv):
             existing_ids = self.pool[model].exists(cr, uid, mids)
             if len(existing_ids) != len(mids):
                 require_employee = True
-            ima.check(cr, uid, model, mode)
+            # For related models, check if we can write to the model, as linking
+            # or unlinking attachments can be seen as an update to the model
+            ima.check(cr, uid, model, 'write')
             self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
         if require_employee:
             if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
