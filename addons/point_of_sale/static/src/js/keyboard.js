@@ -5,7 +5,7 @@ openerp.point_of_sale.load_keyboard = function load_keyboard(instance, module){ 
     // A Widget that displays an onscreen keyboard.
     // There are two options when creating the widget :
     // 
-    // * 'keyboard_model' : 'simple' | 'full' (default) 
+    // * 'keyboard_model' : 'simple' (default) | 'full' 
     //   The 'full' emulates a PC keyboard, while 'simple' emulates an 'android' one.
     //
     // * 'input_selector  : (default: '.searchbox input') 
@@ -21,7 +21,7 @@ openerp.point_of_sale.load_keyboard = function load_keyboard(instance, module){ 
             this._super(parent,options);
             options = options || {};
 
-            this.keyboard_model = options.keyboard_model || 'full';
+            this.keyboard_model = options.keyboard_model || 'simple';
             if(this.keyboard_model === 'full'){
                 this.template = 'OnscreenKeyboardFull';
             }
