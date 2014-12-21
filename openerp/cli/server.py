@@ -73,11 +73,11 @@ def report_configuration():
     """
     config = openerp.tools.config
     _logger.info("OpenERP version %s", __version__)
-    for name, value in [('addons paths', openerp.modules.module.ad_paths),
-                        ('database hostname', config['db_host'] or 'localhost'),
-                        ('database port', config['db_port'] or '5432'),
-                        ('database user', config['db_user'])]:
-        _logger.info("%s: %s", name, value)
+    _logger.info('addons paths: %s', openerp.modules.module.ad_paths)
+    if config['db_host']:
+        _logger.info('database: %s@%s:%s', config['db_user'], config['db_host'], config['db_port'] or '5432')
+    else:
+        _logger.info('database: %s@unix-socket', config['db_user'])
 
 def rm_pid_file():
     config = openerp.tools.config
@@ -98,7 +98,6 @@ def setup_pid_file():
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
         atexit.register(rm_pid_file)
-
 
 def export_translation():
     config = openerp.tools.config
