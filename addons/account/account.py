@@ -528,9 +528,9 @@ class account_tax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 3))
-    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account',
+    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account', ondelete='restrict',
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.")
-    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
+    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
         help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.")
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
