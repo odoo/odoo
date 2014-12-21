@@ -12,12 +12,14 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
     var _t = instance.web._t;
 
     module.Gui = instance.web.Class.extend({
+        screen_classes: {},
+        popup_classes:  {},
         init: function(options){
             var self = this;
             this.pos            = options.pos;
             this.chrome         = options.chrome;
-            this.screen_set     = {};
-            this.popup_set      = {};
+            this.screen_instances     = {};
+            this.popup_instances      = {};
             this.default_screen = null;
             this.startup_screen = null;
             this.current_popup  = null;
@@ -42,7 +44,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         // it must have been inserted into the dom.
         add_screen: function(name, screen){
             screen.hide();
-            this.screen_set[name] = screen;
+            this.screen_instances[name] = screen;
         },
 
         // sets the screen that will be displayed
@@ -81,7 +83,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         // - refresh: if you want the screen to cycle trough show / hide even
         // if you are already on the same screen.
         show_screen: function(screen_name,params,refresh) {
-            var screen = this.screen_set[screen_name];
+            var screen = this.screen_instances[screen_name];
             if (!screen) {
                 console.error("ERROR: show_screen("+screen_name+") : screen not found");
             }
@@ -140,7 +142,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         // into the dom.
         add_popup: function(name, popup) {
             popup.hide();
-            this.popup_set[name] = popup;
+            this.popup_instances[name] = popup;
         },
 
         // displays a popup. Popup do not stack,
@@ -150,7 +152,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             if (this.current_popup) {
                 this.close_popup();
             }
-            this.current_popup = this.popup_set[name];
+            this.current_popup = this.popup_instances[name];
             this.current_popup.show(options);
         },
 
@@ -322,5 +324,13 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
             return newbuf;
         },
     });
+
+    module.Gui.define_screen = function (name, classe) {
+        module.Gui.prototype.screen_classes[name] = classe;
+    };
+
+    module.Gui.define_popup = function (name, classe) {
+        module.Gui.prototype.popup_classes[name] = classe;
+    };
 }; 
 

@@ -308,6 +308,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.pos.proxy_queue.clear();
         },
     });
+    module.Gui.define_screen('scale', module.ScaleScreenWidget);
 
     /*--------------------------------------*\
      |         THE PRODUCT SCREEN           |
@@ -846,6 +847,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
         },
     });
+    module.Gui.define_screen('products', module.ProductScreenWidget);
 
     /*--------------------------------------*\
      |         THE CLIENT LIST              |
@@ -1231,6 +1233,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this._super();
         },
     });
+    module.Gui.define_screen('clientlist', module.ClientListScreenWidget);
 
     /*--------------------------------------*\
      |         THE RECEIPT SCREEN           |
@@ -1314,6 +1317,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }));
         },
     });
+    module.Gui.define_screen('receipt', module.ReceiptScreenWidget);
 
     /*--------------------------------------*\
      |         THE PAYMENT SCREEN           |
@@ -1643,6 +1647,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
         },
     });
+    module.Gui.define_screen('payment', module.PaymentScreenWidget);
 
 };
 

@@ -82,6 +82,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         click_numad: function(){},
     });
 
+
     module.ErrorPopupWidget = module.PopupWidget.extend({
         template:'ErrorPopupWidget',
         show: function(options){
@@ -91,10 +92,14 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
 
         },
     });
+    module.Gui.define_popup('error', module.ErrorPopupWidget);
+
 
     module.ErrorTracebackPopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorTracebackPopupWidget',
     });
+    module.Gui.define_popup('error-traceback', module.ErrorTracebackPopupWidget);
+
 
     module.ErrorBarcodePopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorBarcodePopupWidget',
@@ -102,10 +107,13 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             this._super({barcode: barcode});
         },
     });
+    module.Gui.define_popup('error-barcode', module.ErrorBarcodePopupWidget);
+
 
     module.ConfirmPopupWidget = module.PopupWidget.extend({
         template: 'ConfirmPopupWidget',
     });
+    module.Gui.define_popup('confirm', module.ConfirmPopupWidget);
 
     /**
      * A popup that allows the user to select one item from a list. 
@@ -151,6 +159,8 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         }
     });
+    module.Gui.define_popup('selection', module.SelectionPopupWidget);
+
 
     module.TextInputPopupWidget = module.PopupWidget.extend({
         template: 'TextInputPopupWidget',
@@ -173,10 +183,14 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         },
     });
+    module.Gui.define_popup('textinput', module.TextInputPopupWidget);
+
 
     module.TextAreaPopupWidget = module.TextInputPopupWidget.extend({
         template: 'TextAreaPopupWidget',
     });
+    module.Gui.define_popup('textarea', module.TextAreaPopupWidget);
+
 
     module.NumberPopupWidget = module.PopupWidget.extend({
         template: 'NumberPopupWidget',
@@ -209,6 +223,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         },
     });
+    module.Gui.define_popup('number', module.NumberPopupWidget);
 
     module.PasswordPopupWidget = module.NumberPopupWidget.extend({
         renderElement: function(){
@@ -216,21 +231,16 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             this.$('.popup').addClass('popup-password');    // WHY NOT ?!
         },
     });
-
-    module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
-        template: 'ErrorNoClientPopupWidget',
-    });
-
-    module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
-        template: 'ErrorInvoiceTransferPopupWidget',
-    });
+    module.Gui.define_popup('password', module.PasswordPopupWidget);
 
     module.UnsentOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnsentOrdersPopupWidget',
     });
+    module.Gui.define_popup('unsent-orders', module.UnsentOrdersPopupWidget);
 
     module.UnpaidOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnpaidOrdersPopupWidget',
     });
+    module.Gui.define_popup('unpaid-orders', module.UnpaidOrdersPopupWidget);
 };
 

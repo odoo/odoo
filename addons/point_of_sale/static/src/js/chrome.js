@@ -525,28 +525,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             this.$('.loader').removeClass('oe_hidden').animate({opacity:1},150,'swing');
         },
 
-        screens: {
-            'products':     module.ProductScreenWidget,
-            'receipt':      module.ReceiptScreenWidget,
-            'payment':      module.PaymentScreenWidget,
-            'clientlist':   module.ClientListScreenWidget,
-            'scale':        module.ScaleScreenWidget,
-        },
-
-        popups: {
-            'error':            module.ErrorPopupWidget,
-            'error-barcode':    module.ErrorBarcodePopupWidget,
-            'error-traceback':  module.ErrorTracebackPopupWidget,
-            'textinput':        module.TextInputPopupWidget,
-            'textarea':         module.TextAreaPopupWidget,
-            'number':           module.NumberPopupWidget,
-            'password':         module.PasswordPopupWidget,
-            'confirm':          module.ConfirmPopupWidget,
-            'selection':        module.SelectionPopupWidget,
-            'unsent-orders':    module.UnsentOrdersPopupWidget,
-            'unpaid-orders':    module.UnpaidOrdersPopupWidget,
-        },
-
         widgets: [
             {
                 'name':   'order_selector',
@@ -603,14 +581,14 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
         build_widgets: function() {
             var self = this;
 
-            for (var name in this.screens) {
-                var screen = new this.screens[name](this,{});
+            for (var name in this.gui.screen_classes) {
+                var screen = new this.gui.screen_classes[name](this,{});
                     screen.appendTo(this.$('.screens'));
                 this.gui.add_screen(name, screen);
             }
 
-            for (var name in this.popups) {
-                var popup = new this.popups[name](this,{});
+            for (var name in this.gui.popup_classes) {
+                var popup = new this.gui.popup_classes[name](this,{});
                     popup.appendTo(this.$('.popups')); 
                 this.gui.add_popup(name, popup);
             }
