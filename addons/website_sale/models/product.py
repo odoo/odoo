@@ -38,6 +38,7 @@ class product_pricelist(osv.Model):
 
 class product_public_category(osv.osv):
     _name = "product.public.category"
+    _inherit = ["website.seo.metadata"]
     _description = "Public Category"
     _order = "sequence, name"
 
