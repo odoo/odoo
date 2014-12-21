@@ -949,7 +949,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             }));
 
             popup.find('.button').click(function(){
-                self.close();
+                self.gui.close();
             });
 
             popup.css({ zindex: 9001 });
@@ -1040,7 +1040,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                             },2000);
                         } else {
                             clearTimeout(this.confirmed);
-                            this.chrome.close();
+                            this.gui.close();
                         }
                     },
                 }
@@ -1136,26 +1136,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                     this.$('.rightpane').css({'left':'0px'});
                 }
             }
-        },
-        close: function() {
-            var self = this;
-            self.loading_show();
-            self.loading_message(_t('Closing ...'));
-
-            self.pos.push_order().then(function(){
-                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
-                .pipe(function(res) {
-                    window.location = '/web#action=' + res[0]['res_id'];
-                },function(err,event) {
-                    event.preventDefault();
-                    self.gui.show_popup('error',{
-                        'title': _t('Could not close the point of sale.'),
-                        'body':  _t('Your internet connection is probably down.'),
-                    });
-                    self.close_button.renderElement();
-                });
-            });
-
         },
         destroy: function() {
             this.pos.destroy();

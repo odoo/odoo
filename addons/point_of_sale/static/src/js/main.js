@@ -12,6 +12,10 @@ openerp.point_of_sale = function(openerp) {
 
     openerp.point_of_sale.load_keyboard(openerp,module);
 
+    openerp.point_of_sale.load_gui(openerp,module);
+
+    openerp.point_of_sale.load_popups(openerp,module);
+
     openerp.point_of_sale.load_screens(openerp,module);
 
     openerp.point_of_sale.load_devices(openerp,module);
