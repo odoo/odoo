@@ -519,6 +519,15 @@ class account_account(osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
+    def create(self, cr, uid, data, context=None):
+        result = super(account_account, self).create(cr, uid, data, context=context)
+        brw_obj=self.browse(cr,uid,result)
+        if brw_obj.parent_id:
+            if not (brw_obj.user_type.report_type == brw_obj.parent_id.user_type.report_type or brw_obj.parent_id.user_type.report_type == 'none'):
+                raise osv.except_osv(_('Error!'),_("""You can not create the Account until Account Type's 'P&L / BS Category' is same as 
+                         'P&L / BS Category' of Account Type of Parent Account."""))        
+        return result
+
     def _check_recursion(self, cr, uid, ids, context=None):
         obj_self = self.browse(cr, uid, ids[0], context=context)
         p_id = obj_self.parent_id and obj_self.parent_id.id
@@ -713,7 +722,13 @@ class account_account(osv.osv):
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         if 'code' in vals.keys():
             self._check_allow_code_change(cr, uid, ids, context=context)
-        return super(account_account, self).write(cr, uid, ids, vals, context=context)
+        res = super(account_account, self).write(cr, uid, ids, vals, context=context)
+        obj=self.browse(cr,uid,ids[0])
+        if obj.parent_id:
+            if not (obj.user_type.report_type == obj.parent_id.user_type.report_type or obj.parent_id.user_type.report_type == 'none'):
+                raise osv.except_osv(_('Error!'),_("""You can not update the Account until Account Type's 'P&L / BS Category' is same as 
+                         'P&L / BS Category' of Account Type of Parent Account.""")) 
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         self._check_moves(cr, uid, ids, "unlink", context=context)
