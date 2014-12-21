@@ -753,6 +753,49 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
     });
 
+    module.load_fields = function(model_name, fields) {
+        if (!(fields instanceof Array)) {
+            fields = [fields];
+        }
+
+        var models = module.PosModel.prototype.models;
+        for (var i = 0; i < models.length; i++) {
+            var model = models[i];
+            if (model.model === model_name) {
+                if ((model.fields instanceof Array) && model.fields.length > 0) {
+                    model.fields = model.fields.concat(fields || []);
+                }
+            }
+        }
+    };
+
+    module.load_models = function(models,options) {
+        options = options || {};
+        if (!(models instanceof Array)) {
+            models = [models];
+        }
+
+        var pmodels = module.PosModel.prototype.models;
+        var index = pmodels.length;
+        if (options.before) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.before ||
+                        pmodels[i].label === options.before ){
+                    index = i;
+                    break;
+                }
+            }
+        } else if (options.after) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.after ||
+                        pmodels[i].label === options.after ){
+                    index = i + 1;
+                }
+            }
+        }
+        pmodels.splice.apply(pmodels,[index,0].concat(models));
+    };
+
     var orderline_id = 1;
 
     // An orderline represent one element of the content of a client's shopping cart.
