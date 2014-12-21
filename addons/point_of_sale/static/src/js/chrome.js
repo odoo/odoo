@@ -420,12 +420,9 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
 
             this.pos.ready.done(function(){
                 self.build_chrome();
-                self.pos.on_chrome_started();
-                self.started.resolve();
                 self.build_widgets();
-                self.pos.on_chrome_ready();
-                self.ready.resolve();
                 self.disable_rubberbanding();
+                self.ready.resolve();
                 self.loading_hide();
             }).fail(function(err){   // error when loading models data from the backend
                 self.loading_error(err);

@@ -28,16 +28,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});
-            this.chrome.ready.then(function(){
-                self.barcode_reader.connect();
-            });
 
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
             
             // Business data; loaded from the server at launch
-            this.accounting_precision = 2; //TODO
             this.company_logo = null;
             this.company_logo_base64 = '';
             this.currency = null;
@@ -80,21 +76,19 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            this.ready = this.load_server_data();
-
+            this.ready = this.load_server_data().then(function(){
+                return self.after_load_server_data();
+            });;
         },
-        on_chrome_started: function(){
+        after_load_server_data: function(){
              this.barcode_reader.connect();
              this.load_orders();
              this.set_start_order();
-        },
-        on_chrome_ready: function(){
+             this.push_order();
              if(this.config.use_proxy){
                  return this.connect_to_proxy();
              }
-             this.push_order();
         },
-
         // releases ressources holds by the model at the end of life of the posmodel
         destroy: function(){
             // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
@@ -103,6 +97,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.barcode_reader.disconnect();
             this.barcode_reader.disconnect_from_proxy();
         },
+
         connect_to_proxy: function(){
             var self = this;
             var  done = new $.Deferred();
@@ -124,13 +119,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     done.resolve();
                 });
             return done;
-        },
-
-        // helper function to load data from the server. Obsolete use the models loader below.
-        fetch: function(model, fields, domain, ctx){
-            this._load_progress = (this._load_progress || 0) + 0.05; 
-            this.chrome.loading_message(_t('Loading')+' '+model,this._load_progress);
-            return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
 
         // Server side model loaders. This is the list of the models that need to be loaded from
@@ -603,7 +591,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var self = this;
 
             if(order){
-                this.proxy.log('push_order',order.export_as_JSON());
                 this.db.add_order(order.export_as_JSON());
             }
             
