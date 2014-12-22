@@ -28,6 +28,7 @@ openerp.sip_js = function(instance) {
                 self.physical_phone = result.physical_phone;
                 self.ring_number = result.ring_number;
             }else{
+                //TODO will open the error pop up on every page. maybe not the best way to do it
                 //new openerp.web.Model("crm.phonecall").call("error_config");
             }
 
@@ -47,7 +48,6 @@ openerp.sip_js = function(instance) {
 
     //success callback function of the getUserMedia function
     function getUserMediaSuccess(stream) {
-        console.log('getUserMedia succeeded', stream);
         var self = this;
         self.mediaStream = stream;
         if(!self.session){
@@ -57,8 +57,7 @@ openerp.sip_js = function(instance) {
             } else if (self.current_phonecall.partner_mobile){
                 number = self.current_phonecall.partner_mobile;
             }else{
-                //TODO what to do when no number? 
-                console.log("NO NUMBER");
+                //TODO what to do when no number?
                 return {};
             }
             try{
@@ -74,7 +73,6 @@ openerp.sip_js = function(instance) {
                 };    
                 //Make the call
                 self.session = self.ua.invite(number,call_options);
-                //self.session = self.ua.invite("2001",call_options);
 
                 //Select the current call if not already selected
                 if($(".oe_dial_selected_phonecall").data('id') !== self.current_phonecall.id ){
@@ -177,8 +175,7 @@ openerp.sip_js = function(instance) {
                 });
             }catch(err){
                 $('.oe_dial_big_callbutton').html(_t("Call"));
-                $(".oe_dial_transferbutton").attr('disabled','disabled');
-                $(".oe_dial_hangupbutton").attr('disabled','disabled');
+                $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
                 new openerp.web.Model("crm.phonecall").call("error_config");
             }
         }
@@ -195,7 +192,6 @@ openerp.sip_js = function(instance) {
             self.phonecalls_ids = [];
             self.phonecalls = phonecalls_list;
             for (var phone in self.phonecalls){
-                console.log(self.phonecalls[phone]);
                 if(self.phonecalls[phone].state != "done"){
                     self.phonecalls_ids.push(phone);
                 }

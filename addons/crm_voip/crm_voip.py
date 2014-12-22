@@ -62,7 +62,7 @@ class crm_phonecall(models.Model):
                 "partner_image_small": self.partner_id.image_small,
                 "partner_email": self.partner_id.email,
                 "partner_title": self.partner_id.title.name,
-                "partner_phone": self.partner_phone or self.opportunity_id.partner_id.phone or self.opportunity_id.partner_id.mobile or False,
+                "partner_phone": self.partner_phone or self.opportunity_id.phone or self.opportunity_id.partner_id.phone or self.opportunity_id.partner_id.mobile or False,
                 "opportunity_name": self.opportunity_id.name,
                 "opportunity_id": self.opportunity_id.id,
                 "opportunity_priority": self.opportunity_id.priority,
@@ -117,7 +117,7 @@ class crm_lead(models.Model):
                 'opportunity_id': opp.id,
                 'partner_id': opp.partner_id.id,
                 'state': 'to_do',
-                'partner_phone': opp.partner_id.phone,
+                'partner_phone': opp.phone or opp.partner_id.phone,
                 'partner_mobile': opp.partner_id.mobile,
                 'in_queue': True,
             })
@@ -135,7 +135,7 @@ class crm_lead(models.Model):
             'opportunity_id': self.id,
             'partner_id': self.partner_id.id,
             'state': 'to_do',
-            'partner_phone': self.partner_id.phone,
+            'partner_phone': self.opportunity_id.phone or self.partner_id.phone,
             'in_queue': True,
         })
         return {
@@ -170,7 +170,7 @@ class crm_lead(models.Model):
             'opportunity_id': self.id,
             'partner_id': self.partner_id.id,
             'state': 'done',
-            'partner_phone': self.partner_id.phone,
+            'partner_phone': self.opportunity_id.phone or self.partner_id.phone,
             'partner_mobile': self.partner_id.mobile,
             'in_queue': False,
         })
@@ -195,7 +195,7 @@ class crm_lead(models.Model):
                         'default_partner_id': phonecall.partner_id.id,
                         'default_partner_name': phonecall.partner_id.name,
                         'default_partner_email': phonecall.partner_id.email,
-                        'default_partner_phone': phonecall.partner_id.phone,
+                        'default_partner_phone': phonecall.opportunity_id.phone or phonecall.partner_id.phone,
                         'default_partner_image_small': phonecall.partner_id.image_small,},
                         'default_show_duration': self._context.get('default_show_duration'),
             'views': [[False, 'form']],
@@ -343,7 +343,9 @@ class crm_phonecall_transfer_wizard(models.TransientModel):
                     'tag': 'transfer_call',
                     'params': {'number': self.env.user[0].sip_physicalPhone},
                 }
-            # TODO error message if no physical phone ? or do nothing? Weird to have error message during another call
+                action = self.env.ref('base.action_res_users_my')
+                msg = "Wrong configuration for the call. Verify the user's configuration.\nIf you still have issues, please contact your administrator";
+                raise openerp.exceptions.RedirectWarning(_(msg), action.id, _('Configure The User Now'))
         return action
 
 

@@ -136,7 +136,6 @@ openerp.crm_voip = function(instance) {
                         phonecall_displayed = true;
                         if(refresh_by_user){
                             if(phonecall.state != "done"){
-
                                 self.display_in_queue(phonecall);
                             }else{
                                 new openerp.web.Model("crm.phonecall").call("remove_from_queue",[phonecall.id]);
@@ -188,6 +187,7 @@ openerp.crm_voip = function(instance) {
             }else if(phonecall.opportunity_name == phonecall.name){
                 display_opp_name = false;
             }
+            console.log(phonecall);
             var empty_star = parseInt(phonecall.max_priority) - parseInt(phonecall.opportunity_priority);
             //creation of the tooltip
             $("[rel='popover']").popover({
