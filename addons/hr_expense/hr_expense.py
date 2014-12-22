@@ -476,7 +476,7 @@ class account_move_line(osv.osv):
                     #making the postulate it has to be set paid, then trying to invalidate it
                     new_status_is_paid = True
                     for aml in expense.account_move_id.line_id:
-                        if aml.account_id.user_type.type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
+                        if aml.account_id.internal_type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
                             new_status_is_paid = False
                     if new_status_is_paid:
                         expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)

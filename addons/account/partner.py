@@ -270,12 +270,12 @@ class res_partner(models.Model):
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
     property_account_payable = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('user_type.type', '=', 'payable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('user_type.type', '=', 'receivable'), ('deprecated', '=', False)]",
+        domain="[('internal_type', '=', 'receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position = fields.Many2one('account.fiscal.position', company_dependent=True, 

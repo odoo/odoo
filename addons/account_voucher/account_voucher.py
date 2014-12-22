@@ -28,9 +28,9 @@ from openerp.tools import float_compare
 class account_voucher(models.Model):
 
     @api.one
-    @api.depends('move_id.line_id.reconciled', 'move_id.line_id.account_id.user_type.type')
+    @api.depends('move_id.line_id.reconciled', 'move_id.line_id.account_id.internal_type')
     def _check_paid(self):
-        self.paid = any([((line.account_id.user_type.type, 'in', ('receivable', 'payable')) and line.reconciled) for line in self.move_id.line_id])
+        self.paid = any([((line.account_id.internal_type, 'in', ('receivable', 'payable')) and line.reconciled) for line in self.move_id.line_id])
 
     @api.model
     def _get_currency(self):

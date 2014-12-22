@@ -294,7 +294,7 @@ class stock_landed_cost_lines(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Cost', required=True, digits_compute=dp.get_precision('Product Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
-        'account_id': fields.many2one('account.account', 'Account', domain=[('user_type.type', '!=', 'view'), ('user_type.type', '!=', 'closed'), ('deprecated', '=', False)]),
+        'account_id': fields.many2one('account.account', 'Account', domain=[('internal_type', '!=', 'view'), ('internal_type', '!=', 'closed'), ('deprecated', '=', False)]),
     }
 
 class stock_valuation_adjustment_lines(osv.osv):

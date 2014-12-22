@@ -23,9 +23,9 @@ class res_company(models.Model):
     _inherit = "res.company"
 
     income_currency_exchange_account_id = fields.Many2one('account.account',
-        string="Gain Exchange Rate Account", domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)])
+        string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account',
-        string="Loss Exchange Rate Account", domain=[('user_type.type', '=', 'other'), ('deprecated', '=', False)])
+        string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
 
 
 class account_payment_term(models.Model):
@@ -1533,7 +1533,7 @@ class account_operation_template(models.Model):
     has_second_line = fields.Boolean(string='Second line', default=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
-    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type', '!=', 'consolidation')])
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('internal_type', '!=', 'consolidation')])
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
@@ -1544,7 +1544,7 @@ class account_operation_template(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])
 
-    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('user_type.type','!=','consolidation')])
+    second_account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False), ('internal_type','!=','consolidation')])
     second_journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
     second_label = fields.Char(string='Journal Item Label')
     second_amount_type = fields.Selection([

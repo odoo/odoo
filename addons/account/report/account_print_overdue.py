@@ -29,7 +29,7 @@ class Overdue(models.AbstractModel):
     def _lines_get(self, partner):
         return self.env['account.move.line'].search(
                 [('partner_id', '=', partner.id),
-                  ('account_id.user_type.type', 'in', ['receivable', 'payable']),
+                  ('account_id.internal_type', 'in', ['receivable', 'payable']),
                   ('reconciled', '=', False)])
 
     @api.model
@@ -41,8 +41,8 @@ class Overdue(models.AbstractModel):
     def get_amount(self, partner):
         move_line_ids = self._lines_get(partner)
         res = {}
-        res['due_amount'] = reduce(lambda x, y: x + ((y.account_id.user_type.type == 'receivable' and y.debit or 0) or (y.account_id.user_type.type == 'payable' and y.credit * -1 or 0)), move_line_ids, 0)
-        res['paid_amount'] = reduce(lambda x, y: x + ((y.account_id.user_type.type == 'receivable' and y.credit or 0) or (y.account_id.user_type.type == 'payable' and y.debit * -1 or 0)),  move_line_ids, 0)
+        res['due_amount'] = reduce(lambda x, y: x + ((y.account_id.internal_type == 'receivable' and y.debit or 0) or (y.account_id.internal_type == 'payable' and y.credit * -1 or 0)), move_line_ids, 0)
+        res['paid_amount'] = reduce(lambda x, y: x + ((y.account_id.internal_type == 'receivable' and y.credit or 0) or (y.account_id.internal_type == 'payable' and y.debit * -1 or 0)),  move_line_ids, 0)
         res['mat_amount'] = reduce(lambda x, y: x + (y.debit - y.credit), filter(lambda x: x.date_maturity < time.strftime('%Y-%m-%d'), move_line_ids), 0)
         return res
 

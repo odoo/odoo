@@ -104,7 +104,7 @@ class payment_order_create(osv.osv_memory):
 #        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:
-        domain = [('reconciled', '=', False), ('account_id.user_type.type', '=', 'payable'), ('credit', '>', 0), ('account_id.reconcile', '=', True)]
+        domain = [('reconciled', '=', False), ('account_id.internal_type', '=', 'payable'), ('credit', '>', 0), ('account_id.reconcile', '=', True)]
         domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context = dict(context, line_ids=line_ids)

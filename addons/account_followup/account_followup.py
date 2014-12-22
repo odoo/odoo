@@ -305,7 +305,7 @@ class res_partner(osv.osv):
         #psql view the report is based on, so we need to stop the user here.
         if not self.pool.get('account.move.line').search(cr, uid, [
                                                                    ('partner_id', '=', ids[0]),
-                                                                   ('account_id.user_type.type', '=', 'receivable'),
+                                                                   ('account_id.internal_type', '=', 'receivable'),
                                                                    ('reconciled', '=', False),
                                                                    ('company_id', '=', company_id),
                                                                   ], context=context):
@@ -450,7 +450,7 @@ class res_partner(osv.osv):
                                          "Can be practical to set manually e.g. to see if he keeps "
                                          "his promises."),
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconciled', '=', False), '&', 
-                            ('account_id.deprecated','=', False), '&', ('account_id.user_type.type', '=', 'receivable')]), 
+                            ('account_id.deprecated','=', False), '&', ('account_id.internal_type', '=', 'receivable')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
                             help="Latest date that the follow-up level of the partner was changed", 
                             store=False, multi="latest"), 

@@ -68,7 +68,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
-                    <field domain="[('user_type.type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
+                    <field domain="[('internal_type','in',['normal','contract']),('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_invoice_on_timesheets': 1}"/>
                 </field>
             </field>
         </record>

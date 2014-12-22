@@ -102,7 +102,7 @@ class account_invoice(models.Model):
         # and its residual amount is divided by this number of invoices
         partial_reconciliations_done = []
         for line in self.sudo().move_id.line_id:
-            if line.account_id.user_type.type in ('receivable', 'payable'):
+            if line.account_id.internal_type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
                     self.residual += line.amount_residual_currency
                 else:
@@ -607,7 +607,7 @@ class account_invoice(models.Model):
     @api.multi
     def test_paid(self):
         # check whether all corresponding account move lines are reconciled
-        residual_amounts = [l.amount_residual for l in self.move_id.line_id if l.account_id.user_type.type in ('payable', 'receivable')]
+        residual_amounts = [l.amount_residual for l in self.move_id.line_id if l.account_id.internal_type in ('payable', 'receivable')]
         if not residual_amounts:
             return False
         return not any(residual_amounts)

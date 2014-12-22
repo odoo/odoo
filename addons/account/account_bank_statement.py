@@ -381,7 +381,7 @@ class account_bank_statement_line(models.Model):
 
         # Look for a set of move line whose amount is <= to the line's amount
         domain = [('reconciled', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
-        domain += [('account_id.user_type.type', '=', amount > 0 and 'receivable' or 'payable')] # Make sure we can't mix receivable and payable
+        domain += [('account_id.internal_type', '=', amount > 0 and 'receivable' or 'payable')] # Make sure we can't mix receivable and payable
         domain += amount_domain_maker('<', amount) # Will also enforce > 0
         mv_lines = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
@@ -405,7 +405,7 @@ class account_bank_statement_line(models.Model):
         # Domain for classic reconciliation
         domain_reconciliation = [('reconciled', '=', False)]
         if self.partner_id.id or overlook_partner:
-            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.user_type.type', 'in', ['payable', 'receivable'])]])
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.internal_type', 'in', ['payable', 'receivable'])]])
         else:
             domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.reconcile', '=', True)]])
 

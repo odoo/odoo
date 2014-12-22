@@ -86,7 +86,7 @@
                         </group>
                         <group>
                             <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal" groups="account.group_account_user"/>
-                            <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('user_type.type', '=', 'payable')]" groups="account.group_account_user"/>
+                            <field name="employee_payable_account_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('internal_type', '=', 'payable')]" groups="account.group_account_user"/>
                         </group>
                         <group>
                             <label class="oe_grey" groups="account.group_account_user" string="If this field is empty, entries will be generated in the purchase journal."/>

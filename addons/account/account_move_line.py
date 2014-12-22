@@ -233,7 +233,7 @@ class account_move_line(models.Model):
     @api.constrains('account_id')
     def _check_account_type(self):
         for line in self:
-            if line.account_id.user_type.type == 'consolidation':
+            if line.account_id.internal_type == 'consolidation':
                 raise Warning(_('You cannot create journal items on an account of type consolidation.'))
 
     @api.multi
@@ -454,7 +454,7 @@ class account_move_line(models.Model):
                 'is_reconciled': not line.account_id.reconcile,
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
-                'account_type': line.account_id.user_type.type,
+                'account_type': line.account_id.internal_type,
                 'date_maturity': line.date_maturity,
                 'date': line.date,
                 'journal_name': line.journal_id.name,
@@ -624,7 +624,7 @@ class account_move_line(models.Model):
         for move in self:
             company_ids.append(move.company_id.id)
             all_accounts.append(move.account_id)
-            if (move.account_id.user_type.type in ('receivable', 'payable')):
+            if (move.account_id.internal_type in ('receivable', 'payable')):
                 partners.append(move.partner_id.id)
             if move.reconciled:
                 raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))

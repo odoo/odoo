@@ -51,18 +51,18 @@
                         <span t-field="line.date_maturity"/>
                     </td>
                     <td class="text-right">
-                        <t t-if="line.account_id.user_type.type == 'receivable'">
+                        <t t-if="line.account_id.internal_type == 'receivable'">
                             <span t-esc="line.debit"/>
                         </t>
-                        <t t-if="line.account_id.user_type.type == 'payable'">
+                        <t t-if="line.account_id.internal_type == 'payable'">
                             <span t-esc="(line['credit'] * -1)"/>
                         </t>
                     </td>
                     <td class="text-right">
-                        <t t-if="line.account_id.user_type.type == 'receivable'">
+                        <t t-if="line.account_id.internal_type == 'receivable'">
                             <span t-esc="line.credit"/>
                         </t>
-                        <t t-if="line.account_id.user_type.type == 'payable'">
+                        <t t-if="line.account_id.internal_type == 'payable'">
                             <span t-esc="(line.debit * -1)"/>
                         </t>
                     </td>
