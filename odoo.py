@@ -82,7 +82,7 @@ def cmd_setup_git():
         run('git','config','remote.odoo.pushurl','git@github.com:odoo/odoo.git')
         run('git','config','--add','remote.odoo.fetch','dummy')
         run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/*')
         # setup odoo-dev remote
         run('git','config','remote.odoo-dev.url','https://github.com/odoo-dev/odoo.git')
         run('git','config','remote.odoo-dev.pushurl','git@github.com:odoo-dev/odoo.git')
@@ -100,7 +100,7 @@ def cmd_setup_git_dev():
         # setup odoo-dev remote
         run('git','config','--add','remote.odoo-dev.fetch','dummy')
         run('git','config','--unset-all','remote.odoo-dev.fetch')
-        run('git','config','--add','remote.odoo-dev.fetch','+refs/heads/*:refs/remotes/odoo-dev/heads/*')
+        run('git','config','--add','remote.odoo-dev.fetch','+refs/heads/*:refs/remotes/odoo-dev/*')
         run('git','config','--add','remote.odoo-dev.fetch','+refs/pull/*:refs/remotes/odoo-dev/pull/*')
         run('git','remote','update')
 
@@ -110,7 +110,7 @@ def cmd_setup_git_review():
         # setup odoo-dev remote
         run('git','config','--add','remote.odoo.fetch','dummy')
         run('git','config','--unset-all','remote.odoo.fetch')
-        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/heads/*')
+        run('git','config','--add','remote.odoo.fetch','+refs/heads/*:refs/remotes/odoo/*')
         run('git','config','--add','remote.odoo.fetch','+refs/tags/*:refs/remotes/odoo/tags/*')
         run('git','config','--add','remote.odoo.fetch','+refs/pull/*:refs/remotes/odoo/pull/*')
 
