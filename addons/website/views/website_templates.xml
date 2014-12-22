@@ -6,11 +6,6 @@
 
 <!-- Layout and generic templates -->
 
-<template id="website.theme" name="Theme">
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-    <link rel="stylesheet" href='/website/static/src/css/website.css' t-ignore="true"/>
-</template>
-
 <template id="website.assets_frontend" name="Website assets">
     <t t-call="website.theme"/>
 
@@ -223,6 +218,7 @@
     <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
 
 </template>
 

@@ -642,3 +642,43 @@
   height: 16px;
   display: inline-block;
 }
+
+/* ---- COLOR-PICKER ----  {{{ */
+.colorpicker {
+  margin: 0 auto;
+  background: transparent;
+  border: 0;
+}
+.colorpicker td {
+  padding: 0;
+  background: transparent;
+}
+.colorpicker td > * {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  margin: 3px;
+  padding: 0;
+  border-width: 1px;
+  display: block;
+}
+.colorpicker .only-text {
+  display: none;
+}
+.colorpicker .automatic-color {
+  background: white;
+  border-left: 7px solid #ff3333;
+  border-top: 7px solid #00ee00;
+  border-right: 8px solid #3333ff;
+  border-bottom: 8px solid #ffee00;
+  margin: 4px 3px 3px 3px;
+  width: 0;
+  height: 0;
+}
+
+.cke_panel_container table.colorpicker tr:first-child td {
+  padding-top: 6px;
+}
+.cke_panel_container table.colorpicker tr:last-child td {
+  padding-bottom: 6px;
+}
