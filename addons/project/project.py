@@ -42,8 +42,8 @@ class project_task_type(models.Model):
     def _get_default_project_ids(self):
         project = self.env['project.task']._get_default_project_id()
         if project:
-            self.project_ids = project
-        self.project_ids = None
+            return project
+        return None
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
     description = fields.Text(string='Description')
@@ -214,6 +214,7 @@ class project(models.Model):
         help="Link this project to an analytic account if you need financial management on projects. "
              "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
         ondelete="cascade", required=True, auto_join=True)
+    label_tasks = fields.Char('Use Tasks as', help="Gives label to tasks on project's kanaban view.", default='Tasks')
     members = fields.Many2many('res.users', 'project_user_rel', 'project_id', 'uid', string='Project Members',
         help="Project's members are users who can have an access to the tasks related to this project.", states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]})
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
@@ -386,7 +387,7 @@ class project(models.Model):
             for task in project.tasks:
                 if task.user_id and (task.user_id.id not in u_ids):
                     u_ids.append(task.user_id.id)
-            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id
+            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             resource_objs = resource_pool.generate_resources(u_ids, calendar_id)
             for key, vals in resource_objs.items():
                 result += '''
@@ -1104,7 +1105,7 @@ class project_task_history_cumulative(models.Model):
     _auto = False
 
     end_date = fields.Date(string='End Date')
-    nbr_tasks = fields.Integer(string='# of Tasks', readonly=True),
+    nbr_tasks = fields.Integer(string='# of Tasks', readonly=True)
     project_id = fields.Many2one('project.project', string='Project')
 
     @api.v7
