@@ -600,7 +600,22 @@ class website(osv.osv):
         if response.status_code == 304:
             return response
 
-        data = record[field].decode('base64')
+        if model == 'ir.attachment' and field == 'url' and field in record:
+            path = record[field].strip('/')
+
+            # Check that we serve a file from within the module
+            if os.path.normpath(path).startswith('..'):
+                return self._image_placeholder(response)
+
+            # Check that the file actually exists
+            path = path.split('/')
+            resource = openerp.modules.get_module_resource(*path)
+            if not resource:
+                return self._image_placeholder(response)
+
+            data = open(resource, 'rb').read()
+        else:
+            data = record[field].decode('base64')
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 

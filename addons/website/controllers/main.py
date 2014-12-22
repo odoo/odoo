@@ -464,13 +464,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         xmlid can be used to load the image. But the field image must by base64-encoded
         """
         if xmlid and "." in xmlid:
-            xmlid = xmlid.split(".", 1)
             try:
-                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+                record = request.env.ref(xmlid)
+                model, id = record._name, record.id
             except:
                 raise werkzeug.exceptions.NotFound()
-            if model == 'ir.attachment':
-                field = "datas"
+            if model == 'ir.attachment' and not field:
+                if record.sudo().type == "url":
+                    field = "url"
+                else:
+                    field = "datas"
 
         if not model or not id or not field:
             raise werkzeug.exceptions.NotFound()
