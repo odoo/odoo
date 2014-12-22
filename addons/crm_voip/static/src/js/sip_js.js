@@ -268,7 +268,7 @@ openerp.sip_js = function(instance) {
         var self = this;
         if(self.session){
             self.session.refer(number);
-            stop_automatic_call();
+            self.stop_automatic_call();
         }
     };
 

@@ -343,10 +343,15 @@ class crm_phonecall_transfer_wizard(models.TransientModel):
                     'tag': 'transfer_call',
                     'params': {'number': self.env.user[0].sip_physicalPhone},
                 }
-                action = self.env.ref('base.action_res_users_my')
-                msg = "Wrong configuration for the call. Verify the user's configuration.\nIf you still have issues, please contact your administrator";
-                raise openerp.exceptions.RedirectWarning(_(msg), action.id, _('Configure The User Now'))
+            else:
+                action = {
+                    'warning': {
+                        'title': _("Warning"),
+                        'message': _("Wrong configuration for the call. There is no physical phone number configured"),
+                    },
+                }
         return action
+        
 
 
 class res_users(models.Model):

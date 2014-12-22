@@ -187,7 +187,6 @@ openerp.crm_voip = function(instance) {
             }else if(phonecall.opportunity_name == phonecall.name){
                 display_opp_name = false;
             }
-            console.log(phonecall);
             var empty_star = parseInt(phonecall.max_priority) - parseInt(phonecall.opportunity_priority);
             //creation of the tooltip
             $("[rel='popover']").popover({
@@ -364,6 +363,9 @@ openerp.crm_voip = function(instance) {
                 target: 'new',
                 context: {},
                 views: [[false, 'form']],
+                flags: {
+                    'headless': true,
+                },
             });
         },
 
