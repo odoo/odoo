@@ -542,10 +542,6 @@ class res_users(osv.osv):
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
-    @api.v7
-    def get_company_currency_id(self, cr, uid, context=None):
-        return self.browse(uid).company_id.currency_id.id    
-
 #----------------------------------------------------------
 # Implied groups
 #

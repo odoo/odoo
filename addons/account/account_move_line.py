@@ -331,7 +331,7 @@ class account_move_line(models.Model):
         # Fetch other data
         for row in rows:
             account = self.env['account.account'].browse(row['account_id'])
-            row['currency_id'] = account.currency_id.id or account.company_currency_id.id
+            row['currency_id'] = account.currency_id.id or account.company_id.currency_id.id
             partner_id = is_partner and row['partner_id'] or None
             row['reconciliation_proposition'] = self.get_reconciliation_proposition(account.id, partner_id)
 
@@ -362,7 +362,7 @@ class account_move_line(models.Model):
 
         # Return lines formatted
         if len(pairs) > 0:
-            target_currency = self.currency_id or self.company_currency_id
+            target_currency = self.currency_id or self.company_id.currency_id
             lines = self.browse(list(pairs[0]))
             return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
         else:
@@ -424,7 +424,7 @@ class account_move_line(models.Model):
             target_currency = self.env['res.currency'].browse(target_currency_id)
         else:
             account = self.env['account.account'].browse(account_id)
-            target_currency = account.currency_id or account.company_currency_id
+            target_currency = account.currency_id or account.company_id.currency_id
         return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
 
     @api.v7

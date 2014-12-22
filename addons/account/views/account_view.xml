@@ -96,19 +96,17 @@
                             <field name="user_type"/>
                             <field name="deprecated"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field groups="base.group_multi_currency" name="currency_id"/>
                         </group>
                         <group>
-                            <field name="tax_ids" domain="[('parent_id','=',False)]" widget="many2many_tags"/>
+                            <field name="tax_ids" domain="[('type_tax_use','!=','as_child')]" widget="many2many_tags"/>
+                            <field name="child_consol_ids" widget="many2many_tags"/>
                             <field name="reconcile"/>
-                            <!-- TODO : Unknown field user_type.type in domain ... No joining in web client ? -->
-                            <field name="last_time_entries_checked" readonly="1"/> <!-- attrs="{'invisible':['|',('reconcile','=',False),('user_type.type','in',['payable', 'receivable'])]}" -->
-                            <field name="child_consol_ids"
-                                widget="many2many_tags"/>
-                        </group>
-                        <button string="Reconcile" type="action" class="oe_highlight"
-                            name="%(action_reconcile_account)d"/> <!-- attrs="{'invisible':['|',('reconcile','=',False),('user_type.type','in',['payable', 'receivable'])]}" -->
-                        <group groups="base.group_multi_currency">
-                            <field name="currency_id"/>
+                            <field name="internal_type" invisible="1"/>
+                            <field name="last_time_entries_checked" readonly="1"
+                                attrs="{'invisible':['|','|',('reconcile','=',False),('internal_type','in',('payable', 'receivable')),('last_time_entries_checked','=',False)]}"/>
+                            <button colspan="2" string="Reconcile" type="action" class="oe_highlight" name="%(action_reconcile_account)d"
+                                attrs="{'invisible':['|',('reconcile','=',False),('internal_type','in',('payable', 'receivable'))]}" />
                         </group>
                     </group>
                     <label for="note"/>
@@ -123,8 +121,8 @@
                 <tree string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="user_type" invisible="1"/>
-                    <field name="company_currency_id"/>
+                    <field name="user_type"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>

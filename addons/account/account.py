@@ -80,12 +80,14 @@ class account_payment_term_line(models.Model):
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Computation', required=True, default='balance',
-        help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated.""")
+        help="Select here the kind of valuation related to this payment term line. Note that you should have your last "
+            "line with the type 'Balance' to ensure that the whole amount will be treated.")
     value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computation of the day of month." \
         "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
-        help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month).")
+        help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. "
+            "Set 0 for net days (otherwise it's based on the beginning of the month).")
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
 
     @api.one
@@ -153,12 +155,6 @@ class account_account(models.Model):
             children_ids |= set(this_rec_children)
         return list(children_ids)
 
-    @api.multi
-    @api.depends('company_id')
-    def _get_company_currency(self):
-        for account in self:
-            account.company_currency_id = (account.company_id.currency_id.id, account.company_id.currency_id.symbol)
-
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Secondary Currency',
@@ -166,8 +162,8 @@ class account_account(models.Model):
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
-        help="Account Type is used for information purpose, to generate "\
-        "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
+        help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
+    internal_type = fields.Selection(related='user_type.type', store=True)
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
     last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
         help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
@@ -178,7 +174,6 @@ class account_account(models.Model):
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
-    company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute='_get_company_currency')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
 
@@ -278,7 +273,8 @@ class account_journal(models.Model):
     groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency = fields.Many2one('res.currency', string='Currency', help='The currency used to enter statement')
     entry_posted = fields.Boolean(string='Autopost Created Moves',
-        help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.')
+        help="Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the "
+            "source document is validated (Invoices), whatever the status of this field.")
     company_id = fields.Many2one('res.company', string='Company', required=True, index=1, default=lambda self: self.env.user.company_id,
         help="Company related to this journal")
 
@@ -709,7 +705,8 @@ class account_account_template(models.Model):
     nocreate = fields.Boolean(string='Optional Create', default=False,
         help="If checked, the new chart of accounts will not contain this by default.")
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template',
-        help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
+        help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you "
+            "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
 
     @api.multi
     @api.depends('name', 'code')
@@ -823,10 +820,12 @@ class account_chart_template(models.Model):
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
     visible = fields.Boolean(string='Can be Visible?', default=True,
-        help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template.")
+        help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
+            "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
-        help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete')
+        help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
+            "of taxes. This last choice assumes that the set of tax defined on this template is complete")
     account_root_id = fields.Many2one('account.account.template', string='Root Account')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
@@ -1018,7 +1017,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
-        help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete')
+        help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
+            "the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete")
 
     @api.model
     def _get_chart_parent_ids(self, chart_template):
@@ -1551,6 +1551,7 @@ class account_operation_template(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string='Amount type', required=True, default='percentage')
-    second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount = fields.Float(string='Amount', digits=dp.get_precision('Account'), required=True, default=100.0,
+        help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use','=','purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain=[('state','not in',('close','cancelled'))])

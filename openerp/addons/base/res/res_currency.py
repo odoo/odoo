@@ -278,9 +278,13 @@ class res_currency(osv.osv):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
+    @api.v7
     def get_format_currencies_js_function(self, cr, uid, context=None):
         """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
-            That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
+            That function expects the number as first parameter and the currency id as second parameter.
+            If the currency id parameter is false or undefined, the company currency is used.
+        """
+        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         function = ""
         for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
             symbol = row['symbol'] or row['name']
@@ -290,6 +294,9 @@ class res_currency(osv.osv):
             else:
                 return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
             function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
+            if (row['id'] == company_currency_id):
+                company_currency_format = return_str
+        function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
 
 class res_currency_rate(osv.osv):
