@@ -124,38 +124,19 @@ class crm_lead(format_address, osv.osv):
             context = {}
         return context.get('default_type')
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('crm.stage')
-        order = stage_obj._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
+        if options is None: options = {}
         search_domain = []
         team_id = self._resolve_team_id_from_context(cr, uid, context=context)
         if team_id:
-            search_domain += ['|', ('team_ids', '=', team_id)]
-            search_domain += [('id', 'in', ids)]
-        else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
-        # retrieve type from the context (if set: choose 'type' or 'both')
+            search_domain += [('team_ids', '=', team_id)]
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
             search_domain += ['|', ('type', '=', type), ('type', '=', 'both')]
-        # perform search
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
-        return result, fold
+        options.update({
+            'domain': search_domain
+        })
+        return super(crm_lead, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, options=options)
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context and context.get('opportunity_id'):
@@ -166,10 +147,6 @@ class crm_lead(format_address, osv.osv):
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
         return res
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """

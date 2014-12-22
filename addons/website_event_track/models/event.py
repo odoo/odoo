@@ -61,7 +61,7 @@ class event_track(models.Model):
         else:
             self.image = False
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure

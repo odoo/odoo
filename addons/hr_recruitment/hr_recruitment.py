@@ -131,31 +131,16 @@ class hr_applicant(osv.Model):
             company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
         return company_id            
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('hr.recruitment.stage')
-        order = stage_obj._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
-        # retrieve section_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('department_id', '=', False), ('fold', '=', False): add default columns that are not folded
-        # - OR ('department_id', 'in', department_id), ('fold', '=', False) if department_id: add department columns that are not folded
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
         department_id = self._resolve_department_id_from_context(cr, uid, context=context)
         search_domain = []
         if department_id:
             search_domain += ['|', ('department_id', '=', department_id)]
-        search_domain += ['|', ('id', 'in', ids), ('department_id', '=', False)]
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
-        return result, fold
+        search_domain += [('department_id', '=', False)]
+        options.update({
+            'domain': search_domain
+        })
+        return super(hr_applicant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, options=options)
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         res = dict((res_id, {}) for res_id in ids)
@@ -245,10 +230,6 @@ class hr_applicant(osv.Model):
         'color': 0,
         'priority': '0',
         'date_last_stage_update': fields.datetime.now,
-    }
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
     }
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):

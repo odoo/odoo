@@ -7,7 +7,7 @@
             <field name="name">event.track.kanban</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="state">
+                <kanban default_group_by="state" options='{"display_empty_columns":"stage_id"}'>
                     <templates>
                         <field name="color"/>
                         <field name="speaker_ids"/>

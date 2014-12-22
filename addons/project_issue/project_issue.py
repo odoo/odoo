@@ -99,33 +99,19 @@ class project_issue(osv.Model):
                 return int(project_ids[0][0])
         return None
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('project.task.type')
-        order = stage_obj._order
-        # lame hack to allow reverting search, should just work in the trivial case
-        if read_group_order == 'stage_id desc':
-            order = "%s desc" % order
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
-        search_domain = []
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
+        if options is None: options = {}
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
+        search_domain = []
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+            search_domain = [('project_ids', '=', project_id)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
-        # perform search
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
-        return result, fold
+            search_domain = [('case_default', '=', True)]
+        options.update({
+            'display_empty_columns':"stage_id",
+            'domain': search_domain
+        })
+        return super(project_issue, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, options=options)
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -297,10 +283,6 @@ class project_issue(osv.Model):
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
-    }
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
     }
 
     def copy(self, cr, uid, id, default=None, context=None):

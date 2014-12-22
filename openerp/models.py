@@ -1851,6 +1851,12 @@ class BaseModel(object):
                                                   access_rights_uid=openerp.SUPERUSER_ID,
                                                   context=context)
 
+        return self._read_group_fill_results_process(cr, uid, domain, groupby, remaining_groupbys,
+                                                         aggregated_fields, count_field, read_group_result,
+                                                         all_groups, folded, context)
+
+    def _read_group_fill_results_process(self, cr, uid, domain, groupby, remaining_groupbys, aggregated_fields, count_field, read_group_result, all_groups, folded, context=None):
+
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
         if remaining_groupbys:
@@ -2045,7 +2051,7 @@ class BaseModel(object):
         del data['id']
         return data
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True, options=None):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
@@ -2079,6 +2085,8 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        if options is None:
+            options = {}
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
@@ -2170,7 +2178,44 @@ class BaseModel(object):
             result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                                                        aggregated_fields, count_field, result, read_group_order=order,
                                                        context=context)
+
+        group_by_field = groupby_fields[0]
+        if group_by_field in many2onefields and group_by_field in self._columns:
+            stage_obj = self.pool.get(self._columns[group_by_field]._obj)
+
+            if ('fold' in stage_obj._columns) or (options.get('fold_field') == group_by_field) or (options.get('display_empty_columns') and group_by_field in options.get('display_empty_columns')):
+
+                fold_field = options.get('fold_field') or group_by_field
+                stage_domain = options.get('domain') or []
+                display_empty_columns = options.get('display_empty_columns')
+                result = self._read_group_fill_many2onefield_results(cr, uid, domain, stage_domain, display_empty_columns, 
+                                                                         fold_field, group_by_field, groupby[len(annotated_groupbys):], 
+                                                                         aggregated_fields, count_field, result, read_group_order=order, 
+                                                                         context=context)
+
         return result
+
+    def _read_group_fill_many2onefield_results(self, cr, uid, domain, stage_domain, display_empty_columns, fold_field, groupby, remaining_groupbys, aggregated_fields, count_field, read_group_result, read_group_order=None, context=None):
+        all_groups = {}
+        folded = {}
+        group_by_obj = self.pool.get(self._columns[groupby]._obj)
+        order = group_by_obj._order
+        if read_group_order.endswith('desc'):
+            order = "%s desc" % order
+
+        present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
+        if stage_domain:
+            stage_domain = ['|',('id', 'in', present_group_ids)] + stage_domain
+        group_by_ids = group_by_obj._search(cr, uid, stage_domain, order=order, context=context)
+        if (display_empty_columns and groupby in display_empty_columns):
+            all_groups = group_by_obj.name_get(cr, openerp.SUPERUSER_ID, group_by_ids, context=context)
+        if fold_field == groupby and 'fold' in group_by_obj._columns:
+            for fold in group_by_obj.browse(cr, openerp.SUPERUSER_ID, group_by_ids, context=context):
+                folded[fold.id] = fold.fold or False
+
+        return self._read_group_fill_results_process(cr, uid, domain, groupby, remaining_groupbys,
+                                                         aggregated_fields, count_field, read_group_result,
+                                                         all_groups, folded, context)
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
         """

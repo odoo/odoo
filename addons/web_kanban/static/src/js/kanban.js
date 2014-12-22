@@ -253,7 +253,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 // ensure group_by fields are read.
                 self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
             }
-            var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields);
+            var options;
+            if(self.fields_view.arch.attrs.options) {
+                options = JSON.parse(self.fields_view.arch.attrs.options);
+            }
+            var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields, options);
             return self.alive($.when(grouping)).then(function(groups) {
                 self.remove_no_result();
                 if (groups) {

@@ -286,7 +286,7 @@
             <field name="name">CRM - Leads Kanban</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id">
+                <kanban default_group_by="stage_id" options='{"fold_field":"stage_id", "display_empty_columns": "stage_id"}'>
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
