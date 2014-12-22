@@ -17,10 +17,11 @@ class account_partial_reconcile(models.Model):
     _name = "account.partial.reconcile"
     _description = "Partial Reconcile"
 
-    source_move_id = fields.Many2one('account.move.line')
-    rec_move_id = fields.Many2one('account.move.line')
+    debit_move_id = fields.Many2one('account.move.line')
+    credit_move_id = fields.Many2one('account.move.line')
     amount = fields.Float()
     amount_currency = fields.Float()
+    currency_id = fields.Many2one('res.currency', string='Currency')
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -201,9 +202,9 @@ class account_move_line(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'rec_move_id', String='Partially Reconciled with',
+    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Partially Reconciled with',
         help='Moves in which this move is involved for partial reconciliation')
-    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'source_move_id', String='Partial Reconciliation',
+    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Partial Reconciliation',
         help='Moves involved in this move partial reconciliation')
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=_get_journal, required=True, index=True, store=True)
@@ -609,7 +610,7 @@ class account_move_line(models.Model):
         if amount_reconcile == sm_credit_move.amount_residual:
             self -= sm_credit_move
 
-        self.env['account.partial.reconcile'].create({'source_move_id': sm_debit_move.id, 'rec_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
+        self.env['account.partial.reconcile'].create({'debit_move_id': sm_debit_move.id, 'credit_move_id': sm_credit_move.id, 'amount': amount_reconcile,})
 
         #Iterate process again on self
         return self.auto_reconcile_lines()
