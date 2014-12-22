@@ -358,7 +358,7 @@ class ir_ui_menu(osv.osv):
     @api.cr_uid_context
     @tools.ormcache_context(accepted_keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'icon']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         return {
@@ -432,7 +432,7 @@ class ir_ui_menu(osv.osv):
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name,
             string='Full Path', type='char', size=128),
-        'icon': fields.selection(tools.icons, 'Icon', size=64),
+        'icon': fields.char('Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File'),
         'web_icon_hover': fields.char('Web Icon File (hover)'),
@@ -462,7 +462,6 @@ class ir_ui_menu(osv.osv):
         (osv.osv._check_recursion, _rec_message, ['parent_id'])
     ]
     _defaults = {
-        'icon': 'STOCK_OPEN',
         'icon_pict': ('stock', ('STOCK_OPEN', 'ICON_SIZE_MENU')),
         'sequence': 10,
     }
