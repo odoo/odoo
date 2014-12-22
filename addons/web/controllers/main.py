@@ -1455,7 +1455,6 @@ class ExportFormat(object):
 
         field_names = map(operator.itemgetter('name'), fields)
         import_data = Model.export_data(ids, field_names, self.raw_data, context=context).get('datas',[])
-
         if import_compat:
             columns_headers = field_names
         else:
@@ -1569,7 +1568,18 @@ class XMLExport(ExportFormat, http.Controller):
         fp = StringIO()
         root = etree.Element("openerp")
         data_root = etree.SubElement(root, "data")
-        fields_name = map(fix_import_export_id_paths, fields)
+        fields_name = map(fix_import_export_id_paths, fields)  # [u'company_id', u'id']
+        o2m_fields = []
+        m2o_m2m_fields = []
+        o2o_fields = []
+        for fields in fields_name:
+            if fields[0] == "child_ids":
+                o2m_fields.append(fields)
+            elif fields[0] != "child_ids" and len(fields) > 1:
+                m2o_m2m_fields.append(fields)
+            else:
+                o2o_fields.append(fields)
+
         # for record, _subinfo in request.session.model(model).extract_records(fields_name, rows):
         for record in self._extract_records(fields_name, rows, model):
             self._generate_xml_record(model, data_root, record)

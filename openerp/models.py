@@ -859,6 +859,26 @@ class BaseModel(object):
             })
             return '__export__.' + name
 
+    def export_fields_xml(self, fields):
+        print self  # res.partner(7, 43)
+        print fields  # [[u'id'], [u'email'], [u'company_id', u'id'], [u'child_ids', u'bank_ids', u'company_id']]
+        for record in self:
+            res = [''] * len(fields)
+            primary_done = []
+            for index, field in enumerate(fields):
+                if field[0] == '.id':
+                    res[index] = str(record.id)
+                elif field[0] == 'id':
+                    res[index] = record.__export_xml_id()
+                else:
+                    fld = record._fields[field[0]]
+                    val = record[field[0]]
+
+                    if not isinstance(val, BaseModel):
+                        res[index] = fld.convert_to_export(val, self.env)
+                    else:
+                        primary_done.append(field[0])
+
     @api.multi
     def __export_rows(self, fields):
         """ Export fields of the records in `self`.
@@ -939,7 +959,7 @@ class BaseModel(object):
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
             self = self.with_context(export_raw_data=True)
-        return {'datas': self.__export_rows(fields_to_export)}
+        return {'datas': self.export_fields_xml(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         """
