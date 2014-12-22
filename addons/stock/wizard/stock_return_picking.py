@@ -131,7 +131,7 @@ class stock_return_picking(osv.osv_memory):
                     # a valid return move will be the exact opposite of ours:
                     #     (src location, dest location) <=> (dest location, src location))
                     if rec.location_dest_id.id == m.location_id.id \
-                        and rec.location_id.id == m.location_dest_id.id:
+                        and rec.location_id.id == m.location_dest_id.id and rec.state != 'cancel':
                         return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
         return return_history
 
