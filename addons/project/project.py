@@ -38,7 +38,6 @@ class project_task_type(models.Model):
     _description = 'Task Stage'
     _order = 'sequence'
 
-    @api.model
     def _get_default_project_ids(self):
         project = self.env['project.task']._get_default_project_id()
         if project:
@@ -46,8 +45,8 @@ class project_task_type(models.Model):
         return None
 
     name = fields.Char(string='Stage Name', required=True, translate=True)
-    description = fields.Text(string='Description')
-    sequence = fields.Integer(string='Sequence', default=1)
+    description = fields.Text()
+    sequence = fields.Integer(default=1)
     case_default = fields.Boolean(string='Default for New Projects',
                     help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects.")
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects', default=_get_default_project_ids)
@@ -112,17 +111,15 @@ class project(models.Model):
         [analytic_account_delete.unlink() for analytic_account_delete in analytic_account_to_delete]
         return res
 
-    @api.multi
     def _get_attached_docs(self):
         attachment = self.env['ir.attachment']
         task = self.env['project.task']
         for rec in self:
             project_attachments = attachment.search_count([('res_model', '=', 'project.project'), ('res_id', '=', rec.id)])
             task_ids = task.search([('project_id', '=', rec.id)])
-            task_attachments = attachment.search_count([('res_model', '=', 'project.task'), ('res_id', 'in', task_ids._ids)])
-            rec.doc_count = (project_attachments or 0) + (task_attachments or 0)
+            task_attachments = attachment.search_count([('res_model', '=', 'project.task'), ('res_id', 'in', task_ids.ids)])
+            rec.doc_count = project_attachments + task_attachments
 
-    @api.multi
     def _task_count(self):
         for tasks in self:
             tasks.task_count = len(tasks.task_ids)
@@ -141,12 +138,12 @@ class project(models.Model):
 
     @api.multi
     def attachment_tree_view(self):
-        task_ids = self.env['project.task'].search([('project_id', 'in', self._ids)])
+        task_ids = self.env['project.task'].search([('project_id', 'in', self.ids)])
         domain = [
              '|',
-             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', self._ids),
-             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids._ids)]
-        res_id = self._ids and self._ids[0]
+             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', self.ids),
+             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids.ids)]
+        res_id = self.ids and self.ids[0]
         return {
             'name': _('Attachments'),
             'domain': domain,
@@ -189,7 +186,6 @@ class project(models.Model):
             section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
 
-    @api.multi
     def _get_project_task_data(self):
         obj = self.env['project.task']
         month_begin = date.today().replace(day=1)
@@ -199,7 +195,6 @@ class project(models.Model):
             created_domain = [('project_id', '=', rec.id), ('create_date', '>=', date_begin), ('create_date', '<=', date_end), ('stage_id.fold', '=', False)]
             rec.monthly_tasks = json.dumps(self.__get_bar_values(obj, created_domain, ['create_date'], 'create_date_count', 'create_date'))
 
-    @api.model
     def _get_type_common(self):
         return self.env['project.task.type'].search([('case_default', '=', True)])
 
@@ -207,8 +202,8 @@ class project(models.Model):
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
-    active = fields.Boolean(string='Active', help="If the active field is set to False, it will allow you to hide the project without removing it.", default=True)
-    sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of Projects.", default=10)
+    active = fields.Boolean(help="If the active field is set to False, it will allow you to hide the project without removing it.", default=True)
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of Projects.", default=10)
     analytic_account_id = fields.Many2one(
         'account.analytic.account', string='Contract/Analytic',
         help="Link this project to an analytic account if you need financial management on projects. "
@@ -262,7 +257,7 @@ class project(models.Model):
                 self._message_add_suggested_recipient(recipients, data, partner=data.partner_id, reason='%s' % reason)
         return recipients
 
-    # TODO: Why not using a SQL contraints ?# TODO: Why not using a SQL contraints ?
+    # TODO: Why not using a SQL contraints ?
     @api.constrains('date_start', 'date')
     def _check_dates(self):
         for leave in self.read(['date_start', 'date']):
@@ -308,14 +303,14 @@ class project(models.Model):
         result = []
         for proj in self:
             parent_id = self._context.get('parent_id')
-            self._context.update({'analytic_project_copy': True})
+            self.with_context(analytic_project_copy=True)
             new_date_start = time.strftime('%Y-%m-%d')
             new_date_end = False
             if proj.date_start and proj.date:
                 start_date = date(*time.strptime(proj.date_start, '%Y-%m-%d')[:3])
                 end_date = date(*time.strptime(proj.date, '%Y-%m-%d')[:3])
                 new_date_end = (datetime(*time.strptime(new_date_start, '%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            self._context.update({'copy': True})
+            self.with_context(copy=True)
             new_id = proj.copy(default={
                                     'name':_("%s (copy)") % (proj.name),
                                     'state':'open',
@@ -327,7 +322,7 @@ class project(models.Model):
             child_ids = self.search([('parent_id', '=', proj.analytic_account_id.id)])
             parent_id = new_id.read(['analytic_account_id'])['analytic_account_id'][0]
             if child_ids:
-                self._context.update({'parent_id': parent_id})
+                self.with_context(parent_id=parent_id)
                 child_ids.duplicate_template()
 
         if result and len(result):
@@ -517,7 +512,6 @@ class task(models.Model):
         },
     }
 
-    @api.model
     def _get_default_partner(self):
         project_id = self._get_default_project_id()
         if project_id:
@@ -526,12 +520,10 @@ class task(models.Model):
                 return project.partner_id.id
         return False
 
-    @api.model
     def _get_default_project_id(self):
         """ Gives default section by checking if present in the context """
         return (self._context.get('default_project_id'))
 
-    @api.model
     def _get_default_stage_id(self):
         """ Gives default stage_id """
         project_id = self._get_default_project_id()
@@ -629,7 +621,6 @@ class task(models.Model):
             default['name'] = _("%s (copy)") % self.name
         return super(task, self).copy_data(default)
 
-    @api.multi
     def _is_template(self):
         for task in self:
             task.active = True
@@ -639,9 +630,9 @@ class task(models.Model):
 
     active = fields.Boolean(compute='_is_template', store=True, string='Not a Template Task', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked.", default=True)
     name = fields.Char(string='Task Summary', track_visibility='onchange', required=True, index=True)
-    description = fields.Html(string='Description')
-    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', index=True, default='0')
-    sequence = fields.Integer(string='Sequence', index=True, help="Gives the sequence order when displaying a list of tasks.", default=10)
+    description = fields.Html()
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], index=True, default='0')
+    sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of tasks.", default=10)
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
                     domain="[('project_ids', '=', project_id)]", copy=False, default=_get_default_stage_id)
     tag_ids = fields.Many2many('project.tags', string='Tags')
@@ -661,7 +652,7 @@ class task(models.Model):
     project_id = fields.Many2one('project.project', string='Project', ondelete='set null', index=True, track_visibility='onchange', change_default=True, default=_get_default_project_id)
     parent_ids = fields.Many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', string='Parent Tasks')
     child_ids = fields.Many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', string='Delegated Tasks')
-    notes = fields.Text(string='Notes')
+    notes = fields.Text()
     planned_hours = fields.Float(string='Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.')
     remaining_hours = fields.Float(string='Remaining Hours', digits_compute=dp.get_precision('Product Price'), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users', string='Assigned to', index=True, track_visibility='onchange', default=lambda self: self._uid)
@@ -861,14 +852,13 @@ class task(models.Model):
         if type(vals) == list:
             vals = vals[0][0]
         if vals.get('project_id') and not self._context.get('default_project_id'):
-            create_context = dict(self._context, default_project_id=vals.get('project_id'))
+            self.with_context(default_project_id=vals.get('project_id'))
         # user_id change: update date_start
         if vals.get('user_id') and not vals.get('date_start'):
             vals['date_start'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
-        create_context = dict(self._context, mail_create_nolog=True)
-        self.with_context(create_context)
+        self.with_context(mail_create_nolog=True)
         task_id = super(task, self).create(vals)
         task_id._store_history()
         return task_id
@@ -1046,7 +1036,7 @@ class account_analytic_account(models.Model):
 
     @api.multi
     def unlink(self):
-        proj_ids = self.env['project.project'].search([('analytic_account_id', 'in', self._ids)])
+        proj_ids = self.env['project.project'].search([('analytic_account_id', 'in', self.ids)])
         if proj_ids:
             has_tasks = self.evn['project.task'].search([('project_id', 'in', [ids for ids in proj_ids])], count=True)
             if has_tasks:
@@ -1092,7 +1082,7 @@ class project_task_history(models.Model):
     task_id = fields.Many2one('project.task', string='Task', ondelete='cascade', required=True, index=True)
     type_id = fields.Many2one('project.task.type', string='Stage')
     kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], string='Kanban State', required=False)
-    date = fields.Date(string='Date', index=True, default=date.today())
+    date = fields.Date(index=True, default=date.today())
     end_date = fields.Date(string='End Date', compute="_get_date", store=True)
     remaining_hours = fields.Float(string='Remaining Time', digits_compute=dp.get_precision('Product Price'))
     planned_hours = fields.Float(string='Planned Time', digits_compute=dp.get_precision('Product Price'))
@@ -1142,6 +1132,6 @@ class project_tags(models.Model):
     _name = "project.tags"
     _description = "Category of project's task, issue, ..."
 
-    name = fields.Char(string='Name', required=True, translate=True)
+    name = fields.Char(required=True, translate=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
