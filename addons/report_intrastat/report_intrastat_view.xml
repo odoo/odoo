@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Customer Invoice Form -->
+        <record id="report_intrastat_cust_invoice_view" model="ir.ui.view">
+            <field name="name">report.intrastat.custinvoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_due']" position="after">
+                    <field name="incoterm_id" groups="report_intrastat.intrastat_extended"/>
+                </xpath>
+                <xpath expr="//field[@name='move_id']" position="after">
+                    <field name="intrastat_transaction_id"/>
+                    <field name="transport_mode_id" groups="report_intrastat.intrastat_extended"/>
+                    <field name="intrastat_country_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Supplier Invoice Form -->
+        <record id="report_intrastat_supp_invoice_view" model="ir.ui.view">
+            <field name="name">report.intrastat.suppinvoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term']" position="after">
+                    <field name="incoterm_id" groups="report_intrastat.intrastat_extended"/>
+                </xpath>
+                <xpath expr="//field[@name='period_id']" position="after">
+                    <field name="intrastat_transaction_id" />
+                    <field name="transport_mode_id" groups="report_intrastat.intrastat_extended"/>
+                    <field name="intrastat_country_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Transaction -->
+        <record model="ir.ui.view" id="intra_view_transaction_form">
+            <field name="name">intra.view.transaction_form</field>
+            <field name="model">report.intrastat.transaction</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Intrastat transaction form">
+                    <group>
+                    <field name="code" readonly="1"/>
+                    <field name="description" readonly="1"/>
+                </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="intra_view_transaction_tree">
+            <field name="name">intra.view.transaction_tree</field>
+            <field name="model">report.intrastat.transaction</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Intrastat transaction types">
+                    <field name="code"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Transport mode -->
+        <record model="ir.ui.view" id="intra_view_transport_mode_form">
+            <field name="name">intra.view.transport_mode_form</field>
+            <field name="model">report.intrastat.transport_mode</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Intrastat transpartation mode form">
+                    <group>
+                        <field name="code" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="intra_view_transport_mode_tree">
+            <field name="name">intra.view.transport_mode_tree</field>
+            <field name="model">report.intrastat.transport_mode</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Intrastat transportation modes">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Regions -->
+        <record model="ir.ui.view" id="intra_view_regions_form">
+            <field name="name">intra.view.regions_form</field>
+            <field name="model">report.intrastat.regions</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Intrastat regions form">
+                    <group>
+                        <field name="code"/>
+                        <field name="country_id"/>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="intra_view_regions_tree">
+            <field name="name">intra.view.regions_tree</field>
+            <field name="model">report.intrastat.regions</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="Intrastat regions">
+                    <field name="code"/>
+                    <field name="country_id"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
         <!-- Country -->
         <record id="view_country_tree" model="ir.ui.view">
             <field name="name">res.country.tree</field>
@@ -24,6 +143,20 @@
             </field>
         </record>
 
+        <!-- Category Form -->
+        <record id="report_intrastat_decl_product_category_view" model="ir.ui.view">
+            <field name="name">report.intrastat.productcategory_form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='parent']" position="inside">
+                    <group string="Intrastat" colspan="2">
+                        <field name="intrastat_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Product -->
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form</field>
@@ -33,6 +166,32 @@
                 <field name="product_manager" position="after">
                     <field name="intrastat_id"/>
                 </field>
+            </field>
+        </record>
+
+        <!-- Company -->
+        <record id="report_intrastat_decl_res_company_form_view" model="ir.ui.view">
+            <field name="name">report.intrastat.rescompany_form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="region_id" attrs="{'required': [('country_id', '=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
+                    <field name="transport_mode_id" groups="report_intrastat.intrastat_extended"/>
+                    <field name="incoterm_id" groups="report_intrastat.intrastat_extended"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Warehouse -->
+        <record id="report.intrastat_decl_stock_warehouse_form_view" model="ir.ui.view">
+            <field name="name">report.intrastat.stockwarehouse_form</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="region_id"/>
+                </xpath>
             </field>
         </record>
 
@@ -67,7 +226,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" 
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code"
                 parent="base.menu_config_address_book" sequence="2" groups="base.group_no_one"/>
 
 
@@ -112,7 +271,7 @@
             <field name="search_view_id" ref="view_report_intrastat_search"/>
         </record>
 
-        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
+        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all"
                 parent="stock.next_id_61" sequence="6"/>
     </data>
 </openerp>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Company -->
+        <record id="report_intrastat_decl_res_company_form_view" model="ir.ui.view">
+            <field name="name">report.intrastat.rescompany_form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="kbo" attrs="{'required': [('country_id', '=', %(base.be)d )],'invisible': [('country_id', '!=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
