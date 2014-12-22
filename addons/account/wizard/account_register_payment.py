@@ -27,7 +27,10 @@ class account_register_payment(models.TransientModel):
         res = super(account_register_payment, self).default_get(fields)
         if context.get('active_id', False):
             invoice = self.env['account.invoice'].browse(context.get('active_id'))
-            res.update({'invoice_id': invoice.id})
+            res.update({
+                'invoice_id': invoice.id,
+                'payment_amount': invoice.residual,
+            })
         return res
 
     @api.multi

@@ -90,21 +90,13 @@ class account_invoice(models.Model):
     @api.depends(
         'state', 'currency_id', 'invoice_line.price_subtotal',
         'move_id.line_id.amount_residual',
-        'move_id.line_id.currency_id',
-    )
-    # An invoice's residual amount is the sum of its unreconciled move lines and,
-    # for partially reconciled move lines, their residual amount divided by the
-    # number of times this reconciliation is used in an invoice (so we split
-    # the residual amount between all invoice)
+        'move_id.line_id.currency_id')
     def _compute_residual(self):
         self.residual = 0.0
-        # Each partial reconciliation is considered only once for each invoice it appears into,
-        # and its residual amount is divided by this number of invoices
-        partial_reconciliations_done = []
         for line in self.sudo().move_id.line_id:
             if line.account_id.internal_type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
-                    self.residual += line.amount_residual_currency
+                    self.residual += line.currency_id and line.amount_residual_currency or line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     self.residual += from_currency.compute(line.amount_residual, self.currency_id)
@@ -273,8 +265,7 @@ class account_invoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
 
     residual = fields.Float(string='Amount due', digits=dp.get_precision('Account'),
-        compute='_compute_residual', store=True,
-        help="Remaining amount due.")
+        compute='_compute_residual', store=True, help="Remaining amount due.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')
     move_name = fields.Char(string='Journal Entry', readonly=True,

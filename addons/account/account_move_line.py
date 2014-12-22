@@ -276,7 +276,7 @@ class account_move_line(models.Model):
                         a.id AS account_id,
                         a.name AS account_name,
                         a.code AS account_code,
-                        MAX(l.create_date) AS max_date
+                        MAX(l.write_date) AS max_date
                     FROM
                         account_move_line l
                         RIGHT JOIN account_account a ON (a.id = l.account_id)
@@ -634,7 +634,7 @@ class account_move_line(models.Model):
         if len(set(all_accounts)) > 1:
             raise Warning(_('Entries are not of the same account!'))
         if not all_accounts[0].reconcile:
-            raise Warning(_('The account is not defined to be reconciled !'))
+            raise Warning(_('The account '+all_accounts[0].name+' ('+all_accounts[0].code+') is not marked as reconciliable !'))
         if len(set(partners)) > 1:
             raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
@@ -646,8 +646,6 @@ class account_move_line(models.Model):
             writeoff_to_reconcile = remaining_moves._create_writeoff(writeoff_acc_id, writeoff_journal_id)
             #add writeoff line to reconcile algo and finish the reconciliation
             remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
-
-        return True # TOCHECK : why ?
 
     def _create_writeoff(self, writeoff_acc_id, writeoff_journal_id):
         writeoff_amount = sum([r.amount_residual for r in self])
