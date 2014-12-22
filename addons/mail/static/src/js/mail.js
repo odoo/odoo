@@ -369,6 +369,7 @@ openerp.mail = function (session) {
             this.is_log = false;
             this.recipients = [];
             this.recipient_ids = [];
+            this.followers = [];
         },
 
         start: function () {
@@ -472,6 +473,7 @@ openerp.mail = function (session) {
             this.$('.oe_compact_inbox').on('click', self.on_toggle_quick_composer);
             this.$('.oe_compose_post').on('click', self.on_toggle_quick_composer);
             this.$('.oe_compose_log').on('click', self.on_toggle_quick_composer);
+            this.$el.find(".oe_invite_click").on('click', self.on_click_add_followers);
             this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this));
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this));
             this.$('.oe_post').on('click', self.on_message_post);
@@ -491,6 +493,10 @@ openerp.mail = function (session) {
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
 
             this.$(".oe_recipients").on('change', 'input', this.on_checked_recipient);
+        },
+        on_click_add_followers: function () {
+            var self = this;
+            this.$el.find(".oe_all_follower").parents(".oe_chatter").find(".oe_invite").trigger("click");
         },
 
         on_compose_fullmail: function (default_composition_mode) {
@@ -712,6 +718,7 @@ openerp.mail = function (session) {
          */
         on_toggle_quick_composer: function (event) {
             var self = this;
+            self.followers = this.__parentedParent.__parentedParent.__parentedParent.field_manager.fields.message_follower_ids;
             var $input = $(event.target);
             this.compute_emails_from();
             var email_addresses = _.pluck(this.recipients, 'email_address');
