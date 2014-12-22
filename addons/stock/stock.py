@@ -823,10 +823,10 @@ class stock_picking(osv.osv):
         'recompute_pack_op': fields.boolean('Recompute pack operation?', help='True if reserved quants changed, which mean we might need to recompute the package operations', copy=False),
         'location_id': fields.related(
             'move_lines', 'location_id', type='many2one', relation='stock.location',
-            string='Location', readonly=True),
+            string='Location', readonly=True, store=True),
         'location_dest_id': fields.related(
             'move_lines', 'location_dest_id', type='many2one', relation='stock.location',
-            string='Destination Location', readonly=True),
+            string='Destination Location', readonly=True, store=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True,
               store={
                   'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
