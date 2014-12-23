@@ -1,8 +1,10 @@
 import logging
 import sys
 import os
+from os.path import join as joinpath, isdir
 
 import openerp
+from openerp.modules import get_modules, get_module_path
 
 commands = {}
 
@@ -49,11 +51,11 @@ def main():
     # TODO: find a way to properly discover addons subcommands without importing the world
     # Subcommand discovery
     if len(args) and not args[0].startswith("-"):
-    #     logging.disable(logging.CRITICAL)
-    #     for m in module.get_modules():
-    #         m = 'openerp.addons.' + m
-    #         __import__(m)
-    #     logging.disable(logging.NOTSET)
+        logging.disable(logging.CRITICAL)
+        for module in get_modules():
+            if isdir(joinpath(get_module_path(module), 'cli')):
+                __import__('openerp.addons.' + module)
+        logging.disable(logging.NOTSET)
         command = args[0]
         args = args[1:]
 
