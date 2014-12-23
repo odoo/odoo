@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="mail_timeline_view">
+        <field name="name">mail.timeline</field>
+        <field name="model">mail.message</field>
+        <field name="arch" type="xml">
+            <timeline string="Mail Timeline">
+                <templates>
+                <t t-name="message_content">
+                    <div t-attf-class="row oe_tl_msg oe_tl_msg_#{widget.type} #{widget.subtype ? '' : 'oe_tl_msg_nobody'}">
+
+                        <div class="col-md-2"> <!-- *** date *** -->
+                            <div t-attf-class="oe_tl_msg_date">
+                                <span> <field name="date"/> </span>
+                            </div>
+                        </div> <!-- *** date *** -->
+
+                        <div class="col-md-10 oe_tl_msg_message">
+                            <div class='oe_tl_msg_left'> <!-- *** avatar *** -->
+                                <a t-if="options.show_link" 
+                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                   t-att-title="widget.author_id[1]">
+                                       <img class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+                                </a>
+                                <img t-if="!options.show_link" class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+                            </div> <!-- *** avatar *** -->
+                
+                            <div class="oe_tl_msg_center"> <!-- *** msg_center *** -->           
+                                <div class="oe_tl_msg_content"> <!-- *** msg_content *** -->
+
+                                    <div class="oe_tl_header"> <!-- *** msg_header *** -->
+                                        <!-- *** header when tracking values *** -->
+                                        <div t-if="widget.tracking_values" class="oe_tl_tracking_value_header">
+                                            <span t-if="!widget.subtype" class="oe_grey oe_tl_no_subtype">
+                                                Update </span>
+                                            <span t-if="widget.subtype" class="oe_tl_subtype"> 
+                                                 <field name="subtype_id"/>
+                                            </span>
+                                            <t t-if="options.show_record_name">
+                                                <span t-attf-class="oe_grey #{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}"> 
+                                                    in </span>
+                                                <span t-if="widget.model_desc"
+                                                      t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}">
+                                                    <field name="model"/>
+                                                </span>
+                                                <span t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}">
+                                                    "<field name="res_id"/>"
+                                                </span>
+                                            </t>
+                                            <span t-attf-class="oe_tl_by oe_grey #{!widget.subtype ? 'oe_tl_no_subtype' : ''}"> 
+                                                by </span>
+                                            <span t-attf-class="#{!widget.subtype ? 'oe_grey oe_tl_no_subtype' : ''}"> 
+                                                <a t-if="options.show_link"
+                                                   class="oe_timeline_action_author oe_tl_by"
+                                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                                   t-att-data-partner="widget.author_id[0]"> 
+                                                       <field name="author_id"/> 
+                                                </a>
+                                                <a t-if="!options.show_link"
+                                                   class="oe_timeline_action_author oe_tl_by">
+                                                       <field name="author_id"/>
+                                                </a>
+                                            </span>
+                                        </div>
+    
+                                        <!-- *** header when no tracking value *** -->
+                                        <span t-if="!widget.tracking_values" class="oe_tl_msg_header">
+                                            <span t-if="widget.author_id and !(widget.type == 'notification')"
+                                                 class="oe_grey"> 
+                                                <t t-if="widget.subtype and widget.type == 'comment'"> Message </t> 
+                                                <t t-if="widget.subtype and widget.type == 'email'"> Email </t>
+                                                <t t-if="!widget.subtype"> Note </t>                             
+                                                from
+                                                <a t-if="options.show_link and widget.author_id[0]"
+                                                   t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+                                                   t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author">
+                                                     <field name="author_id"/>
+                                                </a>
+                                                <a t-if="widget.author_id and (!options.show_link or !widget.author_id[0])"
+                                                   class="oe_timeline_action_author">
+                                                     <field name="author_id"/>
+                                                </a>
+                                            </span>
+                                            
+                                            <span t-if="!options.readonly and !(widget.type == 'notification')" 
+                                                  class='oe_subtle oe_sep oe_grey'>•</span>
+                                            <span t-if="!options.readonly and !(widget.type == 'notification')" 
+                                                  class="oe_tl_vote"> </span>
+                                        </span>
+
+                                        <div t-attf-class="oe_tl_msg_icons #{widget.tracking_values ? 
+                                                          'oe_tl_msg_icons_track' : ''}" 
+                                             t-if="!options.readonly"> <!-- *** icons *** -->
+                                            <span class='oe_read' t-if="options.show_read">
+                                                <a title="Done" class="oe_e">W</a>
+                                            </span>
+                                            <span class='oe_unread' t-if="widget.is_favorite and options.show_unread">
+                                                <a title="Set back to Todo" class="oe_e">v</a>
+                                            </span>
+                                            <span class='oe_unread' t-if="!widget.is_favorite and options.show_unread">
+                                                <a title="Move to Inbox" class="oe_e">v</a>
+                                            </span>
+                                            <span class='oe_reply' t-if="options.show_reply_button">
+                                                <a title="Reply" class="oe_e">(</a>
+                                            </span>
+                                            <span t-attf-class="oe_star #{widget.is_favorite ? 'oe_starred':''}">
+                                                <a title="Mark as Todo" class="oe_e">7</a>
+                                            </span>
+                                        </div> <!-- *** icons *** -->
+                                    </div> <!-- *** msg_header *** -->
+
+                                    <div t-attf-class="oe_tl_msg_body"> <!-- *** msg_body *** -->
+                                        <t t-if="widget.tracking_values">
+                                            <ul class="oe_timeline_tracking_value_list"> </ul> 
+                                        </t>
+                                        <t t-if="!widget.tracking_values">
+                                            <field name="body"/>
+                                            <t t-if="!widget.body and widget.subject">
+                                                <field name="subject"/>
+                                            </t>
+                                        </t>
+                                    </div> <!-- *** msg_body *** --> 
+
+                                    <div class="oe_tl_msg_footer"> <!-- *** msg_footer *** -->
+                                        <t t-if="widget.attachments">
+                                            <div class="oe_tl_msg_attachment_list"> </div>
+                                        </t>
+
+                                        <t t-if="(widget.type == 'comment' or widget.type == 'email') and
+                                                 (widget.subtype and widget.partners)">
+                                            <div t-if="widget.partners" class="oe_tl_partners_followers">
+	                                            <span class="oe_grey">
+	                                                To </span>
+                                                <span class = "oe_tl_partners_list"> </span>
+                                            </div>
+                                        </t>
+                                    </div> <!-- *** msg_footer *** -->
+
+                                </div> <!-- *** msg_content *** -->
+                            </div> <!-- *** msg_center *** -->
+                        </div>
+                    </div>        
+				</t>
+				</templates>
+			</timeline>
+		</field>
+	</record>
+
+    <menuitem id="main_timeline_menu" name="Timeline View" />
+
+    <menuitem id="timeline_menu" name="Timeline Test" 
+        parent="main_timeline_menu"/>
+
+    <record model="ir.actions.act_window" id="test_action_to_read">
+            <field name="name">To read</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+                'default_model': 'res.users',
+                'default_res_id': uid,
+                'thread_model': 'res.partner',
+            }</field>
+            <field name="domain">[
+                ('to_read', '=', True),
+                ('starred', '=', False),
+            ]</field>
+            <field name="options">{
+                'view_mailbox': True,
+                'view_inbox': True,
+                'read_action': 'read',
+                'show_compose_message': True
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+            <field name="view_mode">timeline</field>
+        </record>
+
+    <menuitem id="timeline_menu_to_read" name="To read"
+        parent="timeline_menu" action="test_action_to_read"/> 
+
+    <record model="ir.actions.act_window" id="test_action_to_me">
+            <field name="name">To me</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+                'default_model': 'res.users',
+                'default_res_id': uid,
+                'thread_model': 'res.partner',
+                'search_default_message_unread': True
+            }</field>
+            <field name="domain">[
+                ('partner_ids.user_ids', 'in', [uid])
+            ]</field>
+            <field name="options">{
+                'view_mailbox': True,
+                'read_action': 'read',
+                'show_compose_message': True
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+            <field name="view_mode">timeline</field>
+        </record>
+
+    <menuitem id="timeline_menu_to_me" name="To me"
+        parent="timeline_menu" action="test_action_to_me"/>
+
+    <record model="ir.actions.act_window" id="test_action_to_do">
+            <field name="name">To do</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+                'default_model': 'res.users',
+                'default_res_id': uid,
+                'thread_model': 'res.partner',
+                'search_default_message_unread': True
+            }</field>
+            <field name="domain">[
+                ('starred', '=', True),
+            ]</field>
+            <field name="options">{
+                'view_mailbox': True,
+                'view_inbox': True,
+                'read_action': 'read',
+                'show_compose_message': True
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+            <field name="view_mode">timeline</field>
+        </record>
+
+    <menuitem id="timeline_menu_to_do" name="To do"
+        parent="timeline_menu" action="test_action_to_do"/>
+
+    <record model="ir.actions.act_window" id="test_action_archive">
+            <field name="name">Archive</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+                'default_model': 'res.users',
+                'default_res_id': uid,
+                'thread_model': 'res.partner',
+                'search_default_message_unread': True
+            }</field>
+            <field name="domain">[
+                '|',
+                 ('notification_ids.partner_id.user_ids', 'in', [uid]),
+                 ('author_id.user_ids', 'in', [uid]),
+            ]</field>
+            <field name="options">{
+                'view_mailbox': True,
+                'show_compose_message': True
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+            <field name="view_mode">timeline</field>
+        </record>
+
+    <menuitem id="timeline_menu_archives" name="Archives"
+        parent="timeline_menu" action="test_action_archive"/>
+
+
+    <record model="ir.actions.act_window" id="test_action_all">
+            <field name="name">All</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+                'default_model': 'res.users',
+                'default_res_id': uid,
+                'thread_model': 'res.partner',
+                'search_default_message_unread': True
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+            <field name="view_mode">timeline</field>
+        </record>
+
+    <menuitem id="timeline_menu_all" name="All"
+        parent="timeline_menu" action="test_action_all"/>
+
+
+
+</data>
+</openerp>

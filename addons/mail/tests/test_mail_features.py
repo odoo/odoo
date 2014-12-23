@@ -384,6 +384,7 @@ class TestMessagePost(TestMail):
 
         # check followers ?
         # Test: mail.group followers: author not added as follower in mass mail mode
+<<<<<<< HEAD
         # self.assertEqual(set(group_pigs.message_follower_ids.ids), set([self.partner_admin_id, p_b.id, p_c.id, p_d.id]),
         #                 'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
         # self.assertEqual(set(group_bird.message_follower_ids.ids), set([self.partner_admin_id]),
@@ -403,3 +404,4 @@ class TestMessagePost(TestMail):
 
         self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
         self.assertEqual(self.group_public.message_ids[0].subject, 'From Composer Test')
+

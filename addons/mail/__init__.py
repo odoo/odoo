@@ -26,6 +26,7 @@ import mail_followers
 import mail_message
 import mail_mail
 import mail_thread
+import mail_tracking_value
 import mail_group
 import mail_template
 import res_partner

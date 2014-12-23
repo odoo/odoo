@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<!--
+    followers main template
+    Template used to display the followers, the actions and the subtypes in a record.
+    -->
+<div t-name="timeline_followers" class="oe_tl_followers">
+    <div t-attf-class="btn-group-sm oe_tl_follower_title_box">
+        <button t-attf-class="btn btn-default dropdown-toggle oe_tl_partner_list" 
+                data-toggle="dropdown" aria-expanded="false">
+            <span class="oe_tl_follower_title">Followers</span> 
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu oe_tl_follower_list" role="menu"></ul>
+    </div>
+    <div class="oe_actions">
+        <div t-attf-class="btn-group-sm oe_tl_subtype_list">
+            <button class="btn btn-default oe_tl_follower oe_tl_notfollow">
+                <span class="oe_tl_follow">Follow</span>
+                <span class="glyphicon glyphicon-remove oe_tl_unfollow" aria-hidden="true"> Unfollow</span>
+                <span class="glyphicon glyphicon-ok oe_tl_following" aria-hidden="true"> Following</span>
+            </button>
+            <button t-attf-class="btn btn-default dropdown-toggle oe_tl_sbtp_list" 
+                    data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu oe_subtype" role="menu"></ul>
+        </div>
+
+    <!--<t t-if="widget.comment">
+            <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
+        </t>-->
+    </div>
+</div>
+
+<!--
+    followers.partner template
+    Template used to display a partner following the record
+    -->
+<li t-name="timeline_followers_partner" class='oe_partner'>
+    <span> <img class="oe_mail_thumbnail oe_mail_frame" t-att-src="record.avatar_url"/> </span>
+    <span class="oe_partner_name"> 
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" 
+           t-att-title="record.name" t-att-data-partner="record.id">
+               <t t-esc="record.name"/> </a>
+    </span>
+    <span t-if="record.is_editable and (widget.records_length &gt; 1)" 
+          class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" 
+          t-att-data-id="record.id">&amp;</span>
+    <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" 
+          title="Remove this follower" t-att-data-id="record.id">X</span>
+</li>
+
+<t t-name="timeline_followers_add_more">
+    <li t-if="widget.view_is_editable" class="oe_invite"> 
+        <a href="#"> Add followers </a>
+    </li>
+    <li t-if="widget.view_is_editable and (widget.followers.length > 0)" class="divider"></li>
+</t>
+
+<!--
+    followers.subtype template
+    Template used to display message subtypes of a follower subscription
+-->
+<t t-name="timeline_followers_subtype"> 
+    <li> 
+        <input type="checkbox" t-att-checked="record.followed" 
+               t-att-id="'inpust_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')" 
+               t-att-data-id="record.id" t-att-name="record.name" class="oe_msg_subtype_check"/>
+   
+        <label t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
+            <t t-raw="record.name"/>
+        </label>
+    </li>
+</t>
+
+
+</templates>
