@@ -66,6 +66,9 @@ class format_address(object):
             if k in fmt:
                 doc = etree.fromstring(arch)
                 for node in doc.xpath("//div[@class='address_format']"):
+                    data = {'ZIP':_("ZIP"), 'State':_("State"), 'City':_("City")}
+                    for key, trans in data.items():
+                        v = v.replace(key, trans)
                     tree = etree.fromstring(v)
                     node.getparent().replace(node, tree)
                 arch = etree.tostring(doc)
