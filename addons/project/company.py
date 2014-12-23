@@ -25,8 +25,8 @@ class res_company(models.Model):
     _inherit = 'res.company'
 
     project_time_mode_id = fields.Many2one('product.uom', string='Project Time Unit',
-        help='This will set the unit of measure used in projects and tasks.\n' \
-"If you use the timesheet linked to projects (project_timesheet module), don't " \
+        help='This will set the unit of measure used in projects and tasks.\n'
+"If you use the timesheet linked to projects (project_timesheet module), don't "
 "forget to setup the right unit of measure in your employees.",
     )
 

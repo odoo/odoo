@@ -794,9 +794,9 @@ class task(models.Model):
             new_attachment_ids.append(attachment.copy(attachment_id, default={'res_id': delegated_task_id}))
         return new_attachment_ids
 
-    @api.returns('self')
     def _get_effective_hours(self):
         # this method is override in project_timesheet modules.
+        print ">>>>>>>>>>>>>>>>>>>>>>>"
         return 0.0
 
     @api.multi
@@ -894,8 +894,8 @@ class task(models.Model):
         res = super(task, self).unlink()
         return res
 
-    @api.returns('self')
     def _get_total_hours(self):
+        print "<<<<<<<<<<<<<<<<<<<<<<<<<"
         return self._get_effective_hours() + self.remaining_hours
 
     @api.model
