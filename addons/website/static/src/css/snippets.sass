@@ -20,7 +20,6 @@
         height: auto
     .scroll
         white-space: nowrap
-        overflow-y: none
     .nav
         display: inline-block
         border-bottom: none !important
@@ -55,7 +54,7 @@
                     width: 100px
                     text-align: center
                     @include transform( translate(-39px, 44px) , rotate(-90deg) )
-                    @include transform-origin(50% 50%)
+                    @include transform-origin(50%)
 
 .oe_snippet
     float: left
@@ -122,6 +121,12 @@
     &.oe_vertical
         width: 48px
         float: left
+        position: relative
+        margin: 0px -24px !important
+    &.oe_vertical_text
+        width: 48px
+        float: none
+        display: inline-block
         position: relative
         margin: 0px -24px !important
     &.oe_overlay
@@ -208,7 +213,7 @@
             top: 4px
             height: 100%
             &:before
-                content: "\f0d9-\f0da"
+                content: "\f07e"
                 line-height: 16px
             > div
                 width: 0
@@ -308,13 +313,13 @@
         content: "\F061" !important
     &.block-w-right .w:before
         content: "\F060" !important
-    &.block-w-left.block-w-right .w
+    &.block-w-left.block-w-right .w:before
         display: none !important
     &.block-e-left .e:before
         content: "\F061" !important
     &.block-e-right .e:before
         content: "\F060" !important
-    &.block-e-left.block-e-right .e
+    &.block-e-left.block-e-right .e:before
         display: none !important
 
     &.block-s-top .s:before
@@ -543,11 +548,6 @@
         margin: 4px 3px 3px 3px
         width: 0
         height: 0
-.cke_panel_container table.colorpicker
-    tr:first-child td
-        padding-top: 6px
-    tr:last-child td
-        padding-bottom: 6px
 
 // }}}
 
@@ -609,10 +609,12 @@ table.table_desc tr td
         background-image: url('/website/static/src/img/blocks/block_quote.png')
     &.o_block_panel .oe_snippet_thumbnail_img
         background-image: url('/website/static/src/img/blocks/block_panel.png')
+    &.o_block_image_float .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
+    &.o_block_image_floating .oe_snippet_thumbnail_img
+        background-image: url('/website/static/src/img/blocks/block_text_image.png')
     &.o_block_separator .oe_snippet_thumbnail_img
         background-image: url('/website/static/src/img/blocks/block_separator.png')
-    &.o_block_table .oe_snippet_thumbnail_img
-        background-image: url('/website/static/src/img/blocks/block_table.png')        
     &.o_block_button .oe_snippet_thumbnail_img
         background-image: url('/website/static/src/img/blocks/block_button.png')
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='website_blog'
+            data-selector=".js_blog #title.cover"
+            data-no-check="true">
+
+          <li data-change="true"> <a href="#">Change Cover</a> </li>
+          <li data-clear="true"> <a href="#" >Clear Cover</a></li>
+        </div>
+    </xpath>
+
+</template>
+</data>
+</openerp>

@@ -9,7 +9,7 @@
     website.EditorBar.include({
         start: function () {
             var self = this;
-            $("[data-oe-model]").on('click', function (event) {
+            $(document).on('click', '.o_editable', function (event) {
                 var $this = $(event.srcElement);
                 var tag = $this[0] && $this[0].tagName.toLowerCase();
                 if (!(tag === 'a' || tag === "button") && !$this.parents("a, button").length) {
@@ -20,14 +20,14 @@
         },
         edit: function () {
             var self = this;
-            $("[data-oe-model] *, [data-oe-type=html] *").off('click');
-            window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
-            this.snippets.appendTo(this.$el);
             website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
+                var $editable = $(".o_editable");
+                window.snippets = this.snippets = new website.snippet.BuildingBlock(this, $editable);
+                this.snippets.appendTo(this.$el);
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.start_animation();
-                $("#wrapwrap *").off('mousedown mouseup click');
+                $editable.find("*").off('mousedown mouseup click');
             });
 
             return this._super.apply(this, arguments);
@@ -49,31 +49,43 @@
     });
 
     $.extend($.expr[':'],{
-        checkData: function(node,i,m){
-            var dataName = m[3];
+        o_editable: function(node,i,m){
             while (node) {
-                if (node.dataset && node.dataset[dataName]) {
-                    return true;
-                } else {
-                    node = node.parentNode;
+                if (node.className) {
+                    if (node.className.indexOf('o_not_editable')!==-1 ) {
+                        return false;
+                    }
+                    if (node.className.indexOf('o_editable')!==-1 ) {
+                        return true;
+                    }
                 }
+                node = node.parentNode;
             }
             return false;
         },
         hasData: function(node,i,m){
             return !!_.toArray(node.dataset).length;
         },
+        data: function(node,i,m){
+            return $(node).data(m[3]);
+        }
     });
 
     if (!website.snippet) website.snippet = {};
     website.snippet.templateOptions = [];
-    website.snippet.globalSelector = "";
+    website.snippet.globalSelector = {
+        closest: function () { return $(); },
+        all: function () { return $(); },
+        is: function () { return false; },
+    };
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
         template: 'website.snippets',
         activeSnippets: [],
-        init: function (parent) {
+        init: function (parent, $editable) {
             this.parent = parent;
+            this.$editable = $editable;
+
             this._super.apply(this, arguments);
             if(!$('#oe_manipulators').length){
                 $("<div id='oe_manipulators'></div>").appendTo('body');
@@ -96,9 +108,13 @@
             this.$button.click(_.bind(this.show_blocks, this));
 
             this.$snippet = $("#oe_snippets");
-            this.$wrapwrap = $("#wrapwrap");
-            this.$wrapwrap.click(function () {
+
+            $('body').on('click', '.o_editable', function () {
                 self.$el.addClass("hidden");
+            });
+
+            $(window).resize(function () {
+                setTimeout('$(document).click()',0);
             });
 
             this.fetch_snippet_templates();
@@ -113,7 +129,13 @@
                 self.$el.css('top', editor.get('height'));
             });
             this.$el.css('top', this.parent.get('height'));
+
+            var _isNotBreakable = $.summernote.core.dom.isNotBreakable;
+            $.summernote.core.dom.isNotBreakable = function (node, sc, so, ec, eo) {
+                return _isNotBreakable(node, sc, so, ec, eo) || website.snippet.globalSelector.is($(node));
+            };
         },
+
         show_blocks: function () {
             var self = this;
             this.make_active(false);
@@ -122,62 +144,88 @@
                 return;
             }
 
-            //this.enable_snippets( this.$snippet.find(".tab-pane.active") );
-            var categories = this.$snippet.find(".tab-pane.active")
-                .add(this.$snippet.find(".tab-pane:not(.active)"))
-                .get().reverse();
-            function enable() {
-                self.enable_snippets( $(categories.pop()) );
-                if (categories.length) {
-                    setTimeout(enable,10);
-                }
-            }
-            setTimeout(enable,0);
-        },
-        enable_snippets: function ($category) {
-            var self = this;
-            $category.find(".oe_snippet_body").each(function () {
-                var $snippet = $(this);
+            var cache = {};
+            this.$snippet.find(".tab-pane").each(function () {
+                var catcheck = false;
+                var $category = $(this);
+                $category.find(".oe_snippet_body").each(function () {
+                    var $snippet = $(this);
 
-                if (!$snippet.data('selectors')) {
-                    var selectors = [];
+                    var check = false;
+
                     for (var k in website.snippet.templateOptions) {
                         var option = website.snippet.templateOptions[k];
                         if ($snippet.is(option.base_selector)) {
 
-                            var dropzone = [];
-                            if (option['drop-near']) dropzone.push(option['drop-near']);
-                            if (option['drop-in']) dropzone.push(option['drop-in']);
-                            if (option['drop-in-vertical']) dropzone.push(option['drop-in-vertical']);
-                            selectors = selectors.concat(dropzone);
+                            cache[k] = cache[k] || {
+                                'drop-near': option['drop-near'] ? option['drop-near'].all() : [],
+                                'drop-in': option['drop-in'] ? option['drop-in'].all() : []
+                            };
+
+                            if (cache[k]['drop-near'].length || cache[k]['drop-in'].length) {
+                                catcheck = true;
+                                check = true;
+                                break;
+                            }
                         }
                     }
-                    $snippet.data('selectors', selectors.length ? selectors.join(":first, ") + ":first" : "");
-                }
 
-                if ($snippet.data('selectors').length && self.$wrapwrap.find($snippet.data('selectors')).size()) {
-                    $snippet.closest(".oe_snippet").removeClass("disable");
-                } else {
-                    $snippet.closest(".oe_snippet").addClass("disable");
-                }
+                    if (check) {
+                        $snippet.closest(".oe_snippet").removeClass("disable");
+                    } else {
+                        $snippet.closest(".oe_snippet").addClass("disable");
+                    }
+                });
+
+                $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]').toggle(catcheck);
             });
-            $('#oe_snippets .scroll a[data-toggle="tab"][href="#' + $category.attr("id") + '"]')
-                .toggle(!!$category.find(".oe_snippet:not(.disable)").size());
         },
         _get_snippet_url: function () {
             return '/website/snippets';
         },
         _add_check_selector : function (selector, no_check) {
-            var data = selector.split(",");
-            var selectors = [];
-            for (var k in data) {
-                selectors.push(data[k].replace(/^\s+|\s+$/g, '') + (no_check ? "" : ":checkData(oeModel)"));
+            var self = this;
+            var selector = selector.split(/\s*,/).join(":not(.o_snippet_not_selectable), ") + ":not(.o_snippet_not_selectable)";
+
+            if (no_check) {
+                return {
+                    closest: function ($from, parentNode) {
+                        return $from.closest(selector, parentNode);
+                    },
+                    all: function ($from) {
+                        return $from ? $from.find(selector) : $(selector);
+                    },
+                    is: function ($from) {
+                        return $from.is(selector);
+                    }
+                };
+            } else {
+                var selector = selector.split(/\s*,/).join(":o_editable, ") + ":o_editable";
+                return {
+                    closest: function ($from, parentNode) {
+                        var parents = self.$editable.get();
+                        return $from.closest(selector, parentNode).filter(function () {
+                            var node = this;
+                            while (node.parentNode) {
+                                if (parents.indexOf(node)!==-1) {
+                                    return true;
+                                }
+                                node = node.parentNode;
+                            }
+                            return false;
+                        });
+                    },
+                    all: function ($from) {
+                        return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    },
+                    is: function ($from) {
+                        return $from.is(selector);
+                    }
+                };
             }
-            return selectors.join(", ");
         },
         fetch_snippet_templates: function () {
             var self = this;
-
             openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
                     var $html = $(html);
@@ -207,7 +255,38 @@
                         selector.push(option.selector);
                     });
                     $styles.addClass("hidden");
-                    website.snippet.globalSelector = selector.join(",");
+                    website.snippet.globalSelector = {
+                        closest: function ($from) {
+                            var $temp;
+                            var $target;
+                            var len = selector.length;
+                            for (var i = 0; i<len; i++) {
+                                $temp = selector[i].closest($from, $target && $target[0]);
+                                if (!$target || $temp.length) {
+                                    $target = $temp;
+                                }
+                            }
+                            return $target;
+                        },
+                        all: function ($from) {
+                            var $target;
+                            var len = selector.length;
+                            for (var i = 0; i<len; i++) {
+                                if (!$target) $target = selector[i].all($from);
+                                else $target = $target.add(selector[i].all($from));
+                            }
+                            return $target;
+                        },
+                        is: function ($from) {
+                            var len = selector.length;
+                            for (var i = 0; i<len; i++) {
+                                if (selector[i].is($from)) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        },
+                    };
 
                     self.$snippets = $html.find(".tab-content > div > div")
                         .addClass("oe_snippet")
@@ -248,18 +327,28 @@
                 });
         },
         cover_target: function ($el, $target){
+            if($el.data('not-cover_target')) return;
             var pos = $target.offset();
             var mt = parseInt($target.css("margin-top") || 0);
             var mb = parseInt($target.css("margin-bottom") || 0);
+            var width = $target.outerWidth();
+            var bigger = pos.left+width > $("body").outerWidth()-8;
             $el.css({
-                'width': $target.outerWidth(),
+                'width': width,
                 'top': pos.top - mt - 5,
-                'left': pos.left
+                'left': pos.left-1
             });
             $el.find(".oe_handle.e,.oe_handle.w").css({'height': $target.outerHeight() + mt + mb+1});
+            if (bigger) {
+                $el.find(".oe_handle.e").css({right: 0, margin: 0})
+                    .find("div").css({right: 0, left: 'auto'});
+            } else {
+                $el.find(".oe_handle.e").css({right: "", margin: ""})
+                    .find("div").css({right: "", left: ""});
+            }
             $el.find(".oe_handle.s").css({'top': $target.outerHeight() + mt + mb});
             $el.find(".oe_handle.size").css({'top': $target.outerHeight() + mt});
-            $el.find(".oe_handle.s,.oe_handle.n").css({'width': $target.outerWidth()-2});
+            $el.find(".oe_handle.s,.oe_handle.n").css({'width': width-2});
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -270,22 +359,22 @@
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag;
-            self.$wrapwrap.on('click', function (event) {
+            $(document).on('click', '*', function (event) {
                 var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
-                if (snipped_event_flag || !srcElement) {
+                if (snipped_event_flag===srcElement || !srcElement) {
                     return;
                 }
-                snipped_event_flag = true;
+                snipped_event_flag = srcElement;
 
                 setTimeout(function () {snipped_event_flag = false;}, 0);
                 var $target = $(srcElement);
 
-                if ($target.parents(".oe_overlay").length) {
+                if ($target.closest(".oe_overlay, .note-popover").length) {
                     return;
                 }
 
-                if (!$target.is(website.snippet.globalSelector)) {
-                    $target = $target.parents(website.snippet.globalSelector).first();
+                if (!website.snippet.globalSelector.is($target)) {
+                    $target = website.snippet.globalSelector.closest($target);
                 }
 
                 if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
@@ -315,14 +404,16 @@
             for (var k in template) {
                 var Option = options[template[k]['option']];
                 if (Option && Option.prototype.clean_for_save !== dummy) {
-                    self.$wrapwrap.find(template[k].selector).each(function () {
+                    template[k].selector.all().each(function () {
                         new Option(self, null, $(this), k).clean_for_save();
                     });
                 }
             }
-            self.$wrapwrap.find("*[contentEditable], *[attributeEditable]")
+            this.$editable.find("*[contentEditable], *[attributeEditable]")
                 .removeAttr('contentEditable')
-                .removeAttr('attributeEditable');
+                .removeProp('contentEditable')
+                .removeAttr('attributeEditable')
+                .removeProp('attributeEditable');
         },
         make_active: function ($snippet) {
             if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {
@@ -379,58 +470,40 @@
                     // snippet_selectors => to get drop-near, drop-in
                     $snippet = $(this);
                     var $base_body = $snippet.find('.oe_snippet_body');
-                    var selector = [];
-                    var selector_siblings = [];
-                    var selector_children = [];
+                    var $selector_siblings = $();
+                    var $selector_children = $();
                     var vertical = false;
                     var temp = website.snippet.templateOptions;
                     for (var k in temp) {
                         if ($base_body.is(temp[k].base_selector)) {
-                            selector.push(temp[k].base_selector);
-                            if (temp[k]['drop-near'])
-                                selector_siblings.push(temp[k]['drop-near']);
-                            if (temp[k]['drop-in'])
-                                selector_children.push(temp[k]['drop-in']);
+                            if (temp[k]['drop-near']) {
+                                if (!$selector_siblings) $selector_siblings = temp[k]['drop-near'].all();
+                                else $selector_siblings = $selector_siblings.add(temp[k]['drop-near'].all());
+                            }
+                            if (temp[k]['drop-in']) {
+                                if (!$selector_children) $selector_children = temp[k]['drop-in'].all();
+                                else $selector_children = $selector_children.add(temp[k]['drop-in'].all());
+                            }
                         }
                     }
 
                     $toInsert = $base_body.clone();
-                    action = $snippet.find('.oe_snippet_body').size() ? 'insert' : 'mutate';
 
-                    if( action === 'insert'){
-                        if (!selector_siblings.length && !selector_children.length) {
-                            console.debug($snippet.find(".oe_snippet_thumbnail_title").text() + " have not insert action: data-drop-near or data-drop-in");
-                            return;
-                        }
-                        self.activate_insertion_zones({
-                            siblings: selector_siblings.join(","),
-                            children: selector_children.join(","),
-                        });
-
-                    } else if( action === 'mutate' ){
-                        if (!$snippet.data('selector')) {
-                            console.debug($snippet.data("option") + " have not oe_snippet_body class and have not data-selector tag");
-                            return;
-                        }
-                        var $targets = self.activate_overlay_zones(selector_children.join(","));
-                        $targets.each(function(){
-                            var $clone = $(this).data('overlay').clone();
-                             $clone.addClass("oe_drop_zone").data('target', $(this));
-                            $(this).data('overlay').after($clone);
-                        });
-
+                    if (!$selector_siblings.length && !$selector_children.length) {
+                        console.debug($snippet.find(".oe_snippet_thumbnail_title").text() + " have not insert action: data-drop-near or data-drop-in");
+                        return;
                     }
+
+                    self.activate_insertion_zones($selector_siblings, $selector_children);
 
                     $('.oe_drop_zone').droppable({
                         over:   function(){
-                            if( action === 'insert'){
-                                dropped = true;
-                                $(this).first().after($toInsert);
-                            }
+                            dropped = true;
+                            $(this).first().after($toInsert);
                         },
                         out:    function(){
                             var prev = $toInsert.prev();
-                            if( action === 'insert' && this === prev[0]){
+                            if(this === prev[0]){
                                 dropped = false;
                                 $toInsert.detach();
                             }
@@ -440,17 +513,37 @@
                 stop: function(ev, ui){
                     $toInsert.removeClass('oe_snippet_body');
                     
-                    if (action === 'insert' && ! dropped && self.$wrapwrap.find('.oe_drop_zone') && ui.position.top > 3) {
-                        var el = self.$wrapwrap.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
+                    if (! dropped && self.$editable.find('.oe_drop_zone') && ui.position.top > 3) {
+                        var el = self.$editable.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
                             el.after($toInsert);
                             dropped = true;
                         }
                     }
 
-                    self.$wrapwrap.find('.oe_drop_zone').droppable('destroy').remove();
+                    self.$editable.find('.oe_drop_zone').droppable('destroy').remove();
                     
                     if (dropped) {
+
+                        var prev = $toInsert.first()[0].previousSibling;
+                        var next = $toInsert.last()[0].nextSibling;
+                        var rte = self.parent.rte;
+
+                        if (prev) {
+                            $toInsert.detach();
+                            rte.historyRecordUndo($(prev));
+                            $toInsert.insertAfter(prev);
+                        } else if (next) {
+                            $toInsert.detach();
+                            rte.historyRecordUndo($(next));
+                            $toInsert.insertBefore(next);
+                        } else {
+                            var $parent = $toInsert.parent();
+                            $toInsert.detach();
+                            rte.historyRecordUndo($parent);
+                            $parent.prepend($toInsert);
+                        }
+
                         var $target = false;
                         $target = $toInsert;
 
@@ -459,29 +552,13 @@
 
                             website.snippet.start_animation(true, $target);
 
-                            // reset snippet for rte
-                            $target.removeData("snippet-editor");
-                            if ($target.data("overlay")) {
-                                $target.data("overlay").remove();
-                                $target.removeData("overlay");
-                            }
-                            $target.find(website.snippet.globalSelector).each(function () {
-                                var $snippet = $(this);
-                                $snippet.removeData("snippet-editor");
-                                if ($snippet.data("overlay")) {
-                                    $snippet.data("overlay").remove();
-                                    $snippet.removeData("overlay");
-                                }
-                            });
-                            // end
-
                             // drop_and_build_snippet
                             self.create_overlay($target);
                             if ($target.data("snippet-editor")) {
                                 $target.data("snippet-editor").drop_and_build_snippet();
                             }
                             for (var k in website.snippet.templateOptions) {
-                                $target.find(website.snippet.templateOptions[k].selector).each(function () {
+                                website.snippet.templateOptions[k].selector.all($target).each(function () {
                                     var $snippet = $(this);
                                     self.create_overlay($snippet);
                                     if ($snippet.data("snippet-editor")) {
@@ -512,50 +589,71 @@
         //   in case the selected elements have children themselves, dropzones will be interleaved
         //   with them.
         // selector.siblings -> will insert drop zones after and before selected elements
-        activate_insertion_zones: function(selector){
+        activate_insertion_zones: function($selector_siblings, $selector_children){
             var self = this;
-            var child_selector = selector.children;
-            var sibling_selector = selector.siblings;
-
             var zone_template = $("<div class='oe_drop_zone oe_insert'></div>");
 
-            if(child_selector){
-                self.$wrapwrap.find(child_selector).each(function (){
+            if ($selector_children) {
+                $selector_children.each(function (){
                     var $zone = $(this);
-                    var vertical;
-                    var float = window.getComputedStyle(this).float;
-                    if (float === "left" || float === "right") {
-                        vertical = $zone.parent().outerHeight()+'px';
-                    }
+                    var css = window.getComputedStyle(this);
+                    var float = css.float || css.cssFloat;
                     var $drop = zone_template.clone();
-                    if (vertical) {
-                        $drop.addClass("oe_vertical").css('height', vertical);
+
+                    $zone.append($drop);
+                    var node = $drop[0].previousSibling;
+                    var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === "BR"));
+                    if (test) {
+                        $drop.addClass("oe_vertical oe_vertical_text").css({
+                                'height': parseInt(window.getComputedStyle($zone[0]).lineHeight),
+                                'float': 'none',
+                                'display': 'inline-block'
+                            });
+                    } else if (float === "left" || float === "right") {
+                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
                     }
-                    $zone.find('> *:not(.oe_drop_zone):visible').after($drop);
-                    $zone.prepend($drop.clone());
+
+                    $drop = $drop.clone();
+
+                    $zone.prepend($drop);
+                    var node = $drop[0].nextSibling;
+                    var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === "BR"));
+                    if (test) {
+                        $drop.addClass("oe_vertical oe_vertical_text").css({
+                                'height': parseInt(window.getComputedStyle($zone[0]).lineHeight),
+                                'float': 'none',
+                                'display': 'inline-block'
+                            });
+                    } else if (float === "left" || float === "right") {
+                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    }
+                    if (test) {
+                        $drop.css({'float': 'none', 'display': 'inline-block'});
+                    }
                 });
+
+                // add children near drop zone
+                $selector_siblings = $(_.uniq(($selector_siblings || $()).add($selector_children.children()).get()));
             }
 
-            if(sibling_selector){
-                self.$wrapwrap.find(sibling_selector, true).each(function (){
+            if ($selector_siblings) {
+                $selector_siblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function (){
                     var $zone = $(this);
-                    var $drop, vertical;
-                    var float = window.getComputedStyle(this).float;
-                    if (float === "left" || float === "right") {
-                        vertical = $zone.parent().outerHeight()+'px';
-                    }
+                    var $drop;
+                    var css = window.getComputedStyle(this);
+                    var float = css.float || css.cssFloat;
 
                     if($zone.prev('.oe_drop_zone:visible').length === 0){
                         $drop = zone_template.clone();
-                        if (vertical) {
-                            $drop.addClass("oe_vertical").css('height', vertical);
+                        if (float === "left" || float === "right") {
+                            $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
                         }
                         $zone.before($drop);
                     }
                     if($zone.next('.oe_drop_zone:visible').length === 0){
                         $drop = zone_template.clone();
-                        if (vertical) {
-                            $drop.addClass("oe_vertical").css('height', vertical);
+                        if (float === "left" || float === "right") {
+                            $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
                         }
                         $zone.after($drop);
                     }
@@ -565,23 +663,19 @@
             var count;
             do {
                 count = 0;
-                // var $zones = $('.oe_drop_zone + .oe_drop_zone');    // no two consecutive zones
-                // count += $zones.length;
-                // $zones.remove();
-
-                $zones = self.$wrapwrap.find('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
+                $zones = self.$editable.find('.oe_drop_zone > .oe_drop_zone').remove();   // no recursive zones
                 count += $zones.length;
                 $zones.remove();
             } while (count > 0);
 
             // Cleaning consecutive zone and up zones placed between floating or inline elements. We do not like these kind of zones.
-            var $zones = self.$wrapwrap.find('.oe_drop_zone:not(.oe_vertical)');
+            var $zones = self.$editable.find('.oe_drop_zone:not(.oe_vertical)');
             $zones.each(function (){
                 var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
                 // remove consecutive zone
-                if (!zone.hasClass('.oe_vertical') && (prev.is('.oe_drop_zone:not(.oe_vertical)') || next.is('.oe_drop_zone:not(.oe_vertical)'))) {
+                if (prev.is('.oe_drop_zone') || next.is('.oe_drop_zone')) {
                     zone.remove();
                     return;
                 }
@@ -603,8 +697,7 @@
 
         // generate drop zones covering the elements selected by the selector
         // we generate overlay drop zones only to get an idea of where the snippet are, the drop
-        activate_overlay_zones: function(selector){
-            var $targets = typeof selector === "string" ? this.$wrapwrap.find(selector) : selector;
+        activate_overlay_zones: function($targets){
             var self = this;
 
             function is_visible($el){
@@ -644,9 +737,25 @@
                     $zone.data('target',$target);
                     $target.data('overlay',$zone);
 
-                    $target.on("DOMNodeInserted DOMNodeRemoved DOMSubtreeModified", function () {
-                        self.cover_target($zone, $target);
-                    });
+                    var timer;
+                    $target.closest('.o_editable').on("content_changed", function (event) {
+                        if ($target[0] === $(event.target).data('last-mutation').target ||
+                            $.contains($target[0], $(event.target).data('last-mutation').target)) {
+
+                            $target.data('need_recover', true);
+                            clearTimeout(timer);
+                            timer = setTimeout(function () {
+                                $(':data(need_recover)').each(function () {
+                                    var $snippet = $(this);
+                                    $snippet.data('need_recover', null);
+                                    if ($snippet.data('overlay')) {
+                                        self.cover_target($snippet.data('overlay'), $snippet);
+                                    }
+                                });
+                            },50);
+                        }
+                     });
+
                     var resize = function () {
                         if ($zone.parent().length) {
                             self.cover_target($zone, $target);
@@ -678,12 +787,11 @@
             this.option= option_id;
             this.$el = option.$el.find(">li").clone();
             this.data = option.$el.data();
+        },
 
-            this.set_active();
-            this.$target.on('snippet-option-reset', _.bind(this.set_active, this));
-            this._bind_li_menu();
-
-            this.start();
+        // helper for this.$target.find
+        $: function (selector) {
+            return this.$target(selector);
         },
 
         _bind_li_menu: function () {
@@ -704,7 +812,6 @@
                 .on('mouseleave', "ul", _.bind(this.reset, this));
 
             this.reset_methods = [];
-            this.reset_time = null;
         },
 
         /**
@@ -739,6 +846,9 @@
         },
 
         start: function () {
+            this.set_active();
+            this.$target.on('snippet-option-reset', _.bind(this.set_active, this));
+            this._bind_li_menu();
         },
 
         on_focus : function () {
@@ -757,7 +867,7 @@
         drop_and_build_snippet: function () {
         },
 
-        reset: function (event) {
+        reset: function () {
             var self = this;
             var lis = self.$el.add(self.$el.find('li')).filter('.active').get();
             lis.reverse();
@@ -782,15 +892,23 @@
             self.$target.trigger("snippet-option-reset", [this]);
         },
 
-        // call data-method args as method
+        // call data-method args as method (data-only can be used)
         select: function (type, $li) {
             var self = this,
                 $methods = [],
                 el = $li[0],
                 $el;
-            clearTimeout(this.reset_time);
 
-            function filter (k) { return k !== 'oeId' && k !== 'oeModel' && k !== 'oeField' && k !== 'oeXpath' && k !== 'oeSourceId';}
+            if ($li.data('only') && type !== $li.data('only')) {
+                return;
+            }
+
+            if (type==="click") {
+                this.reset();
+                this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
+            }
+
+            function filter (k) { return k !== 'oeId' && k !== 'oeModel' && k !== 'oeField' && k !== 'oeXpath' && k !== 'oeSourceId' && k !== 'only';}
             function hasData(el) {
                 for (var k in el.dataset) {
                     if (filter (k)) {
@@ -868,20 +986,21 @@
         clean_for_save: dummy
     });
     website.snippet.options.background = website.snippet.Option.extend({
-        start: function () {
+        start: function ($change_target) {
+            this.$bg = $change_target || this.$target;
             this._super();
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-            if (this.$target.hasClass('oe_custom_bg')) {
+            var src = this.$bg.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            if (this.$bg.hasClass('oe_custom_bg')) {
                 this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
             }
         },
         background: function(type, value, $li) {
             if (value && value.length) {
-                this.$target.css("background-image", 'url(' + value + ')');
-                this.$target.addClass("oe_img_bg");
+                this.$bg.css("background-image", 'url(' + value + ')');
+                this.$bg.addClass("oe_img_bg");
             } else {
-                this.$target.css("background-image", "");
-                this.$target.removeClass("oe_img_bg").removeClass("oe_custom_bg");
+                this.$bg.css("background-image", "");
+                this.$bg.removeClass("oe_img_bg").removeClass("oe_custom_bg");
             }
         },
         choose_image: function(type, value, $li) {
@@ -890,30 +1009,28 @@
             var self = this;
             var $image = $('<img class="hidden"/>');
             $image.attr("src", value);
-            $image.appendTo(self.$target);
+            $image.appendTo(self.$bg);
 
-            self.element = new CKEDITOR.dom.element($image[0]);
-            var editor = new website.editor.MediaDialog(self, self.element);
+            var editor = new website.editor.MediaDialog(null, $image[0]);
             editor.appendTo(document.body);
             editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
-            $image.on('saved', self, function (o) {
+            editor.on('saved', self, function (o) {
                 var value = $image.attr("src");
-                self.$target.css("background-image", 'url(' + value + ')');
-                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
-                self.$target.trigger("snippet-option-change", [self]);
                 $image.remove();
-                self.$target.addClass('oe_custom_bg oe_img_bg');
+                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
+                self.background(type, value,$li);
+                self.$bg.addClass('oe_custom_bg');
+                self.$bg.trigger("snippet-option-change", [self]);
                 self.set_active();
             });
             editor.on('cancel', self, function () {
-                self.$target.trigger("snippet-option-change", [self]);
                 $image.remove();
             });
         },
         set_active: function () {
             var self = this;
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+            var src = this.$bg.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             this._super();
 
             this.$el.find('li[data-background]:not([data-background=""])')
@@ -938,10 +1055,12 @@
             var self = this;
             var res = this._super();
 
-            this.$el.find('li').append( openerp.qweb.render('website.colorpicker') );
+            if (!this.$el.find('.colorpicker').length) {
+                this.$el.find('li').append( openerp.qweb.render('website.colorpicker') );
+            }
 
             var classes = [];
-            this.$el.find("table.colorpicker td > *").map(function () {
+            this.$el.find(".colorpicker button").map(function () {
                 var $color = $(this);
                 var color = $color.attr("class");
                 if (self.$target.hasClass(color)) {
@@ -957,8 +1076,8 @@
         },
         bind_events: function () {
             var self = this;
-            var $td = this.$el.find("table.colorpicker td");
-            var $colors = $td.children();
+            var $td = this.$el.find(".colorpicker td");
+            var $colors = this.$el.find(".colorpicker button");
             $colors
                 .mouseenter(function () {
                     self.$target.removeClass(self.classes).addClass($(this).attr("class"));
@@ -1001,15 +1120,12 @@
             var self = this;
             this.$target.find('.carousel-indicators [data-slide-to]').off('click').on('click', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
-
-            this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();
             this.$target.find(".item").removeClass("next prev left right active")
                 .first().addClass("active");
-            this.$indicators.find('li').removeClass('active')
+            this.$target.find('.carousel-indicators').find('li').removeClass('active')
                 .first().addClass("active");
         },
         start : function () {
@@ -1118,7 +1234,7 @@
             };
             this.$target.on('slid.bs.carousel', function () {
                 if(self.editor && self.editor.styles.background) {
-                    self.editor.styles.background.$target = self.$target.find(".item.active");
+                    self.editor.styles.background.$bg = self.$target.find(".item.active");
                     self.editor.styles.background.set_active();
                 }
                 self.$target.carousel("pause");
@@ -1479,32 +1595,82 @@
                 .on("mousedown", function () {
                     self.$target.transfo("hide");
                 });
+            this.$target.on('attributes_change', function () {
+                self.resetTransfo();
+            });
+
+            // don't unactive transform if rotation and mouseup on an other container
+            var cursor_mousedown = false;
+            $(document).on('mousedown', function (event) {
+                if (self.$overlay.hasClass('oe_active') && $(event.target).closest(".transfo-controls").length) {
+                    cursor_mousedown = event;
+                }
+            });
+            $(document).on('mouseup', function (event) {
+                if (cursor_mousedown) {
+                    event.preventDefault();
+
+                    var dx = event.clientX-cursor_mousedown.clientX;
+                    var dy = event.clientY-cursor_mousedown.clientY;
+                    setTimeout(function () {
+                        self.$target.focusIn().activateBlock();
+                        if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
+                            setTimeout(function () {
+                                self.$target.transfo({ 'hide': false });
+                            },0);
+                        }
+                    },0);
+                    cursor_mousedown = false;
+                }
+            });
         },
         style: function (type, value) {
             if (type !== 'click') return;
             var settings = this.$target.data("transfo").settings;
-            this.$target.transfo({ hide: (settings.hide = !settings.hide) });
+            this.$target.transfo({ 'hide': (settings.hide = !settings.hide) });
         },
         clear_style: function (type, value) {
             if (type !== 'click') return;
             this.$target.removeClass("fa-spin").attr("style", "");
             this.resetTransfo();
         },
+        move_summernote_select: function () {
+            var self = this;
+            var transfo = this.$target.data("transfo");
+            $('body > .note-handle')
+                .attr('style', transfo.$markup.attr('style'))
+                .css({
+                    'z-index': 0,
+                    'pointer-events': 'none'
+                })
+                .off('mousedown mouseup')
+                .on('mousedown mouseup', function (event) {
+                    self.$target.trigger( jQuery.Event( event.type, event ) );
+                })
+                .find('.note-control-selection').attr('style', transfo.$markup.find('.transfo-controls').attr('style'))
+                    .css({
+                        'display': 'block',
+                        'cursor': 'auto'
+                    });
+        },
         resetTransfo: function () {
             var self = this;
+            this.$overlay.css('width', '');
+            this.$overlay.data('not-cover_target', true);
             this.$target.transfo("destroy");
             this.$target.transfo({
                 hide: true,
                 callback: function () {
-                    var center = $(this).data("transfo").$markup.find('.transfo-scaler-mc').offset();
-                    var $option = self.$overlay.find('.btn-group:first');
+                    var pos = $(this).data("transfo").$center.offset();
                     self.$overlay.css({
-                        'top': center.top - $option.height()/2,
-                        'left': center.left,
+                        'top': pos.top | 0,
+                        'left': pos.left | 0,
                         'position': 'absolute',
                     });
                     self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
                     self.$overlay.find(".oe_overlay_options > .btn-group").attr("style", "width:160px; left:-80px;");
+
+                    self.move_summernote_select();
                 }});
             this.$target.data('transfo').$markup
                 .on("mouseover", function () {
@@ -1513,45 +1679,89 @@
                 .mouseover();
         },
         on_focus : function () {
-            this.resetTransfo();
+            var self = this;
+            setTimeout(function () {
+                self.$target.css({"-webkit-animation": "none", "animation": "none"});
+                self.resetTransfo();
+            },0);
         },
         on_blur : function () {
             this.$target.transfo("hide");
+            $('.note-handle').hide(); // hide selection of summernote
+            this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
         },
+        clean_for_save: function () {
+            this._super();
+            this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        }
     });
 
     website.snippet.options.media = website.snippet.Option.extend({
         start: function () {
-            var self = this;
             this._super();
-
             website.snippet.start_animation(true, this.$target);
-
-            $(document.body).on("media-saved", self, function (event, prev , item) {
-                self.editor.on_blur();
-                self.BuildingBlock.make_active(false);
-                if (self.$target.parent().data("oe-field") !== "image") {
-                    self.BuildingBlock.make_active($(item));
-                }
-            });
         },
         edition: function (type, value) {
             if(type !== "click") return;
-            this.element = new CKEDITOR.dom.element(this.$target[0]);
-            new website.editor.MediaDialog(this, this.element).appendTo(document.body);
+            var self = this;
+            var editor = new website.editor.MediaDialog(this.$target.closest('.o_editable'), this.$target[0]);
+            editor.appendTo(document.body);
+            editor.on('saved', this, function (item, old) {
+                self.editor.on_blur();
+                self.BuildingBlock.make_active(false);
+                if (self.$target.parent().data("oe-field") !== "image") {
+                    setTimeout(function () {
+                        self.BuildingBlock.make_active($(item));
+                    },0);
+                }
+            });
         },
         on_focus : function () {
             var self = this;
-            if (this.$target.parent().data("oe-field") === "image") {
+            var $parent = this.$target.parent();
+
+            if ($parent.data("oe-field") === "image" && $parent.hasClass('o_editable')) {
                 this.$overlay.addClass("hidden");
-                self.element = new CKEDITOR.dom.element(self.$target[0]);
-                new website.editor.MediaDialog(self, self.element).appendTo(document.body);
+                self.edition('click', null);
                 self.BuildingBlock.make_active(false);
             }
-            setTimeout(function () {
-                self.$target.find(".css_editable_mode_display").removeAttr("_moz_abspos");
-            },0);
+        }
+    });
+
+    website.snippet.options.ul = website.snippet.Option.extend({
+        start: function () {
+            this._super();
+            this.$target.data("snippet-view", new website.snippet.animationRegistry.ul(this.$target, true));
         },
+        reset_ul: function () {
+            this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
+
+            this.$target.find('li:has(>ul,>ol)').map(function () {
+                    // get if the li contain a text label
+                    var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType == 3;});
+                    if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
+                        return;
+                    }
+                    $(this).children('ul,ol').addClass('o_close');
+                    return $(this).children(':not(ul,ol)')[0] || this;
+                })
+                .prepend('<a href="#" class="o_ul_toggle_self fa" />');
+
+            var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
+            $li.map(function () { return $(this).children()[0] || this; })
+                .prepend('<a href="#" class="o_ul_toggle_next fa" />');
+            $li.removeClass('o_open').next().addClass('o_close');
+
+            this.$target.find("li").removeClass('o_open').css('list-style', '');
+            this.$target.find("li:has(.o_ul_toggle_self, .o_ul_toggle_next), li:has(>ul,>ol):not(:has(>li))").css('list-style', 'none');
+
+        },
+        toggle_class: function (type, value, $li) {
+            this._super(type, value, $li);
+            this.$target.data("snippet-view").stop();
+            this.reset_ul();
+            this.$target.data("snippet-view", new website.snippet.animationRegistry.ul(this.$target, true));
+        }
     });
 
     website.snippet.Editor = openerp.Class.extend({
@@ -1616,10 +1826,18 @@
             self.$target.detach();
             self.$overlay.addClass("hidden");
 
-            self.BuildingBlock.activate_insertion_zones({
-                siblings: self.selector_siblings,
-                children: self.selector_children,
-            });
+            var $selector_siblings;
+            for (var i=0; i<self.selector_siblings.length; i++) {
+                if (!$selector_siblings) $selector_siblings = self.selector_siblings[i].all();
+                else $selector_siblings = $selector_siblings.add(self.selector_siblings[i].all());
+            }
+            var $selector_children;
+            for (var i=0; i<self.selector_children.length; i++) {
+                if (!$selector_children) $selector_children = self.selector_children[i].all();
+                else $selector_children = $selector_children.add(self.selector_children[i].all());
+            }
+
+            self.BuildingBlock.activate_insertion_zones($selector_siblings, $selector_children);
 
             $("body").addClass('move-important');
 
@@ -1628,14 +1846,32 @@
         },
         _drag_and_drop_stop: function (){
             var self = this;
-            if (!self.dropped) {
-                $(".oe_drop_clone").after(self.$target);
-            }
-            self.$overlay.removeClass("hidden");
+            var $dropzone = this.$target.prev();
+            var prev = $dropzone.length && $dropzone[0].previousSibling;
+            var next = this.$target.last()[0].nextSibling;
+            var $parent = this.$target.parent();
+
+            $(".oe_drop_clone").after(this.$target);
+
+            this.$overlay.removeClass("hidden");
             $("body").removeClass('move-important');
             $('.oe_drop_zone').droppable('destroy').remove();
             $(".oe_drop_clone, .oe_drop_to_remove").remove();
+
+            if (this.dropped) {
+                this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
+
+                if (prev) {
+                    this.$target.insertAfter(prev);
+                } else if (next) {
+                    this.$target.insertBefore(next);
+                } else {
+                    $parent.prepend(this.$target);
+                }
+            }
+
             self.BuildingBlock.editor_busy = false;
+
             self.get_parent_block();
             setTimeout(function () {self.BuildingBlock.create_overlay(self.$target);},0);
         },
@@ -1648,7 +1884,7 @@
             this.selector_siblings = [];
             this.selector_children = [];
             _.each(website.snippet.templateOptions, function (val, option_id) {
-                if (!self.$target.is(val.selector)) {
+                if (!val.selector.is(self.$target)) {
                     return;
                 }
                 if (val['drop-near']) self.selector_siblings.push(val['drop-near']);
@@ -1658,18 +1894,12 @@
                 var Editor = website.snippet.options[option] || website.snippet.Option;
                 var editor = self.styles[option] = new Editor(self.BuildingBlock, self, self.$target, option_id);
                 $ul.append(editor.$el.addClass("snippet-option-" + option));
+                editor.start();
             });
-            this.selector_siblings = this.selector_siblings.join(",");
-            if (this.selector_siblings === "")
-                this.selector_siblings = false;
-            this.selector_children = this.selector_children.join(",");
-            if (this.selector_children === "")
-                this.selector_children = false;
 
-            if (!this.selector_siblings && !this.selector_children) {
+            if (!this.selector_siblings.length && !this.selector_children.length) {
                 this.$overlay.find(".oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove").addClass('hidden');
             }
-
 
             if ($ul.find("li").length) {
                 $styles.removeClass("hidden");
@@ -1680,7 +1910,7 @@
         get_parent_block: function () {
             var self = this;
             var $button = this.$overlay.find('.oe_snippet_parent');
-            var $parent = this.$target.parents(website.snippet.globalSelector).first();
+            var $parent = website.snippet.globalSelector.closest(this.$target.parent());
             if ($parent.length) {
                 $button.removeClass("hidden");
                 $button.off("click").on('click', function (event) {
@@ -1700,9 +1930,13 @@
         */
         start: function () {
             var self = this;
-            this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
-            this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
-            this._drag_and_drop();
+            if (!this.$target.parent().is(':o_editable')) {
+                this.$overlay.find('.oe_snippet_move, .oe_snippet_clone, .oe_snippet_remove').remove();
+            } else {
+                this.$overlay.on('click', '.oe_snippet_clone', _.bind(this.on_clone, this));
+                this.$overlay.on('click', '.oe_snippet_remove', _.bind(this.on_remove, this));
+                this._drag_and_drop();
+            }
         },
 
         on_clone: function () {
@@ -1716,6 +1950,9 @@
 
         on_remove: function () {
             this.on_blur();
+
+            this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
+
             var index = _.indexOf(this.BuildingBlock.snippets, this.$target.get(0));
             for (var i in this.styles){
                 this.styles[i].on_remove();
@@ -1723,28 +1960,18 @@
             delete this.BuildingBlock.snippets[index];
 
             // remove node and his empty
-            var parent,
-                node = this.$target.parent()[0];
+            var node = this.$target.parent()[0];
 
             this.$target.remove();
-            function check(node) {
-                if ($(node).outerHeight() > 8) {
-                    return false;
+            this.$overlay.remove();
+
+            if (node && node.firstChild) {
+                $.summernote.core.dom.removeSpace(node, node.firstChild, 0, node.lastChild, 1);
+                if (!node.firstChild.tagName && node.firstChild.textContent === " ") {
+                    node.firstChild.parentNode.removeChild(node.firstChild);
                 }
-                for (var k=0; k<node.children.length; k++) {
-                    if (node.children[k].tagName || node.children[k].textContent.match(/[^\s]/)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            while (check(node)) {
-                parent = node.parentNode;
-                parent.removeChild(node);
-                node = parent;
             }
 
-            this.$overlay.remove();
             return false;
         },
 
@@ -1779,5 +2006,142 @@
             this.$overlay.removeClass('oe_active');
         },
     });
+
+    /* t-field options */
+
+    website.snippet.options.many2one = website.snippet.Option.extend({
+        start: function () {
+            var self = this;
+
+            this.Model = this.$target.data('oe-many2one-model');
+            this.ID = +this.$target.data('oe-many2one-id');
+
+            // create search button and bind search bar
+            this.$btn = $(openerp.qweb.render("website.many2one.button"))
+                .insertAfter(this.$overlay.find('.oe_options'));
+
+            this.$ul = this.$btn.find("ul");
+            this.$search = this.$ul.find('li:first');
+            this.$search.find('input').on('mousedown click mouseup keyup keydown', function (e) {
+                e.stopPropagation();
+            });
+
+            // move menu item
+            setTimeout(function () {
+                if (self.$overlay.find('.oe_options').hasClass('hidden')) {
+                    self.$btn.css('height', '0').find('> a').addClass('hidden');
+                    self.$ul.show().css({
+                        'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
+                    });
+                } else {
+                    self.$btn.find('a').on('click', function (e) {
+                        self.clear();
+                    });
+                }
+            },0);
+
+            // bind search input
+            this.$search.find('input')
+                .focus()
+                .on('keyup', function(e) {
+                    self.find_existing($(this).val());
+                });
+
+            // bind result
+            this.$ul.on('click', "li:not(:first) a", function (e) {
+                self.select_record(this);
+            });
+        },
+
+        on_focus: function () {
+            this.$target.attr('contentEditable', 'false');
+            this.clear();
+            this._super();
+        },
+
+        clear: function () {
+            var self = this;
+            this.$search.siblings().remove();
+            self.$search.find('input').val("");
+            setTimeout(function () {
+                self.$search.find('input').focus();
+            },0);
+        },
+
+        find_existing: function (name) {
+            var self = this;
+            var domain = [];
+            if (!name || !name.length) {
+                self.$search.siblings().remove();
+                return;
+            }
+            if (isNaN(+name)) {
+                if (this.Model === "res.partner") {
+                    domain.push(['name', 'ilike', name]);
+                } else {
+                    domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
+                }
+            } else {
+                domain.push(['id', '=', name]);
+            }
+
+            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: this.Model,
+                method: 'search_read',
+                args: [domain, this.Model === "res.partner" ? ['name', 'display_name', 'city', 'country_id'] : ['name', 'display_name']],
+                kwargs: {
+                    order: 'name DESC',
+                    limit: 5,
+                    context: website.get_context(),
+                }
+            }).then(function (result){
+                self.$search.siblings().remove();
+                self.$search.after(openerp.qweb.render("website.many2one.search",{contacts:result}));
+            });
+        },
+
+        get_contact_rendering: function (options) {
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'website.qweb.field.contact',
+                method: 'get_record_to_html',
+                args: [[this.ID]],
+                kwargs: {
+                    options: options,
+                    context: website.get_context(),
+                }
+            });
+        },
+
+        select_record: function (li) {
+            var self = this;
+
+            self.ID = +$(li).data("id");
+            self.$target.attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID);
+
+            if (self.$target.data('oe-type') === "contact") {
+                $('[data-oe-contact-options]')
+                    .filter('[data-oe-model="'+self.$target.data('oe-model')+'"]')
+                    .filter('[data-oe-id="'+self.$target.data('oe-id')+'"]')
+                    .filter('[data-oe-field="'+self.$target.data('oe-field')+'"]')
+                    .filter('[data-oe-contact-options!="'+self.$target.data('oe-contact-options')+'"]')
+                    .add(self.$target)
+                    .attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID)
+                    .each(function () {
+                        var $node = $(this);
+                        self.get_contact_rendering($node.data('oe-contact-options'))
+                            .then(function (html){
+                                $node.html(html);
+                            });
+                    });
+            } else {
+                self.$target.html($(li).data("name"));
+            }
+
+            self.clear();
+        }
+    });
+
+
+    /* end*/
 
 })();

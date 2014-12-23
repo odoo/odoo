@@ -174,7 +174,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
-        return werkzeug.utils.redirect(url)
+        return werkzeug.utils.redirect(url + "?enable_editor=1")
 
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
@@ -311,6 +311,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             }, request.context)
         else:                                                  # images provided
             try:
+                attachment_ids = []
                 for c_file in request.httprequest.files.getlist('upload'):
                     image_data = c_file.read()
                     image = Image.open(cStringIO.StringIO(image_data))
@@ -319,9 +320,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                         raise ValueError(
                             u"Image size excessive, uploaded images must be smaller "
                             u"than 42 million pixel")
-    
-                if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                    image_data = image_save_for_web(image)
+
+                    if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                        image_data = image_save_for_web(image)
 
                     attachment_id = Attachments.create(request.cr, request.uid, {
                         'name': c_file.filename,
@@ -329,11 +330,11 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'datas_fname': c_file.filename,
                         'res_model': 'ir.ui.view',
                     }, request.context)
-    
-                    [attachment] = Attachments.read(
-                        request.cr, request.uid, [attachment_id], ['website_url'],
-                        context=request.context)
-                    uploads.append(attachment)
+                    attachment_ids.append(attachment_id)
+
+                uploads = Attachments.read(
+                    request.cr, request.uid, attachment_ids, ['website_url'],
+                    context=request.context)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
