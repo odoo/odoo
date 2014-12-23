@@ -22,6 +22,9 @@ import signal
 import openerp
 from . import Command
 
+def raise_keyboard_interrupt(*a):
+    raise KeyboardInterrupt()
+
 class Console(code.InteractiveConsole):
     def __init__(self, locals=None, filename="<console>"):
         code.InteractiveConsole.__init__(self, locals, filename)
@@ -43,10 +46,9 @@ class Shell(Command):
         self.locals = {
             'openerp': openerp
         }
+        signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 
     def shell(self, dbname):
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        # TODO: Fix ctrl-c that doesnt seem to generate KeyboardInterrupt
         with openerp.api.Environment.manage():
             if dbname:
                 registry = openerp.modules.registry.RegistryManager.get(dbname)
