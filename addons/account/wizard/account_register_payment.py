@@ -44,13 +44,7 @@ class account_register_payment(models.TransientModel):
             name = self.pool.get('ir.sequence').next_by_id(self._cr, self._uid, self.journal_id.id, self._context)
         else:
             raise Warning(_('The associated journal does not have a sequence_id, please specify one'))
-        move_id = self.env['account.move'].create({
-            'name': name,
-            'date': self.date_paid,
-            'ref': self.reference,
-            'company_id': self.company_id.id,
-            'journal_id': self.journal_id.id,
-            })
+        
         ac_move_line = self.env['account.move.line']
         debit = credit = over_value = 0.0
         #convert to company currency
@@ -65,7 +59,6 @@ class account_register_payment(models.TransientModel):
         acl_dict_value = {
             'name': name_preffix+self.partner_id.name,
             'account_id': self.invoice_id.account_id.id,
-            'move_id': move_id.id,
             'journal_id': self.journal_id.id,
             'debit': debit,
             'credit': credit,
@@ -75,17 +68,30 @@ class account_register_payment(models.TransientModel):
             'date': self.date_paid,
             'invoice': self.invoice_id.id,
             }
-        payment_line = ac_move_line.create(acl_dict_value)
-        
         #create balanced line
-        acl_dict_value.update({
+        acl_dict_counterpart_value = acl_dict_value.copy()
+        acl_dict_counterpart_value.update({
             'account_id': self.journal_id.default_debit_account_id.id,
             'debit': credit,
             'credit': debit,
+            'amount_currency': -acl_dict_value['amount_currency'],
             })
-        balanced_line = ac_move_line.create(acl_dict_value)
+        #create move line
+        move_id = self.env['account.move'].create({
+            'name': name,
+            'date': self.date_paid,
+            'ref': self.reference,
+            'company_id': self.company_id.id,
+            'journal_id': self.journal_id.id,
+            'line_id': [(0, 0, acl_dict_value), (0, 0, acl_dict_counterpart_value)],
+            })
 
         move_id.post()
+
+        payment_line = False
+        for line in move_id.line_id:
+            if line.account_id == self.invoice_id.account_id:
+                payment_line = line
 
         #reconcile
         if self.invoice_id:
