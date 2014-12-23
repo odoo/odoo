@@ -3,7 +3,7 @@
 import time
 
 from openerp import api, fields, models, _
-from openerp.osv import expression
+from openerp.osv import osv, expression
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning
 from openerp.report import report_sxw
