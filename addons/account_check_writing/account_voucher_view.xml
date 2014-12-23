@@ -12,14 +12,14 @@
                 <field name="amount" position="after">
                     <newline/>
                     <field name="allow_check" invisible="1"/>
-                    <field name="amount_in_word" attrs="{'invisible':[('allow_check','!=',1)]}" nolabel="1" colspan="6"/>
+                    <field name="amount_in_word" attrs="{'invisible':[('allow_check','!=',True)]}" nolabel="1" colspan="6"/>
                     <newline/>
                 </field>
                 <field name="number" position="replace">
-                    <field name="number" attrs="{'readonly':[('allow_check','!=',1)]}" />
+                    <field name="number" attrs="{'readonly':[('allow_check','!=',True)]}" />
                 </field>
                 <button name="proforma_voucher" position="after">
-                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',1),('state','!=','posted') ]}" class="oe_highlight"/>
+                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',True),('state','!=','posted') ]}" class="oe_highlight"/>
                 </button>
             </field>
         </record>
