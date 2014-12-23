@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "crm_voip",
+    'name': "voip",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -20,20 +20,13 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','voip','crm'],
+    'depends': ['base', 'web'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/crm_voip.xml',
-        'views/phonecall.xml',
-        'views/opportunities.xml',
-        'views/crm_voip_tip.xml',
-        'views/res_config_view.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo.xml',
+        'views/voip_view.xml',
+        'views/res_users_view.xml',
     ],
     'js': ['static/src/js/*.js'],
     'css': ['static/src/css/*.css'],

@@ -62,11 +62,9 @@ openerp.crm_voip = function(instance) {
 
         start: function() {
             var self = this;
-            //this.ari_client = new openerp.ari_client();
-            //this.ari_client.init();
             try{
-                this.sip_js = new openerp.sip_js();
-                this.sip_js.init();
+                openerp.load_voip(openerp);
+                this.sip_js = new openerp.voip_controller();
             }catch(e){
                 console.log(e);
             }
