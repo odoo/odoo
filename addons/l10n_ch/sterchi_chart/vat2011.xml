@@ -9,14 +9,6 @@
             <field name="description">2.5%</field>
             <field name="amount" eval="0.025"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_due_25"/>
-            <field name="tax_code_id" ref="vat_code_due_tva25"/>
-            <field name="ref_base_code_id" ref="vat_code_due_25"/>
-            <field name="ref_tax_code_id" ref="vat_code_due_tva25"/>
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="account_collected_id" ref="ch_1170"/>
             <field name="account_paid_id" ref="ch_1170"/>
@@ -27,16 +19,8 @@
             <field name="description">2.5% achat</field>
             <field name="amount" eval="0.025"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_25"/>
-            <field name="tax_code_id" ref="vat_code_payable_bs"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_25"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
             <field name="python_compute">result = round((price_unit * 0.025) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.025))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -47,16 +31,8 @@
             <field name="description">2.5% invest.</field>
             <field name="amount" eval="0.025"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_invest25"/>
-            <field name="tax_code_id" ref="vat_code_payable_invest"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest25"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
             <field name="python_compute">result = round((price_unit * 0.025) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.025))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -68,16 +44,8 @@
             <field name="description">3.8%</field>
             <field name="amount" eval="0.038"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_due_38"/>
-            <field name="tax_code_id" ref="vat_code_due_tva38"/>
-            <field name="ref_base_code_id" ref="vat_code_due_38"/>
-            <field name="ref_tax_code_id" ref="vat_code_due_tva38"/>
             <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="account_collected_id" ref="ch_1170"/>
@@ -88,16 +56,8 @@
             <field name="description">3.8% achat</field>
             <field name="amount" eval="0.038"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_38"/>
-            <field name="tax_code_id" ref="vat_code_payable_bs"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_38"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
             <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -108,16 +68,8 @@
             <field name="description">3.8% invest</field>
             <field name="amount" eval="0.038"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_invest38"/>
-            <field name="tax_code_id" ref="vat_code_payable_invest"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest38"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
             <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -129,16 +81,8 @@
             <field name="amount" eval="0.080"/>
             <field name="sequence" eval="0"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_due_80"/>
-            <field name="tax_code_id" ref="vat_code_due_tva80"/>
-            <field name="ref_base_code_id" ref="vat_code_due_80"/>
-            <field name="ref_tax_code_id" ref="vat_code_due_tva80"/>
             <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="account_collected_id" ref="ch_1170"/>
@@ -150,16 +94,8 @@
             <field name="amount" eval="0.080"/>
             <field name="type">percent</field>
             <field name="sequence" eval="0"/>
-            <field name="base_code_id" ref="vat_code_receivable_base_80"/>
-            <field name="tax_code_id" ref="vat_code_payable_bs"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_80"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
             <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -170,16 +106,8 @@
             <field name="description">8.0% invest.</field>
             <field name="amount" eval="0.080"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_invest80"/>
-            <field name="tax_code_id" ref="vat_code_payable_invest"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest80"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
             <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
             <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -190,14 +118,6 @@
             <field name="amount" eval="0.00"/>
             <field name="description">0%</field>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_due_0"/>
-<!--            <field name="tax_code_id" ref="vat_code_due_tva0"/>  -->
-            <field name="ref_base_code_id" ref="vat_code_due_0"/>
-<!--            <field name="ref_tax_code_id" ref="vat_code_due_tva0"/>      -->
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="account_collected_id" ref="ch_1170"/>
@@ -208,14 +128,6 @@
             <field name="description">0% excl.</field>
             <field name="amount" eval="0.00"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_due_0_exclu"/>
-<!--            <field name="tax_code_id" ref="vat_code_due_tva0"/>   -->
-            <field name="ref_base_code_id" ref="vat_code_due_0_exclu"/>
-<!--            <field name="ref_tax_code_id" ref="vat_code_due_tva0"/> -->
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">sale</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -226,14 +138,6 @@
             <field name="description">0% import.</field>
             <field name="amount" eval="0.00"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_receivable_base_0"/>
-            <field name="tax_code_id" ref="vat_code_payable_bs"/>
-            <field name="ref_base_code_id" ref="vat_code_receivable_base_0"/>
-            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
-            <field name="base_sign" eval="-1.0"/>
-            <field name="tax_sign" eval="-1.0"/>
-            <field name="ref_base_sign" eval="1.0"/>
-            <field name="ref_tax_sign" eval="1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
@@ -245,12 +149,6 @@
             <field name="description">100% imp.</field>
             <field name="amount" eval="0.0"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_payable_bs"/>
-            <field name="ref_base_code_id" ref="vat_code_payable_bs"/>
-            <field name="base_sign" eval="1.0"/>
-            <field name="tax_sign" eval="1.0"/>
-            <field name="ref_base_sign" eval="-1.0"/>
-            <field name="ref_tax_sign" eval="-1.0"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
             <field name="account_collected_id" ref="ch_1171"/>
