@@ -43,7 +43,7 @@ class purchase_requisition(osv.osv):
         'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
-        'schedule_date': fields.date('Scheduled Date', select=True, help="The expected and scheduled date where all the products are received"),
+        'schedule_date': fields.date('Scheduled Delivery Date', select=True, help="The expected and scheduled delivery date where all the products are received"),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Bid Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
@@ -86,6 +86,8 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
+        if not all(obj.line_ids for obj in self.pool['purchase.requisition'].browse(cr, uid, ids, context=context)):
+            raise osv.except_osv(_('Warning!'), _('You can not confirm call because there is no product line.'))
         return self.write(cr, uid, ids, {'state': 'in_progress'}, context=context)
 
     def tender_open(self, cr, uid, ids, context=None):

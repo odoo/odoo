@@ -39,22 +39,16 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <div class="oe_right oe_button_box" style="margin-top: 10px">
-                    <button name="open_product_line" type="object" string="View Products Lines"
+                <div class="oe_right oe_button_box" name="buttons">
+                    <button name="open_product_line" type="object" string="Product Lines" class="oe_stat_button" icon="fa-list"
                         attrs="{'invisible': ['|', ('state', 'not in', ('open','done')), ('exclusive', '=', 'exclusive')]}" groups="purchase.group_advance_bidding"/>
-                    
+                    <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
+                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
                 </div>
                 <div class="pull-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                    </h1>
-                </div>
-                <div class="pull-left">
-                    <label for="origin" class="oe_edit_only oe_inline"/>
-                    <h1>
-                        <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
-                        <field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
                     </h1>
                 </div>
                 <group>
@@ -68,8 +62,8 @@
                         <field name="date_end" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="origin" placeholder="e.g. OP0025" attrs="{'readonly': [('state','not in',('draft'))]}"/>
-                        <field name="picking_type_id" widget="selection" groups="stock.group_locations" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="picking_type_id" widget="selection" groups="stock.group_stock_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
@@ -99,10 +93,9 @@
                             <button name="%(action_purchase_requisition_partner)d" type="action"
                                 string="Request a Quotation" icon="gtk-execute"
                                 attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                            <button name="open_rfq" type="object" string="View RFQs/Bids" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                         </div>
                         <separator string="Requests for Quotation"/>
-                        <field name="purchase_ids">
+                        <field name="purchase_ids" options="{'reload_on_button': true}">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>

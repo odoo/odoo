@@ -58,7 +58,7 @@
     context.update({"active_model": "purchase.requisition","active_ids": [ref("requisition1")],"active_id": ref("requisition1")})
 - 
   !record {model: purchase.requisition.partner, id: requisition_partner_0}:
-    partner_id: base.res_partner_12
+    partner_ids: [base.res_partner_12]
 - 
   !python {model: purchase.requisition.partner}: |
     context.update({"mail_create_nolog" : True })

@@ -414,13 +414,7 @@ class purchase_order(osv.osv):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
         if not inv_ids:
             raise osv.except_osv(_('Error!'), _('Please create Invoices.'))
-         #choose the view_mode accordingly
-        if len(inv_ids)>1:
-            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
-        else:
-            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-            result['views'] = [(res and res[1] or False, 'form')]
-            result['res_id'] = inv_ids and inv_ids[0] or False
+        result['domain'] = [('id', 'in', inv_ids)]
         return result
 
     def view_invoice(self, cr, uid, ids, context=None):

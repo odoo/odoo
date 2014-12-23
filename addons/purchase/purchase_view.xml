@@ -265,9 +265,8 @@
                             <div class="oe_clear"/>
                             <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
-                        <page string="RFQ &amp; Bid">
+                        <page string="Bid">
                             <group>
-                                <field name="incoterm_id"/>
                                 <field name="bid_date"/>
                                 <field name="bid_validity"/>
                             </group>
@@ -278,6 +277,7 @@
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
+                                    <field name="incoterm_id"/>
                                 </group>
                                 <group>
                                     <field name="invoice_method"/>
