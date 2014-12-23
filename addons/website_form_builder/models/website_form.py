@@ -25,7 +25,6 @@ class website_form(osv.Model):
     # filter all fields to get all authorized fields
     @tools.ormcache(skiparg=3)        
     def get_authorized_fields(self, cr, uid, model, context=None):
-        print 'get authorizeed fields \n'
         output = self.pool[model].fields_get(cr,uid,context=context)
         id_model = self.search(cr,uid,[('model_id','=',model),], context=context)
         # for elem in blacklist
@@ -35,9 +34,8 @@ class website_form(osv.Model):
             output.pop(val,None)
         for key, val in output.iteritems():
             if 'relation' in val and val['relation'] == 'ir.attachment':
-                print val['type']
                 val['type'] = 'manyBinary2many' if ((val['type'] == 'many2many') or (val['type'] == 'one2many')) else 'oneBinary2many'
-                print val['type']
+
 
         return output
         

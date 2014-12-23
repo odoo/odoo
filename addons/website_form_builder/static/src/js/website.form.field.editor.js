@@ -32,7 +32,6 @@ and allowed field for the form editor
         new openerp.Model(openerp.website.session,"website.form")
             .call("search_read", [[['model_id', '=', form.data('model')]],['model_name', 'model_id', 'metadata_field_id']], {context: website.get_context()})
             .then(function(options_list) {
-                console.log('elements', options_list);
                 form.attr('data-model-name', options_list[0].model_id[1]);
                 form.attr('data-default-field', options_list[0].metadata_field_id[1]);
             });
@@ -124,7 +123,6 @@ and allowed field for the form editor
                     }
                     j++;
                 });
-                console.log(i,j);
                 checkAllBox.prop("indeterminate", false);
                 if(i == j) {
                     checkAllBox.prop('checked', true);
@@ -192,7 +190,6 @@ and allowed field for the form editor
         },
         //manage events to add a line on the table
         addField: function(button, e) {
-            console.log(arguments);
             if((e.keyCode === 9) || button) {
                 e.preventDefault();
                 var tb_line = $(this.fieldModel());
@@ -340,7 +337,6 @@ and allowed field for the form editor
             this.table.find('input.delete')         .on('click',this.checkAllStates(this));
             this.checkAllStates(this)();
             wizard.find('.form-group:not(:has(table)) input:not([tabindex]):visible').each(function(i,elem) {
-                console.log(elem);
                 $(elem).attr('tabindex', self.j++);
             });
         }
@@ -375,7 +371,6 @@ and allowed field for the form editor
                 else if(mail.length > 0) {
                     new openerp.Model(openerp.website.session,"res.partner")
                     .call("find_or_create",[mail], {context: website.get_context()}).then(function(id) {
-                        console.log(id);
                         if(id) {
                             var hidden_email = self.$target.find('.hidden_email_website_form_editor');
                             
@@ -449,7 +444,6 @@ and allowed field for the form editor
                 self.wizard.find('.o_form-action-mailto input[type=hidden]').select2({
                     enable: true,
                     initSelection: function(elem, callback) {
-                        console.log(elem,callback);
                         var id_partner = parseInt(self.$target.find('.hidden_email_website_form_editor').val(),10);
                         if(!id_partner) {
                             callback();
@@ -526,12 +520,10 @@ and allowed field for the form editor
             }
 
             form.find('div[data-form=hidden]').addClass('css_non_editable_mode_hidden');
-            console.log(form.data('fields').required);
             $.each(form.data('fields').required,function(i,name){
                 var present = 0;
                 form.find('.form-data').each(function(j,elem){
                     present = present || ($(elem).prop('name') == name);
-                    console.log($(elem).prop('name'), name,($(elem).prop('name') == name));
                 });
                 if(required_error !== '') {
                     required_error += ', ';
@@ -575,7 +567,6 @@ and allowed field for the form editor
         
         // Get list of fields from model
         getFields: function(types) {
-            console.log(arguments);
             var options = '';
             var field_name = this.$target.find('.form-data').attr('name');
             var all_fields = this.$target.parent().find('.form-data');
@@ -599,13 +590,12 @@ and allowed field for the form editor
             });
 
             // get a sorted list of keys to put option sorted alphabetically
-            console.log(sorted_all_fields);
+
             keysSorted = Object.keys(sorted_all_fields).sort(function(a,b){
                 a = sorted_all_fields[a].label.toLowerCase();
                 b = sorted_all_fields[b].label.toLowerCase();
                 return a == b ? 0 : (a > b ? 1:-1);
             });
-            console.log(keysSorted);
             $.each(keysSorted, function(i,key) {
                 if(key) {
                     options += '<option value="'+sorted_all_fields[key].name+'">'+sorted_all_fields[key].label+'</option>';
@@ -859,7 +849,6 @@ and allowed field for the form editor
             var field_label = this.wizard.find('.o_form-field-label');
 
             if(!field_label.val().length) {
-                console.log('test warning on label');
                 field_label.closest('.form-group')
                            .addClass('has-error has-feedback').children('div')
                            .append('<i class="fa fa-close form-control-feedback"></i>');
@@ -911,7 +900,6 @@ and allowed field for the form editor
         },
         
         on_prompt: function () {
-            console.log('on_prompt fired');
             var fieldWizardTemplate;
             var type = this.$target.attr('data-form');
             var form = this.$target.closest('form[action*="/website_form/"]');

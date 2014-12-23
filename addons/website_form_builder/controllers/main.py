@@ -69,7 +69,6 @@ class form_builder(http.Controller):
 
     # Extract all data sent by the form and sort its on several properties
     def extractData(self, model, **kwargs):
-        print kwargs
         ref_model = request.registry[model['name']]
 
         data = {
@@ -87,8 +86,7 @@ class form_builder(http.Controller):
                 }
         }
 
-        for field_name, field_value in kwargs.items():  
-            print field_name, ' : ', field_value, '\n'
+        for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):
                 field_value.field_name = field_name
                 data['files'].append(field_value)
@@ -108,11 +106,10 @@ class form_builder(http.Controller):
         #                                                          "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
         #                                                          "ACCEPT_LANGUAGE"   , environ.get("HTTP_ACCEPT_LANGUAGE"),
         #                                                          "REFERER"           , environ.get("HTTP_REFERER"))
-        print data
+
         if hasattr(ref_model, "website_form_input_filter"):
             data = ref_model.website_form_input_filter(data)
-        print "Model %s \n\n" % model['name']
-        print data
+
         data['error'] = list(set(field for field in model['required'] if not data['post'].get(field)))
         return data
     
@@ -122,7 +119,6 @@ class form_builder(http.Controller):
         if not data['message']['attachment_ids']:
             return True
         data['message']['res_id'] = id_record
-        print data['message']
         return request.registry['mail.message'].create(request.cr, SUPERUSER_ID, data['message'], request.context)
 
     def insertRecord(self, model, data):
@@ -130,7 +126,6 @@ class form_builder(http.Controller):
         if model['default_field'] not in values :
             values[model['default_field']] = ''
         values[model['default_field']] += "\n\n" + (self.custom_label if (data['custom'] != '') else '') + data['custom'] #+ "\n\n" + data['meta']
-        print 'INSERT :: ', values
         return request.registry[model['name']].create(request.cr, SUPERUSER_ID, values, request.context)
 
     # Link all files attached on the form
@@ -219,7 +214,6 @@ class form_builder(http.Controller):
             else :
                 success = self.insert(model, data)
         except ValueError:
-            print ValueError
             success = 0
 
         if request.httprequest.is_xhr:

@@ -40,7 +40,6 @@
                 args[$field.attr('name')+(($field.prop('files').length > 1)? '['+i+']':'')] = val;
                 self.file += 1;
             });
-            console.log('really no files ????? ', self.file);
             return ($.isEmptyObject(args)) ? null:args;
         }
     };
@@ -55,8 +54,6 @@
             this.$target.find('button').off('click');
         },
         indicateRequired: function(fail_required,empty_fields) {
-            console.log('required', fail_required);
-            console.log('empty', empty_fields);
 
             this.$target.find('.form-field').each(function(k,elem){
 
@@ -106,7 +103,6 @@
                             _.extend(args,field_value);
                         }
                         else if($(elem).attr('required')) {
-                            console.log($(elem));
                             fail_required.push($(elem).attr('name'));
                         }
                         else {
@@ -131,7 +127,6 @@
             var success_page = this.$target.data('success');
             var redirect     = this.$target.data('redirect');
 
-            console.log(args);
             openerp.post('/website_form/'+model,args)
             .then(function(data) {
                 progress.modal('hide');
@@ -139,7 +134,6 @@
                 // bad fields, we display an error
                 data = $.parseJSON(data);
                 if(!(data && (data.id || (data.fail_required && data.fail_required.length)))) {
-                    console.log('error without list');
                     self.$target.find('.o_form-danger').show(500)
                                 .parent().find('.form-group').hide(500)
                                 .closest('form').removeClass('o_send-success')
@@ -149,11 +143,9 @@
 
                 // if the server return a list of bad fields, show theses fields for users
                 if(data.fail_required && data.fail_required.length) {
-                    console.log('error with list');
                     self.indicateRequired(data.fail_required, empty_field);
                     return;
                 }
-                console.log('no_error', success_page, redirect);
                 // if success, show success or redirect sync or redirect async following configuration 
                 if(success_page) {
                     success_page = '/website_form/thanks' + ((success_page[0] == '/')? '':'/') + success_page;

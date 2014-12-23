@@ -696,7 +696,6 @@
                 waitFor:        ".oe-view-manager",
                 onload: function (tour) {
                     var success = function(v1, v2, v3) {
-                        console.log(v1, v2, v3);
                         if(v1.length && v2.length && v3.length) {
                             $('body').append('<div id="website_form_builder_success_test_tour"></div>');
                         }
