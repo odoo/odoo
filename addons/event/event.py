@@ -230,7 +230,7 @@ class event_event(osv.osv):
               'seats_max': type_info.default_registration_max,
             }
             values.update(dic)
-        return values
+        return {'value' : values}
 
     def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
         res = {'value':{}}
