@@ -201,10 +201,12 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
+        height: 95% // fallback for browsers without support for calc()
         height: calc(100% - 34px)
         overflow: auto
     @media (max-width: 768px)
         &.openerp_webclient_container
+            height: 90% // fallback for browsers without support for calc()
             height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
