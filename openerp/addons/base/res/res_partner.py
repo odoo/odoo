@@ -34,25 +34,25 @@ from openerp.tools.translate import _
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
         <div class="address_format">
-            <field name="city" placeholder="City" style="width: 50%"/>
-            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%" options='{"no_open": true}'/>
+            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
             <br/>
-            <field name="zip" placeholder="ZIP"/>
+            <field name="zip" placeholder="%(zip)s"/>
         </div>
     """,
     '%(zip)s %(city)s': """
         <div class="address_format">
-            <field name="zip" placeholder="ZIP" style="width: 40%"/>
-            <field name="city" placeholder="City" style="width: 57%"/>
+            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
+            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
             <br/>
-            <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
         </div>
     """,
     '%(city)s\n%(state_name)s\n%(zip)s': """
         <div class="address_format">
-            <field name="city" placeholder="City"/>
-            <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
-            <field name="zip" placeholder="ZIP"/>
+            <field name="city" placeholder="%(city)s"/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
+            <field name="zip" placeholder="%(zip)s"/>
         </div>
     """
 }
@@ -66,7 +66,7 @@ class format_address(object):
             if k in fmt:
                 doc = etree.fromstring(arch)
                 for node in doc.xpath("//div[@class='address_format']"):
-                    tree = etree.fromstring(v)
+                    tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
                     node.getparent().replace(node, tree)
                 arch = etree.tostring(doc)
                 break
