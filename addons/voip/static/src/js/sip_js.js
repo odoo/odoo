@@ -1,14 +1,15 @@
-openerp.load_voip = function load_voip(instance){
+openerp.voip = function(openerp) {
+    "use strict";
 
     var _t = openerp._t;
 
-    openerp.voip_controller = openerp.Class.extend(openerp.PropertiesMixin,{
+    openerp.voip.user_agent = openerp.Class.extend(openerp.PropertiesMixin,{
         init: function(parent,options){
             openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
             self.in_automatic_mode = false;
             self.onCall = false;
-            debugger
+            self.set('state','no_call');
             new openerp.web.Model("voip.configurator").call("get_pbx_config").then(function(result){
                 self.config = result;
                 var ua_config = {};
@@ -44,14 +45,13 @@ openerp.load_voip = function load_voip(instance){
                 audio = document.createElement("audio");
                 audio.id = "ringbacktone";
                 audio.loop = "true";
-                audio.src = "/crm_voip/static/src/sounds/ringbacktone.wav";
+                audio.src = "/voip/static/src/sounds/ringbacktone.wav";
                 document.body.appendChild(audio);
             });
         },
 
         //success callback function of the getUserMedia function
         getUserMediaSuccess: function(stream) {
-            debugger
             var self = this;
             self.mediaStream = stream;
             if(!self.session){
@@ -104,8 +104,8 @@ openerp.load_voip = function load_voip(instance){
                         self.onCall = true;
                         clearTimeout(self.timer);
                         new openerp.web.Model("crm.phonecall").call("init_call", [self.current_phonecall.id]);
-                        ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
+                        //ringbacktone = document.getElementById("ringbacktone");
+                        //ringbacktone.pause();
                         $('.oe_dial_transferbutton').removeAttr('disabled');
                         if(self.always_transfert){
                             self.session.refer(self.physical_phone);
@@ -114,9 +114,10 @@ openerp.load_voip = function load_voip(instance){
                     //Bind action when the call is in progress to catch the ringing phase
                     self.session.on('progress', function (response) {
                         console.log("PROGRESS");console.log(response);
+                        self.set('state','ringing');
                         if(response.reason_phrase == "Ringing"){
-                            ringbacktone = document.getElementById("ringbacktone");
-                            ringbacktone.play();
+                            //ringbacktone = document.getElementById("ringbacktone");
+                            //ringbacktone.play();
                             $('.oe_dial_big_callbutton').html(_t("Calling..."));
                             $('.oe_dial_hangupbutton').removeAttr('disabled');
                             //set the timer to stop the call if ringing too long
@@ -135,7 +136,7 @@ openerp.load_voip = function load_voip(instance){
                         var phonecall_model = new openerp.web.Model("crm.phonecall");
                         phonecall_model.call("rejected_call",[self.current_phonecall.id]);
                         ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
+                        //ringbacktone.pause();
                         var id = self.current_phonecall.id;
                         //Remove the microphone icon
                         $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
@@ -153,7 +154,7 @@ openerp.load_voip = function load_voip(instance){
                         self.session = false;
                         clearTimeout(self.timer);
                         ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
+                        //ringbacktone.pause();
                         var id = self.current_phonecall.id;
                         $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                         //TODO if the sale cancel one call, continue the automatic call or not ? 
@@ -218,7 +219,7 @@ openerp.load_voip = function load_voip(instance){
             };
             //if there is already a mediaStream, it is reused
             if (self.mediaStream) {
-                getUserMediaSuccess.call(self,self.mediaStream);
+                self.getUserMediaSuccess.call(self,self.mediaStream);
             } else {
                 if (SIP.WebRTC.isSupported()) {
                     /*      

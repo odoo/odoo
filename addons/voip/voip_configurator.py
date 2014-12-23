@@ -14,8 +14,6 @@ class voip_configurator(models.Model):
 
     @api.model
     def get_pbx_config(self):
-        import ipdb as pdb
-        pdb.set_trace()
         return {'pbx_ip': self.env['ir.config_parameter'].get_param('crm.voip.pbx_ip'),
                 'wsServer': self.env['ir.config_parameter'].get_param('crm.voip.wsServer'),
                 'login': self.env.user[0].sip_login,

@@ -63,8 +63,9 @@ openerp.crm_voip = function(instance) {
         start: function() {
             var self = this;
             try{
-                openerp.load_voip(openerp);
-                this.sip_js = new openerp.voip_controller();
+                this.sip_js = new openerp.voip.user_agent();
+                this.set('user_agent_state',this.sip_js.state);
+                this.on('change:user_agent_state',this,function(){console.log("ON CHANGE"); console.log(this);});
             }catch(e){
                 console.log(e);
             }
