@@ -36,6 +36,15 @@ openerp.voip = function(openerp) {
                 }
 
                 self.ua = new SIP.UA(ua_config);
+                var audio = document.createElement("audio");
+                audio.id = "remote_audio";
+                audio.autoplay = "autoplay";
+                document.body.appendChild(audio);
+                audio = document.createElement("audio");
+                audio.id = "ringbacktone";
+                audio.loop = "true";
+                audio.src = "/voip/static/src/sounds/ringbacktone.mp3";
+                document.body.appendChild(audio);
             });
         },
 
@@ -72,8 +81,8 @@ openerp.voip = function(openerp) {
                         console.log(result);
                         self.onCall = true;
                         clearTimeout(self.timer);
-                        //ringbacktone = document.getElementById("ringbacktone");
-                        //ringbacktone.pause();
+                        var ringbacktone = document.getElementById("ringbacktone");
+                        ringbacktone.pause();
                         self.trigger('sip_accepted', self.current_phonecall);
                         if(self.always_transfert){
                             self.session.refer(self.physical_phone);
@@ -84,8 +93,8 @@ openerp.voip = function(openerp) {
                         console.log("PROGRESS");console.log(response);
                         if(response.reason_phrase == "Ringing"){
                             self.trigger('sip_ringing', self.current_phonecall);
-                            //ringbacktone = document.getElementById("ringbacktone");
-                            //ringbacktone.play();
+                            var ringbacktone = document.getElementById("ringbacktone");
+                            ringbacktone.play();
                             //set the timer to stop the call if ringing too long
                             self.timer = setTimeout(function(){
                                 self.trigger('sip_rejected', self.current_phonecall);
@@ -99,8 +108,8 @@ openerp.voip = function(openerp) {
                         self.session = false;
                         clearTimeout(self.timer);
                         self.trigger('sip_rejected', self.current_phonecall);
-                        // ringbacktone = document.getElementById("ringbacktone");
-                        //ringbacktone.pause();
+                        var ringbacktone = document.getElementById("ringbacktone");
+                        ringbacktone.pause();
                         var id = self.current_phonecall.id;        
                         if(self.in_automatic_mode){
                             self.next_call();
@@ -115,8 +124,8 @@ openerp.voip = function(openerp) {
                         console.log("CANCEL");
                         self.session = false;
                         clearTimeout(self.timer);
-                        // ringbacktone = document.getElementById("ringbacktone");
-                        //ringbacktone.pause();
+                        var ringbacktone = document.getElementById("ringbacktone");
+                        ringbacktone.pause();
                         self.trigger('sip_cancel', self.current_phonecall);
                         var id = self.current_phonecall.id;
                         //TODO if the sale cancel one call, continue the automatic call or not ? 

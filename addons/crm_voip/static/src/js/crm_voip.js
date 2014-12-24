@@ -423,7 +423,7 @@ openerp.crm_voip = function(instance) {
                     //TODO what to do when no number?
                     return {};
                 }
-                this.sip_js.call(this.phonecalls[phonecall_id], number);
+                this.sip_js.call(phonecall, number);
             }else{
                 this.$(".oe_dial_phonecalls > .oe_dial_phonecall")
                     .each(function(key,phonecall){
@@ -438,7 +438,7 @@ openerp.crm_voip = function(instance) {
                                 //TODO what to do when no number?
                                 return {};
                             }
-                            self.sip_js.call(self.phonecalls[$(phonecall).data('id')], number);
+                            self.sip_js.call(phonecall, number);
                             return false;
                         }
                     });
