@@ -756,12 +756,39 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
+instance.web.SystrayItems = [];
+instance.web.SystrayMenu = instance.web.Widget.extend({
+    /**
+     * This widget renders the systray menu. It creates and renders widgets
+     * pushed in instance.web.SystrayItems.
+     */
+    init: function(parent) {
+        this._super(parent);
+        this.items = [];
+        this.load = $.Deferred();
+    },
+    start: function() {
+        var self = this;
+        self._super.apply(this, arguments);
+        self.load_items();
+        return $.when.apply($, self.items).done(function () {
+            self.load.resolve();
+        });
+    },
+    load_items: function() {
+        var self = this;
+        _.each(instance.web.SystrayItems, function(widgetCls) {
+            var cur_systray_item = new widgetCls(self);
+            self.items.push(cur_systray_item.appendTo(self.$el));
+        });
+    },
+});
+
 instance.web.Menu =  instance.web.Widget.extend({
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.is_bound = $.Deferred();
-        this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_bound", this, function() {
             // launch the fetch of needaction counters, asynchronous
@@ -791,10 +818,9 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.open_menu(self.current_menu);
         }
         this.trigger('menu_bound');
-
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
         instance.web.bus.on('resize', this, function() {
-            if (parseInt(self.$el.parent().css('width')) <= 768 ) {
+            if ($(window).width() < 768 ) {
                 lazyreflow('all_outside');
             } else {
                 lazyreflow();
@@ -829,9 +855,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_bound' event is triggered and on window resizing.
      *
-     * @param {string} behavior If set to 'all_outside', all the items are displayed. If set to
-     * 'all_inside', all the items are hidden under the more item. If not set, only the 
-     * overflowing items are hidden.
+     * @param {string} behavior If set to 'all_outside', all the items are displayed.
+     * If not set, only the overflowing items are hidden.
      */
     reflow: function(behavior) {
         var self = this;
@@ -843,32 +868,33 @@ instance.web.Menu =  instance.web.Widget.extend({
         
         // 'all_outside' beahavior should display all the items, so hide the more menu and exit
         if (behavior === 'all_outside') {
+            // Show list of menu items
+            self.$el.show();
             this.$el.find('li').show();
             $more_container.hide();
             return;
         }
 
+        // Hide all menu items
         var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
+        // Show list of menu items (which is empty for now since all menu items are hidden)
+        self.$el.show();
         $toplevel_items.each(function() {
-            // In all inside mode, we do not compute to know if we must hide the items, we hide them all
-            if (behavior === 'all_inside') {
-                return false;
-            }
             var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
             self.$el.parent().children(':visible').each(function() {
                 remaining_space -= $(this).outerWidth();
             });
 
-            if ($(this).width() > remaining_space) {
-                return false;
+            if ($(this).width() >= remaining_space) {
+                return false; // the current item will be appended in more_container
             }
-            $(this).show();
+            $(this).show(); // show the current item in menu bar
         });
         $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
+        $more_container.toggle(!!$more.children().length);
         // Hide toplevel item if there is only one
-        var $toplevel = this.$el.children("li:visible");
-        if ($toplevel.length === 1 && behavior != 'all_inside') {
+        var $toplevel = self.$el.children("li:visible");
+        if ($toplevel.length === 1) {
             $toplevel.hide();
         }
     },
@@ -1014,7 +1040,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
         this.$el.on('click', '.dropdown-menu li a[data-menu]', function(ev) {
             ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
@@ -1023,6 +1048,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             }
         });
         this.$el.parent().show()
+        return this._super.apply(this, arguments);
     },
     do_update: function () {
         var self = this;
@@ -1286,15 +1312,24 @@ instance.web.WebClient = instance.web.Client.extend({
         this.$('.oe_logo img').click(function(ev) {
 	        self.on_logo_click(ev);
 	    });
+        // Create the user menu (rendered client-side)
+        self.user_menu = new instance.web.UserMenu(self);
+        var user_menu_loaded = self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
+        self.user_menu.on('user_logout', self, self.on_logout);
+        self.user_menu.do_update();
+        // Create the systray menu (rendered server-side)
+        self.systray_menu = new instance.web.SystrayMenu(self);
+        self.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
+        var systray_menu_loaded = self.systray_menu.start();
+        // Create and render the menu once both systray and user menus are rendered
+        // to prevent overflows while loading
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
         self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
-        self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
-        self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
-        self.user_menu.on('user_logout', self, self.on_logout);
-        self.user_menu.do_update();
+        $.when(systray_menu_loaded, user_menu_loaded).done(function() {
+            self.menu.start();
+        });
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
