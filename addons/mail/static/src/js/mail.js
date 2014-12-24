@@ -2045,6 +2045,7 @@ openerp.mail = function (session) {
      */
 
     openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
+
     /**
      * ------------------------------------------------------------
      * UserMenu
@@ -2053,15 +2054,12 @@ openerp.mail = function (session) {
      * Add a link on the top user bar for write a full mail
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
-        template:'mail.ComposeMessageTopButton',
-
-        start: function () {
-            this.$('button').on('click', this.on_compose_message );
-            this._super();
+        template:'mail.compose_message_top_button',
+        events: {
+            "click": "on_compose_message",
         },
-
-        on_compose_message: function (event) {
-            event.stopPropagation();
+        on_compose_message: function (ev) {
+            ev.preventDefault();
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
