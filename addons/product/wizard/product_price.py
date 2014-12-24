@@ -9,7 +9,7 @@ class product_price_list(osv.osv_memory):
     _description = 'Price List'
 
     _columns = {
-        'price_list': fields.many2one('product.pricelist', 'PriceList', required=True),
+        'price_list': fields.many2one('product.pricelist', 'Pricelist', required=True),
         'qty1': fields.integer('Quantity-1'),
         'qty2': fields.integer('Quantity-2'),
         'qty3': fields.integer('Quantity-3'),
