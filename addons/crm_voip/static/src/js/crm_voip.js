@@ -93,10 +93,10 @@ openerp.crm_voip = function(instance) {
             return;
         },
 
-        sip_ringing: function(phonecall){
+        sip_ringing: function(){
             this.$('.oe_dial_big_callbutton').html(_t("Calling..."));
             this.$('.oe_dial_hangupbutton').removeAttr('disabled');
-            var id = phonecall.id;
+            var id = this.current_phonecall.id;
             //Select the current call if not already selected
             if($(".oe_dial_selected_phonecall").data('id') !== id ){
                 openerp.client.action_manager.do_action({
@@ -109,22 +109,22 @@ openerp.crm_voip = function(instance) {
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
         },
 
-        sip_accepted: function(phonecall){
-            new openerp.web.Model("crm.phonecall").call("init_call", [phonecall.id]);
+        sip_accepted: function(){
+            new openerp.web.Model("crm.phonecall").call("init_call", [this.current_phonecall.id]);
             $('.oe_dial_transferbutton').removeAttr('disabled');
         },
 
-        sip_cancel: function(phonecall){
+        sip_cancel: function(){
             this.on_call = false;
-            var id = phonecall.id;
+            var id = this.current_phonecall.id;
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
             //TODO if the sale cancel one call, continue the automatic call or not ? 
             this.stop_automatic_call();
         },
 
-        sip_rejected: function(phonecall){
+        sip_rejected: function(){
             this.on_call = false;
-            var id = phonecall.id;
+            var id = this.current_phonecall.id;
             new openerp.web.Model("crm.phonecall").call("rejected_call",[id]);
             //Remove the microphone icon
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
@@ -135,14 +135,14 @@ openerp.crm_voip = function(instance) {
             }
         },
 
-        sip_bye: function(phonecall){
+        sip_bye: function(){
             var self = this;
             this.on_call = false;
-            var id = phonecall.id;
+            var id = this.current_phonecall.id;
             new openerp.web.Model("crm.phonecall").call("hangup_call", [id]).then(function(result){
                 openerp.web.bus.trigger('reload_panel');
                 var duration = parseFloat(result.duration).toFixed(2);
-                self.logCall(phonecall, duration);
+                self.logCall(duration);
                 $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
                 if(!self.in_automatic_mode){
                    self.stop_automatic_call();
@@ -157,7 +157,7 @@ openerp.crm_voip = function(instance) {
             new openerp.web.Model("crm.phonecall").call("error_config");
         },
 
-        logCall: function(phonecall, duration){
+        logCall: function(duration){
             var self = this;
             var value = duration;
             var pattern = '%02d:%02d';
@@ -171,7 +171,7 @@ openerp.crm_voip = function(instance) {
                 sec = 0;
                 min = min + 1;
             }
-            phonecall.duration = _.str.sprintf(pattern, min, sec);
+            this.current_phonecall.duration = _.str.sprintf(pattern, min, sec);
             openerp.client.action_manager.do_action({
                     name: 'Log a call',
                     type: 'ir.actions.act_window',
@@ -180,21 +180,21 @@ openerp.crm_voip = function(instance) {
                     res_model: "crm.phonecall.log.wizard",
                     multi: "True",
                     target: 'new',
-                    context: {'phonecall_id': phonecall.id,
-                    'default_opportunity_id': phonecall.opportunity_id,
-                    'default_name': phonecall.name,
-                    'default_duration': phonecall.duration,
-                    'default_description' : phonecall.description,
-                    'default_opportunity_name' : phonecall.opportunity_name,
-                    'default_opportunity_planned_revenue' : phonecall.opportunity_planned_revenue,
-                    'default_opportunity_title_action' : phonecall.opportunity_title_action,
-                    'default_opportunity_date_action' : phonecall.opportunity_date_action,
-                    'default_opportunity_probability' : phonecall.opportunity_probability,
-                    'default_partner_id': phonecall.partner_id,
-                    'default_partner_name' : phonecall.partner_name,
-                    'default_partner_phone' : phonecall.partner_phone,
-                    'default_partner_email' : phonecall.partner_email,
-                    'default_partner_image_small' : phonecall.partner_image_small,
+                    context: {'phonecall_id': self.current_phonecall.id,
+                    'default_opportunity_id': self.current_phonecall.opportunity_id,
+                    'default_name': self.current_phonecall.name,
+                    'default_duration': self.current_phonecall.duration,
+                    'default_description' : self.current_phonecall.description,
+                    'default_opportunity_name' : self.current_phonecall.opportunity_name,
+                    'default_opportunity_planned_revenue' : self.current_phonecall.opportunity_planned_revenue,
+                    'default_opportunity_title_action' : self.current_phonecall.opportunity_title_action,
+                    'default_opportunity_date_action' : self.current_phonecall.opportunity_date_action,
+                    'default_opportunity_probability' : self.current_phonecall.opportunity_probability,
+                    'default_partner_id': self.current_phonecall.partner_id,
+                    'default_partner_name' : self.current_phonecall.partner_name,
+                    'default_partner_phone' : self.current_phonecall.partner_phone,
+                    'default_partner_email' : self.current_phonecall.partner_email,
+                    'default_partner_image_small' : self.current_phonecall.partner_image_small,
                     'default_in_automatic_mode': self.in_automatic_mode,},
                     views: [[false, 'form']],
                     flags: {
@@ -204,18 +204,18 @@ openerp.crm_voip = function(instance) {
         },
 
         make_call: function(phonecall_id){
-            var phonecall = this.phonecalls[phonecall_id];
+            this.current_phonecall = this.phonecalls[phonecall_id];
             var number;
-            if(phonecall.partner_phone){
-                number = phonecall.partner_phone;
-            } else if (phonecall.partner_mobile){
-                number = phonecall.partner_mobile;
+            if(this.current_phonecall.partner_phone){
+                number = this.current_phonecall.partner_phone;
+            } else if (this.current_phonecall.partner_mobile){
+                number = this.current_phonecall.partner_mobile;
             }else{
                 //TODO what to do when no number?
                 return {};
             }
             this.on_call = true;
-            this.sip_js.make_call(phonecall, number);
+            this.sip_js.make_call(number);
         },
 
         automatic_call: function(){

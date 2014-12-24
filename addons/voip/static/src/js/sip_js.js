@@ -83,7 +83,7 @@ openerp.voip = function(openerp) {
                         clearTimeout(self.timer);
                         var ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.pause();
-                        self.trigger('sip_accepted', self.current_phonecall);
+                        self.trigger('sip_accepted');
                         if(self.always_transfert){
                             self.session.refer(self.physical_phone);
                         }
@@ -92,12 +92,12 @@ openerp.voip = function(openerp) {
                     self.session.on('progress', function (response) {
                         console.log("PROGRESS");console.log(response);
                         if(response.reason_phrase == "Ringing"){
-                            self.trigger('sip_ringing', self.current_phonecall);
+                            self.trigger('sip_ringing');
                             var ringbacktone = document.getElementById("ringbacktone");
                             ringbacktone.play();
                             //set the timer to stop the call if ringing too long
                             self.timer = setTimeout(function(){
-                                self.trigger('sip_rejected', self.current_phonecall);
+                                self.trigger('sip_rejected');
                                 self.session.cancel();
                             },4000*self.ring_number);
                         }
@@ -107,7 +107,7 @@ openerp.voip = function(openerp) {
                         console.log("REJECTED");
                         self.session = false;
                         clearTimeout(self.timer);
-                        self.trigger('sip_rejected', self.current_phonecall);
+                        self.trigger('sip_rejected');
                         var ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.pause();
                     });
@@ -120,13 +120,13 @@ openerp.voip = function(openerp) {
                         clearTimeout(self.timer);
                         var ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.pause();
-                        self.trigger('sip_cancel', self.current_phonecall);
+                        self.trigger('sip_cancel');
                     });
                     //Bind action when the call is hanged up
                     self.session.on('bye',function(){
                         console.log("BYE");
                         clearTimeout(self.timer);
-                        self.trigger('sip_bye', self.current_phonecall);
+                        self.trigger('sip_bye');
                         self.session = false;
                         self.onCall = false;
                     });
@@ -140,9 +140,8 @@ openerp.voip = function(openerp) {
             console.error('getUserMedia failed:', e);
         },
 
-        make_call: function(phonecall, number){
+        make_call: function(number){
             var self = this;
-            self.current_phonecall = phonecall;
             self.current_number = number;
             var mediaConstraints = {
                 audio: true,
