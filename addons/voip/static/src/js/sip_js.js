@@ -183,7 +183,5 @@ openerp.voip = function(openerp) {
                 self.stop_automatic_call();
             }
         },
-
-        
     });
 };
