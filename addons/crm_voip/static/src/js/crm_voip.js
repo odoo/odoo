@@ -58,6 +58,8 @@ openerp.crm_voip = function(instance) {
             this.phonecalls = {};
             this.widgets = {};
             this.buttonAnimated = false;
+            this.on_call = false;
+            this.in_automatic_mode = false;
         },
 
         start: function() {
@@ -69,6 +71,7 @@ openerp.crm_voip = function(instance) {
                 this.sip_js.on('sip_cancel',this,this.sip_cancel);
                 this.sip_js.on('sip_rejected',this,this.sip_rejected);
                 this.sip_js.on('sip_bye',this,this.sip_bye);
+                this.sip_js.on('sip_error',this,this.sip_error);
             }catch(e){
                 console.log(e);
             }
@@ -112,26 +115,46 @@ openerp.crm_voip = function(instance) {
         },
 
         sip_cancel: function(phonecall){
+            this.on_call = false;
             var id = phonecall.id;
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
+            //TODO if the sale cancel one call, continue the automatic call or not ? 
+            self.stop_automatic_call();
         },
 
         sip_rejected: function(phonecall){
+            this.on_call = false;
             var id = phonecall.id;
             new openerp.web.Model("crm.phonecall").call("rejected_call",[id]);
             //Remove the microphone icon
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
+            if(self.in_automatic_mode){
+                self.next_call();
+            }else{
+                self.stop_automatic_call();
+            }
         },
 
         sip_bye: function(phonecall){
             var self = this;
+            this.on_call = false;
             var id = phonecall.id;
             new openerp.web.Model("crm.phonecall").call("hangup_call", [id]).then(function(result){
                 openerp.web.bus.trigger('reload_panel');
                 var duration = parseFloat(result.duration).toFixed(2);
                 self.logCall(phonecall, duration);
                 $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
+                if(!self.in_automatic_mode){
+                   self.stop_automatic_call();
+                }
             });
+        },
+
+        sip_error: function(){
+            this.on_call = false;
+            $('.oe_dial_big_callbutton').html(_t("Call"));
+            $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+            new openerp.web.Model("crm.phonecall").call("error_config");
         },
 
         logCall: function(phonecall, duration){
@@ -178,6 +201,63 @@ openerp.crm_voip = function(instance) {
                         'headless': true,
                     },
                 });
+        },
+
+        make_call: function(phonecall_id){
+            var phonecall = this.phonecalls[phonecall_id];
+            var number;
+            if(phonecall.partner_phone){
+                number = phonecall.partner_phone;
+            } else if (phonecall.partner_mobile){
+                number = phonecall.partner_mobile;
+            }else{
+                //TODO what to do when no number?
+                return {};
+            }
+            this.on_call = true;
+            this.sip_js.make_call(phonecall, number);
+        },
+
+        automatic_call: function(){
+            var self = this;
+            if(!self.on_call){
+                self.in_automatic_mode = true;
+                self.phonecalls_ids = [];
+                for (var id in self.phonecalls){
+                    if(self.phonecalls[id].state != "done"){
+                        self.phonecalls_ids.push(id);
+                    }
+                }
+                if(self.phonecalls_ids.length){
+                    self.make_call(self.phonecalls_ids.shift());
+                }else{
+                    self.stop_automatic_call();
+                }
+            }
+        },
+
+        next_call: function(){
+            var self = this;
+            if(self.phonecalls_ids.length){
+                if(!self.on_call){
+                    self.make_call(self.phonecalls_ids.shift());
+                }
+            }else{
+                self.stop_automatic_call();
+            }
+        },
+
+        stop_automatic_call: function(){
+            var self = this;
+            self.in_automatic_mode = false;
+            $(".oe_dial_split_callbutton").show();
+            $(".oe_dial_stop_autocall_button").hide();
+            if(!self.on_call){
+                $('.oe_dial_big_callbutton').html(_t("Call"));
+                $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+            }else{
+                $('.oe_dial_big_callbutton').html(_t("Calling..."));
+            }
         },
 
         //Modify the phonecalls list when the search input changes
@@ -412,33 +492,12 @@ openerp.crm_voip = function(instance) {
         call_button: function(){
             var self = this;
             if(this.$(".oe_dial_selected_phonecall").length){
-                var phonecall_id = this.$(".oe_dial_selected_phonecall").data('id');
-                var phonecall = this.phonecalls[phonecall_id];
-                var number;
-                if(phonecall.partner_phone){
-                    number = phonecall.partner_phone;
-                } else if (phonecall.partner_mobile){
-                    number = phonecall.partner_mobile;
-                }else{
-                    //TODO what to do when no number?
-                    return {};
-                }
-                this.sip_js.call(phonecall, number);
+                this.make_call(this.$(".oe_dial_selected_phonecall").data('id'));
             }else{
                 this.$(".oe_dial_phonecalls > .oe_dial_phonecall")
                     .each(function(key,phonecall){
                         if($(phonecall).data('state') != 'done'){
-                            var phonecall = self.phonecalls[$(phonecall).data('id')];
-                            var number;
-                            if(phonecall.partner_phone){
-                                number = phonecall.partner_phone;
-                            } else if (phonecall.partner_mobile){
-                                number = phonecall.partner_mobile;
-                            }else{
-                                //TODO what to do when no number?
-                                return {};
-                            }
-                            self.sip_js.call(phonecall, number);
+                            self.make_call($(phonecall).data('id'));
                             return false;
                         }
                     });
@@ -448,7 +507,7 @@ openerp.crm_voip = function(instance) {
         auto_call_button: function(){
             this.$(".oe_dial_split_callbutton").hide();
             this.$(".oe_dial_stop_autocall_button").show();
-            this.sip_js.automatic_call(this.phonecalls);
+            this.automatic_call();
         },
 
         stop_auto_call_button: function(){

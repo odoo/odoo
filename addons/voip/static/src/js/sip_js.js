@@ -110,12 +110,6 @@ openerp.voip = function(openerp) {
                         self.trigger('sip_rejected', self.current_phonecall);
                         var ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.pause();
-                        var id = self.current_phonecall.id;        
-                        if(self.in_automatic_mode){
-                            self.next_call();
-                        }else{
-                            self.stop_automatic_call();
-                        }
                     });
                     //Bind action when the call is transfered
                     self.session.on('refer',function(response){console.log("REFER");console.log(response);});
@@ -127,9 +121,6 @@ openerp.voip = function(openerp) {
                         var ringbacktone = document.getElementById("ringbacktone");
                         ringbacktone.pause();
                         self.trigger('sip_cancel', self.current_phonecall);
-                        var id = self.current_phonecall.id;
-                        //TODO if the sale cancel one call, continue the automatic call or not ? 
-                        self.stop_automatic_call();
                     });
                     //Bind action when the call is hanged up
                     self.session.on('bye',function(){
@@ -138,14 +129,9 @@ openerp.voip = function(openerp) {
                         self.trigger('sip_bye', self.current_phonecall);
                         self.session = false;
                         self.onCall = false;
-                        if(!self.in_automatic_mode){
-                           self.stop_automatic_call();
-                        }
                     });
                 }catch(err){
-                    $('.oe_dial_big_callbutton').html(_t("Call"));
-                    $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
-                    new openerp.web.Model("crm.phonecall").call("error_config");
+                    self.trigger('sip_error');
                 }
             }
         },
@@ -154,27 +140,9 @@ openerp.voip = function(openerp) {
             console.error('getUserMedia failed:', e);
         },
 
-        automatic_call: function(phonecalls_list){
-            var self = this;
-            if(!self.session){
-                self.in_automatic_mode = true;
-                self.phonecalls_ids = [];
-                self.phonecalls = phonecalls_list;
-                for (var phone in self.phonecalls){
-                    if(self.phonecalls[phone].state != "done"){
-                        self.phonecalls_ids.push(phone);
-                    }
-                }
-                if(self.phonecalls_ids.length){
-                    var current_call = self.phonecalls[self.phonecalls_ids.shift()];
-                    self.call(current_call);
-                }else{
-                    self.stop_automatic_call();
-                }
-            }
-        },
+        
 
-        call: function(phonecall, number){
+        make_call: function(phonecall, number){
             var self = this;
             self.current_phonecall = phonecall;
             self.current_number = number;
@@ -196,31 +164,6 @@ openerp.voip = function(openerp) {
                     */ 
                     SIP.WebRTC.getUserMedia(mediaConstraints, _.bind(self.getUserMediaSuccess,self), _.bind(self.getUserMediaFailure,self));
                 }
-            }
-        },
-
-        next_call: function(){
-            var self = this;
-            if(self.phonecalls_ids.length){
-                if(!self.session){
-                    var current_call = self.phonecalls[self.phonecalls_ids.shift()];
-                    self.call(current_call);
-                }
-            }else{
-                self.stop_automatic_call();
-            }
-        },
-
-        stop_automatic_call: function(){
-            var self = this;
-            self.in_automatic_mode = false;
-            $(".oe_dial_split_callbutton").show();
-            $(".oe_dial_stop_autocall_button").hide();
-            if(!self.session){
-                $('.oe_dial_big_callbutton').html(_t("Call"));
-                $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
-            }else{
-                $('.oe_dial_big_callbutton').html(_t("Calling..."));
             }
         },
 
