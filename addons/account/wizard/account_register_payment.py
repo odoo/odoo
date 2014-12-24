@@ -6,9 +6,6 @@ from openerp.exceptions import Warning
 import openerp.addons.decimal_precision as dp
 
 class account_register_payment(models.TransientModel):
-
-    """Register a payment"""
-
     _name = "account.register.payment"
     _description = "Register payment"
     
@@ -19,13 +16,13 @@ class account_register_payment(models.TransientModel):
     journal_id = fields.Many2one('account.journal', String='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True,
         default=lambda self: self.env.user.company_id)
-    partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', String='Partner', store=True)
+    partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', String='Partner')
 
     @api.model
     def default_get(self, fields):
         context = dict(self._context or {})
         res = super(account_register_payment, self).default_get(fields)
-        if context.get('active_id', False):
+        if context.get('active_id'):
             invoice = self.env['account.invoice'].browse(context.get('active_id'))
             res.update({
                 'invoice_id': invoice.id,
@@ -35,65 +32,56 @@ class account_register_payment(models.TransientModel):
 
     @api.multi
     def pay(self):
-        #create an account_move and account_move_line based on payment
-        if self.journal_id.sequence_id:
-            if not self.journal_id.sequence_id.active:
-                raise Warning(_('Configuration Error !'),
-                    _('Please activate the sequence of selected journal !'))
-            # name = self.journal_id.sequence_id.next_by_id()
-            name = self.pool.get('ir.sequence').next_by_id(self._cr, self._uid, self.journal_id.id, self._context)
-        else:
-            raise Warning(_('The associated journal does not have a sequence_id, please specify one'))
-        
-        ac_move_line = self.env['account.move.line']
-        debit = credit = over_value = 0.0
-        #convert to company currency
-        currency_payment_amount = self.journal_id.currency and self.journal_id.currency.compute(self.payment_amount, self.company_id.currency_id) or self.payment_amount
-        if self.invoice_id.type in ('out_invoice', 'in_refund'):
-            credit = max(currency_payment_amount, credit)
-        else:
-            debit = max(currency_payment_amount, debit)
-        sign = debit - credit < 0 and -1 or 1
+        """ Create an account_move and account_move_line based on payment then reconcile the invoice with the payment """
 
-        name_preffix = 'payment from ' if credit != 0 else 'payment to '
-        acl_dict_value = {
-            'name': name_preffix+self.partner_id.name,
+        # Compute values
+
+        if not self.journal_id.sequence_id:
+            raise Warning(_('Configuration Error !'), _('The journal ' + self.journal_id.name + ' does not have a sequence, please specify one.'))
+        if not self.journal_id.sequence_id.active:
+            raise Warning(_('Configuration Error !'), _('The sequence of journal ' + self.journal_id.name + ' is deactivated.'))
+        move_name = self.journal_id.sequence_id.next_by_id()
+
+        sign = self.invoice_id.type in ('out_invoice', 'in_refund') and -1 or 1
+        amount = sign * self.payment_amount
+        debit, credit, amount_currency = self.env['account.move.line'].compute_amount_fields(amount, self.journal_id.currency, self.company_id.currency_id)
+
+        move_lines_name = (credit != 0 and 'Payment from ' or 'Payment to ') + self.partner_id.name
+
+        # Create move
+
+        aml_dict_value = {
+            'name': move_lines_name,
             'account_id': self.invoice_id.account_id.id,
             'journal_id': self.journal_id.id,
             'debit': debit,
             'credit': credit,
             'partner_id': self.invoice_id.partner_id.id,
-            'currency_id': self.journal_id.currency and self.journal_id.currency.id or False,
-            'amount_currency': sign * abs(self.payment_amount) if self.journal_id.currency and self.journal_id.currency != self.company_id.currency_id else 0.0,
+            'currency_id': self.journal_id.currency.id,
+            'amount_currency': amount_currency or False,
             'date': self.date_paid,
             'invoice': self.invoice_id.id,
-            }
-        #create balanced line
-        acl_dict_counterpart_value = acl_dict_value.copy()
-        acl_dict_counterpart_value.update({
+        }
+
+        aml_dict_counterpart_value = aml_dict_value.copy()
+        aml_dict_counterpart_value.update({
             'account_id': self.journal_id.default_debit_account_id.id,
             'debit': credit,
             'credit': debit,
-            'amount_currency': -acl_dict_value['amount_currency'],
-            })
-        #create move line
+            'amount_currency': amount_currency and - amount_currency or False,
+        })
+
         move_id = self.env['account.move'].create({
-            'name': name,
+            'name': move_name,
             'date': self.date_paid,
             'ref': self.reference,
             'company_id': self.company_id.id,
             'journal_id': self.journal_id.id,
-            'line_id': [(0, 0, acl_dict_value), (0, 0, acl_dict_counterpart_value)],
-            })
+            'line_id': [(0, 0, aml_dict_value), (0, 0, aml_dict_counterpart_value)],
+        })
 
         move_id.post()
 
-        payment_line = False
-        for line in move_id.line_id:
-            if line.account_id == self.invoice_id.account_id:
-                payment_line = line
-
-        #reconcile
-        if self.invoice_id:
-            self.invoice_id.register_payment(payment_line)
-        return True
+        # Reconcile
+        payment_line = move_id.line_id.filtered(lambda r: r.account_id == self.invoice_id.account_id)
+        self.invoice_id.register_payment(payment_line)
