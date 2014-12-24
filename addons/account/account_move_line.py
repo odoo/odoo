@@ -12,117 +12,10 @@ from openerp import tools
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
 
-
-class account_partial_reconcile(models.Model):
-    _name = "account.partial.reconcile"
-    _description = "Partial Reconcile"
-
-    debit_move_id = fields.Many2one('account.move.line')
-    credit_move_id = fields.Many2one('account.move.line')
-    amount = fields.Float()
-    amount_currency = fields.Float()
-    currency_id = fields.Many2one('res.currency', string='Currency')
-
 class account_move_line(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
     _order = "date desc, id desc"
-
-    @api.model
-    def _query_get(self, obj='l'):
-        fiscalyear_obj = self.env['account.fiscalyear']
-        account_obj = self.env['account.account']
-        fiscalyear_ids = []
-        context = dict(self._context or {})
-        initial_bal = context.get('initial_bal', False)
-        company_clause = " "
-        query = ''
-        if context.get('company_id', False):
-            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
-        if not context.get('fiscalyear', False):
-            if context.get('all_fiscalyear', False):
-                #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
-                fiscalyear_ids = fiscalyear_obj.search([]).ids
-            else:
-                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')]).ids
-        else:
-            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
-            fiscalyear_ids = [context['fiscalyear']]
-
-        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
-        state = context.get('state', False)
-        where_move_state = ''
-        where_move_lines_by_date = ''
-
-        if context.get('date_from', False) and context.get('date_to', False):
-            if initial_bal:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
-            else:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
-
-        if state:
-            if state.lower() not in ['all']:
-                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
-            #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
-            #so we have to invalidate this query
-            raise Warning(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
-
-
-        if context.get('journal_ids', False):
-            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
-
-        if context.get('chart_account_id', False):
-            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
-            if child_ids:
-                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
-
-        query += company_clause
-        return query
-
-    @api.model
-    def _prepare_analytic_line(self, obj_line):
-        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
-            an analytic account. This method is intended to be extended in other modules.
-
-            :param obj_line: browse record of the account.move.line that triggered the analytic line creation
-        """
-        return {
-            'name': obj_line.name,
-            'date': obj_line.date,
-            'account_id': obj_line.analytic_account_id.id,
-            'unit_amount': obj_line.quantity,
-            'product_id': obj_line.product_id and obj_line.product_id.id or False,
-            'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
-            'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
-            'general_account_id': obj_line.account_id.id,
-            'journal_id': obj_line.journal_id.analytic_journal_id.id,
-            'ref': obj_line.ref,
-            'move_id': obj_line.id,
-            'user_id': self._uid,
-        }
-
-    @api.multi
-    def create_analytic_lines(self):
-        for obj_line in self:
-            if obj_line.analytic_account_id:
-                if not obj_line.journal_id.analytic_journal_id:
-                    raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                if obj_line.analytic_lines:
-                    obj_line.analytic_lines.unlink()
-                vals_line = self._prepare_analytic_line(obj_line)
-                self.env['account.analytic.line'].create(vals_line)
-
-    @api.multi
-    @api.depends('ref', 'move_id')
-    def name_get(self):
-        result = []
-        for line in self:
-            if line.ref:
-                result.append((line.id, (line.move_id.name or '') + '(' + line.ref + ')'))
-            else:
-                result.append((line.id, line.move_id.name))
-        return result
 
     @api.depends('debit', 'credit', 'amount_currency', 'currency_id',
         'reconcile_partial_ids.amount', 'reconcile_partial_with_ids.amount')
@@ -258,6 +151,11 @@ class account_move_line(models.Model):
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise Warning(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
+
+
+    ####################################################
+    # Reconciliation interface methods
+    ####################################################
 
     @api.model
     def get_data_for_manual_reconciliation(self, res_type, res_id=None):
@@ -539,13 +437,12 @@ class account_move_line(models.Model):
 
             :param new_mv_line_dicts: list of dicts containing values suitable fot account_move_line.create()
         """
-
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
             raise Warning(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
         
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
-            writeoff_lines = self - self # TODO : create empty recordset
+            writeoff_lines = self.env['account.move.line']
             company_currency = self[0].account_id.company_id.currency_id
             account_currency = self[0].account_id.currency_id or company_currency
             for mv_line_dict in new_mv_line_dicts:
@@ -558,6 +455,11 @@ class account_move_line(models.Model):
             (self+writeoff_lines).reconcile()
         else:
             self.reconcile()
+
+
+    ####################################################
+    # Reconciliation methods
+    ####################################################
 
     def _get_pair_to_reconcile(self):
         #target the pair of move in self with smallest debit, credit
@@ -688,92 +590,10 @@ class account_move_line(models.Model):
             rec_move_ids += account_move_line.reconcile_partial_with_ids
         return rec_move_ids.unlink()
 
-    @api.multi
-    def unlink(self, check=True):
-        self._update_check()
-        result = False
-        moves = self.env['account.move']
-        context = dict(self._context or {})
-        for line in self:
-            moves += line.move_id
-            context['journal_id'] = line.journal_id.id
-            context['date'] = line.date
-            line.with_context(context)
-            result = super(account_move_line, line).unlink()
-        if check and moves:
-            moves.with_context(context)._post_validate()
-        return result
 
-    @api.multi
-    def write(self, vals, check=True, update_check=True):
-        if vals.get('account_tax_id', False):
-            raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
-        if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
-            raise Warning(_('You cannot use deprecated account.'))
-        if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('date' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
-                self._update_check()
-
-        todo_date = None
-        if vals.get('date', False):
-            todo_date = vals['date']
-            del vals['date']
-
-        for line in self:
-            ctx = dict(self._context or {})
-            if not ctx.get('journal_id'):
-                if line.move_id:
-                   ctx['journal_id'] = line.move_id.journal_id.id
-                else:
-                    ctx['journal_id'] = line.journal_id.id
-            if not ctx.get('date'):
-                if line.move_id:
-                    ctx['date'] = line.move_id.date
-                else:
-                    ctx['date'] = line.date
-        result = super(account_move_line, self).write(vals)
-        if check:
-            done = []
-            for line in self:
-                if line.move_id.id not in done:
-                    done.append(line.move_id.id)
-                    line.move_id._post_validate()
-                    if todo_date:
-                        line.move_id.write({'date': todo_date})
-        return result
-
-    @api.model
-    def _update_journal_check(self, journal_id, date):
-        #account_journal_period have been removed
-#         self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
-#         result = self._cr.fetchall()
-#         journal = self.env['account.journal'].browse(journal_id)
-#         period = self.env['account.period'].browse(period_id)
-#         for (state,) in result:
-#             if state == 'done':
-#                 raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
-#         if not result:
-#             self.env['account.journal.period'].create({
-#                 'name': (journal.code or journal.name)+':'+(period.name or ''),
-#                 'journal_id': journal.id,
-#                 'period_id': period.id
-#             })
-        return True
-
-    @api.multi
-    def _update_check(self):
-        done = {}
-        for line in self:
-            err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
-                raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
-            if line.reconciled:
-                raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
-            t = (line.journal_id.id, line.date)
-            if t not in done:
-                self._update_journal_check(line.journal_id.id, line.date)
-                done[t] = True
-        return True
+    ####################################################
+    # CRUD methods
+    ####################################################
 
     @api.model
     def create(self, vals, check=True):
@@ -864,6 +684,110 @@ class account_move_line(models.Model):
                 move.with_context(context).button_validate()
         return result
 
+    @api.multi
+    def unlink(self, check=True):
+        self._update_check()
+        result = False
+        moves = self.env['account.move']
+        context = dict(self._context or {})
+        for line in self:
+            moves += line.move_id
+            context['journal_id'] = line.journal_id.id
+            context['date'] = line.date
+            line.with_context(context)
+            result = super(account_move_line, line).unlink()
+        if check and moves:
+            moves.with_context(context)._post_validate()
+        return result
+
+    @api.multi
+    def write(self, vals, check=True, update_check=True):
+        if vals.get('account_tax_id', False):
+            raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
+        if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
+            raise Warning(_('You cannot use deprecated account.'))
+        if update_check:
+            if ('account_id' in vals) or ('journal_id' in vals) or ('date' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
+                self._update_check()
+
+        todo_date = None
+        if vals.get('date', False):
+            todo_date = vals['date']
+            del vals['date']
+
+        for line in self:
+            ctx = dict(self._context or {})
+            if not ctx.get('journal_id'):
+                if line.move_id:
+                   ctx['journal_id'] = line.move_id.journal_id.id
+                else:
+                    ctx['journal_id'] = line.journal_id.id
+            if not ctx.get('date'):
+                if line.move_id:
+                    ctx['date'] = line.move_id.date
+                else:
+                    ctx['date'] = line.date
+        result = super(account_move_line, self).write(vals)
+        if check:
+            done = []
+            for line in self:
+                if line.move_id.id not in done:
+                    done.append(line.move_id.id)
+                    line.move_id._post_validate()
+                    if todo_date:
+                        line.move_id.write({'date': todo_date})
+        return result
+
+    @api.multi
+    def _update_check(self):
+        """ Raise Warning to cause rollback if self is in a correct state """
+        done = {}
+        for line in self:
+            err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
+            if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
+                raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+            if line.reconciled:
+                raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+            t = (line.journal_id.id, line.date)
+            if t not in done:
+                self._update_journal_check(line.journal_id.id, line.date)
+                done[t] = True
+        return True
+
+    @api.model
+    def _update_journal_check(self, journal_id, date):
+        # TODO : since account_journal_period have been removed, how to check date is not in a closed period ?
+        # self._cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
+        # result = self._cr.fetchall()
+        # journal = self.env['account.journal'].browse(journal_id)
+        # period = self.env['account.period'].browse(period_id)
+        # for (state,) in result:
+        #     if state == 'done':
+        #         raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
+        # if not result:
+        #     self.env['account.journal.period'].create({
+        #         'name': (journal.code or journal.name)+':'+(period.name or ''),
+        #         'journal_id': journal.id,
+        #         'period_id': period.id
+        #     })
+        return True
+
+
+    ####################################################
+    # Misc / utility methods
+    ####################################################
+
+    @api.multi
+    @api.depends('ref', 'move_id')
+    def name_get(self):
+        result = []
+        for line in self:
+            if line.ref:
+                result.append((line.id, (line.move_id.name or '') + '(' + line.ref + ')'))
+            else:
+                result.append((line.id, line.move_id.name))
+        return result
+
     @api.model
     def list_journals(self):
         ng = dict(self.env['account.journal'].name_search('',[]))
@@ -872,3 +796,100 @@ class account_move_line(models.Model):
         for journal in self.env['account.journal'].browse(ids):
             result.append((journal.id, ng[journal.id], journal.type, bool(journal.currency), bool(journal.analytic_journal_id)))
         return result
+
+    @api.multi
+    def create_analytic_lines(self):
+        for obj_line in self:
+            if obj_line.analytic_account_id:
+                if not obj_line.journal_id.analytic_journal_id:
+                    raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                if obj_line.analytic_lines:
+                    obj_line.analytic_lines.unlink()
+                vals_line = self._prepare_analytic_line(obj_line)
+                self.env['account.analytic.line'].create(vals_line)
+
+    @api.model
+    def _prepare_analytic_line(self, obj_line):
+        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
+            an analytic account. This method is intended to be extended in other modules.
+
+            :param obj_line: browse record of the account.move.line that triggered the analytic line creation
+        """
+        return {
+            'name': obj_line.name,
+            'date': obj_line.date,
+            'account_id': obj_line.analytic_account_id.id,
+            'unit_amount': obj_line.quantity,
+            'product_id': obj_line.product_id and obj_line.product_id.id or False,
+            'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
+            'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
+            'general_account_id': obj_line.account_id.id,
+            'journal_id': obj_line.journal_id.analytic_journal_id.id,
+            'ref': obj_line.ref,
+            'move_id': obj_line.id,
+            'user_id': self._uid,
+        }
+
+    @api.model
+    def _query_get(self, obj='l'):
+        """ Build SQL query to fetch lines based on obj and context """
+
+        fiscalyear_obj = self.env['account.fiscalyear']
+        account_obj = self.env['account.account']
+        fiscalyear_ids = []
+        context = dict(self._context or {})
+        initial_bal = context.get('initial_bal', False)
+        company_clause = " "
+        query = ''
+        if context.get('company_id', False):
+            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
+        if not context.get('fiscalyear', False):
+            if context.get('all_fiscalyear', False):
+                #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
+                fiscalyear_ids = fiscalyear_obj.search([]).ids
+            else:
+                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')]).ids
+        else:
+            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
+            fiscalyear_ids = [context['fiscalyear']]
+
+        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
+        state = context.get('state', False)
+        where_move_state = ''
+        where_move_lines_by_date = ''
+
+        if context.get('date_from', False) and context.get('date_to', False):
+            if initial_bal:
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+            else:
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+
+        if state:
+            if state.lower() not in ['all']:
+                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
+        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
+            #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
+            #so we have to invalidate this query
+            raise Warning(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
+
+        if context.get('chart_account_id', False):
+            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
+            if child_ids:
+                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+
+        query += company_clause
+        return query
+
+
+class account_partial_reconcile(models.Model):
+    _name = "account.partial.reconcile"
+    _description = "Partial Reconcile"
+
+    debit_move_id = fields.Many2one('account.move.line')
+    credit_move_id = fields.Many2one('account.move.line')
+    amount = fields.Float()
+    amount_currency = fields.Float()
+    currency_id = fields.Many2one('res.currency', string='Currency')
