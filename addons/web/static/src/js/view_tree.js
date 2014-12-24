@@ -230,7 +230,15 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 'context', new instance.web.CompoundContext(
                     this.dataset.get_context(), local_context))
         }).then(function (actions) {
-            if (!actions.length) { return; }
+            if (!actions.length) {
+                //default try to switch to form view
+                if (self.dataset.select_id(id)) {
+                    _.delay(_.bind(function () {
+                        self.do_switch_view('form');
+                    }, self));
+                }
+                return;
+            }
             var action = actions[0][2];
             var c = new instance.web.CompoundContext(local_context);
             if (action.context) {
