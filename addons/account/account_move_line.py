@@ -789,6 +789,17 @@ class account_move_line(models.Model):
         return result
 
     @api.model
+    def compute_amount_fields(self, amount, src_currency, company_currency):
+        """ Compute value for fields debit/credit/amount_currency """
+        amount_currency = False
+        if src_currency and src_currency != company_currency:
+            amount_currency = amount
+            amount = src_currency.compute(amount, company_currency)
+        debit = amount > 0 and amount or 0.0
+        credit = amount < 0 and -amount or 0.0
+        return debit, credit, amount_currency
+
+    @api.model
     def list_journals(self):
         ng = dict(self.env['account.journal'].name_search('',[]))
         ids = ng.keys()
