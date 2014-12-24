@@ -34,8 +34,7 @@ class account_invoice(models.Model):
     _description = "Invoice"
     _order = "number desc, id desc"
     _track = {
-        'type': {
-        },
+        'type': {},
         'state': {
             'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj.state == 'paid' and obj.type in ('out_invoice', 'out_refund'),
             'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj.state == 'open' and obj.type in ('out_invoice', 'out_refund'),
@@ -69,8 +68,7 @@ class account_invoice(models.Model):
     @api.returns('account.analytic.journal', lambda r: r.id)
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
-        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
-        journal_type = type2journal.get(inv_type, 'sale')
+        journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
             raise except_orm(_('No Analytic Journal!'),
@@ -123,7 +121,7 @@ class account_invoice(models.Model):
                         'currency': line.company_id.currency_id.symbol if line.currency_id != self.currency_id else line.currency_id.symbol,
                         'id': line.id,
                         'digits': [69,line.company_id.currency_id.decimal_places if line.currency_id != self.currency_id else line.currency_id.decimal_places],
-                        })
+                    })
                 info['title'] = type_payment + ' from ' + line.partner_id.name
                 self.outstanding_credits_debits_widget = json.dumps(info)
 
@@ -146,12 +144,11 @@ class account_invoice(models.Model):
                     'currency': payment.company_id.currency_id.symbol if payment.currency_id != self.currency_id else payment.currency_id.symbol,
                     'digits': [69,payment.company_id.currency_id.decimal_places if payment.currency_id != self.currency_id else payment.currency_id.decimal_places],
                     'date': payment.date,
-                    })
+                })
             self.payments_widget = json.dumps(info)
+    
     @api.one
-    @api.depends(
-        'move_id.line_id.amount_residual',
-    )
+    @api.depends('move_id.line_id.amount_residual')
     def _compute_payments(self):
         payment_lines = []
         for line in self.move_id.line_id:
@@ -197,8 +194,8 @@ class account_invoice(models.Model):
         ], string='Status', index=True, readonly=True, default='draft',
         track_visibility='onchange', copy=False,
         help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-             " * The 'Pro-forma' when invoice is in Pro-forma status,invoice does not have an invoice number.\n"
-             " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
+             " * The 'Pro-forma' when invoice is in Pro-forma status, invoice does not have an invoice number.\n"
+             " * The 'Open' status is used when user create invoice, an invoice number is generated. Its in open status till user does not pay invoice.\n"
              " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
              " * The 'Cancelled' status is used when user cancel invoice.")
     sent = fields.Boolean(readonly=True, default=False, copy=False,
@@ -283,8 +280,7 @@ class account_invoice(models.Model):
     payments_widget = fields.Text(compute='_get_payment_info_JSON')
 
     _sql_constraints = [
-        ('number_uniq', 'unique(number, company_id, journal_id, type)',
-            'Invoice Number must be unique per Company!'),
+        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
     @api.model
@@ -392,12 +388,11 @@ class account_invoice(models.Model):
             if invoice.state not in ('draft', 'cancel'):
                 raise Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
             elif invoice.internal_number:
-                raise Warning(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
+                raise Warning(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(account_invoice, self).unlink()
 
     @api.multi
-    def onchange_partner_id(self, type, partner_id, date_invoice=False,
-            payment_term=False, partner_bank_id=False, company_id=False):
+    def onchange_partner_id(self, type, partner_id, date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         account_id = False
         payment_term_id = False
         fiscal_position = False
@@ -450,10 +445,6 @@ class account_invoice(models.Model):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank_id != bank_id:
-            to_update = self.onchange_partner_bank(bank_id)
-            result['value'].update(to_update.get('value', {}))
-
         return result
 
     @api.multi
@@ -483,14 +474,6 @@ class account_invoice(models.Model):
         else:
             raise except_orm(_('Insufficient Data!'),
                 _('The payment term of supplier does not have a payment term line.'))
-
-    @api.multi
-    def onchange_invoice_line(self, lines):
-        return {}
-
-    @api.multi
-    def onchange_partner_bank(self, partner_bank_id=False):
-        return {'value': {}}
 
     @api.multi
     def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id):
@@ -584,18 +567,6 @@ class account_invoice(models.Model):
             return self.env.ref('account.invoice_form')
 
     @api.multi
-    def move_line_id_payment_get(self):
-        # return the move line ids with the same account as the invoice self
-        if not self.id:
-            return []
-        query = """ SELECT l.id
-                    FROM account_move_line l, account_invoice i
-                    WHERE i.id = %s AND l.move_id = i.move_id AND l.account_id = i.account_id
-                """
-        self._cr.execute(query, (self.id,))
-        return [row[0] for row in self._cr.fetchall()]
-
-    @api.multi
     def test_paid(self):
         # check whether all corresponding account move lines are reconciled
         residual_amounts = [l.amount_residual for l in self.move_id.line_id if l.account_id.internal_type in ('payable', 'receivable')]
@@ -603,7 +574,7 @@ class account_invoice(models.Model):
             return False
         return not any(residual_amounts)
 
-    # TODO : y so complex ?
+    # TODO : If possible, remove this method
     @api.multi
     def button_reset_taxes(self):
         account_invoice_tax = self.env['account.invoice.tax']
@@ -667,7 +638,6 @@ class account_invoice(models.Model):
     @api.v7
     def assign_outstanding_credit(self, cr, uid, id, payment_id, context=None):
         return self.browse(cr, uid, id, context).register_payment(self.pool.get('account.move.line').browse(cr, uid, payment_id, context))
-
 
     @api.multi
     def action_date_assign(self):
