@@ -5,6 +5,14 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 import openerp.addons.decimal_precision as dp
 
+# Map invoice type to prefix of the aml created in the invoice account
+TYPE2PREFIX = {
+    'out_invoice': 'Payment from ',
+    'in_invoice': 'Payment to ',
+    'out_refund': 'Refund from ',
+    'in_refund': 'Refund to ',
+}
+
 class account_register_payment(models.TransientModel):
     _name = "account.register.payment"
     _description = "Register payment"
@@ -17,6 +25,12 @@ class account_register_payment(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True,
         default=lambda self: self.env.user.company_id)
     partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', String='Partner')
+
+    @api.one
+    @api.constrains('payment_amount')
+    def _check_amount(self):
+        if self.payment_amount == 0.0:
+            raise Warning('Please enter payment amount.')
 
     @api.model
     def default_get(self, fields):
@@ -46,12 +60,13 @@ class account_register_payment(models.TransientModel):
         amount = sign * self.payment_amount
         debit, credit, amount_currency = self.env['account.move.line'].compute_amount_fields(amount, self.journal_id.currency, self.company_id.currency_id)
 
-        move_lines_name = (credit != 0 and 'Payment from ' or 'Payment to ') + self.partner_id.name
+        invoice_account_aml_name = self.invoice_id.number
+        payment_account_aml_name = TYPE2PREFIX[self.invoice_id.type] + self.partner_id.name
 
         # Create move
 
-        aml_dict_value = {
-            'name': move_lines_name,
+        invoice_account_aml = {
+            'name': invoice_account_aml_name,
             'account_id': self.invoice_id.account_id.id,
             'journal_id': self.journal_id.id,
             'debit': debit,
@@ -63,8 +78,10 @@ class account_register_payment(models.TransientModel):
             'invoice': self.invoice_id.id,
         }
 
-        aml_dict_counterpart_value = aml_dict_value.copy()
-        aml_dict_counterpart_value.update({
+        payment_account_aml = invoice_account_aml.copy()
+        payment_account_aml.update({
+            'name': payment_account_aml_name,
+            # TOCHECK :   self.journal_id.default_credit_account_id.id if self.invoice_id.type in ('out_invoice', 'in_refund') ?
             'account_id': self.journal_id.default_debit_account_id.id,
             'debit': credit,
             'credit': debit,
@@ -77,7 +94,7 @@ class account_register_payment(models.TransientModel):
             'ref': self.reference,
             'company_id': self.company_id.id,
             'journal_id': self.journal_id.id,
-            'line_id': [(0, 0, aml_dict_value), (0, 0, aml_dict_counterpart_value)],
+            'line_id': [(0, 0, invoice_account_aml), (0, 0, payment_account_aml)],
         })
 
         move_id.post()
