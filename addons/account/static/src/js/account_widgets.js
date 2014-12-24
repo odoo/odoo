@@ -1816,7 +1816,10 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
+                var propose_partial = self.getCreatedLines().length === 0
+                    && self.get("mv_lines_selected").length === 1
+                    && balance_type === "greater"
+                    && ! self.get("mv_lines_selected")[0].partial_reconcile;
                 self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
@@ -2227,7 +2230,9 @@ openerp.account = function (instance) {
             });
 
             // show or hide done message
-            var reconciliations_left = (self.partners_data.show ? self.partners_data.num_total - self.partners_data.num_done : 0) + (self.accounts_data.show ? self.accounts_data.num_total - self.accounts_data.num_done : 0);
+            var reconciliations_left = 0;
+            reconciliations_left += self.partners_data.show ? self.partners_data.num_total - self.partners_data.num_done : 0;
+            reconciliations_left += self.accounts_data.show ? self.accounts_data.num_total - self.accounts_data.num_done : 0;
             if (reconciliations_left === 0 && self.$(".done_message").length === 0)
                 self.showDoneMessage();
             if (reconciliations_left !== 0 && self.$(".done_message").length !== 0)
@@ -2362,7 +2367,8 @@ openerp.account = function (instance) {
         // Unfortunately, "Generated content does not alter the document tree"
         preventAccountingViewCollapse: function() {
             if (this.$(".tbody_matched_lines > *").length + this.$(".tbody_created_lines > *").length === 0)
-                this.$(".tbody_matched_lines").append('<tr class="filler_line"><td class="cell_action"></td><td class="cell_due_date"></td><td class="cell_label"></td><td class="cell_debit"></td><td class="cell_credit"></td><td class="cell_info_popover"></td></tr>');
+                this.$(".tbody_matched_lines").append('<tr class="filler_line"><td class="cell_action"></td><td class="cell_due_date"></td>\
+                    <td class="cell_label"></td><td class="cell_debit"></td><td class="cell_credit"></td><td class="cell_info_popover"></td></tr>');
         },
 
         updateAccountingViewMatchedLines: function() {
@@ -2480,16 +2486,17 @@ openerp.account = function (instance) {
             });
         },
 
-        markAsReconciled: function() {
+        // Warning: _.once is an awkward workaround for a bug where markAsReconciled is called more than once too
+        // quickly, resulting in a concurrent update server-side.
+        markAsReconciled: _.once(function() {
             var self = this;
-            if (! self.is_consistent) return $.Deferred().rejectWith({reason: "Reconciliation widget is not in a consistent state."});
             var type = this.data.reconciliation_type;
             var id = (type === "partner" ? this.data.partner_id : this.data.account_id);
             var model = (type === "partner" ? this.getParent().model_partner : this.getParent().model_account);
             model.call("mark_as_reconciled", [[id]]).then(function() {
                 self.bowOut(self.animation_speed, true);
             });
-        },
+        }),
 
         getPostMortemProcess: function() {
             var reconciliation_type = this.data.reconciliation_type;

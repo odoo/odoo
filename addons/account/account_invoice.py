@@ -659,18 +659,10 @@ class account_invoice(models.Model):
         return iml
 
     @api.one
-    def register_payment(self, payment_id):
-        #get line with which we will try to reconcile
-        reconcile_line = self.env['account.move.line']
-        for aml in self.move_id.line_id:
-            if aml.reconciled:
-                continue
-            elif (aml.debit > 0 and payment_id.debit > 0) or (aml.credit > 0 and payment_id.credit > 0):
-                #can't reconcile if both account move line are debit or credit
-                continue
-            else:
-                reconcile_line += aml
-        return (reconcile_line + payment_id).reconcile()
+    def register_payment(self, payment_line):
+        """ Reconcile payable/receivable lines from the invoice with payment_line """
+        line_to_reconcile = self.move_id.line_id.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+        return (line_to_reconcile + payment_line).reconcile()
 
     @api.v7
     def assign_outstanding_credit(self, cr, uid, id, payment_id, context=None):
