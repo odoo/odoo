@@ -832,7 +832,7 @@ class purchase_order(osv.osv):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
                 'partner_id': order.dest_address_id.id or order.partner_id.id,
-                'date': max([l.date_planned for l in order.order_line]),
+                'date': order.date_order,
                 'origin': order.name
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
