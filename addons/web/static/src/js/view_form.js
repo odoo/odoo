@@ -3215,9 +3215,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     click_change_value: function (event) {
         var val = $(event.target).val();
         val = this.field.type == "selection" ? val : +val;
-        if (val == this.get_value()) {
-            this.set_value(false);
-        } else {
+        if (val !== this.get_value()) {
             this.set_value(val);
         }
     },
