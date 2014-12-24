@@ -159,11 +159,11 @@
                 <field name="message_unread"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_employee_details">
+                        <div class="row oe_employee_details">
                             <div class="col-md-4">
-                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_image"/></a>
+                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="img-responsive oe_employee_image"/></a>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <h4>
                                     <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
                                 </h4>
