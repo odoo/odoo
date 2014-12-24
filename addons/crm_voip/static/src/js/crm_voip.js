@@ -119,7 +119,7 @@ openerp.crm_voip = function(instance) {
             var id = phonecall.id;
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
             //TODO if the sale cancel one call, continue the automatic call or not ? 
-            self.stop_automatic_call();
+            this.stop_automatic_call();
         },
 
         sip_rejected: function(phonecall){
@@ -128,10 +128,10 @@ openerp.crm_voip = function(instance) {
             new openerp.web.Model("crm.phonecall").call("rejected_call",[id]);
             //Remove the microphone icon
             $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
-            if(self.in_automatic_mode){
-                self.next_call();
+            if(this.in_automatic_mode){
+                this.next_call();
             }else{
-                self.stop_automatic_call();
+                this.stop_automatic_call();
             }
         },
 
@@ -219,40 +219,37 @@ openerp.crm_voip = function(instance) {
         },
 
         automatic_call: function(){
-            var self = this;
-            if(!self.on_call){
-                self.in_automatic_mode = true;
-                self.phonecalls_ids = [];
-                for (var id in self.phonecalls){
-                    if(self.phonecalls[id].state != "done"){
-                        self.phonecalls_ids.push(id);
+            if(!this.on_call){
+                this.in_automatic_mode = true;
+                this.phonecalls_ids = [];
+                for (var id in this.phonecalls){
+                    if(this.phonecalls[id].state != "done"){
+                        this.phonecalls_ids.push(id);
                     }
                 }
-                if(self.phonecalls_ids.length){
-                    self.make_call(self.phonecalls_ids.shift());
+                if(this.phonecalls_ids.length){
+                    this.make_call(this.phonecalls_ids.shift());
                 }else{
-                    self.stop_automatic_call();
+                    this.stop_automatic_call();
                 }
             }
         },
 
         next_call: function(){
-            var self = this;
-            if(self.phonecalls_ids.length){
-                if(!self.on_call){
-                    self.make_call(self.phonecalls_ids.shift());
+            if(this.phonecalls_ids.length){
+                if(!this.on_call){
+                    this.make_call(this.phonecalls_ids.shift());
                 }
             }else{
-                self.stop_automatic_call();
+                this.stop_automatic_call();
             }
         },
 
         stop_automatic_call: function(){
-            var self = this;
-            self.in_automatic_mode = false;
+            this.in_automatic_mode = false;
             $(".oe_dial_split_callbutton").show();
             $(".oe_dial_stop_autocall_button").hide();
-            if(!self.on_call){
+            if(!this.on_call){
                 $('.oe_dial_big_callbutton').html(_t("Call"));
                 $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
             }else{
@@ -262,13 +259,12 @@ openerp.crm_voip = function(instance) {
 
         //Modify the phonecalls list when the search input changes
         input_change: function() {
-            var self = this;
             var search = this.$(".oe_dial_searchbox").val().toLowerCase();
             //for each phonecall, check if the search is in phonecall name or the partner name
             _.each(this.phonecalls,function(phonecall){
                 var flag = phonecall.partner_name.toLowerCase().indexOf(search) == -1 && 
                     phonecall.name.toLowerCase().indexOf(search) == -1;
-                self.$(".oe_dial_phonecall").filter(function(){return $(this).data('id') == phonecall.id;}).toggle(!flag);
+                this.$(".oe_dial_phonecall").filter(function(){return $(this).data('id') == phonecall.id;}).toggle(!flag);
             });
         },
 
@@ -604,10 +600,6 @@ openerp.crm_voip = function(instance) {
                 });
             }
             
-        },
-
-        next_call: function(){
-            this.sip_js.next_call();
         },
     });
     

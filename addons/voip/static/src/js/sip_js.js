@@ -140,8 +140,6 @@ openerp.voip = function(openerp) {
             console.error('getUserMedia failed:', e);
         },
 
-        
-
         make_call: function(phonecall, number){
             var self = this;
             self.current_phonecall = phonecall;
