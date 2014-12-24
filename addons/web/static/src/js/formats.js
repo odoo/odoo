@@ -266,9 +266,16 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                     value, (date_pattern + ' ' + time_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
-            datetime = Date.parseExact(value.toString().replace(/\d+/g, function(m){
+            datetime = Date.parseExact(value, (date_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            var leading_zero_value = value.toString().replace(/\d+/g, function(m){
                 return m.length === 1 ? "0" + m : m ;
-            }), (date_pattern + ' ' + time_pattern));
+            });
+            datetime = Date.parseExact(leading_zero_value, (date_pattern + ' ' + time_pattern));
+            if (datetime !== null)
+                return instance.web.datetime_to_str(datetime);
+            datetime = Date.parseExact(leading_zero_value, (date_pattern));
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
             datetime = Date.parse(value);
