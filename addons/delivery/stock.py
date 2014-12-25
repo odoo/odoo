@@ -51,6 +51,12 @@ class stock_picking(osv.osv):
             result[line.picking_id.id] = True
         return result.keys()
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None: context = {}
+        if vals.get('backorder_id'):
+            vals.update(carrier_tracking_ref = '')
+        return super(stock_picking, self).write(cr, uid, ids, vals, context=context)
+
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),

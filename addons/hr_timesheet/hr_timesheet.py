@@ -70,10 +70,31 @@ class hr_analytic_timesheet(osv.osv):
     _table = 'hr_analytic_timesheet'
     _description = "Timesheet Line"
     _inherits = {'account.analytic.line': 'line_id'}
-    _order = "id desc"
+    _order = "date_aal DESC, account_name ASC"
+
+    def _get_account_analytic_line(self, cr, uid, ids, context=None):
+        ts_line_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [('line_id', 'in', ids)], context=context)
+        return ts_line_ids
+
+    def _get_account_analytic_account(self, cr, uid, ids, context=None):
+        ts_line_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [('account_id', 'in', ids)], context=context)
+        return ts_line_ids
+
     _columns = {
         'line_id': fields.many2one('account.analytic.line', 'Analytic Line', ondelete='cascade', required=True),
         'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner', relation='res.partner', store=True),
+
+        'date_aal': fields.related('line_id', 'date', string="Analytic Line Date", type='date',
+            store={
+                'account.analytic.line': (_get_account_analytic_line, ['date'], 10),
+                'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
+                }),
+        'account_name': fields.related('account_id', 'name', string="Analytic Account Name", type='char', size=256,
+            store={
+                'account.analytic.account': (_get_account_analytic_account, ['name'], 10),
+                'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
+                }
+            ),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -182,6 +203,9 @@ class hr_analytic_timesheet(osv.osv):
         ename = ''
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
+        res = self.on_change_unit_amount(cr, uid, id, vals.get('product_id'), vals.get('unit_amount'), False, False, vals.get('journal_id'), context)
+        if res['value'].get('amount'):
+            vals.update(amount=res['value']['amount'])
         if not vals.get('journal_id',False):
            raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
         if not vals.get('account_id',False):

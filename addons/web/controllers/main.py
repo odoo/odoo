@@ -1277,10 +1277,14 @@ class Binary(openerpweb.Controller):
         """
         Model = req.session.model(model)
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, req.context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, req.context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1290,9 +1294,10 @@ class Binary(openerpweb.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', content_disposition(filename, req))])
+            return req.make_response(
+                filecontent, [('Content-Type', content_type),
+                              ('Content-Disposition',
+                               content_disposition(filename, req))])
 
     @openerpweb.httprequest
     def saveas_ajax(self, req, data, token):
@@ -1303,6 +1308,7 @@ class Binary(openerpweb.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = req.session.model(model)
         fields = [field]
@@ -1311,7 +1317,10 @@ class Binary(openerpweb.Controller):
         if data:
             res = { field: data }
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1322,9 +1331,10 @@ class Binary(openerpweb.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename, req))],
+            return req.make_response(
+                filecontent, headers=[('Content-Type', content_type),
+                                      ('Content-Disposition',
+                                       content_disposition(filename, req))],
                 cookies={'fileToken': token})
 
     @openerpweb.httprequest
@@ -1758,16 +1768,32 @@ class Reports(openerpweb.Controller):
             report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
-        file_name = action.get('name', 'report')
-        if 'name' not in action:
-            reports = req.session.model('ir.actions.report.xml')
-            res_id = reports.search([('report_name', '=', action['report_name']),],
-                                    0, False, False, context)
-            if len(res_id) > 0:
-                file_name = reports.read(res_id[0], ['name'], context)['name']
-            else:
-                file_name = action['report_name']
+        file_name = action['report_name']
+        # Try to get current object model and their ids from context
+        if 'context' in action:
+            action_context = action['context']
+            if (action_context.get('active_model')
+                    and action_context['active_ids']):
+                # Use built-in ORM method to get data from DB
+                m = req.session.model(action_context['active_model'])
+                r = []
+                try:
+                    r = m.name_get(action_context['active_ids'], context)
+                except xmlrpclib.Fault:
+                    #we assume this went wrong because of incorrect/missing
+                    #_rec_name. We don't have access to _columns here to do
+                    # a proper check
+                    pass
+                # Parse result to create a better filename
+                item_names = [item[1] or str(item[0]) for item in r]
+                if action.get('name'):
+                    item_names.insert(0, action['name'])
+                if item_names:
+                    file_name = '-'.join(item_names)[:251]
         file_name = '%s.%s' % (file_name, report_struct['format'])
+        # Create safe filename
+        p = re.compile('[/:(")<>|?*]|(\\\)')
+        file_name = p.sub('_', file_name)
 
         return req.make_response(report,
              headers=[

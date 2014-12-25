@@ -181,7 +181,7 @@ class account_asset_asset(osv.osv):
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
-                     'name': str(asset.id) +'/' + str(i),
+                     'name': "%s/%s" %(i, undone_dotation_number),
                      'remaining_value': residual_amount,
                      'depreciated_value': (asset.purchase_value - asset.salvage_value) - (residual_amount + amount),
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
@@ -410,9 +410,8 @@ class account_asset_depreciation_line(osv.osv):
             asset_name = line.asset_id.name
             reference = line.name
             move_vals = {
-                'name': asset_name,
                 'date': depreciation_date,
-                'ref': reference,
+                'ref': "%s %s" %(line.asset_id.code or line.asset_id.name, line.name),
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }

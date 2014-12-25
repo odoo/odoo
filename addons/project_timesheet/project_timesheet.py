@@ -276,7 +276,7 @@ class task(osv.osv):
                         if vals.get('project_id',False):
                             vals_line['account_id'] = acc_id
                         if vals.get('name',False):
-                            vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
+                            vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name or '/'))
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
 
         res = super(task,self).write(cr, uid, ids, vals, context)

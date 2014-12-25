@@ -27,6 +27,9 @@ class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
     _description = "Import Inventory"
 
+    # Maximum size of a batch of lines we can import without risking OOM
+    MAX_IMPORT_LINES = 10000
+
     def _default_location(self, cr, uid, ids, context=None):
         try:
             location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
@@ -103,23 +106,31 @@ class stock_fill_inventory(osv.osv_memory):
         for location in location_ids:
             datas = {}
             res[location] = {}
-            move_ids = move_obj.search(cr, uid, ['|',('location_dest_id','=',location),('location_id','=',location),('state','=','done')], context=context)
+            all_move_ids = move_obj.search(cr, uid, ['|',('location_dest_id','=',location),('location_id','=',location),('state','=','done')], context=context)
             local_context = dict(context)
             local_context['raise-exception'] = False
-            for move in move_obj.browse(cr, uid, move_ids, context=context):
-                lot_id = move.prodlot_id.id
-                prod_id = move.product_id.id
-                if move.location_dest_id.id != move.location_id.id:
-                    if move.location_dest_id.id == location:
-                        qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
-                    else:
-                        qty = -uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
+            # To avoid running out of memory, process limited batches
+            for i in xrange(0, len(all_move_ids), self.MAX_IMPORT_LINES):
+                move_ids = all_move_ids[i:i+self.MAX_IMPORT_LINES]
+                for move in move_obj.browse(cr, uid, move_ids, context=context):
+                    lot_id = move.prodlot_id.id
+                    prod_id = move.product_id.id
+                    if move.location_dest_id.id != move.location_id.id:
+                        if move.location_dest_id.id == location:
+                            qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
+                        else:
+                            qty = -uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
 
 
-                    if datas.get((prod_id, lot_id)):
-                        qty += datas[(prod_id, lot_id)]['product_qty']
+                        if datas.get((prod_id, lot_id)):
+                            qty += datas[(prod_id, lot_id)]['product_qty']
 
-                    datas[(prod_id, lot_id)] = {'product_id': prod_id, 'location_id': location, 'product_qty': qty, 'product_uom': move.product_id.uom_id.id, 'prod_lot_id': lot_id}
+                        # Floating point sum could introduce tiny rounding errors :
+                        #     Use the UoM API for the rounding (same UoM in & out).
+                        qty = uom_obj._compute_qty_obj(cr, uid,
+                                                       move.product_id.uom_id, qty,
+                                                       move.product_id.uom_id)
+                        datas[(prod_id, lot_id)] = {'product_id': prod_id, 'location_id': location, 'product_qty': qty, 'product_uom': move.product_id.uom_id.id, 'prod_lot_id': lot_id}
 
             if datas:
                 flag = True

@@ -465,7 +465,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in grouped_rows.items():
+            for src, row in sorted(grouped_rows.items()):
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
@@ -784,6 +784,11 @@ def trans_generate(lang, modules, cr):
                         report_file.close()
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
+
+        elif model == 'ir.model':
+            model_pool = pool.get(obj.model)
+            if model_pool:
+                push_translation(module, 'code', '_description', 0, model_pool._description)
 
         for field_name,field_def in obj._table._columns.items():
             if field_def.translate:

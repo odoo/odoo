@@ -629,10 +629,20 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
+    
+    def _get_stock_move_changes(self, cr, uid, ids, context=None):
+        '''Return the ids of pickings that should change, due to changes
+        in stock moves.'''
+        move_pool = self.pool['stock.move']
+        picking_ids = set()
+        for move_obj in move_pool.browse(cr, uid, ids, context=context):
+            if move_obj.picking_id:
+                picking_ids.add(move_obj.picking_id.id)
+        return list(picking_ids)
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            seq_obj_name =  self._name
+            seq_obj_name =  'stock.picking.%s' % vals.get('type', 'internal')
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         return new_id
@@ -664,12 +674,31 @@ class stock_picking(osv.osv):
             * Transferred: has been processed, can't be modified or cancelled anymore\n
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
-        'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+        'min_date': fields.function(
+            get_min_max_date,
+            fnct_inv=_set_minimum_date, multi='min_max_date',
+            store={
+                'stock.move': (
+                    _get_stock_move_changes,
+                    ['date_expected'], 10,
+                )
+            },
+            type='datetime', string='Scheduled Time', select=True,
+            help="Scheduled time for the shipment to be processed"
+        ),
         'date': fields.datetime('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Max. Expected Date', select=2),
+        'max_date': fields.function(
+            get_min_max_date,
+            fnct_inv=_set_maximum_date, multi='min_max_date',
+            store={
+                'stock.move': (
+                    _get_stock_move_changes,
+                    ['date_expected'], 10,
+                )
+            },
+            type='datetime', string='Max. Expected Date', select=True
+        ),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
         'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -749,7 +778,12 @@ class stock_picking(osv.osv):
         @return: True
         """
         pickings = self.browse(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'state': 'confirmed'})
+        to_update = []
+        for pick in pickings:
+            if pick.state != 'confirmed':
+                to_update.append(pick.id)
+        if to_update:
+            self.write(cr, uid, to_update, {'state': 'confirmed'})
         todo = []
         for picking in pickings:
             for r in picking.move_lines:
@@ -817,18 +851,21 @@ class stock_picking(osv.osv):
         """ Cancels picking and moves.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def action_assign_wkf(self, cr, uid, ids, context=None):
         """ Changes picking state to assigned.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'assigned'})
+        to_update = []
+        for pick in self.browse(cr, uid, ids, context=context):
+            if pick.state != 'assigned':
+                to_update.append(pick.id)
+        if to_update:
+            self.write(cr, uid, to_update, {'state': 'assigned'})
         return True
 
     def test_finished(self, cr, uid, ids):
@@ -858,6 +895,8 @@ class stock_picking(osv.osv):
                 if all([x.state != 'waiting' for x in pick.move_lines]):
                     return True
             for move in pick.move_lines:
+                if (move.state) == 'waiting':
+                    move.check_assign()
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
                     return False
                 if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
@@ -1292,7 +1331,7 @@ class stock_picking(osv.osv):
                             'product_uos_qty': uos_qty[move.id],
                             'picking_id' : new_picking,
                             'state': 'assigned',
-                            'move_dest_id': False,
+                            'move_dest_id': move.move_dest_id.id,
                             'price_unit': move.price_unit,
                             'product_uom': product_uoms[move.id]
                     }
@@ -2130,10 +2169,12 @@ class stock_move(osv.osv):
         # fix for bug lp:707031
         # called write of related picking because changing move availability does
         # not trigger workflow of picking in order to change the state of picking
+        seen = set()
         wf_service = netsvc.LocalService('workflow')
         for move in self.browse(cr, uid, ids, context):
-            if move.picking_id:
+            if move.picking_id and move.picking_id.id not in seen:
                 wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+                seen.add(move.picking_id.id)
         return True
 
     #
@@ -2167,7 +2208,11 @@ class stock_move(osv.osv):
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
                     product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, [move.id], move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
+                    move.write({
+                        'location_id': r[1],
+                        'product_qty': r[0],
+                        'product_uos_qty': product_uos_qty,
+                        })
 
                     while res:
                         r = res.pop(0)
@@ -2416,7 +2461,6 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
-            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2441,15 +2485,11 @@ class stock_move(osv.osv):
             self._update_average_price(cr, uid, move, context=context)
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
-                todo.append(move.id)
-
-        if todo:
-            self.action_confirm(cr, uid, todo, context=context)
-
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        for id in move_ids:
-             wf_service.trg_trigger(uid, 'stock.move', id, cr)
-
+                self.action_confirm(cr, uid, [move.id], context=context)
+            self.write(cr, uid, [move.id], 
+                       {'state': 'done', 
+                       'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, 
+                       context=context)
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
@@ -2465,6 +2505,7 @@ class stock_move(osv.osv):
         debit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id and move.product_id.id or False,
+                    'product_uom_id': move.product_uom and move.product_uom.id or False,
                     'quantity': move.product_qty,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
@@ -2475,6 +2516,7 @@ class stock_move(osv.osv):
         credit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id and move.product_id.id or False,
+                    'product_uom_id': move.product_uom and move.product_uom.id or False,
                     'quantity': move.product_qty,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
@@ -2743,7 +2785,7 @@ class stock_move(osv.osv):
                             'product_uos_qty': product_qty,
                             'picking_id' : move.picking_id.id,
                             'state': 'assigned',
-                            'move_dest_id': False,
+                            'move_dest_id': move.move_dest_id.id,
                             'price_unit': move.price_unit,
                             }
                 prodlot_id = prodlot_ids[move.id]
@@ -2915,6 +2957,17 @@ class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
     _rec_name = "inventory_id"
+    _order = "inventory_id, location_name, product_code, product_name, prodlot_name"
+
+    def _get_product_name_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('product_id', 'in', ids)], context=context)
+
+    def _get_location_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('location_id', 'in', ids)], context=context)
+        
+    def _get_prodlot_change(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.inventory.line').search(cr, uid, [('prod_lot_id', 'in', ids)], context=context)
+
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -2924,6 +2977,18 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='Status',readonly=True),
+        'product_name': fields.related('product_id', 'name', type='char', string='Product name', store={
+                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
+        'product_code': fields.related('product_id', 'default_code', type='char', string='Product code', store={
+                                                                                            'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['product_id'], 20),}),
+        'location_name': fields.related('location_id', 'complete_name', type='char', string='Location name', store={
+                                                                                            'stock.location': (_get_location_change, ['name', 'location_id', 'active'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['location_id'], 20),}),
+        'prodlot_name': fields.related('prod_lot_id', 'name', type='char', string='Serial Number name', store={
+                                                                                            'stock.production.lot': (_get_prodlot_change, ['name'], 20),
+                                                                                            'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20),}),
     }
 
     def _default_stock_location(self, cr, uid, context=None):

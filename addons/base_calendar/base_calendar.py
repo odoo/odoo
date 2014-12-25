@@ -88,7 +88,10 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
 
-    return base_calendar_id and int(base_calendar_id) or base_calendar_id
+        return int(base_calendar_id)
+
+    return base_calendar_id
+    
 
 def get_real_ids(ids):
     if isinstance(ids, (str, int, long)):

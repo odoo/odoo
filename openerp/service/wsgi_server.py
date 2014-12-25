@@ -79,7 +79,22 @@ def xmlrpc_return(start_response, service, method, params, legacy_exceptions=Fal
     # This also mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for
     # exception handling.
     try:
-        result = openerp.netsvc.dispatch_rpc(service, method, params)
+        def fix(res):
+            """
+            This fix is a minor hook to avoid xmlrpclib to raise TypeError exception: 
+            - To respect the XML-RPC protocol, all "int" and "float" keys must be cast to string to avoid
+              TypeError, "dictionary key must be string"
+            - And since "allow_none" is disabled, we replace all None values with a False boolean to avoid
+              TypeError, "cannot marshal None unless allow_none is enabled"
+            """
+            if res is None:
+                return False
+            elif type(res) == dict:
+                return dict((str(key), fix(value)) for key, value in res.items())
+            else:
+                return res
+            
+        result = fix(openerp.netsvc.dispatch_rpc(service, method, params))
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except Exception, e:
         if legacy_exceptions:

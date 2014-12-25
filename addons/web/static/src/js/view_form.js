@@ -148,6 +148,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$el.off('.formBlur');
         }
         this._super();
+        if (this.$buttons) {
+            this.$buttons.remove();
+        }
     },
     load_form: function(data) {
         var self = this;
@@ -3514,7 +3517,6 @@ var commands = {
 };
 instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
-    disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         lazy_build_o2m_kanban_view();
@@ -3786,6 +3788,9 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }
         return $.when(false);
     },
+    is_false: function() {
+        return this.dataset.ids.length == 0;
+    },
     is_syntax_valid: function() {
         if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
             return true;
@@ -3853,6 +3858,10 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
         return this.context;
     }
 });
@@ -4290,7 +4299,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
 */
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     multi_selection: false,
-    disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();

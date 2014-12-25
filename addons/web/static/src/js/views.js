@@ -365,6 +365,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @return {*}
      */
     ir_actions_common: function(executor, options) {
+        var self = this;
         if (this.inner_widget && executor.action.target !== 'new') {
             if (this.getParent().has_uncommitted_changes()) {
                 return $.Deferred().reject();

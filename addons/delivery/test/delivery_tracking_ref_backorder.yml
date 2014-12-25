@@ -1,0 +1,41 @@
+-
+  In order to partial delivery with tracking number
+-
+  I create an outgoing picking
+-
+ !record {model: stock.picking, id: outgoing_shipment}:
+    type: out
+    carrier_tracking_ref: ABC12345
+    volume: 2
+    number_of_packages: 2
+-
+ !record {model: stock.move, id: outgoing_move}:
+    picking_id: outgoing_shipment
+    product_id: product.product_product_8
+    product_uom: product.product_uom_unit
+    product_qty: 2
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+-
+ I confirm the picking
+-
+  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_shipment}
+-
+ I make a partial delivery
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = [ref("outgoing_shipment")]
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': pick_ids})
+    partial = self.browse(cr, uid, partial_id, context=context)
+    partial.move_ids[0].write({'quantity': 1})
+    self.do_partial(cr, uid, [partial_id])
+-
+  I check backorder shipment after partial delivery.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("delivery.outgoing_shipment"))
+    backorder = shipment.backorder_id
+    assert backorder, "Backorder should be created after partial shipment."
+    assert backorder.state == 'done', "Backorder should be close after received"
+    assert backorder.carrier_tracking_ref ==  'ABC12345', 'wrong tracking ref on done picking'
+    assert not shipment.carrier_tracking_ref, 'remaining picking must have no tracking ref'

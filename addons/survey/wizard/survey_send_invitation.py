@@ -60,6 +60,7 @@ class survey_send_invitation(osv.osv_memory):
         survey_obj = self.pool.get('survey')
         msg = ""
         name = ""
+        survey_id = 0
         for sur in survey_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             name += "\n --> " + sur.title + "\n"
             if sur.state != 'open':
@@ -67,6 +68,7 @@ class survey_send_invitation(osv.osv_memory):
             data['mail_subject'] = _("Invitation for %s") % (sur.title)
             data['mail_subject_existing'] = _("Invitation for %s") % (sur.title)
             data['mail_from'] = sur.responsible_id.email
+            survey_id = sur.id
         if msg:
             raise osv.except_osv(_('Warning!'), _('The following surveys are not in open state: %s') % msg)
         data['mail'] = _('''
@@ -77,7 +79,12 @@ You can access this survey with the following parameters:
  Your login ID: %%(login)s\n
  Your password: %%(passwd)s\n
 \n\n
-Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context))
+Thanks,''') % (
+            name, 
+            self.pool.get('ir.config_parameter').get_param(
+                cr, uid, 'web.base.url', default='http://localhost:8069',
+                context=context)
+                + '#id=%d&view_type=form&model=survey' % survey_id)
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
@@ -108,8 +115,8 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
         mail_message = self.pool.get('mail.message')
 
         model_data_obj = self.pool.get('ir.model.data')
-        group_id = model_data_obj._get_id(cr, uid, 'base', 'group_survey_user')
-        group_id = model_data_obj.browse(cr, uid, group_id, context=context).res_id
+        group_id = model_data_obj.get_object_reference(
+                cr, uid, 'base', 'group_survey_invitee')[1]
 
         act_id = self.pool.get('ir.actions.act_window')
         act_id = act_id.search(cr, uid, [('res_model', '=' , 'survey.name.wiz'), \
@@ -183,7 +190,9 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                                 'address_id': partner.id,
                                 'groups_id': [[6, 0, [group_id]]],
                                 'action_id': act_id[0],
-                                'survey_id': [[6, 0, survey_ids]]
+                                'survey_id': [[6, 0, survey_ids]],
+                                'partner_id': partner.id,
+                                'tz': context.get('tz'),
                                }
                     user = user_ref.create(cr, uid, res_data)
                     if user not in new_user:

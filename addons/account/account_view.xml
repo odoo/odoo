@@ -393,6 +393,7 @@
             <field name="model">account.journal</field>
             <field name="arch" type="xml">
                 <form string="Account Journal" version="7.0">
+                    <sheet>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -407,6 +408,7 @@
                             <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>
@@ -450,6 +452,7 @@
                             </field>
                         </page>
                     </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -563,6 +566,8 @@
                     <h1><field name="name"/></h1>
                     <group>
                         <group>
+                            <!-- last_closing_balance must be here because it is returned by onchange_journal_id -->
+                            <field name="last_closing_balance" invisible="1"/>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                             <label for="date" string="Date / Period"/>
                             <div>

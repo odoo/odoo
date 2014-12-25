@@ -112,7 +112,11 @@ class stock_move(osv.osv):
 
     def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
         res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
-        res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
+        state = moves_todo[0][1][6] or 'none'
+        if picking.sale_id:
+            if res.get('type') == 'out' and picking.sale_id.order_policy == 'picking':
+                state = '2binvoiced'
+        res.update(invoice_state=state)
         return res
 stock_move()
 

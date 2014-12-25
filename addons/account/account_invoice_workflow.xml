@@ -17,7 +17,7 @@
         <record id="act_proforma2" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">proforma2</field>
-            <field name="action">write({'state':'proforma2'})</field>
+            <field name="action">action_proforma()</field>
             <field name="kind">function</field>
         </record>
 

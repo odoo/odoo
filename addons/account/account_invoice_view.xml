@@ -61,7 +61,7 @@
                         <group>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(product_id, parent.partner_id, parent.type, parent.fiscal_position,account_id)" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_id" context="{'type':parent.get('type')}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" widget="many2many_tags"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)], ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -215,7 +215,7 @@
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
-                                    <button name="button_reset_taxes" states="draft,proforma2"
+                                    <button name="button_reset_taxes" states="draft"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
@@ -346,7 +346,7 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
+                            <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type, 'company_id': company_id}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
@@ -372,7 +372,7 @@
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
-                                    <button name="button_reset_taxes" states="draft,proforma2"
+                                    <button name="button_reset_taxes" states="draft"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>

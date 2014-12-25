@@ -82,7 +82,7 @@
     context = {'active_model':'survey', 'active_id': ref('survey_Initial_partner_feedback'), 'active_ids': [ref('survey_Initial_partner_feedback')]}
     values = self.default_get(cr, uid, ['mail_from', 'mail_subject', 'send_mail_existing', 'mail_subject_existing', 'mail', 'partner_ids', 'send_mail'], context)
     values['mail_from'] = 'Surveyor'
-    new_id = self.create(cr, uid, values)
+    new_id = self.create(cr, uid, values, context)
     self.action_send(cr, uid, [new_id], context)
 -
   I set the value in "Total start survey" field.

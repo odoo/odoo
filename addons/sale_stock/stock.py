@@ -31,6 +31,9 @@ class stock_move(osv.osv):
         values = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
         if picking.sale_id:
             values['sale_id'] = picking.sale_id.id
+            if values.get('type') == 'out' and picking.sale_id.order_policy == 'picking':
+                values['invoice_state'] = '2binvoiced'
+        picking.write({'invoice_state': 'none'})
         return values
 
 class stock_picking(osv.osv):

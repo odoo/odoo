@@ -35,7 +35,7 @@ class mrp_subproduct(osv.osv):
   'Fixed' depicts a situation where the quantity of created byproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
   By opposition, 'Variable' means that the quantity will be computed as\
     '(quantity of byproduct set on the BoM / quantity of manufactured product set on the BoM * quantity of manufactured product in the production order.)'"),
-        'bom_id': fields.many2one('mrp.bom', 'BoM'),
+        'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade'),
     }
     _defaults={
         'subproduct_type': 'variable',

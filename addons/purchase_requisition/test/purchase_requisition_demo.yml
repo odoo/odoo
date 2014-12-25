@@ -7,4 +7,10 @@
       - product_id: product.product_product_9
         product_qty: 10.0
         product_uom_id: product.product_uom_unit
-  
+-
+  !record {model: purchase.requisition, id: requisition2}:
+    exclusive: exclusive
+    line_ids:
+      - product_id: product.product_product_13
+        product_qty: 10.0
+        product_uom_id: product.product_uom_unit

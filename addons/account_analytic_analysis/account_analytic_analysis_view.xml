@@ -139,11 +139,11 @@
                         <group>
                             <field name="pricelist_id"
                                 class="oe_inline"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                                attrs="{'required': ['|',('type','=','template'),('type','=','contract'), ('invoice_on_timesheets', '=', True)]}"/>
                             <field name="to_invoice"
                                 class="oe_inline"
                                 widget="selection"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                                attrs="{'required': ['|',('type','=','template'),('type','=','contract'), ('invoice_on_timesheets', '=', True)]}"/>
                         </group>
                     </group>
                  </xpath>
