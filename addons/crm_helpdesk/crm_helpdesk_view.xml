@@ -21,6 +21,32 @@
             </field>
         </record>
 
+        <!-- helpdesk Stages -->
+        <record id="crm_helpdesk_stage_tree" model="ir.ui.view">
+            <field name="name">crm.helpdesk.stage.tree</field>
+            <field name="model">crm.helpdesk.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Stages">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="crm_helpdesk_stage_form" model="ir.ui.view">
+            <field name="name">crm.helpdesk.stage.form</field>
+            <field name="model">crm.helpdesk.stage</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk Stage">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="crm_helpdesk_category_tree" model="ir.ui.view">
             <field name="name">crm.helpdesk.category.tree</field>
             <field name="model">crm.helpdesk.category</field>
@@ -32,6 +58,24 @@
             </field>
         </record>
 
+        <record id="crm_helpdesk_stage_act" model="ir.actions.act_window">
+            <field name="name">Helpdesk Stages</field>
+            <field name="res_model">crm.helpdesk.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm_helpdesk_stage_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new stage in the processing of the Helpdesk.
+              </p><p>
+                You can create helpdesk stages to categorize the status of every
+                helpdesk entered in the system. The stages define all the steps
+                required for the resolution of a helpdesk.
+              </p>
+            </field>
+        </record>
+
+        <!-- Helpdesk Support Categories Form View -->
+
         <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
             <field name="name">Helpdesk Categories</field>
             <field name="res_model">crm.helpdesk.category</field>
@@ -40,7 +84,7 @@
             <field name="help">Create and manage helpdesk categories to better manage and classify your support requests.</field>
         </record>
 
-        <menuitem action="crm_helpdesk_categ_action" name="Categories"
+        <menuitem action="crm_helpdesk_categ_action" name="Categories" sequence="5"
             id="menu_crm_case_helpdesk-act" parent="menu_config_helpdesk" groups="base.group_no_one"/>
 
         <!--  Helpdesk Support Form View -->
@@ -51,12 +95,13 @@
             <field name="arch" type="xml">
                 <form string="Helpdesk Support">
                 <header>
-                    <button name="case_escalate" string="Escalate" type="object" 
-                            states="open,draft,pending"/>
-                    <field name="state" nolabel="1" widget="statusbar" clickable="True"
-                            statusbar_colors='{"pending":"blue"}'/>
+                   <button name="case_escalate" string="Escalate" type="object"/>
+                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Helpdesk Support">
+                    <div class="oe_right">
+                        <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                    </div>
                     <group col="4" class="oe_header">
                         <field name="name" string="Query"/>
                         <field name="team_id" widget="selection" groups="base.group_multi_salesteams"/>
@@ -118,16 +163,16 @@
             <field name="name">CRM - Helpdesk Support Tree</field>
             <field name="model">crm.helpdesk</field>
             <field name="arch" type="xml">
-                <tree string="Helpdesk Support Tree"
-                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','done')">
+                <tree string="Helpdesk Support Tree">
                     <field name="name" string="Query" />
                     <field name="partner_id" string="Partner"/>
+                    <field name="priority" string="Priority" groups="base.group_user"/>
                     <field name="date" string="Date"/>
                     <field name="date_deadline"/>
                     <field name="user_id"/>
                     <field name="team_id" groups="base.group_multi_salesteams"/>
                     <field name="priority"/>
-                    <field name="state"/>
+                    <field name="stage_id"/>
                 </tree>
             </field>
         </record>
@@ -147,6 +192,68 @@
             </field>
         </record>
 
+        <!-- Helpdesk Kanban view -->
+
+        <record model="ir.ui.view" id="crm_case_helpdesk_kanban_view">
+            <field name="name">CRM - Helpdesk Kanban</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id">
+                    <field name="stage_id"/>
+                    <field name="color"/>
+                    <field name="priority"/>
+                    <field name="user_id"/>
+                    <field name="email_from"/>
+                    <field name="description"/>
+                    <field name="date"/>
+                    <field name="date_deadline"/>
+                    <field name="kanban_state"/>
+                    <field name="message_summary"/>
+                    <field name="message_unread" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-tooltip">
+                           <ul class="oe_kanban_tooltip">
+                              <li><b>Helpdesk:</b> <field name="team_id"/></li>
+                              <li><b>Category:</b> <field name="categ_id"/></li>
+                           </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <br/>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <b><field name="name"/></b></div>
+                                        <div><field name="partner_id"/><br/>
+                                        <field name="create_date"/><br/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                        <t t-raw="record.message_summary.raw_value"/>
+                                        <field name="categ_id"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <div class="pull-left" groups="base.group_user">
+                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                    </div>
+                                </div>
+                               <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- Helpdesk Support Search View  -->
 
         <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
@@ -156,9 +263,7 @@
                 <search string="Search Helpdesk">
                     <field name="name" string="Query"/>
                     <field name="date"/>
-                    <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Helpdesk Request" />
-                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Helpdesk Request" />
-                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="All pending Helpdesk Request" />
+                    <filter icon="terp-check" string="New" name="current" domain="[('stage_id.sequence', '=', 1)]" help="New Helpdesk Request" />
                     <separator/>
                     <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('team_id.user_id','=',uid), ('team_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
@@ -170,7 +275,7 @@
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" help="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'stage_id'}" />
                         <filter string="Request Month" icon="terp-go-month" domain="[]" help="Request Date by Month" context="{'group_by':'date'}" />
                         <filter string="Deadline" icon="terp-go-month" domain="[]" context="{'group_by':'date_deadline'}" />
                     </group>

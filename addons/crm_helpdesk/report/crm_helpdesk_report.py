@@ -23,14 +23,6 @@ from openerp.osv import fields,osv
 from openerp import tools
 
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
-
 class crm_helpdesk_report(osv.osv):
     """ Helpdesk report after Sales Services """
 
@@ -43,7 +35,7 @@ class crm_helpdesk_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'team_id':fields.many2one('crm.team', 'Team', readonly=True, oldname='section_id'),
         'nbr': fields.integer('# of Requests', readonly=True),  # TDE FIXME master: rename into nbr_requests
-        'state': fields.selection(AVAILABLE_STATES, 'Status', readonly=True),
+        'stage_id': fields.many2one('crm.helpdesk.stage', 'Stage', readonly=True, domain="[('team_ids','=',team_id)]"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -74,7 +66,7 @@ class crm_helpdesk_report(osv.osv):
                     c.date as date,
                     c.create_date,
                     c.date_closed,
-                    c.state,
+                    c.stage_id,
                     c.user_id,
                     c.team_id,
                     c.partner_id,
@@ -92,7 +84,7 @@ class crm_helpdesk_report(osv.osv):
                     crm_helpdesk c
                 where c.active = 'true'
                 group by c.date,\
-                     c.state, c.user_id,c.team_id,c.priority,\
+                     c.stage_id, c.user_id,c.team_id,c.priority,\
                      c.partner_id,c.company_id,c.date_deadline,c.create_date,c.date,c.date_closed,\
                      c.categ_id,c.channel_id,c.planned_cost,c.id
             )""")
