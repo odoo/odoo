@@ -232,6 +232,10 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }).then(function (actions) {
             if (!actions.length) {
                 //default try to switch to form view
+                if (!self.dataset.get_id_index(id)) {
+                    // the child/descendant record will not append to dataset, we add it for switch view
+                    self.dataset.alter_ids(self.dataset.ids.concat(id));
+                }
                 if (self.dataset.select_id(id)) {
                     _.delay(_.bind(function () {
                         self.do_switch_view('form');
