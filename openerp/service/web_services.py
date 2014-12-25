@@ -175,6 +175,18 @@ class db(netsvc.ExportService):
         cr = db.cursor()
         try:
             cr.autocommit(True) # avoid transaction block
+            def _close_connections(cr):
+                # patch issue gh:odoo/odoo/4424 bug lp:1180000
+                cr.execute('SELECT VERSION()')
+                version = cr.fetchone()[0].split(' ')[1]
+                if version > '9.2':
+                    cr.execute("""SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '%s'; """ % db_original_name)
+                    _logger.debug('CLOSE DATABASE CONNECTIONS %s in 9.2', db_original_name)
+                else:
+                    cr.execute("""SELECT pg_terminate_backend(pg_stat_activity.procpid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '%s'; """ % db_original_name)
+                    _logger.debug('CLOSE DATABASE CONNECTIONS %s in 9.1', db_original_name)
+                return
+            _close_connections(cr)
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
         finally:
             cr.close()
