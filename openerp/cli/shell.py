@@ -18,6 +18,8 @@
 
 import code
 import signal
+from os import isatty
+from sys import stdin
 
 import openerp
 from . import Command
@@ -58,10 +60,13 @@ class Shell(Command):
                     env = openerp.api.Environment(cr, uid, ctx)
                     self.locals['env'] = env
                     self.locals['self'] = env.user
-                    print 'Connected to %s,' % dbname
-                    print '  env: Environement(cr, openerp.SUPERUSER_ID, %s).' % ctx
-                    print '  self: %s.' % env.user
-                    Console(locals=self.locals).interact()
+                    if not isatty(stdin.fileno()):
+                        exec stdin in self.locals
+                    else:
+                        print 'Connected to %s,' % dbname
+                        print '  env: Environement(cr, openerp.SUPERUSER_ID, %s).' % ctx
+                        print '  self: %s.' % env.user
+                        Console(locals=self.locals).interact()
             else:
                 print 'No evironement set, use `odoo.py shell -d dbname` to get one.'
                 Console(locals=self.locals).interact()
