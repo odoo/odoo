@@ -339,9 +339,12 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
+            globals_dict = {
+                'ODOO_VERSION_INFO': release.version_info,
+            }
             f = tools.file_open(terp_file)
             try:
-                info.update(eval(f.read()))
+                info.update(eval(f.read(), globals_dict=globals_dict))
             finally:
                 f.close()
 
