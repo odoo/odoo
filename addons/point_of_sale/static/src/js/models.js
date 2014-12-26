@@ -938,6 +938,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.trigger('change:selected',this);
             }
         },
+        // returns the payment type: 'cash' | 'bank'
+        get_type: function(){
+            return this.cashregister.journal.type
+        },
         // returns the associated cashregister
         //exports as JSON for server communication
         export_as_JSON: function(){
