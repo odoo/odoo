@@ -334,7 +334,7 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''), post)
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),
