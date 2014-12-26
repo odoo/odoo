@@ -37,6 +37,123 @@ openerp.crm_voip = function(instance) {
         },
     });
     
+    crm_voip.Panel_UI = openerp.Widget.extend({
+
+        init: function(parent){
+            this._super(parent);
+            this.shown = false;
+            this.panel = this.__parentedParent;
+            this.buttonAnimated = false;
+            this.buttonUp = false;
+        },
+
+        start_ringing: function(id){
+            this.panel.$('.oe_dial_big_callbutton').html(_t("Calling..."));
+            this.panel.$('.oe_dial_hangupbutton').removeAttr('disabled');
+            this.panel.$(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
+        },
+
+        remove_mic: function(){
+            this.panel.$(".oe_dial_icon_inCall").remove();
+        },
+
+        hangup: function(){
+            this.panel.$('.oe_dial_big_callbutton').html(_t("Call"));
+            this.panel.$(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+        },
+
+        start_auto_call: function(){
+            this.panel.$(".oe_dial_split_callbutton").hide();
+            this.panel.$(".oe_dial_stop_autocall_button").show();
+        },
+
+        stop_auto_call: function(){
+            this.panel.$(".oe_dial_split_callbutton").show();
+            this.panel.$(".oe_dial_stop_autocall_button").hide();
+        },
+
+        reset_display_panel: function(phonecall_displayed){
+            if(this.panel.$(".oe_dial_icon_inCall").length === 0){
+                this.panel.$(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+            }
+            this.panel.$(".oe_dial_content").animate({
+                bottom: 0,
+            });
+            if(!phonecall_displayed){
+                this.panel.$(".oe_dial_callbutton, .oe_call_dropdown").attr('disabled','disabled');
+            }else{
+                this.panel.$(".oe_dial_callbutton, .oe_call_dropdown").removeAttr('disabled');
+            }
+        },
+
+        switch_display: function(){
+            if (this.shown) {
+                this.panel.$el.animate({
+                    bottom: -this.panel.$el.outerHeight(),
+                });
+            } else {
+                // update the list of user status when show the dialer panel
+                this.panel.search_phonecalls_status();
+
+                this.panel.$el.animate({
+                    bottom: 0,
+                });
+            }
+            this.shown = ! this.shown;
+        },
+
+        select_call: function(selected_phonecall){
+            if(!this.buttonAnimated){
+                var self = this;
+                var selected = selected_phonecall.$el.hasClass("oe_dial_selected_phonecall");
+                this.panel.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
+                if(!selected){
+                    selected_phonecall.$el.addClass("oe_dial_selected_phonecall");
+                    if(!this.buttonUp){
+                        this.buttonAnimated = true;
+                        this.panel.$(".oe_dial_phonecalls").animate({
+                            height: (this.panel.$(".oe_dial_phonecalls").height() - this.panel.$(".oe_dial_optionalbuttons").outerHeight()),
+                        }, 300,function(){
+                            self.buttonAnimated = false;
+                            self.buttonUp = true;
+                        });
+                    }
+                    this.panel.$(".oe_dial_email").hide();
+                    if(selected_phonecall.get('email')){
+                        this.panel.$(".oe_dial_email").show();
+                        this.panel.$(".oe_dial_schedule_call").removeClass("oe_dial_schedule_full_width");
+                    }else{
+                        this.panel.$(".oe_dial_schedule_call").addClass("oe_dial_schedule_full_width");
+                    }
+                }else{
+                    selected_phonecall = false;
+                    this.buttonAnimated = true;
+                    this.panel.$(".oe_dial_phonecalls").animate({
+                        height: (this.panel.$(".oe_dial_phonecalls").height() + this.panel.$(".oe_dial_optionalbuttons").outerHeight()),
+                    }, 300,function(){
+                        self.buttonAnimated = false;
+                        self.buttonUp = false;
+                    });
+                }
+            }
+            return selected_phonecall;
+        },
+
+        //Hide the optional buttons when the panel is reloaded
+        hide_buttons: function(){
+            var self = this;
+            if(this.buttonUp && !this.buttonAnimated){
+                this.buttonAnimated = true;
+                this.panel.$(".oe_dial_phonecalls").animate({
+                    height: (this.panel.$(".oe_dial_phonecalls").height() + this.panel.$(".oe_dial_optionalbuttons").outerHeight()),
+                }, 300,function(){
+                    self.buttonUp = false;
+                    self.buttonAnimated = false;
+                });
+            }
+        },
+    });
+
     crm_voip.DialingPanel = openerp.Widget.extend({
         template: "crm_voip.DialingPanel",
         events: {
@@ -54,10 +171,8 @@ openerp.crm_voip = function(instance) {
 
         init: function(parent) {    
             this._super(parent);
-            this.shown = false;
             this.phonecalls = {};
             this.widgets = {};
-            this.buttonAnimated = false;
             this.on_call = false;
             this.in_automatic_mode = false;
         },
@@ -76,6 +191,7 @@ openerp.crm_voip = function(instance) {
                 console.log(e);
             }
             
+            this.UI = new openerp.crm_voip.Panel_UI(this);
             //To get the formatCurrency function from the server
             new instance.web.Model("res.currency")
                 .call("get_format_currencies_js_function")
@@ -94,9 +210,8 @@ openerp.crm_voip = function(instance) {
         },
 
         sip_ringing: function(){
-            this.$('.oe_dial_big_callbutton').html(_t("Calling..."));
-            this.$('.oe_dial_hangupbutton').removeAttr('disabled');
             var id = this.current_phonecall.id;
+            this.UI.start_ringing(id);
             //Select the current call if not already selected
             if(this.selected_phonecall.get('id') !== id ){
                 openerp.client.action_manager.do_action({
@@ -105,8 +220,6 @@ openerp.crm_voip = function(instance) {
                     params: {'phonecall_id': id}
                 });
             }
-            //Add the microhpone icon next to the current call
-            $(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
         },
 
         sip_accepted: function(){
@@ -117,8 +230,7 @@ openerp.crm_voip = function(instance) {
         sip_cancel: function(){
             this.on_call = false;
             var id = this.current_phonecall.id;
-            this.$(".oe_dial_icon_inCall").remove();
-            //$(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).next(".oe_dial_icon_inCall").remove();
+            this.UI.remove_mic();
             //TODO if the sale cancel one call, continue the automatic call or not ? 
             this.stop_automatic_call();
         },
@@ -127,8 +239,7 @@ openerp.crm_voip = function(instance) {
             this.on_call = false;
             var id = this.current_phonecall.id;
             new openerp.web.Model("crm.phonecall").call("rejected_call",[id]);
-            //Remove the microphone icon
-            this.$(".oe_dial_icon_inCall").remove();
+            this.UI.remove_mic();
             if(this.in_automatic_mode){
                 this.next_call();
             }else{
@@ -143,7 +254,7 @@ openerp.crm_voip = function(instance) {
             new openerp.web.Model("crm.phonecall").call("hangup_call", [id]).then(function(result){
                 var duration = parseFloat(result.duration).toFixed(2);
                 self.logCall(duration);
-                self.$(".oe_dial_icon_inCall").remove();
+                self.UI.remove_mic();
                 if(!self.in_automatic_mode){
                    self.stop_automatic_call();
                 }
@@ -152,8 +263,7 @@ openerp.crm_voip = function(instance) {
 
         sip_error: function(){
             this.on_call = false;
-            $('.oe_dial_big_callbutton').html(_t("Call"));
-            $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+            this.UI.hangup();
             new openerp.web.Model("crm.phonecall").call("error_config");
         },
 
@@ -247,11 +357,9 @@ openerp.crm_voip = function(instance) {
 
         stop_automatic_call: function(){
             this.in_automatic_mode = false;
-            $(".oe_dial_split_callbutton").show();
-            $(".oe_dial_stop_autocall_button").hide();
+            this.UI.stop_auto_call();
             if(!this.on_call){
-                $('.oe_dial_big_callbutton').html(_t("Call"));
-                $(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
+                this.UI.hangup();
             }else{
                 $('.oe_dial_big_callbutton').html(_t("Calling..."));
             }
@@ -271,7 +379,7 @@ openerp.crm_voip = function(instance) {
         //Get the phonecalls and create the widget to put inside the panel
         search_phonecalls_status: function(refresh_by_user) {
             var self = this;
-            this.hide_buttons();
+            this.UI.hide_buttons();
             //get the phonecalls' information and populate the queue
             new openerp.web.Model("crm.phonecall").call("get_list").then(_.bind(self.parse_phonecall,self,refresh_by_user));
         },
@@ -281,12 +389,7 @@ openerp.crm_voip = function(instance) {
             var old_widgets = self.widgets;                   
             self.widgets = {};
             self.phonecalls = {};
-            if(self.$(".oe_dial_icon_inCall").length === 0){
-                self.$(".oe_dial_transferbutton, .oe_dial_hangupbutton").attr('disabled','disabled');
-            }
-            self.$(".oe_dial_content").animate({
-                bottom: 0,
-            });
+            
             var phonecall_displayed = false;
             //for each phonecall display it only if the date is lower than the current one
             //if the refresh is done by the user, retrieve the phonecalls set as "done"
@@ -306,28 +409,10 @@ openerp.crm_voip = function(instance) {
                     }
                 }
             });
-            if(!phonecall_displayed){
-                self.$(".oe_dial_callbutton, .oe_call_dropdown").attr('disabled','disabled');
-            }else{
-                self.$(".oe_dial_callbutton, .oe_call_dropdown").removeAttr('disabled');
-            }
+            self.UI.reset_display_panel(phonecall_displayed);
             _.each(old_widgets, function(w) {
                 w.destroy();
             });
-        },
-
-        //Hide the optional buttons when the panel is reloaded
-        hide_buttons: function(){
-            var self = this;
-            if(this.buttonUp && !this.buttonAnimated){
-                this.buttonAnimated = true;
-                this.$(".oe_dial_phonecalls").animate({
-                    height: (this.$(".oe_dial_phonecalls").height() + this.$(".oe_dial_optionalbuttons").outerHeight()),
-                }, 300,function(){
-                    self.buttonUp = false;
-                    self.buttonAnimated = false;
-                });
-            }
         },
 
         //function which will add the phonecall in the queue and create the tooltip
@@ -384,19 +469,7 @@ openerp.crm_voip = function(instance) {
 
         //function that will display the panel
         switch_display: function() {
-            if (this.shown) {
-                this.$el.animate({
-                    bottom: -this.$el.outerHeight(),
-                });
-            } else {
-                // update the list of user status when show the dialer panel
-                this.search_phonecalls_status();
-
-                this.$el.animate({
-                    bottom: 0,
-                });
-            }
-            this.shown = ! this.shown;
+            this.UI.switch_display();
         },
 
         //action to change the main view to go to the opportunity's view
@@ -442,40 +515,7 @@ openerp.crm_voip = function(instance) {
 
         //action to select a call and display the specific actions
         select_call: function(phonecall_id){
-            this.selected_phonecall = this.widgets[phonecall_id];
-            if(!this.buttonAnimated){
-                var self = this;
-                var selected = this.selected_phonecall.$el.hasClass("oe_dial_selected_phonecall");
-                self.$(".oe_dial_selected_phonecall").removeClass("oe_dial_selected_phonecall");
-                if(!selected){
-                    this.selected_phonecall.$el.addClass("oe_dial_selected_phonecall");
-                    if(!self.buttonUp){
-                        this.buttonAnimated = true;
-                        this.$(".oe_dial_phonecalls").animate({
-                            height: (this.$(".oe_dial_phonecalls").height() - this.$(".oe_dial_optionalbuttons").outerHeight()),
-                        }, 300,function(){
-                            self.buttonAnimated = false;
-                            self.buttonUp = true;
-                        });
-                    }
-                    this.$(".oe_dial_email").hide();
-                    if(this.selected_phonecall.get('email')){
-                        this.$(".oe_dial_email").show();
-                        this.$(".oe_dial_schedule_call").removeClass("oe_dial_schedule_full_width");
-                    }else{
-                        this.$(".oe_dial_schedule_call").addClass("oe_dial_schedule_full_width");
-                    }
-                }else{
-                    this.selected_phonecall = false;
-                    this.buttonAnimated = true;
-                    this.$(".oe_dial_phonecalls").animate({
-                        height: (this.$(".oe_dial_phonecalls").height() + this.$(".oe_dial_optionalbuttons").outerHeight()),
-                    }, 300,function(){
-                        self.buttonAnimated = false;
-                        self.buttonUp = false;
-                    });
-                }
-            } 
+            this.selected_phonecall = this.UI.select_call(this.widgets[phonecall_id]);
         },
 
         //remove the phonecall from the queue
@@ -506,8 +546,7 @@ openerp.crm_voip = function(instance) {
         },
 
         auto_call_button: function(){
-            this.$(".oe_dial_split_callbutton").hide();
-            this.$(".oe_dial_stop_autocall_button").show();
+            this.UI.start_auto_call();
             this.automatic_call();
         },
 
@@ -586,7 +625,6 @@ openerp.crm_voip = function(instance) {
                     views: [[false, 'form']],
                 });
             }else if(this.phonecalls[id].partner_id){
-                console.log("ELSE ");
                 openerp.client.action_manager.do_action({
                     type: 'ir.actions.act_window',
                     res_model: 'mail.compose.message',
@@ -607,7 +645,7 @@ openerp.crm_voip = function(instance) {
             
         },
     });
-    
+
     //Creation of the panel and binding of the display with the button in the top bar
     if(openerp.web && openerp.web.UserMenu) {
         openerp.web.UserMenu.include({
