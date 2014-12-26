@@ -982,6 +982,7 @@ class BaseModel(object):
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
             self = self.with_context(export_raw_data=True)
+        # return {'datas': self.__export_rows(fields_to_export)}
         return {'datas': self.export_fields_xml(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
@@ -1217,8 +1218,7 @@ class BaseModel(object):
                 'to': index + len(record_span) - 1
             }}
             index += len(record_span)
-    #Will be used in export to xml
-    extract_records = _extract_records
+
 
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
