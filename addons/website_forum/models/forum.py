@@ -99,8 +99,6 @@ class Forum(models.Model):
     karma_downvote = fields.Integer(string='Downvote', default=50)
     karma_answer_accept_own = fields.Integer(string='Accept an answer on its own questions', default=20)
     karma_answer_accept_all = fields.Integer(string='Accept an answers to all questions', default=500)
-    karma_editor_link_files = fields.Integer(string='Linking files (Editor)', default=20)
-    karma_editor_clickable_link = fields.Integer(string='Add clickable links (Editor)', default=20)
     karma_comment_own = fields.Integer(string='Comment its own posts', default=1)
     karma_comment_all = fields.Integer(string='Comment all posts', default=1)
     karma_comment_convert_own = fields.Integer(string='Convert its own answers to comments and vice versa', default=50)
@@ -110,6 +108,8 @@ class Forum(models.Model):
     karma_retag = fields.Integer(string='Change question tags', default=75)
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
     karma_dofollow = fields.Integer(string='Disabled links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
+    karma_editor = fields.Integer(string='Karma to post an image or link (question, answer, edit).',
+                                  default=30, oldname='karma_editor_link_files')
 
     @api.model
     def create(self, values):
@@ -316,6 +316,12 @@ class Post(models.Model):
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+
+        if self.env.user.karma <= forum.karma_editor:
+            filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
+            content_match = re.search(filter_regexp, content, re.I)
+            if content_match:
+                raise KarmaError('User karma not sufficient to post an image or link.')
         return content
 
     @api.model
