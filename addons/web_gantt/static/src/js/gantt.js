@@ -312,7 +312,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 };
                 gantt.config.scale_unit = "day";
                 gantt.config.date_scale = "%d %M";
-                gantt.config.subscales = [];
+                gantt.config.subscales = [
+                    {unit:"hour", step:1, date:"%H:00", css:function(date) {
+                        if(date.getDay() == 0 || date.getDay() == 6) return "weekend_scale";
+                    } }
+		];
                 gantt.config.scale_height = 27;
                 break;
             case "week":
