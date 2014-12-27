@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var dummy = function () {};
+    var dummy = function () { return true; };
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.snippets.xml');
@@ -33,8 +33,10 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
-            this.snippets.clean_for_save();
-            this._super();
+            if (this.snippets.check_for_save()) {
+                this.snippets.clean_for_save();
+                this._super();
+            }
         },
     });
 
@@ -307,6 +309,23 @@
                     $snippet.data("snippet-editor").on_focus();
                 }
             }
+        },
+        check_for_save: function () {
+            var self = this;
+            var options = website.snippet.options;
+            var template = website.snippet.templateOptions;
+            var check = true;
+            for (var k in template) {
+                var Option = options[template[k]['option']];
+                if (Option && Option.prototype.check_for_save !== dummy) {
+                    self.$wrapwrap.find(template[k].selector).each(function () {
+                        if (!(new Option(self, null, $(this), k).check_for_save())) {
+                            check = false;
+                        }
+                    });
+                }
+            }
+            return check;
         },
         clean_for_save: function () {
             var self = this;
@@ -865,6 +884,7 @@
             fn.call(this, this, type, value, $li);
         },
 
+        check_for_save: dummy,
         clean_for_save: dummy
     });
     website.snippet.options.background = website.snippet.Option.extend({

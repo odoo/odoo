@@ -1,0 +1,98 @@
+@charset "utf-8";
+/*       
+ *    THIS CSS FILE IS FOR WEBSITE FORM BUILDER CONFIGURATION (NO THEME)
+ */
+form .o_form-success, form .o_form-danger {
+  display:none;
+}
+form.o_send-success > div.form-group {
+  display:none;
+}
+form.o_send-failed > div.form-group {
+  display:none;
+}
+form.o_send-success .o_form-success {
+  display:block;
+}
+form.o_send-failed .o_form-danger {
+  display:block;
+}
+label.o_light {
+  font-weight: normal;
+}
+.modal-dialog input[type=checkbox] {
+  margin-top:12px;
+}
+.modal-dialog .select2-choice {
+  overflow: visible !important;
+}
+form .oe_drop_zone {
+  height: 1em !important;
+}
+.o_progress-size {
+  color: #777777;
+  font-size: x-small;
+  position: relative;
+  top: -15px;
+  text-align: right;
+}
+.text-tag-const {
+  color:#ffffff !important;
+}
+form .form-control-feedback {
+  left: 100%;
+}
+input[type=text] {
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.o_form-editor-add {
+  color:#AAA;
+  font-style: italic;
+}
+.o_form-editor-table {
+  max-height:20%;
+  overflow-y:auto;
+  overflow-x:hidden;
+  text-align:left;
+}
+.o_form-editor-table table {
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: 0px 0px 20px #CCC;
+  margin-top: 10px;
+}
+.o_form-editor-table td, .o_form-editor-table th{
+  text-align:left;
+}
+.div-inline {
+  display:inline;
+  padding-right:10px;
+}
+.o_tb-actions {
+    width:24px;
+}
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}
+.modal-dialog .form-control-feedback {
+  left: inherit !important;
+}

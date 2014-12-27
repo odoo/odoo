@@ -1,4 +1,5 @@
-[![Build Status](http://runbot.odoo.com/runbot/badge/default/1/master.svg)](http://runbot.odoo.com/runbot)
+Internal R&D repository
+=======================
 
 Odoo
 ----
@@ -55,3 +56,4 @@ To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
 
+You probably want to fork/checkout https://github.com/odoo/odoo instead.

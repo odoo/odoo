@@ -822,6 +822,60 @@ openerp.Widget = openerp.Class.extend(openerp.PropertiesMixin, {
         };
     }
 });
+openerp.post = function (controller_url, data) {
+
+    var progressHandler = function (deferred) {
+
+        var display_size = function(size) {
+            var order   = ['o', 'Ko', 'Mo', 'Go', 'To'];
+            var log1000 = Math.floor(Math.log(size)/Math.log(1000));
+            var integer = Math.floor(size/Math.pow(1000,log1000));
+            var decimal = Math.round((size - integer*Math.pow(1000,log1000))/(100*Math.pow(1000,log1000-1)));
+            var result  = integer+Math.round(decimal/10);
+            var order_l = order[Math.min(4,log1000)];
+            return result*Math.max(log1000-4, 1)+((result == integer) ? '.'+decimal:'')+order_l;
+        };
+
+        return function (state) {
+            if(state.lengthComputable) {
+                deferred.notify({
+                    h_loaded: display_size(state.loaded),
+                    h_total : display_size(state.total),
+                    loaded  : state.loaded,
+                    total   : state.total,
+                    pcent   : Math.round((state.loaded/state.total)*100)
+                });
+            }
+        };
+    };
+
+    var Def = $.Deferred();
+    var compatibility = !(typeof(FormData));
+    var postData = compatibility ? new FormDataCompatibility() : new FormData();
+    
+    $.each(data, function(i,val) {
+        postData.append(i, val);
+    });
+
+    var xhr = new XMLHttpRequest();
+    if(compatibility) {
+        postData.setContentTypeHeader(xhr);
+        postData = postData.buildBody();
+    }
+
+    if(xhr.upload) xhr.upload.addEventListener('progress', progressHandler(Def), false);
+      
+    var ajaxDef = $.ajax(controller_url, {
+        xhr: function() {return xhr;},
+        data:           postData,
+        processData:    false,
+        contentType:    false,
+        type:           'POST'
+    }).then(function (data) {Def.resolve(data);})
+    .fail(function (data) {Def.reject(data);});
+
+    return Def;
+};
 
 var genericJsonRpc = function(fct_name, params, fct) {
     var data = {

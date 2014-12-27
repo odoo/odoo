@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-
+        <record id="id_form_lead" model="website.form">
+            <field name="model_id" ref="crm.model_crm_lead" />
+            <field name="blacklist_field_ids" eval="[(6,0,[ref('crm.field_crm_lead_report_probable_revenue')])]" />
+            <field name="name">Create a lead</field>
+            <field name="metadata_field_id" ref="crm.field_crm_lead_description" />
+        </record>
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Contact Form</field>
             <field name="target">self</field>
@@ -11,7 +16,6 @@
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
         </record>
-
         <record model="crm.team" id="website.salesteam_website_sales">
             <field name="name">Website Sales</field>
             <field name="code">WS</field>
@@ -19,6 +23,5 @@
             <field name="use_leads">True</field>
             <field name="use_opportunities" eval="False"/>
         </record>
-
     </data>
 </openerp>
