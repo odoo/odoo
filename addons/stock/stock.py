@@ -2669,6 +2669,7 @@ class stock_move(osv.osv):
                     'product_uos_qty': uos_qty,
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
+                    'prodlot_id': move.prodlot_id and move.prodlot_id.id,
                 }
                 current_move = self.copy(cr, uid, move.id, default_val)
                 res += [current_move]

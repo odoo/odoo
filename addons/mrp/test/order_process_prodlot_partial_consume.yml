@@ -1,0 +1,68 @@
+-
+ I create a MO for 10 PCSC349
+-
+ !record {model: mrp.production, id: test_mo_pcsc349_2}:
+   product_id: product.product_product_4
+   product_qty: 10
+   product_uom: product.product_uom_unit
+   location_src_id: stock.stock_location_stock
+   location_dest_id: stock.stock_location_stock
+   bom_id: mrp_bom_24
+-
+ I confirm the MO
+-
+ !workflow {model: mrp.production, action: button_confirm, ref: test_mo_pcsc349_2}
+-
+ I split the 20 RAM SR3 in 2 production lots of 5, 15 units
+-
+ !python {model: stock.move.split}: |
+   order = self.pool.get('mrp.production').browse(cr, uid, ref('test_mo_pcsc349_2'), context=context)
+   ram_lines = [line for line in order.move_lines if line.product_id.default_code == 'RAM-SR3']
+   assert len(ram_lines) == 1, 'no RAM-SR3 lines found'
+   ctxt = context.copy()
+   ctxt['active_id'] = ram_lines[0].id
+   ctxt['active_ids'] = [ram_lines[0].id]
+   ctxt['active_model'] = 'stock.move'
+   values = self.default_get(cr, uid,
+                             ['product_id', 'product_uom', 'qty', 'use_exist', 'location_id'],
+                             ctxt)
+   wizard_id = self.create(cr, uid, values, context=ctxt)
+   prodlot_obj = self.pool.get('stock.production.lot')
+   split_line_obj = self.pool.get('stock.move.split.lines')
+   split_line_obj.create(cr, uid, {'wizard_id': wizard_id,
+                                   'name': 'ram_sn_3',
+                                   'quantity': 5,}, context=ctxt)
+   split_line_obj.create(cr, uid, {'wizard_id': wizard_id,
+                                   'name': 'ram_sn_4',
+                                   'quantity': 15,}, context=ctxt)
+   self.split_lot(cr, uid, [wizard_id], context=ctxt)
+   order.refresh()
+   ram_lines = [line for line in order.move_lines if line.product_id.default_code == 'RAM-SR3']
+   assert len(ram_lines) == 2, 'RAM-SR3 line not split'
+
+
+-
+  I click on the "Produce" button of the Manufacturing Order and in the wizard select "Consume and Produce" mode.
+  I produce 5 units, which should consume 10 RAM-SR3
+-
+ !python {model: mrp.product.produce}: |
+   ctxt = context.copy()
+   order = self.pool.get('mrp.production').browse(cr, uid, ref('test_mo_pcsc349_2'), context=context)
+   ctxt['active_id'] = order.id
+   ctxt['active_model'] = 'mrp.production'
+   wizard_id = self.create(cr, uid,
+                           {'product_qty': 5,
+                            'mode': 'consume_produce'}, ctxt)
+   self.do_produce(cr, uid, [wizard_id], ctxt)
+-
+  I expect 10 RAM-SR3 to be consumed, taking 5 ram_sn3 and 5 ram_sn4
+-
+ !python {model: mrp.production}: |
+   order = self.browse(cr, uid, ref('test_mo_pcsc349_2'), context=context)
+   ram_lines = [line for line in order.move_lines2 if line.product_id.default_code == 'RAM-SR3']
+   ram_sn_3 = [line for line in ram_lines if line.prodlot_id.name == 'ram_sn_3']
+   ram_sn_4 = [line for line in ram_lines if line.prodlot_id.name == 'ram_sn_4']
+   ram_sn_3_qty = ram_sn_3 and ram_sn_3[0].product_qty or None
+   ram_sn_4_qty = ram_sn_4 and ram_sn_4[0].product_qty or None
+   assert ram_sn_3_qty == 5, 'should have consumed 5 ram_sn_3, not %s' % ram_sn_3_qty
+   assert ram_sn_4_qty == 5, 'should have consumed 5 ram_sn+4. not %s' % ram_sn_4_qty

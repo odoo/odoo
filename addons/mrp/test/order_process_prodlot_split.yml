@@ -1,0 +1,67 @@
+-
+ I create a MO for 1 PCSC349
+-
+ !record {model: mrp.production, id: test_mo_pcsc349}:
+   product_id: product.product_product_4
+   product_qty: 1
+   product_uom: product.product_uom_unit
+   location_src_id: stock.stock_location_stock
+   location_dest_id: stock.stock_location_stock
+   bom_id: mrp_bom_24
+-
+ I confirm the MO
+-
+ !workflow {model: mrp.production, action: button_confirm, ref: test_mo_pcsc349}
+-
+ I split the RAM SR3 in 2 production lots
+-
+ !python {model: stock.move.split}: |
+   order = self.pool.get('mrp.production').browse(cr, uid, ref('test_mo_pcsc349'), context=context)
+   ram_lines = [line for line in order.move_lines if line.product_id.default_code == 'RAM-SR3']
+   assert len(ram_lines) == 1, 'no RAM-SR3 lines found'
+   ctxt = context.copy()
+   ctxt['active_id'] = ram_lines[0].id
+   ctxt['active_ids'] = [ram_lines[0].id]
+   ctxt['active_model'] = 'stock.move'
+   values = self.default_get(cr, uid,
+                             ['product_id', 'product_uom', 'qty', 'use_exist', 'location_id'],
+                             ctxt)
+   wizard_id = self.create(cr, uid, values, context=ctxt)
+   prodlot_obj = self.pool.get('stock.production.lot')
+   split_line_obj = self.pool.get('stock.move.split.lines')
+   split_line_obj.create(cr, uid, {'wizard_id': wizard_id,
+                                   'name': 'ram_sn_1',
+                                   'quantity': 1,}, context=ctxt)
+   split_line_obj.create(cr, uid, {'wizard_id': wizard_id,
+                                   'name': 'ram_sn_2',
+                                   'quantity': 1,}, context=ctxt)
+   self.split_lot(cr, uid, [wizard_id], context=ctxt)
+   order.refresh()
+   ram_lines = [line for line in order.move_lines if line.product_id.default_code == 'RAM-SR3']
+   assert len(ram_lines) == 2, 'RAM-SR3 line not split'
+
+
+-
+  I click on the "Produce" button of the Manufacturing Order and in the wizard select "Consume and Produce" mode
+-
+ !python {model: mrp.product.produce}: |
+   ctxt = context.copy()
+   order = self.pool.get('mrp.production').browse(cr, uid, ref('test_mo_pcsc349'), context=context)
+   ctxt['active_id'] = order.id
+   ctxt['active_model'] = 'mrp.production'
+   wizard_id = self.create(cr, uid,
+                           {'product_qty': 1,
+                            'mode': 'consume_produce'}, ctxt)
+   self.do_produce(cr, uid, [wizard_id], ctxt)
+-
+  I expect
+  all the Products in the "Products to consume" lists to be consumed
+  and moved to the "consumed products" list,
+  and the manufacturing order to be in state "Done"
+-
+ !python {model: mrp.production}: |
+   order = self.browse(cr, uid, ref('test_mo_pcsc349'), context=context)
+   assert order.state == 'done', "wrong state for the production order (%r, expected: 'done')" % order.state
+   assert len(order.move_lines) == 0, "%d leftover move lines in 'products to consume'" % len(order.move_lines)
+   ram_lines = [line for line in order.move_lines2 if line.product_id.default_code == 'RAM-SR3']
+   assert len(ram_lines) == 2, 'not all RAM-SR3 were consumed'
