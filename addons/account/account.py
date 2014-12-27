@@ -102,8 +102,11 @@ class account_payment_term(osv.osv):
                 if line.days2 < 0:
                     next_first_date = next_date + relativedelta(day=1,months=1) #Getting 1st of next month
                     next_date = next_first_date + relativedelta(days=line.days2)
-                if line.days2 > 0:
+                elif line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
+                elif line.count_from_next_month:
+                    next_first_date = (datetime.strptime(date_ref, '%Y-%m-%d')) + relativedelta(day=1,months=1) #Getting 1st of next month
+                    next_date = next_first_date + relativedelta(days=line.days)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
 
@@ -126,6 +129,7 @@ class account_payment_term_line(osv.osv):
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
+        'count_from_next_month' : fields.boolean('Free month', help='The number of days should begin counting from the 1st of next month.'),
         'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
     }
     _defaults = {
