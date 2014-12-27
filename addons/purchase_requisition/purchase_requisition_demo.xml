@@ -21,6 +21,7 @@
         <record id="requisition_line1" model="purchase.requisition.line">
             <field name="requisition_id" ref="requisition1"/>
             <field name="product_id" ref="product.product_product_13"/>
+            <field name="name">[RAM-SR5] RAM DDR SR5</field>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="product_qty">5</field>
         </record>
@@ -43,7 +44,7 @@
             <field name="price_unit">60</field>
             <field name="product_qty">5</field>
         </record>
-               
+
         <record id="rfq2" model="purchase.order">
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="pricelist_id" ref="purchase.list0"/>
@@ -59,7 +60,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">50</field>
             <field name="product_qty">3</field>
-        </record>        
+        </record>
 
 
     </data>

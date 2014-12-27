@@ -167,6 +167,7 @@ class purchase_requisition(osv.osv):
             date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({
+            'name': requisition_line.name,
             'order_id': purchase_id,
             'product_id': product.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
@@ -300,6 +301,7 @@ class purchase_requisition_line(osv.osv):
     _rec_name = 'product_id'
 
     _columns = {
+        'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
@@ -315,10 +317,14 @@ class purchase_requisition_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        value = {'product_uom_id': ''}
+        product_obj = self.pool.get('product.product')
+        value = {'product_uom_id': '', 'name': ''}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            value = {'product_uom_id': prod.uom_id.id, 'product_qty': 1.0}
+            prod_name = prod.name_get()[0][1]
+            if prod.description_purchase:
+                prod_name += '\n' + prod.description_purchase
+            value = {'product_uom_id': prod.uom_id.id, 'product_qty': 1.0, 'name': prod_name}
         if not analytic_account:
             value.update({'account_analytic_id': parent_analytic_account})
         if not date:
@@ -399,6 +405,10 @@ class procurement_order(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
         if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
             warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
+            prod_name = procurement.product_id.name_get()[0][1]
+            if procurement.product_id:
+                prod_name += '\n' + prod.description_purchase
+
             requisition_id = requisition_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'date_end': procurement.date_planned,
@@ -409,8 +419,8 @@ class procurement_order(osv.osv):
                 'line_ids': [(0, 0, {
                     'product_id': procurement.product_id.id,
                     'product_uom_id': procurement.product_uom.id,
-                    'product_qty': procurement.product_qty
-
+                    'product_qty': procurement.product_qty,
+                    'name': prod_name,
                 })],
             })
             self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
