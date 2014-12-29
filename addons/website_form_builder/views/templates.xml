@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="website.form_builder_assets_frontend" name="Form Builder Assets Frontend" inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <link id="website_form_builder_css" rel='stylesheet' href='/website_form_builder/static/src/css/website.form.builder.css'/>
+                <script type="text/javascript" src="/website_form_builder/static/src/js/website.form.field.animation.js"></script>
+            </xpath>
+        </template>
+
+        <template id="website.form_builder_assets_editor" name="Form Builder Assets Editor" inherit_id="website.assets_editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_form_builder/static/src/js/website.form.field.editor.js"></script>
+            </xpath>
+        </template>
+
+        <template id="website.form_builder_assets_common" name="Form Builder Assets Common" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">  
+                <script type="text/javascript" src="/website_form_builder/static/src/js/form.builder.tour.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>

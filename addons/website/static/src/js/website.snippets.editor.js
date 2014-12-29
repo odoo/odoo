@@ -10,7 +10,7 @@ var editor = require('website.editor');
 var animation = require('website.snippets.animation');
 var website = require('website.website');
 
-var dummy = function () {};
+var dummy = function () { return true; };
 
 var options = {};
 
@@ -53,8 +53,11 @@ editor.EditorBar.include({
         return this._super.apply(this, arguments);
     },
     save: function () {
-        this.snippets.clean_for_save();
-        this._super();
+
+        if(this.snippets.check_for_save()) {
+            this.snippets.clean_for_save();
+            this._super();
+        }
     },
 });
 
@@ -181,7 +184,7 @@ var BuildingBlock = Widget.extend({
                     });
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    return $from ? $from.find(selector) : self.$editable.parent().find(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -487,13 +490,30 @@ var BuildingBlock = Widget.extend({
             }
         }
     },
+    check_for_save: function () {
+        var self = this;
+        var template = templateOptions;
+        var check = true;
+        for (var k in template) {
+            var Option = options[template[k]['option']];
+            if (Option && Option.prototype.check_for_save !== dummy) {
+                template[k].selector.all().each(function () {
+                    if (!(new Option(self, null, $(this), k).check_for_save())) {
+                        check = false;
+                    }
+                });
+            }
+        }
+        return check;
+    },
     clean_for_save: function () {
         var self = this;
         var template = templateOptions;
         for (var k in template) {
             var Option = options[template[k]['option']];
             if (Option && Option.prototype.clean_for_save !== dummy) {
-                template[k].selector.all().filter(".o_dirty").each(function () {
+                template[k].selector.all().each(function () {
+                    console.log(this)
                     new Option(self, null, $(this), k).clean_for_save();
                 });
             }
@@ -1060,7 +1080,7 @@ var Option = Class.extend({
         var fn = new Function("node", "type", "value", "$li", value);
         fn.call(this, this, type, value, $li);
     },
-
+    check_for_save: dummy,
     clean_for_save: dummy
 });
 

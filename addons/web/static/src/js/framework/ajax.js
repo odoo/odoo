@@ -1,7 +1,8 @@
 odoo.define('web.ajax', function (require) {
 "use strict";
 
-var time = require('web.time');
+var time  = require('web.time');
+var utils = require('web.utils');
 
 function genericJsonRpc (fct_name, params, fct) {
     var data = {
@@ -274,13 +275,59 @@ function get_file(options) {
     timer = setTimeout(waitLoop, CHECK_INTERVAL);
 };
 
+function post (controller_url, data) {
+
+    var progressHandler = function (deferred) {
+        return function (state) {
+            if(state.lengthComputable) {
+                deferred.notify({
+                    h_loaded: utils.human_size(state.loaded),
+                    h_total : utils.human_size(state.total),
+                    loaded  : state.loaded,
+                    total   : state.total,
+                    pcent   : Math.round((state.loaded/state.total)*100)
+                });
+            }
+        };
+    };
+
+    var Def = $.Deferred();
+    var compatibility = !(typeof(FormData));
+    var postData = compatibility ? new FormDataCompatibility() : new FormData();
+    
+    $.each(data, function(i,val) {
+        postData.append(i, val);
+    });
+
+    var xhr = new XMLHttpRequest();
+    if(compatibility) {
+        postData.setContentTypeHeader(xhr);
+        postData = postData.buildBody();
+    }
+
+    if(xhr.upload) xhr.upload.addEventListener('progress', progressHandler(Def), false);
+      
+    var ajaxDef = $.ajax(controller_url, {
+        xhr: function() {return xhr;},
+        data:           postData,
+        processData:    false,
+        contentType:    false,
+        type:           'POST'
+    }).then(function (data) {Def.resolve(data);})
+    .fail(function (data) {Def.reject(data);});
+
+    return Def;
+}
+
+
 
 return {
-    jsonRpc: jsonRpc,
-    jsonpRpc: jsonpRpc,
-    loadCSS: loadCSS,
-    loadJS: loadJS,
-    get_file: get_file,
+    jsonRpc     : jsonRpc,
+    jsonpRpc    : jsonpRpc,
+    loadCSS     : loadCSS,
+    loadJS      : loadJS,
+    get_file    : get_file,
+    post        : post,
 };
 
 });

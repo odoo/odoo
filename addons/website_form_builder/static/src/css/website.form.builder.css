@@ -1,0 +1,131 @@
+@charset "utf-8";
+/*       
+ *    THIS CSS FILE IS FOR WEBSITE FORM BUILDER CONFIGURATION (NO THEME)
+ */
+.o_block_menu_form_builder_input {
+  background-image: url("/website_form_builder/static/src/img/blocks/input.gif");
+}
+.o_block_menu_form_builder_hidden {
+  background-image: url("/website_form_builder/static/src/img/blocks/hidden.gif");
+}
+.o_block_menu_form_builder_textarea {
+  background-image: url("/website_form_builder/static/src/img/blocks/textarea.gif");
+}
+.o_block_menu_form_builder_checkbox {
+  background-image: url("/website_form_builder/static/src/img/blocks/checkbox.gif");
+}
+.o_block_menu_form_builder_radio {
+  background-image: url("/website_form_builder/static/src/img/blocks/radio.gif");
+}
+.o_block_menu_form_builder_select {
+  background-image: url("/website_form_builder/static/src/img/blocks/select.gif");
+}
+.o_block_menu_form_builder_upload {
+  background-image: url("/website_form_builder/static/src/img/blocks/upload.gif");
+}
+.o_block_menu_form_builder_form {
+  background-image: url("/website_form_builder/static/src/img/blocks/form.gif");
+}
+
+form .o_form_builder_form-success, form .o_form_builder_form-danger {
+  display:none;
+}
+form.o_form_builder_send-success > div.form-group {
+  display:none;
+}
+form.o_form_builder_send-failed > div.form-group {
+  display:none;
+}
+form.o_form_builder_send-success .o_form_builder_form-success {
+  display:block;
+}
+form.o_form_builder_send-failed .o_form_builder_form-danger {
+  display:block;
+}
+label.o_form_builder_light {
+  font-weight: normal;
+}
+
+.o_form_builder_progress-size {
+  color: #777777;
+  font-size: x-small;
+  position: relative;
+  top: -15px;
+  text-align: right;
+}
+.o_form_builder_form-editor-add {
+  color:#AAA;
+  font-style: italic;
+}
+.o_form_builder_form-editor-table {
+  max-height:20%;
+  overflow-y:auto;
+  overflow-x:hidden;
+  text-align:left;
+}
+.o_form_builder_form-editor-table table {
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: 0px 0px 20px #CCC;
+  margin-top: 10px;
+}
+
+.o_form_builder_form-editor-table td, .o_form_builder_form-editor-table th {
+  text-align:left;
+}
+
+.o_form_builder_form-editor-table td[colspan='3']{
+  padding: 5px;
+  padding-left: 20px;
+}
+
+.o_form_builder_tb-actions {
+    width:24px;
+}
+.o_form_builder_modal input[type=checkbox] {
+  margin-top:12px;
+}
+.o_form_builder_modal .select2-choice {
+  overflow: visible !important;
+}
+form.o_form_builder .oe_drop_zone {
+  height: 1em !important;
+}
+.o_form_builder .text-tag-const {
+  color:#ffffff !important;
+}
+form.o_form_builder .form-control-feedback {
+  left: 100%;
+}
+.o_form_builder input[type=text] {
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.o_form_builder .div-inline {
+  display:inline;
+  padding-right:10px;
+}
+.o_form_builder .btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.o_form_builder .btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+form.o_form_builder input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}
+.o_form_builder_modal .form-control-feedback {
+  left: inherit !important;
+}
