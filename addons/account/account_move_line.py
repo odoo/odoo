@@ -26,8 +26,11 @@ from operator import itemgetter
 
 from lxml import etree
 
+from openerp import SUPERUSER_ID
+
 from openerp import netsvc
 from openerp.osv import fields, osv, orm
+from openerp.tools.float_utils import float_is_zero
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp import tools
@@ -607,8 +610,16 @@ class account_move_line(osv.osv):
         return True
 
     def _check_currency_and_amount(self, cr, uid, ids, context=None):
+        digits = self.pool['decimal.precision'].precision_get(
+            cr, SUPERUSER_ID, 'Account')
         for l in self.browse(cr, uid, ids, context=context):
-            if (l.amount_currency and not l.currency_id):
+            amount_currency_is_zero = float_is_zero(l.amount_currency,
+                                                    precision_digits=digits)
+            # Require a non-zero amount if there is a currency
+            if amount_currency_is_zero and l.currency_id:
+                return False
+            # Forbid a non-zero amount if there is no currency
+            if not amount_currency_is_zero and not l.currency_id:
                 return False
         return True
 
