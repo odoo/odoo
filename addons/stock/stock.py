@@ -1029,7 +1029,7 @@ class stock_picking(osv.osv):
         for move in picking.move_lines:
             if not product_uom.get(move.product_id.id):
                 product_uom[move.product_id.id] = move.product_id.uom_id.id
-            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id]:
+            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor == move.product_id.uom_id.factor:
                 product_uom[move.product_id.id] = move.product_uom.id
 
         pack_obj = self.pool.get("stock.quant.package")
