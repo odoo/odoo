@@ -20,7 +20,6 @@
 ##############################################################################
 
 import price
-import workcenter_load
 import bom_structure
 import mrp_report
 
