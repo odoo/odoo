@@ -282,9 +282,18 @@ class Website(openerp.addons.web.controllers.main.Home):
         for view_id, trans in data.items():
             view_id = int(view_id)
             for t in trans:
-                initial_content = t['initial_content'].strip()
+                initial_content = t['initial_content'].strip()  # initial_content may be an already translated value
                 new_content = t['new_content'].strip()
-                tid = t['translation_id']
+                tid = t['translation_id']  # not implemented?
+                if t['translated'] is True:
+                    # Find back the translation
+                    tmp_tid = irt.search(request.cr, request.uid, [
+                        ('type', '=', 'view'),
+                        ('lang', '=', lang),
+                        ('value', '=', initial_content),
+                    ])
+                    if tmp_tid:
+                        tid = tmp_tid[0]
                 if not tid:
                     old_trans = irt.search_read(
                         request.cr, request.uid,

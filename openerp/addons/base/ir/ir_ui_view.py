@@ -950,6 +950,7 @@ class view(osv.osv):
             text = get_trans(arch.text)
             if text:
                 arch.text = arch.text.replace(arch.text.strip(), text)
+                arch.attrib['data-oe-translated'] = 'translated'
             tail = get_trans(arch.tail)
             if tail:
                 arch.tail = arch.tail.replace(arch.tail.strip(), tail)

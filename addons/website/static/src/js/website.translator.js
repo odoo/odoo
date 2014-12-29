@@ -159,7 +159,8 @@
                 trans[data.oeTranslationViewId].push({
                     initial_content: self.getInitialContent(this),
                     new_content: $node.text(),
-                    translation_id: data.oeTranslationId || null
+                    translation_id: data.oeTranslationId || null,  // is this even implemented?
+                    translated: $node.attr('data-oe-translated') === 'translated' ? true : false,
                 });
             });
             openerp.jsonRpc('/website/set_translations', 'call', {
