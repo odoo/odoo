@@ -20,7 +20,11 @@
 ##############################################################################
 import time
 import datetime
+from operator import itemgetter
+import re
+import copy
 
+from openerp.exceptions import Warning, AccessError, MissingError, except_orm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -232,6 +236,13 @@ class project_work(osv.osv):
 class task(osv.osv):
     _inherit = "project.task"
 
+    #TO REMOVE: Once task 'Remove worklogs 8846' is merged
+    _columns = {
+        'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'task_id', 'Timesheets'),
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id',
+                    type='many2one', relation='account.analytic.account',string='Analytic Account', store=True),
+    }
+
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
             if task_obj.work_ids:
@@ -321,5 +332,284 @@ class account_analytic_line(osv.osv):
            raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
 
+class hr_analytic_timesheet(osv.Model):
+    _inherit = 'hr.analytic.timesheet'
+    _description = 'hr analytic timesheet'
+
+    #TO REMOVE task_id: Once task 'Remove worklogs 8846' is merged
+    _columns = {
+        'task_id' : fields.many2one('project.task', 'Task'),
+        'reference_id': fields.char('Anlytic Timesheet Reference'), #Use session_id to generate referenece_id
+        #'session_id': fields.many2one('project.timesheet.session', 'Project Timesheet Session ID'), #We can add session_id field in records while sync so that we can have idea which reods is sync with which session
+    }
+
+    def get_user_related_details(self, cr, uid, user_id):
+        res = {}
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
+        if not emp_id:
+            user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define employee for user "%s". You must create one.')% (user_name,))
+        emp = emp_obj.browse(cr, uid, emp_id[0])
+        if not emp.product_id:
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
+
+        if not emp.journal_id:
+            raise osv.except_osv(_('Bad Configuration!'),
+                 _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        acc_id = emp.product_id.property_account_expense.id
+        if not acc_id:
+            acc_id = emp.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
+                raise osv.except_osv(_('Bad Configuration!'),
+                        _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
+
+        res['product_id'] = emp.product_id.id
+        res['journal_id'] = emp.journal_id.id
+        res['general_account_id'] = acc_id
+        res['product_uom_id'] = emp.product_id.uom_id.id
+        return res
+
+    def load_data(self, cr, uid, domain=None, fields=None, context=None):
+        activities = []
+        analytic_lines = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
+        account_ids = [x['account_id'][0] for x in analytic_lines if x['account_id']]
+        account_ids = list(set(account_ids))
+        projects = self.pool.get('project.project').search_read(cr, uid, domain=[('analytic_account_id', 'in', account_ids)], fields=['name', 'analytic_account_id'], context=context)
+        #TODO: Use list comprehension next two loops
+        for project in projects:
+            for analytic_line in analytic_lines:
+                if analytic_line.get('account_id')[0] == project.get('analytic_account_id')[0]:
+                    analytic_line['project_id'] = (project['id'], project['name'])
+        analytic_lines = filter(lambda x: x.get('project_id'), analytic_lines) #Filter records which doesn't have project_id
+
+        return analytic_lines
+
+    def sync_data(self, cr, uid, datas, load_data_domain=None, context=None):
+        """
+        This method synchronized the data given by Project Timesheet UI,
+        the method will create Save Point and then try to create project if record having new project and same way it tries to create task if task is new,
+        else if will assign existing project_id and task_id in value gooing to prepare, after preparing values it will call create/write of hr.analytic.timesheet based on command and reference_id,
+        data will have unique reference_id, this reference_id is checked before record is sync with database,
+        here we will check if reference_id is already there then even though record having command=0(i.e. create) do not create record,
+        if record having reference_id then write the record, if record having command=0 and there is no reference_id match then and only then create record,
+        Once record has been sync then reload the data and provide new data to client so that client updates localstorage with new 30 day's data.
+        """
+        print "\n\ndatas are inside hr_analytic_timesheet ::: ", context, datas
+        result = {}
+        if not context:
+            context = {}
+        user_related_details = {}
+        try:
+            user_related_details = self.get_user_related_details(cr, uid, uid)
+        except Exception, e:
+            raise e
+
+        virtual_id_regex = r"^virtual_id_.*$"
+        pattern = re.compile(virtual_id_regex)
+        project_obj = self.pool.get('project.project')
+        task_obj = self.pool.get('project.task')
+        uom_obj = self.pool.get('product.uom')
+        missing_project_id = []
+        missing_task_id = []
+        fail_records = []
+
+        def replace_virtual_id(field, virtual_id, real_id):
+            for record in datas:
+                if record.get(field) and isinstance(record.get(field), list) and record[field][0] == virtual_id:
+                    record[field][0] = real_id
+
+        for record in datas:
+            try:
+                cr.execute('SAVEPOINT sync_record')
+                project_id = False
+                new_project_id = False
+                task_id = False
+                new_task_id = False
+                vals_line = {}
+                submitted_line = None
+                current_record = copy.deepcopy(record)
+                if not record.get('project_id'):
+                    raise except_orm(_("Value Missing"), _("Project ID is required, Please add value in Project Field."))
+                #TO Check if reference_id of record is available in database, if yes then update the record else create
+                #Check is basically for scenario where record is already sync but server doesn't respons to client and client did not updated localstorage
+                #In such case we will check based on reference_id, generated by client
+                is_submitted_id = self.search(cr, uid, [('reference_id', '=', record.get('reference_id'))], context=context)
+                if is_submitted_id:
+                    submitted_line = self.browse(cr, uid, is_submitted_id[0], context=context)
+                print "\n\nrecord command is ::: ", record['command'], is_submitted_id, record['reference_id']
+                if pattern.match(str(record['project_id'][0])) and (not is_submitted_id or record['command'] == 1):
+                    project_id = project_obj.create(cr, uid, {'name': record['project_id'][1]}, context=context)
+                    new_project_id = True
+                    print "Trying to create project ::: ", project_id
+                elif pattern.match(str(record['project_id'][0])) and is_submitted_id:
+                    #If record is already submitted in previous sync then Fetch project_id based on is_submitted_id -> account_id
+                    analytic_account_id = submitted_line.account_id and submitted_line.account_id.id
+                    if not analytic_account_id:
+                        continue
+                    project_ids = project_obj.search(cr, uid, [('analytic_account_id', '=', analytic_account_id)], context=context)
+                    if not project_ids:
+                        continue
+                    project_id = project_ids[0]
+                else:
+                    project_id = record['project_id'][0]
+                project_record = project_obj.browse(cr, uid, project_id, context=context)
+                if project_id in missing_project_id or not project_record:
+                    missing_project_id.append(project_id)
+                    continue
+                if record.get('task_id'):
+                    if pattern.match(str(record['task_id'][0])) and (not is_submitted_id or record['command'] == 1):
+                        task_id = task_obj.create(cr, uid, {'name': record['task_id'][1], 'project_id': project_id}, context=context)
+                        new_task_id = True
+                    elif pattern.match(str(record['task_id'][0])) and is_submitted_id:
+                        #Fetch task_id based on is_submitted_id
+                        task_id = submitted_line.task_id.id
+                    else:
+                        task_id = record['task_id'][0]
+                    record['task_id'] = task_id
+                    if task_id and task_id in missing_task_id and not task_obj.search(cr, uid, [('id', '=', task_id)], context=context):
+                        missing_task_id.append(task_id)
+                        continue
+
+                #vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
+                vals_line['name'] = record['name']
+                vals_line['reference_id'] = record['reference_id']
+                vals_line['task_id'] = record.get('task_id', False)
+                vals_line['user_id'] = record['user_id'][0] if isinstance(record['user_id'], tuple) else record['user_id']
+                vals_line['product_id'] = user_related_details['product_id']
+                vals_line['date'] = record['date'][:10]
+                # Calculate quantity based on employee's product's uom
+                vals_line['unit_amount'] = record['unit_amount']
+    
+                account_id = project_record.analytic_account_id.id
+                #TO Remove: Once we load hr.analytic.timesheet in load_data
+                default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+                if user_related_details['product_uom_id'] != default_uom:
+                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, record['unit_amount'], user_related_details['product_uom_id'])
+                if account_id:
+                    vals_line['account_id'] = account_id
+                    res = self.on_change_account_id(cr, uid, False, account_id)
+                    if res.get('value'):
+                        vals_line.update(res['value'])
+                    vals_line['general_account_id'] = user_related_details['general_account_id']
+                    vals_line['journal_id'] = user_related_details['journal_id']
+                    vals_line['amount'] = 0.0
+                    vals_line['product_uom_id'] = user_related_details['product_uom_id']
+                else:
+                    print "\n\nNo account_id found, adding it into failed record"
+                    fail_records.append(current_record)
+                    continue
+    
+                record.pop('project_id')
+                if record.get('command') == 0 and not is_submitted_id:
+                    context = dict(context, recompute=True)
+                    print "\n\ncontext in create ::: ", context
+                    timeline_id = self.create(cr, uid, vals_line, context=context) #Handle fail, if fail add into failed record
+                    # Compute based on pricetype
+                    amount_unit = self.on_change_unit_amount(cr, uid, timeline_id,
+                        vals_line['product_id'], vals_line['unit_amount'], False, False, vals_line['journal_id'], context=context)
+                    if amount_unit and 'amount' in amount_unit.get('value',{}):
+                        updv = { 'amount': amount_unit['value']['amount'] }
+                        self.write(cr, uid, [timeline_id], updv, context=context)
+                elif record.get('command') == 1:
+                    if record.get('command') != 1 and is_submitted_id:
+                        id = is_submitted_id[0]
+                    else:
+                        id = record.get('id')
+                    if 'id' in record:
+                        record.pop('id')
+                    line = self.browse(cr, uid, id, context=context)
+                    # Compute based on pricetype
+                    amount_unit = self.on_change_unit_amount(cr, uid, id,
+                        prod_id=vals_line.get('product_id', line.product_id.id), company_id=False,
+                        unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
+    
+                    if amount_unit and 'amount' in amount_unit.get('value',{}):
+                        vals_line['amount'] = amount_unit['value']['amount']
+                    ctx = copy.deepcopy(context)
+                    #TODO: To check, pass __last_update in context, currently it alsywas fails, that's why commented
+                    #It always fails because currently our server returns __last_update value in standard datetime format without Z part
+                    #ctx['__last_update'] = {("%s,%s"% (self._name,id)): record.get('__last_update')}
+                    print "\n\ncontext in write ::: ", context
+                    self.write(cr, uid, id, vals_line, context=ctx) #Handle fail and MissingError, if fail add into failed record
+                elif record.get('command') == 2:
+                    self.unlink(cr, uid, record.get('id'), context=context) #Handle fail and MissingError, if fail add into failed record
+
+                #Replace virtual_id(project_id and task_id) in other records, so other records do not create new project and task
+                if new_project_id:
+                    replace_virtual_id('project_id', project_id, project_id)
+                if new_task_id:
+                    replace_virtual_id('task_id', task_id, task_id)
+            #TODO: Handle Specific Exceptions, ValueError, AccessError, AssertError, MissingError
+            except MissingError, e:
+                #If record is missing we can not do anything with taht record, simply skip it
+                pass
+            except AccessError, e:
+                current_record['fail_error'] = e
+                fail_records.append(current_record)
+            except ValueError, e:
+                #error = (_("Value Error"), _("Please check entered values, there is something missing in values."))
+                current_record['fail_error'] = e
+                fail_records.append(current_record)
+            except Exception, e:
+                current_record['fail_error'] = (_("Error"), _("Something went wrong with  this record, make sure you have all valid values."))
+                #import traceback
+                #traceback.print_exc()
+                #Here we can have except_orm, if there is ConcurrencyException, we will eiether simply pass or add those ids in concurrency_fail_ids because we need to re-read those records
+                if isinstance(e, except_orm) and e.name == "ConcurrencyException":
+                    pass
+                else:
+                    fail_records.append(current_record)
+                cr.execute('ROLLBACK TO SAVEPOINT sync_record')
+            finally:
+                cr.execute('RELEASE SAVEPOINT sync_record')
+        print "\n\nfail_records is ::: ", fail_records
+        failed_ids = filter(lambda x: not pattern.match(str(x)), map(itemgetter('id'), fail_records))
+        if failed_ids:
+            load_data_domain.append(['id', 'not in', failed_ids])
+        res = self.load_data(cr, uid, load_data_domain, context=context)
+        res += fail_records
+        result['activities'] = res
+        return result
+
+class project_timesheet_session(osv.Model):
+    """
+    This class meant to generate unique session_id for user, session_id is used to generate reference_id of hr.analytic.timesheet records,
+    while synchronizing we will check if record with that session_id is not there, if record with that session_id is
+    already there then do not create record, update the record, this basically helpful when record is sync to server
+    but meanwhile server and client disconnected and when they get connected again at that time duplication doesn't occur
+    """
+    _name = "project.timesheet.session"
+
+    _columns = {
+        'name': fields.char('Session ID', required=True, readonly=True),
+        'state': fields.selection([('opened', 'In Progress'), ('close', 'Close')], 'Status'),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True),
+        'login_number': fields.integer("Login Number"),
+        #We can add hr.analytic.timesheet as a one2many here
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'project.timesheet.session') or '/'
+        new_id = super(project_timesheet_session, self).create(cr, uid, vals, context=context)
+        return new_id
+    #We will have refeence_id field in hr.analytic.timesheet, which is going to use session_id  with zero_pad same as POS
+    def get_session(self, cr, uid, context=None):
+        #TO Implement, this method will create new session for user which called this
+        #Close the session once sync is completed or Close the session once user logout from project_timesheet interface
+        #What if user already having session in In Progress, what should we return ?, if return existing session then it is quite possible that same user logs in from two system and it can create issue
+        existing_session_id = self.search(cr, uid, [('user_id', '=', uid), ('state', '=', 'opened')], context=context)
+        if existing_session_id:
+            current_session = self.browse(cr, uid, existing_session_id[0], context=context)
+            self.write(cr, uid, existing_session_id[0], {'login_number': current_session.login_number+1})
+            return {'session_id': existing_session_id[0], 'login_number': current_session.login_number+1}
+        session_id = self.create(cr, uid, {'user_id': uid, 'login_number': 1, 'state': 'opened'}, context=context)
+        return {'session_id': session_id, 'login_number': 1}
+
+    def close_session(self, cr, uid, session_id, context=None):
+        return self.write(cr, uid, session_id, {'state': 'close'}, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

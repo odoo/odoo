@@ -20,4 +20,6 @@
 ##############################################################################
 
 import project_timesheet
+import controllers
+import tests
 
