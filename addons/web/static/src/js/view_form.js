@@ -1533,8 +1533,8 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         // Bind the invisibility changers and find the page to display
         var pageid_to_display;
         _.each(pages, function(page) {
-            $tab = $new_notebook.find('a[href=#' + page.id + ']').parent();
-            $content = $new_notebook.find('#' + page.id);
+            var $tab = $new_notebook.find('a[href=#' + page.id + ']').parent();
+            var $content = $new_notebook.find('#' + page.id);
 
             // Case: <page autofocus="autofocus">;
             // We attach the autofocus attribute to the node because it can be useful during the
@@ -1557,7 +1557,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         // Display page. Note: we can't use bootstrap's show function because it is looking for
         // document attached DOM, and the form view is only attached when everything is processed
         $new_notebook.find('a[href=#' + pageid_to_display + ']').parent().addClass('active');
-        $new_notebook.find('#' + pageid_to_display).addClass('active in'); // `in` class is required for bootstrap's fade
+        $new_notebook.find('#' + pageid_to_display).addClass('active');
 
         self.process($new_notebook.children());
         self.handle_common_properties($new_notebook, $notebook);
@@ -1794,10 +1794,10 @@ instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityCh
             // Switch to invisible
             // Remove this element as active and set a visible sibling active (if there is one)
             if (this.$el.hasClass('active')) {
-                this.$el.removeClass('active in');
+                this.$el.removeClass('active');
                 var visible_siblings = this.$el.siblings(':not(.oe_form_invisible)');
                 if (visible_siblings.length) {
-                    $(visible_siblings[0]).addClass('active in');
+                    $(visible_siblings[0]).addClass('active');
                 }
             }
         } else {
@@ -1808,10 +1808,10 @@ instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityCh
             //      otherwise, remove that sibling as active and set this element as active
             var visible_active_sibling = this.$el.siblings(':not(.oe_form_invisible).active');
             if (!(visible_active_sibling.length)) {
-                this.$el.addClass('active in');
+                this.$el.addClass('active');
             } else if (!$(visible_active_sibling[0]).data('autofocus')) {
-                this.$el.addClass('active in');
-                $(visible_active_sibling[0]).removeClass('active in');
+                this.$el.addClass('active');
+                $(visible_active_sibling[0]).removeClass('active');
             }
         }
     },

@@ -896,7 +896,7 @@
             </li>
         </ul>
         <div class="tab-content">
-            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane fade #{classnames}" t-att-id="id">
+            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane #{classnames}" t-att-id="id">
                 <t t-raw="page.contents"/>
             </div>
         </div>
