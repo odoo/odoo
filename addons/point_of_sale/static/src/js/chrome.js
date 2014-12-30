@@ -384,7 +384,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
      |             THE CHROME               |
     \*======================================*/
     
-    // Displays the status of the hardware proxy
     // The Chrome is the main widget that contains 
     // all other widgets in the PointOfSale.
     //
