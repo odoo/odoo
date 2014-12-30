@@ -1624,7 +1624,7 @@ class calendar_event(osv.Model):
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (unicode, str, int, long)):
             select = [ids]
         else:
             select = ids
@@ -1636,7 +1636,7 @@ class calendar_event(osv.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+            if not isinstance(ls, (unicode, str, int, long)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 
@@ -1672,7 +1672,7 @@ class calendar_event(osv.Model):
             for k in EXTRAFIELDS:
                 if (k in r) and (fields and (k not in fields)):
                     del r[k]
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (unicode, str, int, long)):
             return result and result[0] or False
         return result
 
