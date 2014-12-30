@@ -1,4 +1,4 @@
-function openerp_restaurant_splitbill(instance, module){
+openerp.pos_restaurant.load_splitbill = function(instance, module){
     var QWeb = instance.web.qweb;
 
     module.SplitbillScreenWidget = module.ScreenWidget.extend({
@@ -179,4 +179,5 @@ function openerp_restaurant_splitbill(instance, module){
             return this.pos.config.iface_splitbill;
         },
     });
-}
+};
+

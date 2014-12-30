@@ -1,4 +1,4 @@
-function openerp_restaurant_printbill(instance,module){
+openerp.pos_restaurant.load_printbill = function(instance,module){
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
 
@@ -23,5 +23,5 @@ function openerp_restaurant_printbill(instance,module){
             return this.pos.config.iface_printbill;
         },
     });
-}
+};
 

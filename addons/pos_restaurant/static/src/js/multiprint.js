@@ -1,4 +1,4 @@
-function openerp_restaurant_multiprint(instance,module){
+openerp.pos_restaurant.load_multiprint = function(instance,module){
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
 
@@ -257,4 +257,5 @@ function openerp_restaurant_multiprint(instance,module){
         },
     });
 
-}
+};
+

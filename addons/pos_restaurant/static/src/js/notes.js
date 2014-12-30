@@ -1,4 +1,4 @@
-function openerp_restaurant_notes(instance,module){
+openerp.pos_restaurant.load_notes = function(instance,module){
     "use strict";
 
     var QWeb = instance.web.qweb;
@@ -64,4 +64,5 @@ function openerp_restaurant_notes(instance,module){
             return this.pos.config.iface_orderline_notes;
         },
     });
-}
+};
+

@@ -1,4 +1,4 @@
-function openerp_restaurant_floors(instance,module){
+openerp.pos_restaurant.load_floors = function(instance,module){
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
 
@@ -741,4 +741,5 @@ function openerp_restaurant_floors(instance,module){
             }
         },
     });
-}
+};
+

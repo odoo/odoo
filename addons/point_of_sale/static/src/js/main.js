@@ -25,4 +25,3 @@ openerp.point_of_sale = function(openerp) {
     openerp.web.client_actions.add('pos.ui', 'openerp.point_of_sale.Chrome');
 };
 
-    
