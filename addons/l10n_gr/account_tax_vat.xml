@@ -12,11 +12,6 @@
         <field name="type_tax_use">sale</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_ivat_303"/>
-        <field name="tax_code_id" ref="vat_code_ivat_333"/>
-
-    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
-        <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
     </record>
 
     <record id="ivat21" model="account.tax.template">
@@ -28,8 +23,6 @@
         <field name="type_tax_use">sale</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_ivat_303"/>
-        <field name="tax_code_id" ref="vat_code_ivat_333"/>
     </record>
 
     <record id="ivat23" model="account.tax.template">
@@ -40,8 +33,6 @@
         <field name="type_tax_use">sale</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_ivat_303"/>
-        <field name="tax_code_id" ref="vat_code_ivat_333"/>
     </record>
     
     <!-- tax definitions for return VAT from purchases -->
@@ -55,10 +46,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_353"/>
-        <field name="tax_code_id" ref="vat_code_evat_373"/>
-    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
-        <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
     </record>
 
 
@@ -71,8 +58,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_353"/>
-        <field name="tax_code_id" ref="vat_code_evat_373"/>
     </record>
 
     <record id="pvat23" model="account.tax.template">
@@ -83,8 +68,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_353"/>
-        <field name="tax_code_id" ref="vat_code_evat_373"/>
     </record>
 
     <!-- return VAT on expenses (different from purchases ) -->
@@ -97,8 +80,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_357"/>
-        <field name="tax_code_id" ref="vat_code_evat_377"/>
     </record>
 
     <record id="evat21" model="account.tax.template">
@@ -110,8 +91,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_357"/>
-        <field name="tax_code_id" ref="vat_code_evat_377"/>
     </record>
 
     <record id="evat23" model="account.tax.template">
@@ -123,8 +102,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_collected_id" ref="chartgr_54_00"/>
         <field name="account_paid_id" ref="chartgr_54_00"/>
-        <field name="base_code_id" ref="vat_code_evat_357"/>
-        <field name="tax_code_id" ref="vat_code_evat_377"/>
     </record>
 
 </data>
