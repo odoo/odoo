@@ -46,7 +46,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (str, int, long)):
+    if isinstance(ids, (unicode, str, int, long)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -625,14 +625,14 @@ class ir_model(osv.Model):
     _inherit = 'ir.model'
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
+        new_ids = isinstance(ids, (unicode, str, int, long)) and [ids] or ids
         if context is None:
             context = {}
         data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, context=context, load=load)
         if data:
             for val in data:
                 val['id'] = calendar_id2real_id(val['id'])
-        return isinstance(ids, (str, int, long)) and data[0] or data
+        return isinstance(ids, (unicode, str, int, long)) and data[0] or data
 
 
 original_exp_report = openerp.service.report.exp_report
@@ -1138,7 +1138,7 @@ class calendar_event(osv.Model):
         if not context:
             context = {}
 
-        if isinstance(event_id, (str, int, long)):
+        if isinstance(event_id, (unicode, str, int, long)):
             ids_to_browse = [event_id]  # keep select for return
         else:
             ids_to_browse = event_id
@@ -1220,7 +1220,7 @@ class calendar_event(osv.Model):
             comparers = [((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]
             ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
 
-        if isinstance(event_id, (str, int, long)):
+        if isinstance(event_id, (unicode, str, int, long)):
             return ids and ids[0] or False
         else:
             return ids
@@ -1528,7 +1528,7 @@ class calendar_event(osv.Model):
         self._set_date(cr, uid, values, id=ids[0], context=context)
 
         for one_ids in ids:
-            if isinstance(one_ids, (str, int, long)):
+            if isinstance(one_ids, (unicode, str, int, long)):
                 if len(str(one_ids).split('-')) == 1:
                     ids = [int(one_ids)]
                 else:
@@ -1624,7 +1624,7 @@ class calendar_event(osv.Model):
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (unicode, str, int, long)):
             select = [ids]
         else:
             select = ids
@@ -1636,7 +1636,7 @@ class calendar_event(osv.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+            if not isinstance(ls, (unicode, str, int, long)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 
@@ -1672,7 +1672,7 @@ class calendar_event(osv.Model):
             for k in EXTRAFIELDS:
                 if (k in r) and (fields and (k not in fields)):
                     del r[k]
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (unicode, str, int, long)):
             return result and result[0] or False
         return result
 
