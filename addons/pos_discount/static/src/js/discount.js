@@ -24,5 +24,6 @@ openerp.pos_discount = function(instance){
             return this.pos.config.discount_product_id;
         },
     });
+
 };
 

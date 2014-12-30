@@ -41,13 +41,12 @@ function openerp_restaurant_notes(instance,module){
         },
     });
 
-    module.PosWidget.include({
-        orderline_note_click: function(){
-            var self = this;
+    module.OrderlineNoteButton = module.ActionButtonWidget.extend({
+        template: 'OrderlineNoteButton',
+        button_click: function(){
             var line = this.pos.get_order().get_selected_orderline();
-
             if (line) {
-                this.screen_selector.show_popup('textarea',{
+                this.gui.show_popup('textarea',{
                     message: _t('Orderline Note'),
                     value:   line.get_note(),
                     confirm: function(note) {
@@ -56,16 +55,13 @@ function openerp_restaurant_notes(instance,module){
                 });
             }
         },
-        build_widgets: function(){
-            var self = this;
-            this._super();
+    });
 
-            if (this.pos.config.iface_orderline_notes) {
-                var button = $(QWeb.render('OrderlineNoteButton'));
-                button.click(function(){ self.orderline_note_click(); });
-                button.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
-            }
+    module.define_action_button({
+        'name': 'orderline_note',
+        'widget': module.OrderlineNoteButton,
+        'condition': function(){
+            return this.pos.config.iface_orderline_notes;
         },
     });
 }

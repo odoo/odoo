@@ -33,7 +33,7 @@ function openerp_restaurant_multiprint(instance,module){
         },
     });
 
-    module.PosModel.prototype.models.push({
+    module.load_models({
         model: 'restaurant.printer',
         fields: ['name','proxy_ip','product_categories_ids'],
         domain: null,
@@ -220,39 +220,39 @@ function openerp_restaurant_multiprint(instance,module){
         },
     });
 
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
-
-            if(this.pos.printers.length){
-                var submitorder = $(QWeb.render('SubmitOrderButton'));
-
-                submitorder.click(function(){
-                    var order = self.pos.get('selectedOrder');
-                    if(order.hasChangesToPrint()){
-                        order.printChanges();
-                        order.saveChanges();
-                        self.pos_widget.order_widget.update_summary();
-                    }
-                });
-                
-                submitorder.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
+    module.SubmitOrderButton = module.ActionButtonWidget.extend({
+        'template': 'SubmitOrderButton',
+        button_click: function(){
+            var order = this.pos.get_order();
+            if(order.hasChangesToPrint()){
+                order.printChanges();
+                order.saveChanges();
             }
         },
-        
+        hilight: function(hi){
+            if (hi) {
+                this.$el.addClass('highlight');
+            } else {
+                this.$el.removeClass('highlight');
+            }
+        },
+    });
+
+    module.define_action_button({
+        'name': 'submit_order',
+        'widget': module.SubmitOrderButton,
+        'condition': function() {
+            return this.pos.printers.length;
+        },
     });
 
     module.OrderWidget.include({
         update_summary: function(){
             this._super();
-            var order = this.pos.get('selectedOrder');
-
-            if(order.hasChangesToPrint()){
-                this.pos_widget.$('.order-submit').addClass('highlight');
-            }else{
-                this.pos_widget.$('.order-submit').removeClass('highlight');
+            var changes = this.pos.get_order().hasChangesToPrint();
+            if (this.getParent().action_buttons && 
+                this.getParent().action_buttons.submit_order) {
+                this.getParent().action_buttons.submit_order.highlight(changes);
             }
         },
     });

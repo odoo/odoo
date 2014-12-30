@@ -1,11 +1,9 @@
 function openerp_restaurant_splitbill(instance, module){
     var QWeb = instance.web.qweb;
-	var _t = instance.web._t;
 
     module.SplitbillScreenWidget = module.ScreenWidget.extend({
         template: 'SplitbillScreenWidget',
 
-        show_leftpane:   false,
         previous_screen: 'products',
 
         renderElement: function(){
@@ -29,7 +27,7 @@ function openerp_restaurant_splitbill(instance, module){
                 this.$('.orderlines').append(linewidget);
             }
             this.$('.back').click(function(){
-                self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
+                self.gui.show_screen(self.previous_screen);
             });
         },
 
@@ -102,7 +100,7 @@ function openerp_restaurant_splitbill(instance, module){
 
 
             if(full){
-                this.pos_widget.screen_selector.set_current_screen('payment');
+                this.gui.show_screen('payment');
             }else{
                 for(var id in splitlines){
                     var split = splitlines[id];
@@ -157,27 +155,28 @@ function openerp_restaurant_splitbill(instance, module){
         },
     });
 
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
+    module.Gui.define_screen({
+        'name': 'splitbill', 
+        'widget': module.SplitbillScreenWidget,
+        'condition': function(){ 
+            return this.pos.config.iface_splitbill;
+        },
+    });
 
-            if(this.pos.config.iface_splitbill){
-                this.splitbill_screen = new module.SplitbillScreenWidget(this,{});
-                this.splitbill_screen.appendTo(this.$('.screens'));
-                this.screen_selector.add_screen('splitbill',this.splitbill_screen);
-
-                var splitbill = $(QWeb.render('SplitbillButton'));
-
-                splitbill.click(function(){
-                    if(self.pos.get_order().get_orderlines().length > 0){
-                        self.pos_widget.screen_selector.set_current_screen('splitbill');
-                    }
-                });
-                
-                splitbill.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
+    module.SplitbillButton = module.ActionButtonWidget.extend({
+        template: 'SplitbillButton',
+        button_click: function(){
+            if(this.pos.get_order().get_orderlines().length > 0){
+                self.gui.show_screen('splitbill');
             }
+        },
+    });
+
+    module.define_action_button({
+        'name': 'splitbill',
+        'widget': module.SplitbillButton,
+        'condition': function(){
+            return this.pos.config.iface_splitbill;
         },
     });
 }

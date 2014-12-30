@@ -92,13 +92,13 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
 
         },
     });
-    module.Gui.define_popup('error', module.ErrorPopupWidget);
+    module.Gui.define_popup({name:'error', widget:module.ErrorPopupWidget});
 
 
     module.ErrorTracebackPopupWidget = module.ErrorPopupWidget.extend({
         template:'ErrorTracebackPopupWidget',
     });
-    module.Gui.define_popup('error-traceback', module.ErrorTracebackPopupWidget);
+    module.Gui.define_popup({name:'error-traceback', widget:module.ErrorTracebackPopupWidget});
 
 
     module.ErrorBarcodePopupWidget = module.ErrorPopupWidget.extend({
@@ -107,13 +107,13 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             this._super({barcode: barcode});
         },
     });
-    module.Gui.define_popup('error-barcode', module.ErrorBarcodePopupWidget);
+    module.Gui.define_popup({name:'error-barcode', widget:module.ErrorBarcodePopupWidget});
 
 
     module.ConfirmPopupWidget = module.PopupWidget.extend({
         template: 'ConfirmPopupWidget',
     });
-    module.Gui.define_popup('confirm', module.ConfirmPopupWidget);
+    module.Gui.define_popup({name:'confirm', widget:module.ConfirmPopupWidget});
 
     /**
      * A popup that allows the user to select one item from a list. 
@@ -159,7 +159,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         }
     });
-    module.Gui.define_popup('selection', module.SelectionPopupWidget);
+    module.Gui.define_popup({name:'selection', widget:module.SelectionPopupWidget});
 
 
     module.TextInputPopupWidget = module.PopupWidget.extend({
@@ -183,13 +183,13 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         },
     });
-    module.Gui.define_popup('textinput', module.TextInputPopupWidget);
+    module.Gui.define_popup({name:'textinput', widget:module.TextInputPopupWidget});
 
 
     module.TextAreaPopupWidget = module.TextInputPopupWidget.extend({
         template: 'TextAreaPopupWidget',
     });
-    module.Gui.define_popup('textarea', module.TextAreaPopupWidget);
+    module.Gui.define_popup({name:'textarea', widget:module.TextAreaPopupWidget});
 
 
     module.NumberPopupWidget = module.PopupWidget.extend({
@@ -223,24 +223,24 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             }
         },
     });
-    module.Gui.define_popup('number', module.NumberPopupWidget);
+    module.Gui.define_popup({name:'number', widget:module.NumberPopupWidget});
 
     module.PasswordPopupWidget = module.NumberPopupWidget.extend({
         renderElement: function(){
             this._super();
-            this.$('.popup').addClass('popup-password');    // WHY NOT ?!
+            this.$('.popup').addClass('popup-password');
         },
     });
-    module.Gui.define_popup('password', module.PasswordPopupWidget);
+    module.Gui.define_popup({name:'password', widget:module.PasswordPopupWidget});
 
     module.UnsentOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnsentOrdersPopupWidget',
     });
-    module.Gui.define_popup('unsent-orders', module.UnsentOrdersPopupWidget);
+    module.Gui.define_popup({name:'unsent-orders', widget:module.UnsentOrdersPopupWidget});
 
     module.UnpaidOrdersPopupWidget = module.ConfirmPopupWidget.extend({
         template: 'UnpaidOrdersPopupWidget',
     });
-    module.Gui.define_popup('unpaid-orders', module.UnpaidOrdersPopupWidget);
+    module.Gui.define_popup({name:'unpaid-orders', widget:module.UnpaidOrdersPopupWidget});
 };
 

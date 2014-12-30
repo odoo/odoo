@@ -534,7 +534,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 'name':   'proxy_status',
                 'widget': module.ProxyStatusWidget,
                 'append':  '.pos-rightheader',
-                'condition': function(self){ return self.pos.config.use_proxy },
+                'condition': function(){ return this.pos.config.use_proxy },
             },{
                 'name':   'notification',
                 'widget': module.SynchNotificationWidget,
@@ -573,7 +573,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 'name':  'debug',
                 'widget': module.DebugWidget,
                 'append': '.pos-content',
-                'condition': function(self){ return self.pos.debug },
+                'condition': function(){ return this.pos.debug },
             },
         ],
 
@@ -581,21 +581,9 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
         build_widgets: function() {
             var self = this;
 
-            for (var name in this.gui.screen_classes) {
-                var screen = new this.gui.screen_classes[name](this,{});
-                    screen.appendTo(this.$('.screens'));
-                this.gui.add_screen(name, screen);
-            }
-
-            for (var name in this.gui.popup_classes) {
-                var popup = new this.gui.popup_classes[name](this,{});
-                    popup.appendTo(this.$('.popups')); 
-                this.gui.add_popup(name, popup);
-            }
-
             for (var i = 0; i < this.widgets.length; i++) {
                 var def = this.widgets[i];
-                if ( !def.condition || def.condition(this) ) {
+                if ( !def.condition || def.condition.call(this) ) {
                     var args = typeof def.args === 'function' ? def.args(this) : def.args;
                     var w = new def.widget(this, args || {});
                     if (def.replace) {
@@ -608,6 +596,28 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                         w.appendTo(this.$el);
                     }
                     this.widget[def.name] = w;
+                }
+            }
+
+            this.screens = {};
+            for (var i = 0; i < this.gui.screen_classes.length; i++) {
+                var classe = this.gui.screen_classes[i];
+                if (!classe.condition || classe.condition.call(this)) {
+                    var screen = new classe.widget(this,{});
+                        screen.appendTo(this.$('.screens'));
+                    this.screens[classe.name] = screen;
+                    this.gui.add_screen(classe.name, screen);
+                }
+            }
+
+            this.popups = {};
+            for (var i = 0; i < this.gui.popup_classes.length; i++) {
+                var classe = this.gui.popup_classes[i];
+                if (!classe.condition || classe.condition.call(this)) {
+                    var popup = new classe.widget(this,{});
+                        popup.appendTo(this.$('.popups'));
+                    this.popups[classe.name] = popup;
+                    this.gui.add_popup(classe.name, popup);
                 }
             }
 

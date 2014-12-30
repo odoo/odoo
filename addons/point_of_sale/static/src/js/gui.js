@@ -12,8 +12,8 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
     var _t = instance.web._t;
 
     module.Gui = instance.web.Class.extend({
-        screen_classes: {},
-        popup_classes:  {},
+        screen_classes: [],
+        popup_classes:  [],
         init: function(options){
             var self = this;
             this.pos            = options.pos;
@@ -117,7 +117,7 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         
         // returns the current screen.
         get_current_screen: function() {
-            return this.pos.get_order().get_screen_data('screen') || this.default_screen;
+            return this.pos.get_order() ? ( this.pos.get_order().get_screen_data('screen') || this.default_screen ) : this.startup_screen;
         },
 
         // goes to the previous screen (as specified in the order). The history only
@@ -131,8 +131,12 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
 
         // returns the parameter specified when this screen was displayed
         get_current_screen_param: function(param) {
-            var params = this.pos.get_order().get_screen_data('params');
-            return params ? params[param] : undefined;
+            if (this.pos.get_order()) {
+                var params = this.pos.get_order().get_screen_data('params');
+                return params ? params[param] : undefined;
+            } else {
+                return undefined;
+            }
         },
 
         /* ---- Gui: POPUP MANIPULATION ---- */
@@ -325,12 +329,12 @@ openerp.point_of_sale.load_gui = function load_gui(instance, module) {
         },
     });
 
-    module.Gui.define_screen = function (name, classe) {
-        module.Gui.prototype.screen_classes[name] = classe;
+    module.Gui.define_screen = function (classe) {
+        module.Gui.prototype.screen_classes.push(classe);
     };
 
-    module.Gui.define_popup = function (name, classe) {
-        module.Gui.prototype.popup_classes[name] = classe;
+    module.Gui.define_popup = function (classe) {
+        module.Gui.prototype.popup_classes.push(classe);
     };
 }; 
 
