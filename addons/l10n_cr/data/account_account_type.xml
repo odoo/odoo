@@ -5,60 +5,235 @@
         Resource: account.account.type
         Add usual account types
         -->
-        <record id="account_account_type_asset" model="account.account.type">
-            <field name="code">A</field>
-            <field name="name">Asset</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_account_type_asset_valuation" model="account.account.type">
-            <field name="code">AV</field>
-            <field name="name">Asset valuation</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_account_type_cash" model="account.account.type">
-            <field name="code">C</field>
-            <field name="name">Cash</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_account_type_equity" model="account.account.type">
-            <field name="code">Eq</field>
-            <field name="name">Equity</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">detail</field>
-        </record>
-        <record id="account_account_type_expense" model="account.account.type">
-            <field name="code">Ex</field>
-            <field name="name">Expense</field>
-            <field name="close_method">none</field>
-        </record>
-        <record id="account_account_type_income" model="account.account.type">
-            <field name="code">I</field>
-            <field name="name">Income</field>
-            <field name="close_method">none</field>
-        </record>
-        <record id="account_account_type_passive" model="account.account.type">
-            <field name="code">Pas</field>
-            <field name="name">Passive</field>
-            <field name="close_method">balance</field>
-        </record>
-        <record id="account_account_type_payable" model="account.account.type">
-            <field name="code">Pay</field>
-            <field name="name">Payable</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_account_type_receivable" model="account.account.type">
-            <field name="code">R</field>
-            <field name="name">Receivable</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_account_type_tax" model="account.account.type">
-            <field name="code">T</field>
-            <field name="name">Tax</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_account_type_view" model="account.account.type">
+        <record id="account.data_account_type_view" model="account.account.type">
             <field name="code">V</field>
-            <field name="name">View</field>
+            <field name="name">Vista</field>
+            
+            <field name="report_type">none</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.account_type_asset_view1" model="account.account.type">
+            <field name="code">A</field>
+            <field name="name">Activo vista</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.data_account_type_cash" model="account.account.type">
+            <field name="code">A/Cash/B</field>
+            <field name="name">Caja – Saldo</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.data_account_type_bank" model="account.account.type">
+            <field name="code">A/BNK/B</field>
+            <field name="name">Banco – Saldo</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.conf_account_type_chk" model="account.account.type">
+            <field name="code">A/Cash/T</field>
+            <field name="name">Efectivo – Tránsito</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.data_account_type_asset" model="account.account.type">
+            <field name="code">A/C</field>
+            <field name="name">Activo corriente</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_reconcile_current_asset" model="account.account.type">
+            <field name="code">A/C/C</field>
+            <field name="name">Activo corriente conciliable</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.data_account_type_receivable" model="account.account.type">
+            <field name="code">A/C/R</field>
+            <field name="name">Por cobrar</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_account_type_stock_products" model="account.account.type">
+            <field name="code">A/C/SP</field>
+            <field name="name">Inventario – Productos</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_stock_consumables" model="account.account.type">
+            <field name="code">A/C/SC</field>
+            <field name="name">Inventario – Consumibles</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_stock_transit" model="account.account.type">
+            <field name="code">A/C/ST</field>
+            <field name="name">Inventario – Tránsito</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_non_current_asset" model="account.account.type">
+            <field name="code">A/NC</field>
+            <field name="name">Activo no corriente</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_fixed_asset" model="account.account.type">
+            <field name="code">A/NC/F</field>
+            <field name="name">Activo fijo</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_fixed_asset_contra" model="account.account.type">
+            <field name="code">A/NC/FC</field>
+            <field name="name">Dep. activo fijo</field>
+            
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.account_type_liability_view1" model="account.account.type">
+            <field name="code">L</field>
+            <field name="name">Pasivo vista</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.data_account_type_liability" model="account.account.type">
+            <field name="code">L/C</field>
+            <field name="name">Pasivo corriente</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_short_term_credit" model="account.account.type">
+            <field name="code">L/C/ST</field>
+            <field name="name">Short term credit</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.data_account_type_payable" model="account.account.type">
+            <field name="code">L/C/P</field>
+            <field name="name">Por pagar</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account.conf_account_type_tax" model="account.account.type">
+            <field name="code">L/C/T</field>
+            <field name="name">Impuesto</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_reconcile_current_liability" model="account.account.type">
+            <field name="code">L/C/R</field>
+            <field name="name">Pasivo corriente conciliable</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_non_current_liability" model="account.account.type">
+            <field name="code">L/NC</field>
+            <field name="name">Pasivo no corriente</field>
+            
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_view_equity" model="account.account.type">
+            <field name="code">Eq</field>
+            <field name="name">Patrimonio vista</field>
+            
+            <field name="report_type">none</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.conf_account_type_equity" model="account.account.type">
+            <field name="code">Eq/E</field>
+            <field name="name">Patrimonio</field>
+            
+            <field name="report_type">none</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account.account_type_income_view1" model="account.account.type">
+            <field name="code">I</field>
+            <field name="name">Ingreso vista</field>
+            
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.data_account_type_income" model="account.account.type">
+            <field name="code">I/I</field>
+            <field name="name">Ingreso</field>
+            
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_income_contra" model="account.account.type">
+            <field name="code">I/IC</field>
+            <field name="name">Dev. ingreso</field>
+            
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.account_type_expense_view1" model="account.account.type">
+            <field name="code">Ex</field>
+            <field name="name">Gasto vista</field>
+            
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_cost_goods" model="account.account.type">
+            <field name="code">Ex/CG</field>
+            <field name="name">Costo de mercadería vendida</field>
+            
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_cost_service" model="account.account.type">
+            <field name="code">Ex/CS</field>
+            <field name="name">Costo de servicios prestados</field>
+            
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_cost_production" model="account.account.type">
+            <field name="code">Ex/CP</field>
+            <field name="name">Costo de producción</field>
+            
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account.data_account_type_expense" model="account.account.type">
+            <field name="code">Ex/Ex</field>
+            <field name="name">Gasto</field>
+            
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_view_order" model="account.account.type">
+            <field name="code">Or</field>
+            <field name="name">Vista Orden</field>
+            
+            <field name="report_type">none</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_order" model="account.account.type">
+            <field name="code">Or/Or</field>
+            <field name="name">Orden</field>
+            
+            <field name="report_type">none</field>
             <field name="close_method">none</field>
         </record>
     </data>
