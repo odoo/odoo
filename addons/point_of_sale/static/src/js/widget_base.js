@@ -22,7 +22,9 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
         format_currency: function(amount,precision){
             var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
             var decimals = currency.decimals;
-
+            
+            amount = instance.web.format_value(amount,{type:"float"});
+            
             if (precision && (typeof this.pos.dp[precision]) !== undefined) {
                 decimals = this.pos.dp[precision];
             }
