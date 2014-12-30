@@ -1612,7 +1612,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     * the processing of the page.
     */
     attach_node_attr: function($new_element, $node, attr) {
-        $new_element.data('autofocus', $node.attr(attr));
+        $new_element.data(attr, $node.attr(attr));
     }
 });
 
