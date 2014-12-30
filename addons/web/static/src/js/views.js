@@ -41,8 +41,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
     push_widget: function(widget, action, options) {
         var self = this,
             to_destroy,
-            options = options || {},
             old_widget = this.inner_widget;
+        options = options || {};
 
         if (options.clear_breadcrumbs) {
             to_destroy = this.widgets;
@@ -67,10 +67,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.inner_action = action;
         this.inner_widget = widget;
         return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
-            (action.target !== 'inline') && (!action.flags.headless) && widget.$header && widget.$header.show();
-            old_widget && old_widget.$el.hide();
+            if ((action.target !== 'inline') && (!action.flags.headless) && widget.$header) {
+                widget.$header.show();
+            }
+            if (old_widget) {
+                old_widget.$el.hide();
+            }
             if (options.clear_breadcrumbs) {
-                self.clear_widgets(to_destroy)
+                self.clear_widgets(to_destroy);
             }
         });
     },
@@ -134,8 +138,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 w.destroy();
             });
             self.inner_widget = _.last(self.widgets);
-            self.inner_widget.display_breadcrumbs && self.inner_widget.display_breadcrumbs();
-            self.inner_widget.do_show && self.inner_widget.do_show();
+            if (self.inner_widget.display_breadcrumbs) {
+                self.inner_widget.display_breadcrumbs();
+            }
+            if (self.inner_widget.do_show) {
+                self.inner_widget.do_show();
+            }
         });
     },
     clear_widgets: function(widgets) {
@@ -437,7 +445,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
-            if ((next = ClientWidget(this, action))) {
+            if ((next = new ClientWidget(this, action))) {
                 return this.do_action(next, options);
             }
             return $.when();
@@ -525,7 +533,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      */
     init: function(parent, dataset, views, flags, action) {
         if (action) {
-            var flags = action.flags || {};
+            flags = action.flags || {};
             if (!('auto_search' in flags)) {
                 flags.auto_search = action.auto_search !== false;
             }
@@ -543,7 +551,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
             this.action = action;
             this.action_manager = parent;
-            var dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+            dataset = new instance.web.DataSetSearch(this, action.res_model, action.context, action.domain);
             if (action.res_id) {
                 dataset.ids.push(action.res_id);
                 dataset.index = 0;
@@ -569,7 +577,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             var view_type = view[1] || view.view_type,
                 View = instance.web.views.get_object(view_type, true),
                 view_label = View ? View.prototype.display_name: (void 'nope'),
-                view = {
+                view_descr = {
                     controller: null,
                     options: view.options || {},
                     view_id: view[0] || view.view_id,
@@ -579,8 +587,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     title: self.action && self.action.name,
                     button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
                 };
-            self.view_order.push(view);
-            self.views[view_type] = view;
+            self.view_order.push(view_descr);
+            self.views[view_type] = view_descr;
         });
         this.multiple_views = (self.view_order.length - ('form' in this.views ? 1 : 0)) > 1;
     },
@@ -648,9 +656,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         this.active_search = $.Deferred();
 
-        if (this.searchview
-                && this.flags.auto_search
-                && view.controller.searchable !== false) {
+        if (this.searchview && 
+                this.flags.auto_search && 
+                view.controller.searchable !== false) {
             $.when(this.search_view_loaded, view.created).done(this.searchview.do_search);
         } else {
             this.active_search.resolve();
@@ -679,12 +687,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         $.when(this.active_view.controller.do_show(view_options)).done(function () { 
             _.each(self.views, function (view) {
                 if (view.type !== view_type) {
-                    view.controller && view.controller.do_hide();
-                    view.$container && view.$container.hide();
-                    view.options.$buttons && view.options.$buttons.hide();
+                    if (view.controller) view.controller.do_hide();
+                    if (view.$container) view.$container.hide();
+                    if (view.options.$buttons) view.options.$buttons.hide();
                 }
             });
-            self.active_view.options.$buttons && self.active_view.options.$buttons.show();
+            if (self.active_view.options.$buttons) {
+                self.active_view.options.$buttons.show();
+            }
             if (self.searchview) {
                 var is_hidden = self.active_view.controller.searchable === false;
                 self.searchview.toggle_visibility(!is_hidden);
@@ -739,7 +749,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         controller.on('switch_mode', this, this.switch_mode.bind(this));
         controller.on('history_back', this, function () {
-            self.action_manager && self.action_manager.trigger('history_back');
+            if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
             self.display_breadcrumbs();
@@ -1417,7 +1427,7 @@ instance.web.View = instance.web.Widget.extend({
         return (action in attrs) ? JSON.parse(attrs[action]) : true;
     },
     get_context: function () {
-        return {}
+        return {};
     },
 });
 
@@ -1438,7 +1448,7 @@ instance.web.fields_view_get = function(args) {
         fvg.arch = instance.web.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
         if ('id' in fvg.fields) {
             // Special case for id's
-            var id_field = fvg.fields['id'];
+            var id_field = fvg.fields.id;
             id_field.original_type = id_field.type;
             id_field.type = 'id';
         }
