@@ -699,17 +699,24 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (!this.action_manager) return;
         var breadcrumbs = this.action_manager.get_breadcrumbs();
         if (!breadcrumbs.length) return;
-        var $breadcrumbs = _.map(_.initial(breadcrumbs), function (bc) {
-            var $link = $('<a>').text(bc.title);
-            $link.click(function () {
-                self.action_manager.select_widget(bc.widget, bc.index);
-            });
-            return $('<li>').append($link);
+
+        var $breadcrumbs = breadcrumbs.map(function (bc, index) {
+            return make_breadcrumb(bc, index === breadcrumbs.length - 1);
         });
-        $breadcrumbs.push($('<li>').addClass('active').text(_.last(breadcrumbs).title));
+
         this.$breadcrumbs
             .empty()
             .append($breadcrumbs);
+
+        function make_breadcrumb (bc, is_active) {
+            var handler = function () {
+                self.action_manager.select_widget(bc.widget, bc.index);
+            };
+            return $('<li>')
+                    .append(is_active ? bc.title : $('<a>').text(bc.title))
+                    .toggleClass('active', is_active)
+                    .click(handler);
+        }
     },
     create_view: function(view) {
         var self = this,
