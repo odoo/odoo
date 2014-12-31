@@ -84,5 +84,3 @@ class report_event_registration(models.Model):
                 name_registration
         )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

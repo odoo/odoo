@@ -11,4 +11,3 @@ class TestUi(openerp.tests.HttpCase):
 
     def test_public(self):
         self.phantom_js("/", "openerp.Tour.run('event_buy_tickets', 'test')", "openerp.Tour.tours.event_buy_tickets")
-

@@ -54,6 +54,3 @@ class im_livechat_report(osv.Model):
                 GROUP BY U.id, M.to_id, S.id, C.name, S.uuid
             )
         """)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

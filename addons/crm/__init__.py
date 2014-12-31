@@ -29,6 +29,3 @@ import wizard
 import res_partner
 import res_config
 import base_partner_merge
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -318,6 +318,3 @@ class account_followup_print(osv.osv_memory):
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

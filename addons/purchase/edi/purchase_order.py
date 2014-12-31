@@ -190,4 +190,3 @@ class purchase_order(osv.osv, EDIMixin):
 
 class purchase_order_line(osv.osv, EDIMixin):
     _inherit='purchase.order.line'
-

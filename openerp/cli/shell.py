@@ -78,4 +78,3 @@ class Shell(Command):
         self.init(args)
         self.shell(openerp.tools.config['db_name'])
         return 0
-

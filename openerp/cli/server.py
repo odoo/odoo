@@ -171,5 +171,3 @@ class Server(Command):
     """Start the odoo server (default command)"""
     def run(self, args):
         main(args)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1568,5 +1568,3 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

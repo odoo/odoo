@@ -165,7 +165,3 @@ class subscription_subscription_history(osv.osv):
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

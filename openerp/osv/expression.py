@@ -1260,5 +1260,3 @@ class expression(object):
             query = '(%s) AND %s' % (joins, query)
 
         return query, tools.flatten(params)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

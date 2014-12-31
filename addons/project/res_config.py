@@ -79,5 +79,3 @@ class project_configuration(osv.osv_memory):
     def set_default_generate_project_alias(self, cr, uid, ids, context=None):
         config_value = self.browse(cr, uid, ids, context=context).generate_project_alias
         self.pool.get('ir.values').set_default(cr, uid, 'project.config.settings', 'generate_project_alias', config_value)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

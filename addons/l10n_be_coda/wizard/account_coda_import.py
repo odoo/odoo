@@ -296,7 +296,3 @@ class account_bank_statement_import(osv.TransientModel):
 
 def rmspaces(s):
     return " ".join(s.split())
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

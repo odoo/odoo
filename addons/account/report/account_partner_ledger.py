@@ -312,5 +312,3 @@ class report_partnerledgerother(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'account.report_partnerledgerother'
     _wrapped_report_class = third_party_ledger
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

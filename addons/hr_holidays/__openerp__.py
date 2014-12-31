@@ -69,4 +69,3 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'application': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -108,5 +108,3 @@ Dashboard / Reports for Warehouse Management will include:
     'auto_install': False,
     'qweb': ['static/src/xml/picking.xml'],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

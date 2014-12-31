@@ -58,5 +58,3 @@ class wizard_price(osv.osv):
         res = self.browse(cr, uid, ids, context=context)
         prod = prod_obj.browse(cr, uid, rec_id, context=context)
         prod_obj.compute_price(cr, uid, [], template_ids=[prod.id], real_time_accounting=res[0].real_time_accounting, recursive=res[0].recursive, test=False, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

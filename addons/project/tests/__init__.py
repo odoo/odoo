@@ -24,5 +24,3 @@ from . import test_project_flow
 checks = [
     test_project_flow,
 ]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

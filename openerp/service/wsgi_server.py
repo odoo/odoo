@@ -214,6 +214,3 @@ def application(environ, start_response):
         return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
     else:
         return application_unproxied(environ, start_response)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -155,4 +155,3 @@ class account_analytic_line(osv.osv):
             if grid.user_id.id==user_id:
                 return grid.price
         return super(account_analytic_line, self)._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
-

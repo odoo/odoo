@@ -30,8 +30,3 @@ class res_partner(osv.osv):
           string="Delivery Method",
           help="This delivery method will be used when invoicing from picking."),
     }
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

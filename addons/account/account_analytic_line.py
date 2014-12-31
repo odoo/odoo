@@ -159,6 +159,3 @@ class res_partner(osv.osv):
         'contract_ids': fields.one2many('account.analytic.account', \
                                                     'partner_id', 'Contracts', readonly=True),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

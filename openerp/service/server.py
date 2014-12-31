@@ -915,5 +915,3 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

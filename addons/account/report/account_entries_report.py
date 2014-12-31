@@ -143,5 +143,3 @@ class account_entries_report(osv.osv):
                 where l.state != 'draft'
             )
         """)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

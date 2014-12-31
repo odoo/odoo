@@ -54,5 +54,3 @@ class account_bilan_report(osv.osv_memory):
         return self.pool['report'].get_action(
             cr, uid, ids, 'l10n_fr.report_l10nfrbilan', data=data, context=context
         )
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

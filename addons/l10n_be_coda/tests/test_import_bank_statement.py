@@ -36,4 +36,3 @@ class TestCodaFile(TransactionCase):
         bank_st_record = self.bank_statement_model.browse(cr, uid, statement_id)
         self.assertEquals(bank_st_record.balance_start, 11812.70)
         self.assertEquals(bank_st_record.balance_end_real, 13527.81)
-

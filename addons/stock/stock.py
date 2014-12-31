@@ -4367,5 +4367,3 @@ class barcode_rule(models.Model):
             ('package','Package')
         ])
         return list(types)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

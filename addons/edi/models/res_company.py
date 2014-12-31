@@ -55,5 +55,3 @@ class res_company(osv.osv):
                                                              res_partner_bank.browse(cr, uid, bank_ids, context=context),
                                                              context=context)
         return result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

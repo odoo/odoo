@@ -143,5 +143,3 @@ def exp_report_get(db, uid, report_id):
             raise Exception, 'AccessDenied'
     else:
         raise Exception, 'ReportNotFound'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -71,5 +71,3 @@ class account_bank_statement_import(osv.TransientModel):
                                     'line_ids': line_ids,
                                     'journal_id': journal_id})
         return [vals_bank_statement]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

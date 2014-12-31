@@ -68,6 +68,3 @@ class product_template(osv.osv):
             if self.pool.get('account.move.line').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
                 raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.") % ())
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

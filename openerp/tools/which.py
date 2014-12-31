@@ -151,5 +151,3 @@ def which(file, mode=F_OK | X_OK, path=None, pathext=None):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

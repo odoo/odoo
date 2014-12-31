@@ -671,6 +671,3 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

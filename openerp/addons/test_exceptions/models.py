@@ -67,5 +67,3 @@ class m(openerp.osv.osv.Model):
     def generate_safe_eval(self, cr, uid, ids, f, context):
         globals_dict = { 'generate': lambda *args: f(cr, uid, ids, context) }
         openerp.tools.safe_eval.safe_eval("generate()", mode='exec', globals_dict=globals_dict)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

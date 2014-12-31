@@ -466,5 +466,3 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.log(25, "All post-tested in %.2fs, %s queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
     finally:
         cr.close()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

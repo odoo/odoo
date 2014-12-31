@@ -253,7 +253,3 @@ class purchase_order_line(osv.osv):
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
 
         return {'value': result.get('value',{}), 'warning':warning}
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

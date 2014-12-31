@@ -890,5 +890,3 @@ class account_analytic_account_summary_month(osv.osv):
                     ') ' \
                 'GROUP BY d.month, d.account_id ' \
                 ')')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

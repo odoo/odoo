@@ -88,6 +88,3 @@ class sale_order(osv.osv):
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
                 }),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

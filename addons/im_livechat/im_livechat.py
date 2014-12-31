@@ -347,5 +347,3 @@ class LiveChatController(http.Controller):
         Session = registry['im_chat.session']
         session_ids = Session.search(cr, uid, [('uuid','=',uuid)], context=context)
         Session.write(cr, uid, session_ids, {'feedback_rating' : str(rating), 'feedback_reason' : reason}, context=context)
-
-

@@ -61,4 +61,3 @@ class sale_configuration(osv.osv_memory):
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
         res = super(sale_configuration, self).set_sale_defaults(cr, uid, ids, context)
         return res
-

@@ -126,4 +126,3 @@ class website_hr_recruitment(http.Controller):
                 subtype = "hr_recruitment.mt_applicant_hired")
 
         return request.render("website_hr_recruitment.thankyou", {})
-

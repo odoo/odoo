@@ -34,5 +34,3 @@ class bid_line_qty(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         self.pool.get('purchase.order.line').write(cr, uid, active_ids, {'quantity_bid': data.qty})
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

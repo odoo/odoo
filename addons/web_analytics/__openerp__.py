@@ -38,4 +38,3 @@ Collects web application usage with Google Analytics.
     'installable': True,
     'active': False,
 }
-

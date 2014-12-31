@@ -325,5 +325,3 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         import sys
         exc_info = sys.exc_info()
         raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

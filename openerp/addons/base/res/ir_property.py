@@ -302,5 +302,3 @@ class ir_property(osv.osv):
             return [('id', 'not in', bad_ids)]
         else:
             return [('id', 'in', good_ids)]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

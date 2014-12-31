@@ -387,5 +387,3 @@ class ir_sequence_date_range(models.Model):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
             seq_to_alter._alter_sequence(number_next=values.get('number_next'))
         return super(ir_sequence_date_range, self).write(values)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

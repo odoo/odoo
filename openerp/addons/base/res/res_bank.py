@@ -227,5 +227,3 @@ class res_partner_bank(osv.osv):
             result['country_id'] =  part.country_id.id
             result['state_id'] = part.state_id.id
         return {'value': result}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

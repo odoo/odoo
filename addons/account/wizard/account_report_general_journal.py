@@ -34,5 +34,3 @@ class account_general_journal(osv.osv_memory):
     def _print_report(self, cr, uid, ids, data, context=None):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         return self.pool['report'].get_action(cr, uid, [], 'account.report_generaljournal', data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

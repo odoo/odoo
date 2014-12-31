@@ -56,5 +56,3 @@ class mrp_config_settings(osv.osv_memory):
             implied_group='mrp.group_rounding_efficiency',
             help="""Allow to manage product rounding on quantity and product efficiency during production process"""),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

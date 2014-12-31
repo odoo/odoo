@@ -222,6 +222,3 @@ class hr_payslip_run(osv.osv):
     _defaults = {
         'journal_id': _get_default_journal,
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

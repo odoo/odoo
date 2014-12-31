@@ -791,5 +791,3 @@ class res_partner(osv.Model, format_address):
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

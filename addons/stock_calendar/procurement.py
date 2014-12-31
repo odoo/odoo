@@ -323,9 +323,3 @@ class procurement_order(osv.osv):
             cr.commit()
             cr.close()
         return {}
-
-
-
-
-
-

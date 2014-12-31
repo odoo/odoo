@@ -131,4 +131,3 @@ class stock_invoice_onshipping(osv.osv_memory):
               type = inv_type,
               context=context)
         return res
-

@@ -918,5 +918,3 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

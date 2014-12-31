@@ -92,5 +92,3 @@ class account_bank_statement_import(osv.TransientModel):
         action = self.pool[model].read(cr, uid, action_id, context=context)
         action['domain'] = "[('id', 'in', [" + ', '.join(map(str, statement_ids)) + "])]"
         return action
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

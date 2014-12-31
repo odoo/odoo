@@ -454,6 +454,3 @@ if __name__ == "__main__":
     else:
         data = sys.stdin.read().decode('utf8')
     wrapwrite(html2text(data, baseurl))
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

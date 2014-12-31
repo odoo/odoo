@@ -602,5 +602,3 @@ class EDIMixin(object):
         self._edi_import_attachments(cr, uid, record_id, edi, context=context)
 
         return record_id
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

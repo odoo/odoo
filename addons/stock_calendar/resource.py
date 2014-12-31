@@ -137,4 +137,3 @@ class resource_calendar_attendance(osv.osv):
     _columns = {
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
     }
-

@@ -168,5 +168,3 @@ class sale_quote(http.Controller):
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
-
-

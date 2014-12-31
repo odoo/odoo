@@ -66,5 +66,3 @@ class crm_team(osv.Model):
 
     def action_forecast(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

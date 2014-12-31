@@ -226,6 +226,3 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
