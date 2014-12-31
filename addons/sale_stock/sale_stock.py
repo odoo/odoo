@@ -266,6 +266,26 @@ class sale_order_line(osv.osv):
 
         return {'value': result, 'warning': warning}
 
+    def _check_routing(self, cr, uid, product, warehouse_id=False, context=None):
+        isMto = False
+        if warehouse_id:
+            warehouse = self.pool['stock.warehouse'].browse(cr, uid, warehouse_id, context=context)
+            for product_route in product.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    isMto = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool['stock.warehouse']._get_mto_route(cr, uid, context=context)
+            except:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product.route_ids:
+                    if product_route.id == mto_route_id:
+                        isMto = True
+                        break
+        return isMto
 
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -273,7 +293,6 @@ class sale_order_line(osv.osv):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        warehouse_obj = self.pool['stock.warehouse']
         warning = {}
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -303,24 +322,7 @@ class sale_order_line(osv.osv):
 
         if product_obj.type == 'product':
             #determine if the product is MTO or not (for a further check)
-            isMto = False
-            if warehouse_id:
-                warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
-                for product_route in product_obj.route_ids:
-                    if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
-                        isMto = True
-                        break
-            else:
-                try:
-                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context=context)
-                except:
-                    # if route MTO not found in ir_model_data, we treat the product as in MTS
-                    mto_route_id = False
-                if mto_route_id:
-                    for product_route in product_obj.route_ids:
-                        if product_route.id == mto_route_id:
-                            isMto = True
-                            break
+            isMto = self._check_routing(cr, uid, product_obj, warehouse_id, context=context)
 
             #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
             if not isMto:
