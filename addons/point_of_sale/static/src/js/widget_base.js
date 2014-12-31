@@ -17,8 +17,9 @@ openerp.point_of_sale.load_basewidget = function load_basewidget(instance, modul
         init:function(parent,options){
             this._super(parent);
             options = options || {};
-            this.pos = options.pos || (parent ? parent.pos : undefined);
-            this.pos_widget = options.pos_widget || (parent ? parent.pos_widget : undefined);
+            this.pos    = options.pos    || (parent ? parent.pos : undefined);
+            this.chrome = options.chrome || (parent ? parent.chrome : undefined);
+            this.gui    = options.gui    || (parent ? parent.gui : undefined); 
         },
         format_currency: function(amount,precision){
             var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};

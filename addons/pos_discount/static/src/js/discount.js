@@ -5,28 +5,23 @@ openerp.pos_discount = function(instance){
 
     QWeb.add_template('/pos_discount/static/src/xml/discount.xml');
 
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
-            
-            if(!this.pos.config.discount_product_id){
-                return;
+    module.DiscountButton = module.ActionButtonWidget.extend({
+        template: 'DiscountButton',
+        button_click: function(){
+            var order    = this.pos.get_order();
+            var product  = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+            var discount = - this.pos.config.discount_pc/ 100.0 * order.get_total_with_tax();
+            if( discount < 0 ){
+                order.add_product(product, { price: discount });
             }
+        },
+    });
 
-            var discount = $(QWeb.render('DiscountButton'));
-
-            discount.click(function(){
-                var order    = self.pos.get_order();
-                var product  = self.pos.db.get_product_by_id(self.pos.config.discount_product_id[0]);
-                var discount = - self.pos.config.discount_pc/ 100.0 * order.get_total_tax_included();
-                if( discount < 0 ){
-                    order.add_product(product, { price: discount });
-                }
-            });
-
-            discount.appendTo(this.$('.control-buttons'));
-            this.$('.control-buttons').removeClass('oe_hidden');
+    module.define_action_button({
+        'name': 'discount',
+        'widget': module.DiscountButton,
+        'condition': function(){
+            return this.pos.config.discount_product_id;
         },
     });
 

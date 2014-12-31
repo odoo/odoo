@@ -3,7 +3,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
-    var barcode_parser_module = instance.barcodes;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -24,7 +23,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var  self = this;
             this.session = session;                 
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            this.pos_widget = attributes.pos_widget;
+            this.chrome = attributes.chrome;
+            this.gui    = attributes.gui;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});
@@ -34,7 +34,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
             
             // Business data; loaded from the server at launch
-            this.accounting_precision = 2; //TODO
             this.company_logo = null;
             this.company_logo_base64 = '';
             this.currency = null;
@@ -73,18 +72,23 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.get('orders').bind('remove', function(order,_unused_,options){ 
                 self.on_removed_order(order,options.index,options.reason); 
             });
-            
+
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            this.ready = this.load_server_data()
-                .then(function(){
-                    if(self.config.use_proxy){
-                        return self.connect_to_proxy();
-                    }
-                });  // used to read barcodes);
+            this.ready = this.load_server_data().then(function(){
+                return self.after_load_server_data();
+            });;
         },
-
+        after_load_server_data: function(){
+             this.barcode_reader.connect();
+             this.load_orders();
+             this.set_start_order();
+             this.push_order();
+             if(this.config.use_proxy){
+                 return this.connect_to_proxy();
+             }
+        },
         // releases ressources holds by the model at the end of life of the posmodel
         destroy: function(){
             // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
@@ -93,18 +97,19 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.barcode_reader.disconnect();
             this.barcode_reader.disconnect_from_proxy();
         },
+
         connect_to_proxy: function(){
             var self = this;
             var  done = new $.Deferred();
             this.barcode_reader.disconnect_from_proxy();
-            this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            this.pos_widget.loading_skip(function(){
+            this.chrome.loading_message(_t('Connecting to the PosBox'),0);
+            this.chrome.loading_skip(function(){
                     self.proxy.stop_searching();
                 });
             this.proxy.autoconnect({
                     force_ip: self.config.proxy_ip || undefined,
                     progress: function(prog){ 
-                        self.pos_widget.loading_progress(prog);
+                        self.chrome.loading_progress(prog);
                     },
                 }).then(function(){
                     if(self.config.iface_scan_via_proxy){
@@ -114,13 +119,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     done.resolve();
                 });
             return done;
-        },
-
-        // helper function to load data from the server. Obsolete use the models loader below.
-        fetch: function(model, fields, domain, ctx){
-            this._load_progress = (this._load_progress || 0) + 0.05; 
-            this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
-            return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
 
         // Server side model loaders. This is the list of the models that need to be loaded from
@@ -397,7 +395,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         }, {
             label: 'barcodes',
             loaded: function(self) {
-                var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
+                var barcode_parser = new instance.barcodes.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
                 self.barcode_reader.set_barcode_parser(barcode_parser);
                 return barcode_parser.is_loaded();
             },
@@ -417,7 +415,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     loaded.resolve();
                 }else{
                     var model = self.models[index];
-                    self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {
@@ -593,7 +591,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var self = this;
 
             if(order){
-                this.proxy.log('push_order',order.export_as_JSON());
                 this.db.add_order(order.export_as_JSON());
             }
             
@@ -649,7 +646,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 transfer.pipe(function(order_server_id){    
 
                     // generate the pdf and download it
-                    self.pos_widget.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
+                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
                         active_ids:order_server_id,
                     }});
 
@@ -722,9 +719,9 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     if (error.data.exception_type == 'warning') {
                         delete error.data.debug;
                     }
-                    self.pos_widget.screen_selector.show_popup('error-traceback',{
-                        message: error.data.message,
-                        comment: error.data.debug
+                    self.gui.show_popup('error-traceback',{
+                        'title': error.data.message,
+                        'body':  error.data.debug
                     });
                 }
                 // prevent an error popup creation by the rpc failure
@@ -755,6 +752,96 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return true;
         },
     });
+
+    // Add fields to the list of read fields when a model is loaded
+    // by the point of sale.
+    // e.g: module.load_fields("product.product",['price','category'])
+
+    module.load_fields = function(model_name, fields) {
+        if (!(fields instanceof Array)) {
+            fields = [fields];
+        }
+
+        var models = module.PosModel.prototype.models;
+        for (var i = 0; i < models.length; i++) {
+            var model = models[i];
+            if (model.model === model_name) {
+                // if 'fields' is empty all fields are loaded, so we do not need
+                // to modify the array
+                if ((model.fields instanceof Array) && model.fields.length > 0) {
+                    model.fields = model.fields.concat(fields || []);
+                }
+            }
+        }
+    };
+
+    // Loads openerp models at the point of sale startup.
+    // load_models take an array of model loader declarations.
+    // - The models will be loaded in the array order. 
+    // - If no openerp model name is provided, no server data
+    //   will be loaded, but the system can be used to preprocess
+    //   data before load.
+    // - loader arguments can be functions that return a dynamic
+    //   value. The function takes the PosModel as the first argument
+    //   and a temporary object that is shared by all models, and can
+    //   be used to store transient information between model loads.
+    // - There is no dependency management. The models must be loaded
+    //   in the right order. Newly added models are loaded at the end
+    //   but the after / before options can be used to load directly
+    //   before / after another model.
+    //
+    // models: [{
+    //  model: [string] the name of the openerp model to load.
+    //  label: [string] The label displayed during load.
+    //  fields: [[string]|function] the list of fields to be loaded. 
+    //          Empty Array / Null loads all fields.
+    //  order:  [[string]|function] the models will be ordered by 
+    //          the provided fields
+    //  domain: [domain|function] the domain that determines what
+    //          models need to be loaded. Null loads everything
+    //  ids:    [[id]|function] the id list of the models that must
+    //          be loaded. Overrides domain.
+    //  context: [Dict|function] the openerp context for the model read
+    //  condition: [function] do not load the models if it evaluates to
+    //             false.
+    //  loaded: [function(self,model)] this function is called once the 
+    //          models have been loaded, with the data as second argument
+    //          if the function returns a deferred, the next model will
+    //          wait until it resolves before loading.
+    // }]
+    //
+    // options:
+    //   before: [string] The model will be loaded before the named models
+    //           (applies to both model name and label)
+    //   after:  [string] The model will be loaded after the (last loaded)
+    //           named model. (applies to both model name and label)
+    //
+    module.load_models = function(models,options) {
+        options = options || {};
+        if (!(models instanceof Array)) {
+            models = [models];
+        }
+
+        var pmodels = module.PosModel.prototype.models;
+        var index = pmodels.length;
+        if (options.before) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.before ||
+                        pmodels[i].label === options.before ){
+                    index = i;
+                    break;
+                }
+            }
+        } else if (options.after) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.after ||
+                        pmodels[i].label === options.after ){
+                    index = i + 1;
+                }
+            }
+        }
+        pmodels.splice.apply(pmodels,[index,0].concat(models));
+    };
 
     var orderline_id = 1;
 
@@ -1107,7 +1194,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.pos            = options.pos; 
             this.selected_orderline   = undefined;
             this.selected_paymentline = undefined;
-            this.screen_data    = {};  // see ScreenSelector
+            this.screen_data    = {};  // see Gui
             this.temporary      = options.temporary || false;
             this.creation_date  = new Date();
             this.to_invoice     = false;
@@ -1236,7 +1323,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                         qweb.default_dict = _.clone(QWeb.default_dict);
                         qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
                     
-                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.pos_widget,'order':self, 'receipt': receipt}) ;
+                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.chrome,'order':self, 'receipt': receipt}) ;
                 }
             }
 
