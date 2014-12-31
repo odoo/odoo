@@ -753,6 +753,10 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
     });
 
+    // Add fields to the list of read fields when a model is loaded
+    // by the point of sale.
+    // e.g: module.load_fields("product.product",['price','category'])
+
     module.load_fields = function(model_name, fields) {
         if (!(fields instanceof Array)) {
             fields = [fields];
@@ -762,6 +766,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         for (var i = 0; i < models.length; i++) {
             var model = models[i];
             if (model.model === model_name) {
+                // if 'fields' is empty all fields are loaded, so we do not need
+                // to modify the array
                 if ((model.fields instanceof Array) && model.fields.length > 0) {
                     model.fields = model.fields.concat(fields || []);
                 }
@@ -769,6 +775,47 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         }
     };
 
+    // Loads openerp models at the point of sale startup.
+    // load_models take an array of model loader declarations.
+    // - The models will be loaded in the array order. 
+    // - If no openerp model name is provided, no server data
+    //   will be loaded, but the system can be used to preprocess
+    //   data before load.
+    // - loader arguments can be functions that return a dynamic
+    //   value. The function takes the PosModel as the first argument
+    //   and a temporary object that is shared by all models, and can
+    //   be used to store transient information between model loads.
+    // - There is no dependency management. The models must be loaded
+    //   in the right order. Newly added models are loaded at the end
+    //   but the after / before options can be used to load directly
+    //   before / after another model.
+    //
+    // models: [{
+    //  model: [string] the name of the openerp model to load.
+    //  label: [string] The label displayed during load.
+    //  fields: [[string]|function] the list of fields to be loaded. 
+    //          Empty Array / Null loads all fields.
+    //  order:  [[string]|function] the models will be ordered by 
+    //          the provided fields
+    //  domain: [domain|function] the domain that determines what
+    //          models need to be loaded. Null loads everything
+    //  ids:    [[id]|function] the id list of the models that must
+    //          be loaded. Overrides domain.
+    //  context: [Dict|function] the openerp context for the model read
+    //  condition: [function] do not load the models if it evaluates to
+    //             false.
+    //  loaded: [function(self,model)] this function is called once the 
+    //          models have been loaded, with the data as second argument
+    //          if the function returns a deferred, the next model will
+    //          wait until it resolves before loading.
+    // }]
+    //
+    // options:
+    //   before: [string] The model will be loaded before the named models
+    //           (applies to both model name and label)
+    //   after:  [string] The model will be loaded after the (last loaded)
+    //           named model. (applies to both model name and label)
+    //
     module.load_models = function(models,options) {
         options = options || {};
         if (!(models instanceof Array)) {
