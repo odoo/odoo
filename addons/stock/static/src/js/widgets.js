@@ -1061,4 +1061,14 @@ function openerp_picking_widgets(instance){
 openerp.stock = function(openerp) {
     openerp.stock = openerp.stock || {};
     openerp_picking_widgets(openerp);
+
+    openerp.web_kanban.KanbanRecord.include({
+        on_card_clicked: function() {
+            if (this.view.dataset.model === 'stock.picking.type') {
+                this.$('.oe_kanban_stock_picking_type_list').first().click();
+            } else {
+                this._super.apply(this, arguments);
+            }
+        },
+    });
 }
