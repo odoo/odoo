@@ -76,60 +76,17 @@ openerp.voip = function(openerp) {
                         }
                     });
                     //Bind action when the call is answered
-                    self.session.on('accepted',function(result){
-                        console.log("ACCEPTED");
-                        console.log(result);
-                        self.onCall = true;
-                        clearTimeout(self.timer);
-                        var ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
-                        self.trigger('sip_accepted');
-                        if(self.always_transfert){
-                            self.session.refer(self.physical_phone);
-                        }
-                    });
+                    self.session.on('accepted',_.bind(self.accepted,self));
                     //Bind action when the call is in progress to catch the ringing phase
-                    self.session.on('progress', function (response) {
-                        console.log("PROGRESS");console.log(response);
-                        if(response.reason_phrase == "Ringing"){
-                            self.trigger('sip_ringing');
-                            var ringbacktone = document.getElementById("ringbacktone");
-                            ringbacktone.play();
-                            //set the timer to stop the call if ringing too long
-                            self.timer = setTimeout(function(){
-                                self.trigger('sip_rejected');
-                                self.session.cancel();
-                            },4000*self.ring_number);
-                        }
-                    });
+                    self.session.on('progress', _.bind(self.progress,self));
                     //Bind action when the call is rejected by the customer
-                    self.session.on('rejected',function(){
-                        console.log("REJECTED");
-                        self.session = false;
-                        clearTimeout(self.timer);
-                        self.trigger('sip_rejected');
-                        var ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
-                    });
+                    self.session.on('rejected',_.bind(self.rejected,self));
                     //Bind action when the call is transfered
                     self.session.on('refer',function(response){console.log("REFER");console.log(response);});
                     //Bind action when the user hangup the call while ringing
-                    self.session.on('cancel',function(){
-                        console.log("CANCEL");
-                        self.session = false;
-                        clearTimeout(self.timer);
-                        var ringbacktone = document.getElementById("ringbacktone");
-                        ringbacktone.pause();
-                        self.trigger('sip_cancel');
-                    });
+                    self.session.on('cancel',_.bind(self.cancel,self));
                     //Bind action when the call is hanged up
-                    self.session.on('bye',function(){
-                        console.log("BYE");
-                        clearTimeout(self.timer);
-                        self.trigger('sip_bye');
-                        self.session = false;
-                        self.onCall = false;
-                    });
+                    self.session.on('bye',_.bind(self.bye,self));
                 }catch(err){
                     self.trigger('sip_error');
                 }
@@ -138,6 +95,60 @@ openerp.voip = function(openerp) {
 
         getUserMediaFailure: function(e) {
             console.error('getUserMedia failed:', e);
+        },
+
+        rejected: function(){
+            console.log("REJECTED");
+            this.session = false;
+            clearTimeout(this.timer);
+            this.trigger('sip_rejected');
+            this.ringbacktone = document.getElementById("ringbacktone");
+            ringbacktone.pause();
+        },
+
+        bye: function(){
+            console.log("BYE");
+            clearTimeout(this.timer);
+            this.trigger('sip_bye');
+            this.session = false;
+            this.onCall = false;
+        },
+
+        progress: function(response){
+            console.log("PROGRESS");console.log(response);
+            var self = this;
+            if(response.reason_phrase == "Ringing"){
+                this.trigger('sip_ringing');
+                var ringbacktone = document.getElementById("ringbacktone");
+                ringbacktone.play();
+                //set the timer to stop the call if ringing too long
+                this.timer = setTimeout(function(){
+                    self.trigger('sip_rejected');
+                    self.session.cancel();
+                },4000*self.ring_number);
+            }
+        },
+
+        accepted: function(result){
+            console.log("ACCEPTED");
+            console.log(result);
+            this.onCall = true;
+            clearTimeout(this.timer);
+            var ringbacktone = document.getElementById("ringbacktone");
+            ringbacktone.pause();
+            this.trigger('sip_accepted');
+            if(this.always_transfert){
+                this.session.refer(this.physical_phone);
+            }
+        },
+
+        cancel: function(){
+            console.log("CANCEL");
+            this.session = false;
+            clearTimeout(this.timer);
+            var ringbacktone = document.getElementById("ringbacktone");
+            ringbacktone.pause();
+            this.trigger('sip_cancel');
         },
 
         make_call: function(number){

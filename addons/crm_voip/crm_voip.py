@@ -135,7 +135,7 @@ class crm_lead(models.Model):
             'opportunity_id': self.id,
             'partner_id': self.partner_id.id,
             'state': 'to_do',
-            'partner_phone': self.opportunity_id.phone or self.partner_id.phone,
+            'partner_phone': self.phone or self.partner_id.phone,
             'in_queue': True,
         })
         return {

@@ -4,7 +4,6 @@
 
 <openerp>
     <data>
-
         <record model="web.tip" id="voip_tip_1">
             <field name="title"></field>
             <field name="description">Changing the phone number will not change the phone numbers already in the call queue</field>
@@ -12,7 +11,7 @@
             <field name="model">res.partner</field>
             <field name="mode">form</field>
             <field name="trigger_selector">.oe_group_right table tbody tr:nth-child(2):visible</field>
-            <field name="highlight_selector">.oe_group_right table tbody tr:nth-child(2) label, .oe_group_right table tbody tr:nth-child(2) .oe_form_char_content</field>
+            <field name="highlight_selector">.oe_form_sheet>table .oe_group_right tbody tr:nth-child(2) label</field>
             <field name="end_event">mouseup</field>
             <field name="placement">auto bottom</field>
         </record>

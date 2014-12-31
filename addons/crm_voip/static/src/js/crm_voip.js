@@ -213,7 +213,7 @@ openerp.crm_voip = function(instance) {
             var id = this.current_phonecall.id;
             this.UI.start_ringing(id);
             //Select the current call if not already selected
-            if(this.selected_phonecall.get('id') !== id ){
+            if(this.selected_phonecall && this.selected_phonecall.get('id') !== id ){
                 openerp.client.action_manager.do_action({
                     type: 'ir.actions.client',
                     tag: 'select_call',
@@ -251,14 +251,16 @@ openerp.crm_voip = function(instance) {
             var self = this;
             this.on_call = false;
             var id = this.current_phonecall.id;
-            new openerp.web.Model("crm.phonecall").call("hangup_call", [id]).then(function(result){
-                var duration = parseFloat(result.duration).toFixed(2);
-                self.logCall(duration);
-                self.UI.remove_mic();
-                if(!self.in_automatic_mode){
-                   self.stop_automatic_call();
-                }
-            });
+            new openerp.web.Model("crm.phonecall").call("hangup_call", [id]).then(_.bind(self.hangup_call,self));
+        },
+
+        hangup_call: function(result){
+            var duration = parseFloat(result.duration).toFixed(2);
+            this.logCall(duration);
+            this.UI.remove_mic();
+            if(!this.in_automatic_mode){
+               this.stop_automatic_call();
+            }
         },
 
         sip_error: function(){
