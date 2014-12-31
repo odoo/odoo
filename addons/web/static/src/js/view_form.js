@@ -1788,6 +1788,11 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(instance.web.P
 // Specialization of InvisibilityChanger for the `notebook` form element to handle more
 // elegantly its special cases (i.e. activate the closest visible sibling)
 instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityChanger.extend({
+    // Override start so that it does not call _check_visibility since it will be
+    // called again when view content will be loaded (event view_content_has_changed)
+    start: function() {
+        this.on("change:effective_invisible", this, this._check_visibility);
+    },
     _check_visibility: function() {
         this._super();
         if (this.get("effective_invisible") === true) {
@@ -1803,13 +1808,12 @@ instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityCh
         } else {
             // Switch to visible
             // If there is no visible active sibling, set this element as active,
-            // otherwise:
-            //      if that sibling has autofocus, do nothing
-            //      otherwise, remove that sibling as active and set this element as active
+            // otherwise if that sibling hasn't autofocus and if we are in edit mode,
+            //    remove that sibling as active and set this element as active
             var visible_active_sibling = this.$el.siblings(':not(.oe_form_invisible).active');
             if (!(visible_active_sibling.length)) {
                 this.$el.addClass('active');
-            } else if (!$(visible_active_sibling[0]).data('autofocus')) {
+            } else if (!$(visible_active_sibling[0]).data('autofocus') && this._ic_field_manager.get('actual_mode') === "edit") {
                 this.$el.addClass('active');
                 $(visible_active_sibling[0]).removeClass('active');
             }
