@@ -238,7 +238,7 @@
                 $(tip.end_selector).one(tip.end_event, function($ev) {
                     self.end_tip(tip);
                     def.resolve();
-                }); // TODO : drag and drop problem (if end_selector change its location, event is not triggered...)
+                });
 
                 // dismiss tip
                 $cross.on('click', function($ev) {
