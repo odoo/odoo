@@ -58,8 +58,9 @@
   Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
-    work_ids:
+    timesheet_ids:
       - date: !eval time.strftime('%Y-05-%d %H:%M:%S')
-        hours: 10.0
+        unit_amount: 10.0
         name: Get work calendar of all employees
         user_id: res_users_hrmanager0
+        account_id: analytic.analytic_administratif

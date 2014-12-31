@@ -6,6 +6,9 @@
             <field name="model">project.issue</field>
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
             <field name="arch" type="xml">
+                <field name="task_id"  position="after">
+                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
+                </field>
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">on_change_project(project_id)</attribute>
                 </field>
@@ -39,5 +42,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="project_issue_tree_view_inherited" model="ir.ui.view">
+            <field name="name">Project Issue Tracker Tree Inherited</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_tree_view" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
