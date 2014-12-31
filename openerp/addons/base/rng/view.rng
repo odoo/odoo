@@ -708,6 +708,7 @@
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="class"/></rng:optional>
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
+            <rng:optional><rng:attribute name="tour_id"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />
@@ -728,7 +729,6 @@
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
-
         </rng:element>
     </rng:define>
 
