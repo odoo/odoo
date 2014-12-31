@@ -93,29 +93,41 @@ class StyleStack:
                 'left':     TXT_ALIGN_LT,
                 'right':    TXT_ALIGN_RT,
                 'center':   TXT_ALIGN_CT,
+                '_order':   1,
             },
             'underline': {
                 'off':      TXT_UNDERL_OFF,
                 'on':       TXT_UNDERL_ON,
                 'double':   TXT_UNDERL2_ON,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC -
+                '_order':   10,
             },
             'bold': {
                 'off':      TXT_BOLD_OFF,
                 'on':       TXT_BOLD_ON,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC E
+                '_order':   10,
             },
             'font': {
                 'a':        TXT_FONT_A,
                 'b':        TXT_FONT_B,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC M
+                '_order':   10,
             },
             'size': {
                 'normal':           TXT_NORMAL,
                 'double-height':    TXT_2HEIGHT,
                 'double-width':     TXT_2WIDTH,
                 'double':           TXT_DOUBLE,
+                '_order':           1,
             },
             'color': {
                 'black':    TXT_COLOR_BLACK,
                 'red':      TXT_COLOR_RED,
+                '_order':   1,
             },
         }
 
@@ -169,7 +181,10 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        for style in self.cmds:
+        # Sort commands because some commands affect others (see _order attributes above)
+        ordered_cmds = self.cmds.keys()
+        ordered_cmds.sort(lambda x, y: cmp(self.cmds[x]['_order'], self.cmds[y]['_order']))
+        for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd
 
