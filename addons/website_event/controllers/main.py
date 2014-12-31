@@ -24,6 +24,8 @@ class website_event(http.Controller):
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
+        searches.setdefault('search', '')
+        searches.setdefault('search_category', '')
 
         domain_search = {}
 
@@ -79,6 +81,12 @@ class website_event(http.Controller):
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
         elif searches["country"] == 'online':
             domain_search["country"] = [("country_id", "=", False)]
+
+        if searches['search']:
+            domain_search["search"] = [('name', 'ilike', searches['search'])]
+
+        if searches['search_category']:
+            domain_search["search_category"] = [('type', 'ilike', searches['search_category'])]
 
         def dom_without(without):
             domain = [('state', "in", ['draft', 'confirm', 'done'])]
@@ -141,6 +149,8 @@ class website_event(http.Controller):
             'current_date': current_date,
             'current_country': current_country,
             'current_type': current_type,
+            'current_category': searches['search_category'],
+            'current_search': searches['search'],
             'event_ids': events_ids,
             'dates': dates,
             'types': types,
