@@ -37,7 +37,7 @@
                             $link.parent().append($warning);
                         }
                     } else {
-                        $link.parent().find("#vote_count").html(data['vote_count']);
+                        $link.parent().find(".vote_count").html(data['vote_count']);
                         if (data['user_vote'] == 0) {
                             $link.parent().find(".text-success").removeClass("text-success");
                             $link.parent().find(".text-warning").removeClass("text-warning");
