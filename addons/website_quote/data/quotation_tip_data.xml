@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <record model="web.tip" id="quotation_tip_1">
-            <field name="title"></field>
-            <field name="description"><![CDATA[Click here to see the polished and professional proposal that is automatically created. The customer will be able to sign it online.]]></field>
+            <field name="title">Online quotation</field>
+            <field name="description"><![CDATA[By clicking here, you can see the polished and professional proposal that is automatically created. The customer will be able to sign it online.]]></field>
             <field name="model">sale.order</field>
             <field name="mode">form</field>
-            <field name="trigger_selector">.oe_form_buttons_view:visible, header >.oe_button.oe_form_button:nth-child(3):not(.oe_form_invisible)</field>
-            <field name="highlight_selector">header >.oe_button.oe_form_button:nth-child(3):not(.oe_form_invisible)</field>
+            <field name="trigger_selector">.oe_form_buttons_view,header #preview_quotation.oe_highlight:visible</field>
+            <field name="highlight_selector">header #preview_quotation.oe_highlight</field>
             <field name="placement">bottom</field>
         </record>
     </data>

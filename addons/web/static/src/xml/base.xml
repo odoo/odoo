@@ -771,7 +771,8 @@
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled' : ''"
-        ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-id="widget.tour_id">
+        <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
         t-att-alt="widget.string"/></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
@@ -1496,7 +1497,8 @@
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-accesskey="widget.node.attrs.accesskey">
+        t-att-accesskey="widget.node.attrs.accesskey"
+        t-att-id="widget.node.attrs.tour_id">
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
