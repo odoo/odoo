@@ -132,10 +132,6 @@ class account_installer(models.TransientModel):
                         'company_id': res.company_id.id
                     }
                     fiscal_year = fy_obj.create(vals)
-                    if res.period == 'month':
-                        fiscal_year.create_period()
-                    elif res.period == '3months':
-                        fiscal_year.create_period3()
 
     @api.multi
     def modules_to_install(self):
