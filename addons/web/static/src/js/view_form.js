@@ -3316,7 +3316,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
 // jquery autocomplete tweak to allow html and classnames
 (function() {
     var proto = $.ui.autocomplete.prototype,
-        initSource = proto._initSource;
+        initSource = proto._initSource,
+        create = proto._create;
 
     function filter( array, term ) {
         var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
@@ -3342,6 +3343,10 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
                 .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
                 .appendTo( ul )
                 .addClass(item.classname);
+        },
+        _create: function() {
+            create.call(this);
+            this.menu.element.zIndex( this.element.zIndex() + 1 );
         }
     });
 })();
