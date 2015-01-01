@@ -1678,13 +1678,7 @@
         <field name="type">percent</field>
         <field name="account_collected_id" ref="pcg_4441"/>
         <field name="account_paid_id" ref="pcg_4449"/>
-        <field name="base_code_id" ref="tax_col_18_ht"/>
-        <field name="tax_code_id" ref="tax_col_18"/>
         <field name="type_tax_use">sale</field>        
-        <field name="ref_base_code_id" ref="tax_col_18_ht"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_code_id" ref="tax_col_18"/>
-        <field name="ref_tax_sign" eval="-1"/>        
     </record>
 
     <record model="account.tax.template" id="tva_purchase_18">
@@ -1695,12 +1689,6 @@
         <field name="type_tax_use">purchase</field>    
         <field name="account_collected_id" ref="pcg_4441"/>
         <field name="account_paid_id" ref="pcg_4449"/>
-        <field name="base_code_id" ref="tax_acq_18_ht"/>
-        <field name="tax_code_id" ref="tax_acq_18"/>
-        <field name="ref_base_code_id" ref="tax_acq_18_ht"/>
-        <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_code_id" ref="tax_acq_18"/>
-        <field name="ref_tax_sign" eval="-1"/>        
     </record>    
 
     <record model="account.tax.template" id="tva_exonere">
