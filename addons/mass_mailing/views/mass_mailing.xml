@@ -396,7 +396,8 @@
 
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
-                                    options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain'}"/>
+                                    options="{'model_field': 'mailing_model', 'model_domain': 'mailing_domain'}"
+                                    context="{'search_default_not_opt_out':1}"/>
 
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
