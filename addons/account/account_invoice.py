@@ -1267,7 +1267,7 @@ class account_invoice_line(models.Model):
 
         values['name'] = product.partner_ref
         account = self.get_invoice_line_account(product, fpos)
-        values['account_id'] = account
+        values['account_id'] = account.id
 
         if type in ('out_invoice', 'out_refund'):
             taxes = product.taxes_id or account.tax_ids
