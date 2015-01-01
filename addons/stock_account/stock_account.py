@@ -22,6 +22,8 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID, api
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+import time
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -245,11 +247,11 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, move.date, context=context)[0])
+            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, context=context)[0])
             move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
                                       'period_id': period_id,
-                                      'date': move.date,
+                                      'date': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
                                       'ref': move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
