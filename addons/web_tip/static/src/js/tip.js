@@ -157,7 +157,6 @@
         },
 
         do_tip: function (tip) {
-            console.log(tip);
             var self = this;
             var def = $.Deferred();
             var Tips = new instance.web.Model('web.tip');
@@ -166,7 +165,6 @@
             var trigger_tip = true;
 
             if(!$(highlight_selector).length > 0 || !$(highlight_selector).is(":visible")) {
-                console.log($(highlight_selector).length + " " + $(highlight_selector).is(":visible"));
                 return def.reject();
             }
             for (var i = 0; i < triggers.length; i++) {
@@ -174,8 +172,6 @@
                     trigger_tip = false;
                 }
             }
-
-            console.log("trigger_tip:" + trigger_tip);
 
             if (trigger_tip) {
                 self.$element = $(highlight_selector).first();
