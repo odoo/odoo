@@ -130,7 +130,7 @@ class Website_less(Website):
                 raise werkzeug.exceptions.NotFound()
                 env.ref
             if model == 'ir.attachment' and not field:
-                if record.type == 'url':
+                if record.sudo().type == 'url':
                     field = "url"
                 else:
                     field = "datas"
