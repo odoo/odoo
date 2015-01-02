@@ -561,10 +561,10 @@
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
-                        <button name="%(action_bank_reconcile_bank_statements)d" states="draft" string="Reconcile" type="action" class="oe_highlight"/>
+                        <button name="%(action_bank_reconcile_bank_statements)d" states="draft" string="Reconcile" type="action" class="oe_highlight" tour_id="reconcile_statement"/>
                     </span>
                     <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
-                        <button name="button_confirm_bank" states="draft" string="Close" type="object" class="oe_highlight"/>
+                        <button name="button_confirm_bank" states="draft" string="Close" type="object" class="oe_highlight" tour_id="close_statement"/>
                     </span>
                     <button name="button_cancel" states="confirm" string="Cancel Statement" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
@@ -2342,7 +2342,7 @@
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
                     <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
-                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight"/>
+                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight" tour_id="reconcile_statement"/>
                     </span>
                     <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
                         <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>

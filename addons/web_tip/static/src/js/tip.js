@@ -58,7 +58,7 @@
         on_view: function(view) {
             var self = this;
             var fields_view = view.fields_view;
-            var action_id = view.ViewManager.action ? view.ViewManager.action.id : null;
+            self.action_id = view.ViewManager.action ? view.ViewManager.action.id : null;
             var model = fields_view.model;
 
             // kanban
@@ -73,14 +73,14 @@
                     groups_def.resolve();
                 });
                 dataset_def.done(function(length) {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
                 groups_def.done(function() {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
             } else if (fields_view.type === 'tree') {
                 view.on('view_list_rendered', self, function() {
-                    self.eval_tip(action_id, model, fields_view.type);
+                    self.eval_tip(model, fields_view.type);
                 });
             } else if (view.hasOwnProperty('editor')) {
                 view.on('view_list_rendered', self, function() {
@@ -95,14 +95,14 @@
             var type = formView.datarecord.type ? formView.datarecord.type : null;
             var mode = 'form';
             formView.on('view_content_has_changed', self, _.once(function() {
-                self.eval_tip(null, model, mode, type);
+                self.eval_tip(model, mode, type);
             }));
             if ($('.oe_chatter').length > 0) {
                 instance.web.bus.on('chatter_messages_fetched', this, _.once(function () {
-                    self.eval_tip(null, model, mode, type);
+                    self.eval_tip(model, mode, type);
                 }));
             } else {
-                self.eval_tip(null, model, mode, type);
+                self.eval_tip(model, mode, type);
             }
         },
 
@@ -114,20 +114,21 @@
             var model = action.res_model;
         },
 
-        eval_tip: function(action_id, model, mode, type) {
+        eval_tip: function(model, mode, type) {
             var self = this;
             var filter = {};
             var valid_tips = [];
             var tips = [];
-            if (action_id) {
+            if (self.action_id) {
                 valid_tips = _.filter(self.tips, function (tip) {
-                    return tip.action_id[0] === action_id;
+                    return !tip.action_id[0] || tip.action_id[0] === self.action_id;
                 });
             }
 
             filter.model = model;
+            if(mode === "list") mode = "tree";
             filter.mode = mode;
-            tips = _.where(self.tips, filter);
+            tips = _.where(valid_tips, filter);
             if (type) {
                 tips = _.filter(tips, function(tip) {
                     if (!tip.type) {
@@ -137,7 +138,7 @@
                 });
             }
 
-            valid_tips = _.uniq(valid_tips.concat(tips));
+            valid_tips = _.uniq(tips);
             _.each(valid_tips, function(tip) {
                 if (!tip.is_consumed) {
                     self.add_tip(tip);
@@ -243,6 +244,7 @@
                 self.$overlay.on('click', function($ev) {
                     self.end_tip(tip);
                     def.resolve();
+
                 });
                 $(document).on('keyup.web_tip', function($ev) {
                     if ($ev.which === 27) { // esc
@@ -250,7 +252,6 @@
                         def.resolve();
                     }
                 });
-
                 // resize
                 instance.web.bus.on('resize', this, function() {
                     self.reposition();
