@@ -10,6 +10,21 @@ openerp.report = function(instance) {
         });
     }
 
+    var show_pdf = function(session, response, c, options, self) {
+        response.push("pdf_viewer");
+        session.show_pdf({
+            url: '/report/download',
+            data: {data: JSON.stringify(response)},
+            complete: function(){
+                openerp.web.unblockUI();
+                if (self.dialog) {
+                    self.dialog_stop();
+                }
+            },
+            error: c.rpc_error.bind(c)
+        });
+    }
+
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
             var self = this;
