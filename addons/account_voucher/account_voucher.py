@@ -1284,9 +1284,13 @@ class account_voucher(osv.osv):
 
             if not currency_obj.is_zero(cr, uid, voucher.company_id.currency_id, currency_rate_difference):
                 # Change difference entry in company currency
+                exch_context = context.copy()
+                exch_context['verify_amount_currency'] = False
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, currency_rate_difference, company_currency, current_currency, context=context)
-                new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
-                move_line_obj.create(cr, uid, exch_lines[1], context)
+                new_id = move_line_obj.create(cr, uid, exch_lines[0],
+                                              context=exch_context)
+                move_line_obj.create(cr, uid, exch_lines[1],
+                                     context=exch_context)
                 rec_ids.append(new_id)
 
             if line.move_line_id and line.move_line_id.currency_id and not currency_obj.is_zero(cr, uid, line.move_line_id.currency_id, foreign_currency_diff):

@@ -615,9 +615,6 @@ class account_move_line(osv.osv):
         for l in self.browse(cr, uid, ids, context=context):
             amount_currency_is_zero = float_is_zero(l.amount_currency,
                                                     precision_digits=digits)
-            # Require a non-zero amount if there is a currency
-            if amount_currency_is_zero and l.currency_id:
-                return False
             # Forbid a non-zero amount if there is no currency
             if not amount_currency_is_zero and not l.currency_id:
                 return False
@@ -1236,6 +1233,18 @@ class account_move_line(osv.osv):
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+
+        verify_amount_currency = context.get('verify_amount_currency', True)
+        if vals.get('currency_id') and verify_amount_currency:
+            digits = self.pool['decimal.precision'].precision_get(
+                cr, SUPERUSER_ID, 'Account')
+            amount_currency_is_zero = float_is_zero(
+                vals.get('amount_currency'),
+                precision_digits=digits)
+            if amount_currency_is_zero:
+                raise orm.except_orm(
+                    _('Validation Error'),
+                    _('The amount in secondary currency is missing'))
 
         result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
