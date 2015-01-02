@@ -3268,14 +3268,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         });
     },
     set_value: function (value_) {
-        if (value_) {
-            if (this.field.type == "selection") {
-                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
-            }
-            else if (!this.selection.length) {
-                this.selection = [value_];
-            }
+        if (this.field.type == "selection") {
+            value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
         }
+        else if (!this.selection.length) {
+            this.selection = [value_];
+        }
+
         this._super(value_);
     },
     get_value: function () {
@@ -3285,10 +3284,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     render_value: function () {
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        if (this.get_value()) {
-            this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
-            this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
-        }
+        this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
+        this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
 
