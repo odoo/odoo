@@ -213,12 +213,8 @@ openerp.crm_voip = function(instance) {
             var id = this.current_phonecall.id;
             this.UI.start_ringing(id);
             //Select the current call if not already selected
-            if(this.selected_phonecall && this.selected_phonecall.get('id') !== id ){
-                openerp.client.action_manager.do_action({
-                    type: 'ir.actions.client',
-                    tag: 'select_call',
-                    params: {'phonecall_id': id}
-                });
+            if(!this.selected_phonecall || this.selected_phonecall.get('id') !== id ){
+                this.select_call(id);
             }
         },
 
@@ -706,13 +702,7 @@ openerp.crm_voip = function(instance) {
         return { type: 'ir.actions.act_window_close' };
     };
 
-    openerp.crm_voip.select_call = function(parent, action){
-        var params = action.params || {};
-        openerp.web.bus.trigger('select_call', params.phonecall_id);
-    };
-
     instance.web.client_actions.add("reload_panel", "openerp.crm_voip.reload_panel");
     instance.web.client_actions.add("transfer_call","openerp.crm_voip.transfer_call");
-    instance.web.client_actions.add("select_call","openerp.crm_voip.select_call");
     return crm_voip;
 };
