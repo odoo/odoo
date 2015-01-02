@@ -29,6 +29,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         'click #export_new_list': 'on_show_save_list',
         'click #move_up':'on_click_move_up',
         'click #move_down':'on_click_move_down',
+        'click #sort_list':'on_click_sort_list',
     },
     init: function(parent, dataset) {
         var self = this;
@@ -40,6 +41,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             close: function () { self.close();}
         };
         this._super(parent, options);
+        this.ascending = true;
         this.records = {};
         this.dataset = dataset;
         this.exports = new instance.web.DataSetSearch(
@@ -93,6 +95,22 @@ instance.web.DataExport = instance.web.Dialog.extend({
         if(next_row.length){
             var selected_rows = self.$('#fields_list option:selected').detach();
             next_row.after(selected_rows);
+        }
+    },
+    on_click_sort_list: function () {
+        var export_list = this.$el.find("#fields_list");
+        if (this.ascending === true) {
+            this.$el.find("#sort_list").removeClass("glyphicon glyphicon-arrow-down").addClass("glyphicon glyphicon-arrow-up").prop("title","Sort Descending");
+            export_list.find("option").sort(function (a, b) {
+                return $(a).text().localeCompare($(b).text())
+            }).appendTo(export_list);
+            this.ascending = false;
+        } else {
+            this.$el.find("#sort_list").removeClass("glyphicon glyphicon-arrow-up").addClass("glyphicon glyphicon-arrow-down").prop("title","Sort Ascending");
+            export_list.find("option").sort(function (a, b) {
+                return $(b).text().localeCompare($(a).text())
+            }).appendTo(export_list);
+            this.ascending = true;
         }
     },
     do_setup_export_formats: function (formats) {
