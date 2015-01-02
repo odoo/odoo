@@ -697,7 +697,7 @@
                 <t t-set="answer" t-value="post_answer"/>
             </t>
         </div>
-        <div groups="base.group_user" t-if="question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered and question.state != 'close' and question.active != False">
+        <div t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
             <t t-call="website_forum.post_answer"/>
         </div>
         <div t-if="question.post_type == 'question' and question.uid_has_answered" class="mb16">
