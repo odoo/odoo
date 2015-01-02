@@ -80,7 +80,6 @@
                             </div>
                         </group>
                         <group>
-                            <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
                             <field name="priority" groups="base.group_user" widget="priority"/>
                             <label for="task_id" groups="base.group_user"/>
@@ -94,9 +93,10 @@
                         <page string="Description">
                             <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
                         </page>
-                        <page string="Extra Info" groups="project.group_project_manager,project.group_project_user">
+                        <page string="Extra Info" name="extra_info" groups="project.group_project_manager,project.group_project_user">
                             <group>
-                                <group string="Statistics">
+                                <group>
+                                    <field name="id"/>
                                     <field name="day_open"/>
                                     <field name="day_close"/>
                                     <field name="working_hours_open" widget="float_time"/>
@@ -104,7 +104,7 @@
                                     <field name="inactivity_days"/>
                                     <field name="days_since_creation"/>
                                 </group>
-                                <group string="Status" groups="base.group_no_one">
+                                <group groups="base.group_no_one">
                                     <field name="active"/>
                                 </group>
                             </group>

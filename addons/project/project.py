@@ -912,7 +912,7 @@ class task(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
-        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
+        (_check_dates, 'Error ! Task starting date must be lower then its ending date.', ['date_start','date_end'])
     ]
 
     # Override view according to the company definition
