@@ -76,7 +76,11 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'company_id': order.company_id and order.company_id.id or False,
                 'date_invoice': fields.date.today(),
             }
-            inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+            inv_obj = self.pool.get('account.invoice')
+            inv_id = inv_obj.create(cr, uid, inv)
+
+            # Called to update taxes on invoice created
+            inv_obj.button_compute(cr, uid, [inv_id])
             return inv_id
 
         sales_order_line_obj = self.pool.get('sale.order.line')
