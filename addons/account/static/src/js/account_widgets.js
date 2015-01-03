@@ -1717,22 +1717,22 @@ openerp.account = function (instance) {
             var self = this;
             var line = self._super(mv_line);
             if (!line) return;
+            var last_selected_line = _.last(self.get("mv_lines_selected"));
 
-            // Warn the user if he's selecting lines from both a payable and a receivable account
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
-            if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                self.getParent().crash_manager.show_warning({data: {
-                    exception_type: "Chair-To-Keyboard Interface",
-                    message: _.str.sprintf(_t("You are selecting transactions from accounts of different type : %s and %s."), last_selected_line.account_type, line.account_type)
-                }});
-                return;
-            }
             // Warn the user if he's selecting reconciled and unreconciled lines
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
             if (last_selected_line && last_selected_line.is_reconciled !== line.is_reconciled) {
                 self.getParent().crash_manager.show_warning({data: {
                     exception_type: "Chair-To-Keyboard Interface",
                     message: _t("You cannot mix reconciled and unreconciled items.")
+                }});
+                return;
+            }
+
+            // Warn the user if he's selecting lines from both a payable and a receivable account
+            if (last_selected_line && last_selected_line.account_type != line.account_type) {
+                self.getParent().crash_manager.show_warning({data: {
+                    exception_type: "Chair-To-Keyboard Interface",
+                    message: _.str.sprintf(_t("You are selecting transactions from accounts of different type : %s and %s."), last_selected_line.account_type, line.account_type)
                 }});
                 return;
             }
