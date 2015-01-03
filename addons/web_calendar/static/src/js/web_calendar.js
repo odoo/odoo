@@ -522,7 +522,10 @@ openerp.web_calendar = function(instance) {
                 }
                 else {
                     var res_text= [];
-                    _.each(temp_ret, function(val,key) { res_text.push(val); });
+                    _.each(temp_ret, function(val,key) {
+                        if( typeof(val) == 'boolean' && val == false ) { }
+                        else { res_text.push(val) };
+                    });
                     the_title = res_text.join(', ');
                 }
                 the_title = _.escape(the_title);
@@ -820,10 +823,11 @@ openerp.web_calendar = function(instance) {
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);
-                pop.show_element(this.dataset.model, parseInt(id), this.dataset.get_context(), {
+                var id_cast = parseInt(id).toString() == id ? parseInt(id) : id;
+                pop.show_element(this.dataset.model, id_cast, this.dataset.get_context(), {
                     title: _.str.sprintf(_t("View: %s"),title),
                     view_id: +this.open_popup_action,
-                    res_id: id,
+                    res_id: id_cast,
                     target: 'new',
                     readonly:true
                 });

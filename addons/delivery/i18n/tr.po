@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-28 09:55+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:05+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:47+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -73,6 +73,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir teslimat yöntemi tanımlamak için tıklayın. \n"
+"              </p><p>\n"
+"                Her taşıyıcının (örn. UPS) birçok yöntemi olabilir (örn.\n"
+"                UPS Express, UPS Standard) ve bu yöntemlere ait ödeme "
+"kuralları\n"
+"                olabilir.\n"
+"              </p><p>\n"
+"                Bu yöntemler, ayarlarınıza göre teslimat fiyatlarını\n"
+"                satış siparişlerinde (teklife göre) veya faturada (teslimat\n"
+"                emirlerine göre) otomatik olarak hesaplar.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -117,7 +130,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,available:0
 msgid "Available"
-msgstr ""
+msgstr "Uygun"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -132,7 +145,7 @@ msgstr "Nakliyeci"
 #. module: delivery
 #: view:stock.picking:delivery.view_picking_withcarrier_out_form
 msgid "Carrier Information"
-msgstr ""
+msgstr "Taşıyıcı Bilgisi"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -177,14 +190,14 @@ msgstr "Ülkeler"
 #: field:delivery.grid,create_uid:0
 #: field:delivery.grid.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: delivery
 #: field:delivery.carrier,create_date:0
 #: field:delivery.grid,create_date:0
 #: field:delivery.grid.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturma"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:162
@@ -273,12 +286,12 @@ msgstr "Eğer %.2f den fazla ise ücretsiz"
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
-msgstr ""
+msgstr "Genel Bilgi"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "Teslimat çizelgesini hesaplarken sıralama numarasını verir."
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -357,12 +370,12 @@ msgstr ""
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr ""
+msgstr "Bir teslimattır"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "Taşıma yöntemi geçerli sipariş için olası mıdır."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
@@ -377,14 +390,14 @@ msgstr ""
 #: field:delivery.grid,write_uid:0
 #: field:delivery.grid.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: delivery
 #: field:delivery.carrier,write_date:0
 #: field:delivery.grid,write_date:0
 #: field:delivery.grid.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -410,13 +423,13 @@ msgstr "Net Ağırlık"
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No Grid Available!"
-msgstr ""
+msgstr "Çizelge Mevcut değil!"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:75
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "Bu taşıyıcıyla eşleşen çizelge yok!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -437,7 +450,7 @@ msgstr "Operatör"
 #: code:addons/delivery/sale.py:78
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "Sipariş Taslak Durumda değil!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -490,7 +503,7 @@ msgstr "Satış Siparişi"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Satış Siparişi Satırı"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:237
@@ -499,6 +512,7 @@ msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
 msgstr ""
+"Teslimat çizelgesi kriterlerini karşılamayan ürünü teslimat yönteminde seç."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -561,7 +575,7 @@ msgstr "Nakliye Firması"
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "Teslim yöntemi alınamıyor!"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
@@ -624,7 +638,7 @@ msgstr "Ağırlık * Hacim"
 #. module: delivery
 #: view:website:stock.report_picking
 msgid "Will be invoiced to:"
-msgstr ""
+msgstr "Buna faturalanacak:"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -634,4 +648,4 @@ msgstr "PKodu"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "Bunun yerine"

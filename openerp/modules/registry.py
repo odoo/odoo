@@ -158,15 +158,20 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        # load custom models
+        ir_model = self['ir.model']
+        cr.execute('select model from ir_model where state=%s', ('manual',))
+        for (model_name,) in cr.fetchall():
+            ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
+
         # prepare the setup on all models
         for model in self.models.itervalues():
             model._prepare_setup_fields(cr, SUPERUSER_ID)
 
         # do the actual setup from a clean state
         self._m2m = {}
-        context = {'_setup_fields_partial': partial}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, context=context)
+            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
 
     def clear_caches(self):
         """ Clear the caches
@@ -429,14 +434,6 @@ class RegistryManager(object):
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
-                    # One possible reason caches have been invalidated is the
-                    # use of decimal_precision.write(), in which case we need
-                    # to refresh fields.float columns.
-                    env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-                    for model in registry.values():
-                        for field in model._fields.values():
-                            if field.type == 'float':
-                                field._setup_digits(env)
                 registry.base_registry_signaling_sequence = r
                 registry.base_cache_signaling_sequence = c
             finally:

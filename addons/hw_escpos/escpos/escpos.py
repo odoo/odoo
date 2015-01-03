@@ -6,11 +6,8 @@
 @license: GPL
 '''
 
-try: 
-    import qrcode
-except ImportError:
-    qrcode = None
 
+import logging
 import time
 import copy
 import io
@@ -24,12 +21,19 @@ import xml.dom.minidom as minidom
 
 from PIL import Image
 
+_logger = logging.getLogger(__name__)
+
 try:
     import jcconv
 except ImportError:
     jcconv = None
-    print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
-    print ' # pip install jcconv'
+    _logger.warning('ESC/POS: please install jcconv for improved Japanese receipt printing:\n  # pip install jcconv')
+
+try: 
+    import qrcode
+except ImportError:
+    qrcode = None
+    _logger.warning('ESC/POS: please install the qrcode python module for qrcode printing in point of sale receipts:\n  # pip install qrcode')
 
 from constants import *
 from exceptions import *
@@ -89,29 +93,41 @@ class StyleStack:
                 'left':     TXT_ALIGN_LT,
                 'right':    TXT_ALIGN_RT,
                 'center':   TXT_ALIGN_CT,
+                '_order':   1,
             },
             'underline': {
                 'off':      TXT_UNDERL_OFF,
                 'on':       TXT_UNDERL_ON,
                 'double':   TXT_UNDERL2_ON,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC -
+                '_order':   10,
             },
             'bold': {
                 'off':      TXT_BOLD_OFF,
                 'on':       TXT_BOLD_ON,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC E
+                '_order':   10,
             },
             'font': {
                 'a':        TXT_FONT_A,
                 'b':        TXT_FONT_B,
+                # must be issued after 'size' command
+                # because ESC ! resets ESC M
+                '_order':   10,
             },
             'size': {
                 'normal':           TXT_NORMAL,
                 'double-height':    TXT_2HEIGHT,
                 'double-width':     TXT_2WIDTH,
                 'double':           TXT_DOUBLE,
+                '_order':           1,
             },
             'color': {
                 'black':    TXT_COLOR_BLACK,
                 'red':      TXT_COLOR_RED,
+                '_order':   1,
             },
         }
 
@@ -165,7 +181,10 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        for style in self.cmds:
+        # Sort commands because some commands affect others (see _order attributes above)
+        ordered_cmds = self.cmds.keys()
+        ordered_cmds.sort(lambda x, y: cmp(self.cmds[x]['_order'], self.cmds[y]['_order']))
+        for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd
 
@@ -438,7 +457,12 @@ class Escpos:
             f.seek(0)
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
-            img.paste(img_rgba, mask=img_rgba.split()[3]) 
+            channels = img_rgba.split()
+            if len(channels) > 1:
+                # use alpha channel as mask
+                img.paste(img_rgba, mask=channels[3])
+            else:
+                img.paste(img_rgba)
 
             print 'convert image'
         

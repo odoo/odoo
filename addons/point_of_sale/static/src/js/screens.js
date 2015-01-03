@@ -475,7 +475,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(!product || !this.pos){
                 return defaultstr;
             }
-            var unit_id = product.uos_id || product.uom_id;
+            var unit_id = product.uom_id;
             if(!unit_id){
                 return defaultstr;
             }
@@ -751,6 +751,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             new instance.web.Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
                 self.saved_client_details(partner_id);
+            },function(err,event){
+                event.preventDefault();
+                self.pos_widget.screen_selector.show_popup('error',{
+                    'message':_t('Error: Could not Save Changes'),
+                    'comment':_t('Your Internet connection is probably down.'),
+                });
             });
         },
         
@@ -1255,6 +1261,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     'comment': _t('There must be at least one product in your order before it can be validated'),
                 });
                 return;
+            }
+
+            var plines = currentOrder.get('paymentLines').models;
+            for (var i = 0; i < plines.length; i++) {
+                if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
+                    this.pos_widget.screen_selector.show_popup('error',{
+                        'message': _t('Negative Bank Payment'),
+                        'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
+                    });
+                    return;
+                }
             }
 
             if(!this.is_paid()){

@@ -602,7 +602,8 @@ class website(osv.osv):
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
         model = record._name
-        id = '%s_%s' % (record.id, hashlib.sha1(record.sudo().write_date).hexdigest()[0:7])
+        sudo_record = record.sudo()
+        id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
@@ -684,12 +685,12 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
+        result = dict.fromkeys(ids, False)
+        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
+        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
+        for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
+            result[attach['id']] = self._compute_checksum(attach)
+        return result
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
@@ -705,7 +706,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises

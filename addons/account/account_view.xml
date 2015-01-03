@@ -626,7 +626,7 @@
                             <label for="balance_end" />
                             <button name="button_dummy" states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                         </div>
-                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency'}"/>
                     </group>
                     <div class="oe_clear"/>
                 </sheet>
@@ -702,9 +702,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('type', 'not in', ['view', 'closed', 'consolidation'])]"/>
+                                <field name="account_id"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('type_tax_use', 'in', ['purchase', 'all']), ('parent_id', '=', False)]"/>
+                                <field name="tax_id"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -1084,7 +1084,9 @@
                             <group>
                                 <field name="name"/>
                                 <field name="ref"/>
-                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                <field name="partner_id"
+                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                    on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                             </group>
                             <group>
                                 <field name="journal_id"/>
@@ -1157,7 +1159,9 @@
                                 <field name="journal_id" readonly="False"/>
                                 <field name="period_id" readonly="False"/>
                                 <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
-                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                <field name="partner_id"
+                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                    on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                                 <newline/>
                                 <field name="debit"/>
                                 <field name="credit"/>
@@ -1201,7 +1205,9 @@
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="partner_id"
+                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                        on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                     <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
@@ -1383,7 +1389,9 @@
                                     <group col="6" colspan="4">
                                         <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
+                                        <field name="partner_id"
+                                            domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                            on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
 
                                         <field name="journal_id"/>
                                         <field name="period_id"/>
@@ -1447,7 +1455,9 @@
                                 <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
                                     <field name="invoice"/>
                                     <field name="name"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
+                                    <field name="partner_id"
+                                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                        on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
                                     <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>

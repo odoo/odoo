@@ -15,7 +15,7 @@
                     <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
                     <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                    <field name="categ_id"/>
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.name','ilike',self)]"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
@@ -215,6 +215,7 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -249,6 +250,11 @@
                                 <field string="List of Variants" name="product_variant_count" widget="statinfo" />
                             </button>
                         </div>
+                        <p class="oe_grey">
+                            <strong>Warning</strong>: adding or deleting attributes
+                            will delete and recreate existing variants and lead
+                            to the loss of its eventual customizations.
+                        </p>
                         <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                             <tree string="Variants" editable="bottom">
                                 <field name="attribute_id"/>
@@ -595,7 +601,7 @@
                                 <field name="factor"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','smaller')],
-                                            'readonly':[('uom_type','!=','smaller')]}"/>
+                                            'readonly':[('uom_type','=','bigger')]}"/>
                                 <field name="factor_inv"
                                     digits="[42,5]"
                                     attrs="{'invisible':[('uom_type','!=','bigger')],
@@ -610,7 +616,7 @@
                         </group>
                         <group>
                             <field name="active"/>
-                            <field name="rounding"/>
+                            <field name="rounding" digits="[42, 5]"/>
                         </group>
                     </group>
                 </form>

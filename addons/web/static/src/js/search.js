@@ -598,6 +598,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data;
+        this.view_id = this.view_id || data.view_id;
         if (data.type !== 'search' ||
             data.arch.tag !== 'search') {
                 throw new Error(_.str.sprintf(
@@ -1698,7 +1699,10 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         var values = facet.values;
         if (_.isEmpty(this.attrs.context) && values.length === 1) {
             var c = {};
-            c['default_' + this.attrs.name] = values.at(0).get('value');
+            var v = values.at(0);
+            if (v.get('operator') !== 'ilike') {
+                c['default_' + this.attrs.name] = v.get('value');
+            }
             return c;
         }
         return this._super(facet);
@@ -2362,6 +2366,14 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
                 ev.preventDefault();
                 return;
             }
+            // ENTER is caugth at KeyUp rather than KeyDown to avoid firing
+            // before all regular keystrokes have been processed
+            if (ev.which === $.ui.keyCode.ENTER) {
+                if (self.current_result && self.get_search_string().length) {
+                    self.select_item(ev);
+                }
+                return;
+            }
             if (!self.searching) {
                 self.searching = true;
                 return;
@@ -2376,8 +2388,10 @@ instance.web.search.AutoComplete = instance.web.Widget.extend({
         });
         this.$input.on('keydown', function (ev) {
             switch (ev.which) {
+                // TAB and direction keys are handled at KeyDown because KeyUp
+                // is not guaranteed to fire.
+                // See e.g. https://github.com/aef-/jquery.masterblaster/issues/13
                 case $.ui.keyCode.TAB:
-                case $.ui.keyCode.ENTER:
                     if (self.current_result && self.get_search_string().length) {
                         self.select_item(ev);
                     }

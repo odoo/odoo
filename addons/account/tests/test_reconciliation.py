@@ -73,7 +73,7 @@ class TestReconciliation(TransactionCase):
         checked_line = 0
         for move_line in move_line_ids:
             if move_line.account_id.id == self.account_usd_id:
-                self.assertEquals(move_line.debit, 27.47)
+                self.assertAlmostEquals(move_line.debit, 32.73)
                 self.assertEquals(move_line.credit, 0.0)
                 self.assertEquals(move_line.amount_currency, 42)
                 self.assertEquals(move_line.currency_id.id, self.currency_usd_id)
@@ -81,13 +81,13 @@ class TestReconciliation(TransactionCase):
                 continue
             if move_line.account_id.id == self.account_rcv_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertEquals(move_line.credit, 38.21)
+                self.assertAlmostEquals(move_line.credit, 38.21)
                 self.assertEquals(move_line.amount_currency, -50)
                 self.assertEquals(move_line.currency_id.id, self.currency_swiss_id)
                 checked_line += 1
                 continue
             if move_line.account_id.id == self.account_rsa_id:
-                self.assertEquals(move_line.debit, 10.74)
+                self.assertAlmostEquals(move_line.debit, 5.48)
                 self.assertEquals(move_line.credit, 0.0)
                 checked_line += 1
                 continue
@@ -141,13 +141,13 @@ class TestReconciliation(TransactionCase):
         for move_line in move_line_ids:
             if move_line.account_id.id == self.account_usd_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertEquals(move_line.credit, 27.47)
+                self.assertAlmostEquals(move_line.credit, 32.73)
                 self.assertEquals(move_line.amount_currency, -42)
                 self.assertEquals(move_line.currency_id.id, self.currency_usd_id)
                 checked_line += 1
                 continue
             if move_line.account_id.id == self.account_rcv_id:
-                self.assertEquals(move_line.debit, 38.21)
+                self.assertAlmostEquals(move_line.debit, 38.21)
                 self.assertEquals(move_line.credit, 0.0)
                 self.assertEquals(move_line.amount_currency, 50)
                 self.assertEquals(move_line.currency_id.id, self.currency_swiss_id)
@@ -155,7 +155,7 @@ class TestReconciliation(TransactionCase):
                 continue
             if move_line.account_id.id == self.account_rsa_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertEquals(move_line.credit, 10.74)
+                self.assertAlmostEquals(move_line.credit, 5.48)
                 checked_line += 1
                 continue
         self.assertEquals(checked_line, 3)

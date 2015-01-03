@@ -256,9 +256,13 @@ class hr_applicant(osv.Model):
         return {'value': {'department_id': department_id, 'user_id': user_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
+        values = {}
         if not stage_id:
-            stage_id = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
-        return {'value': {'stage_id': stage_id}}
+            values['stage_id'] = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
+        if department_id:
+            department = self.pool['hr.department'].browse(cr, uid, department_id, context=context)
+            values['company_id'] = department.company_id.id
+        return {'value': values}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         data = {'partner_phone': False,

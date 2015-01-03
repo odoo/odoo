@@ -1,14 +1,14 @@
 .. highlight:: xml
 
 ===============
-Creating themes
+Building Themes
 ===============
 
 Basic set up
 ============
 
 Create a basic theme module with :command:`odoo.py scaffold` and the ``theme``
-template: from the root odoo folder, use
+template: from the root Odoo folder, use
 
 .. code-block:: console
 
@@ -56,7 +56,7 @@ Refresh the page and feel the hit.
 Editing content on a page
 '''''''''''''''''''''''''
 
-You can now add you content! You should always use the Bootstrap structure as
+You can now add your content! You should always use the Bootstrap structure as
 below::
 
     <template id="website.hello" name="Homepage" page="True">
