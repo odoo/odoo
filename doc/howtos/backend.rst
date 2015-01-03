@@ -4,6 +4,10 @@
 Building a Module
 =================
 
+.. warning::
+
+    This tutorial requires :ref:`having installed Odoo <setup/install>`
+
 Start/Stop the Odoo server
 ==========================
 

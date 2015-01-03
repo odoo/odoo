@@ -294,7 +294,8 @@ class purchase_order(osv.osv):
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
                                            states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
-        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),        
+        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),
+        'related_usage': fields.related('location_id', 'usage', type='char'),
         'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
         'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
@@ -380,8 +381,8 @@ class purchase_order(osv.osv):
         if picking_type_id:
             picktype = self.pool.get("stock.picking.type").browse(cr, uid, picking_type_id, context=context)
             if picktype.default_location_dest_id:
-                value.update({'location_id': picktype.default_location_dest_id.id})
-            value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
+                value.update({'location_id': picktype.default_location_dest_id.id, 'related_usage': picktype.default_location_dest_id.usage})
+            value.update({'related_location_id': picktype.default_location_dest_id.id})
         return {'value': value}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -749,7 +750,7 @@ class purchase_order(osv.osv):
                 'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
                 'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
                 'procurement_id': procurement.id,
-                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='picking' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
                 'propagate': procurement.rule_id.propagate,
             })
             diff_quantity -= min(procurement_qty, diff_quantity)

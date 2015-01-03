@@ -1539,9 +1539,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         });
     },
     setup_resequence_rows: function (list, dataset) {
-        // drag and drop enabled if list is not sorted and there is a
-        // visible column with @widget=handle or "sequence" column in the view.
-        if ((dataset.sort && dataset.sort())
+        // drag and drop enabled if list is not sorted (unless it is sorted by
+        // sequence (ASC)), and there is a visible column with @widget=handle
+        // or "sequence" column in the view.
+        if ((dataset.sort && dataset.sort() && dataset.sort() !== 'sequence'
+            && dataset.sort() !== 'sequence ASC')
             || !_(this.columns).any(function (column) {
                     return column.widget === 'handle'
                         || column.name === 'sequence'; })) {

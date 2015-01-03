@@ -50,6 +50,11 @@ var InstantClick = function(document, location) {
 	}
 
 	function changePage(title, body, newUrl, scrollY_) {
+		// fix by odoo because the script assets are loaded in the body and not in the head
+		// TODO: remove wen forward port in master
+		$(document).off()
+ 		// end
+ 		
 		var doc = document.implementation.createHTMLDocument('')
 		doc.documentElement.innerHTML = body
 		document.documentElement.replaceChild(doc.body, document.body)

@@ -301,7 +301,7 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if not stop or test_mode:
+        if test_mode or (config['xmlrpc'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -543,12 +543,13 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        while len(self.workers_http) < self.population:
-            self.worker_spawn(WorkerHTTP, self.workers_http)
+        if config['xmlrpc']:
+            while len(self.workers_http) < self.population:
+                self.worker_spawn(WorkerHTTP, self.workers_http)
+            if not self.long_polling_pid:
+                self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
-        if not self.long_polling_pid:
-            self.long_polling_spawn()
 
     def sleep(self):
         try:
@@ -733,7 +734,9 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
+            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                         self.pid, self.request_count,
+                         len(openerp.modules.registry.RegistryManager.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)

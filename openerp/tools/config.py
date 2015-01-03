@@ -74,6 +74,12 @@ def _get_default_datadir():
 
 class configmanager(object):
     def __init__(self, fname=None):
+        """Constructor.
+
+        :param fname: a shortcut allowing to instantiate :class:`configmanager`
+                      from Python code without resorting to environment
+                      variable
+        """
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
@@ -378,8 +384,7 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config \
-                or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            self.config_file or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout

@@ -191,6 +191,8 @@ class BlogPost(osv.Model):
         return content
 
     def create_history(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for i in ids:
             history = self.pool.get('blog.post.history')
             if vals.get('content'):
