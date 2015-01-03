@@ -818,8 +818,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
-            var price    = round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
-            return price;
+            return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
         },
         get_display_price: function(){
             return this.get_base_price();
@@ -937,6 +936,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.selected = selected;
                 this.trigger('change:selected',this);
             }
+        },
+        // returns the payment type: 'cash' | 'bank'
+        get_type: function(){
+            return this.cashregister.journal.type
         },
         // returns the associated cashregister
         //exports as JSON for server communication

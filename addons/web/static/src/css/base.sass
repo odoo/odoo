@@ -201,10 +201,12 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     &.openerp_webclient_container
+        height: 95% // fallback for browsers without support for calc()
         height: calc(100% - 34px)
         overflow: auto
     @media (max-width: 768px)
         &.openerp_webclient_container
+            height: 90% // fallback for browsers without support for calc()
             height: calc(100% - 52px)
     // }}}
     //Placeholder style{{{
@@ -2659,9 +2661,16 @@ body.oe_single_form
 
 // @media print {{{
 @media print
+    body
+        height: auto !important
+    .openerp#announcement_bar_table
+        display: none
     .openerp
+        .oe_application, .oe_view_manager_wrapper
+            height: auto !important
         .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body
             overflow: visible
+            position: relative !important
         .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default, .oe_topbar, .oe_leftbar, .oe_loading
             // We use !important here because jQuery adds @style = display: block on elements when using $.fn.show()
             display: none !important

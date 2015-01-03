@@ -29,7 +29,7 @@ from math import ceil
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
 from openerp.tools.safe_eval import safe_eval
 
 
@@ -400,7 +400,7 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         result = []
         if question.type == 'multiple_choice':
-            result.append({'key': str(question.question),
+            result.append({'key': ustr(question.question),
                            'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
                            })
         if question.type == 'simple_choice':

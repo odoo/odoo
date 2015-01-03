@@ -39,7 +39,7 @@ class hr_timesheet_report(osv.osv):
     def _from(self):
         from_str = """
                 account_analytic_line as aal
-                    left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
+                    inner join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
         """
         return from_str
 
