@@ -1062,10 +1062,7 @@ class account_voucher(osv.osv):
         else:
             raise osv.except_osv(_('Error!'),
                         _('Please define a sequence on the journal.'))
-        if not voucher.reference:
-            ref = name.replace('/','')
-        else:
-            ref = voucher.reference
+        ref = voucher.reference or name
 
         move = {
             'name': name,

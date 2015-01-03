@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.report import report_sxw
@@ -575,10 +575,8 @@ class account_bank_statement_line(osv.osv):
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
-        if amount > 0: # Make sure we can't mix receivable and payable
-            domain += [('account_id.type', '=', 'receivable')]
-        else:
-            domain += [('account_id.type', '=', 'payable')]
+        domain += [('reconcile_id', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
+        domain += [('account_id.type', '=', (amount > 0 and 'receivable' or 'payable'))] # Make sure we can't mix receivable and payable
         if amount_field == 'amount_currency' and amount < 0:
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
         else:
@@ -608,29 +606,38 @@ class account_bank_statement_line(osv.osv):
             excluded_ids = []
         if additional_domain is None:
             additional_domain = []
-        # Make domain
-        domain = additional_domain + [
-            ('reconcile_id', '=', False),
-            ('state', '=', 'valid'),
-            ('account_id.reconcile', '=', True)
-        ]
+        else:
+            additional_domain = expression.normalize_domain(additional_domain)
+        
+        # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
+        domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])]
+
+        # Domain for classic reconciliation (match transactions with unreconciled journal items)
+        domain_reconciliation = [('reconcile_id', '=', False)]
         if st_line.partner_id.id:
-            domain += [('partner_id', '=', st_line.partner_id.id)]
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.type', 'in', ['payable', 'receivable'])]])
+        else:
+            domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.reconcile', '=', True)]])
+
+        # Let's add what applies to both
+        domain = expression.OR([domain_rapprochement, domain_reconciliation])
+        domain = expression.AND([domain, [('state', '=', 'valid')]])
+        if st_line.partner_id.id:
+            domain = expression.AND([domain, [('partner_id', '=', st_line.partner_id.id)]])
         if excluded_ids:
-            domain.append(('id', 'not in', excluded_ids))
+            domain = expression.AND([domain, [('id', 'not in', excluded_ids)]])
         if str:
-            domain += [
+            str_domain = [
                 '|', ('move_id.name', 'ilike', str),
                 '|', ('move_id.ref', 'ilike', str),
-                ('date_maturity', 'like', str),
+                '|', ('date_maturity', 'like', str),
+                '&', ('name', '!=', '/'), ('name', 'ilike', str)
             ]
             if not st_line.partner_id.id:
-                domain.insert(-1, '|', )
-                domain.append(('partner_id.name', 'ilike', str))
-            if str != '/':
-                domain.insert(-1, '|', )
-                domain.append(('name', 'ilike', str))
-        return domain
+                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
+            domain = expression.AND([domain, str_domain])
+
+        return expression.AND([additional_domain, domain])
 
     def get_move_lines_for_reconciliation(self, cr, uid, st_line, excluded_ids=None, str=False, offset=0, limit=None, count=False, additional_domain=None, context=None):
         """ Find the move lines that could be used to reconcile a statement line. If count is true, only returns the count.
@@ -735,6 +742,24 @@ class account_bank_statement_line(osv.osv):
                 if mv_line.reconcile_id:
                     raise osv.except_osv(_('Error!'), _('A selected move line was already reconciled.'))
 
+        # Particular use case : using reconciled move lines (fr: rapprochement bancaire)
+        num_already_reconciled_items = len([x for x in mv_line_dicts if x.get('already_paid', False)])
+        if num_already_reconciled_items > 0:
+            # Check only using already reconciled move lines
+            if len(mv_line_dicts) != num_already_reconciled_items:
+                raise osv.except_osv(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+            # Check all move lines are from the same move
+            move_id = aml_obj.browse(cr, uid, mv_line_dicts[0].get('counterpart_move_line_id'), context=context).move_id.id
+            for mv_line_dict in mv_line_dicts:
+                if move_id != aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context).move_id.id:
+                    raise osv.except_osv(_('Error!'), _('You cannot mix items from different journal entries.'))
+            # Link move lines to the bank statement
+            mv_line_ids =[line_dict['counterpart_move_line_id'] for line_dict in mv_line_dicts]
+            aml_obj.write(cr, uid, mv_line_ids, {'statement_id': st_line.statement_id.id}, context=context)
+            # Mark the statement line as reconciled
+            self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
+            return
+
         # Create the move
         move_name = (st_line.statement_id.name or st_line.name) + "/" + str(st_line.sequence)
         move_vals = bs_obj._prepare_move(cr, uid, st_line, move_name, context=context)
@@ -759,6 +784,7 @@ class account_bank_statement_line(osv.osv):
         for mv_line_dict in mv_line_dicts:
             if mv_line_dict.get('is_tax_line'):
                 continue
+            mv_line_dict.pop('already_paid', None)
             mv_line_dict['ref'] = move_name
             mv_line_dict['move_id'] = move_id
             mv_line_dict['period_id'] = st_line.statement_id.period_id.id

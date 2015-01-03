@@ -656,6 +656,7 @@ openerp.account = function (instance) {
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
+            this.is_rapprochement; // matching a statement line with an already reconciled journal item
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
             this.filter = "";
             // In rare cases like when deleting a statement line's partner we don't want the server to
@@ -1014,13 +1015,22 @@ openerp.account = function (instance) {
             }
             if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
 
-            // Warn the user if he's selecting lines from both a payable and a receivable account
+            // Warn the user if he's selecting reconciled and unreconciled lines
             var last_selected_line = _.last(self.get("mv_lines_selected"));
+            if (last_selected_line && last_selected_line.already_paid !== line.already_paid) {
+                new instance.web.CrashManager().show_warning({data: {
+                    exception_type: "Incorrect Operation",
+                    message: _t("You cannot mix reconciled and unreconciled items.")
+                }});
+                return;
+            }
+
+            // Warn the user if he's selecting lines from both a payable and a receivable account
             if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                new instance.web.Dialog(this, {
-                    title: _t("Warning"),
-                    size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+                new instance.web.CrashManager().show_warning({data: {
+                    exception_type: "Incorrect Operation",
+                    message: _.str.sprintf(_t("You are selecting transactions from accounts of different type : %s and %s."), last_selected_line.account_type, line.account_type)
+                }});
                 return;
             }
 
@@ -1260,6 +1270,8 @@ openerp.account = function (instance) {
             // Adjust to different cases
             if (balance_type === "equal") {
                 displayValidState(true);
+            } else if (self.is_rapprochement) {
+                // Do nothing ; just stay in invalid state
             } else if (balance_type === "greater") {
                 createOpenBalance("Create Write-off");
             } else if (balance_type === "lower") {
@@ -1273,7 +1285,11 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
+                var propose_partial = self.getCreatedLines().length === 0
+                    && self.get("mv_lines_selected").length === 1
+                    && balance_type === "greater"
+                    && ! self.get("mv_lines_selected")[0].partial_reconcile
+                    && ! self.is_rapprochement;
                 self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
@@ -1304,6 +1320,11 @@ openerp.account = function (instance) {
             var self = this;
     
             self.$(".action_pane.active").removeClass("active");
+
+            if (self.is_rapprochement && (self.get("mode") === "create" || (self.get("mode") === "match" && self.$el.hasClass("no_match")))) {
+                self.set("mode", "inactive");
+                return;
+            }
 
             if (val.oldValue === "create")
                 self.addLineBeingEdited();
@@ -1379,7 +1400,9 @@ openerp.account = function (instance) {
         
             self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
-        
+
+            self.is_rapprochement = added_lines.length > 0 && added_lines[0].already_paid;
+
             $.when(self.updateMatches()).then(function(){
                 self.updateAccountingViewMatchedLines();
                 self.updateBalance();
@@ -1543,6 +1566,7 @@ openerp.account = function (instance) {
             balance = Math.round(balance*1000)/1000;
 
             self.set("balance", balance);
+    
         },
 
         // Loads move lines according to the widget's state
@@ -1604,6 +1628,7 @@ openerp.account = function (instance) {
                 debit: line.debit,
                 credit: line.credit,
                 counterpart_move_line_id: line.id,
+                already_paid: line.already_paid,
             };
         },
     
