@@ -264,10 +264,11 @@
 -
   !python {model: stock.picking}: |
     move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).name
-    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
-    account_invoice_line = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', account_invoice)])
-    self.pool.get('account.invoice.line').write(cr, uid, account_invoice_line, {'invoice_line_tax_id': [(6, 0, [])]})
-    self.pool.get('account.invoice').button_reset_taxes(cr, uid, account_invoice)
+    account_invoice_id = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])[0]
+    account_invoice = self.pool.get('account.invoice').browse(cr, uid, account_invoice_id)
+    self.pool.get('account.invoice.line').write(cr, uid, account_invoice.invoice_line.ids, {'invoice_line_tax_id': [(6, 0, [])]})
+    # remove once @depends works
+    #self.pool.get('account.invoice').compute_taxes(cr, uid, account_invoice)
     self.pool.get('account.invoice').signal_workflow(cr, uid, account_invoice, 'invoice_open')
 -
   I check Income Account is Credited sucessfully when Invoice validated.

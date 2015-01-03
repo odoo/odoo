@@ -663,7 +663,7 @@ class purchase_order(osv.osv):
             inv_id = inv_obj.create(cr, uid, inv_data, context=context)
 
             # compute the invoice
-            inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
+            inv_obj.compute_amount(cr, uid, [inv_id], context=context, set_total=True)
 
             # Link this new invoice to related purchase order
             order.write({'invoice_ids': [(4, inv_id)]})

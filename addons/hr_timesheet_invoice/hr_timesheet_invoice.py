@@ -288,7 +288,7 @@ class account_analytic_line(osv.osv):
                     cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
                     self.invalidate_cache(cr, uid, ['invoice_id'], ids, context=context)
 
-                invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+                invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
 
 

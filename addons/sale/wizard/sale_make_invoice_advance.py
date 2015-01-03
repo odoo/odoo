@@ -154,7 +154,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         inv_obj = self.pool.get('account.invoice')
         sale_obj = self.pool.get('sale.order')
         inv_id = inv_obj.create(cr, uid, inv_values, context=context)
-        inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
+        inv_obj.compute_taxes(cr, uid, [inv_id], context=context)
         # add the invoice to the sales order's invoices
         sale_obj.write(cr, uid, sale_id, {'invoice_ids': [(4, inv_id)]}, context=context)
         return inv_id

@@ -209,7 +209,7 @@
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
-                                    <button name="button_reset_taxes" states="draft,proforma2"
+                                    <button name="compute_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
@@ -226,7 +226,7 @@
                                         <field name="name"/>
                                         <field name="account_id" groups="account.group_account_invoice"/>
                                         <field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                        <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
+                                        <field name="amount"/>
                                     </tree>
                                 </field>
                             </div>
@@ -342,7 +342,7 @@
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
-                                    <button name="button_reset_taxes" states="draft,proforma2"
+                                    <button name="compute_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
@@ -383,7 +383,7 @@
                                 <tree editable="bottom" string="Taxes">
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
-                                    <field name="amount" on_change="amount_change(amount,parent.currency_id,parent.company_id,parent.date_invoice)"/>
+                                    <field name="amount"/>
                                 </tree>
                             </field>
                         </page>

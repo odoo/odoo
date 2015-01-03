@@ -14,7 +14,6 @@
         </record>
         <record id="test_tax_line" model="account.invoice.tax">
             <field name="name">Test Tax</field>
-            <field name="base">5.00</field>
             <field name="amount">100.00</field>
             <field name="account_id" ref="account.ova"/>
             <field name="invoice_id" ref="test_invoice_1"/>
@@ -50,7 +49,7 @@
         </assert>
         <function model="account.invoice" name="pay_and_reconcile">
             <!-- ids = -->                   <value eval="[ref('test_invoice_1')]"/>
-            <!-- pay_amount = -->            <value eval="1850"/>
+            <!-- pay_amount = -->            <value eval="1950"/>
             <!-- pay_account_id = -->        <value eval="ref('cash')"/>
             <!-- date = -->                  <value eval="time.strftime('%Y-%m-%d')"/>
             <!-- pay_journal_id = -->        <value eval="ref('bank_journal')"/>

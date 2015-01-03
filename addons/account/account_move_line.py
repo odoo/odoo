@@ -670,9 +670,11 @@ class account_move_line(models.Model):
 
         # WIP
         # Create tax lines
-        # if vals.get('tax_ids') and vals['tax_ids']:
+        # if not context.get("dont_create_taxes") and vals.get('tax_ids') and vals['tax_ids']:
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
-            # taxes = TaxObj.compute_all(self._cr, self._uid, vals['tax_ids'], amount, vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
+            # taxes = TaxObj.compute_all(self._cr, self._uid, vals['tax_ids'], amount, vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)['taxes']
+            # for vals in self.get_tax_move_lines(taxes):
+                # super(account_move_line, self).create(vals)
 
         result = super(account_move_line, self).create(vals)
 

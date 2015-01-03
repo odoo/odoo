@@ -432,7 +432,7 @@ class sale_order(osv.osv):
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], inv['payment_term'], time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         if data.get('value', False):
             inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
-        inv_obj.button_compute(cr, uid, [inv_id])
+        inv_obj.compute_amount(cr, uid, [inv_id])
         return inv_id
 
     def print_quotation(self, cr, uid, ids, context=None):

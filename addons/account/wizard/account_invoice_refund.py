@@ -68,7 +68,7 @@ class account_invoice_refund(models.TransientModel):
 
                 refund = inv.refund(date, date, description, journal_id)
                 refund.write({'date_due': date, 'check_total': inv.check_total})
-                refund.button_compute()
+                refund.compute_amount()
 
                 created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):

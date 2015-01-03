@@ -41,6 +41,11 @@ class account_invoice(models.Model):
         },
     }
 
+    # @api.model
+    # def create(self, vals):
+    #     inv = super(account_invoice, self).create(vals)
+    #     inv.compute_taxes();
+
     @api.one
     @api.depends('invoice_line.price_subtotal', 'tax_line.amount')
     def _compute_amount(self):
@@ -75,11 +80,6 @@ class account_invoice(models.Model):
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
         return journal
 
-    @api.one
-    @api.depends('account_id', 'residual')
-    def _compute_reconciled(self):
-        self.reconciled = self.test_paid()
-
     @api.model
     def _get_reference_type(self):
         return [('none', _('Free Reference'))]
@@ -90,15 +90,16 @@ class account_invoice(models.Model):
         'move_id.line_id.amount_residual',
         'move_id.line_id.currency_id')
     def _compute_residual(self):
-        self.residual = 0.0
+        residual = 0.0
         for line in self.sudo().move_id.line_id:
             if line.account_id.internal_type in ('receivable', 'payable'):
                 if line.currency_id == self.currency_id:
-                    self.residual += line.currency_id and line.amount_residual_currency or line.amount_residual
+                    residual += line.currency_id and line.amount_residual_currency or line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
-                    self.residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual = max(self.residual, 0.0)
+                    residual += from_currency.compute(line.amount_residual, self.currency_id)
+        self.residual = max(residual, 0.0)
+        self.reconciled = residual == 0.0
 
     @api.one
     def _get_outstanding_info_JSON(self):
@@ -254,8 +255,7 @@ class account_invoice(models.Model):
     check_total = fields.Float(string='Verification Total', digits=dp.get_precision('Account'),
         readonly=True, states={'draft': [('readonly', False)]}, default=0.0)
 
-    reconciled = fields.Boolean(string='Paid/Reconciled',
-        store=True, readonly=True, compute='_compute_reconciled',
+    reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
@@ -567,67 +567,62 @@ class account_invoice(models.Model):
             return self.env.ref('account.invoice_form')
 
     @api.multi
-    def test_paid(self):
-        # check whether all corresponding account move lines are reconciled
-        residual_amounts = [l.amount_residual for l in self.move_id.line_id if l.account_id.internal_type in ('payable', 'receivable')]
-        if not residual_amounts:
-            return False
-        return not any(residual_amounts)
-
-    # TODO : If possible, remove this method
-    @api.multi
-    def button_reset_taxes(self):
+    def compute_taxes(self):
         account_invoice_tax = self.env['account.invoice.tax']
         ctx = dict(self._context)
         for invoice in self:
+            # Delete non-manual tax lines
             self._cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (invoice.id,))
             self.invalidate_cache()
-            partner = invoice.partner_id
-            if partner.lang:
-                ctx['lang'] = partner.lang
-            for taxe in account_invoice_tax.compute(invoice).values():
-                account_invoice_tax.create(taxe)
+            
+            # Generate one tax line per tax, however many invoice lines it's applied to
+            tax_grouped = {}
+            for line in self.invoice_line:
+                price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                taxes = line.invoice_line_tax_id.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
+                for tax in taxes:
+                    val = {
+                        'invoice_id': self.id,
+                        'name': tax['name'],
+                        'tax_id': tax['id'],
+                        'amount': tax['amount'],
+                        'manual': False,
+                        'sequence': tax['sequence'],
+                        'account_analytic_id': line.account_analytic_id.id,
+                        'account_id': self.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+                    }
+
+                    # If the taxes generate moves on the same financial account as the invoice line
+                    # and no default analytic account is defined at the tax level, propagate the
+                    # analytic account from the invoice line to the tax line. This is necessary
+                    # in situations were (part of) the taxes cannot be reclaimed,
+                    # to ensure the tax move is allocated to the proper analytic account.
+                    if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
+                        val['account_analytic_id'] = line.account_analytic_id.id
+
+                    key = tax['id']
+                    if key not in tax_grouped:
+                        tax_grouped[key] = val
+                    else:
+                        tax_grouped[key]['amount'] += val['amount']
+
+            # Create new tax lines
+            for tax in tax_grouped.values():
+                account_invoice_tax.create(tax)
+        
         # dummy write on self to trigger recomputations
+        ctx = dict(self._context) # TODO : why lang in context ?
+        if self[0].partner_id.lang:
+            ctx['lang'] = self[0].partner_id.lang
         return self.with_context(ctx).write({'invoice_line': []})
 
+
     @api.multi
-    def button_compute(self, set_total=False):
-        self.button_reset_taxes()
+    def compute_amount(self, set_total=False):
         for invoice in self:
             if set_total:
                 invoice.check_total = invoice.amount_total
         return True
-
-    @api.multi
-    def _get_analytic_lines(self):
-        """ Return a list of dict for creating analytic lines for self[0] """
-        company_currency = self.company_id.currency_id
-        sign = 1 if self.type in ('out_invoice', 'in_refund') else -1
-
-        iml = self.env['account.invoice.line'].move_line_get(self.id)
-        for il in iml:
-            if il['account_analytic_id']:
-                if self.type in ('in_invoice', 'in_refund'):
-                    ref = self.reference
-                else:
-                    ref = self.number
-                if not self.journal_id.analytic_journal_id:
-                    raise except_orm(_('No Analytic Journal!'),
-                        _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
-                currency = self.currency_id.with_context(date=self.date_invoice)
-                il['analytic_lines'] = [(0,0, {
-                    'name': il['name'],
-                    'date': self.date_invoice,
-                    'account_id': il['account_analytic_id'],
-                    'unit_amount': il['quantity'],
-                    'amount': currency.compute(il['price'], company_currency) * sign,
-                    'product_id': il['product_id'],
-                    'product_uom_id': il['uos_id'],
-                    'general_account_id': il['account_id'],
-                    'journal_id': self.journal_id.analytic_journal_id.id,
-                    'ref': ref,
-                })]
-        return iml
 
     @api.one
     def register_payment(self, payment_line):
@@ -660,27 +655,6 @@ class account_invoice(models.Model):
         return move_lines
 
     @api.multi
-    def check_tax_lines(self, compute_taxes):
-        account_invoice_tax = self.env['account.invoice.tax']
-        company_currency = self.company_id.currency_id
-        if not self.tax_line:
-            for tax in compute_taxes.values():
-                account_invoice_tax.create(tax)
-        else:
-            tax_key = []
-            precision = self.env['decimal.precision'].precision_get('Account')
-            for tax in self.tax_line:
-                if tax.manual:
-                    continue
-                key = tax.tax_id.id
-                tax_key.append(key)
-                if key not in compute_taxes:
-                    raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
-            for key in compute_taxes:
-                if key not in tax_key:
-                    raise except_orm(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
-
-    @api.multi
     def compute_invoice_totals(self, company_currency, ref, invoice_move_lines):
         total = 0
         total_currency = 0
@@ -702,6 +676,70 @@ class account_invoice(models.Model):
                 total -= line['price']
                 total_currency -= line['amount_currency'] or line['price']
         return total, total_currency, invoice_move_lines
+
+    @api.model
+    def invoice_line_move_line_get(self):
+        res = []
+        for line in self.invoice_line:
+            tax_ids = [(4, id, None) for id in line.invoice_line_tax_id.ids]
+            move_line_dict = {
+                'invl_id': line.id,
+                'type': 'src',
+                'name': line.name.split('\n')[0][:64],
+                'price_unit': line.price_unit,
+                'quantity': line.quantity,
+                'price': line.price_subtotal,
+                'account_id': line.account_id.id,
+                'product_id': line.product_id.id,
+                'uos_id': line.uos_id.id,
+                'account_analytic_id': line.account_analytic_id.id,
+                'tax_ids': tax_ids,
+            }
+            if line['account_analytic_id']:
+                move_line_dict['analytic_lines'] = [(0,0, line._get_analytic_line())]
+            res.append(move_line_dict)
+        return res
+
+    @api.multi
+    def _get_analytic_line(self):
+        company_currency = self.company_id.currency_id
+        sign = 1 if self.type in ('out_invoice', 'in_refund') else -1
+        if self.type in ('in_invoice', 'in_refund'):
+            ref = self.reference
+        else:
+            ref = self.number
+        if not self.journal_id.analytic_journal_id:
+            raise except_orm(_('No Analytic Journal!'),
+                _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
+        currency = self.currency_id.with_context(date=self.date_invoice)
+        return {
+            'name': il['name'],
+            'date': self.date_invoice,
+            'account_id': il['account_analytic_id'],
+            'unit_amount': il['quantity'],
+            'amount': currency.compute(il['price'], company_currency) * sign,
+            'product_id': il['product_id'],
+            'product_uom_id': il['uos_id'],
+            'general_account_id': il['account_id'],
+            'journal_id': self.journal_id.analytic_journal_id.id,
+            'ref': ref,
+        }
+
+    @api.model
+    def tax_line_move_line_get(self):
+        res = []
+        for tax_line in self.tax_line:
+            res.append({
+                'tax_line_id': tax_line.tax_id.id,
+                'type': 'tax',
+                'name': tax_line.name,
+                'price_unit': tax_line.amount,
+                'quantity': 1,
+                'price': tax_line.amount,
+                'account_id': tax_line.account_id.id,
+                'account_analytic_id': tax_line.account_analytic_id.id,
+            })
+        return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
         """Overridable hashcode generation for invoice lines. Lines having the same hashcode
@@ -738,7 +776,6 @@ class account_invoice(models.Model):
     @api.multi
     def action_move_create(self):
         """ Creates invoice related analytics and financial move lines """
-        account_invoice_tax = self.env['account.invoice.tax']
         account_move = self.env['account.move']
 
         for inv in self:
@@ -756,20 +793,14 @@ class account_invoice(models.Model):
             date_invoice = inv.date_invoice
             company_currency = inv.company_id.currency_id
 
-            # create base lines and their eventual analytical lines, one move line per invoice line
-            iml = inv._get_analytic_lines()
-
-            # check if taxes are all computed
-            compute_taxes = account_invoice_tax.compute(inv)
-            inv.check_tax_lines(compute_taxes)
+            # create move lines (one per invoice line + eventual taxes and analytic lines)
+            iml = inv.invoice_line_move_line_get()
+            iml += inv.tax_line_move_line_get()
 
             # I disabled the check_total feature
             if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                    raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
-
-            # one move line per tax line
-            iml += account_invoice_tax.move_line_get(inv.id)
+                    raise except_orm(_('Wrong Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
@@ -781,10 +812,8 @@ class account_invoice(models.Model):
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
 
             name = inv.name or inv.supplier_invoice_number or '/'
-            totlines = []
             if inv.payment_term:
                 totlines = inv.with_context(ctx).payment_term.compute(total, date_invoice)[0]
-            if totlines:
                 res_amount_currency = total_currency
                 ctx['date'] = date_invoice
                 for i, t in enumerate(totlines):
@@ -840,6 +869,7 @@ class account_invoice(models.Model):
                 'company_id': inv.company_id.id,
             }
             ctx['company_id'] = inv.company_id.id
+            ctx['dont_create_taxes'] = True
             date = inv.date
             if not date:
                 date = fields.Date.context_today(self)
@@ -1331,31 +1361,9 @@ class account_invoice_line(models.Model):
             result['warning'] = warning
         return result
 
-    @api.model
-    def move_line_get(self, invoice_id):
-        res = []
-        for line in self.env['account.invoice'].browse(invoice_id).invoice_line:
-            tax_ids = [(4, id, None) for id in line.invoice_line_tax_id.ids]
-            res.append({
-                'invl_id': line.id,
-                'type': 'src',
-                'name': line.name.split('\n')[0][:64],
-                'price_unit': line.price_unit,
-                'quantity': line.quantity,
-                'price': line.price_subtotal,
-                'account_id': line.account_id.id,
-                'product_id': line.product_id.id,
-                'uos_id': line.uos_id.id,
-                'account_analytic_id': line.account_analytic_id.id,
-                'tax_ids': tax_ids,
-            })
-        return res
-
-    #
-    # Set the tax field according to the account and the fiscal position
-    #
     @api.multi
     def onchange_account_id(self, product_id, partner_id, inv_type, fposition_id, account_id):
+        """ Set the tax field according to the account and the fiscal position """
         if not account_id:
             return {}
         unique_tax_ids = []
@@ -1385,64 +1393,6 @@ class account_invoice_tax(models.Model):
     manual = fields.Boolean(string='Manual', default=True)
     sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
-
-    @api.v8
-    def compute(self, invoice):
-        tax_grouped = {} # Generate one journal item per tax, however many invoice lines it's applied to
-        for line in invoice.invoice_line:
-            price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_id.compute_all(price_unit, invoice.currency_id, line.quantity, line.product_id, invoice.partner_id)['taxes']
-            for tax in taxes:
-                val = {
-                    'invoice_id': invoice.id,
-                    'name': tax['name'],
-                    'tax_id': tax['id'],
-                    'amount': tax['amount'],
-                    'manual': False,
-                    'sequence': tax['sequence'],
-                    'account_analytic_id': line.account_analytic_id.id,
-                    'account_id': invoice.type in ('out_invoice','in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
-                }
-
-                # If the taxes generate moves on the same financial account as the invoice line
-                # and no default analytic account is defined at the tax level, propagate the
-                # analytic account from the invoice line to the tax line. This is necessary
-                # in situations were (part of) the taxes cannot be reclaimed,
-                # to ensure the tax move is allocated to the proper analytic account.
-                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
-                    val['account_analytic_id'] = line.account_analytic_id.id
-
-                key = tax['id']
-                if key not in tax_grouped:
-                    tax_grouped[key] = val
-                else:
-                    tax_grouped[key]['amount'] += val['amount']
-
-        return tax_grouped
-
-    @api.v7
-    def compute(self, cr, uid, invoice_id, context=None):
-        recs = self.browse(cr, uid, [], context)
-        invoice = recs.env['account.invoice'].browse(invoice_id)
-        return recs.compute(invoice)
-
-    @api.model
-    def move_line_get(self, invoice_id):
-        res = []
-        for tax_line in self.env['account.invoice'].browse(invoice_id).tax_line:
-            if not tax_line.amount:
-                continue
-            res.append({
-                'tax_line_id': tax_line.tax_id.id,
-                'type': 'tax',
-                'name': tax_line.name,
-                'price_unit': tax_line.amount,
-                'quantity': 1,
-                'price': tax_line.amount or 0.0,
-                'account_id': tax_line.account_id.id,
-                'account_analytic_id': tax_line.account_analytic_id.id,
-            })
-        return res
 
 
 class res_partner(models.Model):

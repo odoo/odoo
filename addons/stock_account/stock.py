@@ -298,7 +298,7 @@ class stock_picking(osv.osv):
             move_obj._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
             move_obj.write(cr, uid, move.id, {'invoice_state': 'invoiced'}, context=context)
 
-        invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
+        invoice_obj.compute_amount(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
 
     def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
