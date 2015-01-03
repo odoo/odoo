@@ -179,20 +179,27 @@ class account_bank_statement(models.Model):
             counterpart_amount = sum(line['debit'] for line in counterpart) - sum(line['credit'] for line in counterpart)
             st_line_amount = st_line.amount_currency if st_line.currency_id else st_line.amount
             if counterpart and counterpart_amount == st_line_amount:
-                # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
-                # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
-                # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
-                # 'counterpart_move_line_id': 7,
-                # 'credit': 500
-                # This is what the reconciliation widget does.
-                counterpart = map(lambda l: {
-                    'name': l['name'],
-                    'debit': l['credit'],
-                    'credit': l['debit'],
-                    'counterpart_move_line_id': l['id'],
-                }, counterpart)
+                operation = counterpart[0]['is_reconciled'] and 'rapprochement' or 'reconciliation'
+                if operation == 'reconciliation':
+                    # get_reconciliation_proposition() returns informations about move lines whereas process_reconciliation() expects informations
+                    # about how to create new move lines to reconcile existing ones. So, if get_reconciliation_proposition() gives us a move line
+                    # whose id is 7 and debit is 500, and we want to totally reconcile it, we need to feed process_reconciliation() with :
+                    # 'counterpart_move_line_id': 7,
+                    # 'credit': 500
+                    # This is what the reconciliation widget does.
+                    counterpart = map(lambda l: {
+                        'name': l['name'],
+                        'debit': l['credit'],
+                        'credit': l['debit'],
+                        'counterpart_move_line_id': l['id'],
+                    }, counterpart)
+                else:
+                    counterpart = [line['id'] for line in counterpart]
                 try:
-                    st_line.process_reconciliation(counterpart)
+                    if operation == 'reconciliation': 
+                        st_line.process_reconciliation(counterpart)
+                    else:
+                        st_line.process_rapprochement(counterpart)
                     automatic_reconciliation_entries.append(st_line.journal_entry_id.id)
                 except:
                     st_lines_left.append(st_line)
