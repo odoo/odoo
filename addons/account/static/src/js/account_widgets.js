@@ -1539,8 +1539,12 @@ openerp.account = function (instance) {
             if (context.line_id === undefined ||
                 context.initial_data_provided === true && (context.reconciliation_proposition === undefined || context.line === undefined))
                 console.error("[Warning] bankStatementReconciliationLine instanciated with incorrect context.");
-    
+
+            this.is_rapprochement; // matching a statement line with an already reconciled journal item
+            this.st_line_id = context.line_id;
+            this.model_bank_statement_line = this.getParent().model_bank_statement_line;
             this.formatCurrency = this.getParent().formatCurrency;
+
             if (context.initial_data_provided) {
                 // Process data
                 this.st_line = context.line;
@@ -1551,14 +1555,13 @@ openerp.account = function (instance) {
                 if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
                     this.getParent().excluded_move_lines_ids[this.partner_id] = [];
                 this.getParent().excludeMoveLines(this, this.partner_id, context.reconciliation_proposition);
+
+                // This is computed on mvLinesSelectedChanged, which is not triggered  if the widget is instanciated with a reconciliation proposition
+                this.is_rapprochement = this.get("mv_lines_selected").length > 0 && this.get("mv_lines_selected")[0].is_reconciled;
             } else {
                 this.st_line = undefined;
                 this.partner_id = undefined;
             }
-
-            this.is_rapprochement; // matching a statement line with an already reconciled journal item
-            this.st_line_id = context.line_id;
-            this.model_bank_statement_line = this.getParent().model_bank_statement_line;
         },
 
         loadData: function() {
