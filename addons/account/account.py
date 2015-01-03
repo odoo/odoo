@@ -1833,6 +1833,10 @@ class account_tax_code(osv.osv):
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id'])
     ]
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code,company_id)',
+         'The code of the Tax Case must be unique per company !')
+    ]
     _order = 'code'
 
 
