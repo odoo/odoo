@@ -458,9 +458,10 @@ class account_bank_statement_line(models.Model):
     def process_rapprochement(self, mv_line_ids):
         """ Reconcile the statement.line with already reconciled move.line (fr: rapprochement bancaire) """
         move_lines = self.env['account.move.line'].browse(mv_line_ids)
-        # Check only using already reconciled move lines
-        if any([move_line.reconciled == False for move_line in move_lines]):
-            raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+        # Check only using already reconciled entries
+        for move_line in move_lines:
+            if move_line.move_id.line_id.filtered(lambda l: l.account_id.reconcile).reconciled == False:
+                raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
         # Check all move lines are from the same move
         move = move_lines[0].move_id
         if any([move_line.move_id != move for move_line in move_lines]):
