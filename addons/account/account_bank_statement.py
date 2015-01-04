@@ -384,9 +384,9 @@ class account_bank_statement(osv.osv):
         if not abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001:
             raise osv.except_osv(
                 _('Error!'),
-                _('The statement balance is incorrect !\n'
-                  'The expected balance (%.2f) is different than the computed'
-                  ' one. (%.2f)')
+                _('The statement balance is incorrect!\n'
+                  'The expected balance (%.2f) differs from the computed'
+                  ' one (%.2f).')
                 % (st.balance_end_real, st.balance_end)
             )
         return True
