@@ -2109,7 +2109,7 @@ class BaseModel(object):
             if f not in groupby_fields
             if f in self._fields
             if self._fields[f].type in ('integer', 'float')
-            if getattr(self._fields[f].base_field.column, '_classic_write')
+            if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
         field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
