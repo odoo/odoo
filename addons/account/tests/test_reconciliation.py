@@ -1,4 +1,5 @@
 from openerp.tests.common import TransactionCase
+import time
 
 class TestReconciliation(TransactionCase):
     """Tests for reconciliation (account.tax)
@@ -36,7 +37,8 @@ class TestReconciliation(TransactionCase):
             'currency_id': self.currency_swiss_id,
             'name': 'invoice to client',
             'account_id': self.account_rcv_id,
-            'type': 'out_invoice'
+            'type': 'out_invoice',
+            'date_invoice': time.strftime('%Y')+'-07-01', # to use USD rate rateUSDbis
             })
         self.account_invoice_line_model.create(cr, uid, {'product_id': self.product_id,
             'quantity': 1,
@@ -49,14 +51,18 @@ class TestReconciliation(TransactionCase):
         invoice_record = self.account_invoice_model.browse(cr, uid, [invoice_id])
 
         #we pay half of it on a journal with currency in dollar (bank statement)
-        bank_stmt_id = self.acc_bank_stmt_model.create(cr, uid, {'journal_id': self.bank_journal_usd_id,})
+        bank_stmt_id = self.acc_bank_stmt_model.create(cr, uid, {
+            'journal_id': self.bank_journal_usd_id,
+            'date': time.strftime('%Y')+'-07-15',
+        })
 
         bank_stmt_line_id = self.acc_bank_stmt_line_model.create(cr, uid, {'name': 'half payment',
             'statement_id': bank_stmt_id,
             'partner_id': self.partner_agrolait_id,
             'amount': 42,
             'amount_currency': 50,
-            'currency_id': self.currency_swiss_id,})
+            'currency_id': self.currency_swiss_id,
+            'date': time.strftime('%Y')+'-07-15',})
 
         #reconcile the payment with the invoice
         for l in invoice_record.move_id.line_id:
@@ -73,7 +79,7 @@ class TestReconciliation(TransactionCase):
         checked_line = 0
         for move_line in move_line_ids:
             if move_line.account_id.id == self.account_usd_id:
-                self.assertAlmostEquals(move_line.debit, 32.73)
+                self.assertEquals(move_line.debit, 27.47)
                 self.assertEquals(move_line.credit, 0.0)
                 self.assertEquals(move_line.amount_currency, 42)
                 self.assertEquals(move_line.currency_id.id, self.currency_usd_id)
@@ -81,13 +87,13 @@ class TestReconciliation(TransactionCase):
                 continue
             if move_line.account_id.id == self.account_rcv_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertAlmostEquals(move_line.credit, 38.21)
+                self.assertEquals(move_line.credit, 38.21)
                 self.assertEquals(move_line.amount_currency, -50)
                 self.assertEquals(move_line.currency_id.id, self.currency_swiss_id)
                 checked_line += 1
                 continue
             if move_line.account_id.id == self.account_rsa_id:
-                self.assertAlmostEquals(move_line.debit, 5.48)
+                self.assertEquals(move_line.debit, 10.74)
                 self.assertEquals(move_line.credit, 0.0)
                 checked_line += 1
                 continue
@@ -103,7 +109,8 @@ class TestReconciliation(TransactionCase):
             'currency_id': self.currency_swiss_id,
             'name': 'invoice to client',
             'account_id': self.account_rcv_id,
-            'type': 'in_invoice'
+            'type': 'in_invoice',
+            'date_invoice': time.strftime('%Y')+'-07-01',
             })
         self.account_invoice_line_model.create(cr, uid, {'product_id': self.product_id,
             'quantity': 1,
@@ -116,14 +123,18 @@ class TestReconciliation(TransactionCase):
         invoice_record = self.account_invoice_model.browse(cr, uid, [invoice_id])
 
         #we pay half of it on a journal with currency in dollar (bank statement)
-        bank_stmt_id = self.acc_bank_stmt_model.create(cr, uid, {'journal_id': self.bank_journal_usd_id,})
+        bank_stmt_id = self.acc_bank_stmt_model.create(cr, uid, {
+            'journal_id': self.bank_journal_usd_id,
+            'date': time.strftime('%Y')+'-07-15',
+        })
 
         bank_stmt_line_id = self.acc_bank_stmt_line_model.create(cr, uid, {'name': 'half payment',
             'statement_id': bank_stmt_id,
             'partner_id': self.partner_agrolait_id,
             'amount': -42,
             'amount_currency': -50,
-            'currency_id': self.currency_swiss_id,})
+            'currency_id': self.currency_swiss_id,
+            'date': time.strftime('%Y')+'-07-15',})
 
         #reconcile the payment with the invoice
         for l in invoice_record.move_id.line_id:
@@ -141,13 +152,13 @@ class TestReconciliation(TransactionCase):
         for move_line in move_line_ids:
             if move_line.account_id.id == self.account_usd_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertAlmostEquals(move_line.credit, 32.73)
+                self.assertEquals(move_line.credit, 27.47)
                 self.assertEquals(move_line.amount_currency, -42)
                 self.assertEquals(move_line.currency_id.id, self.currency_usd_id)
                 checked_line += 1
                 continue
             if move_line.account_id.id == self.account_rcv_id:
-                self.assertAlmostEquals(move_line.debit, 38.21)
+                self.assertEquals(move_line.debit, 38.21)
                 self.assertEquals(move_line.credit, 0.0)
                 self.assertEquals(move_line.amount_currency, 50)
                 self.assertEquals(move_line.currency_id.id, self.currency_swiss_id)
@@ -155,7 +166,7 @@ class TestReconciliation(TransactionCase):
                 continue
             if move_line.account_id.id == self.account_rsa_id:
                 self.assertEquals(move_line.debit, 0.0)
-                self.assertAlmostEquals(move_line.credit, 5.48)
+                self.assertEquals(move_line.credit, 10.74)
                 checked_line += 1
                 continue
         self.assertEquals(checked_line, 3)

@@ -41,24 +41,15 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 execfile(join(dirname(__file__), '..', 'openerp', 'release.py'))
 version = version.split('-')[0]
+timestamp = time.strftime("%Y%m%d", time.gmtime())
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
-timestamp = time.strftime("%Y%m%d", time.gmtime())
 PUBLISH_DIRS = {
     'debian': 'deb',
     'redhat': 'rpm',
     'tarball': 'src',
     'windows': 'exe',
 }
-EXTENSIONS = [
-    '.tar.gz',
-    '.zip',
-    '.deb',
-    '.dsc',
-    '.changes',
-    '.noarch.rpm',
-    '.exe',
-]
 
 def mkdir(d):
     if not os.path.isdir(d):
@@ -97,27 +88,13 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         print("Package test: FAILED. Not able to install base.")
         raise Exception("Installation of package failed")
 
-def publish(o, type, releases):
+def publish(o, type, extensions):
     def _publish(o, release):
         arch = ''
         filename = release.split(os.path.sep)[-1]
 
-        extension = None
-        for EXTENSION in EXTENSIONS:
-            if filename.endswith(EXTENSION):
-                extension = EXTENSION
-                filename = filename.replace(extension, '')
-                break
-        if extension is None:
-            raise Exception("Extension of %s is not handled" % filename)
-
-        # keep _all or _amd64
-        if filename.count('_') > 1:
-            arch = '_' + filename.split('_')[-1]
-
         release_dir = PUBLISH_DIRS[type]
-        release_filename = 'odoo_%s.%s%s%s' % (version, timestamp, arch, extension)
-        release_path = join(o.pub, release_dir, release_filename)
+        release_path = join(o.pub, release_dir, filename)
 
         system('mkdir -p %s' % join(o.pub, release_dir))
         shutil.move(join(o.build_dir, release), release_path)
@@ -134,11 +111,9 @@ def publish(o, type, releases):
         return release_path
 
     published = []
-    if isinstance(releases, basestring):
-        published.append(_publish(o, releases))
-    elif isinstance(releases, list):
-        for release in releases:
-            published.append(_publish(o, release))
+    for extension in extensions:
+        release = glob("%s/odoo_*.%s" % (o.build_dir, extension))[0]
+        published.append(_publish(o, release))
     return published
 
 class OdooDocker(object):
@@ -271,10 +246,13 @@ def _prepare_build_dir(o):
 
 def build_tgz(o):
     system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
-    system(['cp', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo.tar.gz' % o.build_dir])
-    system(['cp', glob('%s/dist/odoo-*.zip' % o.build_dir)[0], '%s/odoo.zip' % o.build_dir])
+    system(['mv', glob('%s/dist/odoo-*.tar.gz' % o.build_dir)[0], '%s/odoo_%s.%s.tar.gz' % (o.build_dir, version, timestamp)])
+    system(['mv', glob('%s/dist/odoo-*.zip' % o.build_dir)[0], '%s/odoo_%s.%s.zip' % (o.build_dir, version, timestamp)])
 
 def build_deb(o):
+    # Append timestamp to version for the .dsc to refer the right .tar.gz
+    cmd=['sed', '-i', '1s/^.*$/odoo (%s.%s) stable; urgency=low/'%(version,timestamp), 'debian/changelog']
+    subprocess.call(cmd, cwd=o.build_dir)
     deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
     deb.logfile = stdout
     deb.expect_exact('Enter passphrase: ', timeout=1200)
@@ -289,11 +267,11 @@ def build_deb(o):
 
 def build_rpm(o):
     system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
-    system(['cp', glob('%s/dist/odoo-*.noarch.rpm' % o.build_dir)[0], '%s/odoo.noarch.rpm' % o.build_dir])
+    system(['mv', glob('%s/dist/odoo-*.noarch.rpm' % o.build_dir)[0], '%s/odoo_%s.%s.noarch.rpm' % (o.build_dir, version, timestamp)])
 
 def build_exe(o):
     KVMWinBuildExe(o, o.vm_winxp_image, o.vm_winxp_ssh_key, o.vm_winxp_login).start()
-    system(['cp', glob('%s/openerp*.exe' % o.build_dir)[0], '%s/odoo.exe' % o.build_dir])
+    system(['cp', glob('%s/openerp*.exe' % o.build_dir)[0], '%s/odoo_%s.%s.exe' % (o.build_dir, version, timestamp)])
 
 #----------------------------------------------------------
 # Stage: testing
@@ -317,7 +295,7 @@ def _prepare_testing(o):
 
 def test_tgz(o):
     with docker('odoo-debian-nightly-tests', o.build_dir, o.pub) as wheezy:
-        wheezy.release = 'odoo.tar.gz'
+        wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
         wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
@@ -340,7 +318,7 @@ def test_deb(o):
 
 def test_rpm(o):
     with docker('odoo-centos-nightly-tests', o.build_dir, o.pub) as centos7:
-        centos7.release = 'odoo.noarch.rpm'
+        centos7.release = '*.noarch.rpm'
         # Start postgresql
         centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')
         centos7.system('sleep 5')
@@ -454,7 +432,7 @@ def main():
             try:
                 if not o.no_testing:
                     test_tgz(o)
-                published_files = publish(o, 'tarball', ['odoo.tar.gz', 'odoo.zip'])
+                published_files = publish(o, 'tarball', ['tar.gz', 'zip'])
             except Exception, e:
                 print("Won't publish the tgz release.\n Exception: %s" % str(e))
         if not o.no_debian:
@@ -462,13 +440,7 @@ def main():
             try:
                 if not o.no_testing:
                     test_deb(o)
-
-                to_publish = []
-                to_publish.append(glob("%s/odoo_*.deb" % o.build_dir)[0])
-                to_publish.append(glob("%s/odoo_*.dsc" % o.build_dir)[0])
-                to_publish.append(glob("%s/odoo_*.changes" % o.build_dir)[0])
-                to_publish.append(glob("%s/odoo_*.tar.gz" % o.build_dir)[0])
-                published_files = publish(o, 'debian', to_publish)
+                published_files = publish(o, 'debian', ['deb', 'dsc', 'changes', 'tar.gz'])
                 gen_deb_package(o, published_files)
             except Exception, e:
                 print("Won't publish the deb release.\n Exception: %s" % str(e))
@@ -477,7 +449,7 @@ def main():
             try:
                 if not o.no_testing:
                     test_rpm(o)
-                published_files = publish(o, 'redhat', ['odoo.noarch.rpm'])
+                published_files = publish(o, 'redhat', ['noarch.rpm'])
                 gen_rpm_repo(o, published_files[0])
             except Exception, e:
                 print("Won't publish the rpm release.\n Exception: %s" % str(e))
@@ -486,7 +458,7 @@ def main():
             try:
                 if not o.no_testing:
                     test_exe(o)
-                published_files = publish(o, 'windows', ['odoo.exe'])
+                published_files = publish(o, 'windows', ['exe'])
             except Exception, e:
                 print("Won't publish the exe release.\n Exception: %s" % str(e))
     except:
