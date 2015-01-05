@@ -192,7 +192,6 @@ class website_sale(http.Controller):
         categories = category_obj.browse(cr, uid, category_ids, context=context)
         categs = filter(lambda x: not x.parent_id, categories)
 
-        domain += ['|', ('public_categ_ids', 'in', category_ids), ('public_categ_ids', '=', False)]
         product_obj = pool.get('product.template')
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
