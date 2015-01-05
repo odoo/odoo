@@ -190,7 +190,6 @@
                     return { results: ret };
                 }
             },
-
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
@@ -202,28 +201,28 @@
             },
         });
 
-        if ($('textarea.load_editor').length) {
-            $('textarea.load_editor').each(function () {
-                if (this['id']) {
-                    CKEDITOR.replace(this['id']).on('instanceReady', CKEDITORLoadComplete);
-                }
+        $('textarea.load_editor').each(function () {
+            var $textarea = $(this);
+            if (!$textarea.val().match(/\S/)) {
+                $textarea.val("<p><br/></p>");
+            }
+            var $form = $textarea.closest('form');
+            var toolbar = [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']]
+                ];
+            if (parseInt($("#karma").val()) > 30) {
+                toolbar.push(['insert', ['link', 'picture']]);
+            }
+            $textarea.summernote({
+                    height: 150,
+                    toolbar: toolbar
+                });
+            $form.on('click', 'button, .a-submit', function () {
+                $textarea.html($form.find('.note-editable').code());
             });
-        }
-        
-        function CKEDITORLoadComplete(){
-            "use strict";
-            $('.cke_button__link').attr('onclick','website_forum_IsKarmaValid(33,30)');
-            $('.cke_button__unlink').attr('onclick','website_forum_IsKarmaValid(37,30)');
-            $('.cke_button__image').attr('onclick','website_forum_IsKarmaValid(41,30)');
-        }
+        });
     });
 
-   function website_forum_IsKarmaValid(eventNumber, minKarma){
-        "use strict";
-        if(parseInt($("#karma").val()) >= minKarma){
-            CKEDITOR.tools.callFunction(eventNumber, this);
-            return false;
-        } else {
-            alert("Sorry you need more than " + minKarma + " Karma.");
-        }
-    }

@@ -29,18 +29,18 @@ if (typeof openerp.Tour !== "undefined") {
  *  :containsRegex()     - set by user ( use: $(el).find(':containsRegex(/(red|blue|yellow)/gi)') )
  */
 $.extend($.expr[':'],{
-    containsExact: function(a,i,m){
-        return $.trim(a.innerHTML.toLowerCase()) === m[3].toLowerCase();
+    containsExact: function(element, index, matches){
+        return $.trim(element.innerHTML.toLowerCase()) === matches[3].toLowerCase();
     },
-    containsExactCase: function(a,i,m){
-        return $.trim(a.innerHTML) === m[3];
+    containsExactCase: function(element, index, matches){
+        return $.trim(element.innerHTML) === matches[3];
     },
     // Note all escaped characters need to be double escaped
     // inside of the containsRegex, so "\(" needs to be "\\("
-    containsRegex: function(a,i,m){
+    containsRegex: function(element, index, matches){
         var regreg =  /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})$/,
-        reg = regreg.exec(m[3]);
-        return reg ? new RegExp(reg[1], reg[2]).test($.trim(a.innerHTML)) : false;
+        reg = regreg.exec(matches[3]);
+        return reg ? new RegExp(reg[1], reg[2]).test($.trim(element.innerHTML)) : false;
     },
     propChecked: function(element, index, matches) {
         return $(element).prop("checked") === true;
@@ -165,7 +165,10 @@ var Tour = {
             Tour.$element.removeData("tour");
             Tour.$element.removeData("tour-step");
             $(".tour-backdrop").remove();
-            $(".popover.tour").remove();
+            if (Tour.$popover.data('bs.popover')) {
+                Tour.$popover.data('bs.popover').$element.popover('destroy');
+            }
+            Tour.$popover.remove();
             Tour.$element = null;
         }
     },
@@ -210,6 +213,9 @@ var Tour = {
 
 
         var $tip = $element.data("bs.popover").tip();
+
+
+        Tour.$popover = $tip.add($element.data("bs.popover").arrow());
 
 
         // add popover style (orphan, static, backdrop)
@@ -344,9 +350,12 @@ var Tour = {
             + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + (all ? '\nhref: ' + window.location.href : '' )
             + (all ? '\nreferrer: ' + document.referrer : '' )
-            + (step ? '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) : '' )
-            + (step ? '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size()) : '' )
-            + (step ? '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size()) : '' )
+            + (step ? '\nelement: ' + ((!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) ? 'true ' : 'false') : '' )
+                + (step && step.element ? "   "+JSON.stringify(step.element) : "")
+            + (step ? '\nwaitNot: ' + ((!step.waitNot || !$(step.waitNot).size()) ? 'true ' : 'false') : '' )
+                + (step && step.waitNot ? "   "+JSON.stringify(step.waitNot) : "")
+            + (step ? '\nwaitFor: ' + ((!step.waitFor || $(step.waitFor).size()) ? 'true ' : 'false') : '' )
+                + (step && step.waitFor ? "   "+JSON.stringify(step.waitFor) : "")
             + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
             + (all ? '\n\n' + $("body").html() : '' );
         Tour.log(message, true);
@@ -402,7 +411,7 @@ var Tour = {
                 return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
             Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
-            Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
+            //Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
             setTimeout(Tour.running, Tour.retryRunningDelay);
         }
     },
@@ -436,7 +445,15 @@ var Tour = {
                 // use an other timeout for cke dom loading
                 Tour.saveState(state.id, state.mode, state.step.id, 0);
                 setTimeout(function () {
-                    if (state.step.onend && Tour._goto(state.step.onend())) return;
+                    if (state.step.onend) {
+                        try {
+                            if(Tour._goto(state.step.onend())) {
+                                return;
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
                     Tour.nextStep(next);
                 }, Tour.defaultDelay);
                 return;
@@ -500,7 +517,7 @@ var Tour = {
         step = step || state.step;
         var next = state.step.next ? Tour.search_step(state.step.next) : state.tour.steps[step.id+1];
 
-        if (state.mode === "test" && state.number > 3) {
+        if (state.mode === "test" && state.number > 5) {
             return Tour.error(next, "Cycling. Can't reach the next step");
         }
         
@@ -513,8 +530,14 @@ var Tour = {
         Tour.autoTogglePopover(true);
 
         // onload a step you can fallback to an other step
-        if (step.onload && Tour._goto(step.onload())) {
-            return;
+        if (step.onload) {
+            try {
+                if(Tour._goto(step.onload())) {
+                    return;
+                }
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         if (state.mode === "test") {
@@ -560,40 +583,70 @@ var Tour = {
             var $element = $(step.element);
             if (!$element.size()) return;
 
+            var click_event = function(type) {
+                var evt = document.createEvent("MouseEvents");
+                evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+                $element[0].dispatchEvent(evt);
+            };
+
             if (step.snippet) {
 
                 Tour.autoDragAndDropSnippet($element);
             
+            } else if (step.keydown) {
+                
+                if (!(step.keydown instanceof Array)) {
+                    step.keydown = [step.keydown];
+                }
+                var keydown = function (list) {
+                    var keyCode = list.shift();
+                    if (keyCode) {
+                        setTimeout(function () {
+                            setTimeout(function () {
+                                $element.trigger({ type: 'keydown', keyCode: keyCode });
+                                if ((keyCode > 47 && keyCode < 58)   || // number keys
+                                    keyCode == 32  || // spacebar
+                                    (keyCode > 64 && keyCode < 91)   || // letter keys
+                                    (keyCode > 95 && keyCode < 112)  || // numpad keys
+                                    (keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+                                    (keyCode > 218 && keyCode < 223)) {   // [\]' (in order))
+                                    document.execCommand('insertText', 0, String.fromCharCode(keyCode));
+                                }
+                                $element.trigger({ type: 'keyup', keyCode: keyCode });
+                                keydown(list);
+                            },0);
+                        },25);
+                    }
+                };
+                keydown(step.keydown.slice());
+
             } else if ($element.is(":visible")) {
 
-                $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
-                $element.trigger($.Event("mousedown", { srcElement: $element[0] }));
-        
-                var evt = document.createEvent("MouseEvents");
-                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                $element[0].dispatchEvent(evt);
+                click_event("mouseover");
+                click_event("mousedown");
+                click_event("mouseup");
+                click_event("click");
 
                 // trigger after for step like: mouseenter, next step click on button display with mouseenter
                 setTimeout(function () {
                     if (!Tour.getState()) return;
-                    $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
-                    $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
-                }, 1000);
+                    click_event("mouseout");
+                }, self.defaultDelay<<1);
             }
             if (step.sampleText) {
             
-                $element.trigger($.Event("keydown", { srcElement: $element }));
+                $element.trigger($.Event("keydown", { srcElement: $element[0] }));
                 if ($element.is("input") ) {
                     $element.val(step.sampleText);
                 } if ($element.is("select")) {
                     $element.val(step.sampleText);
                 } else {
-                    $element.html(step.sampleText);
+                    $element.text(step.sampleText);
                 }
                 setTimeout(function () {
                     if (!Tour.getState()) return;
-                    $element.trigger($.Event("keyup", { srcElement: $element }));
-                    $element.trigger($.Event("change", { srcElement: $element }));
+                    $element.trigger($.Event("keyup", { srcElement: $element[0] }));
+                    $element.trigger($.Event("change", { srcElement: $element[0] }));
                 }, self.defaultDelay<<1);
             
             }
@@ -607,7 +660,7 @@ var Tour = {
         $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: document.body.scrollWidth/2, pageY: document.body.scrollHeight/2 }));
         var $dropZone = $(".oe_drop_zone").first();
         var dropPosition = $dropZone.position();
-        $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+        $thumbnail.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
     }
 };
 openerp.Tour = Tour;

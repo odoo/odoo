@@ -23,7 +23,7 @@
                 <div class="item active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
                     <div class="container">
                         <div class="row content">
-                            <div class="carousel-content col-md-6 col-sm-12">
+                            <div class="carousel-content col-md-6 col-sm-12 mt64">
                                     <h2>Your Banner Title</h2>
                                     <h3>Click to customize this text</h3>
                                     <p>
@@ -89,12 +89,8 @@
         </section>
     </div>
 
-    <div name="Image-Text" class="o_block_image_float">
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
-            <span class="oe_snippet_thumbnail_title">Image-Floating</span>
-        </div>
-        <section class="oe_snippet_body para_large">
+    <div name="Image-Floating" class="o_block_image_float">
+        <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 mb16 mt16">
@@ -207,20 +203,17 @@
                     <div class="col-md-4 text-center">
                         <span class="fa fa-suitcase fa-5x"></span>
                         <h3 class="mt8 mb0">First Feature</h3>
-                        <div class="text-muted">Tell what's the value for the</div>
-                        <div class="text-muted">customer for this feature.</div>
+                        <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
                     </div>
                     <div class="col-md-4 text-center">
                         <span class="fa fa-lock fa-5x"></span>
                         <h3 class="mt8 mb0">Second Feature</h3>
-                        <div class="text-muted">Write what the customer would like to know,</div>
-                        <div class="text-muted">not what you want to show.</div>
+                        <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
                     </div>
                     <div class="col-md-4 text-center">
                         <span class="fa fa-heart fa-5x"></span>
                         <h3 class="mt8 mb0">Third Feature</h3>
-                        <div class="text-muted">A small explanation of this great</div>
-                        <div class="text-muted">feature, in clear words.</div>
+                        <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
                     </div>
                 </div>
             </div>
@@ -298,8 +291,10 @@
 
     <div name="Well" class="o_block_well">
         <div class="well">
-            Explain the benefits you offer. Don't write about products or
-            services here, write about solutions.
+            <p>
+                Explain the benefits you offer. Don't write about products or
+                services here, write about solutions.
+            </p>
         </div>
     </div>
 
@@ -310,7 +305,7 @@
                 Write a quote here from one of your customers. Quotes are a
                 great way to build confidence in your products or services.
             </p>
-            <small>Author of this quote</small>
+            <p><small>Author of this quote</small></p>
         </blockquote>
     </div>
 
@@ -321,18 +316,16 @@
                 <h3 class="panel-title">Feature Title</h3>
             </div>
             <div class="panel-body">
-                Panels are a great tool to compare offers or to emphasize on
-                key features. To compare products, use the inside columns.
+                <p>
+                    Panels are a great tool to compare offers or to emphasize on
+                    key features. To compare products, use the inside columns.
+                </p>
             </div>
         </div>
     </div>
 
     <div name="Image Floating" class="o_block_image_floating">
-        <div class="oe_snippet_thumbnail">
-            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
-            <span class="oe_snippet_thumbnail_title">Image Floating</span>
-        </div>
-        <div class="oe_snippet_body o_image_floating o_margin_l pull-right">
+        <div class="o_image_floating o_margin_l pull-right">
             <div class="o_container">
                 <img class="img img-rounded img-responsive" src="/website/static/src/img/library/ipad.png"/>
                 <mark class="text-center"><a href="#"><strong>Click Here</strong></a></mark>
@@ -347,7 +340,6 @@
         <hr/>
     </div>
 
-
     <div name="Share" class="o_block_button">
         <div class="oe_share">
             <h3>
@@ -361,69 +353,18 @@
         </div>
     </div>
 
-    <div name="Table" class="o_block_table">
-        <section class="oe_snippet_body mt16 mb16">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8">
-                        <table cellspacing="0" class="table_desc">
-                            <tbody>
-                                <tr><th class="table_heading" colspan="2">Description</th></tr>
-                                <tr>
-                                    <td></td>
-                                    <td>(Press Tab to add a new row)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-4">
-                        <img class="img img-rounded img-responsive" src="/website/static/src/img/library/ipad.png"/>
-                        <h4 class="mt16">Description</h4>
-                        <p>
-                            To add a related product list, reduce 
-                            the size of these three columns using 
-                            the right icon of each block.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
 </div>
 
 <div id="snippet_feature" class="tab-pane">
 
     <div name="Image Gallery" class="o_block_image_gallery">
-        <section class="o_gallery o_nomode o_spc-none">
+
+        <section class="o_gallery o_spc-medium o_slideshow" data-columns="3" style="height: 500px; overflow: hidden;">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/desert_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/deers_thumb.jpg"/>
-                    </div>
-                    <div class="col-md-6">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/landscape.jpg"/>
-                    </div>
-                    <div class="col-md-3">
-                        <img class="img img-thumbnail img-responsive mb8 mt8" src="/website/static/src/img/china_thumb.jpg"/>
-                    </div>
-                </div>
+                <div class="alert alert-info css_editable_mode_display">Add Images from the 'Customize' menu</div>
             </div>
         </section>
+
     </div>
 
 
@@ -434,7 +375,8 @@
                 <div class="col-md-12 text-center mt16 mb32">
                     <h2>Our Offers</h2>
                 </div>
-
+              </div>
+              <div class="row">
                 <div class="col-md-4">
                     <div class="panel panel-info">
 
@@ -699,46 +641,45 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-5 text-center">
-                        <h2>List of Features</h2>
-                        <h4 class="text-muted">Add a great slogan</h4>
-                    </div>
-                    <div class="col-md-5 text-center col-md-offset-2">
-                        <h2>Second List</h2>
-                        <h4 class="text-muted">Add a great slogan</h4>
-                    </div>
-                </div><div class="row">
-                    <div class="col-md-5 mt16 mb16">
-                        <div class="row">
-                          <div class="col-md-12">
+                        <div class="col-md-12 mt16 mb16">
+                            <h2>List of Features</h2>
+                            <h4 class="text-muted">Add a great slogan</h4>
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-comment pull-left mb16"></span>
                             <h3 class="mt0 mb0">Change Icons</h3>
                             <p>Click on the icon to adapt it to your feature</p>
-                          </div><div class="col-md-12">
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-columns pull-left mb16"></span>
                             <h3 class="mt0 mb0">Duplicate</h3>
                             <p>Duplicate blocks to add more features.</p>
-                          </div><div class="col-md-12">
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-user pull-left mb16"></span>
                             <h3 class="mt0 mb0">Delete Blocks</h3>
                             <p class="text-muted">Select and delete blocks to remove some features.</p>
-                          </div>
                         </div>
                     </div>
-                    <div class="col-md-5 col-md-offset-2 mt16 mb16">
-                        <div class="row">
-                          <div class="col-md-12">
+                    <div class="col-md-5 text-center col-md-offset-2">
+                        <div class="col-md-12 mt16 mb16">
+                            <h2>Second List</h2>
+                            <h4 class="text-muted">Add a great slogan</h4>
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-magic pull-left mb16"></span>
                             <h3 class="mt0 mb0">Great Value</h3>
                             <p>Tell features the visitor would like to know, not what you'd like to say.</p>
-                          </div><div class="col-md-12">
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-bolt pull-left mb16"></span>
                             <h3 class="mt0 mb0">Change Background</h3>
                             <p>From the main container, you can change the background to highlight features.</p>
-                          </div><div class="col-md-12">
+                        </div>
+                        <div class="col-md-12">
                             <span style="min-width: 45px" class="fa fa-3x fa-picture-o pull-left mb16"></span>
                             <h3 class="mt0 mb0">Sample images</h3>
                             <p>All these icons are licensed under creative commons so that you can use them.</p>
-                          </div>
                         </div>
                     </div>
                 </div>
@@ -840,7 +781,7 @@
 
     <div data-js='background'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
-        <li class="dropdown-submenu" data-background="">
+        <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
                 <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
@@ -867,12 +808,22 @@
         </li>
     </div>
      
+    <div data-js='colorpicker'
+        data-selector="section:not(.jumbotron), :not(.o_gallery > .container) > .carousel, .parallax">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+
     <div data-js='gallery' data-selector=".o_gallery">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Mode</a>
             
             <ul class="dropdown-menu">
-                <li data-mode="nomode"   > <a>None</a></li>
+                <li data-mode="nomode"   > <a>Float</a></li>
                 <li data-mode="masonry"  > <a>Masonry</a> </li>
                 <li data-mode="grid"     > <a>Grid</a> </li>
                 <li data-mode="slideshow"> <a>Slideshow</a> </li>
@@ -912,99 +863,36 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-           <a tabindex="-2" href="#">Album</a>
-           
-           <ul class="dropdown-menu">
-               <li data-albumimages="images_add"> <a>Add images</a></li>
-               <li data-albumimages="images_rm"><a>Remove all images</a></li>
-           </ul>
-        </li>
-        <li class="dropdown-submenu">
            <a tabindex="-2" href="#">Styling</a>
            
            <ul class="dropdown-menu">
+               <li data-styling=""              ><a>Square</a></li>
                <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
                <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
                <li data-styling="img-circle"    ><a>Circle</a></li>
                <li data-styling="shadow"        ><a>Shadows</a></li>
-               <li data-styling="fa-spin"       ><a>Spinning</a></li>
            </ul>
         </li>
+       <li data-images_add="true"> <a>Add images</a></li>
+       <li data-images_rm="true"><a>Remove all images</a></li>
     </div>
 
-    <div data-js='colorpicker'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+    <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Color</a>
+            <a tabindex="-2" href="#">Re-order</a>
             <ul class="dropdown-menu">
-                <li></li>
+                <li data-position="first"><a>Move to first</a></li>
+                <li data-position="prev"><a>Move to previous</a></li>
+                <li data-position="next"><a>Move to next</a></li>
+                <li data-position="last"><a>Move to last</a></li>
             </ul>
         </li>
+        <li data-remove="remove"><a>Remove from gallery</a></li>
     </div>
      
-    <div data-js='gallery' data-selector=".gallery">
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Mode</a>
-            
-            <ul class="dropdown-menu">
-                <li data-mode="nomode"   > <a>None</a></li>
-                <li data-mode="masonry"  > <a>Masonry</a> </li>
-                <li data-mode="grid"     > <a>Grid</a> </li>
-                <li data-mode="slideshow"> <a>Slideshow</a> </li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Slideshow speed</a>
-            <ul class="dropdown-menu">
-                 <li data-interval="1000"> <a>1s</a> </li>
-                 <li data-interval="2000"> <a>2s</a> </li>
-                 <li data-interval="3000"> <a>3s</a> </li>
-                 <li data-interval="5000"> <a>5s</a> </li>
-                 <li data-interval="10000"> <a>10s</a></li>
-                 <li data-interval="0"   > <a>Disable autoplay</a> </li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Columns</a>
-            
-            <ul class="dropdown-menu">
-                <li data-columns="1"  > <a>1</a> </li>
-                <li data-columns="2"  > <a>2</a> </li>
-                <li data-columns="3"  > <a>3</a> </li>
-                <li data-columns="4"  > <a>4</a> </li>
-                <li data-columns="6"  > <a>6</a> </li>
-                <li data-columns="12" > <a>12</a> </li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#">Images spacing</a>
-
-            <ul class="dropdown-menu">
-                <li data-select_class="spc-none"  > <a>None</a>   </li>
-                <li data-select_class="spc-small" > <a>Small</a>  </li>
-                <li data-select_class="spc-medium"> <a>Medium</a> </li>
-                <li data-select_class="spc-big"   > <a>Big</a>    </li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-           <a tabindex="-2" href="#">Album</a>
-           
-           <ul class="dropdown-menu">
-               <li data-albumimages="images_add"> <a>Add images</a></li>
-               <li data-albumimages="images_rm"><a>Remove all images</a></li>
-           </ul>
-        </li>
-        <li class="dropdown-submenu">
-           <a tabindex="-2" href="#">Styling</a>
-           
-           <ul class="dropdown-menu">
-               <li data-styling="img-rounded"   ><a>Rounded corners</a></li>
-               <li data-styling="img-thumbnail" ><a>Thumbnails</a></li>
-               <li data-styling="img-circle"    ><a>Circle</a></li>
-               <li data-styling="shadow"        ><a>Shadows</a></li>
-               <li data-styling="fa-spin"       ><a>Spinning</a></li>
-           </ul>
-        </li>
+    <div data-js='media'
+        data-selector="img, .media_iframe_video, span.fa, i.fa, .glyphicon">
+        <li data-edition="edition"><a>Change...</a></li>
     </div>
 
     <div data-js='carousel'
@@ -1040,7 +928,7 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .panel, .oe_share, .o_image_floating"
+        data-selector="blockquote, .well, *:not(.row)>*>.panel, .oe_share, .o_image_floating"
         data-drop-near="p, h1, h2, h3, blockquote, .well, .panel, .oe_share"
         data-drop-in=".content">
     </div>
@@ -1050,32 +938,29 @@
         data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
-    <div data-snippet-option-id='image_floating_margin'
-        data-selector=".o_image_floating">
+    <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Margin</a>
             <ul class="dropdown-menu">
-                <li data-value="o_margin_xl"> <a>Extra-Large</a> </li>
-                <li data-value="o_margin_l"> <a>Large</a> </li>
-                <li data-value="o_margin_m"  > <a>Medium</a> </li>
-                <li data-value="o_margin_s"  > <a>Small</a></li>
-                <li data-value=""  > <a>None</a></li>
+                <li data-select_class="o_margin_xl"> <a>Extra-Large</a> </li>
+                <li data-select_class="o_margin_l"> <a>Large</a> </li>
+                <li data-select_class="o_margin_m"  > <a>Medium</a> </li>
+                <li data-select_class="o_margin_s"  > <a>Small</a></li>
+                <li data-select_class=""  > <a>None</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-option-id='image_floating_hidelink'
-        data-selector=".o_image_floating">
-        <li data-value="o_hide_link"><a>Hide link</a></li>
+    <div data-selector=".o_image_floating">
+        <li data-toggle_class="o_hide_link"><a>Hide link</a></li>
     </div>
 
-    <div data-snippet-option-id='image_floating_side'
-         data-selector=".o_image_floating">
+    <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#">Float</a>
             <ul class="dropdown-menu">
-                <li data-value="pull-left"><a>Left</a></li>
-                <li data-value="pull-right"><a>Right</a></li>
+                <li data-select_class="pull-left" data-only="click"><a>Left</a></li>
+                <li data-select_class="pull-right" data-only="click"><a>Right</a></li>
             </ul>
         </li>
     </div>
@@ -1095,25 +980,32 @@
         </li>
     </div>
 
-    <div data-js='media'
-        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa, .glyphicon">
-        <li data-edition="edition"><a>Change...</a></li>
-    </div>
-
     <div data-js='transform'
-        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
+        data-selector=":not([data-oe-field='image']) > img, .media_iframe_video, span.fa, i.fa">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-select_class="img-rounded"><a>Rounded corners</a></li>
-                <li data-select_class="img-thumbnail"><a>Box</a></li>
-                <li data-select_class="img-circle"><a>Circle</a></li>
-                <li data-select_class="shadow"><a>Shadow</a></li>
-                <li data-select_class="fa-spin"><a>Spin</a></li>
+                <li data-toggle_class="img-rounded"><a>Rounded corners</a></li>
+                <li data-toggle_class="img-thumbnail"><a>Box</a></li>
+                <li data-toggle_class="img-circle"><a>Circle</a></li>
+                <li data-toggle_class="shadow"><a>Shadow</a></li>
+                <li data-toggle_class="fa-spin"><a>Spin</a></li>
             </ul>
         </li>
         <li data-style=""><a>Transform</a></li>
         <li data-clear_style=""><a>Reset Transformation</a></li>
+    </div>
+
+    <div data-js='ul'
+         data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
+        <li data-toggle_class="o_ul_folded"> <a href="#">Folded list</a> </li>
+    </div>
+
+    <!-- t-field -->
+
+    <div data-js='many2one'
+        data-selector="[data-oe-many2one-model]"
+        data-no-check="true">
     </div>
 
 </template>

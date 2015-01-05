@@ -293,15 +293,17 @@ class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
     def generate(self, cr, uid, query=None, args={}, context=None):
         View = request.registry['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-            fields=['xml_id','priority','write_date'], order='name', context=context)
+        domain = [('page', '=', True)]
+        query = query and query.startswith('website.') and query[8:] or query
+        if query:
+            domain += [('key', 'like', query)]
+
+        views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
-            xid = view['xml_id'].startswith('website.') and view['xml_id'][8:] or view['xml_id']
+            xid = view['key'].startswith('website.') and view['key'][8:] or view['key']
             # the 'page/homepage' url is indexed as '/', avoid aving the same page referenced twice
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
-            if query and query.lower() not in xid.lower():
-                continue
             record = {'loc': xid}
             if view['priority'] <> 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)

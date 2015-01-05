@@ -9,7 +9,6 @@
     </xpath>
 </template>
 
-<!-- Front-end custom css / js + ckeditor lib and customization -->
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
@@ -20,15 +19,6 @@
         <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
         <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = '/web/static/lib/ckeditor/';
-        </script>
-        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-         <script type="text/javascript">
-                CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-                ,['Outdent','Indent','Link','Unlink','Image'],] ;
-        </script>
-
     </xpath>
 </template>
 
@@ -60,6 +50,7 @@
                 <button type="button" class="btn btn-link js_close_intro" data-dismiss="alert" aria-hidden="true">Hide Intro</button>
             </div>
         </div>
+        
         <div class="container mt16 website_forum">
             <div class="navbar navbar-default">
                 <div class="navbar-header">
@@ -531,7 +522,7 @@
 
 <!-- Edition: post a reply -->
 <template id="post_reply">
-    <div class="css_editable_mode_hidden">
+    <div class="css_editable_mode_hidden" groups="base.group_user">
         <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
@@ -705,7 +696,7 @@
                 <t t-set="answer" t-value="post_answer"/>
             </t>
         </div>
-        <div t-if="question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered and question.state != 'close' and question.active != False">
+        <div groups="base.group_user" t-if="question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered and question.state != 'close' and question.active != False">
             <t t-call="website_forum.post_answer"/>
         </div>
         <div t-if="question.post_type == 'question' and question.uid_has_answered" class="mb16">

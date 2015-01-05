@@ -29,6 +29,7 @@ from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATET
 from openerp.tools import html_escape as escape
 from openerp.addons.web.http import request
 from openerp.addons.base.ir import ir_qweb
+import simplejson
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -270,28 +271,32 @@ class ManyToOne(orm.AbstractModel):
     _name = 'website.qweb.field.many2one'
     _inherit = ['website.qweb.field', 'ir.qweb.field.many2one']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(ManyToOne, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=context)
+        many2one = getattr(record, field_name)
+        if many2one:
+            return itertools.chain(attrs, [
+                    ('data-oe-many2one-id', many2one.id),
+                    ('data-oe-many2one-model', many2one._name)])
+        else:
+            return attrs
+
     def from_html(self, cr, uid, model, field, element, context=None):
-        # FIXME: layering violations all the things
         Model = self.pool[element.get('data-oe-model')]
         M2O = self.pool[field.comodel_name]
         field_name = element.get('data-oe-field')
         id = int(element.get('data-oe-id'))
-        # FIXME: weird things are going to happen for char-type _rec_name
-        value = html_to_text(element)
+        many2one_id = int(element.get('data-oe-many2one-id'))
 
-        # if anything blows up, just ignore it and bail
-        try:
-            # get parent record
-            [obj] = Model.read(cr, uid, [id], [field_name])
-            # get m2o record id
-            (m2o_id, _) = obj[field_name]
-            # assume _rec_name and write directly to it
-            M2O.write(cr, uid, [m2o_id], {
-                M2O._rec_name: value
+        if many2one_id and M2O.exists(cr, uid, [many2one_id]):
+            # save the new id of the many2one
+            Model.write(cr, uid, [id], {
+                field_name: many2one_id
             }, context=context)
-        except:
-            logger.exception("Could not save %r to m2o field %s of model %s",
-                             value, field_name, Model._name)
 
         # not necessary, but might as well be explicit about it
         return None
@@ -460,8 +465,24 @@ class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
-    def from_html(self, cr, uid, model, field, element, context=None):
-        return None
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Contact, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=context)
+        many2one = getattr(record, field_name)
+        if many2one:
+            return itertools.chain(attrs, [('data-oe-contact-options', simplejson.dumps(options))])
+        else:
+            return attrs
+
+    # helper to call the rendering of contact field in website
+    def get_record_to_html(self, cr, uid, ids, options=None, context=None):
+        node = self.record_to_html(cr, uid,
+            'record', {'record': self.pool['res.partner'].browse(cr, uid, ids[0], context=context)},
+            options=options, context=context)
+        return node and node.__html__()
 
 class QwebView(orm.AbstractModel):
     _name = 'website.qweb.field.qweb'

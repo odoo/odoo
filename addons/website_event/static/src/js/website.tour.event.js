@@ -27,15 +27,15 @@
                 popover:   { fixed: true },
             },
             {
-                element:   '.modal #editor_new_event input[type=text]',
+                element:   '.modal-dialog #editor_new_event input[type=text]',
                 sampleText: 'Advanced Technical Training',
                 placement: 'right',
                 title:     _t("Create an Event Name"),
                 content:   _t("Create a name for your new event and click <em>'Continue'</em>. e.g: Technical Training"),
             },
             {
-                waitNot:   '.modal input[type=text]:not([value!=""])',
-                element:   '.modal button.btn-primary',
+                waitNot:   '.modal-dialog #editor_new_event input[type=text]:not([value!=""])',
+                element:   '.modal-dialog button.btn-primary',
                 placement: 'right',
                 title:     _t("Create Event"),
                 content:   _t("Click <em>Continue</em> to create the event."),

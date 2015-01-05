@@ -202,21 +202,24 @@ class website(osv.osv):
         page_name = slugify(name, max_length=50)
         page_xmlid = "%s.%s" % (template_module, page_name)
 
-        try:
-            # existing page
-            imd.get_object_reference(cr, uid, template_module, page_name)
-        except ValueError:
-            # new page
-            _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
-            website_id = context.get('website_id')
-            key = template_module+'.'+page_name
-            page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
-            page = view.browse(cr, uid, page_id, context=context)
-            page.write({
-                'arch': page.arch.replace(template, page_xmlid),
-                'name': page_name,
-                'page': ispage,
-            })
+        # find a free xmlid
+        inc = 0
+        while view.search(cr, openerp.SUPERUSER_ID, [('key', '=', page_xmlid)], context=dict(context or {}, active_test=False)):
+            inc += 1
+            page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
+        page_name += (inc and "-%s" % inc or "")
+
+        # new page
+        _, template_id = imd.get_object_reference(cr, uid, template_module, template_name)
+        website_id = context.get('website_id')
+        key = template_module+'.'+page_name
+        page_id = view.copy(cr, uid, template_id, {'website_id': website_id, 'key': key}, context=context)
+        page = view.browse(cr, uid, page_id, context=context)
+        page.write({
+            'arch': page.arch.replace(template, page_xmlid),
+            'name': page_name,
+            'page': ispage,
+        })
         return page_xmlid
 
     def page_for_name(self, cr, uid, ids, name, module='website', context=None):
@@ -445,7 +448,7 @@ class website(osv.osv):
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
             if needle in page['loc']:
@@ -748,7 +751,7 @@ class ir_attachment(osv.osv):
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = escape(attachment.website_url)
-            ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
+            ids = Views.search(cr, uid, ["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)], context=context)
 
             if ids:
                 removal_blocked_by[attachment.id] = Views.read(

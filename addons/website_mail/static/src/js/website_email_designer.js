@@ -9,7 +9,7 @@
             }
         });
 
-        $('.js_template_set').click(function(ev) {
+        $('.js_template_set').off('click').click(function(ev) {
             // Copy the template to the body of the email
             $('#email_designer').show();
             $('#email_template').hide();
