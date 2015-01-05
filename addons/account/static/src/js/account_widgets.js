@@ -1447,6 +1447,8 @@ openerp.account = function (instance) {
                         line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
                         line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
                     }
+                    if (val.amount_with_tax)
+                        line_created_being_edited[index].amount_with_tax = Math.round(val.amount_with_tax*rounding)/rounding;
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
