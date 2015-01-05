@@ -963,8 +963,13 @@ class mrp_production(osv.osv):
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
                     if extra_move_id:
-                        if consume['lot_id']:
-                            stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id']}, context=context)
+                        stock_mov_obj.write(
+                            cr, uid, [extra_move_id],
+                            {
+                                'restrict_lot_id': consume['lot_id'],
+                                'consumed_for': main_production_move,
+                            },
+                            context=context)
                         stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
