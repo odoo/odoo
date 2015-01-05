@@ -11,7 +11,7 @@
     width: 100%;
     display: flex;
     position: relative;
-    height: calc(100% - 21px);
+    height: 100%;
 }
 
 .openerp.openerp_webclient_container {
@@ -44,7 +44,7 @@ body {
 
 #wrapwrap footer {
     position: fixed;
-    bottom: -180px;
+    bottom: -800px;
     transition: all 0.2s linear;
     height: auto;
     width: 100%;
@@ -52,6 +52,13 @@ body {
     border-top: 1px solid #e7e7e7;
 }
 
-#wrapwrap footer:hover {
-    bottom: 0;
+.wport_show_footer {
+    bottom: 0 !important;
+}
+
+#show_footer {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 999;
 }

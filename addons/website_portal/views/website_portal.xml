@@ -19,6 +19,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <t t-set="script_footer">
                     <t t-call-assets="web.assets_backend" t-css="false"/>
@@ -33,6 +34,12 @@
                                 wc.setElement($(".openerp_webclient_container"));
                                 wc.start();
                             </t>
+                            $('#wrapwrap footer').prepend('<button type="button" class="btn btn-info" id="show_footer"><i class="fa fa-arrow-up"></i>Toggle Footer</button>')
+                            $('#show_footer').on('click', function() {
+                                $('#wrapwrap footer').toggleClass('wport_show_footer');
+                                $('#show_footer i').toggleClass('fa-arrow-up');
+                                $('#show_footer i').toggleClass('fa-arrow-down');
+                            });
                         }
                         )();
                     </script>
