@@ -20,7 +20,7 @@ openerp.voip = function(openerp) {
                         password: result.password,
                         hackIpInContact: true,
                         log: {level: "error"},
-                        traceSip: true,
+                        traceSip: false,
                     };
                     self.always_transfert = result.always_transfert;
                     self.physical_phone = result.physical_phone;

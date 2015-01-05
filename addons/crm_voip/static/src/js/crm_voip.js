@@ -11,7 +11,7 @@ openerp.crm_voip = function(instance) {
             "click": "select_call",
             "click .oe_dial_remove_phonecall": "remove_phonecall"
         },
-        init: function(parent, phonecall, inCall) {
+        init: function(parent, phonecall, in_call) {
             this._super(parent);
             this.set("id", phonecall.id);
             if(phonecall.partner_name){
@@ -21,7 +21,7 @@ openerp.crm_voip = function(instance) {
             }
             this.set("state",phonecall.state);
             this.set("image_small", phonecall.partner_image_small);
-            this.set("inCall", inCall); 
+            this.set("in_call", in_call); 
             this.set("email",phonecall.partner_email);
             this.set("name",_.str.truncate(phonecall.name,23));
         },
@@ -50,7 +50,10 @@ openerp.crm_voip = function(instance) {
         start_ringing: function(id){
             this.panel.$('.oe_dial_big_callbutton').html(_t("Calling..."));
             this.panel.$('.oe_dial_hangupbutton').removeAttr('disabled');
-            this.panel.$(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;}).after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
+            if(this.panel.$('.oe_dial_icon_inCall').length === 0){
+                this.panel.$(".oe_dial_phonecall_partner_name").filter(function(){return $(this).data('id') == id;})
+                .after("<i style='margin-left:5px;' class='fa fa-microphone oe_dial_icon_inCall'></i>");
+            }
         },
 
         remove_mic: function(){
@@ -411,12 +414,12 @@ openerp.crm_voip = function(instance) {
 
         //function which will add the phonecall in the queue and create the tooltip
         display_in_queue: function(phonecall){
-            var inCall = false;
+            var in_call = false;
             //Check if the current phonecall is currently done to add the microphone icon
             if(this.on_call && phonecall.id == this.current_phonecall.id){
-                inCall = true;
+                in_call = true;
             }
-            var widget = new openerp.crm_voip.PhonecallWidget(this, phonecall, inCall);
+            var widget = new openerp.crm_voip.PhonecallWidget(this, phonecall, in_call);
             widget.appendTo(this.$(".oe_dial_phonecalls"));
             widget.on("select_call", this, this.select_call);
             widget.on("remove_phonecall",this,this.remove_phonecall);
