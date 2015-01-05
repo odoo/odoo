@@ -1341,8 +1341,6 @@ class account_move_line(osv.osv):
                 tax_sign = 'ref_tax_sign'
             base_adjusted = False
             for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=False).get('taxes'):
-                if bool(tax[base_code]) != bool(tax[tax_code]):
-                    raise osv.except_osv(_('Tax misconfiguration !'), _('You cannot apply a tax which doesn\'t have a base code and a tax code. Please fix the configuration of tax %s.') % tax['name'])
                 #create the base movement
                 if base_adjusted == False:
                     base_adjusted = True
