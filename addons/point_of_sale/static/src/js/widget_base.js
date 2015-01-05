@@ -23,12 +23,12 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
             var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
             var decimals = currency.decimals;
             
-            amount = instance.web.format_value(amount,{type:"float"});
-            
             if (precision && (typeof this.pos.dp[precision]) !== undefined) {
                 decimals = this.pos.dp[precision];
             }
-
+            
+            amount = instance.web.format_value(amount, {type:"float",digits:[Math.floor(amount).toString().length, decimals]});
+            
             if (typeof amount === 'number') {
                 amount = round_di(amount,decimals).toFixed(decimals);
             }
