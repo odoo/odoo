@@ -69,15 +69,18 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         for wizard in self.browse(cr, uid, ids, context=context):
-            if wizard.template_id:
-                template = self.pool.get('email.template').browse(
-                    cr, uid, wizard.template_id, context=context)
-                if template.mail_server_id:
-                    context['mail_server_id'] = template.mail_server_id.id
-                if template.email_from:
-                    context['email_from'] = template.email_from
-            if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
+            if (
+                not wizard.attachment_ids
+                or wizard.composition_mode == 'mass_mail'
+                or not wizard.template_id
+            ):
                 continue
+            template = self.pool.get('email.template').browse(
+                cr, uid, wizard.template_id, context=context)
+            if template.mail_server_id:
+                context['mail_server_id'] = template.mail_server_id.id
+            if template.email_from:
+                context['email_from'] = template.email_from
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in template.attachment_ids:
