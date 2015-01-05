@@ -1237,11 +1237,6 @@ class account_voucher(osv.osv):
                     'account_tax_id': voucher.tax_id.id,
                 })
 
-            if move_line.get('account_tax_id', False):
-                tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
-                if not (tax_data.base_code_id and tax_data.tax_code_id):
-                    raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
-
             # compute the amount in foreign currency
             foreign_currency_diff = 0.0
             amount_currency = False
