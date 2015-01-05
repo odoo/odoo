@@ -358,7 +358,7 @@ class ir_translation(osv.osv):
         if source and not trad:
             return tools.ustr(source)
         # Remove control characters
-        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
+        return filter(lambda c: unicodedata.category(c) != 'Cc' or c in '\t\n\r', tools.ustr(trad))
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
