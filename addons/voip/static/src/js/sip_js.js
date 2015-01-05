@@ -92,13 +92,16 @@ openerp.voip = function(openerp) {
             console.error('getUserMedia failed:', e);
         },
 
-        rejected: function(){
-            console.log("REJECTED");
+        rejected: function(response){
+            console.log("REJECTED");console.log(response);
             this.session = false;
             clearTimeout(this.timer);
             this.trigger('sip_rejected');
             this.ringbacktone = document.getElementById("ringbacktone");
             ringbacktone.pause();
+            if(response.reason_phrase != "Busy Here"){
+                self.trigger('sip_error');
+            }
         },
 
         bye: function(){

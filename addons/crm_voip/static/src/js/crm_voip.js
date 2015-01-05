@@ -179,17 +179,13 @@ openerp.crm_voip = function(instance) {
 
         start: function() {
             var self = this;
-            try{
-                this.sip_js = new openerp.voip.user_agent();
-                this.sip_js.on('sip_ringing',this,this.sip_ringing);
-                this.sip_js.on('sip_accepted',this,this.sip_accepted);
-                this.sip_js.on('sip_cancel',this,this.sip_cancel);
-                this.sip_js.on('sip_rejected',this,this.sip_rejected);
-                this.sip_js.on('sip_bye',this,this.sip_bye);
-                this.sip_js.on('sip_error',this,this.sip_error);
-            }catch(e){
-                console.log(e);
-            }
+            this.sip_js = new openerp.voip.user_agent();
+            this.sip_js.on('sip_ringing',this,this.sip_ringing);
+            this.sip_js.on('sip_accepted',this,this.sip_accepted);
+            this.sip_js.on('sip_cancel',this,this.sip_cancel);
+            this.sip_js.on('sip_rejected',this,this.sip_rejected);
+            this.sip_js.on('sip_bye',this,this.sip_bye);
+            this.sip_js.on('sip_error',this,this.sip_error);
             
             this.UI = new openerp.crm_voip.Panel_UI(this);
             //To get the formatCurrency function from the server
@@ -252,7 +248,7 @@ openerp.crm_voip = function(instance) {
 
         hangup_call: function(result){
             var duration = parseFloat(result.duration).toFixed(2);
-            this.logCall(duration);
+            this.log_call(duration);
             this.UI.remove_mic();
             if(!this.in_automatic_mode){
                this.stop_automatic_call();
@@ -265,7 +261,7 @@ openerp.crm_voip = function(instance) {
             new openerp.web.Model("crm.phonecall").call("error_config");
         },
 
-        logCall: function(duration){
+        log_call: function(duration){
             var self = this;
             var value = duration;
             var pattern = '%02d:%02d';
