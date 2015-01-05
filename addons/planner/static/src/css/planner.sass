@@ -1,0 +1,31 @@
+#oe_main_menu_navbar.navbar .oe_planner_systray
+  width: 100px
+  height: 13px
+  margin: 10px 20px 0 0
+  div.oe_planner_progress
+    cursor: pointer
+  .oe_planner_progress div.progress
+    height: 13px
+
+.planner-dialog
+  width: 85%
+  margin-left: auto
+  margin-right: auto
+  .oe_planner_title
+    margin-top: -2px
+  .oe_planner
+    .nav-stacked a
+      padding: 7px
+    .planner_footer
+      .btn-default
+        background-color: #bdbaba
+      span
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+    .oe_report_header
+      width: 100%
+
+@media print
+  .oe_planner_page
+    page-break-after: always
+    a[href]:after
+      content: none !important

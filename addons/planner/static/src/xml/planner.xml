@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="PlannerManager">
+       <li class="oe_topbar_item oe_planner_systray">
+            <div class="oe_planner_progress">
+                <span class="fa fa-question-circle pull-left" style="color:white;"/>
+                <div class="progress">
+                    <div class="progress-bar" t-attf-style="width :0%;">
+                    </div>
+                </div>
+            </div>
+        </li>
+    </t>
+
+    <t t-name="PlannerFooter">
+        <div class="planner_footer hidden-print">
+            <br/>
+            <t t-if="!start and !end">
+                <button t-attf-id='input_element_btn_#{current_page_id}' 
+                    t-attf-data-progress='#{current_page_id}'
+                    class='fa fa-square-o btn btn-primary mark_as_done'> <span>Mark As Done</span>
+                </button>
+            </t>
+            <t t-if="!end">
+                <a data-toggle='collapse'
+                    t-attf-class="pull-right btn btn-#{start and 'primary' or 'default'} fa fa-arrow-circle-right"
+                    t-attf-data-parent='#{current_page_id}' 
+                    t-attf-href='##{next_page_id}'> <span>Next Step: <t t-esc="next_page_name"/></span>
+                </a>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="PlannerDialog">
+        <div>
+            <div class="modal fade" id="PlannerModal" tabindex="-1" role="dialog" aria-labelledby="PlannerModalLabel" aria-hidden="true">
+                <div class="modal-dialog planner-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+                            <div class="row">
+                                <div class="col-md-2 col-xs-2">
+                                    <span class="fa fa-question-circle fa-2x pull-left"/>
+                                    <div class="progress" style="margin-top:3px;">
+                                        <div class="progress-bar" t-attf-style="width :0%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <h2 class="oe_planner_title"></h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="PlannerReport">
+       <html>
+           <head>
+                <!--we need to link this files because we are generating new html page for reports -->
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                <link rel="stylesheet" href="/planner/static/src/css/planner.css"/>
+                <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            </head>
+            <body>
+                <div class="oe_planner">
+                    <t t-raw="content"/>
+                </div>
+           </body>
+       </html>
+    </t>
+
+</templates>
