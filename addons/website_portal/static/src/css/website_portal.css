@@ -50,6 +50,7 @@ body {
     width: 100%;
     background-color: #F8F8F8;
     border-top: 1px solid #e7e7e7;
+    z-index: 10;
 }
 
 .wport_show_footer {
@@ -58,7 +59,22 @@ body {
 
 #show_footer {
     position: fixed;
-    bottom: 1em;
-    right: 1em;
+    bottom: 2.5em;
+    width: 140px;
+    left: 40px;
+    opacity: 0.5;
     z-index: 999;
+}
+
+#show_footer:hover {
+    opacity: 1;
+}
+
+.breadcrumb > .active {
+color: #777;
+}
+
+/* someone decided to add a background in website_forum */
+.oe_grey {
+    background-color: transparent;
 }
