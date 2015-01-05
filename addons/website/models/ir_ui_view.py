@@ -13,6 +13,38 @@ _logger = logging.getLogger(__name__)
 
 
 class view(osv.osv):
+
+    def _in_menu(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        website_menu = self.pool.get('website.menu')
+        for page in self.browse(cr, uid, ids, context=context):
+            result[page.id] = False
+            #No website_id means that the page is shared by several websites
+            domain = [('url', '=', "/page/" + page.key.split('.')[-1])]
+            if page.website_id.id:
+                result[page.id] = bool(website_menu.search(cr, uid, domain + [('website_id', '=', page.website_id.id)], limit=1, context=context))
+            else:
+                menu_ids = website_menu.search(cr, uid, domain, context=context)
+                website_ids = [menu.website_id.id for menu in website_menu.browse(cr, uid, menu_ids, context=context)]
+                #To check if a menu points to a shared page
+                if self.search_count(cr, uid, [('key', '=', page.key), ('website_id', 'in', website_ids)], context=context) < len(website_ids):
+                    result[page.id] = True
+        return result
+
+    def _in_menu_website(self, cr, uid, ids, context=None):
+        result = []
+        for menu in self.pool.get('website.menu').browse(cr, uid, ids, context=context):
+            if menu.url:
+                page_key = 'website.' + menu.url.split('/')[-1]
+                result += self.pool.get('ir.ui.view').search(cr, uid, [('key', '=', page_key), '|', ('website_id', '=', menu.website_id.id), ('website_id', '=', False)], order='website_id', limit=1, context=context)
+        return result
+
+    def _in_menu_view(self, cr, uid, ids, context=None):
+        result = []
+        keys = [page.key for page in self.browse(cr, uid, ids, context=context)]
+        result += self.search(cr, uid, [('key', 'in', keys)], context=context)
+        return result
+
     _inherit = "ir.ui.view"
     _columns = {
         'page': fields.boolean("Whether this view is a web page template (complete)"),
@@ -21,6 +53,7 @@ class view(osv.osv):
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
         'customize_show': fields.boolean("Show As Optional Inherit"),
         'website_id': fields.many2one('website', ondelete='cascade', string="Website"),
+        'in_menu': fields.function(_in_menu, type='boolean', string='In Menu', store={'website.menu': (_in_menu_website, ['url'], 10), 'ir.ui.view': (_in_menu_view, ['website_id'], 10)}),
     }
 
     _sql_constraints = [

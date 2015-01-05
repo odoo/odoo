@@ -135,6 +135,7 @@ response = request.render("website.template_partner_comment", values)
 
         <record id="website2" model="website">
             <field name="name">0.0.0.0</field>
+            <field name="domain">0.0.0.0</field>
             <field name="social_twitter">https://twitter.com/Odoo</field>
             <field name="social_facebook">https://www.facebook.com/Odoo</field>
             <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
@@ -164,7 +165,7 @@ response = request.render("website.template_partner_comment", values)
                                   <h2>Homepage 0.0.0.0</h2>
                                   <h3>Click to customize this text</h3>
                                   <p>
-                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
+                                    <a class="btn btn-success btn-large" href="/page/contactus">Contact us</a>
                                   </p>
                                 </div>
                                 <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
@@ -200,7 +201,7 @@ response = request.render("website.template_partner_comment", values)
 
         <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
-            <field name="url">/page/website.contactus</field>
+            <field name="url">/page/contactus</field>
             <field name="parent_id" ref="website.website2_main_menu"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="website2"/>
