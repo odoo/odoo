@@ -39,5 +39,5 @@ You can track your suppliers, customers and other contacts.
     'images': ['images/contacts.jpeg'],
     'installable': True,
     'application': True,
-    'auto_install': False,
+    'auto_install': True,
 }
