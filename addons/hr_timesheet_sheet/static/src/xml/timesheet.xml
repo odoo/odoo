@@ -7,9 +7,9 @@
                 <tr>
                     <th class="oe_timesheet_first_col"> </th>
                     <t t-foreach="widget.dates" t-as="date">
-                        <th t-att-class="'oe_timesheet_weekly_date_head' + (Date.compare(date, Date.today()) === 0 ? ' oe_timesheet_weekly_today' : '')">
+                        <th t-att-class="'oe_timesheet_weekly_date_head' + (moment().format('DD-MM-YYYY') === moment(date).format('DD-MM-YYYY') ? ' oe_timesheet_weekly_today' : '')">
                             <t t-esc="moment(date).format('ddd')"/><br />
-                            <t t-esc="moment(date).format('MMM d')"/>
+                            <t t-esc="moment(date).format('MMM DD')"/>
                         </th>
                     </t>
                     <th class="oe_timesheet_weekly_date_head">Total</th>
@@ -18,7 +18,7 @@
                     <td class="oe_timesheet_weekly_account"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(account.account)"><t t-esc="widget.account_names[account.account]"/></a></td>
                     <t t-set="day_count" t-value="0"/>
                     <t t-foreach="account.days" t-as="day">
-                        <td t-att-class="(Date.compare(day.day, Date.today()) === 0 ? 'oe_timesheet_weekly_today' : '')">
+                        <td t-att-class="moment().format('DD-MM-YYYY') === moment(day.day).format('DD-MM-YYYY') ? 'oe_timesheet_weekly_today' : ''">
                             <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_input" t-att-data-account="account.account"
                                 t-att-data-day-count="day_count" type="text"/>
                             <span t-if="widget.get('effective_readonly')" t-att-data-account="account.account"
