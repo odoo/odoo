@@ -44,6 +44,10 @@
                                 <field name="module_sale_stock" class="oe_inline"/>
                                 <label for="module_sale_stock"/>
                             </div>
+                            <div name="display_incoterm" attrs="{'invisible': [('module_sale_stock', '!=', True)]}">
+                                <field name="group_display_incoterm" class="oe_inline"/>
+                                <label for="group_display_incoterm"/>
+                            </div>
                             <div name='module_sale_journal'>
                                 <field name="module_sale_journal" class="oe_inline"/>
                                 <label for="module_sale_journal"/>

@@ -80,8 +80,15 @@ class sale_order(osv.osv):
         vals['partner_dest_id'] = order.partner_shipping_id.id
         return vals
 
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        if context is None:
+            context = {}
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        invoice_vals['incoterms_id'] = order.incoterm.id or False
+        return invoice_vals
+
     _columns = {
-        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
+        'incoterm': fields.many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
@@ -442,3 +449,32 @@ class stock_picking(osv.osv):
                     created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
                     invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    _columns = {
+        'incoterms_id': fields.many2one(
+            'stock.incoterms',
+            "Incoterms",
+            help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
+            readonly=True, 
+            states={'draft': [('readonly', False)]}),
+    }
+
+class sale_advance_payment_inv(osv.TransientModel):
+    _inherit = 'sale.advance.payment.inv'
+
+    def _prepare_advance_invoice_vals(self, cr, uid, ids, context=None):
+        result = super(sale_advance_payment_inv,self)._prepare_advance_invoice_vals(cr, uid, ids, context=context)
+        if context is None:
+            context = {}
+
+        sale_obj = self.pool.get('sale.order')
+        sale_ids = context.get('active_ids', [])
+        res = []
+        for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+            elem = filter(lambda t: t[0] == sale.id, result)[0]
+            elem[1]['incoterms_id'] = sale.incoterm.id or False
+            res.append(elem)
+        return res

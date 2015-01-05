@@ -51,6 +51,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sales order line."),
+        'group_display_incoterm':fields.boolean("Display incoterms on the printed sale orders and invoices reports",
+            implied_group='sale.group_display_incoterm',
+            help="The printed reports will display the incoterms for the sale orders and the related invoices"),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
                  'Example: Product: this product is deprecated, do not purchase more than 5.\n'
