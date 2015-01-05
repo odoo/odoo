@@ -157,6 +157,7 @@ class mail_notification(osv.Model):
 
         # email_from: partner-user alias or partner email or mail.message email_from
         if 'email_from' in context:
+            # workaround for 7.0: https://github.com/odoo/odoo/pull/3848
             email_from = context['email_from']
         elif msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].alias_domain and msg.author_id.user_ids[0].alias_name:
             email_from = formataddr((msg.author_id.name, '%s@%s' % (msg.author_id.user_ids[0].alias_name, msg.author_id.user_ids[0].alias_domain)))
@@ -177,6 +178,7 @@ class mail_notification(osv.Model):
             'references': references,
         }
         if 'mail_server_id' in context:
+            # workaround for 7.0: https://github.com/odoo/odoo/pull/3848
             mail_values['mail_server_id'] = context['mail_server_id']
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
