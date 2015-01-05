@@ -115,7 +115,6 @@
                                     attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                     context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                             <newline/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
                         </group>
                         <group name="group_alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -156,6 +155,7 @@
                         </page>
                         <page string="Other Info">
                             <group string="Administration">
+                                <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="planned_hours" widget="float_time"
                                         groups="project.group_time_work_estimation_tasks"/>
