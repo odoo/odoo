@@ -81,7 +81,9 @@ class view(osv.Model):
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
             domain = [('key', '=', xml_id), '|', ('website_id', '=', context['website_id']), ('website_id', '=', False)]
-            [xml_id] = self.search(cr, uid, domain, order='website_id', limit=1, context=context)
+            if 'version_id' in context:
+                domain += ['|', ('version_id', '=', context['version_id']), ('version_id', '=', False)]
+            [xml_id] = self.search(cr, uid, domain, order='website_id,version_id', limit=1, context=context)
         else:
             xml_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
         return xml_id

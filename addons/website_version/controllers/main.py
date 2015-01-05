@@ -58,18 +58,18 @@ class Versioning_Controller(Website):
             result.append({'id':version_id, 'name':ver.browse(version_id).name, 'bold':1})
         return result
 
-    @http.route(['/website_version/has_experiments'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/has_experiments'], type = 'json', auth = "user", website = True)
     def has_experiments(self, view_id):
         v = request.env['ir.ui.view'].browse(int(view_id))
         website_id = request.context.get('website_id')
         return bool(request.env["website_version.experiment_version"].search([('version_id.view_ids.key', '=', v.key),('experiment_id.website_id.id','=',website_id)]))
 
-    @http.route(['/website_version/publish_version'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/publish_version'], type = 'json', auth = "user", website = True)
     def publish_version(self, version_id, save_master, copy_master_name):
         request.session['version_id'] = 0
         return request.env['website_version.version'].publish_version(int(version_id), save_master, copy_master_name)
 
-    @http.route(['/website_version/diff_version'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/diff_version'], type = 'json', auth = "user", website = True)
     def diff_version(self, version_id):
         mod_version = request.env['website_version.version']
         version = mod_version.browse(int(version_id))
@@ -77,25 +77,6 @@ class Versioning_Controller(Website):
         for view in version.view_ids:
             name_list.append(view.name)
         return name_list
-
-    @http.route(['/website_version/get_analytics'], type = 'json', auth = "public", website = True)
-    def get_analytics(self, view_id):
-        #To get the ExpId and the VarId of the view if it is in a running experiment
-        result = {'ExpId':False, 'VarId': 0}
-        obj_v = request.env['ir.ui.view']
-        view = obj_v.browse(int(view_id))
-        #search all the running experiments with the key of view
-        exp_ids = request.env['website_version.experiment'].search([('experiment_version_ids.version_id.view_ids.key', '=', view.key),('state','=','running'),('experiment_version_ids.version_id.website_id', '=',request.context['website_id'])])
-        if exp_ids:
-            #No overlap between running experiments then we can take the first one
-            x = exp_ids[0]
-            result['ExpId'] = x.google_id
-            if view.version_id:
-                exp_ver_ids = request.env['website_version.experiment_version'].search([('experiment_id','=',exp_ids[0].id),('version_id','=',view.version_id.id)])
-                if exp_ver_ids:
-                    y = exp_ver_ids[0]
-                    result['VarId'] = y.google_index 
-        return result
 
     @http.route(['/website_version/google_access'], type='json', auth="user")
     def google_authorize(self, **kw):
@@ -118,7 +99,7 @@ class Versioning_Controller(Website):
             "url": url
         }
 
-    @http.route(['/website_version/set_google_access'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/set_google_access'], type = 'json', auth = "user", website = True)
     def set_google_access(self, ga_key, view_id, client_id, client_secret):
         #To set ga_key, view_id, client_id, client_secret
         website_id = request.context.get('website_id')
@@ -130,7 +111,7 @@ class Versioning_Controller(Website):
             icp.set_param('google_management_client_secret', client_secret or '', groups=['base.group_system'])
 
 
-    @http.route(['/website_version/all_versions_all_goals'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/all_versions_all_goals'], type = 'json', auth = "user", website = True)
     def all_versions_all_goals(self, view_id):
         #To get all versions and all goals to create an experiment
         view = request.env['ir.ui.view']
@@ -162,7 +143,7 @@ class Versioning_Controller(Website):
                         return (False,exp.name)           
         return (True,"")
 
-    @http.route(['/website_version/launch_experiment'], type = 'json', auth = "public", website = True)
+    @http.route(['/website_version/launch_experiment'], type = 'json', auth = "user", website = True)
     def launch_experiment(self, name, version_ids, objectives):
         tab = []
         check = self.check_view(version_ids)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from openerp import api
 from openerp.osv import osv,fields
 from openerp.http import request
 import random
@@ -9,12 +10,12 @@ class NewWebsite(osv.Model):
     _inherit = "website"
 
     _columns = {
-        'tuto_sync': fields.boolean("How to get GA key and View ID"),
+        'tuto_google_analytics': fields.boolean("How to get GA key and View ID"),
         'google_analytics_view_id': fields.char('View ID'),
         'google_management_authorization': fields.char('Google authorization')
     }
 
-    def get_current_version(self,cr,uid,context=None):
+    def get_current_version(self, cr, uid, context=None):
         snap = request.registry['website_version.version']
         version_id = request.context.get('version_id')
 
@@ -24,7 +25,7 @@ class NewWebsite(osv.Model):
         return snap.name_get(cr, uid, [version_id], context=context)[0];
 
     def get_current_website(self, cr, uid, context=None):
-        website = super(NewWebsite,self).get_current_website(cr, uid, context=context)
+        website = super(NewWebsite, self).get_current_website(cr, uid, context=context)
         #We just set the cookie for the first visit
         if 'website_version_experiment' in request.httprequest.cookies:
             EXP = json.loads(request.httprequest.cookies.get('website_version_experiment'))
@@ -60,5 +61,26 @@ class NewWebsite(osv.Model):
         else:
             request.context['experiment_id'] = 1
         return website
+
+    @api.model
+    def google_analytics_data(self, main_object):
+        result = super(NewWebsite, self).google_analytics_data(main_object)
+        #To get the ExpId and the VarId of the view if it is in a running experiment
+
+        if main_object and main_object._name == 'ir.ui.view':
+            view = main_object
+            #search all the running experiments with the key of view
+            exp_ids = self.env['website_version.experiment'].search([('experiment_version_ids.version_id.view_ids.key', '=', view.key),('state','=','running'),('experiment_version_ids.version_id.website_id', '=',self.env.context.get('website_id'))])
+            if exp_ids:
+                #No overlap between running experiments then we can take the first one
+                result['expId'] = exp_ids[0].google_id
+                version_id = self.env.context.get('version_id') or self.env.context['website_version_experiment'].get(exp_ids[0].google_id)
+                if version_id:
+                    exp_ver_ids = self.env['website_version.experiment_version'].search([('experiment_id','=',exp_ids[0].id),('version_id','=', int(version_id))])
+                    if exp_ver_ids:
+                        result['expVar'] = exp_ver_ids[0].google_index
+                    else:
+                        result['expVar'] = 0
+        return result
 
 

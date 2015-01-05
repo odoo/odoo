@@ -635,6 +635,8 @@ class website(osv.osv):
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
+    def google_analytics_data(self, cr, uid, main_object, context=None):
+        return {}
 
 class website_menu(osv.osv):
     _name = "website.menu"

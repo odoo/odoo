@@ -41,8 +41,8 @@ class Goals(osv.Model):
     _name = "website_version.goals"
     
     _columns = {
-        'name': fields.char(string="Name", size=256, required=True),
-        'google_ref': fields.char(string="Reference Google", size=256, required=True),        
+        'name': fields.char(string="Name", required=True),
+        'google_ref': fields.char(string="Reference Google", required=True),        
     }
 
 EXPERIMENT_STATES = [('running','Running'),('paused','Paused'),('ended','Ended')]
@@ -62,7 +62,7 @@ class Experiment(osv.Model):
         return result
 
     _columns = {
-        'name': fields.char(string="Title", size=256, required=True),
+        'name': fields.char(string="Title", required=True),
         'experiment_version_ids': fields.one2many('website_version.experiment_version', 'experiment_id',string="experiment_version_ids"),
         'website_id': fields.many2one('website',string="Website", required=True),
         'state': fields.selection(EXPERIMENT_STATES, 'Status', required=True, copy=False, track_visibility='onchange'),
@@ -70,7 +70,7 @@ class Experiment(osv.Model):
         'color': fields.integer('Color Index'),
         'version_number' : fields.function(_get_version_number,type='integer'),
         'sequence': fields.integer('Sequence', required=True, help="Test."),
-        'google_id': fields.char(string="Google_id", size=256),
+        'google_id': fields.char(string="Google_id"),
     }
 
     _defaults = {
@@ -302,9 +302,3 @@ class google_management(osv.AbstractModel):
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_rtoken' % self.STR_SERVICE, all_token.get('refresh_token'))
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token_validity' % self.STR_SERVICE, datetime.now() + timedelta(seconds=all_token.get('expires_in')))
         icp.set_param(cr, SUPERUSER_ID, 'google_%s_token' % self.STR_SERVICE, all_token.get('access_token'))
-
-
-
-    
-
-
