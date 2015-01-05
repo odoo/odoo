@@ -59,7 +59,7 @@
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
-          t-att-data-view-xmlid="xmlid"
+          t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
@@ -87,22 +87,10 @@
                     <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
-
             <t t-call-assets="web.assets_common"/>
             <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
-            <t t-if="website and website.google_analytics_key">
-                <script id="tracking_code">
-                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
-                    ga('send','pageview');
-                </script>
-            </t>
         </head>
         <body>
             <div id="wrapwrap">
@@ -148,6 +136,19 @@
                     </div>
                 </footer>
             </div>
+            <script t-if="website and website.google_analytics_key and not editable">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
+                ga_google_analytics_data = <t t-raw="json.dumps(website.google_analytics_data(main_object))"/>;
+                for(i in ga_google_analytics_data) {
+                    ga('set', i, ga_google_analytics_data[i]);
+                }
+                ga('send','pageview');
+            </script>
         </body>
     </html>
 </template>
