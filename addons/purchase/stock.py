@@ -188,6 +188,7 @@ class stock_warehouse(osv.osv):
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
             'warehouse_id': warehouse.id,
+            'group_propagation_option': 'none',
         }
 
     def create_routes(self, cr, uid, ids, warehouse, context=None):
