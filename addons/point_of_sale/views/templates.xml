@@ -27,13 +27,10 @@
         <style> body { background: #222; } </style> 
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/fonts/lato/stylesheet.css" /> 
-        <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" /> 
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" id="pos-stylesheet"/>
-        <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
 
         <t t-call-assets="web.assets_common" t-css="false" />
         <t t-call-assets="web.assets_backend" t-css="false" />
+        <t t-call-assets="point_of_sale.assets"/>
 
         <script type="text/javascript" id="loading-script" t-raw="init">
             $(function() {
