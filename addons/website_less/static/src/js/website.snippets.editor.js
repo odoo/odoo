@@ -914,7 +914,7 @@
                 }
                 for (var k in data) {
                     if (k === "value") {
-                        if (isNaN(+data[k])) {
+                        if (isNaN(+data[k]) || !data[k].length) {
                             $li.attr("data-"+(this.required ? "select_class" : "toggle_class"), data[k]);
                             $li.data(this.required ? "select_class" : "toggle_class", data[k]);
                         }
@@ -927,10 +927,13 @@
                         $li.removeData(k);
                     }
                 }
-                $li.data(data);
-                $li.find("li").each(function () {
-                    $(this).data(data);
-                });
+
+                for (var k in data) {
+                    $li.data(k, data[k]).attr("data-" + k, data[k]);
+                    $li.find("li").each(function () {
+                        $(this).data(k, data[k]).attr("data-" + k, data[k]);
+                    });
+                }
             });
 
             // carousel
