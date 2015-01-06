@@ -22,4 +22,4 @@
     }
 
     $(document).ready(load_called_template);
-})
+})();
