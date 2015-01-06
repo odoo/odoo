@@ -35,15 +35,15 @@
         </record>
 
         <!-- Currencies -->
-        <record id="EUR" model="res.currency">
-            <field name="name">EUR</field>
-            <field name="symbol">€</field>
+        <record id="USD" model="res.currency">
+            <field name="name">USD</field>
+            <field name="symbol">$</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
         </record>
-        <record id="rateEUR" model="res.currency.rate">
+        <record id="rateUSD" model="res.currency.rate">
             <field name="rate">1.0</field>
-            <field name="currency_id" ref="EUR"/>
+            <field name="currency_id" ref="USD"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
@@ -52,7 +52,7 @@
             <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
             <field name="rml_header1">Your Company Tagline</field>
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record model="res.partner" id="base.partner_root">

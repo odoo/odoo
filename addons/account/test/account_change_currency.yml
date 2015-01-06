@@ -1,10 +1,10 @@
 -
-  In order to test change currency wizard I create an invoice with currency "EUR" and change it to "USD" using the wizard
+  In order to test change currency wizard I create an invoice with currency "USD" and change it to "EUR" using the wizard
 -
   !record {model: account.invoice, id: account_invoice_currency}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.EUR
+    currency_id: base.USD
     invoice_line:
       - account_id: account.a_sale
         name: '[PCSC234] PC Assemble SC234'
@@ -22,10 +22,10 @@
   !assert {model: account.invoice, id: account_invoice_currency, string: Customer Invoice is in Draft state}:
     - state == 'draft'
 -
-  Now I select USD as new currency
+  Now I select EUR as new currency
 -
   !record {model: account.change.currency, id: account_change_currency_0}:
-    currency_id: base.USD
+    currency_id: base.EUR
 -
   I clicked on Change Currency button to change the currency
 -
@@ -63,7 +63,7 @@
   I change the currency.
 -
   !record {model: account.change.currency, id: account_change_currency_0}:
-    currency_id: base.USD
+    currency_id: base.EUR
 -
   I clicked on Change Currency button to change the currency
 -
@@ -75,5 +75,5 @@
 -
   I check that the currency is changed successfully
 -
-  !assert {model: account.invoice, id: account_invoice_currency, string: Currency changed from EUR to USD}:
-    - currency_id.id == ref("base.USD")
+  !assert {model: account.invoice, id: account_invoice_currency, string: Currency changed from USD to EUR}:
+    - currency_id.id == ref("base.EUR")

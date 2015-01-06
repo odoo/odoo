@@ -78,4 +78,4 @@
   !python {model: res.partner}: |
     from openerp.tools import float_compare
     credit = self.browse(cr, uid, ref('base.res_partner_2')).credit
-    assert float_compare(credit, 1040.0, precision_digits=2) == 0, "Total Receivable does not takes unreconciled moves of previous years"
+    assert float_compare(credit, 1330.61, precision_digits=2) == 0, "Total Receivable does not takes unreconciled moves of previous years"

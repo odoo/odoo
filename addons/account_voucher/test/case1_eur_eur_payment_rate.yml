@@ -1,6 +1,6 @@
 -
   In order to check the Account_voucher module with multi-currency in OpenERP, 
-  I create 2 Invoices in USD and make 1 Payment in USD based on the currency rating given by the bank which is slightly different that the one encoded in OpenERP
+  I create 2 Invoices in EUR and make 1 Payment in EUR based on the currency rating given by the bank which is slightly different that the one encoded in OpenERP
 -
   I set the income and expense currency accounts on the main company
 -
@@ -11,60 +11,59 @@
       'expense_currency_exchange_account_id': ref('account.o_expense')}
     self.write(cr, uid, ref('base.main_company'), vals)
 -
-  I create currency USD in OpenERP for January of 1.333333 Rate
+  I create currency EUR in OpenERP for January of 0.888888 Rate
 -
   !python {model: res.currency.rate}: |
     from datetime import datetime
-    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
+    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'EUR')])[0]
     date = '%s-01-01' %(datetime.now().year)
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
-    self.write(cr, uid, ids, {'rate': 1.333333})
+    self.write(cr, uid, ids, {'rate': 0.888888})
 -
-  I create currency USD in OpenERP for February of 1.250000 Rate
+  I create currency EUR in OpenERP for February of 0.999999 Rate
 -
-  !record {model: res.currency.rate, id: feb_usd}:
-    currency_id: base.USD
+  !record {model: res.currency.rate, id: feb_eur}:
+    currency_id: base.EUR
     name: !eval "'%s-02-01' %(datetime.now().year)"
-    rate: 1.250000
+    rate: 0.999999
 
 -
-  I create currency USD in OpenERP for March of 1.111111 Rate
+  I create currency EUR in OpenERP for March of 0.777777 Rate
 -
-  !record {model: res.currency.rate, id: mar_usd}:
-    currency_id: base.USD
+  !record {model: res.currency.rate, id: mar_eur}:
+    currency_id: base.EUR
     name: !eval "'%s-03-01' %(datetime.now().year)"
-    rate: 1.111111
-
+    rate: 0.777777
 -
-  I create currency USD in OpenERP for April of 1.052632 Rate
+  I create currency EUR in OpenERP for April of 0.666666 Rate
 -
-  !record {model: res.currency.rate, id: apr_usd}:
-    currency_id: base.USD
+  !record {model: res.currency.rate, id: apr_eur}:
+    currency_id: base.EUR
     name: !eval "'%s-04-01' %(datetime.now().year)"
-    rate: 1.052632
+    rate: 0.666666
 
 -
-  I create a cash account with currency USD
+  I create a cash account with currency EUR
 -
-  !record {model: account.account, id: account_cash_usd_id}:
-    currency_id: base.USD
-    name: "cash account in usd"
-    code: "Xcash usd"
+  !record {model: account.account, id: account_cash_eur_id}:
+    currency_id: base.EUR
+    name: "cash account in EUR"
+    code: "Xcash eur"
     type: 'liquidity'
     user_type: "account.data_account_type_cash"
 
 -
-  I create a bank journal with USD as currency
+  I create a bank journal with EUR as currency
 -
-  !record {model: account.journal, id: bank_journal_USD}:
-    name: Bank Journal(USD)
-    code: BUSD
+  !record {model: account.journal, id: bank_journal_EUR}:
+    name: Bank Journal(EUR)
+    code: BEUR
     type: bank
     analytic_journal_id: analytic.sit
     sequence_id: account.sequence_bank_journal
-    default_debit_account_id: account_cash_usd_id
-    default_credit_account_id: account_cash_usd_id
-    currency: base.USD
+    default_debit_account_id: account_cash_eur_id
+    default_credit_account_id: account_cash_eur_id
+    currency: base.EUR
     company_id: base.main_company
 
 -
@@ -75,12 +74,12 @@
     property_account_receivable: account.a_recv
     property_account_payable: account.a_pay
 -
-  I create the first invoice on 1st January  for 200 USD
+  I create the first invoice on 1st January  for 200 EUR
 -
   !record {model: account.invoice, id: account_invoice_jan_payment_rate}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.USD
+    currency_id: base.EUR
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
     period_id: account.period_1
     invoice_line:
@@ -98,7 +97,7 @@
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_jan_payment_rate}
 -
-  I check that first invoice move is correct for debtor account (debit - credit == 150.0)
+  I check that first invoice move is correct for debtor account (debit - credit == 225.0)
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
@@ -107,14 +106,14 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (float_compare(move_line.debit - move_line.credit, 150.0, precision_digits=2) == 0), "Invoice move is not correct for debtors account"
+    assert (float_compare(move_line.debit - move_line.credit, 225.0, precision_digits=2) == 0), "Invoice move is not correct for debtors account"
 -
-  I create the second invoice on 1st February for 100 USD
+  I create the second invoice on 1st February for 100 EUR
 -
   !record {model: account.invoice, id: account_invoice_feb_payment_rate}:
     account_id: account.a_recv
     company_id: base.main_company
-    currency_id: base.USD
+    currency_id: base.EUR
     date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
     period_id: account.period_2
     invoice_line:
@@ -132,7 +131,7 @@
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_feb_payment_rate}
 -
-  I check that second invoice move is correct for debtor account (debit - credit == 80)
+  I check that second invoice move is correct for debtor account (debit - credit == 100.0)
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
@@ -141,7 +140,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (float_compare(move_line.debit - move_line.credit, 80, precision_digits=2) == 0), "Invoice move is not correct for debtors account"
+    assert (float_compare(move_line.debit - move_line.credit, 100.0, precision_digits=2) == 0), "Invoice move is not correct for debtors account"
 
 -
   I set the context that will be used for the encoding of all the vouchers of this file
@@ -149,14 +148,14 @@
   !context
     'type': 'receipt'
 -
-  On the first March, I create the first voucher of payment with values 240 USD, journal USD, and specifying that $1 = 0.8€
+  On the first March, I create the first voucher of payment with values 240 EUR, journal EUR, and specifying that $1 = 0.8€
 -
   !record {model: account.voucher, id: account_voucher_1_case1_payment_rate, view: view_vendor_receipt_form}:
     account_id: account.cash
     amount: 240.0
     company_id: base.main_company
-    journal_id: bank_journal_USD
-    name: 'Payment: Case 1 USD/USD payment rate'
+    journal_id: bank_journal_EUR
+    name: 'Payment: Case 1 EUR/EUR payment rate'
     partner_id: res_partner_mc_kay
     period_id: account.period_3
     date: !eval time.strftime("%Y-03-01")
@@ -164,7 +163,7 @@
     writeoff_acc_id: account.a_expense
     comment: 'Write Off'
     payment_rate: 0.8
-    payment_rate_currency_id: base.EUR
+    payment_rate_currency_id: base.USD
 
 -
   I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
@@ -231,7 +230,7 @@
         else:
             assert False, "Unrecognized journal entry"
 -
-  I check the residual amount of Invoice1, should be 20 in amount_currency and 6 in amount_residual
+  I check the residual amount of Invoice1, should be 20 in amount_currency and 81 in amount_residual
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
@@ -239,10 +238,10 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (float_compare(move_line.amount_residual, 6.0, precision_digits=2) == 0) , "Residual amount is not correct for first Invoice"
+    assert (float_compare(move_line.amount_residual, 81.0, precision_digits=2) == 0) , "Residual amount is not correct for first Invoice"
     assert (float_compare(move_line.amount_residual_currency, 20.0, precision_digits=2) == 0) , "Residual amount in currency is not correct for first Invoice"
 -
-  I check the residual amuont of Invoice2, should be 30 in residual currency and 24 in amount_residual
+  I check the residual amuont of Invoice2, should be 30 in residual currency and 44 in amount_residual
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
@@ -250,5 +249,5 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (float_compare(move_line.amount_residual, 24.0, precision_digits=2) == 0) , "Residual amount is not correct for second Invoice"
+    assert (float_compare(move_line.amount_residual, 44.0, precision_digits=2) == 0) , "Residual amount is not correct for second Invoice"
     assert (float_compare(move_line.amount_residual_currency, 30.0, precision_digits=2) == 0) , "Residual amount in currency is not correct for second Invoice"

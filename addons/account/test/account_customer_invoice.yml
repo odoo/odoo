@@ -36,8 +36,8 @@
   I manually assign tax on invoice
 -
   !python {model: account.invoice.tax}: |
-    amt = self.amount_change(cr, uid, [], 50.0, ref('base.EUR'), ref('base.main_company'), False)
-    base_amt = self.base_change(cr, uid, [], 9000.0, ref('base.EUR'), ref('base.main_company'), False)
+    amt = self.amount_change(cr, uid, [], 50.0, ref('base.USD'), ref('base.main_company'), False)
+    base_amt = self.base_change(cr, uid, [], 9000.0, ref('base.USD'), ref('base.main_company'), False)
     invoice_tax_line = {
         'name':  'Test Tax for Customer Invoice',
         'manual': 1,
