@@ -50,6 +50,9 @@ openerp.crm_voip = function(instance) {
             "click .oe_dial_transferbutton": function(){this.panel.transfer_button();},
             "click .oe_dial_auto_callbutton": function(){this.panel.auto_call_button();},
             "click .oe_dial_stop_autocall_button": function(){this.panel.stop_auto_call_button();},
+            "click .oe_dial_close_icon": "switch_display",
+            "click .oe_dial_search_icon": function(){this.search_phonecalls_status(false)},
+            "click .oe_dial_refresh_icon": function(){this.search_phonecalls_status(true)},
         },
         init: function(parent){
             this._super(parent);
@@ -58,7 +61,6 @@ openerp.crm_voip = function(instance) {
             this.buttonAnimated = false;
             this.buttonUp = false;
             this.$el.css("bottom", -this.$el.outerHeight());
-
         },
 
         start_ringing: function(id){
@@ -205,6 +207,18 @@ openerp.crm_voip = function(instance) {
                 this.$(".oe_dial_phonecall").filter(function(){return $(this).data('id') == phonecall.id;}).toggle(!flag);
             });
         },
+
+        //When a configuration error occured, disable the panel
+        disable_panel: function(){
+            this.$().block({message: "<div style='cursor: default'> TEST DIV </div>"});
+            this.$('.blockOverlay').css('cursor', 'auto');
+            this.$('.blockOverlay').css('background', 'grey');
+        },
+
+
+        enable_panel:function(){
+            this.$().unblock();
+        }
     });
 
     crm_voip.DialingModel = openerp.Widget.extend({
@@ -229,6 +243,7 @@ openerp.crm_voip = function(instance) {
             this.sip_js.on('sip_rejected',this,this.sip_rejected);
             this.sip_js.on('sip_bye',this,this.sip_bye);
             this.sip_js.on('sip_error',this,this.sip_error);
+            this.sip_js.on('sip_error_resolved',this,this.sip_error_resolved);
             this.UI = this.__parentedParent;
 
             //To get the formatCurrency function from the server
@@ -300,7 +315,12 @@ openerp.crm_voip = function(instance) {
         sip_error: function(){
             this.on_call = false;
             this.UI.hangup();
-            new openerp.web.Model("crm.phonecall").call("error_config");
+            //new openerp.web.Model("crm.phonecall").call("error_config");
+            this.UI.disable_panel();
+        },
+
+        sip_error_resolved: function(){
+            this.UI.enable_panel();
         },
 
         log_call: function(duration){
@@ -669,16 +689,6 @@ openerp.crm_voip = function(instance) {
                         var dial = new openerp.crm_voip.DialingUI(self);
                         dial.appendTo(openerp.client.$el);
                         $('.oe_topbar_dialbutton_icon').parent().on("click", dial, _.bind(dial.switch_display, dial));
-                        
-                        //bind the action to retrieve the panel with the button in the header of the panel
-                        $('.oe_dial_close_icon').parent().on("click", dial, _.bind(dial.switch_display, dial));
-
-                        //bind the action to refresh the panel information
-                        $('.oe_dial_search_icon').on("click", dial, _.bind(dial.search_phonecalls_status, dial));
-
-                        //bind the action to refresh the panel information
-                        refresh_by_user = true;
-                        $('.oe_dial_refresh_icon').parent().on("click", dial, _.bind(dial.search_phonecalls_status, dial,refresh_by_user));
                     });
                 }
                 return this._super.apply(this, arguments);

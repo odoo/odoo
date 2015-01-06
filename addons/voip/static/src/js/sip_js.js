@@ -10,6 +10,7 @@ openerp.voip = function(openerp) {
             this.in_automatic_mode = false;
             this.onCall = false;
             new openerp.web.Model("voip.configurator").call("get_pbx_config").then(_.bind(self.init_ua,self));
+            this.blocked = false;
         },
 
         //initialisation of the ua object
@@ -30,11 +31,18 @@ openerp.voip = function(openerp) {
                 this.physical_phone = result.physical_phone;
                 this.ring_number = result.ring_number;
             }else{
-                //TODO will open the error pop up on every page. maybe not the best way to do it
-                //new openerp.web.Model("crm.phonecall").call("error_config");
+                this.trigger('sip_error');
+                this.blocked = true;
             }
-
-            this.ua = new SIP.UA(ua_config);
+            try{
+                this.ua = new SIP.UA(ua_config);
+                if(this.blocked){
+                    this.trigger('sip_error_resolved');
+                }
+            }catch(err){
+                this.trigger('sip_error');
+                this.blocked = true;
+            }
             var audio = document.createElement("audio");
             audio.id = "remote_audio";
             audio.autoplay = "autoplay";
@@ -51,43 +59,47 @@ openerp.voip = function(openerp) {
             var self = this;
             self.mediaStream = stream;
             if(!self.session){
-                try{
-                    var call_options = {
-                        media: {
-                            stream: self.mediaStream,
-                            render: {
-                                remote: {
-                                    audio: document.getElementById('remote_audio')
-                                },
-                            }
+                var call_options = {
+                    media: {
+                        stream: self.mediaStream,
+                        render: {
+                            remote: {
+                                audio: document.getElementById('remote_audio')
+                            },
                         }
-                    };    
+                    }
+                };    
+                try{
                     //Make the call
                     self.session = self.ua.invite(self.current_number,call_options);
-                    self.ua.on('invite', function (invite_session){
-                        console.log(invite_session.remoteIdentity.displayName);
-                        var confirmation = confirm("Incomming call from " + invite_session.remoteIdentity.displayName);
-                        if(confirmation){
-                            invite_session.accept(call_options);
-                        }else{
-                            invite_session.reject();
-                        }
-                    });
-                    //Bind action when the call is answered
-                    self.session.on('accepted',_.bind(self.accepted,self));
-                    //Bind action when the call is in progress to catch the ringing phase
-                    self.session.on('progress', _.bind(self.progress,self));
-                    //Bind action when the call is rejected by the customer
-                    self.session.on('rejected',_.bind(self.rejected,self));
-                    //Bind action when the call is transfered
-                    self.session.on('refer',function(response){console.log("REFER");console.log(response);});
-                    //Bind action when the user hangup the call while ringing
-                    self.session.on('cancel',_.bind(self.cancel,self));
-                    //Bind action when the call is hanged up
-                    self.session.on('bye',_.bind(self.bye,self));
+                    if(this.blocked){
+                        this.trigger('sip_error_resolved');
+                    }
                 }catch(err){
-                    self.trigger('sip_error');
+                    this.trigger('sip_error');
+                    this.blocked = true;
                 }
+                self.ua.on('invite', function (invite_session){
+                    console.log(invite_session.remoteIdentity.displayName);
+                    var confirmation = confirm("Incomming call from " + invite_session.remoteIdentity.displayName);
+                    if(confirmation){
+                        invite_session.accept(call_options);
+                    }else{
+                        invite_session.reject();
+                    }
+                });
+                //Bind action when the call is answered
+                self.session.on('accepted',_.bind(self.accepted,self));
+                //Bind action when the call is in progress to catch the ringing phase
+                self.session.on('progress', _.bind(self.progress,self));
+                //Bind action when the call is rejected by the customer
+                self.session.on('rejected',_.bind(self.rejected,self));
+                //Bind action when the call is transfered
+                self.session.on('refer',function(response){console.log("REFER");console.log(response);});
+                //Bind action when the user hangup the call while ringing
+                self.session.on('cancel',_.bind(self.cancel,self));
+                //Bind action when the call is hanged up
+                self.session.on('bye',_.bind(self.bye,self));
             }
         },
 
@@ -103,7 +115,10 @@ openerp.voip = function(openerp) {
             this.ringbacktone = document.getElementById("ringbacktone");
             ringbacktone.pause();
             if(response.reason_phrase != "Busy Here"){
-                self.trigger('sip_error');
+                this.trigger('sip_error');
+                this.blocked = true;
+            }else if(this.blocked){
+                this.trigger('sip_error_resolved');
             }
         },
 
