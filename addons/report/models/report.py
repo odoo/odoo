@@ -536,11 +536,11 @@ class Report(osv.Model):
         elif paperformat.header_spacing:
             command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
-        if paperformat.margin_left:
+        if paperformat.margin_left >= 0:
             command_args.extend(['--margin-left', str(paperformat.margin_left)])
-        if paperformat.margin_bottom:
+        if paperformat.margin_bottom >= 0:
             command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-        if paperformat.margin_right:
+        if paperformat.margin_right >= 0:
             command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
