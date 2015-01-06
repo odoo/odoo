@@ -211,10 +211,17 @@ openerp.crm_voip = function(instance) {
 
         init: function(parent) {    
             this._super(parent);
+            //phonecalls in the queue 
             this.phonecalls = {};
             this.widgets = {};
             this.on_call = false;
             this.in_automatic_mode = false;
+            this.current_phonecall = null;
+            //phonecalls which will be called in automatic mode.
+            //To avoid calling already done calls
+            this.phonecalls_auto_call = [];
+            this.selected_phonecall = null;
+            //create the sip user agent and bind actions
             this.sip_js = new openerp.voip.user_agent();
             this.sip_js.on('sip_ringing',this,this.sip_ringing);
             this.sip_js.on('sip_accepted',this,this.sip_accepted);
@@ -223,6 +230,7 @@ openerp.crm_voip = function(instance) {
             this.sip_js.on('sip_bye',this,this.sip_bye);
             this.sip_js.on('sip_error',this,this.sip_error);
             this.UI = this.__parentedParent;
+
             //To get the formatCurrency function from the server
             var self = this;
             new instance.web.Model("res.currency")
@@ -359,14 +367,14 @@ openerp.crm_voip = function(instance) {
         automatic_call: function(){
             if(!this.on_call){
                 this.in_automatic_mode = true;
-                this.phonecalls_ids = [];
+                this.phonecalls_auto_call = [];
                 for (var id in this.phonecalls){
                     if(this.phonecalls[id].state != "done"){
-                        this.phonecalls_ids.push(id);
+                        this.phonecalls_auto_call.push(id);
                     }
                 }
-                if(this.phonecalls_ids.length){
-                    this.make_call(this.phonecalls_ids.shift());
+                if(this.phonecalls_auto_call.length){
+                    this.make_call(this.phonecalls_auto_call.shift());
                 }else{
                     this.stop_automatic_call();
                 }
@@ -374,9 +382,9 @@ openerp.crm_voip = function(instance) {
         },
 
         next_call: function(){
-            if(this.phonecalls_ids.length){
+            if(this.phonecalls_auto_call.length){
                 if(!this.on_call){
-                    this.make_call(this.phonecalls_ids.shift());
+                    this.make_call(this.phonecalls_auto_call.shift());
                 }
             }else{
                 this.stop_automatic_call();
@@ -543,8 +551,8 @@ openerp.crm_voip = function(instance) {
             }else{
                 this.UI.$(".oe_dial_phonecall")
                     .each(function(key,phonecall){
-                        if($(phonecall).data('state') != 'done'){
-                            self.make_call($(phonecall).data('id'));
+                        if(phonecall.getAttribute('data-state') != 'done'){
+                            self.make_call(phonecall.getAttribute('data-id'));
                             return false;
                         }
                     });
