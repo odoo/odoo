@@ -590,7 +590,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.view_order.push(view_descr);
             self.views[view_type] = view_descr;
         });
-        this.multiple_views = (self.view_order.length - ('form' in this.views ? 1 : 0)) > 1;
+        this.multiple_views = (self.view_order.length > 1);
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -625,9 +625,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 action : self.action,
                 action_views_ids : views_ids,
             }, self.flags, self.flags[view.type], view.options);
-            if (view.type !== 'form') {
-                self.$('.oe-vm-switch-' + view.type).tooltip();
-            }
+            self.$('.oe-vm-switch-' + view.type).tooltip();
         });
         this.$('.oe_debug_view').click(this.on_debug_changed);
         this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
