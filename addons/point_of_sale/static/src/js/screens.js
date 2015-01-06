@@ -1641,6 +1641,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 return;
             }
 
+            var plines = currentOrder.get('paymentLines').models;
+            for (var i = 0; i < plines.length; i++) {
+                if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
+                    this.pos_widget.screen_selector.show_popup('error',{
+                        'message': _t('Negative Bank Payment'),
+                        'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
+                    });
+                    return;
+                }
+            }
+
             if (!order.is_paid() || this.invoicing) {
                 return;
             }

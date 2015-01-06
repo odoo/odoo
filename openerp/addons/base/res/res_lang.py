@@ -94,6 +94,10 @@ class lang(osv.osv):
                be 100% cross-platform we map to the directives required by
                the C standard (1989 version), always available on platforms
                with a C standard implementation."""
+            # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
+            # unsupported '%-' patterns, e.g. for cs_CZ
+            format = format.replace('%-', '%')
+
             for pattern, replacement in tools.DATETIME_FORMATS_MAP.iteritems():
                 format = format.replace(pattern, replacement)
             return str(format)

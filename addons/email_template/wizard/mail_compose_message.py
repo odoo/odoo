@@ -129,7 +129,7 @@ class mail_compose_message(osv.TransientModel):
         email_template = self.pool.get('email.template')
         ir_model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
-            model_ids = ir_model_pool.search(cr, uid, [('model', '=', record.model)], context=context)
+            model_ids = ir_model_pool.search(cr, uid, [('model', '=', record.model or 'mail.message')], context=context)
             model_id = model_ids and model_ids[0] or False
             model_name = ''
             if model_id:

@@ -296,7 +296,8 @@ class purchase_order(osv.osv):
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
                                            states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
-        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),        
+        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),
+        'related_usage': fields.related('location_id', 'usage', type='char'),
         'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
         'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True),
         'group_id': fields.many2one('procurement.group', string="Procurement Group"),
@@ -383,8 +384,8 @@ class purchase_order(osv.osv):
         if picking_type_id:
             picktype = self.pool.get("stock.picking.type").browse(cr, uid, picking_type_id, context=context)
             if picktype.default_location_dest_id:
-                value.update({'location_id': picktype.default_location_dest_id.id})
-            value.update({'related_location_id': picktype.default_location_dest_id and picktype.default_location_dest_id.id or False})
+                value.update({'location_id': picktype.default_location_dest_id.id, 'related_usage': picktype.default_location_dest_id.usage})
+            value.update({'related_location_id': picktype.default_location_dest_id.id})
         return {'value': value}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -745,14 +746,14 @@ class purchase_order(osv.osv):
                 'product_uos_qty': min(procurement_qty, diff_quantity),
                 'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
                 'procurement_id': procurement.id,
-                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='picking' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
                 'propagate': procurement.rule_id.propagate,
             })
             diff_quantity -= min(procurement_qty, diff_quantity)
             res.append(tmp)
         #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
         #split the future stock move in two because the route followed may be different.
-        if diff_quantity > 0:
+        if float_compare(diff_quantity, 0.0, precision_rounding=order_line.product_uom.rounding) > 0:
             move_template['product_uom_qty'] = diff_quantity
             move_template['product_uos_qty'] = diff_quantity
             res.append(move_template)
@@ -1052,7 +1053,7 @@ class purchase_order_line(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        # Calculate the list of purchase orders first
+        # We will group by PO first, so we do the check only once for each PO
         purchase_orders = list(set([x.order_id for x in self.browse(cr, uid, ids, context=context)]))
         for purchase in purchase_orders:
             if all([l.state == 'cancel' for l in purchase.order_line]):
@@ -1062,7 +1063,6 @@ class purchase_order_line(osv.osv):
         group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
         res = [user for user in group_uom.users if user.id == uid]
         return len(res) and True or False
-
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,

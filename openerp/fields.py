@@ -447,6 +447,7 @@ class Field(object):
         for name in self.related:
             recs._setup_fields()
             field = recs._fields[name]
+            field.setup(env)
             recs = recs[name]
             fields.append(field)
 
@@ -568,6 +569,8 @@ class Field(object):
                 _logger.debug("Field %s is recursively defined", self)
                 self.recursive = True
                 continue
+
+            field.setup(env)
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
             field._triggers.add((self, '.'.join(path0 or ['id'])))
@@ -739,7 +742,7 @@ class Field(object):
             return value
         return bool(value) and ustr(value)
 
-    def convert_to_display_name(self, value):
+    def convert_to_display_name(self, value, record=None):
         """ convert `value` from the cache to a suitable display name. """
         return ustr(value)
 
@@ -1218,6 +1221,10 @@ class Datetime(Field):
             return self.from_string(value)
         return bool(value) and ustr(value)
 
+    def convert_to_display_name(self, value, record=None):
+        assert record, 'Record expected'
+        return Datetime.to_string(Datetime.context_timestamp(record, Datetime.from_string(value)))
+
 
 class Binary(Field):
     type = 'binary'
@@ -1360,7 +1367,7 @@ class Reference(Selection):
     def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
-    def convert_to_display_name(self, value):
+    def convert_to_display_name(self, value, record=None):
         return ustr(value and value.display_name)
 
 
@@ -1372,8 +1379,10 @@ class _Relational(Field):
 
     def _setup(self, env):
         super(_Relational, self)._setup(env)
-        assert self.comodel_name in env.registry, \
-            "Field %s with unknown comodel_name %r" % (self, self.comodel_name)
+        if self.comodel_name not in env.registry:
+            _logger.warning("Field %s with unknown comodel_name %r"
+                            % (self, self.comodel_name))
+            self.comodel_name = '_unknown'
 
     @property
     def _related_domain(self):
@@ -1490,7 +1499,7 @@ class Many2one(_Relational):
     def convert_to_export(self, value, env):
         return bool(value) and value.name_get()[0][1]
 
-    def convert_to_display_name(self, value):
+    def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
 
 
@@ -1597,7 +1606,7 @@ class _RelationalMulti(_Relational):
     def convert_to_export(self, value, env):
         return bool(value) and ','.join(name for id, name in value.name_get())
 
-    def convert_to_display_name(self, value):
+    def convert_to_display_name(self, value, record=None):
         raise NotImplementedError()
 
     def _compute_related(self, records):

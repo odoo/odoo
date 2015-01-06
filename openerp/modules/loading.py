@@ -225,8 +225,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         registry._init_modules.add(package.name)
         cr.commit()
 
-    registry.setup_models(cr, partial=True)
-
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
     # The query won't be valid for models created later (i.e. custom model
@@ -258,12 +256,15 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     while True:
         cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
+        if not module_list:
+            break
         graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules, perform_checks=perform_checks)
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
-        if not processed: break
+        if not processed:
+            break
     return processed_modules
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
@@ -302,6 +303,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
+
+        if tools.config['load_language'] or update_module:
+            # some base models are used below, so make sure they are set up
+            registry.setup_models(cr, partial=True)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
@@ -357,10 +362,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module)
 
-        # load custom models
-        cr.execute('select model from ir_model where state=%s', ('manual',))
-        for model in cr.dictfetchall():
-            registry['ir.model'].instanciate(cr, SUPERUSER_ID, model['model'], {})
         registry.setup_models(cr)
 
         # STEP 4: Finish and cleanup installations

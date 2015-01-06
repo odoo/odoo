@@ -188,6 +188,8 @@ class BlogPost(osv.Model):
             self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
         return content
 
+        if isinstance(ids, (int, long)):
+            ids = [ids]
     def _check_for_publication(self, cr, uid, ids, vals, context=None):
         if vals.get('website_published'):
             base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')

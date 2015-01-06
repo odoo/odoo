@@ -444,7 +444,7 @@ class Post(models.Model):
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = self.browse(question.id).with_context(mail_create_nosubcribe=True).message_post(**values)
+        new_message = self.browse(question.id).with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()

@@ -1261,7 +1261,7 @@ class account_invoice_line(models.Model):
     uos_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
-        ondelete='set null', index=True)
+        ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('type', 'not in', ['view', 'closed'])],
         default=_default_account,

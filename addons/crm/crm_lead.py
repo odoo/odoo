@@ -326,7 +326,7 @@ class crm_lead(format_address, osv.osv):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
         team_id = self._get_default_team_id(cr, uid, context=context)
-        if user_id and not team_id:
+        if user_id and not team_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams'):
             team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if team_ids:
                 team_id = team_ids[0]

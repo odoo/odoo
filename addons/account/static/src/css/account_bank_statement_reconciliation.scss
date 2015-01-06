@@ -267,14 +267,6 @@ $aestetic_animation_speed: 300ms;
 
             tr {
                 cursor: pointer;
-
-                &.created_line {
-                    cursor: default !important;
-
-                    .line_remove_button {
-                        cursor: pointer;
-                    }
-                }
             }
 
             td {
@@ -373,10 +365,18 @@ $aestetic_animation_speed: 300ms;
 
             caption {
                 text-align: left;
-                font-size: 1.1em;
-                font-weight: bold;
                 height: 26px;
                 margin: 0 $actionColWidth 4px $actionColWidth;
+
+                .partner_name {
+                    font-size: 1.1em;
+                    font-weight: bold;
+                }
+
+                .tip_reconciliation_not_balanced {
+                    float: right;
+                    padding-right: 7px;
+                }
 
                 button {
                     float: right;
@@ -390,7 +390,6 @@ $aestetic_animation_speed: 300ms;
 
                 > span, > input {
                     position: relative; top: 7px; /* meh */
-                    font-weight: bold;
                 }
             }
 

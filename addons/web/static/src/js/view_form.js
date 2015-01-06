@@ -510,38 +510,47 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             this.onchanges_mutex.exec(function(){
                 return def.then(function(response) {
-                    if (widget && widget.field['change_default']) {
-                        var fieldname = widget.name;
-                        var value_;
-                        if (response.value && (fieldname in response.value)) {
-                            // Use value from onchange if onchange executed
-                            value_ = response.value[fieldname];
-                        } else {
-                            // otherwise get form value for field
-                            value_ = self.fields[fieldname].get_value();
-                        }
-                        var condition = fieldname + '=' + value_;
-
-                        if (value_) {
-                            return self.alive(new instance.web.Model('ir.values').call(
-                                'get_defaults', [self.model, condition]
-                            )).then(function (results) {
-                                if (!results.length) {
-                                    return response;
-                                }
-                                if (!response.value) {
-                                    response.value = {};
-                                }
-                                for(var i=0; i<results.length; ++i) {
-                                    // [whatever, key, value]
-                                    var triplet = results[i];
-                                    response.value[triplet[1]] = triplet[2];
-                                }
-                                return response;
-                            });
-                        }
+                    var fields = {};
+                    if (widget){
+                        fields[widget.name] = widget.field;
                     }
-                    return response;
+                    else{
+                        fields = self.fields_view.fields;
+                    }
+                    var defs = [];
+                    _.each(fields, function(field, fieldname){
+                        if (field && field.change_default) {
+                            var value_;
+                            if (response.value && (fieldname in response.value)) {
+                                // Use value from onchange if onchange executed
+                                value_ = response.value[fieldname];
+                            } else {
+                                // otherwise get form value for field
+                                value_ = self.fields[fieldname].get_value();
+                            }
+                            var condition = fieldname + '=' + value_;
+
+                            if (value_) {
+                                defs.push(self.alive(new instance.web.Model('ir.values').call(
+                                    'get_defaults', [self.model, condition]
+                                )).then(function (results) {
+                                    if (!results.length) {
+                                        return response;
+                                    }
+                                    if (!response.value) {
+                                        response.value = {};
+                                    }
+                                    for(var i=0; i<results.length; ++i) {
+                                        // [whatever, key, value]
+                                        var triplet = results[i];
+                                        response.value[triplet[1]] = triplet[2];
+                                    }
+                                    return response;
+                                }));
+                            }
+                        }
+                    });
+                    return _.isEmpty(defs) ? response : $.when.apply(null, defs);
                 }).then(function(response) {
                     return self.on_processed_onchange(response);
                 });
@@ -1151,7 +1160,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
+        return new instance.web.CompoundContext(this._build_view_fields_values(), a_dataset.get_context());
     },
 });
 
@@ -3244,9 +3253,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     click_change_value: function (event) {
         var val = $(event.target).val();
         val = this.field.type == "selection" ? val : +val;
-        if (val == this.get_value()) {
-            this.set_value(false);
-        } else {
+        if (val !== this.get_value()) {
             this.set_value(val);
         }
     },
@@ -3762,7 +3769,14 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
             minLength: 0,
-            delay: 250
+            delay: 250,
+        });
+        var appendTo = this.$el.parents('.oe_view_manager_body, .modal-dialog').last();
+        if (appendTo.length === 0){
+            appendTo = '.oe_application > *';
+        }
+        this.$input.autocomplete({
+            appendTo: appendTo
         });
         // set position for list of suggestions box
         this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
@@ -4069,16 +4083,18 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var self = this;
 
         self.load_views();
-        this.is_loaded.done(function() {
-            self.on("change:effective_readonly", self, function() {
-                self.is_loaded = self.is_loaded.then(function() {
-                    self.viewmanager.destroy();
-                    return $.when(self.load_views()).done(function() {
-                        self.reload_current_view();
-                    });
+        var destroy = function() {
+            self.is_loaded = self.is_loaded.then(function() {
+                self.viewmanager.destroy();
+                return $.when(self.load_views()).done(function() {
+                    self.reload_current_view();
                 });
             });
+        };
+        this.is_loaded.done(function() {
+            self.on("change:effective_readonly", self, destroy);
         });
+        this.view.on("on_button_cancel", self, destroy);
         this.is_started = true;
         this.reload_current_view();
     },

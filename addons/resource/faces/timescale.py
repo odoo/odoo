@@ -21,7 +21,7 @@
 ############################################################################
 
 import faces.pcalendar as pcal
-import matplotlib.cbook as cbook
+import openerp.tools as tools
 import datetime
 import sys
 
@@ -73,7 +73,7 @@ class TimeScale(object):
         def create_time_slots(day):
             src_slots = dcal.get_working_times(day)
             slots = [0, src_slots, 24*60]
-            slots = tuple(cbook.flatten(slots))
+            slots = tuple(tools.flatten(slots))
             slots = zip(slots[:-1], slots[1:])
 
             #balance non working slots

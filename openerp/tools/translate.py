@@ -137,6 +137,9 @@ _LOCALE2WIN32 = {
 
 }
 
+# These are not all english small words, just those that could potentially be isolated within views
+ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
+
 
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
@@ -676,7 +679,7 @@ def trans_generate(lang, modules, cr):
 
     def push(mod, type, name, res_id, term):
         term = (term or '').strip()
-        if len(term) > 2:
+        if len(term) > 2 or term in ENGLISH_SMALL_WORDS:
             push_translation(mod, type, name, res_id, term)
 
     def get_root_view(xml_id):
@@ -950,10 +953,12 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
+                    # (Sometimes we have 'i18n_extra' instead of just 'i18n')
                     addons_module_i18n, _ = os.path.split(fileobj.name)
-                    addons_module, _ = os.path.split(addons_module_i18n)
+                    addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
-                    pot_handle = misc.file_open(os.path.join(addons, module, 'i18n', module + '.pot'))
+                    pot_handle = misc.file_open(os.path.join(
+                        addons, module, i18n_dir, module + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass

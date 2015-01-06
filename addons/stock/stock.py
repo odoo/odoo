@@ -1031,9 +1031,9 @@ class stock_picking(osv.osv):
         product_uom = {} # Determines UoM used in pack operations
         for move in picking.move_lines:
             if not product_uom.get(move.product_id.id):
-                product_uom[move.product_id.id] = move.product_id.uom_id.id
-            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id]:
-                product_uom[move.product_id.id] = move.product_uom.id
+                product_uom[move.product_id.id] = move.product_id.uom_id
+            if move.product_uom.id != move.product_id.uom_id.id and move.product_uom.factor > product_uom[move.product_id.id].factor:
+                product_uom[move.product_id.id] = move.product_uom
 
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
@@ -1091,7 +1091,7 @@ class stock_picking(osv.osv):
             uom_id = product.uom_id.id
             qty_uom = qty
             if product_uom.get(key[0]):
-                uom_id = product_uom[key[0]]
+                uom_id = product_uom[key[0]].id
                 qty_uom = uom_obj._compute_qty(cr, uid, product.uom_id.id, qty, uom_id)
             vals.append({
                 'picking_id': picking.id,
@@ -1274,7 +1274,7 @@ class stock_picking(osv.osv):
         #2) then, process the remaining part
         all_op_processed = True
         for ops, product_id, remaining_qty in still_to_do:
-            all_op_processed = all_op_processed and _create_link_for_product(ops.id, product_id, remaining_qty)
+            all_op_processed = _create_link_for_product(ops.id, product_id, remaining_qty) and all_op_processed
         return (need_rereserve, all_op_processed)
 
     def picking_recompute_remaining_quantities(self, cr, uid, picking, context=None):
@@ -1453,6 +1453,7 @@ class stock_picking(osv.osv):
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
         stock_move_obj = self.pool.get('stock.move')
+        package_id = False
         for picking_id in picking_ids:
             operation_search_domain = [('picking_id', '=', picking_id), ('result_package_id', '=', False)]
             if operation_filter_ids != []:
@@ -1472,7 +1473,7 @@ class stock_picking(osv.osv):
                         stock_move_obj.check_tracking_product(cr, uid, op.product_id, op.lot_id.id, op.location_id, op.location_dest_id, context=context)
                 package_id = package_obj.create(cr, uid, {}, context=context)
                 stock_operation_obj.write(cr, uid, pack_operation_ids, {'result_package_id': package_id}, context=context)
-        return True
+        return package_id
 
     def process_product_id_from_ui(self, cr, uid, picking_id, product_id, op_id, increment=1, context=None):
         return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id),('id', '=', op_id)], increment=increment, context=context)

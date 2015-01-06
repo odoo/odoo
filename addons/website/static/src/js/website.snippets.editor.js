@@ -26,7 +26,7 @@
                 window.snippets = this.snippets = new website.snippet.BuildingBlock(this, $editable);
                 this.snippets.appendTo(this.$el);
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
+                website.snippet.start_animation(true);
                 $editable.find("*").off('mousedown mouseup click');
             });
 

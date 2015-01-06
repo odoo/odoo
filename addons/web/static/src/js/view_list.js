@@ -1537,9 +1537,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         });
     },
     setup_resequence_rows: function (list, dataset) {
-        // drag and drop enabled if list is not sorted and there is a
-        // visible column with @widget=handle or "sequence" column in the view.
-        if ((dataset.sort && dataset.sort())
+        // drag and drop enabled if list is not sorted (unless it is sorted by
+        // sequence (ASC)), and there is a visible column with @widget=handle
+        // or "sequence" column in the view.
+        if ((dataset.sort && dataset.sort() && dataset.sort() !== 'sequence'
+            && dataset.sort() !== 'sequence ASC')
             || !_(this.columns).any(function (column) {
                     return column.widget === 'handle'
                         || column.name === 'sequence'; })) {
@@ -1611,7 +1613,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
-                self.view.$pager.hide();
+                // page count is irrelevant on grouped page, replace by limit
+                self.view.$pager.find('.oe_pager_group').hide();
+                self.view.$pager.find('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }

@@ -98,7 +98,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
-            product = data.product_id.with_context(location=data.location_id.id)
+            product = data.product_id.with_context(location=data.location_id.id, lot_id= data.lot_id.id)
             th_qty = product.qty_available
             line_data = {
                 'inventory_id': inventory_id,

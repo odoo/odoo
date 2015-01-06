@@ -50,14 +50,9 @@ class account_invoice_line(osv.osv):
             return res
         if type in ('in_invoice','in_refund'):
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            if type == 'in_invoice':
-                oa = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id
-                if not oa:
-                    oa = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id
-            else:
-                oa = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id
-                if not oa:
-                    oa = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id
+            oa = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id
+            if not oa:
+                oa = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id
             if oa:
                 fpos = fposition_id and fiscal_pool.browse(cr, uid, fposition_id, context=context) or False
                 a = fiscal_pool.map_account(cr, uid, fpos, oa)
@@ -82,7 +77,7 @@ class account_invoice_line(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
             # debit account dacc will be the output account
             # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id

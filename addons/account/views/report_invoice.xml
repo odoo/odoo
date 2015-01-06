@@ -71,7 +71,7 @@
                         <td class="text-right">
                             <span t-field="l.price_unit"/>
                         </td>
-                        <td groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                        <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td>
                             <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
                         </td>
@@ -142,7 +142,7 @@
             <p t-if="o.payment_term">
                 <span t-field="o.payment_term.note"/>
             </p>
-            <p t-if="o.fiscal_position and o.fiscal_position.note">
+            <p t-if="o.fiscal_position.note">
                 <strong>Fiscal Position Remark:</strong>
                 <span t-field="o.fiscal_position.note"/>
             </p>

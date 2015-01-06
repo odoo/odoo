@@ -177,7 +177,8 @@ class product_uom(osv.osv):
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
-        if not from_uom_id or not price or not to_uom_id:
+        if (not from_uom_id or not price or not to_uom_id
+                or (to_uom_id == from_uom_id)):
             return price
         from_unit, to_unit = self.browse(cr, uid, [from_uom_id, to_uom_id])
         if from_unit.category_id.id != to_unit.category_id.id:
@@ -890,11 +891,8 @@ class product_product(osv.osv):
         return dict.fromkeys(ids, True)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
-        result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
-        for el in template_ids:
-            result.add(el)
-        return list(result)
+        return list(set(template_ids))
 
     def _get_image_variant(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -924,7 +922,7 @@ class product_product(osv.osv):
 
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes"),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),

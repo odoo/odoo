@@ -737,9 +737,13 @@ class mrp_production(osv.osv):
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
         for production in self.browse(cr, uid, ids, context=context):
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
+            procs = proc_obj.search(cr, uid, [('move_dest_id', 'in', [x.id for x in production.move_lines])], context=context)
+            if procs:
+                proc_obj.cancel(cr, uid, procs, context=context)
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
         # Put related procurements in exception
@@ -1057,7 +1061,8 @@ class mrp_production(osv.osv):
         source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         procs = proc_obj.search(cr, uid, [('production_id', '=', production.id)], context=context)
-        procurement_id = procs and procs[0] or False
+        procurement = procs and\
+            proc_obj.browse(cr, uid, procs[0], context=context) or False
         data = {
             'name': production.name,
             'date': production.date_planned,
@@ -1069,10 +1074,11 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'move_dest_id': production.move_prod_id.id,
-            'procurement_id': procurement_id,
+            'procurement_id': procurement and procurement.id,
             'company_id': production.company_id.id,
             'production_id': production.id,
             'origin': production.name,
+            'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
         #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
@@ -1157,6 +1163,7 @@ class mrp_production(osv.osv):
             'price_unit': product.standard_price,
             'origin': production.name,
             'warehouse_id': loc_obj.get_warehouse(cr, uid, production.location_src_id, context=context),
+            'group_id': production.move_prod_id.group_id.id,
         }, context=context)
         
         if prev_move:

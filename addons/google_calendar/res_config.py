@@ -13,8 +13,8 @@ class calendar_config_settings(osv.TransientModel):
     def set_calset(self,cr,uid,ids,context=None) :
         params = self.pool['ir.config_parameter']
         myself = self.browse(cr,uid,ids[0],context=context)
-        params.set_param(cr, uid, 'google_calendar_client_id', myself.cal_client_id or '', groups=['base.group_system'], context=None)
-        params.set_param(cr, uid, 'google_calendar_client_secret', myself.cal_client_secret or '', groups=['base.group_system'], context=None)
+        params.set_param(cr, uid, 'google_calendar_client_id', myself.cal_client_id.strip() or '', groups=['base.group_system'], context=None)
+        params.set_param(cr, uid, 'google_calendar_client_secret', myself.cal_client_secret.strip() or '', groups=['base.group_system'], context=None)
         
 
     def get_default_all(self,cr,uid,ids,context=None):

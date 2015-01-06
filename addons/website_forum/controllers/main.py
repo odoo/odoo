@@ -293,7 +293,7 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
-            post.with_context(mail_create_nosubcribe=True).message_post(
+            post.with_context(mail_create_nosubscribe=True).message_post(
                 body=kwargs.get('comment'),
                 type='comment',
                 subtype='mt_comment')

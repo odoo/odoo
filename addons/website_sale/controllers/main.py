@@ -6,6 +6,7 @@ from openerp import http
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+from openerp.addons.web.controllers.main import login_redirect
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -188,9 +189,8 @@ class website_sale(http.Controller):
         styles = style_obj.browse(cr, uid, style_ids, context=context)
 
         category_obj = pool['product.public.category']
-        category_ids = category_obj.search(cr, uid, [], context=context)
-        categories = category_obj.browse(cr, uid, category_ids, context=context)
-        categs = filter(lambda x: not x.parent_id, categories)
+        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        categs = category_obj.browse(cr, uid, category_ids, context=context)
 
         product_obj = pool.get('product.template')
 
@@ -277,6 +277,8 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", methods=['POST'], website=True)
     def product_comment(self, product_template_id, **post):
+        if not request.session.uid:
+            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             request.registry['product.template'].message_post(
@@ -284,7 +286,7 @@ class website_sale(http.Controller):
                 body=post.get('comment'),
                 type='comment',
                 subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
+                context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
@@ -514,7 +516,12 @@ class website_sale(http.Controller):
         orm_user = registry.get('res.users')
         order_obj = request.registry.get('sale.order')
 
-        billing_info = self.checkout_parse('billing', checkout, True)
+        partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
+
+        billing_info = {}
+        if partner_lang:
+            billing_info['lang'] = partner_lang
+        billing_info.update(self.checkout_parse('billing', checkout, True))
 
         # set partner_id
         partner_id = None
@@ -535,7 +542,10 @@ class website_sale(http.Controller):
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
-            shipping_info = self.checkout_parse('shipping', checkout, True)
+            shipping_info = {}
+            if partner_lang:
+                shipping_info['lang'] = partner_lang
+            shipping_info.update(self.checkout_parse('shipping', checkout, True))
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
