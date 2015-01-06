@@ -50,6 +50,9 @@ PUBLISH_DIRS = {
     'tarball': 'src',
     'windows': 'exe',
 }
+ADDONS_NOT_TO_PUBLISH = [
+    'web_analytics'
+]
 
 def mkdir(d):
     if not os.path.isdir(d):
@@ -242,7 +245,8 @@ def _prepare_build_dir(o):
     cmd = ['rsync', '-a', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
     system(cmd + ['%s/' % o.odoo_dir, o.build_dir])
     for i in glob(join(o.build_dir, 'addons/*')):
-        shutil.move(i, join(o.build_dir, 'openerp/addons'))
+        if i.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
+            shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
 def build_tgz(o):
     system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
