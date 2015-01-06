@@ -1751,6 +1751,14 @@ class Many2many(_RelationalMulti):
     _column_limit = property(attrgetter('limit'))
 
 
+class Serialized(Field):
+    """ Minimal support for existing sparse and serialized fields. """
+    type = 'serialized'
+
+    def convert_to_cache(self, value, record, validate=True):
+        return value or {}
+
+
 class Id(Field):
     """ Special case for field 'id'. """
     store = True
@@ -1773,7 +1781,6 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
-
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
