@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from collections import defaultdict
 from difflib import get_close_matches
 import logging
 
@@ -435,34 +434,35 @@ class ir_translation(osv.osv):
             return
 
         trans = self.env['ir.translation']
-        trans_domain = [('type', '=', 'model'), ('name', '=', "%s,%s" % (model_name, field_name))]
+        outdated = trans
         discarded = trans
 
         for record in records:
+            # get field value and terms to translate
             value = record[field_name]
-            if not value:
+            terms = set(field.get_terms(value))
+            record_trans = trans.search([
+                ('type', '=', 'model'),
+                ('name', '=', "%s,%s" % (model_name, field_name)),
+                ('res_id', '=', record.id),
+            ])
+
+            if not terms:
                 # discard all translations for that field
-                discarded += trans.search(trans_domain + [('res_id', '=', record.id)])
+                discarded += record_trans
                 continue
 
-            # group existing translations by lang and src
-            lang_term_trans = defaultdict(dict)
-            for trans in trans.search(trans_domain + [('res_id', '=', record.id)]):
-                lang_term_trans[trans.lang][trans.src] = trans
+            # remap existing translations on terms when possible
+            for trans in record_trans:
+                if trans.src not in terms:
+                    matches = get_close_matches(trans.src, terms, 1, 0.9)
+                    if matches:
+                        trans.write({'src': matches[0], 'state': trans.state})
+                    else:
+                        outdated += trans
 
-            # remap existing translations on source terms when possible
-            sources = set(field.get_terms(value))
-            for term_trans in lang_term_trans.values():
-                for term, trans in term_trans.items():
-                    if term not in sources:
-                        terms = get_close_matches(term, sources, 1, 0.9)
-                        if terms and terms[0] not in term_trans:
-                            trans.write({'src': terms[0], 'state': trans.state})
-                            term_trans[terms[0]] = trans
-                        else:
-                            discarded += trans
-
-        # remove discarded translations
+        # process outdated and discarded translations
+        outdated.write({'state': 'to_translate'})
         discarded.unlink()
 
     @api.model
