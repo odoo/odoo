@@ -499,7 +499,7 @@ class Post(osv.Model):
         }
         message_id = self.pool['forum.post'].message_post(
             cr, uid, question.id,
-            context=dict(context, mail_create_nosubcribe=True),
+            context=dict(context, mail_create_nosubscribe=True),
             **values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
