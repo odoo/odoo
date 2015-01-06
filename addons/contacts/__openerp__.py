@@ -36,7 +36,6 @@ You can track your suppliers, customers and other contacts.
     'data': [
         'contacts_view.xml',
     ],
-    'images': ['images/contacts.jpeg'],
     'installable': True,
     'application': True,
     'auto_install': False,

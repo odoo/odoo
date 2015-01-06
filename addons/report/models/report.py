@@ -519,7 +519,7 @@ class Report(osv.Model):
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
             command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-        elif paperformat.margin_top:
+        else:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
@@ -536,12 +536,9 @@ class Report(osv.Model):
         elif paperformat.header_spacing:
             command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
-        if paperformat.margin_left:
-            command_args.extend(['--margin-left', str(paperformat.margin_left)])
-        if paperformat.margin_bottom:
-            command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-        if paperformat.margin_right:
-            command_args.extend(['--margin-right', str(paperformat.margin_right)])
+        command_args.extend(['--margin-left', str(paperformat.margin_left)])
+        command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
+        command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
         if paperformat.header_line:

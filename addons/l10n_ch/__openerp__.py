@@ -70,6 +70,5 @@ https://github.com/OCA/l10n-switzerland
  'test': [],
  'auto_install': False,
  'installable': True,
- 'images': ['images/config_chart_l10n_ch.jpeg', 'images/l10n_ch_chart.jpeg']
  }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
