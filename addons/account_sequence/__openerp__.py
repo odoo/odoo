@@ -39,7 +39,6 @@ You can customize the following attributes of the sequence:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com',
-    'images': ['images/internal_sequence_number.jpeg'],
     'depends': ['account'],
     'data': [
         'account_sequence_data.xml',

@@ -44,6 +44,5 @@ Shows you a list of applications features to install from.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
