@@ -402,14 +402,21 @@ class ir_translation(osv.osv):
         return self.__get_source(cr, uid, name, types, lang, source, res_id)
 
     @api.model
+    def _get_terms_query(self, model_name, field_name, lang, ids):
+        """ Utility function that makes the query for field terms. """
+        query = """ SELECT res_id, src, value FROM ir_translation
+                    WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
+        params = (lang, 'model', "%s,%s" % (model_name, field_name), tuple(ids))
+        return query, params
+
+    @api.model
     @tools.ormcache_multi(skiparg=1, multi=4)
     def _get_terms_translations(self, model_name, field_name, lang, ids):
         """ Return the terms and translations of a given field on record ids. """
         result = {rid: {} for rid in ids}
         if ids:
-            query = """ SELECT res_id, src, value FROM ir_translation
-                        WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
-            self._cr.execute(query, (lang, 'model', "%s,%s" % (model_name, field_name), tuple(ids)))
+            query, params = self._get_terms_query(model_name, field_name, lang, ids)
+            self._cr.execute(query, params)
             for res_id, src, value in self._cr.fetchall():
                 result[res_id][src] = value
         return result
