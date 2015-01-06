@@ -98,7 +98,7 @@ class crm_phonecall(osv.osv):
             except ValueError:
                 pass
         for call in self.browse(cr, uid, ids, context=context):
-            if(call.state == "to_do"):
+            if(call.state != "done"):
                 call.state = "cancel"
                 call.in_queue = False
             if not team_id:
