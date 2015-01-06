@@ -649,7 +649,7 @@ define(['summernote/summernote'], function () {
 
         this.makeSnap = function () {
             var rng = range.create(),
-                elEditable = dom.ancestor(rng && rng.commonAncestor(), dom.isEditable) || $('.o_editable.note-editable:first')[0];
+                elEditable = dom.ancestor(rng && rng.commonAncestor(), dom.isEditable) || $('.o_editable:first')[0];
             return {
                 editable: elEditable,
                 contents: elEditable.innerHTML,
