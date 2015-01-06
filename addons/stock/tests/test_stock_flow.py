@@ -425,8 +425,8 @@ class TestStockFlow(TestStockCommon):
         # ----------------------------------------------------------------------
         # Create incoming shipment of products DozA, SDozA, SDozARound, kgB, gB
         # ----------------------------------------------------------------------
-        #   DozA ( 10 Dozon ) , SDozA ( 10.5 SuperDozon )
-        #   SDozARound ( 10.5 10.5 SuperDozonRound ) , kgB ( 0.020 kg )
+        #   DozA ( 10 Dozen ) , SDozA ( 10.5 SuperDozen )
+        #   SDozARound ( 10.5 10.5 SuperDozenRound ) , kgB ( 0.020 kg )
         #   gB ( 525.3 g )
         # ----------------------------------------------------------------------
 
@@ -861,7 +861,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(self.DozA.qty_available, 15.5, 'Wrong quantity available (%s found instead of 15.5)' % (self.DozA.qty_available))
 
         # -----------------------------------------
-        # Create product in kg and receive in tone.
+        # Create product in kg and receive in ton.
         # -----------------------------------------
 
         productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
