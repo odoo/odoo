@@ -28,7 +28,7 @@ openerp.crm_voip = function(instance) {
 
         //select the clicked call, show options and put some highlight on it
         select_call: function(){
-            this.trigger("select_call", this.get('id'));
+            this.trigger("select_call", this.id);
         },
 
         remove_phonecall: function(e){
@@ -160,7 +160,7 @@ openerp.crm_voip = function(instance) {
                     }
                     this.$(".oe_dial_email").hide();
                     //check if the phonecall has an email to display the send email button or not
-                    if(selected_phonecall.get('email')){
+                    if(selected_phonecall.email){
                         this.$(".oe_dial_email").show();
                         this.$(".oe_dial_schedule_call").removeClass("oe_dial_schedule_full_width");
                     }else{
@@ -243,7 +243,7 @@ openerp.crm_voip = function(instance) {
             var id = this.current_phonecall.id;
             this.UI.start_ringing(id);
             //Select the current call if not already selected
-            if(!this.selected_phonecall || this.selected_phonecall.get('id') !== id ){
+            if(!this.selected_phonecall || this.selected_phonecall.id !== id ){
                 this.select_call(id);
             }
         },
@@ -480,7 +480,7 @@ openerp.crm_voip = function(instance) {
 
         //action to change the main view to go to the opportunity's view
         to_lead: function() {
-            var id = this.selected_phonecall.get('id');
+            var id = this.selected_phonecall.id;
             var phonecall = this.phonecalls[id];
             if(phonecall.opportunity_id){
                 //Call of the function xmlid_to_res_model_res_id to get the id of the opportunity's form view and not the lead's form view
@@ -506,7 +506,7 @@ openerp.crm_voip = function(instance) {
 
         //action to change the main view to go to the client's view
         to_client: function() {
-            var id = this.selected_phonecall.get('id');
+            var id = this.selected_phonecall.id;
             var phonecall = this.phonecalls[id];
             openerp.client.action_manager.do_action({
                 type: 'ir.actions.act_window',
@@ -539,9 +539,9 @@ openerp.crm_voip = function(instance) {
         call_button: function(){
             var self = this;
             if(this.selected_phonecall){
-                this.make_call(this.selected_phonecall.get('id'));
+                this.make_call(this.selected_phonecall.id);
             }else{
-                this.widgets
+                this.UI.$(".oe_dial_phonecall")
                     .each(function(key,phonecall){
                         if($(phonecall).data('state') != 'done'){
                             self.make_call($(phonecall).data('id'));
@@ -590,7 +590,7 @@ openerp.crm_voip = function(instance) {
 
         //action done when the button "Reschedule Call" is clicked
         schedule_call: function(){
-            var id = this.selected_phonecall.get('id');
+            var id = this.selected_phonecall.id;
             var self = this;
             openerp.client.action_manager.do_action({
                 name: 'Schedule Other Call',
@@ -610,7 +610,7 @@ openerp.crm_voip = function(instance) {
 
         //action done when the button "Send Email" is clicked
         send_email: function(){
-            var id = this.selected_phonecall.get('id');
+            var id = this.selected_phonecall.id;
             var self = this;
             if(this.phonecalls[id].opportunity_id){
                 openerp.client.action_manager.do_action({

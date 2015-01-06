@@ -7,40 +7,43 @@ openerp.voip = function(openerp) {
         init: function(parent,options){
             openerp.PropertiesMixin.init.call(this,parent);
             var self = this;
-            self.in_automatic_mode = false;
-            self.onCall = false;
-            new openerp.web.Model("voip.configurator").call("get_pbx_config").then(function(result){
-                self.config = result;
-                var ua_config = {};
-                if(result.login && result.wsServer && result.pbx_ip && result.password){
-                    ua_config = {
-                        uri: result.login +'@'+result.pbx_ip,
-                        wsServers: result.wsServer,
-                        authorizationUser: result.login,
-                        password: result.password,
-                        hackIpInContact: true,
-                        log: {level: "error"},
-                        traceSip: false,
-                    };
-                    self.always_transfert = result.always_transfert;
-                    self.physical_phone = result.physical_phone;
-                    self.ring_number = result.ring_number;
-                }else{
-                    //TODO will open the error pop up on every page. maybe not the best way to do it
-                    //new openerp.web.Model("crm.phonecall").call("error_config");
-                }
+            this.in_automatic_mode = false;
+            this.onCall = false;
+            new openerp.web.Model("voip.configurator").call("get_pbx_config").then(_.bind(self.init_ua,self));
+        },
 
-                self.ua = new SIP.UA(ua_config);
-                var audio = document.createElement("audio");
-                audio.id = "remote_audio";
-                audio.autoplay = "autoplay";
-                document.body.appendChild(audio);
-                audio = document.createElement("audio");
-                audio.id = "ringbacktone";
-                audio.loop = "true";
-                audio.src = "/voip/static/src/sounds/ringbacktone.mp3";
-                document.body.appendChild(audio);
-            });
+        //initialisation of the ua object
+        init_ua: function(result){
+            this.config = result;
+            var ua_config = {};
+            if(result.login && result.wsServer && result.pbx_ip && result.password){
+                ua_config = {
+                    uri: result.login +'@'+result.pbx_ip,
+                    wsServers: result.wsServer,
+                    authorizationUser: result.login,
+                    password: result.password,
+                    hackIpInContact: true,
+                    log: {level: "error"},
+                    traceSip: false,
+                };
+                this.always_transfert = result.always_transfert;
+                this.physical_phone = result.physical_phone;
+                this.ring_number = result.ring_number;
+            }else{
+                //TODO will open the error pop up on every page. maybe not the best way to do it
+                //new openerp.web.Model("crm.phonecall").call("error_config");
+            }
+
+            this.ua = new SIP.UA(ua_config);
+            var audio = document.createElement("audio");
+            audio.id = "remote_audio";
+            audio.autoplay = "autoplay";
+            document.body.appendChild(audio);
+            audio = document.createElement("audio");
+            audio.id = "ringbacktone";
+            audio.loop = "true";
+            audio.src = "/voip/static/src/sounds/ringbacktone.mp3";
+            document.body.appendChild(audio);
         },
 
         //success callback function of the getUserMedia function
