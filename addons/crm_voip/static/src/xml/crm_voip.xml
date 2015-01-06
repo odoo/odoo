@@ -3,31 +3,31 @@
 -->
 <templates xml:space="preserve">
 <t t-name="crm_voip.PhonecallWidget">
-    <div rel='popover' data-trigger="hover" data-placement='right' class="oe_dial_phonecall" t-att-data-state="widget.get('state')" t-att-data-id="widget.get('id')">
+    <div rel='popover' data-trigger="hover" data-placement='right' class="oe_dial_phonecall" t-att-data-state="widget.state" t-att-data-id="widget.id">
          <table class="oe_form_group">
             <tr class="oe_form_group_row">
                 <td class="oe_form_group_cell oe_form_group_cell_label">
-                    <t t-if="widget.get('partner') != 'Unknown'">
+                    <t t-if="widget.partner != 'Unknown'">
                         <span class="oe_dial_phonecall_clip">
-                            <img t-att-src="'data:image/jpg;base64,'+widget.get('image_small')" class="oe_dial_phonecall_avatar"/>
+                            <img t-att-src="'data:image/jpg;base64,'+widget.image_small" class="oe_dial_phonecall_avatar"/>
                         </span>
                     </t>
-                    <t t-if="widget.get('partner') == 'Unknown'">
+                    <t t-if="widget.partner == 'Unknown'">
                         <span class="oe_dial_phonecall_clip">
                             <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_dial_phonecall_avatar"/>
                         </span>
                     </t>
                 </td>
                 <td style="width: 100%;" class="oe_form_group_cell">
-                    <span class="oe_dial_phonecall_partner_name" t-att-data-id="widget.get('id')"><t t-esc="widget.get('partner')"/></span>
-                    <t t-if="widget.get('in_call')">
+                    <span class="oe_dial_phonecall_partner_name" t-att-data-id="widget.id"><t t-esc="widget.partner"/></span>
+                    <t t-if="widget.in_call">
                         <i style='margin-left:2px;' class='fa fa-microphone oe_dial_icon_inCall'></i>
                     </t>
                     <span class="pull-right">
-                        <t t-if="widget.get('state') == 'done'">
+                        <t t-if="widget.state == 'done'">
                             <i class="fa fa-check oe_dial_state_icon text-muted"></i>
                         </t>
-                        <t t-if="widget.get('state') == 'no_answer'">
+                        <t t-if="widget.state == 'no_answer'">
                             <!-- <i class="fa fa-exclamation-triangle oe_dial_state_icon" style="color:LightCoral"></i> -->
                             <i class="fa fa-stack oe_dial_state_icon" style="width:13px; height:15px;line-height: 13px;">
                                 <i class="fa fa-phone fa-stack-1x oe_dial_state_icon text-muted"></i>
@@ -35,15 +35,15 @@
                             </i>
                         </t>
                         <a href="#">
-                            <t t-if="widget.get('state') == 'done'">
+                            <t t-if="widget.state == 'done'">
                                 <i title="Remove from the queue" class="text-muted oe_dial_remove_phonecall fa fa-times"></i>
                             </t>
-                            <t t-if="widget.get('state') != 'done'">
+                            <t t-if="widget.state != 'done'">
                                 <i title="Cancel the call" class="text-muted oe_dial_remove_phonecall fa fa-times"></i>
                             </t>
                         </a>
                     </span><br/>
-                    <span><t t-esc="widget.get('name')"/></span>
+                    <span><t t-esc="widget.name"/></span>
 
                 </td>
             </tr>

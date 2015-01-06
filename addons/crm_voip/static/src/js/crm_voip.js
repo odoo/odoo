@@ -13,17 +13,17 @@ openerp.crm_voip = function(instance) {
         },
         init: function(parent, phonecall, in_call) {
             this._super(parent);
-            this.set("id", phonecall.id);
+            this.id = phonecall.id;
             if(phonecall.partner_name){
-                this.set("partner",_.str.truncate(phonecall.partner_name,19));
+                this.partner = _.str.truncate(phonecall.partner_name,19);
             }else{
-                this.set("partner", _t("Unknown"));
+                this.partner = _t("Unknown");
             }
-            this.set("state",phonecall.state);
-            this.set("image_small", phonecall.partner_image_small);
-            this.set("in_call", in_call); 
-            this.set("email",phonecall.partner_email);
-            this.set("name",_.str.truncate(phonecall.name,23));
+            this.state =phonecall.state;
+            this.image_small = phonecall.partner_image_small;
+            this.in_call = in_call; 
+            this.email =phonecall.partner_email;
+            this.name =_.str.truncate(phonecall.name,23);
         },
 
         //select the clicked call, show options and put some highlight on it
