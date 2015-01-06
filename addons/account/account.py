@@ -504,6 +504,14 @@ class account_move(models.Model):
             "of credits equals the sum of debits"
         return True
 
+    @api.model
+    def get_centralisation_move(self, period, journal):
+        """ We use a single centralisation move by period - journal couple """
+        # TODO : Since we remove the concept of period in favor of a freezing date, this
+        # method will have to be written while doing this task. It probably should :
+        # - return the move (of course)
+        # - raise a warning if the centralisation move is posted (and offer to create it ?)
+
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------

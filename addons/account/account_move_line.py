@@ -704,31 +704,21 @@ class account_move_line(models.Model):
 
     @api.multi
     def write(self, vals, check=True, update_check=True):
-        if vals.get('account_tax_id', False):
+        if vals.get('tax_line_id') or vals.get('tax_ids'):
             raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise Warning(_('You cannot use deprecated account.'))
-        if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('date' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
-                self._update_check()
+        if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
+            self._update_check()
 
-        todo_date = None
-        if vals.get('date', False):
-            todo_date = vals['date']
-            del vals['date']
-
+        # Check for centralisation
         for line in self:
-            ctx = dict(self._context or {})
-            if not ctx.get('journal_id'):
-                if line.move_id:
-                   ctx['journal_id'] = line.move_id.journal_id.id
-                else:
-                    ctx['journal_id'] = line.journal_id.id
-            if not ctx.get('date'):
-                if line.move_id:
-                    ctx['date'] = line.move_id.date
-                else:
-                    ctx['date'] = line.date
+            journal = line.move_id and line.move_id.journal_id or line.journal_id
+            journal = self._context.get('journal_id') and self.env['account.journal'].browse(self._context.get('journal_id')) or journal # Legacy
+            if journal.centralisation:
+                # Do something here
+
+        todo_date = vals.pop('date', False)
         result = super(account_move_line, self).write(vals)
         if check:
             done = []
