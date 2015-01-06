@@ -40,6 +40,7 @@ class crm_partner_binding(osv.osv_memory):
                 ('nothing', 'Do not link to a customer')
             ], 'Related Customer', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer'),
+        'partner_name': fields.char('Customer Name',size=256),
     }
 
     def _find_matching_partner(self, cr, uid, context=None):
@@ -86,6 +87,7 @@ class crm_partner_binding(osv.osv_memory):
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
+        lead_obj = self.pool.get('crm.lead')
         res = super(crm_partner_binding, self).default_get(cr, uid, fields, context=context)
         partner_id = self._find_matching_partner(cr, uid, context=context)
 
@@ -93,5 +95,8 @@ class crm_partner_binding(osv.osv_memory):
             res['action'] = partner_id and 'exist' or 'create'
         if 'partner_id' in fields:
             res['partner_id'] = partner_id
+        if 'partner_name' in fields and context.get('active_id'):
+            lead_record = lead_obj.browse(cr, uid, context.get('active_id'), context=context)
+            res['partner_name'] = lead_record.contact_name or False            
 
         return res

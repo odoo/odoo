@@ -8,14 +8,14 @@
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity">
                     <group name="name">
-                        <field name="name" class="oe_inline"/>
+                        <field name="name" class="oe_inline" widget="radio"/>
                     </group>
-                    <group string="Assign opportunities to">
+                    <group string="Assign these opportunities to">
                         <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
                         <field name="team_id" class="oe_inline" groups="base.group_multi_salesteams"/>
                     </group>
-                    <group string="Opportunities">
-                        <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
+                    <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
+                        <field name="opportunity_ids" nolabel="1">
                             <tree>
                                 <field name="create_date"/>
                                 <field name="name"/>
@@ -30,11 +30,14 @@
                             </tree>
                         </field>
                     </group>
-                    <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}">
-                        <field name="action" on_change="onchange_action(action, context)" class="oe_inline"/>
-                        <field name="partner_id"
-                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
-                            class="oe_inline"/>
+                    <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
+                        <field name="action" class="oe_inline" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
+                        <group col="2">
+                            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                                class="oe_inline"/>
+                            <field name="partner_name" attrs="{'required': [('action', '=', 'create')], 'invisible':[('action','!=','create')]}"
+                                class="oe_inline"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
@@ -52,7 +55,7 @@
                 <form string="Convert to Opportunity">
                     <separator string="Conversion Options"/>
                     <group>
-                        <field name="action" class="oe_inline" on_change="on_change_action(action)"/>
+                        <field name="name" class="oe_inline" widget="radio"/>
                         <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
                     </group>
                     <group string="Assign opportunities to">
@@ -77,6 +80,17 @@
                                 <field name="team_id" groups="base.group_multi_salesteams"/>
                             </tree>
                         </field>
+                    </group>
+                    <group attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
+                        <field name="action" class="oe_inline" widget="radio"/>
+                        <group col="2">
+                            <field name="partner_id"
+                                attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                                class="oe_inline"/>
+                            <field name="partner_name" 
+                                attrs="{'required': [('action', '=', 'create')], 'invisible':[('action','!=','create')]}"
+                                class="oe_inline"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="mass_convert" string="Convert to Opportunities" type="object" class="oe_highlight"/>
