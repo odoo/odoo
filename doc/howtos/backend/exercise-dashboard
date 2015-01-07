@@ -54,6 +54,7 @@ Index: addons/openacademy/views/session_board.xml
 +        <record model="ir.ui.view" id="board_session_form">
 +            <field name="name">Session Dashboard Form</field>
 +            <field name="model">board.board</field>
++            <field name="type">form</field>
 +            <field name="arch" type="xml">
 +                <form string="Session Dashboard">
 +                    <board style="2-1">
@@ -89,6 +90,6 @@ Index: addons/openacademy/views/session_board.xml
 +            name="Session Dashboard" parent="base.menu_reporting_dashboard"
 +            action="open_board_session"
 +            sequence="1"
-+            id="menu_board_session"/>
++            id="menu_board_session" icon="terp-graph"/>
 +    </data>
 +</openerp>
