@@ -698,10 +698,15 @@ class view(osv.osv):
             if node.get('string') and node.get('string').strip() and not result:
                 term = node.get('string').strip()
                 trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans == term and ('base_model_name' in context):
+                view = self.browse(cr, user, view_id, context=context)
+                base_model_name = view.inherit_id and view.inherit_id.model
+                ctx = context.copy()
+                if base_model_name:
+                    ctx['base_model_name'] = base_model_name
+                if trans == term and ('base_model_name' in ctx):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
                     # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
+                    trans = Translations._get_source(cr, user, ctx['base_model_name'], 'view', ctx['lang'], term)
                 if trans:
                     node.set('string', trans)
 
