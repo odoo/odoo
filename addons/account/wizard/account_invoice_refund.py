@@ -82,8 +82,8 @@ class account_invoice_refund(models.TransientModel):
                     refund.signal_workflow('invoice_open')
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
-                            tmpline.reconcile(writeoff_journal_id = inv.journal_id.id,
-                                            writeoff_acc_id=inv.account_id.id
+                            tmpline.reconcile(writeoff_journal_id = inv.journal_id,
+                                            writeoff_acc_id=inv.account_id
                                             )
                     if mode == 'modify':
                         invoice = inv.read(

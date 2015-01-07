@@ -103,5 +103,5 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
         if self.analytic_id:
             context['analytic_id'] = self.analytic_id.id
         move_lines = self.env['account.move.line'].browse(self._context.get('active_ids', []))
-        move_lines.with_context(context).reconcile(self.writeoff_acc_id.id, self.journal_id.id)
+        move_lines.with_context(context).reconcile(self.writeoff_acc_id, self.journal_id)
         return {'type': 'ir.actions.act_window_close'}
