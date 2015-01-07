@@ -1774,6 +1774,13 @@ class Id(Field):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
+class Serialized(Field):
+    type = 'serialized'
+
+    def convert_to_cache(self, value, record, validate=True):
+        if value:
+            return value
+        return {}
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
