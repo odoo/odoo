@@ -72,6 +72,7 @@ Main Features
         'account_statement_report.xml',
         'res_users_view.xml',
         'res_partner_view.xml',
+        'res_config_view.xml',
         'views/report_statement.xml',
         'views/report_usersproduct.xml',
         'views/report_receipt.xml',
