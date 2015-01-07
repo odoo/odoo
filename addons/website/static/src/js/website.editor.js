@@ -340,8 +340,10 @@ define(['summernote/summernote'], function () {
         editor.appendTo(document.body);
         return new $.Deferred().reject();
     };
-    eventHandler.editor.alt = function ($editable) {
-        var media = $editable.data('summernote').handle.find('.note-control-selection').data('target');
+    $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
+        var $editable = layoutInfo.editable();
+        var $selection = layoutInfo.handle().find('.note-control-selection');
+        var media = $selection.data('target');
         new website.editor.alt($editable, media).appendTo(document.body);
     };
 
