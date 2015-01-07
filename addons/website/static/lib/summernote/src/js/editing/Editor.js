@@ -334,10 +334,13 @@ define([
       }
 
       rng = rng.deleteContents();
+      var anchor = dom.ancestor(rng.sc, dom.isAnchor);
 
       // Create a new link when there is no anchor on range.
-      var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0], true);
-      $(anchor).attr({
+      if (!anchor) {
+        anchor = rng.insertNode($('<A>' + linkText + '</A>')[0], true);
+      }
+      $(anchor).html(linkText).attr({
         'href': linkUrl,
         'target': isNewWindow ? '_blank' : null,
         'class': className
