@@ -50,18 +50,18 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         return node;
     };
     dom.nextElementSibling = function (node) {
-        while (node && node.nextSibling) {
+        while (node) {
             node = node.nextSibling;
-            if (node.tagName) {
+            if (node && node.tagName) {
                 break;
             }
         }
         return node;
     };
     dom.previousElementSibling = function (node) {
-        while (node && node.previousSibling) {
+        while (node) {
             node = node.previousSibling;
-            if (node.tagName) {
+            if (node && node.tagName) {
                 break;
             }
         }
@@ -1571,6 +1571,8 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             var parent = UL.parentNode;
             var li = UL.parentNode.tagName === "LI" ? UL.parentNode : UL;
             var ul = UL.parentNode.tagName === "LI" ? UL.parentNode.parentNode : UL.parentNode;
+            start = dom.ancestor(start, dom.isLi);
+            end = dom.ancestor(end, dom.isLi);
 
             if (ul.tagName !== "UL" && ul.tagName !== "OL") return;
 
@@ -1578,28 +1580,27 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             while (node) {
                 if (node === start || $.contains(node, start)) {
                     flag = true;
-                    if (dom.firstElementChild(UL) !== start && dom.lastElementChild(UL) !== end && li.tagName === "LI") {
-                        li = dom.splitTree(li, {'node': node, 'offset': 0});
+                    if (dom.previousElementSibling(node) && li.tagName === "LI") {
+                        li = dom.splitTree(li, dom.prevPoint({'node': node, 'offset': 0}));
                     }
                 }
                 next = dom.nextElementSibling(node);
                 if (flag) {
-                    ul.insertBefore(node, li);
+                    ul = node.parentNode;
+                    li.parentNode.insertBefore(node, li);
+                    if (!ul.children.length) {
+                        if (ul.parentNode.tagName === "LI") {
+                            ul = ul.parentNode;
+                        }
+                        ul.parentNode.removeChild(ul);
+                    }
                 }
+
                 if (node === end || $.contains(node, end)) {
                     flag = false;
                     break;
                 }
                 node = next;
-            }
-
-            if (dom.firstElementChild(li).tagName === tagName && !dom.firstElementChild(dom.firstElementChild(li))) {
-                li.parentNode.removeChild( li );
-            }
-
-            if (!dom.firstElementChild(UL)) {
-                li = UL.parentNode.tagName === "LI" ? UL.parentNode : UL;
-                li.parentNode.removeChild( li );
             }
 
             dom.merge(parent, start, 0, end, 1, null, true);
