@@ -205,6 +205,22 @@
         <attribute name="class">oe_snippet_body parallax s_parallax_slider</attribute>
     </xpath>
 
+    <!-- Remove inline background images -->
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Banner']]/div/div/div" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">item active bg-img-01</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax']]/section" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">oe_snippet_body parallax bg-img-02</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax Slider']]/section" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">oe_snippet_body parallax bg-img-03</attribute>
+    </xpath>
+
 </template>
 
 <template id="website_less.snippet_options" inherit_id="website.snippet_options">

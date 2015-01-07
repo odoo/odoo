@@ -29,5 +29,12 @@
     </xpath>
 </template>
 
+<template id="website_less.assets_frontend" inherit_id="website.theme" priority="0">
+    <xpath expr='//link[last()]' position="after">
+        <link rel='stylesheet' href='/website_less/static/src/less/default_backgrounds.less'/>
+        <script type="text/javascript" src="/website_less/static/src/js/website.snippets.animation.js"></script>
+    </xpath>
+</template>
+
     </data>
 </openerp>
