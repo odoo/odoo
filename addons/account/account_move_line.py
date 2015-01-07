@@ -530,7 +530,7 @@ class account_move_line(models.Model):
         if len(set(all_accounts)) > 1:
             raise Warning(_('Entries are not of the same account!'))
         if not all_accounts[0].reconcile:
-            raise Warning(_('The account '+all_accounts[0].name+' ('+all_accounts[0].code+') is not marked as reconciliable !'))
+            raise Warning(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
         if len(set(partners)) > 1:
             raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
