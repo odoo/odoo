@@ -51,6 +51,7 @@ class PaymentAcquirer(osv.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
+    _order = 'sequence'
 
     def _get_providers(self, cr, uid, context=None):
         return []
@@ -87,6 +88,7 @@ class PaymentAcquirer(osv.Model):
         'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
         'fees_int_fixed': fields.float('Fixed international fees'),
         'fees_int_var': fields.float('Variable international fees (in percents)'),
+        'sequence': fields.integer('Sequence', help="Determine the display order"),
     }
 
     _defaults = {
