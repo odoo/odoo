@@ -32,6 +32,7 @@ This module adds the picking wave option in warehouse management.
     'depends': ['stock'],
     'data': ['security/ir.model.access.csv',
             'stock_picking_wave_view.xml',
+            'stock_picking_wave_data.xml',
             'stock_picking_wave_sequence.xml',
             'wizard/picking_to_wave_view.xml',
             ],
