@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+       <template id="website_slides.slide_embed_assets" name="Website sldies embed assets">
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
+        </template>
+
+        <template id="embed_slide" name="pdfembed">
+            <html>
+                <head t-if="not private">
+                    <title><t t-esc="slide.name"/></title>
+                    <script type="text/javascript" src="/website_slides/static/lib/pdfjs/build/pdf.js"></script>
+                    <t t-call-assets="website_slides.slide_embed_assets"/>
+                </head>
+                <body t-if="private" style="position: inherit;">
+                    <title><t t-esc="private_slide.name"/></title>
+                    <div class="slide-private-view">
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle"></i> This <t t-esc="private_slide.slide_type"/> is private.</h3>
+                        <div t-field="private_slide.channel_id.access_error_msg" />
+                    </div>
+                </body>
+                <body t-if="not private" style="padding-top: 50px;padding-bottom: 50px;height:100%;">
+                    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                        <div class="container-fluid">
+                            <div class="row" style="padding-top:15px;">
+                                <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4 text-left">
+                                    <div class="oe_slides_ellipsis">
+                                        <a target="_new" t-att-href="slide.share_url">
+                                            <span  t-esc="slide.name" t-attf-title="#{slide.name}"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="toggle-slide-option slide-cursor slide-color" data-slide-option-id="#slide_share"><i class="fa fa-share-alt"></i> Share</b>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="toggle-slide-option slide-cursor slide-color" data-slide-option-id="#slide_email"><i class="fa fa-envelope"></i> Email</b>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                    <b class="toggle-slide-option slide-cursor slide-color" data-slide-option-id="#slide_embed"><i class="fa fa-code"></i> Embed</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- pdf container -->
+                    <div id="pdf_container" style="position:relative;">
+                        <div id="slide_share" class="slide-option-toggle">
+                            <t t-call="website_slides.slide_social_media"/>
+                        </div>
+                        <div id="slide_email" class="slide-option-toggle">
+                            <t t-call="website_slides.slide_social_email"/>
+                        </div>
+                        <div id="slide_embed" class="slide-option-toggle">
+                            <t t-call="website_slides.slide_social_embed"/>
+                        </div>
+                        <div id="slide_suggest" class="slide-option-toggle" style="padding:0px 0px 0px 0px;">
+                            <t t-foreach="related_slides" t-as="slide">
+                                <div class="col-md-4 col-sm-4 col-xs-6 oe_slides_pdf_js_thumb">
+                                    <a t-att-href="slide.share_url" target="_new">
+                                        <div class="oe_slides_pdf_js_caption">
+                                            <h4><t t-esc="slide.name"/></h4>
+                                        </div>
+                                        <span class="oe-image-thumbnail">
+                                            <img class="img-responsive oe_slides_suggestions_thumb" t-attf-src="/website/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
+                                        </span>
+                                    </a>
+
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="slide.slide_type in ('presentation', 'document')">
+                            <div id="slide_loader" class="slide-option-toggle">
+                                <span style="text-center"><i class="fa fa-spinner fa-spin fa-2x"></i>Loading ...</span>
+                            </div>
+                            <img id="slide_init_image" t-attf-src="/website/image/slide.slide/#{slide.id}/image_medium" class="img-responsive" style="margin:auto;height:100%"/>
+                            <canvas id="pdfcanvas" class="img-responsive" style="margin:auto;height:100%;display:none;"></canvas>
+                        </t>
+                        <t t-if="slide.slide_type in ('infographic')">
+                            <img t-attf-src="/website/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                        </t>
+                    </div>
+                    <!-- Fixed bottom navbar -->
+                    <div class="navbar navbar-default navbar-fixed-bottom" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
+                        <div class="container-fluid">
+                            <div class="row" style="padding-top:15px;">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-left">
+                                    <input type="number" class="text-center slide-img-border" style="width: 45px;" id="page_number"></input> / <span id="page_count"></span>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="first" title="First slide" role="button"><i class="fa fa-step-backward slide-fa-1-5x slide-cursor slide-color"></i></span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="previous" title="Previous slide" role="button"><i class="fa fa-arrow-circle-left slide-fa-1-5x slide-cursor slide-color"></i></span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="next" title="Next slide" role="button"><i class="fa fa-arrow-circle-right slide-fa-1-5x slide-cursor slide-color"></i></span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                        <span id="last" title="Last slide" role="button"><i class="fa fa-step-forward slide-fa-1-5x slide-cursor slide-color"></i></span>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+                                    <span id="fullscreen" title="View fullscreen"><i class="fa fa-arrows-alt slide-fa-1-5x slide-cursor slide-color"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="pdf_file" t-attf-value="/slides/slide/#{slide.id}/pdf_content"/>
+                    <input type="hidden" id="pdf_page" t-att-value="page"/>
+                    <input type="hidden" id="pdf_id" t-att-value="slide.id"/>
+                 <!-- End of body -->
+                </body>
+            </html>
+        </template>
+    </data>
+</openerp>
