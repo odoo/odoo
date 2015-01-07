@@ -1699,15 +1699,22 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
         var nodes = dom.listBetween(r.sc, r.ec);
         for (var i=0; i<nodes.length; i++) {
-            if (!dom.ancestor(nodes[i], isFormatNode) &&
-                (dom.isBR(nodes[i]) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i]))) {
-                dom.wrap(nodes[i], 'p');
+            if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && nodes[i].textContent.match(/\S|\u00A0/)) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
+                var ancestor = dom.ancestor(nodes[i], isFormatNode);
+                if (!ancestor) {
+                    dom.wrap(nodes[i], sTagName);
+                } else if (ancestor.tagName.toLowerCase() !== sTagName) {
+                    var tag = document.createElement(sTagName);
+                    ancestor.parentNode.insertBefore(tag, ancestor);
+                    dom.moveContent(ancestor, tag);
+                    if (ancestor.className) {
+                        tag.className = ancestor.className;
+                    }
+                    ancestor.parentNode.removeChild(ancestor);
+                }
             }
         }
-        // end
-
-        sTagName = agent.isMSIE ? '<' + sTagName + '>' : sTagName;
-        document.execCommand('FormatBlock', false, sTagName);
+        r.select();
     };
     $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, value) {
         var $editable = layoutInfo.editable();
