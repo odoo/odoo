@@ -209,8 +209,8 @@ openerp.crm_voip = function(instance) {
         },
 
         //When a configuration error occured, disable the panel
-        disable_panel: function(){
-            this.$().block({message: "<div style='cursor: default'> TEST DIV </div>"});
+        disable_panel: function(message){
+            this.$().block({message: message});
             this.$('.blockOverlay').css('cursor', 'auto');
             this.$('.blockOverlay').css('background', 'grey');
         },
@@ -312,11 +312,11 @@ openerp.crm_voip = function(instance) {
             }
         },
 
-        sip_error: function(){
+        sip_error: function(message){
             this.on_call = false;
             this.UI.hangup();
             //new openerp.web.Model("crm.phonecall").call("error_config");
-            this.UI.disable_panel();
+            this.UI.disable_panel(message);
         },
 
         sip_error_resolved: function(){

@@ -17,6 +17,7 @@ openerp.voip = function(openerp) {
         init_ua: function(result){
             this.config = result;
             var ua_config = {};
+            var error_found = false;
             if(result.login && result.wsServer && result.pbx_ip && result.password){
                 ua_config = {
                     uri: result.login +'@'+result.pbx_ip,
@@ -31,16 +32,17 @@ openerp.voip = function(openerp) {
                 this.physical_phone = result.physical_phone;
                 this.ring_number = result.ring_number;
             }else{
-                this.trigger('sip_error');
+                this.trigger('sip_error', _t('One or more parameter is missing. Please check your configuration.'));
                 this.blocked = true;
+                error_found = true;
             }
             try{
                 this.ua = new SIP.UA(ua_config);
-                if(this.blocked){
+                if(this.blocked && !error_found){
                     this.trigger('sip_error_resolved');
                 }
             }catch(err){
-                this.trigger('sip_error');
+                this.trigger('sip_error', _t('The server configuration could be wrong. Please check your configuration.'));
                 this.blocked = true;
             }
             var audio = document.createElement("audio");
@@ -76,7 +78,8 @@ openerp.voip = function(openerp) {
                         this.trigger('sip_error_resolved');
                     }
                 }catch(err){
-                    this.trigger('sip_error');
+                    this.trigger('sip_error', _t('the connection cannot be made. '+
+                        'Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'));
                     this.blocked = true;
                 }
                 self.ua.on('invite', function (invite_session){
@@ -115,7 +118,8 @@ openerp.voip = function(openerp) {
             this.ringbacktone = document.getElementById("ringbacktone");
             ringbacktone.pause();
             if(response.reason_phrase != "Busy Here"){
-                this.trigger('sip_error');
+                this.trigger('sip_error', _t('The user credentials could be wrong or '+
+                    'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'));
                 this.blocked = true;
             }else if(this.blocked){
                 this.trigger('sip_error_resolved');
