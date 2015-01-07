@@ -831,7 +831,7 @@
                         }
                         self[k](type, methods[k], $el);
                     } else {
-                        console.error("'"+self.option+"' snippet have not method '"+k+"'");
+                        // console.info("'"+self.option+"' snippet has no method '"+k+"'");
                     }
                 }
             });
@@ -876,7 +876,7 @@
     function backward_compatibility_80 ($html) {
         console.log($html[0]);
         $html.find("[data-snippet-option-id]").each(function () {
-            console.info("Please use the new Snippet & BuildingBlock API", $(this).data("snippet-option-id"));
+            // console.info("Please use the new Snippet & BuildingBlock API", $(this).data("snippet-option-id"));
 
             var $option = $(this);
             var copy = $option.data();
