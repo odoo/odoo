@@ -25,6 +25,8 @@ class account_register_payment(models.TransientModel):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True,
         default=lambda self: self.env.user.company_id)
     partner_id = fields.Many2one('res.partner', related='invoice_id.partner_id', String='Partner')
+    payment_difference = fields.Selection([('open', 'Keep Open'), ('reconcile', 'Reconcile Payment Balance')], required=True, String="Payment difference")
+    writeoff_account = fields.Many2one('account.account', String="Counterpart Account")
 
     @api.one
     @api.constrains('payment_amount')
@@ -41,6 +43,7 @@ class account_register_payment(models.TransientModel):
             res.update({
                 'invoice_id': invoice.id,
                 'payment_amount': invoice.residual,
+                'payment_difference': 'open',
             })
         return res
 
@@ -101,4 +104,6 @@ class account_register_payment(models.TransientModel):
 
         # Reconcile
         payment_line = move_id.line_id.filtered(lambda r: r.account_id == self.invoice_id.account_id)
-        self.invoice_id.register_payment(payment_line)
+        writeoff_account = self.writeoff_account if self.payment_difference == 'reconcile' else False
+        writeoff_journal = self.journal_id if self.payment_difference == 'reconcile' else False
+        self.invoice_id.register_payment(payment_line, writeoff_account, writeoff_journal)

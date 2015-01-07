@@ -625,10 +625,10 @@ class account_invoice(models.Model):
         return True
 
     @api.one
-    def register_payment(self, payment_line):
+    def register_payment(self, payment_line, writeoff_acc_id=False, writeoff_journal_id=False):
         """ Reconcile payable/receivable lines from the invoice with payment_line """
         line_to_reconcile = self.move_id.line_id.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
-        return (line_to_reconcile + payment_line).reconcile()
+        return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.v7
     def assign_outstanding_credit(self, cr, uid, id, payment_id, context=None):
