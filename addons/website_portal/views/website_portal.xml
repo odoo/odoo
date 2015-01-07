@@ -8,12 +8,14 @@
                     <link rel='stylesheet' href='/website_portal/static/src/css/website_portal.css'/>
                 </t>
                 <div id="wrap" t-ignore="true">
+                    <div class="oe_application_menu_placeholder">
+                       <t t-call="portal.menu"/>
+                    </div>
                     <div class="oe_structure">
                         <div class="openerp openerp_webclient_container">
                             <div id="oe_main_menu_navbar"></div>
                             <div class="oe_webclient">
-                                        <div class="oe_application_menu_placeholder"></div>
-                                        <div class="oe_menu_placeholder">
+                                        <div class="oe_main_menu_placeholder">
                                            <t t-call="portal.menu_secondary"/>
                                         </div>
                                     <div class="oe_application"></div>
@@ -66,6 +68,27 @@
                     </div>
                 </div>
             </div>
+        </template>
+
+        <template id="portal_link" name="Portal Link from User Account" inherit_id="website.layout" groups="base.group_portal">
+            <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'Logout')]" position="before">
+                <li><a href="/portal" role="menuitem">Portal</a></li>
+            </xpath>
+        </template>
+
+        <template id="portal.menu">
+            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder">
+                <li t-foreach="menu_data['children']" t-as="menu">
+                    <t t-call="web.menu_link"/>
+                </li>
+                <li id="menu_more_container" class="dropdown" style="display: none;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                    <ul id="menu_more" class="dropdown-menu"></ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
+            <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
         </template>
     </data>
 </openerp>

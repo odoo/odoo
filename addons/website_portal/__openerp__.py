@@ -7,6 +7,6 @@
     'category': 'Website',
     'version': '1.0',
     'depends': ["base", "portal", "website", "web"],
-    'data': ["views/website_portal.xml", "data/website_portal_data.xml"],
+    'data': ["views/website_portal.xml"],
     'auto_install': False,
 }
