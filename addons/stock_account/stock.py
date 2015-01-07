@@ -292,7 +292,8 @@ class stock_picking(osv.osv):
                 invoices[key] = invoice_id
             else:
                 invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
-                invoice.write({'origin': '%s, %s' % (invoice.origin, invoice_vals['origin'],)})
+                if invoice_vals['origin'] not in invoice.origin.split(', '):
+                    invoice.write({'origin': '%s, %s' % (invoice.origin, invoice_vals['origin'],)})
 
             invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
