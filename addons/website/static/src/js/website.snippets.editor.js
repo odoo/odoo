@@ -1754,7 +1754,12 @@
 
             this.$target.find("li").removeClass('o_open').css('list-style', '');
             this.$target.find("li:has(.o_ul_toggle_self, .o_ul_toggle_next), li:has(>ul,>ol):not(:has(>li))").css('list-style', 'none');
-
+        },
+        clean_for_save: function () {
+            this._super();
+            if (!this.$target.hasClass('o_ul_folded')) {
+                this.$target.find(".o_close").removeClass("o_close");
+            }
         },
         toggle_class: function (type, value, $li) {
             this._super(type, value, $li);
