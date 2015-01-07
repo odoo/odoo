@@ -12,9 +12,6 @@
 				<field position="after" name="price_include">
 					<field name="tax_discount"/>
 			    </field>
-	    		<field name="tax_code_id" position="replace" >
-					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
-			    </field>
 				<field position="after" name="tax_discount">
 					<field name="base_reduction"/>
 					<field name="amount_mva"/>
@@ -29,9 +26,6 @@
 			<field name="arch" type="xml">
 				<field position="after" name="price_include">
 					<field name="tax_discount"/>
-			    </field>
-   				<field name="tax_code_id" position="replace" >
-					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
 			    </field>
 			    <field position="after" name="tax_discount">
 					<field name="base_reduction"/>
