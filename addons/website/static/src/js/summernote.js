@@ -1699,12 +1699,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
         var nodes = dom.listBetween(r.sc, r.ec);
         for (var i=0; i<nodes.length; i++) {
-            if (dom.isText(nodes[i]) || dom.isBR(nodes[i])) {
-                if (options.styleTags.indexOf(nodes[i].parentNode.tagName.toLowerCase()) === -1) {
-                    dom.wrap(nodes[i], 'p');
-                }
-            } else if (nodes[i].childNodes.length === 1 && dom.isBR(nodes[i].firstChild)) {
-                dom.wrap(nodes[i].firstChild, 'p');
+            if (!dom.ancestor(nodes[i], isFormatNode) &&
+                (dom.isBR(nodes[i]) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i]))) {
+                dom.wrap(nodes[i], 'p');
             }
         }
         // end
