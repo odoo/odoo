@@ -560,7 +560,7 @@
             parent="base.menu_product"
             sequence="30" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
-            <field name="name">Internal Categories</field>
+            <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>
@@ -734,12 +734,18 @@
         <menuitem
             action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
+        <record model="ir.actions.act_window" id="action_packaging_view">
+            <field name="name">Packagings</field>
+            <field name="res_model">product.packaging</field>
+        </record>
+
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
+                    <field name="name"/>
                     <field name="product_tmpl_id"/>
                     <field name="barcode"/>
                     <field name="qty"/>
@@ -768,22 +774,24 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <form string="Packaging">
-                    <group col="4">
-                        <field name="product_tmpl_id"/>
-                        <newline/>
-                        <field name="barcode"/>
-                        <field name="sequence" invisible="1"/>
-                        <newline/>
-                        <field name="qty"/>
-                        <field name="ul"/>
-                        <separator colspan="4" string="Palletization"/>
-                        <field name="ul_qty"/>
-                        <field name="rows"/>
-                        <field name="ul_container"/>
-                        <field name="weight"/>
-                        <separator colspan="4" string="Other Info"/>
-                        <field colspan="4" name="name"/>
-                    </group>
+                    <sheet>
+                        <group col="4">
+                            <field name="product_tmpl_id"/>
+                            <newline/>
+                            <field name="barcode"/>
+                            <field name="sequence" invisible="1"/>
+                            <newline/>
+                            <field name="qty"/>
+                            <field name="ul"/>
+                            <separator colspan="4" string="Palletization"/>
+                            <field name="ul_qty"/>
+                            <field name="rows"/>
+                            <field name="ul_container"/>
+                            <field name="weight"/>
+                            <separator colspan="4" string="Other Info"/>
+                            <field colspan="4" name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
