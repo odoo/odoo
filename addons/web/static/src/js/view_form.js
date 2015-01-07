@@ -2536,7 +2536,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
             // As in GTK client, floats default to 0
             value_ = 0;
         }
-        this._super.apply(this, [value_]);
+        this._super.apply(this, [Math.round(value_*Math.pow(10,this.digits[1]))/Math.pow(10,this.digits[1])]);
     },
     focus: function () {
         var $input = this.$('input:first');
