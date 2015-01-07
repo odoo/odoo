@@ -296,12 +296,44 @@ define([
      */
     var hPasteClipboardImage = function (event) {
       var clipboardData = event.originalEvent.clipboardData;
+      var layoutInfo = makeLayoutInfo(event.currentTarget || event.target);
+      var $editable = layoutInfo.editable();
+
       if (!clipboardData || !clipboardData.items || !clipboardData.items.length) {
+        var callbacks = $editable.data('callbacks');
+        // only can run if it has onImageUpload method
+        if (!callbacks.onImageUpload) {
+          return;
+        }
+
+        // save cursor
+        editor.saveNode($editable);
+        editor.saveRange($editable);
+
+        $editable.html('');
+
+        setTimeout(function () {
+          var $img = $editable.find('img');
+          var datauri = $img[0].src;
+
+          var data = atob(datauri.split(',')[1]);
+          var array = new Uint8Array(data.length);
+          for (var i = 0; i < data.length; i++) {
+            array[i] = data.charCodeAt(i);
+          }
+
+          var blob = new Blob([array], { type : 'image/png'});
+          blob.name = 'clipboard.png';
+
+          editor.restoreNode($editable);
+          editor.restoreRange($editable);
+          insertImages(layoutInfo, [blob]);
+
+          editor.afterCommand($editable);
+        }, 0);
+
         return;
       }
-
-      var layoutInfo = makeLayoutInfo(event.currentTarget || event.target),
-          $editable = layoutInfo.editable();
 
       var item = list.head(clipboardData.items);
       var isClipboardImage = item.kind === 'file' && item.type.indexOf('image/') !== -1;
@@ -541,10 +573,13 @@ define([
         event.preventDefault();
 
         var dataTransfer = event.originalEvent.dataTransfer;
-        if (dataTransfer && dataTransfer.files) {
-          var layoutInfo = makeLayoutInfo(event.currentTarget || event.target);
-          layoutInfo.editable().focus();
+        var text = dataTransfer.getData('text/plain');
+        var layoutInfo = makeLayoutInfo(event.currentTarget || event.target);
+        layoutInfo.editable().focus();
+        if (dataTransfer && dataTransfer.files && dataTransfer.files.length) {
           insertImages(layoutInfo, dataTransfer.files);
+        } else if (text) {
+          editor.insertText(layoutInfo.editable(), text);
         }
       }).on('dragover', false); // prevent default dragover event
     };
