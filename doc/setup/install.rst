@@ -235,18 +235,34 @@ Source installation requires manually installing dependencies:
   - on Windows, use `the official Python 2.7 installer
     <https://www.python.org/downloads/windows/>`_.
 
-
 * PostgreSQL, to use a local database
 
-  - on Linux, use your distribution's package
+  After installation you will need to create a postgres user (also named a
+  role), by default the only user is ``postgres``, and Odoo forbids connecting
+  as ``postgres``.
+
+  - on Linux, use your distribution's package, then create a postgres user
+    named like your login:
+
+    .. code-block:: console
+
+        $ sudo su - postgres -c "createuser -s $USER"
+
+    Because the role login is the same as your unix login unix sockets can be
+    use without a password.
+
   - on OS X, `postgres.app <http://postgresapp.com>`_ is the simplest way to
-    get started
+    get started, then create a postgres user like on Linux.
+
   - on Windows, use `PostgreSQL for windows`_ then add PostgreSQL's ``bin``
     directory (default: ``C:\Program Files\PostgreSQL\9.3\bin``) to your
     :envvar:`PATH`
 
-  .. todo:: create new role?
+    Then create a postgres user with a password using the pg admin gui, for
+    example login ``odoo`` and password ``odoo``.
 
+    This user and password will be provided with the -w and -r option or in the
+    config file.
 
 * Python dependencies listed in the :file:`requirements.txt` file.
 
@@ -294,8 +310,8 @@ Source installation requires manually installing dependencies:
 
     .. code-block:: console
 
-        C:\> cd \YourOdooSourcePath
-        C:\YourOdooSourcePath> C:\Python27\Scripts\pip.exe install -r requirements.txt
+        C:\> cd \YourOdooPath
+        C:\YourOdooPath> C:\Python27\Scripts\pip.exe install -r requirements.txt
 
 
 Running Odoo
@@ -309,13 +325,32 @@ Once all dependencies are set up, Odoo can be launched by running ``odoo.py``.
 
 Common necessary configurations are:
 
-* PostgreSQL host, port, user and password. Odoo has no defaults beyond
+* PostgreSQL host, port, user and password.
+
+  Odoo has no defaults beyond
   `psycopg2's defaults <http://initd.org/psycopg/docs/module.html>`_: connects
   over a UNIX socket on port 5432 with the current user and no password.
 
-  This may require creating new PostgreSQL roles, by default the only user is
-  ``postgres``, and Odoo forbids connecting as ``postgres``.
 * Custom addons path beyond the defaults, to load your own modules
+
+Under Windows a typical way to execute odoo would be:
+
+    .. code-block:: console
+
+        C:\YourOdooPath> python odoo.py -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
+
+Where ``odoo``, ``odoo`` are the postgresql login and password,
+``../mymodules`` a directory with additional addons and ``mydb`` the default db
+to serve on localhost:8069
+
+Under Unix a typical way to execute odoo would be:
+
+    .. code-block:: console
+
+        $ ./odoo.py --addons-path=addons,../mymodules --db-filter=mydb$
+
+Where ``../mymodules`` is a directory with additional addons and ``mydb`` the default db
+to serve on localhost:8069
 
 
 .. _demo: https://demo.odoo.com
