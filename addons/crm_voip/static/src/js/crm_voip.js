@@ -41,15 +41,15 @@ openerp.crm_voip = function(instance) {
         template: "crm_voip.DialingUI",
         events: {
             "keyup .oe_dial_searchbox": "input_change",
-            "click .oe_dial_callbutton":  function(){this.panel.call_button();},
-            "click .oe_dial_hangupbutton": function(){this.panel.hangup_button();},
-            "click .oe_dial_schedule_call": function(){this.panel.schedule_call();},
-            "click .oe_dial_email": function(){this.panel.send_email();},
-            "click .oe_dial_to_client": function(){this.panel.to_client();},
-            "click .oe_dial_to_lead": function(){this.panel.to_lead();},
-            "click .oe_dial_transferbutton": function(){this.panel.transfer_button();},
-            "click .oe_dial_auto_callbutton": function(){this.panel.auto_call_button();},
-            "click .oe_dial_stop_autocall_button": function(){this.panel.stop_auto_call_button();},
+            "click .oe_dial_callbutton":  function(){this.model.call_button();},
+            "click .oe_dial_hangupbutton": function(){this.model.hangup_button();},
+            "click .oe_dial_schedule_call": function(){this.model.schedule_call();},
+            "click .oe_dial_email": function(){this.model.send_email();},
+            "click .oe_dial_to_client": function(){this.model.to_client();},
+            "click .oe_dial_to_lead": function(){this.model.to_lead();},
+            "click .oe_dial_transferbutton": function(){this.model.transfer_button();},
+            "click .oe_dial_auto_callbutton": function(){this.model.auto_call_button();},
+            "click .oe_dial_stop_autocall_button": function(){this.model.stop_auto_call_button();},
             "click .oe_dial_close_icon": "switch_display",
             "click .oe_dial_search_icon": function(){this.search_phonecalls_status(false)},
             "click .oe_dial_refresh_icon": function(){this.search_phonecalls_status(true)},
@@ -57,7 +57,7 @@ openerp.crm_voip = function(instance) {
         init: function(parent){
             this._super(parent);
             this.shown = false;
-            this.panel = new openerp.crm_voip.DialingModel(this);
+            this.model = new openerp.crm_voip.DialingModel(this);
             this.buttonAnimated = false;
             this.buttonUp = false;
             this.$el.css("bottom", -this.$el.outerHeight());
@@ -139,7 +139,7 @@ openerp.crm_voip = function(instance) {
 
         search_phonecalls_status: function(refresh_by_user) {
             this.hide_buttons();
-            this.panel.search_phonecalls_status(refresh_by_user);
+            this.model.search_phonecalls_status(refresh_by_user);
         },
 
         select_call: function(selected_phonecall){
@@ -201,7 +201,7 @@ openerp.crm_voip = function(instance) {
         input_change: function() {
             var search = this.$(".oe_dial_searchbox").val().toLowerCase();
             //for each phonecall, check if the search is in phonecall name or the partner name
-            _.each(this.panel.phonecalls,function(phonecall){
+            _.each(this.model.phonecalls,function(phonecall){
                 var flag = phonecall.partner_name.toLowerCase().indexOf(search) == -1 && 
                     phonecall.name.toLowerCase().indexOf(search) == -1;
                 this.$(".oe_dial_phonecall").filter(function(){return $(this).data('id') == phonecall.id;}).toggle(!flag);
