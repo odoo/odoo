@@ -9,6 +9,7 @@
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
                 <tree string="Carrier">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="price" invisible="'order_id' not in context"/>

@@ -31,6 +31,7 @@ _logger = logging.getLogger(__name__)
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
     _description = "Carrier"
+    _order = 'sequence, id'
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -77,6 +78,7 @@ class delivery_carrier(osv.osv):
 
     _columns = {
         'name': fields.char('Delivery Method', required=True),
+        'sequence': fields.integer('Sequence', help="Determine the display order"),
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
@@ -94,6 +96,7 @@ class delivery_carrier(osv.osv):
     _defaults = {
         'active': 1,
         'free_if_more_than': False,
+        'sequence': 10,
     }
 
     def grid_get(self, cr, uid, ids, contact_id, context=None):
