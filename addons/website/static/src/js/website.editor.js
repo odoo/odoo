@@ -675,8 +675,13 @@ define(['summernote/summernote'], function () {
                 return;
             }
 
-            var r = range.createFromBookmark(oSnap.editable, oSnap.bookmark);
-            r.select();
+            try {
+                var r = range.createFromBookmark(oSnap.editable, oSnap.bookmark);
+                r.select();
+            } catch(e) {
+                console.error(e);
+                return;
+            }
 
             $(document).trigger("click");
             $(".o_editable *").filter(function () {
@@ -688,6 +693,9 @@ define(['summernote/summernote'], function () {
 
             setTimeout(function () {
                 var target = dom.isBR(r.sc) ? r.sc.parentNode : dom.node(r.sc);
+                if (!target) {
+                    return;
+                }
                 var evt = document.createEvent("MouseEvents");
                 evt.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, target);
                 target.dispatchEvent(evt);
@@ -1089,7 +1097,11 @@ define(['summernote/summernote'], function () {
                 rng = range.create($target[0],0);
             }
             if (rng) {
-                rng.select();
+                try {
+                    rng.select();
+                } catch (e) {
+                    console.error(e);
+                }
             }
             $target = $(rng.sc);
             $target.mousedown();
