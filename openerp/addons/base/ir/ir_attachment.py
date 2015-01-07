@@ -22,6 +22,7 @@
 import hashlib
 import itertools
 import logging
+import mimetypes
 import os
 import re
 
@@ -207,10 +208,18 @@ class ir_attachment(osv.osv):
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
+        # compute the field depending of datas, supporting the case of a empty/None datas
+        bin_data = value and value.decode('base64') or '' # empty string to compute its hash
+        checksum = self._compute_checksum(bin_data)
+        vals = {
+            'file_size': len(bin_data),
+            'checksum' : checksum,
+        }
         # We dont handle setting data to null
+        # datas is false, but file_size and checksum are not (computed as datas is an empty string)
         if not value:
             # reset computed fields
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'file_size' : 0, 'checksum' : None, 'mimetype' : None, 'index_content' : None}, context=context)
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], vals, context=context)
             return True
         if context is None:
             context = {}
@@ -218,16 +227,8 @@ class ir_attachment(osv.osv):
         attach = self.browse(cr, uid, id, context=context)
         fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
-        # compute the field depending of datas
-        bin_data = value.decode('base64')
-        mimetype = self._compute_mimetype(bin_data)
-        checksum = self._compute_checksum(bin_data)
-        vals = {
-            'file_size': len(bin_data),
-            'checksum' : checksum,
-            'mimetype' : mimetype,
-            'index_content' : self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, mimetype),
-        }
+        # compute the index_content field
+        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
         if location != 'db':
             # create the file
             fname = self._file_write(cr, uid, value, checksum)
@@ -257,12 +258,17 @@ class ir_attachment(osv.osv):
             return hashlib.sha1(bin_data).hexdigest()
         return False
 
-    def _compute_mimetype(self, bin_data):
-        """ compute the mimetype of the given datas
-            :param bin_data : binary data
+    def _compute_mimetype(self, values):
+        """ compute the mimetype of the given values
+            :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        return guess_mimetype(bin_data)
+        mimetype = 'application/octet-stream'
+        if 'datas_fname' in values:
+            mimetype = mimetypes.guess_type(values.get('datas_fname'))[0]
+        if 'datas' in values:
+            mimetype = guess_mimetype(values.get('datas').decode('base64'))
+        return mimetype
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
         """ compute the index content of the given filename, or binary data.
@@ -420,7 +426,7 @@ class ir_attachment(osv.osv):
             ids = [ids]
         self.check(cr, uid, ids, 'write', context=context, values=vals)
         # remove computed field depending of datas
-        for field in ['file_size', 'checksum', 'mimetype']:
+        for field in ['file_size', 'checksum']:
             vals.pop(field, False)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
@@ -448,8 +454,11 @@ class ir_attachment(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         # remove computed field depending of datas
-        for field in ['file_size', 'checksum', 'mimetype']:
+        for field in ['file_size', 'checksum']:
             values.pop(field, False)
+        # if mimetype not given, compute it !
+        if 'mimetype' not in values:
+            values['mimetype'] = self._compute_mimetype(values)
         self.check(cr, uid, [], mode='write', context=context, values=values)
         return super(ir_attachment, self).create(cr, uid, values, context)
 
