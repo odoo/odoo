@@ -771,7 +771,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
       }
       if (from.parentNode === to) {
         while (from.lastChild) {
-          insertAfter(from.lastChild, from);
+          dom.insertAfter(from.lastChild, from);
         }
       } else {
         while (from.firstChild && from.firstChild != to) {
@@ -1747,7 +1747,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         return false;
     };
 
-    options.fontSizes = ['8', '9', '10', '11', '12', '14', '18', '24', '36'];
+    options.fontSizes = [_t('Default'), 8, 9, 10, 11, 12, 14, 18, 24, 36, 48, 62];
     $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color, bgcolor, size) {
         var rng = range.create();
         var startPoint = rng.getStartPoint();
@@ -1846,7 +1846,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             }
             if (size) {
               font.style.fontSize = "inherit";
-              if (parseInt(window.getComputedStyle(font).fontSize, 10) != size) {
+              if (!isNaN(size) && Math.abs(parseInt(window.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
                 font.style.fontSize = size + "px";
               }
             }
