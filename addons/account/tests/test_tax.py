@@ -10,5 +10,6 @@ class TestTax(AccountTestUsers):
             amount_type='percent',
             amount=10,
         ))
-        self.assertEquals(percent_tax.compute_all(50.0, 2)['taxes'][0]['amount'], 10.0)
-        self.assertEquals(percent_tax.compute_all(50.0, 2)['total_included'], 110.0)
+        currency = self.currency_model.browse(2)
+        self.assertEquals(percent_tax.compute_all(50.0, currency)['taxes'][0]['amount'], 10.0)
+        self.assertEquals(percent_tax.compute_all(50.0, currency)['total_included'], 110.0)
