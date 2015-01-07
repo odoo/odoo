@@ -831,7 +831,7 @@
                         }
                         self[k](type, methods[k], $el);
                     } else {
-                        // console.info("'"+self.option+"' snippet has no method '"+k+"'");
+                        console.info("'"+self.__id__+"' snippet option has no method '"+k+"'");
                     }
                 }
             });
@@ -904,27 +904,22 @@
 
             $("li:hasData", this).each(function () {
                 var $li = $(this);
-                var copy = $li.data();
+                var copy = _.clone($li.data());
                 var data = {};
                 for (var k in copy) {
-                    data[k] = copy[k];
+                    $li.removeAttr("data-"+k);
+                    $li.removeData(k);
+
                     if (k === "required") {
                         this.required = true;
-                    }
-                }
-                for (var k in data) {
-                    if (k === "value") {
-                        if (isNaN(+data[k]) || !data[k].length) {
-                            $li.attr("data-"+(this.required ? "select_class" : "toggle_class"), data[k]);
-                            $li.data(this.required ? "select_class" : "toggle_class", data[k]);
+                    } else if (k === "value") {
+                        if (isNaN(+copy[k]) || !copy[k].length) {
+                            data[this.required ? "select_class" : "toggle_class"] = copy[k];
                         }
+                    } else if (k === "src") {
+                        data["background"] = copy[k];
                     } else {
-                        if (k === "src") {
-                            $li.attr("data-background", data[k]);
-                            $li.data("background", data[k]);
-                        }
-                        $li.removeAttr("data-"+k);
-                        $li.removeData(k);
+                        data[k] = copy[k];
                     }
                 }
 
@@ -1057,6 +1052,7 @@
             var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             this._super();
 
+            this.$el.find('li.active').removeClass('active');
             this.$el.find('li[data-background]:not([data-background=""])')
                 .removeClass("active")
                 .each(function () {
@@ -1840,6 +1836,7 @@
                 var option = val['option'];
                 var Editor = website.snippet.options[option] || website.snippet.Option;
                 var editor = self.styles[option] = new Editor(self.BuildingBlock, self, self.$target, option_id);
+                editor.__id__ = option;
                 $ul.append(editor.$el.addClass("snippet-option-" + option));
             });
             this.selector_siblings = this.selector_siblings.join(",");
