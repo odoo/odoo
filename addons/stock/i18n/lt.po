@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-06 15:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-04-30 16:29+0000\n"
 "Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-07 07:11+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:26+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -129,8 +129,8 @@ msgid "Product Moves"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
 #, python-format
 msgid "Please provide proper quantity."
 msgstr ""
@@ -156,7 +156,7 @@ msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr ""
@@ -211,11 +211,6 @@ msgid "Physical Inventories"
 msgstr "Inventorizacija"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse a Period"
-msgstr "Analizuoti laikotarpį"
-
-#. module: stock
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
@@ -240,9 +235,9 @@ msgid ""
 msgstr "Adresas, kur bus pristatyti produktai."
 
 #. module: stock
-#: model:ir.actions.server,name:stock.action_partial_move_server
-msgid "Deliver/Receive Products"
-msgstr "Tiekti/priimti produktus"
+#: field:stock.location.product,type:0
+msgid "Analysis Type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -322,7 +317,7 @@ msgid "Reference"
 msgstr "Numeris"
 
 #. module: stock
-#: code:addons/stock/stock.py:1565
+#: code:addons/stock/stock.py:1559
 #, python-format
 msgid "Products to Process"
 msgstr "Produktų tiekimas/priėmimas"
@@ -363,19 +358,19 @@ msgstr ""
 "formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: stock
-#: code:addons/stock/stock.py:782
-#: code:addons/stock/stock.py:2517
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/stock.py:777
+#: code:addons/stock/stock.py:2512
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
 #: code:addons/stock/wizard/stock_inventory_merge.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
-#: code:addons/stock/wizard/stock_partial_picking.py:174
-#: code:addons/stock/wizard/stock_partial_picking.py:181
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:176
+#: code:addons/stock/wizard/stock_partial_picking.py:183
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #: code:addons/stock/wizard/stock_return_picking.py:102
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #: code:addons/stock/wizard/stock_return_picking.py:212
@@ -486,7 +481,7 @@ msgid "Ready to Deliver"
 msgstr "Galima išsiųsti"
 
 #. module: stock
-#: code:addons/stock/stock.py:2525
+#: code:addons/stock/stock.py:2520
 #, python-format
 msgid ""
 "Forbidden operation: it is not allowed to scrap products from a virtual "
@@ -583,7 +578,7 @@ msgstr ""
 "(paslaugų suteikimo). Tai yra laikas, kurį pažadėsite savo pirkėjams."
 
 #. module: stock
-#: code:addons/stock/product.py:195
+#: code:addons/stock/product.py:197
 #, python-format
 msgid "Products: "
 msgstr "Produktai: "
@@ -600,7 +595,7 @@ msgid "Draft Physical Inventories"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1806
+#: code:addons/stock/stock.py:1800
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -644,7 +639,7 @@ msgid "Item Labels"
 msgstr "Produktų etiketės"
 
 #. module: stock
-#: code:addons/stock/stock.py:1373
+#: code:addons/stock/stock.py:1367
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
 msgstr ""
@@ -841,9 +836,11 @@ msgid "Packs"
 msgstr "Pakai"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse Current Inventory"
-msgstr "Analizuoti turimas atsargas šiuo momentu"
+#: selection:report.stock.inventory,location_type:0
+#: field:res.partner,property_stock_supplier:0
+#: selection:stock.location,usage:0
+msgid "Supplier Location"
+msgstr "Tiekėjo sandėlis"
 
 #. module: stock
 #: view:stock.move:0
@@ -910,7 +907,7 @@ msgstr ""
 "automatiniam įrašų registravimui susijusiam su atsargų pokyčiais."
 
 #. module: stock
-#: code:addons/stock/stock.py:2296
+#: code:addons/stock/stock.py:2289
 #, python-format
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
@@ -937,7 +934,7 @@ msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:448
+#: code:addons/stock/product.py:450
 #, python-format
 msgid "Future Receptions"
 msgstr ""
@@ -946,11 +943,6 @@ msgstr ""
 #: selection:stock.move,priority:0
 msgid "Urgent"
 msgstr "Skubu"
-
-#. module: stock
-#: selection:stock.picking.out,state:0
-msgid "Delivered"
-msgstr "Išsiųsta"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1021,7 +1013,7 @@ msgid "December"
 msgstr "Gruodis"
 
 #. module: stock
-#: code:addons/stock/stock.py:1204
+#: code:addons/stock/stock.py:1198
 #, python-format
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
@@ -1044,7 +1036,7 @@ msgid "Change Product Quantity"
 msgstr "Keisti produkto kiekį"
 
 #. module: stock
-#: code:addons/stock/product.py:464
+#: code:addons/stock/product.py:466
 #, python-format
 msgid "Future P&L"
 msgstr ""
@@ -1081,7 +1073,7 @@ msgid "You must assign a serial number for this product."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2299
+#: code:addons/stock/stock.py:2292
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr ""
@@ -1206,6 +1198,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of Serial Number, internal reference, Product and Company "
+"must be unique !"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
@@ -1214,10 +1213,9 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-#: view:stock.picking.in:0
-msgid "Back Orders"
-msgstr "Pradiniai užsakymai"
+#: model:ir.actions.server,name:stock.action_partial_move_server
+msgid "Deliver/Receive Products"
+msgstr "Tiekti/priimti produktus"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1261,7 +1259,7 @@ msgid "Production Location"
 msgstr "Gamybos vieta"
 
 #. module: stock
-#: code:addons/stock/product.py:121
+#: code:addons/stock/product.py:123
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
@@ -1333,7 +1331,7 @@ msgid "Author"
 msgstr "Autorius"
 
 #. module: stock
-#: code:addons/stock/stock.py:1851
+#: code:addons/stock/stock.py:1848
 #, python-format
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
@@ -1370,7 +1368,7 @@ msgid "Supplier"
 msgstr "Tiekėjas"
 
 #. module: stock
-#: code:addons/stock/stock.py:2908
+#: code:addons/stock/stock.py:2903
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1378,7 +1376,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:113
+#: code:addons/stock/product.py:115
 #, python-format
 msgid "Please specify company in Location."
 msgstr ""
@@ -1548,9 +1546,10 @@ msgid "Waiting Another Move"
 msgstr ""
 
 #. module: stock
-#: selection:stock.picking,state:0
-msgid "Transferred"
-msgstr "Perduota"
+#: help:stock.move,product_packaging:0
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+msgstr ""
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -1566,14 +1565,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1919
-#, python-format
-msgid "Warning: No Back Order"
-msgstr ""
-
-#. module: stock
 #: model:ir.model,name:stock.model_stock_move
 #: view:stock.partial.move:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Stock Move"
 msgstr "Atsargų judėjimas"
 
@@ -1588,13 +1584,13 @@ msgid "To be refunded/invoiced"
 msgstr "Bus užpajamuota"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
+#: code:addons/stock/stock.py:2487
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Jūs galite ištrinti tik juodraščio būsenos įrašus"
 
 #. module: stock
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
 msgstr ""
@@ -1631,7 +1627,7 @@ msgid "Additional Info"
 msgstr "Papildoma informacija"
 
 #. module: stock
-#: code:addons/stock/stock.py:2697
+#: code:addons/stock/stock.py:2692
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr ""
@@ -1804,7 +1800,7 @@ msgid "Order Date"
 msgstr "Užsakymo data"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:96
+#: code:addons/stock/wizard/stock_change_product_qty.py:102
 #, python-format
 msgid "INV: %s"
 msgstr ""
@@ -1816,7 +1812,7 @@ msgid "Parent Location"
 msgstr "Tėvinė vieta"
 
 #. module: stock
-#: code:addons/stock/product.py:168
+#: code:addons/stock/product.py:170
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
 msgstr ""
@@ -1842,7 +1838,7 @@ msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2517
+#: code:addons/stock/stock.py:2512
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr ""
@@ -1918,7 +1914,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Atsargų apskaitos sąskaita (Tiekiama)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1805
+#: code:addons/stock/stock.py:1799
 #, python-format
 msgid "Operation Forbidden!"
 msgstr ""
@@ -2004,12 +2000,10 @@ msgid "You cannot remove a lot line."
 msgstr ""
 
 #. module: stock
-#: help:stock.location,posx:0
-#: help:stock.location,posy:0
-#: help:stock.location,posz:0
-msgid "Optional localization details, for information purpose only"
-msgstr ""
-"Papildomi lokalizacijos duomenys, naudojami tik informaciniai tikslai"
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+msgid "Back Orders"
+msgstr "Pradiniai užsakymai"
 
 #. module: stock
 #: view:product.product:0
@@ -2023,7 +2017,7 @@ msgid "Localization"
 msgstr "Lokalizavimas"
 
 #. module: stock
-#: code:addons/stock/product.py:460
+#: code:addons/stock/product.py:462
 #, python-format
 msgid "Delivered Qty"
 msgstr "Pristatyti kiekiai"
@@ -2267,12 +2261,6 @@ msgstr ""
 "naudojama numatytoji tiekėjo atsargų vieta."
 
 #. module: stock
-#: sql_constraint:stock.production.lot:0
-msgid ""
-"The combination of Serial Number and internal reference must be unique !"
-msgstr ""
-
-#. module: stock
 #: field:stock.warehouse,partner_id:0
 msgid "Owner Address"
 msgstr "Savininkas"
@@ -2316,7 +2304,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:450
+#: code:addons/stock/product.py:452
 #, python-format
 msgid "Received Qty"
 msgstr "Gauti kiekiai"
@@ -2394,8 +2382,8 @@ msgid "Customer Locations"
 msgstr "Pirkėjo vietos"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
-#: code:addons/stock/stock.py:2907
+#: code:addons/stock/stock.py:2487
+#: code:addons/stock/stock.py:2902
 #, python-format
 msgid "User Error!"
 msgstr "Naudotojo klaida!"
@@ -2432,13 +2420,6 @@ msgstr ""
 "Atsargų žurnalas, kuriame fiksuojami atsargų perkėlimai į susietąją vietą, "
 "kai susiejimo tipas nėra tiesioginis (palikus lauką tuščią, perkėlimai nėra "
 "fiksuojami)"
-
-#. module: stock
-#: selection:report.stock.inventory,location_type:0
-#: field:res.partner,property_stock_supplier:0
-#: selection:stock.location,usage:0
-msgid "Supplier Location"
-msgstr "Tiekėjo sandėlis"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2483,6 +2464,12 @@ msgstr "Apskaita"
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr "Sandėlio valdymas"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:224
+#, python-format
+msgid "Partial Delivery"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2626,7 +2613,7 @@ msgid "Warehouse board"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:470
+#: code:addons/stock/product.py:472
 #, python-format
 msgid "Future Qty"
 msgstr ""
@@ -2645,7 +2632,7 @@ msgid "Notes"
 msgstr "Pastabos"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:181
+#: code:addons/stock/wizard/stock_partial_picking.py:183
 #, python-format
 msgid ""
 "The unit of measure rounding does not allow you to ship \"%s %s\", only "
@@ -2691,7 +2678,7 @@ msgid "Products"
 msgstr "Produktai"
 
 #. module: stock
-#: code:addons/stock/stock.py:2287
+#: code:addons/stock/stock.py:2280
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
@@ -2731,7 +2718,7 @@ msgid "Outgoing Products"
 msgstr "Išsiunčiami produktai"
 
 #. module: stock
-#: code:addons/stock/stock.py:2293
+#: code:addons/stock/stock.py:2286
 #, python-format
 msgid ""
 "Please define stock input account for this product or its category: \"%s\" "
@@ -2751,7 +2738,7 @@ msgid "Move"
 msgstr "DK įrašas"
 
 #. module: stock
-#: code:addons/stock/product.py:466
+#: code:addons/stock/product.py:468
 #, python-format
 msgid "P&L Qty"
 msgstr "Kiekis"
@@ -2814,6 +2801,11 @@ msgid "New Quantity on Hand"
 msgstr "Naujas turimas kiekis"
 
 #. module: stock
+#: selection:stock.location.product,type:0
+msgid "Analyze current inventory"
+msgstr ""
+
+#. module: stock
 #: field:stock.move,priority:0
 msgid "Priority"
 msgstr "Svarbumas"
@@ -2866,7 +2858,7 @@ msgid "Cancel Move"
 msgstr "Atšaukti veiksmą"
 
 #. module: stock
-#: code:addons/stock/stock.py:2290
+#: code:addons/stock/stock.py:2283
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
@@ -2888,14 +2880,6 @@ msgstr "Fiksuota vieta"
 #: field:report.stock.inventory,scrap_location:0
 msgid "scrap"
 msgstr "nurašymai"
-
-#. module: stock
-#: code:addons/stock/stock.py:1920
-#, python-format
-msgid ""
-"By changing the quantity here, you accept the new quantity as complete: "
-"OpenERP will not automatically generate a Back Order."
-msgstr ""
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -2956,7 +2940,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:174
+#: code:addons/stock/wizard/stock_partial_picking.py:176
 #, python-format
 msgid "Please provide proper Quantity."
 msgstr ""
@@ -2985,7 +2969,7 @@ msgid "%s-%s-return"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:86
+#: code:addons/stock/wizard/stock_change_product_qty.py:92
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr ""
@@ -3053,7 +3037,7 @@ msgid "Date of Completion"
 msgstr "Siuntos perdavimo įvykdymo data"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
+#: code:addons/stock/stock.py:1674
 #, python-format
 msgid "You cannot move product %s from a location of type view %s."
 msgstr ""
@@ -3347,7 +3331,7 @@ msgstr ""
 "            "
 
 #. module: stock
-#: code:addons/stock/stock.py:2545
+#: code:addons/stock/stock.py:2540
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr ""
@@ -3397,7 +3381,7 @@ msgid "Date done"
 msgstr "Įvykdymo data"
 
 #. module: stock
-#: code:addons/stock/stock.py:1135
+#: code:addons/stock/stock.py:1129
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -3553,7 +3537,7 @@ msgid "Assigned Internal Moves"
 msgstr "Paruošti vidiniai perkėlimai"
 
 #. module: stock
-#: code:addons/stock/stock.py:804
+#: code:addons/stock/stock.py:799
 #, python-format
 msgid "You cannot process picking without stock moves."
 msgstr ""
@@ -3647,6 +3631,11 @@ msgid "Products by Location"
 msgstr "Produktai pagal vietas"
 
 #. module: stock
+#: selection:stock.picking,state:0
+msgid "Transferred"
+msgstr "Perduota"
+
+#. module: stock
 #: view:stock.config.settings:0
 msgid "Logistic"
 msgstr ""
@@ -3738,7 +3727,7 @@ msgid "Manager"
 msgstr "Vadovas"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #, python-format
 msgid ""
 "The rounding of the initial uom does not allow you to ship \"%s %s\", as it "
@@ -3755,11 +3744,6 @@ msgstr ""
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
 msgstr ""
-
-#. module: stock
-#: field:stock.location.product,type:0
-msgid "Analyse Type"
-msgstr "Analizės tipas"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3802,7 +3786,7 @@ msgid "Inventory Move"
 msgstr "Atsargų judėjimas"
 
 #. module: stock
-#: code:addons/stock/product.py:476
+#: code:addons/stock/product.py:478
 #, python-format
 msgid "Future Productions"
 msgstr ""
@@ -3994,25 +3978,25 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/product.py:100
-#: code:addons/stock/product.py:110
-#: code:addons/stock/product.py:113
-#: code:addons/stock/product.py:120
-#: code:addons/stock/product.py:141
-#: code:addons/stock/product.py:167
+#: code:addons/stock/product.py:112
+#: code:addons/stock/product.py:115
+#: code:addons/stock/product.py:122
+#: code:addons/stock/product.py:143
+#: code:addons/stock/product.py:169
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
 #: code:addons/stock/stock.py:543
-#: code:addons/stock/stock.py:804
-#: code:addons/stock/stock.py:1204
-#: code:addons/stock/stock.py:1213
-#: code:addons/stock/stock.py:2287
-#: code:addons/stock/stock.py:2290
-#: code:addons/stock/stock.py:2293
-#: code:addons/stock/stock.py:2296
-#: code:addons/stock/stock.py:2299
-#: code:addons/stock/stock.py:2302
-#: code:addons/stock/stock.py:2525
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:799
+#: code:addons/stock/stock.py:1198
+#: code:addons/stock/stock.py:1207
+#: code:addons/stock/stock.py:2280
+#: code:addons/stock/stock.py:2283
+#: code:addons/stock/stock.py:2286
+#: code:addons/stock/stock.py:2289
+#: code:addons/stock/stock.py:2292
+#: code:addons/stock/stock.py:2295
+#: code:addons/stock/stock.py:2520
+#: code:addons/stock/stock.py:2629
 #: code:addons/stock/wizard/stock_fill_inventory.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -4109,7 +4093,7 @@ msgstr ""
 "vieta“."
 
 #. module: stock
-#: code:addons/stock/stock.py:1882
+#: code:addons/stock/stock.py:1879
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -4122,7 +4106,7 @@ msgid "Serial Number Revisions"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1134
+#: code:addons/stock/stock.py:1128
 #, python-format
 msgid "Error, no partner!"
 msgstr ""
@@ -4180,7 +4164,7 @@ msgid "Followers"
 msgstr "Prenumeratoriai"
 
 #. module: stock
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:2629
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
@@ -4236,6 +4220,13 @@ msgid "Create invoice"
 msgstr "Išrašyti sąskaitą"
 
 #. module: stock
+#: help:stock.config.settings,group_stock_multiple_locations:0
+msgid ""
+"This allows to configure and use multiple stock locations and warehouses,\n"
+"                instead of having a single default one."
+msgstr ""
+
+#. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
 msgstr "Patvirtinti vidiniai perkėlimai"
@@ -4266,7 +4257,7 @@ msgstr ""
 "sąskaita bei  debetuojama atsargų padidėjimo sąskaita."
 
 #. module: stock
-#: code:addons/stock/stock.py:2860
+#: code:addons/stock/stock.py:2855
 #, python-format
 msgid "INV:"
 msgstr ""
@@ -4285,7 +4276,7 @@ msgid "Chaining Journal"
 msgstr "Susiejimo žurnalas"
 
 #. module: stock
-#: code:addons/stock/stock.py:782
+#: code:addons/stock/stock.py:777
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr ""
@@ -4322,7 +4313,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:458
+#: code:addons/stock/product.py:460
 #, python-format
 msgid "Future Deliveries"
 msgstr ""
@@ -4345,7 +4336,7 @@ msgid "Auto Validate"
 msgstr "Automatiškai patvirtinti"
 
 #. module: stock
-#: code:addons/stock/stock.py:1850
+#: code:addons/stock/stock.py:1847
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
 msgstr ""
@@ -4399,7 +4390,7 @@ msgstr ""
 "[VIDINIS_IDENT]"
 
 #. module: stock
-#: code:addons/stock/product.py:142
+#: code:addons/stock/product.py:144
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
 msgstr ""
@@ -4442,14 +4433,14 @@ msgid "Invoiced"
 msgstr "Sąskaitos faktūros"
 
 #. module: stock
-#: code:addons/stock/stock.py:1881
+#: code:addons/stock/stock.py:1878
 #: view:product.template:0
 #, python-format
 msgid "Information"
 msgstr "Informacija"
 
 #. module: stock
-#: code:addons/stock/stock.py:1213
+#: code:addons/stock/stock.py:1207
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
 msgstr ""
@@ -4547,7 +4538,7 @@ msgid "Shelves (Y)"
 msgstr "Lentyna (Y)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2295
 #, python-format
 msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
@@ -4606,7 +4597,7 @@ msgid "November"
 msgstr "Lapkritis"
 
 #. module: stock
-#: code:addons/stock/product.py:472
+#: code:addons/stock/product.py:474
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Nesuplanuoti kiekiai"
@@ -4641,7 +4632,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #, python-format
 msgid ""
 "No product in this location. Please select a location in the product form."
@@ -4658,14 +4649,14 @@ msgid "Move History (parent moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:454
+#: code:addons/stock/product.py:456
 #, python-format
 msgid "Future Stock"
 msgstr "Būsimos atsargos"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1674
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "Error"
 msgstr "Klaida"
@@ -4772,10 +4763,9 @@ msgid "Picking Slip"
 msgstr "Važtaraštis"
 
 #. module: stock
-#: help:stock.move,product_packaging:0
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+#: selection:stock.picking.out,state:0
+msgid "Delivered"
+msgstr "Išsiųsta"
 
 #. module: stock
 #: view:product.product:0
@@ -4837,7 +4827,7 @@ msgid "May"
 msgstr "Gegužė"
 
 #. module: stock
-#: code:addons/stock/product.py:110
+#: code:addons/stock/product.py:112
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
@@ -4870,7 +4860,7 @@ msgid "Location Content"
 msgstr "Atsargų vietos apžvalga"
 
 #. module: stock
-#: code:addons/stock/product.py:478
+#: code:addons/stock/product.py:480
 #, python-format
 msgid "Produced Qty"
 msgstr "Pagaminti kiekiai"
@@ -4952,10 +4942,8 @@ msgid "Date of Reception"
 msgstr "Gavimo data"
 
 #. module: stock
-#: help:stock.config.settings,group_stock_multiple_locations:0
-msgid ""
-"This allows to configure and use multiple stock locations and warehouses,\n"
-"                instead of having a single default one."
+#: selection:stock.location.product,type:0
+msgid "Analyze period"
 msgstr ""
 
 #. module: stock
@@ -5094,12 +5082,29 @@ msgstr "Paruošta apdorojimui"
 msgid "Warehouse Address :"
 msgstr ""
 
+#. module: stock
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
+msgstr ""
+"Papildomi lokalizacijos duomenys, naudojami tik informaciniai tikslai"
+
 #, python-format
 #~ msgid "Error, no partner !"
 #~ msgstr "Klaida, nėra nurodytas partneris!"
+
+#~ msgid "Analyse a Period"
+#~ msgstr "Analizuoti laikotarpį"
+
+#~ msgid "Analyse Current Inventory"
+#~ msgstr "Analizuoti turimas atsargas šiuo momentu"
 
 #~ msgid "Time"
 #~ msgstr "Data"
 
 #~ msgid "Creation time, usually the time of the order."
 #~ msgstr "Sukūrimo data, dažniausiai tai yra užsakymo data."
+
+#~ msgid "Analyse Type"
+#~ msgstr "Analizės tipas"

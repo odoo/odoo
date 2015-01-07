@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-12-14 10:41+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-15 05:46+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -23,9 +23,22 @@ msgid "Tasks by User"
 msgstr "Tehtävät käyttäjittäin"
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Tuntikortin tehtävä"
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
 msgstr "Ryhmittele vuoden päivän mukaan"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Et voi valita abalyyttistä tiliä, joka on tilassa suljettu tai peruutettu."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -38,7 +51,7 @@ msgid "Related Timeline Id"
 msgstr "Liittyvän aikajanan id"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
@@ -53,12 +66,10 @@ msgid "Project Task Work"
 msgstr "Projektille tehtävät työt"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
-"Et voi valita abalyyttistä tiliä, joka on tilassa suljettu tai peruutettu."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -228,9 +239,9 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Tuntikortin tehtävä"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Tuntikortin tunnit"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -253,14 +264,9 @@ msgid "Trigger Invoice"
 msgstr "Liipaise laskutus"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "Marraskuu"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Maaliskuu"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Tuntikortti ja tehtävän tunnit -raportti kuukausittain"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -295,24 +301,14 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Virheellinen analyyttinen tili !"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Maaliskuu"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Tuntikortti ja tehtävän tunnit -raportti kuukausittain"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Virheellinen konfiguraatio !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "Marraskuu"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -377,7 +373,7 @@ msgid "After task is completed, Create its invoice."
 msgstr "Kun tehtävä on valmis, tee sille lasku."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr "Virheellinen toiminto!"
@@ -399,9 +395,13 @@ msgstr ""
 "\"%s\".</p>"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Tuntikortin tunnit"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -413,3 +413,11 @@ msgstr "Vuosi"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Täytä tuntikortti"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Virheellinen konfiguraatio !"
+
+#, python-format
+#~ msgid "Invalid Analytic Account !"
+#~ msgstr "Virheellinen analyyttinen tili !"

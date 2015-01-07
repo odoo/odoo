@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-31 07:55+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-01 06:52+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:04+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -73,7 +73,7 @@ msgid ""
 msgstr "最小在庫ルールは最小在庫に達すると、システムが直ちに自動的に調達オーダーを作成します。"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
 msgstr "時間コスト"
@@ -203,12 +203,12 @@ msgid "Order Planning"
 msgstr "生産計画"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr "作業指示の詳細な計画を許可"
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per product using properties"
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:633
+#: code:addons/mrp/mrp.py:666
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "製造オーダをキャンセルできません。"
@@ -219,7 +219,7 @@ msgid "Cycle Account"
 msgstr "サイクルアカウント"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
 msgstr "作業コスト"
@@ -235,6 +235,8 @@ msgid "Capacity Information"
 msgstr "容量情報"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "作業区"
@@ -380,7 +382,7 @@ msgid "Reference must be unique per Company!"
 msgstr "参照は会社ごとに固有でなければいけません。"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: report:bom.structure:0
 #: view:mrp.bom:0
 #: field:mrp.product_price,number:0
@@ -489,7 +491,7 @@ msgid "Scheduled Date"
 msgstr "予定日"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:129
+#: code:addons/mrp/procurement.py:121
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
@@ -675,7 +677,7 @@ msgid "Work Center Load"
 msgstr "作業区負荷"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:55
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "この製品のための部品表が定義されていません。"
@@ -829,8 +831,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "0.9の数は製造過程の中での10％の損失を意味します。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:779
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "警告"
@@ -895,7 +897,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "原材料を待っている製造オーダーです。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -972,7 +974,7 @@ msgid "BoM Type"
 msgstr "部品表タイプ"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:57
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -994,7 +996,7 @@ msgid "Companies"
 msgstr "会社"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:634
+#: code:addons/mrp/mrp.py:667
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1008,8 +1010,8 @@ msgid "Minimum Stock"
 msgstr "最小在庫"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:160
-#: code:addons/mrp/report/price.py:211
+#: code:addons/mrp/report/price.py:162
+#: code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "合計コスト %s %s"
@@ -1022,7 +1024,7 @@ msgid "Stockable Product"
 msgstr "在庫可能製品"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
 msgstr "作業区名"
@@ -1195,7 +1197,7 @@ msgid "Group By..."
 msgstr "グループ化…"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
 msgstr "サイクルコスト"
@@ -1223,6 +1225,11 @@ msgid "Resources"
 msgstr "リソース"
 
 #. module: mrp
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
@@ -1235,7 +1242,7 @@ msgid "Analytic Journal"
 msgstr "分析仕訳帳"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
 msgstr ""
@@ -1315,7 +1322,7 @@ msgstr ""
 "工順は全ての作業区が長さとサイクルがどのくらい使われるかを示します。工順が示される場合、製造オーダ（作業区）の第３のタブは自動的に事前完了します。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Invalid Action!"
 msgstr "操作は無効です。"
@@ -1329,7 +1336,7 @@ msgid ""
 msgstr "最小在庫ルールは最小と最大の量に基づき自動調達するルールです。これは在庫管理メニューで利用可能で製品ごとに設定できます。"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:187
+#: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
 msgstr "%s %s の構成部品コスト"
@@ -1358,7 +1365,7 @@ msgid ""
 msgstr "部品表には完成品の製造に必要な原材料のリストを定義することができます。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:375
+#: code:addons/mrp/mrp.py:379
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1369,7 +1376,7 @@ msgid "Production Scheduled Product"
 msgstr "製造予定済製品"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:204
+#: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
 msgstr "作業コスト %s %s"
@@ -1415,7 +1422,7 @@ msgid "Product Cost Structure"
 msgstr "製品のコスト構造"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
 msgstr "構成部品仕入先"
@@ -1542,7 +1549,7 @@ msgid "SO Number"
 msgstr "受注番号"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "'%s' ステータスの製造オーダは削除できません。"
@@ -1579,9 +1586,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "製造オーダ開始"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1801,7 +1806,7 @@ msgstr ""
 "                mrp_operationsモジュールをインストールします。"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:779
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1868,7 +1873,7 @@ msgid "Compute Data"
 msgstr "データ計算"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1876,8 +1881,9 @@ msgid "Error!"
 msgstr "エラー！"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: view:mrp.bom:0
+#: view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "構成部品"
@@ -1914,7 +1920,7 @@ msgid "Manufacturing Lead Time"
 msgstr "製造リードタイム"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -1928,6 +1934,11 @@ msgstr "製品販売単位数量"
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
 msgstr "製品移動"
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Operation"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2102,7 +2113,7 @@ msgid "Assignment from stock."
 msgstr "在庫から割当"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
 msgstr ""
@@ -2130,7 +2141,7 @@ msgid "Manufacturing Steps."
 msgstr "製造工程"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:146
+#: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2157,7 +2168,7 @@ msgid "BOM Ref"
 msgstr "部品表参照"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2197,7 +2208,7 @@ msgid "Bill of Materials"
 msgstr "部品表"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2216,7 +2227,6 @@ msgid "Manage manual picking to fulfill manufacturing orders "
 msgstr "製造オーダにてマニュアルピッキングを使用 "
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
 msgstr "一般情報"
@@ -2329,11 +2339,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr "属性を使用して製品ごとにいくつかの部品表を許可"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
@@ -2432,3 +2437,9 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "消費予定"
+
+#~ msgid "Allow detailed planning of work order"
+#~ msgstr "作業指示の詳細な計画を許可"
+
+#~ msgid "Allow several bill of materials per products using properties"
+#~ msgstr "属性を使用して製品ごとにいくつかの部品表を許可"

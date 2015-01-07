@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-01-17 12:44+0000\n"
 "Last-Translator: Quentin THEURET @TeMPO Consulting <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-18 07:05+0000\n"
-"X-Generator: Launchpad (build 16901)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:44+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -159,7 +159,7 @@ msgid "Rule Name"
 msgstr "Nom de la règle"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "On ne peut convertir d'un appel téléphonique à la fois."
@@ -198,7 +198,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -226,7 +226,7 @@ msgid "Schedule Other Call"
 msgstr "Planifier un autre appel"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -261,6 +261,11 @@ msgstr "Critères"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Assignées à mon/mes équipe(s)"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "Réponses exclues :"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -304,7 +309,7 @@ msgid "Prospect Partner"
 msgstr "Prospect"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "Pas de sujet"
@@ -430,6 +435,7 @@ msgid "Unread Messages"
 msgstr "Messages non lus"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -570,7 +576,7 @@ msgid "Planned Revenue"
 msgstr "Revenu prévu"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "Courriel client"
@@ -588,9 +594,9 @@ msgid "October"
 msgstr "Octobre"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Revenir à 'à faire'"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "Réponses incluses :"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -646,6 +652,11 @@ msgid ""
 msgstr ""
 "Aucun nom de client défini. Veuillez remplir l'un des champs suivants: nom "
 "de la société, nom du contact ou courriel (\"Nom <utilisateur@serveur.com>\")"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "Options d'analyse"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -734,7 +745,7 @@ msgid "Partner Segmentation"
 msgstr "Segmentation du partenaire"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr "Journalisation d’un appel pour %(date)s. %(description)s"
@@ -1359,7 +1370,7 @@ msgid "Days to Close"
 msgstr "Jours avant clôture"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1440,6 +1451,11 @@ msgid ""
 msgstr ""
 "Appels téléphoniques affectés à l'utilisateur actuel ou à une équipe ayant "
 "l'utilisateur actuel comme chef d'équipe"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "Description de la segmentation"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1740,7 +1756,7 @@ msgid "Describe the lead..."
 msgstr "Décrivez la piste..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Le partenaire à été <b> créé </b>"
@@ -1964,7 +1980,7 @@ msgid "Support Department"
 msgstr "Service support"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Réunion prévue '%s'<br> Objet: %s <br> Durée: %s heure(s)"
@@ -3041,7 +3057,6 @@ msgstr "Fonction"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Description"
@@ -3129,7 +3144,12 @@ msgid "Referred By"
 msgstr "Apporté par"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Revenir à 'à faire'"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr "Planification d’un appel pour le  %(date)s. %(description)s"
@@ -3140,7 +3160,7 @@ msgid "Working Hours"
 msgstr "Heures de travail"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3206,6 +3226,11 @@ msgstr "Avril"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "Nom de la campagne"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "Analyse"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3286,18 +3311,6 @@ msgstr ""
 #~ msgid "Warning !"
 #~ msgstr "Avertissement !"
 
-#~ msgid "Excluded Answers :"
-#~ msgstr "Réponses exclues :"
-
-#~ msgid "Profiling"
-#~ msgstr "Analyse"
-
-#~ msgid "Profiling Options"
-#~ msgstr "Options d'analyse"
-
-#~ msgid "Included Answers :"
-#~ msgstr "Réponses incluses :"
-
 #~ msgid "Send Mail"
 #~ msgstr "Envoyer un courriel"
 
@@ -3311,9 +3324,6 @@ msgstr ""
 #~ "Si \"Retirer des campagnes marketing\" est coché, cela signifie que ce "
 #~ "contact a refusé de recevoir des courriels ou s'est désinscrit d'une "
 #~ "campagne."
-
-#~ msgid "Segmentation Description"
-#~ msgstr "Description de la segmentation"
 
 #~ msgid "New Leads"
 #~ msgstr "Nouvelles pistes"

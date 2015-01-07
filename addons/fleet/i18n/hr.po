@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-02-10 23:19+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:09+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:53+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -83,7 +83,9 @@ msgstr "Reparacija rotora"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
+#: view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.model:0
+#: view:fleet.vehicle.odometer:0
 msgid "Group By..."
 msgstr "Grupiraj po..."
 
@@ -482,6 +484,7 @@ msgid "Vehicles Services Logs"
 msgstr "Evidencija servisa vozila"
 
 #. module: fleet
+#: view:fleet.vehicle.log.fuel:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
@@ -609,9 +612,9 @@ msgid "Driver of the vehicle"
 msgstr "Vozač ovog vozila"
 
 #. module: fleet
-#: view:fleet.vehicle:0
-msgid "other(s)"
-msgstr "ostali"
+#: view:fleet.vehicle.odometer:0
+msgid "Vehicles odometers"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -1724,6 +1727,8 @@ msgstr "Stanje kilometraže"
 #: view:fleet.vehicle:0
 #: view:fleet.vehicle.cost:0
 #: field:fleet.vehicle.cost,vehicle_id:0
+#: view:fleet.vehicle.log.fuel:0
+#: view:fleet.vehicle.odometer:0
 #: field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
 msgstr "Vozilo"
@@ -1893,6 +1898,11 @@ msgstr "CO2 emisija vozila"
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
 msgstr "Zamjena brisača"
+
+#. module: fleet
+#: view:fleet.vehicle:0
+msgid "other(s)"
+msgstr "ostali"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0

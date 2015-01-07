@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-14 15:50+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-27 22:36+0000\n"
+"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:22+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 
 #. module: pad
 #. openerp-web
@@ -36,14 +36,31 @@ msgstr ""
 "Compañías, en la pestaña de configuración de su compañía."
 
 #. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:48
+#, python-format
+msgid "This pad will be initialized on first edit"
+msgstr "Este pad se inicializará en la primera edición"
+
+#. module: pad
 #: help:res.company,pad_key:0
 msgid "Etherpad lite api key."
 msgstr "Clave de la API de Etherpad lite."
 
 #. module: pad
-#: view:res.company:0
+#: view:res.company:pad.view_company_form_with_pad
 msgid "e.g. beta.primarypad.com"
 msgstr "Por ejemplo, beta.primarypad.com"
+
+#. module: pad
+#: code:addons/pad/pad.py:49
+#, python-format
+msgid ""
+"Pad creation fail,                 either there is a problem with your pad "
+"server URL or with your connection."
+msgstr ""
+"Falló la creación del pad, puede existir un problema con la URL del servidor "
+"del pad o con su conexión."
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -56,7 +73,7 @@ msgid "pad.common"
 msgstr "Datos comunes del PAD"
 
 #. module: pad
-#: view:res.company:0
+#: view:res.company:pad.view_company_form_with_pad
 msgid "Pads"
 msgstr "Pads"
 
@@ -64,6 +81,12 @@ msgstr "Pads"
 #: field:res.company,pad_server:0
 msgid "Pad Server"
 msgstr "Servidor pad"
+
+#. module: pad
+#: code:addons/pad/pad.py:49
+#, python-format
+msgid "Error"
+msgstr "Error"
 
 #. module: pad
 #: field:res.company,pad_key:0
@@ -74,3 +97,10 @@ msgstr "Clave de la API del pad"
 #: help:res.company,pad_server:0
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Servidor de Etherpad lite. Ejemplo: beta.primarypad.com"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:45
+#, python-format
+msgid "Unable to load pad"
+msgstr "Imposible cargar el pad"

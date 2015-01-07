@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-01-23 09:12+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-24 06:24+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -161,6 +161,12 @@ msgid "Email Templates"
 msgstr "Eメールテンプレート"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "このテンプレートで使用できる文書の種類"
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -183,16 +189,9 @@ msgid "Sidebar action"
 msgstr "サイドバーのアクション"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
 msgstr ""
-"Eメールを送信するときに選択できる翻訳言語（ISOコード）。これを設定しないと、英語版が使われます。これは通常、言語コードを設定するためのものです。例えば"
-"、${object.partner_id.lang.code} など。"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -250,8 +249,9 @@ msgid "Advanced"
 msgstr "高度"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: email_template
@@ -362,10 +362,14 @@ msgid "Add context action"
 msgstr "コンテキストアクションを追加"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "このテンプレートで使用できる文書の種類"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,email_recipients:0
@@ -479,6 +483,14 @@ msgid "Suppliers"
 msgstr ""
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -527,3 +539,12 @@ msgstr "件名"
 
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr "送信者アドレス"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Eメールを送信するときに選択できる翻訳言語（ISOコード）。これを設定しないと、英語版が使われます。これは通常、言語コードを設定するためのものです。例えば"
+#~ "、${object.partner_id.lang.code} など。"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-07 19:34+0000\n"
 "Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:22+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -31,14 +31,6 @@ msgstr "Grupeaza dupa..."
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
 msgstr "Recreeaza Factura"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
-"Trebuie sa selectati o Adresa de Facturare a Partenerului in formularul de "
-"reparatii !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -73,7 +65,7 @@ msgid "Unread Messages"
 msgstr "Mesaje Necitite"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Niciun produs definit in Taxe!"
@@ -148,9 +140,9 @@ msgid "Taxes"
 msgstr "Taxe"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:391
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -268,9 +260,9 @@ msgid "Extra Info"
 msgstr "Informatii suplimentare"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:341
+#: code:addons/mrp_repair/mrp_repair.py:354
+#: code:addons/mrp_repair/mrp_repair.py:441
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -288,7 +280,7 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Nu este definit niciun cont pentru partenerul \"%s\"."
@@ -334,7 +326,7 @@ msgid "Repairs order"
 msgstr "Comanda reparatii"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -596,6 +588,12 @@ msgid "Date"
 msgstr "Data"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
 msgstr "Linie Taxe Reparatii"
@@ -626,8 +624,8 @@ msgid "End Repair"
 msgstr "Finalizeaza Reparatia"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Niciun cont definit pentru produsul \"%s\"."
@@ -651,9 +649,7 @@ msgid "Product Information"
 msgstr "Informatii Produs"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr "Creeaza Factura"
 
@@ -661,6 +657,12 @@ msgstr "Creeaza Factura"
 #: view:mrp.repair:0
 msgid "Start Repair"
 msgstr "Incepe Reparatia"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -737,6 +739,8 @@ msgstr ""
 "posibilitatea de a modifica manual dupa aceea."
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "Creeaza Factura"
@@ -796,7 +800,7 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "Chiar doriti să creaţi factura(ile)?"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "Ordinul de reparatii este deja facturat."
@@ -874,8 +878,12 @@ msgstr "Total"
 msgid "Ready to Repair"
 msgstr "Pregatit de reparatie"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
-msgid "No partner !"
-msgstr "Niciun partener !"
+#~ msgid "You have to select a Partner Invoice Address in the repair form !"
+#~ msgstr ""
+#~ "Trebuie sa selectati o Adresa de Facturare a Partenerului in formularul de "
+#~ "reparatii !"
+
+#, python-format
+#~ msgid "No partner !"
+#~ msgstr "Niciun partener !"

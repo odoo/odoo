@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-04-12 15:00+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-13 06:20+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:15+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,12 +85,6 @@ msgid "Start Task"
 msgstr "Rozpocznij zadanie"
 
 #. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr "Ostrzeżenie !"
-
-#. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
@@ -138,8 +132,9 @@ msgstr ""
 "kanban."
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr "Ostrzeżenie !"
@@ -417,7 +412,7 @@ msgid "Assigned to"
 msgstr "Przypisano do"
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Oddelegowani pracownicy powinni być wyspecyfikowani"
@@ -1210,7 +1205,7 @@ msgid "Done by"
 msgstr "Wykonane przez"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr "Niedozwolona akcja!"
@@ -1299,9 +1294,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Obliczone jako: Czas spędzony + Czas pozostały"
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1347,6 +1342,12 @@ msgstr "Dodaj opis..."
 #: view:project.project:0
 msgid "Team"
 msgstr "Zespół"
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
+msgstr ""
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1515,7 +1516,7 @@ msgstr ""
 "kiedy zadanie jest w stanie projektu."
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr "Załączniki"
@@ -1526,7 +1527,7 @@ msgid "Issue Version"
 msgstr "Wersja problemu"
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1638,7 +1639,7 @@ msgid "Overpassed Tasks"
 msgstr "Zadania przeterminowane"
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1701,12 +1702,6 @@ msgid "CHECK: "
 msgstr "SPRAWDŹ: "
 
 #. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr "Musisz przypisac uczestników do projektu '%s' !"
-
-#. module: project
 #: view:project.project:0
 msgid "Pending Projects"
 msgstr "Projekty oczekujące"
@@ -1761,6 +1756,11 @@ msgstr "Ważne"
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Definiuj wymagania i ustal planowane godziny."
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1938,7 +1938,7 @@ msgid "Starting Date"
 msgstr "Data rozpoczęcia"
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2102,7 +2102,7 @@ msgid "Reevaluation Task"
 msgstr "Przeliczenie zadania"
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Usuń najpierw projekt związany z tym kontem."
@@ -2247,6 +2247,14 @@ msgstr "Rok"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Etapy zadań"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Ostrzeżenie !"
+
+#, python-format
+#~ msgid "You must assign members on the project '%s' !"
+#~ msgstr "Musisz przypisac uczestników do projektu '%s' !"
 
 #~ msgid "Public"
 #~ msgstr "Publiczny"

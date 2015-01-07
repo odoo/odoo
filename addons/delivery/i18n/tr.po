@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-05-12 09:30+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-13 06:28+0000\n"
-"X-Generator: Launchpad (build 17002)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "Postayla Teslim"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr " bu İşlevde "
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "PKodu"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr "Teslimat Tablo Satırı"
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
@@ -64,14 +71,16 @@ msgstr "Teslimat tablosu"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Hacim"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "PKodu"
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "Teslim emri"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
@@ -180,7 +189,7 @@ msgid "Delivery Method"
 msgstr "Teslimat Yöntemi"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "Hiç fiyat yok!"
@@ -192,6 +201,7 @@ msgstr "Stok Hareketi"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Nakliyeci İzleme Ref"
@@ -339,6 +349,7 @@ msgstr "Tablo Adı"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Paket Sayısı"
@@ -374,21 +385,9 @@ msgstr ""
 "boş bırakın"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr "Hiçbir tablo yok!"
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "Sipariş taslak durumunda değil !"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -420,6 +419,12 @@ msgstr "Koşul"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Maliyet Fiyatı"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -493,6 +498,12 @@ msgstr ""
 "tamamlayın."
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -510,6 +521,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "Ağırlık ölçü birimi"
 
@@ -538,12 +551,6 @@ msgstr "Teslimat Fiyat Listesi"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Fiyat"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "Bu nakliyeciyle eşleşen hiçbir tablo yoktur!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -578,6 +585,7 @@ msgstr "Adrese göre Peşin Fiyatlandırma"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Nakliyeci"
@@ -631,3 +639,15 @@ msgstr "Ölçü Birimi (Ölçü Birimi) Ağırlık ölçü birimidir"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Fiyat Türü"
+
+#, python-format
+#~ msgid "No grid available !"
+#~ msgstr "Hiçbir tablo yok!"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "Bu nakliyeciyle eşleşen hiçbir tablo yoktur!"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "Sipariş taslak durumunda değil !"

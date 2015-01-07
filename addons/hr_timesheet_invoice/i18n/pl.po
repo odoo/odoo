@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:14+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:58+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -104,7 +104,7 @@ msgid "Profit"
 msgstr "Zysk"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:142
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "Nie możesz modyfikować zafakturowanej pozycji analitycznej !"
@@ -165,12 +165,6 @@ msgstr "Spędzony czas"
 #: field:account.analytic.account,amount_invoiced:0
 msgid "Invoiced Amount"
 msgstr "Kwota zafakturowana"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
-#, python-format
-msgid "Analytic Account incomplete !"
-msgstr "Niekompletne konto analityczne !"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
@@ -246,7 +240,7 @@ msgid "Deadline"
 msgstr "Termin"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:262
 #, python-format
 msgid "Configuration Error!"
 msgstr "Błąd konfiguracji!"
@@ -283,7 +277,7 @@ msgid "Costs to invoice"
 msgstr "Koszty do faktury"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:262
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr "Zdefiniuj konto przychodów dla produktu '%s'."
@@ -579,6 +573,12 @@ msgid "User"
 msgstr "Użytkownik"
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
+#, python-format
+msgid "Analytic Account Incomplete!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
 #: selection:report.timesheet.line,month:0
 #: selection:report_timesheet.account,month:0
@@ -748,7 +748,7 @@ msgid "Timesheets to invoice"
 msgstr "Karta czasu pracy do zafakturowania"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:186
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -865,15 +865,6 @@ msgid "April"
 msgstr "Kwiecień"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
-#, python-format
-msgid ""
-"There is no product defined. Please select one or force the product through "
-"the wizard."
-msgstr ""
-"Nie zdefiniowano produktu. Wybierz produkt lub wymuś produkt w kreatorze."
-
-#. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
 msgid "Discount in percentage"
 msgstr "Upust w procentach"
@@ -905,8 +896,7 @@ msgid "Units"
 msgstr "Jednostki"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "Error!"
 msgstr "Błąd!"
@@ -952,3 +942,14 @@ msgstr "Rok"
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
 msgstr "Czas trwania"
+
+#, python-format
+#~ msgid "Analytic Account incomplete !"
+#~ msgstr "Niekompletne konto analityczne !"
+
+#, python-format
+#~ msgid ""
+#~ "There is no product defined. Please select one or force the product through "
+#~ "the wizard."
+#~ msgstr ""
+#~ "Nie zdefiniowano produktu. Wybierz produkt lub wymuś produkt w kreatorze."

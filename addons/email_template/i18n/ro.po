@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-01-23 16:44+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-24 06:24+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -166,6 +166,12 @@ msgid "Email Templates"
 msgstr "Sabloane e-mail"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Tipul de document cu care poate fi utilizat acest sablon"
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -189,19 +195,9 @@ msgid "Sidebar action"
 msgstr "Actiune bara laterala"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
-"Limba optionala de traducere (cod ISO) care va fi selectata atunci cand "
-"trimiteti un e-mail. Daca nu este setata, va fi folosita versiunea in limba "
-"engleza. Aceasta ar trebui de obicei sa fie o expresie inlocuitoare care "
-"furnizeaza codul limbii corespunzatoare, de exemplu "
-"${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
+msgstr "Previzualizare a"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -263,9 +259,10 @@ msgid "Advanced"
 msgstr "Avansat"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Previzualizare a"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -376,10 +373,14 @@ msgid "Add context action"
 msgstr "Adauga contextul actiunii"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Tipul de document cu care poate fi utilizat acest sablon"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,email_recipients:0
@@ -502,6 +503,14 @@ msgid "Suppliers"
 msgstr "Furnizori"
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -555,3 +564,15 @@ msgstr "Subiect"
 #~ msgstr ""
 #~ "Daca bifati, acest partener nu va primi nicio notificare automata prin e-"
 #~ "mail, cum ar fi disponibilitatea facturilor."
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Limba optionala de traducere (cod ISO) care va fi selectata atunci cand "
+#~ "trimiteti un e-mail. Daca nu este setata, va fi folosita versiunea in limba "
+#~ "engleza. Aceasta ar trebui de obicei sa fie o expresie inlocuitoare care "
+#~ "furnizeaza codul limbii corespunzatoare, de exemplu "
+#~ "${object.partner_id.lang.code}."

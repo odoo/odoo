@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:37+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -114,6 +114,11 @@ msgid "Distribution Code"
 msgstr "Código de distribución"
 
 #. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr "Aceptar"
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
@@ -210,11 +215,6 @@ msgid "Journal Items"
 msgstr "Elementos diario"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
-msgid "analytic.plan.create.model"
-msgstr "analitica.plan.crear.modelo"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
 msgstr "Id cuenta1"
@@ -225,9 +225,9 @@ msgid "Maximum Allowed (%)"
 msgstr "Máximo permitido (%)"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
-msgstr "Cuenta principal"
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
+msgstr "analitica.plan.crear.modelo"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
@@ -247,9 +247,11 @@ msgid "Distribution Models"
 msgstr "Modelos distribución"
 
 #. module: account_analytic_plans
-#: view:analytic.plan.create.model:0
-msgid "Ok"
-msgstr "Aceptar"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:481
+#, python-format
+msgid "No Analytic Journal!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -346,17 +348,15 @@ msgstr "Diario"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
+#: code:addons/account_analytic_plans/account_analytic_plans.py:481
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal."
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:342
-#: code:addons/account_analytic_plans/account_analytic_plans.py:486
-#, python-format
-msgid "No Analytic Journal !"
-msgstr "¡No diario analítico!"
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "Cuenta principal"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
@@ -451,3 +451,7 @@ msgstr "Línea pedido de venta"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Desde la fecha"
+
+#, python-format
+#~ msgid "No Analytic Journal !"
+#~ msgstr "¡No diario analítico!"

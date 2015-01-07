@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-11-09 23:06+0000\n"
 "Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -27,6 +27,12 @@ msgstr "Kilde dokument"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Objekt"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:147
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -81,6 +87,11 @@ msgstr "Gentagne sager"
 #: view:subscription.subscription:0
 msgid "Subscriptions"
 msgstr "Abonnementer"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "Abonnements data"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -145,12 +156,6 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Du kan ikke slette et aktivt abonnement !"
-
-#. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
 msgstr "Felter"
@@ -202,9 +207,18 @@ msgid "Scheduler which runs on subscription"
 msgstr "Planlægningsfunktion på abonnement"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Abonnements data"
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid "Wrong Source Document!"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.subscription,note:0
@@ -259,12 +273,6 @@ msgid "Document Types"
 msgstr "Dokument typer"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Forkert kildedokument !"
-
-#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
@@ -274,14 +282,6 @@ msgstr "Dokumentfelter på abonnement"
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Udført"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -299,3 +299,11 @@ msgstr "Dokumenter oprettet"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Aktiv"
+
+#, python-format
+#~ msgid "You cannot delete an active subscription !"
+#~ msgstr "Du kan ikke slette et aktivt abonnement !"
+
+#, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "Forkert kildedokument !"

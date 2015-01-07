@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-03-31 13:49+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: mk\n"
 
 #. module: subscription
@@ -28,6 +28,12 @@ msgstr "Изворен документ"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Објект"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:147
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -82,6 +88,11 @@ msgstr "Повторлив настан"
 #: view:subscription.subscription:0
 msgid "Subscriptions"
 msgstr "Претплати"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "Податоци за претплата"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -146,12 +157,6 @@ msgid "Name"
 msgstr "Име"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Не може да избришете активна претплата !"
-
-#. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
 msgstr "Полиња"
@@ -203,9 +208,18 @@ msgid "Scheduler which runs on subscription"
 msgstr "Распоредувач кој работи на претплата"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Податоци за претплата"
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid "Wrong Source Document!"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.subscription,note:0
@@ -264,12 +278,6 @@ msgid "Document Types"
 msgstr "Типови на документи"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Погрешен изворен документ !"
-
-#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
@@ -279,16 +287,6 @@ msgstr "Поле на документ за претплата"
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Завршено"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Обезбедете друг изворен документ.\n"
-"Овој не постои !"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -306,3 +304,19 @@ msgstr "Креирани документи"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Активно"
+
+#, python-format
+#~ msgid "You cannot delete an active subscription !"
+#~ msgstr "Не може да избришете активна претплата !"
+
+#, python-format
+#~ msgid ""
+#~ "Please provide another source document.\n"
+#~ "This one does not exist !"
+#~ msgstr ""
+#~ "Обезбедете друг изворен документ.\n"
+#~ "Овој не постои !"
+
+#, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "Погрешен изворен документ !"

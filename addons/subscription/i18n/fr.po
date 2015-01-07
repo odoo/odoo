@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-01-03 15:07+0000\n"
 "Last-Translator: Ronan Fontenay <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -27,6 +27,12 @@ msgstr "Document Source"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Objet"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:147
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -81,6 +87,11 @@ msgstr "Événements récurrents"
 #: view:subscription.subscription:0
 msgid "Subscriptions"
 msgstr "Abonnements"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "Données de l'Abonnement"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -145,12 +156,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr "Vous ne pouvez pas supprimer un abonnement actif !"
-
-#. module: subscription
 #: field:subscription.document,field_ids:0
 msgid "Fields"
 msgstr "Champs"
@@ -202,9 +207,18 @@ msgid "Scheduler which runs on subscription"
 msgstr "Calcul système qui traite les abonnements"
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Données de l'Abonnement"
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid "Wrong Source Document!"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.subscription,note:0
@@ -264,12 +278,6 @@ msgid "Document Types"
 msgstr "Types de Documents"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Mauvais document source !"
-
-#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
@@ -279,16 +287,6 @@ msgstr "Champs du contrat d'abonnement !"
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Terminer"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Veuillez ajouter un autre document source.\n"
-"Celui ci n'existe pas !"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -306,3 +304,19 @@ msgstr "Document crée"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Actif"
+
+#, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "Mauvais document source !"
+
+#, python-format
+#~ msgid ""
+#~ "Please provide another source document.\n"
+#~ "This one does not exist !"
+#~ msgstr ""
+#~ "Veuillez ajouter un autre document source.\n"
+#~ "Celui ci n'existe pas !"
+
+#, python-format
+#~ msgid "You cannot delete an active subscription !"
+#~ msgstr "Vous ne pouvez pas supprimer un abonnement actif !"

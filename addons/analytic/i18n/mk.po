@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-31 13:12+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:00+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: mk\n"
 
 #. module: analytic
@@ -48,7 +48,6 @@ msgstr "Урнек"
 
 #. module: analytic
 #: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "Краен датум"
 
@@ -102,6 +101,17 @@ msgstr "Менаџер на сметка"
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
 msgstr "Пратители"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -197,24 +207,6 @@ msgstr ""
 "поддршка)"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"Доколку поставите компанија, избраната валута мора да биде иста како на "
-"компанијата. \n"
-"Може да отстраните каде припаѓа компанијата и со тоа да извршите промена на "
-"валутата, само на аналитичка сметка со тип 'преглед'. Ова може да биде "
-"навистина корисно во консолидациски цели кај табели со различни валути на "
-"неколку компании, на пример."
-
-#. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
 msgstr "Пратител"
@@ -243,6 +235,11 @@ msgstr "Договорот е завршен"
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
 msgstr "Услови и правила"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -440,3 +437,19 @@ msgstr "Аналитички внесови"
 
 #~ msgid "Full Account Name"
 #~ msgstr "Цело име на сметка"
+
+#, python-format
+#~ msgid ""
+#~ "If you set a company, the currency selected has to be the same as it's "
+#~ "currency. \n"
+#~ "You can remove the company belonging, and thus change the currency, only on "
+#~ "analytic account of type 'view'. This can be really usefull for "
+#~ "consolidation purposes of several companies charts with different "
+#~ "currencies, for example."
+#~ msgstr ""
+#~ "Доколку поставите компанија, избраната валута мора да биде иста како на "
+#~ "компанијата. \n"
+#~ "Може да отстраните каде припаѓа компанијата и со тоа да извршите промена на "
+#~ "валутата, само на аналитичка сметка со тип 'преглед'. Ова може да биде "
+#~ "навистина корисно во консолидациски цели кај табели со различни валути на "
+#~ "неколку компании, на пример."

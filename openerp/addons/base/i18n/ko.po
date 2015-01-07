@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2014-07-15 09:43+0000\n"
-"Last-Translator: eric hyung <kathar0s.dev@gmail.com>\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-09-11 08:26+0000\n"
+"Last-Translator: choiJH <hwangtog@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-16 07:24+0000\n"
-"X-Generator: Launchpad (build 17112)\n"
+"X-Launchpad-Export-Date: 2014-09-12 06:51+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -31,7 +31,7 @@ msgstr ""
 "    "
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "e.g. GEBABEBB"
 msgstr "e.g. GEBABEBB"
 
@@ -46,12 +46,20 @@ msgid "Other Configuration"
 msgstr "기타 구성"
 
 #. module: base
+#: code:addons/base/res/res_partner.py:550
+#, python-format
+msgid ""
+"You can not change the company as the partner/user has multiple user linked "
+"with different companies."
+msgstr ""
+
+#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "날짜와 시간"
 
 #. module: base
-#: code:addons/fields.py:652
+#: code:addons/fields.py:794
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -62,6 +70,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.ui.view,arch:0
+#: view:ir.ui.view.custom:base.view_view_custom_form
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "아키텍처 보기"
@@ -110,7 +119,7 @@ msgid ""
 msgstr "불러올 방식이 위치한 모델명, 예:  'res.partner'."
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Created Views"
 msgstr "생성된 화면"
 
@@ -146,7 +155,7 @@ msgid "Supplementary arguments"
 msgstr "보충 인수"
 
 #. module: base
-#: model:ir.module.module,description:base.module_google_base_account
+#: model:ir.module.module,description:base.module_google_account
 msgid ""
 "\n"
 "The module adds google user in res user.\n"
@@ -210,13 +219,14 @@ msgstr ""
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:134
 #: code:addons/base/ir/ir_sequence.py:160
-#: code:addons/base/res/res_users.py:473
+#: code:addons/base/res/res_config.py:469
+#: code:addons/base/res/res_users.py:505
 #, python-format
 msgid "Warning!"
 msgstr "경고!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:405
+#: code:addons/base/ir/ir_model.py:426
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -224,7 +234,7 @@ msgid ""
 msgstr "기본 필드의 속성은 해당 방식으로 변경되지 않습니다! 가급적 사용자 정의 부가 기능으로  파이썬 코드를 수정하세요."
 
 #. module: base
-#: code:addons/osv.py:151
+#: code:addons/osv.py:153
 #, python-format
 msgid "Constraint Error"
 msgstr "제한 오류"
@@ -235,7 +245,7 @@ msgid "ir.ui.view.custom"
 msgstr "ir.ui.view.custom"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:398
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "\"%s\" 스파스 필드의 이름 변경이 허용되지 않습니다"
@@ -246,7 +256,7 @@ msgid "Swaziland"
 msgstr "스와질란드"
 
 #. module: base
-#: code:addons/orm.py:4485
+#: code:addons/orm.py:4585
 #, python-format
 msgid "created."
 msgstr "생성됨."
@@ -278,43 +288,6 @@ msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
 msgstr "이뉴잇어 / ᐃᓄᒃᑎᑐᑦ"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_ch
-msgid ""
-"\n"
-" Swiss localization :\n"
-" ====================\n"
-" **Multilang swiss STERCHI account chart and taxes**\n"
-"  **Author:** Camptocamp SA\n"
-"\n"
-"  **Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
-"\n"
-"  **Translation contributors:** brain-tec AG, Agile Business Group\n"
-"\n"
-" **This release will introduce major changes to l10n_ch.**\n"
-"\n"
-" Due to important refactoring needs and the Switzerland adoption of new "
-"international payment standard during 2013-2014. We have reorganised the "
-"swiss localization addons this way:\n"
-"\n"
-" - **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official "
-"addon)\n"
-" - **l10n_ch_base_bank**: Technical module that introduces a new and "
-"simplified version of bank type management\n"
-" - **l10n_ch_bank**: List of swiss banks\n"
-" - **l10n_ch_zip**: List of swiss postal zip\n"
-" - **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end "
-"2014)\n"
-" - **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and "
-"reconciliation. Report refactored with easy element positioning.\n"
-" - **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support "
-"will be completed during 2013/2014\n"
-"\n"
-" The modules will be soon available on OpenERP swiss localization on "
-"launchpad:\n"
-" https://launchpad.net/openerp-swiss-localization\n"
-msgstr ""
-
-#. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
 msgstr "다중 화폐"
@@ -343,7 +316,7 @@ msgid ""
 msgstr "이 연락처와 의사소통을 담당하는 내부 사용자"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Search Partner"
 msgstr "협력업체 검색"
 
@@ -427,7 +400,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:80
+#: code:addons/base/ir/ir_filters.py:96
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
@@ -435,7 +408,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2649
+#: code:addons/orm.py:2711
 #, python-format
 msgid "Invalid group_by"
 msgstr "유효하지 않은 group_by"
@@ -453,7 +426,7 @@ msgstr "신용 한도"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_long_term
 msgid "Portal Project Long Term"
-msgstr ""
+msgstr "장기프로젝트 포털"
 
 #. module: base
 #: field:ir.model.constraint,date_update:0
@@ -468,13 +441,13 @@ msgid "Automated Action Rules"
 msgstr "자동화된 액션 규칙"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 #: field:ir.attachment,create_uid:0
 msgid "Owner"
 msgstr "소유자"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
 msgid "Source Object"
 msgstr "소스 객체"
 
@@ -484,7 +457,8 @@ msgid "%(bank_name)s: %(acc_number)s"
 msgstr "%(bank_name)s: %(acc_number)s"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_form
+#: view:ir.actions.todo:base.ir_actions_todo_tree
 msgid "Config Wizard Steps"
 msgstr "구성 마법사 단계"
 
@@ -494,9 +468,9 @@ msgid "ir.ui.view_sc"
 msgstr "ir.ui.view_sc"
 
 #. module: base
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,group_id:0
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_search
 msgid "Group"
 msgstr "그룹"
 
@@ -508,7 +482,7 @@ msgid ""
 msgstr "유효하지 않은 날짜/시간 형식 지시자가 지정되었습니다. 언어변경 시 표시되는 허용된 지시자 목록을 참조하세요."
 
 #. module: base
-#: code:addons/orm.py:4153
+#: code:addons/orm.py:4249
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -536,7 +510,7 @@ msgid "Relation Name"
 msgstr "관계명"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Create Access Right"
 msgstr "접근 권한 생성"
 
@@ -566,7 +540,7 @@ msgid "Netherlands Antilles"
 msgstr "네덜란드령 안틸 제도"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:342
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -575,7 +549,7 @@ msgstr ""
 "OpenERP에 의해 생성된 리소스(업데이트, 모듈 설치,...)를 위해 내부적으로 사용되는 관리자 사용자를 삭제할 수 없습니다."
 
 #. module: base
-#: view:workflow.transition:0
+#: view:workflow.transition:base.view_workflow_transition_search
 msgid "Workflow Transition"
 msgstr "작업 흐름 전환"
 
@@ -673,11 +647,6 @@ msgid "Invoice on Timesheets"
 msgstr "타임시트 상의 인보이스"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "Your system will be updated."
-msgstr "시스템이 업데이트 됩니다."
-
-#. module: base
 #: field:ir.actions.todo,note:0
 #: selection:ir.property,type:0
 msgid "Text"
@@ -713,22 +682,22 @@ msgid "Palau"
 msgstr "팔라우"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Sales & Purchases"
 msgstr "판매 & 구매"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Put an internal note..."
 msgstr "내부 메모 넣기..."
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_search
 msgid "Untranslated"
 msgstr "번역되지 않음"
 
 #. module: base
-#: view:ir.mail_server:0
+#: view:ir.mail_server:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
 msgstr "발신 메일 서버"
 
@@ -745,7 +714,7 @@ msgid "Logo Web"
 msgstr "로고 웹"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:344
+#: code:addons/base/ir/ir_model.py:361
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "사용자 지정 필드명은 'x_'로 시작해야 합니다 !"
@@ -803,7 +772,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
+#: view:ir.model:base.view_model_search
+#: view:ir.model:base.view_model_tree
 #: field:ir.model,name:0
 msgid "Model Description"
 msgstr "모델 설명"
@@ -917,7 +888,7 @@ msgstr ""
 "`object.invoice_address_id.mobile`이 올바른 휴대 전화 번호를 제공하는 필드입니다."
 
 #. module: base
-#: view:ir.mail_server:0
+#: view:ir.mail_server:base.ir_mail_server_form
 msgid "Security and Authentication"
 msgstr "보안 및 인증"
 
@@ -959,7 +930,7 @@ msgid "Overwrite Existing Terms"
 msgstr "기존 용어 덮어쓰기"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:52
+#: code:addons/base/res/res_currency.py:60
 #, python-format
 msgid "No currency rate associated for currency %d for the given period"
 msgstr ""
@@ -1024,18 +995,18 @@ msgid "Shared Repositories (WebDAV)"
 msgstr "공유된 저장소 (WebDAV)"
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form_simple_modif
 msgid "Email Preferences"
 msgstr "이메일 기본 설정"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:195
+#: code:addons/base/ir/ir_fields.py:204
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s'은(는)  '%%(field)s' 필드에 대해 유효하지 않은 날짜입니다."
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "My Partners"
 msgstr "내 협력업체"
 
@@ -1051,7 +1022,7 @@ msgid ""
 msgstr "제약의 유형: 외래 키는 'f', 기타 제약은 'u'"
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "XML Report"
 msgstr "XML 보고서"
 
@@ -1072,11 +1043,10 @@ msgid "Module Upgrade"
 msgstr "모듈 업그레이드"
 
 #. module: base
-#: view:res.bank:0
-#: view:res.company:0
-#: view:res.partner:0
-#: view:res.partner.bank:0
-#: view:res.users:0
+#: view:res.bank:base.view_res_bank_form
+#: view:res.company:base.view_company_form
+#: view:res.partner:base.view_partner_form
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "ZIP"
 msgstr "우편번호"
 
@@ -1140,7 +1110,7 @@ msgstr "웹 간트"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
-#: view:wizard.ir.model.menu.create:0
+#: view:wizard.ir.model.menu.create:base.view_model_menu_create
 msgid "Create Menu"
 msgstr "메뉴 생성"
 
@@ -1156,7 +1126,7 @@ msgid "Request Reference Types"
 msgstr "대조 유형 요청"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_google_base_account
+#: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
 msgstr "구글 사용자"
 
@@ -1233,39 +1203,40 @@ msgid "TGZ Archive"
 msgstr "TGZ 아카이브"
 
 #. module: base
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 msgid ""
 "Users added to this group are automatically added in the following groups."
 msgstr "해당 그룹에 추가된 사용자는 다음 그룹에 자동으로 추가됩니다."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:732
-#: code:addons/base/ir/ir_model.py:735
+#: code:addons/base/ir/ir_model.py:754
+#: code:addons/base/ir/ir_model.py:757
 #, python-format
 msgid "Document model"
 msgstr "문서 모델"
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form
 msgid "Change the user password."
 msgstr "사용자 암호 변경"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%B - Full month name."
 msgstr "%B - 월 전체 이름."
 
 #. module: base
 #: field:ir.actions.todo,type:0
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 #: field:ir.attachment,type:0
+#: view:ir.logging:base.ir_logging_search_view
+#: field:ir.logging,type:0
 #: field:ir.model,state:0
 #: field:ir.model.fields,state:0
 #: field:ir.property,type:0
-#: field:ir.server.object.lines,type:0
 #: field:ir.translation,type:0
-#: view:ir.ui.view:0
-#: view:ir.values:0
+#: view:ir.ui.view:base.view_view_search
+#: view:ir.values:base.values_view_search_action
 #: field:ir.values,key:0
 msgid "Type"
 msgstr "유형"
@@ -1323,7 +1294,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:406
+#: code:addons/orm.py:419
 #, python-format
 msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
@@ -1346,17 +1317,16 @@ msgid "Latest Version"
 msgstr "최신 버전"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Delete Access Right"
 msgstr "접근 권한 삭제"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr ""
+msgstr "벨기에 - 회계와 급여"
 
 #. module: base
-#: selection:ir.actions.server,state:0
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
 msgstr "모형"
@@ -1372,7 +1342,7 @@ msgid "Cayman Islands"
 msgstr "케이맨 제도"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Record Rule"
 msgstr "기록 규칙"
 
@@ -1387,7 +1357,7 @@ msgid "Kontni načrt za gospodarske družbe"
 msgstr "Kontni načrt za gospodarske družbe"
 
 #. module: base
-#: code:addons/orm.py:4920
+#: code:addons/orm.py:5044
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "레코드 #%d (%s) 가 발견되지 않아 복사할 수 없습니다!"
@@ -1468,7 +1438,7 @@ msgid "Used to log into the system"
 msgstr "시스템 로그인 시 사용됨"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid ""
 "TGZ format: this is a compressed archive containing a PO file, directly "
 "suitable\n"
@@ -1479,7 +1449,7 @@ msgstr ""
 "                                OpenERP의 번역 플랫폼에 올리기 적합한 형식입니다."
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid ""
 "%W - Week number of the year (Monday as the first day of the week) as a "
 "decimal number [00,53]. All days in a new year preceding the first Monday "
@@ -1495,6 +1465,7 @@ msgid "Language Pack"
 msgstr "언어 팩"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_tests
 #: model:ir.module.module,shortdesc:base.module_web_tests
 msgid "Tests"
 msgstr "시험"
@@ -1515,7 +1486,6 @@ msgid "Action URL"
 msgstr "액션 URL"
 
 #. module: base
-#: field:base.module.import,module_name:0
 #: field:ir.module.module,shortdesc:0
 msgid "Module Name"
 msgstr "모듈명"
@@ -1526,7 +1496,7 @@ msgid "Marshall Islands"
 msgstr "마샬 군도"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:429
+#: code:addons/base/ir/ir_model.py:450
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "필드의 모델 변경은 금지되었습니다!"
@@ -1542,13 +1512,13 @@ msgid "French Payroll"
 msgstr "프랑스 급여"
 
 #. module: base
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Search"
 msgstr "검색"
 
 #. module: base
-#: code:addons/osv.py:154
+#: code:addons/osv.py:156
 #, python-format
 msgid ""
 "The operation cannot be completed, probably due to the following:\n"
@@ -1573,7 +1543,7 @@ msgid "Wizards"
 msgstr "마법사"
 
 #. module: base
-#: code:addons/base/res/res_users.py:131
+#: code:addons/base/res/res_users.py:158
 #, python-format
 msgid "Operation Canceled"
 msgstr "작업이 취소됨"
@@ -1652,7 +1622,7 @@ msgid "Features"
 msgstr "기능"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_form
 msgid "Data"
 msgstr "데이터"
 
@@ -1716,7 +1686,7 @@ msgid "Social Network"
 msgstr "소셜 네트워크"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%Y - Year with century."
 msgstr "%Y - 4자리수 연도."
 
@@ -1756,12 +1726,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:wizard.ir.model.menu.create:0
+#: view:wizard.ir.model.menu.create:base.view_model_menu_create
 msgid "Create _Menu"
 msgstr "_Menu 생성"
 
 #. module: base
-#: help:ir.actions.server,trigger_obj_id:0
+#: help:ir.actions.server,wkf_field_id:0
 msgid ""
 "The field on the current object that links to the target object record (must "
 "be a many2one, or an integer field with the record ID)"
@@ -1769,7 +1739,7 @@ msgstr "대상 객체 레코드로 연결되는 현재 객채 상의 필드 (man
 
 #. module: base
 #: model:ir.model,name:base.model_res_bank
-#: view:res.bank:0
+#: view:res.bank:base.view_res_bank_form
 #: field:res.partner.bank,bank:0
 msgid "Bank"
 msgstr "은행"
@@ -1836,7 +1806,7 @@ msgid "On Create"
 msgstr "생성 시"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:913
+#: code:addons/base/ir/ir_model.py:977
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1846,10 +1816,10 @@ msgstr ""
 "module.reference_id와 같이 다른 모듈 데이터를 참조하기 위해 사용됩니다."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:85
+#: code:addons/base/ir/ir_model.py:84
 #, python-format
 msgid "Invalid Search Criteria"
-msgstr ""
+msgstr "잘못된 검색 조건"
 
 #. module: base
 #: field:res.users,login:0
@@ -1874,9 +1844,9 @@ msgid "Tools"
 msgstr "도구"
 
 #. module: base
-#: selection:ir.property,type:0
-msgid "Float"
-msgstr "부동 소수"
+#: view:base.language.export:base.wizard_lang_export
+msgid "Here is the exported translation file:"
+msgstr "다음은 내보낸 번역 파일입니다:"
 
 #. module: base
 #: help:ir.actions.todo,type:0
@@ -1918,7 +1888,8 @@ msgstr "번역 내보내기"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
-#: view:ir.actions.server:0
+#: view:ir.actions.server:base.view_server_action_search
+#: view:ir.actions.server:base.view_server_action_tree
 #: model:ir.ui.menu,name:base.menu_server_action
 msgid "Server Actions"
 msgstr "서버 액션"
@@ -1939,8 +1910,9 @@ msgid "Destination Activity"
 msgstr "목적지 활동"
 
 #. module: base
-#: code:addons/base/module/module.py:414
-#: view:ir.module.module:0
+#: code:addons/base/module/module.py:440
+#: view:ir.module.module:base.module_form
+#: view:ir.module.module:base.module_view_kanban
 #, python-format
 msgid "Install"
 msgstr "설치"
@@ -1987,7 +1959,7 @@ msgstr ""
 "관리자에게 관리자와 사용자 권한을 설정하고 데모 유저에게는 사용자 권한만 할당합니다. \n"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Day: %(day)s"
 msgstr "일: %(day)s"
 
@@ -2002,7 +1974,7 @@ msgstr ""
 "줌."
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:164
+#: code:addons/base/ir/ir_fields.py:173
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
@@ -2038,7 +2010,7 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr "차량, 리스, 보험, 비용"
 
 #. module: base
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,perm_read:0
 msgid "Read Access"
 msgstr "읽기 접근"
@@ -2047,6 +2019,11 @@ msgstr "읽기 접근"
 #: help:ir.attachment,res_id:0
 msgid "The record id this is attached to"
 msgstr "이것이 첨부된 기록 id"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Lao / ພາສາລາວ"
+msgstr "라오어 / ພາ ສາ ລາວ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -2104,12 +2081,12 @@ msgid "Turkmenistan"
 msgstr "투르크메니스탄"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "7.  %H:%M:%S      ==> 18:25:20"
 msgstr "7. %H:%M:%S ==> 18:25:20"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 #: field:res.partner.category,partner_ids:0
 msgid "Partners"
 msgstr "협력업체"
@@ -2120,12 +2097,12 @@ msgid "Left parent"
 msgstr "좌측 모체"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_project_mrp
+#: model:ir.module.module,shortdesc:base.module_sale_service
 msgid "Create Tasks on SO"
 msgstr "판매 주문 상에 과제 생성"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:320
+#: code:addons/base/ir/ir_model.py:337
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "이 컬럼은 모듈 데이터를 포함하고 있으며 삭제할 수 없습니다."
@@ -2174,7 +2151,7 @@ msgid "Source Activity"
 msgstr "소스 활동"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Legend (for prefix, suffix)"
 msgstr "범례 (접두사, 접미사용)"
 
@@ -2184,7 +2161,7 @@ msgid "Formula"
 msgstr "수식"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:342
 #, python-format
 msgid "Can not remove root user!"
 msgstr "루트 사용자를 제거할 수 없음!"
@@ -2216,10 +2193,10 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:339
-#: code:addons/base/res/res_users.py:92
-#: code:addons/base/res/res_users.py:335
-#: code:addons/base/res/res_users.py:337
+#: code:addons/base/res/res_partner.py:355
+#: code:addons/base/res/res_users.py:120
+#: code:addons/base/res/res_users.py:366
+#: code:addons/base/res/res_users.py:368
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -2245,12 +2222,12 @@ msgid "Full Path"
 msgstr "전체 경로"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "The next step depends on the file format:"
 msgstr "파일 형식에 따라 다음 단계 결정"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid ""
 "%U - Week number of the year (Sunday as the first day of the week) as a "
 "decimal number [00,53]. All days in a new year preceding the first Sunday "
@@ -2260,7 +2237,7 @@ msgstr ""
 "0'에 속하는 것으로 간주함."
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "PO(T) format: you should edit it with a PO editor such as"
 msgstr "PO(T) 파일 형식 : 다음과 같은 PO 편집기로 편집해야 합니다."
 
@@ -2273,18 +2250,18 @@ msgstr "설정"
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
 #: selection:ir.actions.act_window.view,view_mode:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Tree"
 msgstr "트리"
 
 #. module: base
-#: view:ir.actions.server:0
+#: view:ir.actions.server:base.view_server_action_form
 msgid "Create / Write / Copy"
 msgstr "생성 / 쓰기 / 복사"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Second: %(sec)s"
 msgstr "초: %(sec)"
 
@@ -2362,7 +2339,7 @@ msgid "Extra Tools"
 msgstr "추가 도구"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 msgid "Attachment"
 msgstr "첨부 파일"
 
@@ -2379,7 +2356,7 @@ msgid ""
 msgstr "출력 문서의 우측 상단에 기본으로 출력됩니다. (보고서 머릿글)"
 
 #. module: base
-#: field:base.module.update,update:0
+#: field:base.module.update,updated:0
 msgid "Number of modules updated"
 msgstr "업데이트 된 모듈의 개수"
 
@@ -2394,7 +2371,7 @@ msgid "Password Encryption"
 msgstr "비밀번호 암호화"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_search
 msgid "Workflow Activity"
 msgstr "업무 흐름 활동"
 
@@ -2426,7 +2403,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:341
+#: code:addons/base/ir/ir_fields.py:351
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
@@ -2455,18 +2432,19 @@ msgstr "초기 설정 도구"
 #: field:ir.actions.act_window,groups_id:0
 #: model:ir.actions.act_window,name:base.action_res_groups
 #: field:ir.actions.report.xml,groups_id:0
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_form
 #: field:ir.actions.todo,groups_id:0
-#: field:ir.actions.wizard,groups_id:0
-#: view:ir.model:0
+#: field:ir.config_parameter,group_ids:0
+#: view:ir.model:base.view_model_form
 #: field:ir.model.fields,groups:0
 #: field:ir.rule,groups:0
-#: view:ir.ui.menu:0
+#: view:ir.ui.menu:base.edit_menu_access
 #: field:ir.ui.menu,groups_id:0
 #: model:ir.ui.menu,name:base.menu_action_res_groups
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_form
 #: field:ir.ui.view,groups_id:0
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
+#: view:res.groups:base.view_groups_search
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "그룹"
@@ -2550,19 +2528,18 @@ msgid ""
 msgstr "'양식', '트리', '달력' 등과 같은 보기 모드를 구분하기 위한 콤마 분리 목록 (기본: 트리,양식)"
 
 #. module: base
-#: code:addons/orm.py:3843
+#: code:addons/orm.py:3935
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "문서가 (%s:%d) 마지막으로 본 시점 이후에 수정되었습니다"
 
 #. module: base
-#: view:workflow:0
+#: view:workflow:base.view_workflow_diagram
 msgid "Workflow Editor"
 msgstr "업무 흐름 편집기"
 
 #. module: base
 #: selection:ir.module.module,state:0
-#: selection:ir.module.module.dependency,state:0
 msgid "To be removed"
 msgstr "제거 예정"
 
@@ -2617,12 +2594,12 @@ msgid "Shortcut for this menu already exists!"
 msgstr "해당 메뉴에 대한 단축키가 이미 존재합니다!"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid "Groups (no group = global)"
 msgstr "그룹 (그룹 없음 = 포괄적)"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 msgid "Extra"
 msgstr "추가"
 
@@ -2690,7 +2667,7 @@ msgid "Madagascar"
 msgstr "마다가스카르"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:127
+#: code:addons/base/ir/ir_model.py:126
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -2707,14 +2684,17 @@ msgid "Custom Object"
 msgstr "사용자 정의 객체"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_menu_admin
-#: view:ir.ui.menu:0
+#: view:ir.ui.menu:base.edit_menu
+#: view:ir.ui.menu:base.edit_menu_access
+#: view:ir.ui.menu:base.edit_menu_access_search
+#: view:ir.ui.menu:base.view_menu
 #: field:ir.ui.menu,name:0
 msgid "Menu"
 msgstr "메뉴"
 
 #. module: base
 #: field:res.currency,rate:0
+#: field:res.currency,rate_silent:0
 msgid "Current Rate"
 msgstr "현재 비율"
 
@@ -2856,7 +2836,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "RML Report"
 msgstr "RML 보고서"
 
@@ -2906,6 +2886,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,res_id:0
+#: field:ir.actions.server,id_value:0
 #: field:ir.model.data,res_id:0
 #: field:ir.translation,res_id:0
 #: field:ir.values,res_id:0
@@ -2913,7 +2894,8 @@ msgid "Record ID"
 msgstr "레코드 ID"
 
 #. module: base
-#: field:ir.actions.server,email:0
+#: view:res.users:base.view_users_form
+#: view:res.users:base.view_users_simple_form
 msgid "Email Address"
 msgstr "이메일 주소"
 
@@ -2926,7 +2908,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:333
+#: code:addons/base/ir/ir_fields.py:343
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr ""
@@ -2951,7 +2933,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.actions.server:0
+#: view:ir.actions.server:base.view_server_action_form
+#: view:ir.actions.server:base.view_server_action_search
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
 msgstr "서버 액션"
@@ -2977,12 +2960,12 @@ msgid "Latvia"
 msgstr "라트비아"
 
 #. module: base
-#: view:ir.actions.server:0
+#: view:ir.actions.server:base.view_server_action_form
 msgid "Field Mappings"
 msgstr "필드 매핑"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "Export Translations"
 msgstr "번역 내보내기"
 
@@ -3015,7 +2998,7 @@ msgid "Manager"
 msgstr "관리자"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:726
+#: code:addons/base/ir/ir_model.py:748
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "죄송합니다. 이 문서에 접근이 거부되었습니다."
@@ -3031,7 +3014,7 @@ msgid "Fiji"
 msgstr "피지"
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_search_view
 msgid "Report Xml"
 msgstr "보고서 Xml"
 
@@ -3079,6 +3062,11 @@ msgid "Lithuania"
 msgstr "리투아니아"
 
 #. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique within an application!"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_web_graph
 msgid ""
 "\n"
@@ -3096,12 +3084,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 msgid "Inherited"
 msgstr "전승됨"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:146
+#: code:addons/base/ir/ir_fields.py:155
 #, python-format
 msgid "yes"
 msgstr "예"
@@ -3131,7 +3119,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:174
+#: code:addons/base/ir/ir_fields.py:183
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr "'%s'은(는) '%%(field)s' 필드의 정수 같지 않습니다."
@@ -3144,7 +3132,7 @@ msgid ""
 msgstr "OpenERP의 보고서 생성을 단순화하고 향상하는 다양한 도구를 설치할 수 있게 함."
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%y - Year without century [00,99]."
 msgstr "%y - 2자리수 연도 [00,99]."
 
@@ -3196,25 +3184,23 @@ msgid "LinkedIn Integration"
 msgstr "LinkedIn 통합"
 
 #. module: base
-#: code:addons/orm.py:2021
-#: code:addons/orm.py:2032
+#: code:addons/orm.py:2049
+#: code:addons/orm.py:2060
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "유효하지 않은 객체 아키텍처!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:372
-#: code:addons/base/ir/ir_model.py:374
-#: code:addons/base/ir/ir_model.py:404
-#: code:addons/base/ir/ir_model.py:418
-#: code:addons/base/ir/ir_model.py:420
-#: code:addons/base/ir/ir_model.py:422
-#: code:addons/base/ir/ir_model.py:429
-#: code:addons/base/ir/ir_model.py:432
-#: code:addons/base/module/wizard/base_module_import.py:58
-#: code:addons/base/module/wizard/base_module_import.py:66
+#: code:addons/base/ir/ir_model.py:396
+#: code:addons/base/ir/ir_model.py:398
+#: code:addons/base/ir/ir_model.py:425
+#: code:addons/base/ir/ir_model.py:439
+#: code:addons/base/ir/ir_model.py:441
+#: code:addons/base/ir/ir_model.py:443
+#: code:addons/base/ir/ir_model.py:450
+#: code:addons/base/ir/ir_model.py:453
 #: code:addons/base/module/wizard/base_update_translations.py:39
-#: code:addons/base/res/res_currency.py:52
+#: code:addons/base/res/res_currency.py:58
 #, python-format
 msgid "Error!"
 msgstr "오류!"
@@ -3225,7 +3211,7 @@ msgid "French RIB Bank Details"
 msgstr "프랑스 RIB 은행 상세 내용"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%p - Equivalent of either AM or PM."
 msgstr "%p - AM 또는 PM의 등가물"
 
@@ -3253,7 +3239,7 @@ msgstr "뉴질랜드"
 
 #. module: base
 #: field:ir.exports.line,name:0
-#: view:ir.model.fields:0
+#: view:ir.model.fields:base.view_model_fields_form
 #: field:res.partner.bank.type.field,name:0
 msgid "Field Name"
 msgstr "필드명"
@@ -3285,8 +3271,7 @@ msgstr "이 필드가 속한 모델의 기술적 명칭"
 
 #. module: base
 #: field:ir.actions.server,action_id:0
-#: selection:ir.actions.server,state:0
-#: view:ir.values:0
+#: view:ir.values:base.values_view_search_action
 msgid "Client Action"
 msgstr "클라이언트 액션"
 
@@ -3310,7 +3295,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 msgid "e.g. Global Business Solutions"
 msgstr "예: 전세계 비지니스 솔루션"
 
@@ -3320,11 +3305,11 @@ msgid "Company Tagline"
 msgstr "업체 태그라인"
 
 #. module: base
-#: code:addons/base/res/res_users.py:674
+#: code:addons/base/res/res_users.py:728
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
-#: view:res.users:0
+#: view:res.users:base.user_groups_view
 #, python-format
 msgid "Application"
 msgstr "응용 프로그램"
@@ -3365,10 +3350,10 @@ msgstr ""
 "    "
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:222
+#: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid "Connection Test Succeeded!"
-msgstr ""
+msgstr "연결 테스트에 성공했습니다!"
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -3376,7 +3361,7 @@ msgid "Params storage"
 msgstr "파라미터 저장소"
 
 #. module: base
-#: code:addons/base/module/module.py:525
+#: code:addons/base/module/module.py:548
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "'%s' 모듈을 업그레이드할 수 없음. 설치되지 않음."
@@ -3387,7 +3372,7 @@ msgid "Cuba"
 msgstr "쿠바"
 
 #. module: base
-#: code:addons/report_sxw.py:443
+#: code:addons/report_sxw.py:390
 #, python-format
 msgid "Unknown report type: %s"
 msgstr "알 수 없는 보고서 유형: %s"
@@ -3465,7 +3450,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3871
+#: code:addons/orm.py:3963
 #, python-format
 msgid "Missing document(s)"
 msgstr "누락된 문서"
@@ -3473,7 +3458,8 @@ msgstr "누락된 문서"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type
 #: field:res.partner.bank,state:0
-#: view:res.partner.bank.type:0
+#: view:res.partner.bank.type:base.view_partner_bank_type_form
+#: view:res.partner.bank.type:base.view_partner_bank_type_tree
 msgid "Bank Account Type"
 msgstr "은행 계정 유형"
 
@@ -3506,13 +3492,14 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid ""
 "For more details about translating OpenERP in your language, please refer to "
 "the"
 msgstr "OpenERP를 귀하의 언어로 번역하는 작업에 대한 자세한 내용은 다음을 참고하세요:"
 
 #. module: base
+#: field:res.country,image:0
 #: field:res.partner,image:0
 msgid "Image"
 msgstr "이미지"
@@ -3524,8 +3511,7 @@ msgstr "오스트리아"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
-#: model:ir.module.module,shortdesc:base.module_base_calendar
-#: model:ir.ui.menu,name:base.menu_calendar_configuration
+#: model:ir.module.module,shortdesc:base.module_calendar
 #: selection:ir.ui.view,type:0
 msgid "Calendar"
 msgstr "달력"
@@ -3541,7 +3527,7 @@ msgid "Signal (subflow.*)"
 msgstr "신호 (subflow.*)"
 
 #. module: base
-#: code:addons/orm.py:4685
+#: code:addons/orm.py:4789
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -3570,14 +3556,16 @@ msgid ""
 msgstr "시스템에서 사용 가능한 담당자의 호칭과  편지 또는 문서에 인쇄되기 원하는 방식을 관리하세요. (예: Mr, Mrs) "
 
 #. module: base
-#: view:ir.model.access:0
-#: view:res.groups:0
+#: view:ir.model.access:base.ir_access_view_form
+#: view:ir.model.access:base.ir_access_view_search
+#: view:ir.model.access:base.ir_access_view_tree
+#: view:res.groups:base.view_groups_form
 #: field:res.groups,model_access:0
 msgid "Access Controls"
 msgstr "접근 제어"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:277
+#: code:addons/base/ir/ir_model.py:284
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -3591,7 +3579,12 @@ msgid "Survey / User"
 msgstr "설문 / 사용자"
 
 #. module: base
-#: view:ir.module.module:0
+#: selection:base.language.install,lang:0
+msgid "Amharic / አምሃርኛ"
+msgstr ""
+
+#. module: base
+#: view:ir.module.module:base.module_form
 #: field:ir.module.module,dependencies_id:0
 msgid "Dependencies"
 msgstr "의존성"
@@ -3610,6 +3603,11 @@ msgstr "웹 아이콘 파일 (제자리비행)"
 #: help:res.currency,name:0
 msgid "Currency Code (ISO 4217)"
 msgstr "통화 코드 (ISO 4217)"
+
+#. module: base
+#: view:base.module.upgrade:base.view_base_module_upgrade
+msgid "Impacted Modules"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
@@ -3645,14 +3643,13 @@ msgid "Products Manufacturers"
 msgstr "상품 생산자"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:240
+#: code:addons/base/ir/ir_mail_server.py:242
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr "SMTP-over-SSL 모드 사용 가능"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey
-#: model:ir.ui.menu,name:base.next_id_10
 msgid "Survey"
 msgstr "설문"
 
@@ -3667,7 +3664,7 @@ msgid "workflow.activity"
 msgstr "workflow.activity"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "Export Complete"
 msgstr "내보내기 완료"
 
@@ -3694,9 +3691,14 @@ msgid "Finnish / Suomi"
 msgstr "핀란드어 / Suomi"
 
 #. module: base
-#: view:ir.config_parameter:0
+#: view:ir.config_parameter:base.view_ir_config_search
 msgid "System Properties"
 msgstr "시스템 속성"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_event
+msgid "Events Organisation"
+msgstr "이벤트 계획"
 
 #. module: base
 #: field:ir.sequence,prefix:0
@@ -3714,7 +3716,7 @@ msgid "Fields Mapping"
 msgstr "필드 매핑"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:84
+#: code:addons/base/module/wizard/base_module_upgrade.py:98
 #, python-format
 msgid "Unmet Dependency!"
 msgstr ""
@@ -3724,26 +3726,6 @@ msgstr ""
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
 msgid "Sir"
 msgstr "귀하"
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_ca
-msgid ""
-"\n"
-"This is the module to manage the English and French - Canadian accounting "
-"chart in OpenERP.\n"
-"============================================================================="
-"==============\n"
-"\n"
-"Canadian accounting charts and localizations.\n"
-"    "
-msgstr ""
-"\n"
-"OpenERP에서 영어계 및 프랑스계 캐나다 회계 도표를 관리하는 모듈입니다.\n"
-"============================================================================="
-"==============\n"
-"\n"
-"캐나다 회계 도표 및 현지화.\n"
-"    "
 
 #. module: base
 #: view:base.module.import:0
@@ -3761,7 +3743,7 @@ msgid "Malta"
 msgstr "몰타"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:732
+#: code:addons/base/ir/ir_model.py:754
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -3815,11 +3797,10 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_form
 #: field:ir.attachment,description:0
 #: field:ir.mail_server,name:0
 #: field:ir.module.category,description:0
-#: view:ir.module.module:0
 #: field:ir.module.module,description:0
 msgid "Description"
 msgstr "설명"
@@ -3854,12 +3835,12 @@ msgid "Antarctica"
 msgstr "남극 대륙"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Persons"
 msgstr "개인"
 
 #. module: base
-#: view:base.language.import:0
+#: view:base.language.import:base.view_base_import_language
 msgid "_Import"
 msgstr "_가져오기"
 
@@ -3900,12 +3881,12 @@ msgstr "CRM 상의 과제"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 msgid "Accounting"
 msgstr "회계"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid "Interaction between rules"
 msgstr "규칙 간의 상호 작용"
 
@@ -3926,9 +3907,11 @@ msgid "Sint Maarten (Dutch part)"
 msgstr "상마르탱 (네덜란드령)"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_form
+#: view:ir.filters:base.ir_filters_view_search
+#: view:ir.filters:base.ir_filters_view_tree
 #: model:ir.model,name:base.model_ir_filters
 msgid "Filters"
 msgstr "필터"
@@ -3941,14 +3924,16 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view
+#: view:ir.cron:base.ir_cron_view_calendar
+#: view:ir.cron:base.ir_cron_view_search
+#: view:ir.cron:base.ir_cron_view_tree
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
 msgid "Scheduled Actions"
 msgstr "예정된 액션"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_reporting
-#: model:ir.ui.menu,name:base.menu_lunch_reporting
 #: model:ir.ui.menu,name:base.menu_reporting
 msgid "Reporting"
 msgstr "보고"
@@ -3965,7 +3950,7 @@ msgid "If not set, acts as a default value for new resources"
 msgstr "설정하지 않을 경우, 신규 리소스의 기본 값 역할을 함."
 
 #. module: base
-#: code:addons/orm.py:4246
+#: code:addons/orm.py:4343
 #, python-format
 msgid "Recursivity Detected."
 msgstr "재귀성이 탐지됨."
@@ -3977,13 +3962,14 @@ msgstr "에티오피아 - 회계"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
-#: view:ir.config_parameter:0
+#: view:ir.config_parameter:base.view_ir_config_form
+#: view:ir.config_parameter:base.view_ir_config_list
 #: model:ir.ui.menu,name:base.ir_config_menu
 msgid "System Parameters"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:366
+#: code:addons/base/module/module.py:386
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "모듈 의존성에서 재귀적 오류 발생 !"
@@ -4012,7 +3998,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
 msgid "Create a Menu"
 msgstr "메뉴 생성"
 
@@ -4043,10 +4029,10 @@ msgid "Urdu / اردو"
 msgstr "우르드 / اردو"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:739
-#: code:addons/orm.py:3567
-#: code:addons/orm.py:3860
-#: code:addons/orm.py:3902
+#: code:addons/base/ir/ir_model.py:755
+#: code:addons/orm.py:3656
+#: code:addons/orm.py:3952
+#: code:addons/orm.py:3994
 #, python-format
 msgid "Access Denied"
 msgstr "접근이 거부됨"
@@ -4057,7 +4043,7 @@ msgid "Company Name"
 msgstr "업체명"
 
 #. module: base
-#: code:addons/orm.py:2808
+#: code:addons/orm.py:2889
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -4067,6 +4053,7 @@ msgstr "\"%s.%s\" 참조 필드의 유효하지 않은 값 (마지막 부분이 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
 #: model:ir.ui.menu,name:base.menu_country_partner
+#: field:res.country.group,country_ids:0
 msgid "Countries"
 msgstr "국가"
 
@@ -4109,12 +4096,12 @@ msgid "Saint Pierre and Miquelon"
 msgstr "생 페에르와 미켈론"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_search
 msgid "Search Actions"
 msgstr "액션 검색"
 
 #. module: base
-#: model:ir.module.module,description:base.module_base_calendar
+#: model:ir.module.module,description:base.module_calendar
 msgid ""
 "\n"
 "This is a full-featured calendar system.\n"
@@ -4140,7 +4127,7 @@ msgid "ir.translation"
 msgstr "ir.translation"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
 msgstr "12. %w ==> 5 (금요일이 6번째 날임)"
 
@@ -4150,17 +4137,17 @@ msgid "Error ! You can not create recursive categories."
 msgstr "오류 ! 재귀적 분류를 생성할 수 없습니다."
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%x - Appropriate date representation."
 msgstr "%x - 적절한 날짜 표시."
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Tag"
 msgstr "태그"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%d - Day of the month [01,31]."
 msgstr "%d - 일 [01,31]."
 
@@ -4180,19 +4167,9 @@ msgid "Stop All"
 msgstr "전부 중단"
 
 #. module: base
-#: field:res.company,paper_format:0
+#: field:res.company,rml_paper_format:0
 msgid "Paper Format"
 msgstr "용지 형식"
-
-#. module: base
-#: code:addons/base/module/module.py:644
-#, python-format
-msgid ""
-"Can not create the module file:\n"
-" %s"
-msgstr ""
-"다음 모듈 파일을 생성할수 없음:\n"
-" %s"
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -4205,7 +4182,7 @@ msgid "Nauru"
 msgstr "나우루"
 
 #. module: base
-#: code:addons/base/res/res_company.py:166
+#: code:addons/base/res/res_company.py:168
 #, python-format
 msgid "Reg"
 msgstr ""
@@ -4218,7 +4195,7 @@ msgstr "ir.property"
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
 #: selection:ir.actions.act_window.view,view_mode:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Form"
 msgstr "양식"
@@ -4256,7 +4233,7 @@ msgid "Email Gateway"
 msgstr "이메일 게이트웨이"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:470
+#: code:addons/base/ir/ir_mail_server.py:479
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -4271,8 +4248,8 @@ msgid "Tokelau"
 msgstr "토켈라우 제도"
 
 #. module: base
-#: view:ir.cron:0
-#: view:ir.module.module:0
+#: view:ir.cron:base.ir_cron_view
+#: view:ir.module.module:base.module_form
 msgid "Technical Data"
 msgstr "기술적 데이터"
 
@@ -4340,7 +4317,6 @@ msgstr ""
 
 #. module: base
 #: selection:ir.module.module,state:0
-#: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "업그레이드 예정"
 
@@ -4380,7 +4356,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2275
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "유효하지 않은 아키텍처!"
@@ -4401,7 +4377,7 @@ msgid "Group Required"
 msgstr "그룹이 필요함"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "6.  %d, %m         ==> 05, 12"
 msgstr "6.  %d, %m         ==> 05, 12"
 
@@ -4418,7 +4394,6 @@ msgstr "이탈리아 - 회계"
 #: field:ir.actions.client,help:0
 #: field:ir.actions.report.xml,help:0
 #: field:ir.actions.server,help:0
-#: field:ir.actions.wizard,help:0
 msgid "Action description"
 msgstr "액션 설명"
 
@@ -4452,7 +4427,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.res_lang_act_window
 #: model:ir.model,name:base.model_res_lang
 #: model:ir.ui.menu,name:base.menu_res_lang_act_window
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
+#: view:res.lang:base.res_lang_search
+#: view:res.lang:base.res_lang_tree
 msgid "Languages"
 msgstr "언어"
 
@@ -4476,7 +4453,7 @@ msgstr "이벤트 계획"
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: model:ir.actions.act_window,name:base.action_partner_form
 #: model:ir.ui.menu,name:base.menu_partner_form
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Customers"
 msgstr "고객"
 
@@ -4533,7 +4510,7 @@ msgid "Poland - Accounting"
 msgstr "폴란드 - 회계"
 
 #. module: base
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view
 msgid "Action to Trigger"
 msgstr "촉발 예정 액션"
 
@@ -4555,7 +4532,7 @@ msgid "Lunch Order, Meal, Food"
 msgstr "점심 주문, 식사, 음식"
 
 #. module: base
-#: view:ir.model.fields:0
+#: view:ir.model.fields:base.view_model_fields_search
 #: field:ir.model.fields,required:0
 #: field:res.partner.bank.type.field,required:0
 msgid "Required"
@@ -4568,7 +4545,6 @@ msgstr "루마니아"
 
 #. module: base
 #: field:ir.module.module,summary:0
-#: field:res.request.history,name:0
 msgid "Summary"
 msgstr "요약"
 
@@ -4601,6 +4577,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: field:ir.actions.server,write_expression:0
 #: field:multi_company.default,expression:0
 msgid "Expression"
 msgstr "표현식"
@@ -4637,7 +4614,6 @@ msgstr "관련 업체"
 #: help:ir.actions.client,help:0
 #: help:ir.actions.report.xml,help:0
 #: help:ir.actions.server,help:0
-#: help:ir.actions.wizard,help:0
 msgid ""
 "Optional help text for the users with a description of the target view, such "
 "as its usage and purpose."
@@ -4669,7 +4645,7 @@ msgid "`code` must be unique."
 msgstr "`code`는 유일해야 합니다."
 
 #. module: base
-#: code:addons/base/ir/workflow/workflow.py:99
+#: code:addons/base/workflow/workflow.py:101
 #, python-format
 msgid "Operation Forbidden"
 msgstr ""
@@ -4680,12 +4656,13 @@ msgid "Knowledge Management System"
 msgstr "지식 관리 시스템"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
 msgstr "입고 전환"
 
 #. module: base
+#: view:ir.values:base.values_view_form_defaults
 #: field:ir.values,value_unpickle:0
 msgid "Default value or action reference"
 msgstr "기본 값 또는 액션 참조"
@@ -4730,12 +4707,12 @@ msgstr "과제에 대한 청구 시점"
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
 #: model:ir.ui.menu,name:base.marketing_menu
-#: model:ir.ui.menu,name:base.menu_report_marketing
+#: model:ir.ui.menu,name:base.marketing_reporting_menu
 msgid "Marketing"
 msgstr "마케팅"
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "Bank account"
 msgstr "은행 계정"
 
@@ -4758,12 +4735,15 @@ msgid "Spanish (HN) / Español (HN)"
 msgstr "스페인어 (HN) / Español (HN)"
 
 #. module: base
-#: view:ir.sequence.type:0
+#: field:ir.sequence,code:0
+#: view:ir.sequence.type:base.sequence_type_form_view
+#: view:ir.sequence.type:base.sequence_type_tree_view
+#: view:ir.sequence.type:base.view_sequence_type_search
 msgid "Sequence Type"
 msgstr "순서 유형"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "Unicode/UTF-8"
 msgstr "유니코드/UTF-8"
 
@@ -4773,7 +4753,7 @@ msgid "Hindi / हिंदी"
 msgstr "힌두어 / हिंदी"
 
 #. module: base
-#: view:base.language.install:0
+#: view:base.language.install:base.view_base_language_install
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 msgid "Load a Translation"
@@ -4863,20 +4843,21 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.actions.server,srcmodel_id:0
-#: view:ir.filters:0
+#: field:ir.actions.report.xml,model:0
+#: view:ir.actions.server:base.view_server_action_search
+#: view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,model_id:0
-#: view:ir.model:0
+#: view:ir.model:base.view_model_search
 #: field:ir.model,model:0
 #: field:ir.model.constraint,model:0
 #: field:ir.model.fields,model_id:0
 #: field:ir.model.relation,model:0
-#: view:ir.values:0
+#: view:ir.values:base.values_view_search_action
 msgid "Model"
 msgstr "모델"
 
 #. module: base
-#: view:base.language.install:0
+#: view:base.language.install:base.view_base_language_install
 msgid ""
 "The selected language has been successfully installed. You must change the "
 "preferences of the user and open a new menu to view the changes."
@@ -4887,12 +4868,12 @@ msgstr ""
 #: field:ir.actions.act_window.view,view_id:0
 #: field:ir.default,page:0
 #: selection:ir.translation,type:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 msgid "View"
 msgstr "화면"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:146
+#: code:addons/base/ir/ir_fields.py:155
 #, python-format
 msgid "no"
 msgstr "아니요"
@@ -4917,7 +4898,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
+#: view:ir.actions.act_window:base.view_window_action_search
 msgid "Open a Window"
 msgstr "창 열기"
 
@@ -4993,23 +4975,24 @@ msgid "Zip"
 msgstr "우편번호"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 #: field:ir.module.module,author:0
 msgid "Author"
 msgstr "작성자"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_form
+#: view:ir.actions.todo:base.ir_actions_todo_tree
 msgid "Set as Todo"
 msgstr "과제로 설정"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - 적절한 날짜 및 시간 표시"
 
 #. module: base
-#: code:addons/base/res/res_config.py:420
+#: code:addons/base/res/res_config.py:419
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -5050,28 +5033,30 @@ msgid "Direction"
 msgstr "방향"
 
 #. module: base
-#: code:addons/orm.py:4815
+#: code:addons/orm.py:4922
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
 #: model:ir.actions.act_window,name:base.action_ui_view
 #: field:ir.actions.act_window,view_ids:0
 #: field:ir.actions.act_window,views:0
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
 #: field:ir.model,view_ids:0
 #: field:ir.module.module,views_by_module:0
 #: model:ir.ui.menu,name:base.menu_action_ui_view
-#: view:ir.ui.view:0
-#: view:res.groups:0
+#: view:ir.ui.view:base.view_view_form
+#: view:ir.ui.view:base.view_view_search
+#: view:ir.ui.view:base.view_view_tree
+#: view:res.groups:base.view_groups_form
 #: field:res.groups,view_access:0
 msgid "Views"
 msgstr "화면"
 
 #. module: base
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 #: field:res.groups,rule_groups:0
 msgid "Rules"
 msgstr "규칙"
@@ -5082,13 +5067,13 @@ msgid "SMTP Server"
 msgstr "SMTP 서버"
 
 #. module: base
-#: code:addons/base/module/module.py:320
+#: code:addons/base/module/module.py:339
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "설치된 혹은 설치 예정 모듈을 제거하려고 시도합니다"
 
 #. module: base
-#: view:base.module.upgrade:0
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
 msgid "The selected modules have been updated / installed !"
 msgstr "선택된 모듈이 업데이트 / 설치되었습니다 !"
 
@@ -5142,6 +5127,12 @@ msgid "Workflows"
 msgstr "업무 흐름"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_usability
+#: view:res.users:base.user_groups_view
+msgid "Usability"
+msgstr "사용성"
+
+#. module: base
 #: model:ir.ui.menu,name:base.next_id_73
 msgid "Purchase"
 msgstr "구매"
@@ -5157,7 +5148,7 @@ msgid "ir.needaction_mixin"
 msgstr "ir.needaction_mixin"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "This file was generated using the universal"
 msgstr ""
 
@@ -5182,7 +5173,7 @@ msgid "The database object this attachment will be attached to"
 msgstr "이 첨부 파일이 첨부될 데이터베이스 객체"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:327
+#: code:addons/base/ir/ir_fields.py:337
 #, python-format
 msgid "name"
 msgstr "이름"
@@ -5224,7 +5215,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.config.installer:0
+#: view:res.config.installer:base.res_config_installer
 msgid "Skip"
 msgstr "건너뛰기"
 
@@ -5239,12 +5230,12 @@ msgid "Lesotho"
 msgstr "레소토"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid ", or your preferred text editor"
 msgstr ", 또는 귀하가 선호하는 텍스트 편집기"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_crm_partner_assign
+#: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geo-Localization"
 msgstr "협력업체의 지리적 지역화"
 
@@ -5265,18 +5256,18 @@ msgid "Abkhazian / аҧсуа"
 msgstr "아브하즈어  / аҧсуа"
 
 #. module: base
-#: view:base.module.configuration:0
+#: view:base.module.configuration:base.view_base_module_configuration_form
 msgid "System Configuration Done"
 msgstr "시스템 구성 완료"
 
 #. module: base
-#: code:addons/orm.py:1540
+#: code:addons/orm.py:1568
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "%s 필드를 검증하는 동안 오류 발생: %s"
 
 #. module: base
-#: view:ir.property:0
+#: view:ir.property:base.ir_property_view_search
 msgid "Generic"
 msgstr "일반"
 
@@ -5306,7 +5297,7 @@ msgid "Set NULL"
 msgstr "NULL로 설정"
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form_simple_modif
 msgid "Save"
 msgstr "저장"
 
@@ -5347,7 +5338,7 @@ msgid "Not Searchable"
 msgstr "검색 불가능"
 
 #. module: base
-#: view:ir.config_parameter:0
+#: view:ir.config_parameter:base.view_ir_config_search
 #: field:ir.config_parameter,key:0
 msgid "Key"
 msgstr "키"
@@ -5381,7 +5372,7 @@ msgid "Mauritius"
 msgstr "마우리티우스"
 
 #. module: base
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 msgid "Full Access"
 msgstr "전체 접근"
 
@@ -5391,8 +5382,8 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "Plano de contas SNC para Portugal"
 
 #. module: base
-#: view:ir.actions.act_window:0
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.act_window:base.view_window_action_form
+#: view:ir.actions.report.xml:base.act_report_xml_view
 #: model:ir.ui.menu,name:base.menu_security
 msgid "Security"
 msgstr "보안"
@@ -5403,7 +5394,7 @@ msgid "Portuguese / Português"
 msgstr "포르투갈어 / Português"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:372
+#: code:addons/base/ir/ir_model.py:396
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "\"%s\" 필드에 대한 저장 시스템을 변경하는 것은 허용되지 않습니다."
@@ -5414,7 +5405,7 @@ msgid "Only if this bank account belong to your company"
 msgstr "은행 계정이 자사에 속해있을 경우에만"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:337
+#: code:addons/base/ir/ir_fields.py:347
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "알 수 없는 '%s' 하위 필드"
@@ -5425,9 +5416,9 @@ msgid "South Africa"
 msgstr "남아프리카 공화국"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_view_kanban
+#: view:ir.module.module:base.view_module_filter
 #: selection:ir.module.module,state:0
-#: selection:ir.module.module.dependency,state:0
 msgid "Installed"
 msgstr "설치됨"
 
@@ -5474,7 +5465,7 @@ msgid "Brazil"
 msgstr "브라질"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%M - Minute [00,59]."
 msgstr "%M - 분 [00,59]."
 
@@ -5500,7 +5491,7 @@ msgid "Spanish (PA) / Español (PA)"
 msgstr "스페인어 (PA) / Español (PA)"
 
 #. module: base
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_form
 #: field:res.currency,rate_ids:0
 msgid "Rates"
 msgstr "비율"
@@ -5516,7 +5507,7 @@ msgid "Syria"
 msgstr "시리아"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "======================================================"
 msgstr "======================================================"
 
@@ -5528,6 +5519,7 @@ msgstr "각각의 모델은 유일해야 합니다!"
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization
 #: model:ir.ui.menu,name:base.menu_localisation
+#: view:res.users:base.view_users_form
 msgid "Localization"
 msgstr "지역화"
 
@@ -5551,10 +5543,8 @@ msgstr "초안"
 
 #. module: base
 #: selection:ir.property,type:0
-#: field:res.currency,date:0
 #: field:res.currency.rate,name:0
 #: field:res.partner,date:0
-#: field:res.request,date_sent:0
 msgid "Date"
 msgstr "날짜"
 
@@ -5610,12 +5600,17 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_by_category
+#: model:ir.actions.act_window,name:base.action_partner_category_form
+#: model:ir.model,name:base.model_res_partner_category
 #: model:ir.ui.menu,name:base.menu_partner_category_form
+#: view:res.partner.category:base.view_partner_category_list
+#: view:res.partner.category:base.view_partner_category_tree
 msgid "Partner Tags"
 msgstr "협력업체 태그"
 
 #. module: base
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 msgid "Preview Header/Footer"
 msgstr "미리보기 머리글/바닥글"
 
@@ -5631,13 +5626,13 @@ msgid "Account Owner Name"
 msgstr "계정 소유자명"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:420
+#: code:addons/base/ir/ir_model.py:441
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr "해당 열이 이미 존재하기 때문에, 열 이름을 %s로 변경할 수 없음!"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_form
 msgid "Attached To"
 msgstr "첨부 대상"
 
@@ -5647,13 +5642,13 @@ msgid "Decimal Separator"
 msgstr "십진수 분리자"
 
 #. module: base
-#: code:addons/orm.py:5319
+#: code:addons/orm.py:5437
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "'%s' 필드의 필수 값을 찾을 수 없음."
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Write Access Right"
 msgstr "쓰기 접근 권한"
 
@@ -5672,15 +5667,13 @@ msgstr ""
 "그룹이 보유한 읽기, 쓰기, 생성 및 삭제 접근 권한이 여기에서 관리될 수 있습니다."
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,name:0
 msgid "Filter Name"
 msgstr "필터 이름"
 
 #. module: base
-#: view:ir.attachment:0
-#: view:res.partner:0
-#: field:res.request,history:0
+#: view:ir.attachment:base.view_attachment_form
 msgid "History"
 msgstr "기록"
 
@@ -5695,7 +5688,7 @@ msgid "Optional model, mostly used for needactions."
 msgstr "선택적 모델, 대부분 필요 액션에 사용됨."
 
 #. module: base
-#: code:addons/base/module/module.py:306
+#: code:addons/base/module/module.py:325
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "모듈명은 유일해야 합니다 !"
@@ -5739,8 +5732,10 @@ msgid "Wizard Button"
 msgstr "마법사 버튼"
 
 #. module: base
-#: view:ir.model.fields:0
+#: field:ir.actions.server,model_object_field:0
+#: view:ir.model.fields:base.view_model_fields_search
 #: field:ir.property,fields_id:0
+#: field:ir.server.object.lines,col1:0
 #: selection:ir.translation,type:0
 #: field:multi_company.default,field_id:0
 msgid "Field"
@@ -5757,7 +5752,7 @@ msgid "Venezuela"
 msgstr "베네수엘라"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "9.  %j              ==> 340"
 msgstr "9.  %j ==> 340"
 
@@ -5767,7 +5762,8 @@ msgid "Zambia"
 msgstr "잠비아"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_form
+#: view:ir.actions.todo:base.ir_actions_todo_tree
 msgid "Launch Configuration Wizard"
 msgstr "구성 마법사 시작"
 
@@ -5782,67 +5778,9 @@ msgid "Attachment Name"
 msgstr "첨부 파일명"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Cancel Upgrade"
 msgstr "업그레이드 취소"
-
-#. module: base
-#: model:ir.module.module,description:base.module_report_webkit
-msgid ""
-"\n"
-"This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
-"to support reports designed in HTML + CSS.\n"
-"============================================================================="
-"========================================\n"
-"\n"
-"The module structure and some code is inspired by the report_openoffice "
-"module.\n"
-"\n"
-"The module allows:\n"
-"------------------\n"
-"    - HTML report definition\n"
-"    - Multi header support\n"
-"    - Multi logo\n"
-"    - Multi company support\n"
-"    - HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
-"    - JavaScript support\n"
-"    - Raw HTML debugger\n"
-"    - Book printing capabilities\n"
-"    - Margins definition\n"
-"    - Paper size definition\n"
-"\n"
-"Multiple headers and logos can be defined per company. CSS style, header "
-"and\n"
-"footer body are defined per company.\n"
-"\n"
-"For a sample report see also the webkit_report_sample module, and this "
-"video:\n"
-"    http://files.me.com/nbessi/06n92k.mov\n"
-"\n"
-"Requirements and Installation:\n"
-"------------------------------\n"
-"This module requires the ``wkthtmltopdf`` library to render HTML documents "
-"as\n"
-"PDF. Version 0.9.9 or later is necessary, and can be found at\n"
-"http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows "
-"(32bits).\n"
-"\n"
-"After installing the library on the OpenERP Server machine, you need to set "
-"the\n"
-"path to the ``wkthtmltopdf`` executable file on each Company.\n"
-"\n"
-"If you are experiencing missing header/footer problems on Linux, be sure to\n"
-"install a 'static' version of the library. The default ``wkhtmltopdf`` on\n"
-"Ubuntu is known to have this issue.\n"
-"\n"
-"\n"
-"TODO:\n"
-"-----\n"
-"    * JavaScript support activation deactivation\n"
-"    * Collated and book format support\n"
-"    * Zip return for separated PDF\n"
-"    * Web client WYSIWYG\n"
-msgstr ""
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
@@ -5860,13 +5798,12 @@ msgid "Kazakhstan"
 msgstr "카자흐스탄"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%w - Weekday number [0(Sunday),6]."
 msgstr "%w - 평일 숫자 [0(일요일),6]."
 
 #. module: base
 #: field:ir.attachment,res_name:0
-#: field:ir.ui.view_sc,resource:0
 msgid "Resource Name"
 msgstr "리소스명"
 
@@ -5881,30 +5818,31 @@ msgstr "사용자 지정 필터"
 #: field:ir.actions.report.xml,name:0
 #: field:ir.actions.todo,name:0
 #: field:ir.cron,name:0
+#: field:ir.logging,name:0
 #: field:ir.model.access,name:0
 #: field:ir.model.fields,name:0
 #: field:ir.module.category,name:0
 #: field:ir.module.module.dependency,name:0
 #: report:ir.module.reference:0
-#: view:ir.property:0
+#: view:ir.property:base.ir_property_view_search
 #: field:ir.property,name:0
 #: field:ir.rule,name:0
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 #: field:ir.values,name:0
-#: view:multi_company.default:0
+#: view:multi_company.default:base.view_inventory_search
 #: field:multi_company.default,name:0
 #: field:res.bank,name:0
-#: view:res.currency.rate.type:0
-#: field:res.currency.rate.type,name:0
+#: field:res.country.group,name:0
 #: field:res.groups,name:0
 #: field:res.lang,name:0
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
+#: field:res.partner,display_name:0
 #: field:res.partner,name:0
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank.type,name:0
 #: field:res.request.link,name:0
-#: view:res.users:0
 #: field:workflow,name:0
 #: field:workflow.activity,name:0
 msgid "Name"
@@ -5928,7 +5866,6 @@ msgid "Decimal Precision Configuration"
 msgstr "십진수 정밀도 구성"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_act_url
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_url"
 msgstr "ir.actions.act_url"
@@ -5952,10 +5889,11 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
 #: field:ir.model.constraint,module:0
-#: view:ir.model.data:0
+#: view:ir.model.data:base.view_model_data_search
 #: field:ir.model.data,module:0
 #: field:ir.model.relation,module:0
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
+#: view:ir.module.module:base.view_module_filter
 #: field:ir.module.module.dependency,module_id:0
 #: report:ir.module.reference:0
 #: field:ir.translation,module:0
@@ -6084,7 +6022,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_form
 msgid "Comments"
 msgstr "코멘트"
 
@@ -6104,7 +6042,6 @@ msgid "Grenada"
 msgstr "그레나다"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_wizard
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.wizard"
 msgstr "ir.actions.wizard"
@@ -6115,19 +6052,31 @@ msgid "Base Kanban"
 msgstr "기준 간판"
 
 #. module: base
-#: view:ir.actions.act_window:0
-#: view:ir.actions.report.xml:0
-#: view:ir.actions.server:0
+#: view:ir.actions.act_window:base.view_window_action_search
+#: view:ir.actions.report.xml:base.act_report_xml_search_view
+#: view:ir.actions.server:base.view_server_action_search
+#: view:ir.attachment:base.view_attachment_search
+#: view:ir.cron:base.ir_cron_view_search
+#: view:ir.filters:base.ir_filters_view_search
+#: view:ir.logging:base.ir_logging_search_view
+#: view:ir.model.access:base.ir_access_view_search
+#: view:ir.model.data:base.view_model_data_search
+#: view:ir.model.fields:base.view_model_fields_search
+#: view:ir.module.module:base.view_module_filter
+#: view:ir.ui.view:base.view_view_search
+#: view:ir.values:base.values_view_search_action
+#: view:res.partner:base.view_res_partner_filter
+#: view:workflow.activity:base.view_workflow_activity_search
 msgid "Group By"
 msgstr "분류 기준"
 
 #. module: base
-#: view:res.config.installer:0
+#: view:res.config.installer:base.res_config_installer
 msgid "title"
 msgstr "제목"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:146
+#: code:addons/base/ir/ir_fields.py:155
 #, python-format
 msgid "true"
 msgstr "참"
@@ -6143,7 +6092,7 @@ msgid "Services"
 msgstr "서비스"
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_form
 msgid "Translation"
 msgstr "번역"
 
@@ -6180,7 +6129,7 @@ msgstr "상품"
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_defaults
 #: model:ir.ui.menu,name:base.menu_values_form_defaults
-#: view:ir.values:0
+#: view:ir.values:base.values_view_form_defaults
 msgid "User-defined Defaults"
 msgstr "사용자 정의 기본 값"
 
@@ -6194,10 +6143,11 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_usability
-#: view:res.users:0
-msgid "Usability"
-msgstr "사용성"
+#: view:base.module.upgrade:base.view_base_module_upgrade
+msgid ""
+"This operation will permanently erase all data currently stored by the "
+"modules!"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,domain:0
@@ -6222,12 +6172,11 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_config
 #: model:ir.ui.menu,name:base.menu_definitions
 #: model:ir.ui.menu,name:base.menu_event_config
-#: model:ir.ui.menu,name:base.menu_lunch_survey_root
 #: model:ir.ui.menu,name:base.menu_marketing_config_association
 #: model:ir.ui.menu,name:base.menu_marketing_config_root
 #: model:ir.ui.menu,name:base.menu_reporting_config
-#: view:res.company:0
-#: view:res.config:0
+#: view:res.company:base.view_company_form
+#: view:res.config:base.res_config_view_base
 msgid "Configuration"
 msgstr "구성"
 
@@ -6292,7 +6241,7 @@ msgid "USA Minor Outlying Islands"
 msgstr "미국령 소군도"
 
 #. module: base
-#: view:base.language.import:0
+#: view:base.language.import:base.view_base_import_language
 msgid "e.g. English"
 msgstr "예: 영어"
 
@@ -6311,14 +6260,14 @@ msgid "Bank Type"
 msgstr "은행 유형"
 
 #. module: base
-#: code:addons/base/res/res_users.py:99
+#: code:addons/base/res/res_users.py:127
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "그룹명은 \"-\"로 시작할 수 없습니다"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_act_cl
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 #: model:ir.ui.menu,name:base.module_mi
 msgid "Apps"
 msgstr "응용 프로그램"
@@ -6339,7 +6288,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "구자라트어 / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:361
+#: code:addons/base/module/module.py:380
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -6351,7 +6300,7 @@ msgid "Belgium - Payroll"
 msgstr "벨기에 - 급여"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_search
 #: field:workflow.activity,flow_start:0
 msgid "Flow Start"
 msgstr "흐름 시작"
@@ -6362,7 +6311,7 @@ msgid "res.partner.title"
 msgstr "res.partner.title"
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "Bank Account Owner"
 msgstr "은행 계정 소유자"
 
@@ -6372,7 +6321,7 @@ msgid "Uncategorized"
 msgstr "분류되지 않음"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Phone:"
 msgstr "전화:"
 
@@ -6399,9 +6348,9 @@ msgid "Guadeloupe (French)"
 msgstr "과들루프 (프랑스령)"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:185
-#: code:addons/base/res/res_lang.py:187
 #: code:addons/base/res/res_lang.py:189
+#: code:addons/base/res/res_lang.py:191
+#: code:addons/base/res/res_lang.py:193
 #, python-format
 msgid "User Error"
 msgstr "사용자 오류"
@@ -6435,7 +6384,7 @@ msgstr ""
 "\n"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:182
+#: code:addons/base/ir/ir_fields.py:191
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s'은(는) '%%(field)s' 필드에 대한 숫자로 보이지 않습니다."
@@ -6447,7 +6396,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_search
 msgid "My Banks"
 msgstr "내 은행"
 
@@ -6597,7 +6546,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.logging:base.ir_logging_search_view
 msgid "Month"
 msgstr "월"
 
@@ -6710,14 +6659,13 @@ msgid "the user will have access to his own data in the sales application."
 msgstr "사용자가 판매 응용 프로그램에서 자신의 데이터에 대한 접근 권한을 갖습니다."
 
 #. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
-msgstr "사용자가 시스템 내에 직원으로 연결되었을 경우, 자신의 인사내역을 관리할 수 있습니다 (휴무 요청, 근태기록,...)"
+#: code:addons/orm.py:1393
+#, python-format
+msgid "Unknown error during import:"
+msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2275
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "해당 구조를 위해 정의된 '%s' 유형의 화면은 없습니다!"
@@ -6732,12 +6680,12 @@ msgstr ""
 "- 기본: 모델 필드의 기본 값"
 
 #. module: base
-#: field:base.module.update,add:0
+#: field:base.module.update,added:0
 msgid "Number of modules added"
 msgstr "추가된 모듈 개수"
 
 #. module: base
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_form
 msgid "Price Accuracy"
 msgstr "가격 정확도"
 
@@ -6752,13 +6700,13 @@ msgid "French / Français"
 msgstr "프랑스어 / Français"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Created Menus"
 msgstr "생성된 메뉴"
 
 #. module: base
-#: code:addons/base/module/module.py:502
-#: view:ir.module.module:0
+#: code:addons/base/module/module.py:525
+#: view:ir.module.module:base.module_form
 #, python-format
 msgid "Uninstall"
 msgstr "제거"
@@ -6822,10 +6770,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_search
 #: field:ir.actions.act_window.view,act_window_id:0
-#: view:ir.actions.actions:0
+#: view:ir.actions.actions:base.action_view
+#: view:ir.actions.actions:base.action_view_search
+#: view:ir.actions.actions:base.action_view_tree
 #: field:ir.actions.todo,action_id:0
+#: field:ir.filters,action_id:0
 #: field:ir.ui.menu,action:0
 #: selection:ir.values,key:0
 msgid "Action"
@@ -6852,7 +6803,7 @@ msgid "Curaçao"
 msgstr "쿠라사우 섬"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Current Year without Century: %(y)s"
 msgstr "2자리수 연도: %(y)s"
 
@@ -6903,7 +6854,7 @@ msgid "Audit Trail"
 msgstr "감사 추적"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:264
+#: code:addons/base/ir/ir_fields.py:274
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr "'%%(field)s' 선택 필드에서 '%s' 값을 찾을 수 없습니다"
@@ -6922,7 +6873,7 @@ msgid "Currency Rate Type"
 msgstr "환율 유형"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:189
+#: code:addons/base/res/res_lang.py:193
 #, python-format
 msgid ""
 "You cannot delete the language which is Active!\n"
@@ -6973,7 +6924,7 @@ msgstr "미크로네시아"
 
 #. module: base
 #: field:ir.module.module,menus_by_module:0
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 msgid "Menus"
 msgstr "메뉴"
 
@@ -6983,8 +6934,10 @@ msgid "Launch Manually Once"
 msgstr "한 번만 수동으로 시작"
 
 #. module: base
-#: view:workflow:0
-#: view:workflow.activity:0
+#: view:workflow:base.view_workflow_form
+#: view:workflow:base.view_workflow_search
+#: view:workflow:base.view_workflow_tree
+#: view:workflow.activity:base.view_workflow_activity_search
 #: field:workflow.activity,wkf_id:0
 #: field:workflow.instance,wkf_id:0
 #: field:workflow.transition,wkf_id:0
@@ -7003,7 +6956,7 @@ msgid "Israel"
 msgstr "이스라엘"
 
 #. module: base
-#: code:addons/base/res/res_config.py:475
+#: code:addons/base/res/res_config.py:436
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr "구성을 복제할 수 없음!"
@@ -7024,6 +6977,11 @@ msgid "Indian - Accounting"
 msgstr "인도 - 회계"
 
 #. module: base
+#: field:ir.translation,src:0
+msgid "Old source"
+msgstr ""
+
+#. module: base
 #: field:res.lang,time_format:0
 msgid "Time Format"
 msgstr "시간 형식"
@@ -7039,7 +6997,7 @@ msgid "Contact Creation"
 msgstr "담당자 생성"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Defined Reports"
 msgstr "정의된 보고서"
 
@@ -7049,20 +7007,20 @@ msgid "Todo Lists"
 msgstr "과제목록"
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_view_tree
 msgid "Report xml"
 msgstr "보고서 xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
 #: field:ir.module.category,module_ids:0
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_tree
 #: model:ir.ui.menu,name:base.menu_management
 msgid "Modules"
 msgstr "모듈"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 #: selection:workflow.activity,kind:0
 #: field:workflow.activity,subflow_id:0
 #: field:workflow.workitem,subflow_id:0
@@ -7072,7 +7030,7 @@ msgstr "하위 흐름"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
-#: view:res.bank:0
+#: view:res.bank:base.view_res_bank_tree
 #: field:res.partner,bank_ids:0
 msgid "Banks"
 msgstr "은행"
@@ -7095,12 +7053,107 @@ msgstr ""
 "        "
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Week of the Year: %(woy)s"
 msgstr "주: %(woy)s"
 
 #. module: base
+#: field:base.language.export,id:0
+#: field:base.language.import,id:0
+#: field:base.language.install,id:0
+#: field:base.module.configuration,id:0
+#: field:base.module.update,id:0
+#: field:base.module.upgrade,id:0
+#: field:base.update.translations,id:0
+#: field:change.password.user,id:0
+#: field:change.password.wizard,id:0
+#: field:ir.actions.act_url,id:0
+#: field:ir.actions.act_window,id:0
+#: field:ir.actions.act_window.view,id:0
+#: field:ir.actions.act_window_close,id:0
+#: field:ir.actions.actions,id:0
+#: field:ir.actions.client,id:0
+#: field:ir.actions.report.xml,id:0
+#: field:ir.actions.server,id:0
+#: field:ir.actions.todo,id:0
+#: field:ir.attachment,id:0
+#: field:ir.config_parameter,id:0
+#: field:ir.cron,id:0
+#: field:ir.default,id:0
+#: field:ir.exports,id:0
+#: field:ir.exports.line,id:0
+#: field:ir.fields.converter,id:0
+#: field:ir.filters,id:0
+#: field:ir.http,id:0
+#: field:ir.logging,id:0
+#: field:ir.mail_server,id:0
+#: field:ir.model,id:0
+#: field:ir.model.access,id:0
+#: field:ir.model.constraint,id:0
+#: field:ir.model.data,id:0
+#: field:ir.model.fields,id:0
+#: field:ir.model.relation,id:0
+#: field:ir.module.category,id:0
+#: field:ir.module.module,id:0
+#: field:ir.module.module.dependency,id:0
+#: field:ir.needaction_mixin,id:0
+#: field:ir.property,id:0
+#: field:ir.qweb,id:0
+#: field:ir.qweb.field,id:0
+#: field:ir.qweb.field.contact,id:0
+#: field:ir.qweb.field.date,id:0
+#: field:ir.qweb.field.datetime,id:0
+#: field:ir.qweb.field.duration,id:0
+#: field:ir.qweb.field.float,id:0
+#: field:ir.qweb.field.html,id:0
+#: field:ir.qweb.field.image,id:0
+#: field:ir.qweb.field.many2one,id:0
+#: field:ir.qweb.field.monetary,id:0
+#: field:ir.qweb.field.qweb,id:0
+#: field:ir.qweb.field.relative,id:0
+#: field:ir.qweb.field.selection,id:0
+#: field:ir.qweb.field.text,id:0
+#: field:ir.qweb.widget,id:0
+#: field:ir.qweb.widget.monetary,id:0
+#: field:ir.rule,id:0
+#: field:ir.sequence,id:0
+#: field:ir.sequence.type,id:0
+#: field:ir.server.object.lines,id:0
+#: field:ir.translation,id:0
+#: field:ir.ui.menu,id:0
+#: field:ir.ui.view,id:0
+#: field:ir.ui.view.custom,id:0
+#: field:ir.values,id:0
+#: field:multi_company.default,id:0
+#: field:osv_memory.autovacuum,id:0
+#: field:res.bank,id:0
+#: field:res.company,id:0
+#: field:res.config,id:0
+#: field:res.config.installer,id:0
+#: field:res.config.settings,id:0
+#: field:res.country,id:0
+#: field:res.country.group,id:0
+#: field:res.country.state,id:0
+#: field:res.currency,id:0
+#: field:res.currency.rate,id:0
+#: field:res.font,id:0
+#: field:res.groups,id:0
+#: field:res.lang,id:0
+#: field:res.partner,id:0
+#: field:res.partner.bank,id:0
+#: field:res.partner.bank.type,id:0
+#: field:res.partner.bank.type.field,id:0
+#: field:res.partner.category,id:0
+#: field:res.partner.title,id:0
+#: field:res.request.link,id:0
 #: field:res.users,id:0
+#: field:wizard.ir.model.menu.create,id:0
+#: field:workflow,id:0
+#: field:workflow.activity,id:0
+#: field:workflow.instance,id:0
+#: field:workflow.transition,id:0
+#: field:workflow.triggers,id:0
+#: field:workflow.workitem,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -7156,13 +7209,14 @@ msgid "Botswana"
 msgstr "보츠와나"
 
 #. module: base
-#: view:res.partner.title:0
+#: view:res.partner.title:base.view_partner_title_form
+#: view:res.partner.title:base.view_partner_title_tree
 msgid "Partner Titles"
 msgstr "협력업체 호칭"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:196
-#: code:addons/base/ir/ir_fields.py:227
+#: code:addons/base/ir/ir_fields.py:205
+#: code:addons/base/ir/ir_fields.py:236
 #, python-format
 msgid "Use the format '%s'"
 msgstr "'%s' 형식 사용"
@@ -7194,13 +7248,13 @@ msgid "Workitems"
 msgstr "작업 항목"
 
 #. module: base
-#: code:addons/base/res/res_bank.py:195
+#: code:addons/base/res/res_bank.py:188
 #, python-format
 msgid "Invalid Bank Account Type Name format."
 msgstr "유효하지 않은 은행 계좌 유형명 형식."
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 msgid "Filters visible only for one user"
 msgstr "한 명의 사용자에게만 보이는 필터"
 
@@ -7210,7 +7264,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4348
+#: code:addons/orm.py:4446
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -7276,7 +7330,7 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "관계 필드용, 대상 모델의 기술적 명칭"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%S - Seconds [00,61]."
 msgstr "%S - 초 [00,61]."
 
@@ -7293,7 +7347,7 @@ msgid "Inherited View"
 msgstr "전승 화면"
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_form
 msgid "Source Term"
 msgstr "소스 용어"
 
@@ -7317,7 +7371,8 @@ msgstr "모듈 파일을 성공적으로 가져옴!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
-#: view:ir.model.constraint:0
+#: view:ir.model.constraint:base.view_model_constraint_form
+#: view:ir.model.constraint:base.view_model_constraint_list
 #: model:ir.ui.menu,name:base.ir_model_constraint_menu
 msgid "Model Constraints"
 msgstr "모델 제약"
@@ -7325,12 +7380,11 @@ msgstr "모델 제약"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
 #: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 msgid "Transitions"
 msgstr "전환"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
 msgstr "시간 기록표"
@@ -7354,6 +7408,13 @@ msgid ""
 msgstr ""
 "사용자 생성할 때에만 지정하거나 사용자 암호를 변경할 경우에만 값을 지정하고, 그러지 않을 경우에는 비워두세요. 암호 변경 후에는 "
 "사용자가 다시 로그인해야 합니다."
+
+#. module: base
+#: model:res.groups,comment:base.group_user
+msgid ""
+"the user will be able to manage his own human resources stuff (leave "
+"request, timesheets, ...), if he is linked to an employee in the system."
+msgstr "사용자가 시스템 내에 직원으로 연결되었을 경우, 자신의 인사내역을 관리할 수 있습니다 (휴무 요청, 근태기록,...)"
 
 #. module: base
 #: model:res.country,name:base.so
@@ -7430,7 +7491,6 @@ msgid "Record Name"
 msgstr "레코드명"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_client
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.client"
 msgstr "ir.actions.client"
@@ -7446,7 +7506,7 @@ msgid "Module Immediate Install"
 msgstr "모듈 즉시 설치"
 
 #. module: base
-#: view:ir.actions.server:0
+#: view:ir.actions.server:base.view_server_action_form
 msgid "Field Mapping"
 msgstr "필드 매핑"
 
@@ -7485,7 +7545,7 @@ msgstr "왼쪽에서 오른쪽으로"
 
 #. module: base
 #: field:ir.model.fields,translate:0
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_search
 #: field:res.lang,translatable:0
 msgid "Translatable"
 msgstr "번역 가능"
@@ -7516,7 +7576,7 @@ msgid "on"
 msgstr ""
 
 #. module: base
-#: view:ir.property:0
+#: view:ir.property:base.ir_property_view_search
 msgid "Parameters that are used by all resources."
 msgstr "모든 리소스에 사용되는 매개 변수"
 
@@ -7538,7 +7598,7 @@ msgid "Long Term Planning"
 msgstr "장기 기획"
 
 #. module: base
-#: field:ir.actions.server,message:0
+#: field:ir.logging,message:0
 msgid "Message"
 msgstr "메시지"
 
@@ -7571,7 +7631,7 @@ msgid "Accounting and Finance"
 msgstr "회계 및 재정"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Upgrade"
 msgstr "업그레이드"
 
@@ -7598,7 +7658,8 @@ msgid "Job Position"
 msgstr ""
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_tree
 #: field:res.partner,child_ids:0
 msgid "Contacts"
 msgstr "연락처"
@@ -7634,7 +7695,7 @@ msgid "User Login"
 msgstr "사용자 로그인"
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 msgid "Filters created by myself"
 msgstr "내가 생성한 필터"
 
@@ -7649,7 +7710,7 @@ msgid "Intrastat Reporting"
 msgstr "주내 보고"
 
 #. module: base
-#: code:addons/base/res/res_users.py:131
+#: code:addons/base/res/res_users.py:158
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -7691,7 +7752,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2021
+#: code:addons/orm.py:2049
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "달력 화면에 부족한 필드!"
@@ -7724,7 +7785,9 @@ msgid "wizard.ir.model.menu.create"
 msgstr "wizard.ir.model.menu.create"
 
 #. module: base
-#: view:workflow.transition:0
+#: view:workflow.transition:base.view_workflow_transition_form
+#: view:workflow.transition:base.view_workflow_transition_search
+#: view:workflow.transition:base.view_workflow_transition_tree
 msgid "Transition"
 msgstr "전환"
 
@@ -7739,10 +7802,9 @@ msgstr "전환"
 #: field:res.lang,active:0
 #: field:res.partner,active:0
 #: field:res.partner.category,active:0
-#: field:res.request,active:0
 #: field:res.users,active:0
-#: view:workflow.instance:0
-#: view:workflow.workitem:0
+#: view:workflow.instance:base.view_workflow_instance_search
+#: view:workflow.workitem:base.view_workflow_workitem_search
 msgid "Active"
 msgstr "활성"
 
@@ -7757,36 +7819,31 @@ msgid "Child Categories"
 msgstr "하위 분류"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:606
-#: code:addons/base/ir/ir_actions.py:702
-#: code:addons/base/ir/ir_actions.py:705
-#: code:addons/base/ir/ir_model.py:165
-#: code:addons/base/ir/ir_model.py:276
-#: code:addons/base/ir/ir_model.py:290
-#: code:addons/base/ir/ir_model.py:320
-#: code:addons/base/ir/ir_model.py:339
-#: code:addons/base/ir/ir_model.py:344
-#: code:addons/base/ir/ir_model.py:347
-#: code:addons/base/ir/ir_translation.py:341
-#: code:addons/base/module/module.py:320
-#: code:addons/base/module/module.py:362
-#: code:addons/base/module/module.py:366
-#: code:addons/base/module/module.py:372
-#: code:addons/base/module/module.py:499
-#: code:addons/base/module/module.py:525
-#: code:addons/base/module/module.py:539
-#: code:addons/base/module/module.py:644
-#: code:addons/base/res/res_currency.py:194
-#: code:addons/base/res/res_users.py:98
-#: code:addons/custom.py:555
-#: code:addons/orm.py:787
-#: code:addons/orm.py:3961
+#: code:addons/base/ir/ir_actions.py:840
+#: code:addons/base/ir/ir_model.py:164
+#: code:addons/base/ir/ir_model.py:283
+#: code:addons/base/ir/ir_model.py:297
+#: code:addons/base/ir/ir_model.py:337
+#: code:addons/base/ir/ir_model.py:356
+#: code:addons/base/ir/ir_model.py:361
+#: code:addons/base/ir/ir_model.py:364
+#: code:addons/base/ir/ir_translation.py:392
+#: code:addons/base/module/module.py:339
+#: code:addons/base/module/module.py:381
+#: code:addons/base/module/module.py:386
+#: code:addons/base/module/module.py:396
+#: code:addons/base/module/module.py:522
+#: code:addons/base/module/module.py:548
+#: code:addons/base/module/module.py:562
+#: code:addons/base/res/res_currency.py:229
+#: code:addons/base/res/res_users.py:126
+#: code:addons/custom.py:554
 #, python-format
 msgid "Error"
 msgstr "오류"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:566
+#: code:addons/base/res/res_partner.py:630
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr ""
@@ -7811,7 +7868,7 @@ msgid "mdx"
 msgstr "mdx"
 
 #. module: base
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view_search
 msgid "Scheduled Action"
 msgstr "예정된 액션"
 
@@ -7821,10 +7878,10 @@ msgid "Burundi"
 msgstr "부룬디"
 
 #. module: base
-#: view:base.language.export:0
-#: view:base.language.install:0
-#: view:base.module.configuration:0
-#: view:base.module.update:0
+#: view:base.language.export:base.wizard_lang_export
+#: view:base.language.install:base.view_base_language_install
+#: view:base.module.configuration:base.view_base_module_configuration_form
+#: view:base.module.update:base.view_base_module_update
 msgid "Close"
 msgstr "닫기"
 
@@ -7834,7 +7891,7 @@ msgid "Spanish (MX) / Español (MX)"
 msgstr "스페인어 (MX) / Español (MX)"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_search
 msgid "Wizards to be Launched"
 msgstr "시작 대상 마법사"
 
@@ -7860,8 +7917,8 @@ msgid "Next number of this sequence"
 msgstr "해당 순서의 다음 숫자"
 
 #. module: base
-#: view:res.partner:0
-#: view:res.users:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
 msgid "Tags..."
 msgstr "태그..."
 
@@ -7871,7 +7928,7 @@ msgid "at"
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
 msgstr "규칙 정의 (도메인 필터)"
 
@@ -7891,7 +7948,7 @@ msgid "File Format"
 msgstr "파일 형식"
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 msgid "My filters"
 msgstr "내 필터"
 
@@ -7927,7 +7984,9 @@ msgstr ""
 "소속되어 있습니다."
 
 #. module: base
-#: view:workflow.workitem:0
+#: view:workflow.workitem:base.view_workflow_workitem_form
+#: view:workflow.workitem:base.view_workflow_workitem_search
+#: view:workflow.workitem:base.view_workflow_workitem_tree
 msgid "Workflow Workitems"
 msgstr "업무 흐름 업무 항목"
 
@@ -7962,10 +8021,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
 #: field:ir.model,field_id:0
 #: model:ir.model,name:base.model_ir_model_fields
-#: view:ir.model.fields:0
+#: view:ir.model.fields:base.view_model_fields_form
+#: view:ir.model.fields:base.view_model_fields_search
+#: view:ir.model.fields:base.view_model_fields_tree
 #: model:ir.ui.menu,name:base.ir_model_model_fields
 msgid "Fields"
 msgstr "필드"
@@ -8015,7 +8076,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.mail_server:0
+#: view:ir.mail_server:base.ir_mail_server_form
 msgid "Test Connection"
 msgstr "연결 시험"
 
@@ -8043,7 +8104,7 @@ msgstr "선택 옵션"
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank,street:0
 msgid "Street"
 msgstr "도로명+건물번호"
@@ -8127,7 +8188,7 @@ msgid "Canada"
 msgstr "캐나다"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "Launchpad"
 msgstr "Launchpad"
 
@@ -8150,7 +8211,7 @@ msgid "Change My Preferences"
 msgstr "내 기본 설정 변경"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:171
+#: code:addons/base/ir/ir_actions.py:222
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "액션 정의에서 유효하지 않은 모델명"
@@ -8200,19 +8261,18 @@ msgstr "코코스 (킬링) 제도"
 
 #. module: base
 #: selection:base.language.install,state:0
-#: selection:base.module.import,state:0
 #: selection:base.module.update,state:0
 msgid "init"
 msgstr "개시함"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 #: field:res.partner,user_id:0
 msgid "Salesperson"
 msgstr "영업사원"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "11. %U or %W       ==> 48 (49th week)"
 msgstr "11. %U 또는 %W       ==> 48 (49번째 주)"
 
@@ -8227,7 +8287,7 @@ msgid "Rules can not be applied on Transient models."
 msgstr "일시적인 모델에는 규칙을 적용할 수 없습니다."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:215
+#: code:addons/base/ir/ir_mail_server.py:217
 #, python-format
 msgid "Connection Test Failed!"
 msgstr ""
@@ -8238,7 +8298,7 @@ msgid "Dutch / Nederlands"
 msgstr "독일어 / 네덜란드"
 
 #. module: base
-#: selection:res.company,paper_format:0
+#: selection:res.company,rml_paper_format:0
 msgid "US Letter"
 msgstr "US Letter"
 
@@ -8261,7 +8321,7 @@ msgid "Company Bank Accounts"
 msgstr "업체 은행 계정"
 
 #. module: base
-#: code:addons/base/res/res_users.py:473
+#: code:addons/base/res/res_users.py:505
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "보안을 이유로 암호를 비워두고 설정하는 것을 허용하지 않습니다!"
@@ -8272,13 +8332,13 @@ msgid "Optional password for SMTP authentication"
 msgstr "SMTP 인증을 위한 선택적 암호"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:727
+#: code:addons/base/ir/ir_model.py:749
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "죄송합니다. 이 문서의 수정을 허용할 수 없습니다."
 
 #. module: base
-#: code:addons/base/res/res_config.py:380
+#: code:addons/base/res/res_config.py:379
 #, python-format
 msgid ""
 "\n"
@@ -8301,12 +8361,11 @@ msgstr "보통 은행 계정"
 
 #. module: base
 #: field:change.password.user,wizard_id:0
-#: view:ir.actions.wizard:0
 msgid "Wizard"
 msgstr "마법사"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:303
+#: code:addons/base/ir/ir_fields.py:313
 #, python-format
 msgid "database id"
 msgstr "데이터베이스 id"
@@ -8400,7 +8459,7 @@ msgstr ""
 "설정했을 경우, 이 필드는 자체 데이터베이스 열 대신에 직렬화 필드의 희소 구조에 보관됩니다. 이것은 생성 후 변경될 수 없습니다."
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_search
 msgid "Bank accounts belonging to one of your companies"
 msgstr "귀사가 보유하고 있는 은행 계좌"
 
@@ -8462,12 +8521,12 @@ msgid "Entries Sequence Numbering"
 msgstr "기입 순서 번호 부여"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "POEdit"
 msgstr ""
 
 #. module: base
-#: view:ir.values:0
+#: view:ir.values:base.values_view_search_action
 msgid "Client Actions"
 msgstr "클라이언트 액션"
 
@@ -8482,7 +8541,7 @@ msgid "Jobs, Recruitment, Applications, Job Interviews"
 msgstr "직무, 채용, 지원, 면접"
 
 #. module: base
-#: code:addons/base/module/module.py:539
+#: code:addons/base/module/module.py:562
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -8510,6 +8569,11 @@ msgid ""
 msgstr "통화 표기가 금액 이전 또는 이후에 위치할지 결정함"
 
 #. module: base
+#: view:base.module.upgrade:base.view_base_module_upgrade
+msgid "If you wish to cancel the process, press the cancel button below"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Pad on tasks"
 msgstr ""
@@ -8520,7 +8584,7 @@ msgid "base.update.translations"
 msgstr "base.update.translations"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Full Access Right"
 msgstr "전체 접근 권한"
 
@@ -8540,10 +8604,10 @@ msgid "Web Shortcuts"
 msgstr "웹 바로 가기"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
 #: selection:res.partner,type:0
 #: selection:res.partner.title,domain:0
-#: view:res.users:0
 msgid "Contact"
 msgstr "담당자"
 
@@ -8563,12 +8627,12 @@ msgid "Project Management"
 msgstr "프로젝트 관리"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Cancel Uninstall"
 msgstr "제거 취소"
 
 #. module: base
-#: view:res.bank:0
+#: view:res.bank:base.view_res_bank_form
 msgid "Communication"
 msgstr "의사소통"
 
@@ -8614,7 +8678,7 @@ msgid "Belgium - Accounting"
 msgstr "벨기에 - 회계"
 
 #. module: base
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 msgid "Access Control"
 msgstr "접근 관리"
 
@@ -8629,7 +8693,7 @@ msgid "Payment Follow-up Management"
 msgstr "지불 추적 관리"
 
 #. module: base
-#: code:addons/orm.py:5334
+#: code:addons/orm.py:5452
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr "'%s' 필드의 값이 이미 존재합니다.."
@@ -8667,10 +8731,16 @@ msgid "Nigeria"
 msgstr "나이지리아"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:356
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "선택 필드용, 선택 옵션이 정해져야 함!"
+
+#. module: base
+#: help:res.currency,rate_silent:0
+msgid ""
+"The rate of the currency to the currency of rate 1 (0 if no rate defined)."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
@@ -8740,12 +8810,12 @@ msgid ""
 msgstr "해당 기입이 적용되는 모델 - 모델 설정 시 도움을 주는 필드, 올바른 모델명을 자동으로 설정함"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "2.  %a ,%A         ==> Fri, Friday"
 msgstr "2.  %a ,%A  ==> 금, 금요일"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:341
+#: code:addons/base/ir/ir_translation.py:392
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra OpenERP "
@@ -8818,12 +8888,12 @@ msgid "workflow.transition"
 msgstr "workflow.transition"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%a - Abbreviated weekday name."
 msgstr "%a - 축약된 요일 이름."
 
 #. module: base
-#: view:ir.ui.menu:0
+#: view:ir.ui.menu:base.edit_menu_access
 msgid "Submenus"
 msgstr "하위 메뉴"
 
@@ -8836,24 +8906,6 @@ msgstr "객체에 대한 성찰 보고서"
 #: model:ir.module.module,shortdesc:base.module_web_analytics
 msgid "Google Analytics"
 msgstr "구글 웹로그 분석"
-
-#. module: base
-#: model:ir.module.module,description:base.module_note
-msgid ""
-"\n"
-"This module allows users to create their own notes inside OpenERP\n"
-"=================================================================\n"
-"\n"
-"Use notes to write meeting minutes, organize ideas, organize personnal todo\n"
-"lists, etc. Each user manages his own personnal Notes. Notes are available "
-"to\n"
-"their authors only, but they can share notes to others users so that "
-"several\n"
-"people can work on the same note in real time. It's very efficient to share\n"
-"meeting minutes.\n"
-"\n"
-"Notes can be found in the 'Home' menu.\n"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -8924,7 +8976,9 @@ msgstr "경고 메시지 및 경보"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
-#: view:ir.ui.view.custom:0
+#: view:ir.ui.view.custom:base.view_view_custom_form
+#: view:ir.ui.view.custom:base.view_view_custom_search
+#: view:ir.ui.view.custom:base.view_view_custom_tree
 msgid "Customized Views"
 msgstr "사용자 지정 화면"
 
@@ -8937,7 +8991,7 @@ msgstr "모듈 가져오기"
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_action
 #: model:ir.ui.menu,name:base.menu_values_form_action
-#: view:ir.values:0
+#: view:ir.values:base.values_view_form_action
 msgid "Action Bindings"
 msgstr "액션 결합"
 
@@ -8987,7 +9041,7 @@ msgid "Update Modules List"
 msgstr "모듈 목록 업데이트"
 
 #. module: base
-#: code:addons/base/module/module.py:359
+#: code:addons/base/module/module.py:378
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
@@ -8999,7 +9053,7 @@ msgid "eInvoicing"
 msgstr "전자 송장 발행"
 
 #. module: base
-#: code:addons/base/res/res_users.py:171
+#: code:addons/base/res/res_users.py:191
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -9011,7 +9065,7 @@ msgstr ""
 "변경하기 전에 모든 양식을 저장하고 닫아야 합니다. (지금 사용자 기본 설정에서 취소를 클릭할 수 있습니다)"
 
 #. module: base
-#: code:addons/orm.py:2818
+#: code:addons/orm.py:2899
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr "\"%s.%s\" 필드의 \"%s\" 값은 선택목록에 존재하지 않습니다"
@@ -9038,7 +9092,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%j - Day of the year [001,366]."
 msgstr "%j - 한 해의 날 [001,366]."
 
@@ -9076,7 +9130,7 @@ msgid "Mexico"
 msgstr "멕시코"
 
 #. module: base
-#: code:addons/orm.py:3903
+#: code:addons/orm.py:3995
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -9089,7 +9143,7 @@ msgstr ""
 "(문서 유형: %s)"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "documentation"
 msgstr "문서화"
 
@@ -9101,7 +9155,7 @@ msgid ""
 msgstr "이 필드는 모델이 일시적인지 아닌지 명시합니다. (예: 레코드가 데이터베이스에서 자동적으로 삭제되는지 안되는지)"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:445
+#: code:addons/base/ir/ir_mail_server.py:457
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "SMTP 서버가 없음"
@@ -9128,12 +9182,12 @@ msgid "ir.actions.configuration.wizard"
 msgstr "ir.actions.configuration.wizard"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%b - Abbreviated month name."
 msgstr "%b - 축약된 월 이름."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:729
+#: code:addons/base/ir/ir_model.py:751
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "죄송하지만 이 문서를 삭제하는 것이 허용되지 않습니다."
@@ -9207,7 +9261,7 @@ msgid "American Samoa"
 msgstr "미국령 사모아"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 msgid "My Document(s)"
 msgstr "내 문서"
 
@@ -9222,18 +9276,20 @@ msgid "Selectable"
 msgstr "선택 가능"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:222
+#: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr "모든 것이 올바로 설정된 것 같이 보입니다!"
 
 #. module: base
-#: view:res.request.link:0
+#: view:res.request.link:base.res_request_link-view
+#: view:res.request.link:base.res_request_link_search_view
+#: view:res.request.link:base.res_request_link_tree-view
 msgid "Request Link"
 msgstr "링크 요청"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 #: selection:ir.attachment,type:0
 #: field:ir.module.module,url:0
 msgid "URL"
@@ -9250,8 +9306,8 @@ msgid "Iteration"
 msgstr "반복"
 
 #. module: base
-#: code:addons/orm.py:4246
-#: code:addons/orm.py:4347
+#: code:addons/orm.py:4343
+#: code:addons/orm.py:4445
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -9277,7 +9333,7 @@ msgstr ""
 "필드는 참으로 설정됩니다. 그렇지 않을 경우, 이는 거짓으로 설정됩니다."
 
 #. module: base
-#: code:addons/orm.py:3961
+#: code:addons/orm.py:4053
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -9310,113 +9366,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.values:0
+#: view:ir.values:base.values_view_form_action
 msgid "Action Reference"
 msgstr "액션 참조"
-
-#. module: base
-#: model:ir.module.module,description:base.module_auth_ldap
-msgid ""
-"\n"
-"Adds support for authentication by LDAP server.\n"
-"===============================================\n"
-"This module allows users to login with their LDAP username and password, "
-"and\n"
-"will automatically create OpenERP users for them on the fly.\n"
-"\n"
-"**Note:** This module only work on servers who have Python's ``ldap`` module "
-"installed.\n"
-"\n"
-"Configuration:\n"
-"--------------\n"
-"After installing this module, you need to configure the LDAP parameters in "
-"the\n"
-"Configuration tab of the Company details. Different companies may have "
-"different\n"
-"LDAP servers, as long as they have unique usernames (usernames need to be "
-"unique\n"
-"in OpenERP, even across multiple companies).\n"
-"\n"
-"Anonymous LDAP binding is also supported (for LDAP servers that allow it), "
-"by\n"
-"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
-"This does not allow anonymous authentication for users, it is only for the "
-"master\n"
-"LDAP account that is used to verify if a user exists before attempting to\n"
-"authenticate it.\n"
-"\n"
-"Securing the connection with STARTTLS is available for LDAP servers "
-"supporting\n"
-"it, by enabling the TLS option in the LDAP configuration.\n"
-"\n"
-"For further options configuring the LDAP settings, refer to the ldap.conf\n"
-"manpage: manpage:`ldap.conf(5)`.\n"
-"\n"
-"Security Considerations:\n"
-"------------------------\n"
-"Users' LDAP passwords are never stored in the OpenERP database, the LDAP "
-"server\n"
-"is queried whenever a user needs to be authenticated. No duplication of the\n"
-"password occurs, and passwords are managed in one place only.\n"
-"\n"
-"OpenERP does not manage password changes in the LDAP, so any change of "
-"password\n"
-"should be conducted by other means in the LDAP directory directly (for LDAP "
-"users).\n"
-"\n"
-"It is also possible to have local OpenERP users in the database along with\n"
-"LDAP-authenticated users (the Administrator account is one obvious "
-"example).\n"
-"\n"
-"Here is how it works:\n"
-"---------------------\n"
-"    * The system first attempts to authenticate users against the local "
-"OpenERP\n"
-"      database;\n"
-"    * if this authentication fails (for example because the user has no "
-"local\n"
-"      password), the system then attempts to authenticate against LDAP;\n"
-"\n"
-"As LDAP users have blank passwords by default in the local OpenERP database\n"
-"(which means no access), the first step always fails and the LDAP server is\n"
-"queried to do the authentication.\n"
-"\n"
-"Enabling STARTTLS ensures that the authentication query to the LDAP server "
-"is\n"
-"encrypted.\n"
-"\n"
-"User Template:\n"
-"--------------\n"
-"In the LDAP configuration on the Company form, it is possible to select a "
-"*User\n"
-"Template*. If set, this user will be used as template to create the local "
-"users\n"
-"whenever someone authenticates for the first time via LDAP authentication. "
-"This\n"
-"allows pre-setting the default groups and menus of the first-time users.\n"
-"\n"
-"**Warning:** if you set a password for the user template, this password will "
-"be\n"
-"         assigned as local password for each new LDAP user, effectively "
-"setting\n"
-"         a *master password* for these users (until manually changed). You\n"
-"         usually do not want this. One easy way to setup a template user is "
-"to\n"
-"         login once with a valid LDAP user, let OpenERP create a blank "
-"local\n"
-"         user with the same login (and a blank password), then rename this "
-"new\n"
-"         user to a username that does not exist in LDAP, and setup its "
-"groups\n"
-"         the way you want.\n"
-"\n"
-"Interaction with base_crypt:\n"
-"----------------------------\n"
-"The base_crypt module is not compatible with this module, and will disable "
-"LDAP\n"
-"authentication if installed at the same time.\n"
-"    "
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.re
@@ -9424,7 +9376,7 @@ msgid "Reunion (French)"
 msgstr "리유니온 (프랑스령)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:422
+#: code:addons/base/ir/ir_model.py:443
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -9441,8 +9393,8 @@ msgid "Assets Management"
 msgstr "자산 관리"
 
 #. module: base
-#: view:ir.model.access:0
-#: view:ir.rule:0
+#: view:ir.model.access:base.ir_access_view_search
+#: view:ir.rule:base.view_rule_search
 #: field:ir.rule,global:0
 msgid "Global"
 msgstr "포괄적"
@@ -9463,8 +9415,8 @@ msgid "Solomon Islands"
 msgstr "솔로몬 제도"
 
 #. module: base
-#: code:addons/orm.py:4152
-#: code:addons/orm.py:4685
+#: code:addons/orm.py:4248
+#: code:addons/orm.py:4789
 #, python-format
 msgid "AccessError"
 msgstr "AccessError"
@@ -9516,23 +9468,28 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 msgid "Filters shared with all users"
 msgstr "모든 사용자와 공유하는 필터"
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_form
+#: view:ir.translation:base.view_translation_search
+#: view:ir.translation:base.view_translation_tree
 #: model:ir.ui.menu,name:base.menu_translation
 msgid "Translations"
 msgstr "번역"
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_search_view
+#: view:ir.actions.report.xml:base.act_report_xml_view
+#: model:ir.module.module,shortdesc:base.module_report
+#: model:ir.module.module,summary:base.module_report
 msgid "Report"
 msgstr "보고서"
 
@@ -9542,7 +9499,7 @@ msgid "Prof."
 msgstr "교수"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:241
+#: code:addons/base/ir/ir_mail_server.py:243
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -9558,7 +9515,8 @@ msgid "Ukraine"
 msgstr "우크라이나"
 
 #. module: base
-#: code:addons/base/res/res_company.py:164
+#: code:addons/base/res/res_company.py:166
+#: model:ir.module.category,name:base.module_category_website
 #: field:ir.module.module,website:0
 #: field:res.company,website:0
 #: field:res.partner,website:0
@@ -9592,7 +9550,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.module.category:0
+#: view:ir.module.category:base.view_module_category_form
+#: view:ir.module.category:base.view_module_category_tree
 msgid "Module Category"
 msgstr "모듈 분류"
 
@@ -9602,7 +9561,7 @@ msgid "United States"
 msgstr "미국"
 
 #. module: base
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_form
 msgid "Architecture"
 msgstr "아키텍처"
 
@@ -9653,7 +9612,7 @@ msgid "Brunei Darussalam"
 msgstr "브루나이"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_search
 #: field:ir.actions.act_window,view_type:0
 #: field:ir.actions.act_window.view,view_mode:0
 #: field:ir.ui.view,type:0
@@ -9692,13 +9651,12 @@ msgstr "촉발 대상 업무 흐름 신호"
 
 #. module: base
 #: selection:base.language.install,state:0
-#: selection:base.module.import,state:0
 #: selection:base.module.update,state:0
 msgid "done"
 msgstr "완료"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
 msgid "General Settings"
 msgstr "일반 설정"
 
@@ -9754,13 +9712,13 @@ msgid "Models"
 msgstr "모델"
 
 #. module: base
-#: code:addons/base/module/module.py:499
+#: code:addons/base/module/module.py:522
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr "'베이스' 모듈은 제거될 수 없습니다"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:262
+#: code:addons/base/ir/ir_cron.py:281
 #, python-format
 msgid "Record cannot be modified right now"
 msgstr "현재 레코드를 수정할 수 없습니다"
@@ -9781,7 +9739,7 @@ msgid "osv_memory.autovacuum"
 msgstr "osv_memory.autovacuum"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:728
+#: code:addons/base/ir/ir_model.py:750
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "죄송하지만 이런 종류의 문서를 생성하는 것이 허용되지 않습니다."
@@ -9791,7 +9749,7 @@ msgstr "죄송하지만 이런 종류의 문서를 생성하는 것이 허용되
 #: field:base.language.install,lang:0
 #: field:base.update.translations,lang:0
 #: field:ir.translation,lang:0
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_search
 #: field:res.partner,lang:0
 msgid "Language"
 msgstr "언어"
@@ -9807,8 +9765,8 @@ msgstr "감비아"
 #: model:ir.model,name:base.model_res_company
 #: model:ir.ui.menu,name:base.menu_action_res_company_form
 #: model:ir.ui.menu,name:base.menu_res_company_global
-#: view:res.company:0
-#: view:res.partner:0
+#: view:res.company:base.view_company_tree
+#: view:res.partner:base.view_res_partner_filter
 #: field:res.users,company_ids:0
 msgid "Companies"
 msgstr "업체"
@@ -9819,7 +9777,7 @@ msgid "Currency sign, to be used when printing amounts."
 msgstr "통화 표기, 금액 인쇄 시 사용됨."
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%H - Hour (24-hour clock) [00,23]."
 msgstr "%H - 시간 (24시간 시계) [00,23]."
 
@@ -9829,20 +9787,24 @@ msgid "On Delete"
 msgstr "삭제 시"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:347
+#: code:addons/base/ir/ir_model.py:364
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "%s 모델이 존재하지 않습니다!"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_mrp_jit
+#: model:ir.module.module,shortdesc:base.module_procurement_jit
 msgid "Just In Time Scheduling"
 msgstr "무재고 생산 일정 관리"
 
 #. module: base
-#: view:ir.actions.server:0
+#: model:ir.module.module,shortdesc:base.module_saas_worker
+msgid "SAAS Worker"
+msgstr ""
+
+#. module: base
+#: view:ir.actions.server:base.view_server_action_form
 #: field:ir.actions.server,code:0
-#: selection:ir.actions.server,state:0
 msgid "Python Code"
 msgstr "파이썬 코드"
 
@@ -9863,23 +9825,22 @@ msgid "United States - Chart of accounts"
 msgstr "미국 - 회계 계통도"
 
 #. module: base
-#: view:base.language.export:0
-#: view:base.language.import:0
-#: view:base.language.install:0
-#: view:base.module.import:0
-#: view:base.module.update:0
-#: view:base.module.upgrade:0
-#: view:base.update.translations:0
-#: view:change.password.wizard:0
-#: view:ir.actions.configuration.wizard:0
-#: view:res.config:0
-#: view:res.users:0
-#: view:wizard.ir.model.menu.create:0
+#: view:base.language.export:base.wizard_lang_export
+#: view:base.language.import:base.view_base_import_language
+#: view:base.language.install:base.view_base_language_install
+#: view:base.module.update:base.view_base_module_update
+#: view:base.module.upgrade:base.view_base_module_upgrade
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
+#: view:base.update.translations:base.wizard_update_translations
+#: view:change.password.wizard:base.change_password_wizard_view
+#: view:res.config:base.res_config_view_base
+#: view:res.users:base.view_users_form_simple_modif
+#: view:wizard.ir.model.menu.create:base.view_model_menu_create
 msgid "Cancel"
 msgstr "취소"
 
 #. module: base
-#: code:addons/orm.py:1507
+#: code:addons/orm.py:1535
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "알 수 없는 '%s' 데이터베이스 식별자"
@@ -9937,13 +9898,14 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:316
+#: code:addons/base/ir/ir_fields.py:326
 #, python-format
 msgid "external id"
 msgstr "외부 id"
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_search
+#: view:ir.model.fields:base.view_model_fields_search
 msgid "Custom"
 msgstr "사용자 지정"
 
@@ -9974,6 +9936,12 @@ msgid "Window Actions"
 msgstr "창 액션"
 
 #. module: base
+#: code:addons/base/res/res_config.py:539
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_portal_project_issue
 msgid ""
 "\n"
@@ -9985,12 +9953,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%I - Hour (12-hour clock) [01,12]."
 msgstr "%I - 시계 (12시간 시계) [01,12]."
 
 #. module: base
-#: view:res.config:0
+#: view:res.config:base.res_config_view_base
 msgid "res_config_contents"
 msgstr "res_config_contents"
 
@@ -10081,7 +10049,7 @@ msgid "Products Expiry Date"
 msgstr "상품 유효기간"
 
 #. module: base
-#: code:addons/base/res/res_config.py:419
+#: code:addons/base/res/res_config.py:418
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr "'계속'을 클릭하여 다음 부가 기능을 구성하세요..."
@@ -10102,7 +10070,7 @@ msgid "Egypt"
 msgstr "이집트"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_form
 msgid "Creation"
 msgstr "생성"
 
@@ -10227,7 +10195,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
 msgid "Fields Description"
 msgstr "필드 설명"
 
@@ -10237,7 +10205,7 @@ msgid "Contracts Management: hr_expense link"
 msgstr "계약 관리: hr_expense link"
 
 #. module: base
-#: code:addons/base/module/module.py:670
+#: code:addons/base/module/module.py:685
 #, python-format
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
@@ -10260,7 +10228,7 @@ msgid "Group By..."
 msgstr "분류 기준..."
 
 #. module: base
-#: view:base.module.update:0
+#: view:base.module.update:base.view_base_module_update
 msgid "Module Update Result"
 msgstr "모듈 업데이트 결과"
 
@@ -10304,18 +10272,20 @@ msgstr ""
 
 #. module: base
 #: selection:ir.module.module,state:0
-#: selection:ir.module.module.dependency,state:0
 msgid "To be installed"
 msgstr "설치 예정"
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_search
+#: view:ir.model.fields:base.view_model_fields_search
+#: model:ir.module.category,name:base.module_category_base
 #: model:ir.module.module,shortdesc:base.module_base
 #: field:res.currency,base:0
 msgid "Base"
 msgstr "베이스"
 
 #. module: base
+#: field:ir.actions.server,model_name:0
 #: field:ir.model.data,model:0
 #: field:ir.values,model:0
 msgid "Model Name"
@@ -10358,9 +10328,9 @@ msgstr ""
 "\n"
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_form
 #: model:ir.module.module,shortdesc:base.module_note
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 #: field:res.partner,comment:0
 msgid "Notes"
 msgstr "메모"
@@ -10380,8 +10350,7 @@ msgid "Value"
 msgstr "값"
 
 #. module: base
-#: view:base.language.import:0
-#: field:ir.sequence,code:0
+#: view:base.language.import:base.view_base_import_language
 #: field:ir.sequence.type,code:0
 #: selection:ir.translation,type:0
 #: field:res.partner.bank.type,code:0
@@ -10404,7 +10373,7 @@ msgid "Minutes"
 msgstr "분"
 
 #. module: base
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_form
 msgid "Display"
 msgstr "표시"
 
@@ -10441,14 +10410,14 @@ msgid "Spanish (CO) / Español (CO)"
 msgstr "스페인어 (CO) / Español (CO)"
 
 #. module: base
-#: view:base.module.configuration:0
+#: view:base.module.configuration:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
 "individual wizards via the list of configuration wizards."
 msgstr "보류 중인 모든 구성 마법사가 실행되었습니다. 구성 마법사 목록을 통해 각각의 마법사를 재시작해도 됩니다."
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Current Year with Century: %(year)s"
 msgstr "4자리수 연도: %(year)s"
 
@@ -10463,7 +10432,7 @@ msgid "France"
 msgstr "프랑스"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_search
 #: field:workflow.activity,flow_stop:0
 msgid "Flow Stop"
 msgstr "흐름 중단"
@@ -10484,7 +10453,7 @@ msgid "Marketing Campaign - Demo"
 msgstr "마케팅 캠페인 - 시연"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:360
+#: code:addons/base/ir/ir_fields.py:370
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
@@ -10506,13 +10475,13 @@ msgid "Kind"
 msgstr "종류"
 
 #. module: base
-#: code:addons/orm.py:4647
+#: code:addons/orm.py:4751
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "해당 방식은 더 이상 존재하지 않습니다"
 
 #. module: base
-#: view:base.update.translations:0
+#: view:base.update.translations:base.wizard_update_translations
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 msgid "Synchronize Terms"
@@ -10582,12 +10551,12 @@ msgid "Medium-sized image"
 msgstr "중간 크기 이미지"
 
 #. module: base
-#: view:ir.model:0
+#: view:ir.model:base.view_model_search
 msgid "In Memory"
 msgstr "메모리 내에 존재함"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr "과제"
 
@@ -10619,7 +10588,8 @@ msgstr "파일 컨텐트"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
-#: view:ir.model.relation:0
+#: view:ir.model.relation:base.view_model_relation_form
+#: view:ir.model.relation:base.view_model_relation_list
 #: model:ir.ui.menu,name:base.ir_model_relation_menu
 msgid "ManyToMany Relations"
 msgstr "다 대 다 관계"
@@ -10636,10 +10606,9 @@ msgid ""
 msgstr "해당 전환을 검증하기 위해 승인되어야 할 사용자가 보유해야 할 그룹"
 
 #. module: base
-#: view:res.bank:0
-#: view:res.company:0
-#: view:res.partner:0
-#: view:res.users:0
+#: view:res.bank:base.view_res_bank_form
+#: view:res.company:base.view_company_form
+#: view:res.partner:base.view_partner_form
 msgid "Street..."
 msgstr ""
 
@@ -10669,26 +10638,29 @@ msgid "Tags"
 msgstr "태그"
 
 #. module: base
-#: view:base.module.upgrade:0
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
 msgstr "신규 메뉴를 볼 수 있도록 메뉴를 다시 불러올 것을 제안합니다. (Ctrl+T 그 다음 Ctrl+R)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 #: model:ir.ui.menu,name:base.menu_action_rule
 msgid "Record Rules"
 msgstr "기록 규칙"
 
 #. module: base
-#: view:multi_company.default:0
+#: view:multi_company.default:base.view_inventory_form
+#: view:multi_company.default:base.view_inventory_search
+#: view:multi_company.default:base.view_inventory_tree
 msgid "Multi Company"
 msgstr "다중업체"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_portal
 #: model:ir.module.module,shortdesc:base.module_portal
+#: model:res.groups,name:base.group_portal
 msgid "Portal"
 msgstr "포털"
 
@@ -10698,7 +10670,7 @@ msgid "To Translate"
 msgstr "번역 대상"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:294
+#: code:addons/base/ir/ir_fields.py:304
 #, python-format
 msgid "See all possible values"
 msgstr "모든 가능 값 보기"
@@ -10714,8 +10686,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.model:0
-#: view:workflow.activity:0
+#: view:ir.model:base.view_model_form
+#: view:workflow.activity:base.view_workflow_activity_form
 msgid "Properties"
 msgstr "속성"
 
@@ -10732,12 +10704,12 @@ msgid "PostgreSQL constraint or foreign key name."
 msgstr "PostgreSQL 제약 또는 외래 키명."
 
 #. module: base
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 msgid "Click to set your company logo."
 msgstr "귀하의 업체 로고를 설정하기 위해 클릭하세요."
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%A - Full weekday name."
 msgstr "%A - 전체 요일 이름."
 
@@ -10791,8 +10763,9 @@ msgstr "언어의 코드는 유일해야 합니다 !"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
-#: view:ir.actions.report.xml:0
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_form
+#: view:ir.attachment:base.view_attachment_search
+#: view:ir.attachment:base.view_attachment_tree
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "첨부 파일"
@@ -10840,26 +10813,25 @@ msgid "Miss"
 msgstr "미스"
 
 #. module: base
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,perm_write:0
 msgid "Write Access"
 msgstr "쓰기 접근"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%m - Month number [01,12]."
 msgstr "%m - 월 번호 [01,12]."
 
 #. module: base
-#: view:res.bank:0
+#: view:res.bank:base.view_res_bank_form
 #: field:res.bank,city:0
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 #: field:res.company,city:0
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 #: field:res.partner,city:0
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank,city:0
-#: view:res.users:0
 msgid "City"
 msgstr "시구군"
 
@@ -10879,7 +10851,7 @@ msgid "See Own Leads"
 msgstr "내 리드 보기"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_search
 #: selection:ir.actions.todo,state:0
 msgid "To Do"
 msgstr "할 일"
@@ -10907,7 +10879,7 @@ msgid "GPL-3 or later version"
 msgstr "GPL-3 또는 이후 버전"
 
 #. module: base
-#: code:addons/orm.py:2033
+#: code:addons/orm.py:2061
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -10933,11 +10905,10 @@ msgstr ""
 "시스템 내에서 가용을 원하는 협력업체의 소유권을 관리합니다. 협력업체의 소유권은 업체의 법적 지위입니다: 개인, 유한, 주식회사 등"
 
 #. module: base
-#: view:res.bank:0
-#: view:res.company:0
-#: view:res.partner:0
-#: view:res.partner.bank:0
-#: view:res.users:0
+#: view:res.bank:base.view_res_bank_form
+#: view:res.company:base.view_company_form
+#: view:res.partner:base.view_partner_form
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "Address"
 msgstr "주소"
 
@@ -10997,38 +10968,43 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:735
+#: code:addons/base/ir/ir_model.py:757
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
 msgstr "이것이 오류라고 생각되는 경우, 시스템 관리자에게 연락하세요."
 
 #. module: base
-#: code:addons/base/module/module.py:545
-#: view:base.module.upgrade:0
+#: code:addons/base/module/module.py:568
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
 msgid "Apply Schedule Upgrade"
 msgstr "예정된 업그레이드 적용"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
+#: view:workflow.activity:base.view_workflow_activity_tree
 #: field:workflow.workitem,act_id:0
 msgid "Activity"
 msgstr "활동"
 
 #. module: base
-#: view:change.password.user:0
+#: view:change.password.user:base.change_password_wizard_user_tree_view
 #: field:change.password.wizard,user_ids:0
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.default,uid:0
 #: model:ir.model,name:base.model_res_users
 #: model:ir.ui.menu,name:base.menu_action_res_users
 #: model:ir.ui.menu,name:base.menu_users
-#: view:res.groups:0
+#: view:res.groups:base.view_groups_form
 #: field:res.groups,users:0
 #: field:res.partner,user_ids:0
-#: view:res.users:0
+#: view:res.users:base.view_users_form
+#: view:res.users:base.view_users_form_simple_modif
+#: view:res.users:base.view_users_search
+#: view:res.users:base.view_users_simple_form
+#: view:res.users:base.view_users_tree
 msgid "Users"
 msgstr "사용자"
 
@@ -11043,7 +11019,7 @@ msgid "OpenID Authentification"
 msgstr "OpenID 인증"
 
 #. module: base
-#: code:addons/orm.py:3872
+#: code:addons/orm.py:3964
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -11061,7 +11037,7 @@ msgid "Spanish (CR) / Español (CR)"
 msgstr "스페인어 (CR) / Español (CR)"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid ""
 "Global rules (non group-specific) are restrictions, and cannot be bypassed. "
 "Group-local rules grant additional permissions, but are constrained within "
@@ -11082,7 +11058,7 @@ msgid "Congo"
 msgstr "콩고"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "Examples"
 msgstr "예"
 
@@ -11118,7 +11094,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "세인트 키츠 네비스 앙귈라"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:194
+#: code:addons/base/res/res_currency.py:229
 #, python-format
 msgid ""
 "No rate found \n"
@@ -11174,14 +11150,13 @@ msgid ""
 msgstr "객체를 생성 / 쓰기하려는 객체. 비어있을 경우, 객체 필드를 참조하세요."
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 #: selection:ir.module.module,state:0
-#: selection:ir.module.module.dependency,state:0
 msgid "Not Installed"
 msgstr "설치되지 않음"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 #: field:workflow.activity,out_transitions:0
 msgid "Outgoing Transitions"
 msgstr "출고 전환"
@@ -11226,17 +11201,17 @@ msgid "Check if the contact is a company, otherwise it is a person"
 msgstr "연락처가 업체일 경우 체크하고, 그렇지 않을 경우 인물임"
 
 #. module: base
-#: view:ir.sequence.type:0
+#: view:ir.sequence.type:base.view_sequence_type_search
 msgid "Sequences Type"
 msgstr "순서 유형"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Mobile:"
 msgstr "휴대전화:"
 
 #. module: base
-#: code:addons/base/res/res_bank.py:195
+#: code:addons/base/res/res_bank.py:188
 #, python-format
 msgid "Formating Error"
 msgstr "형식 오류"
@@ -11285,9 +11260,9 @@ msgid "Samoa"
 msgstr "사모아"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:509
-#: code:addons/base/ir/ir_model.py:570
-#: code:addons/base/ir/ir_model.py:1031
+#: code:addons/base/ir/ir_model.py:531
+#: code:addons/base/ir/ir_model.py:592
+#: code:addons/base/ir/ir_model.py:1096
 #, python-format
 msgid "Permission Denied"
 msgstr "승인이 거부됨"
@@ -11305,17 +11280,21 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "서버 액션에서 '기록 ID' 구성에 문제"
 
 #. module: base
-#: code:addons/orm.py:2807
-#: code:addons/orm.py:2817
+#: code:addons/orm.py:2888
+#: code:addons/orm.py:2898
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
 
 #. module: base
-#: view:base.module.import:0
-#: view:base.module.update:0
+#: view:base.module.update:base.view_base_module_update
 msgid "Open Modules"
 msgstr "모듈 열기"
+
+#. module: base
+#: view:base.module.upgrade:base.view_base_module_upgrade
+msgid "Confirm"
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -11340,8 +11319,7 @@ msgid "Laos"
 msgstr "라오스"
 
 #. module: base
-#: code:addons/base/res/res_company.py:163
-#: selection:ir.actions.server,state:0
+#: code:addons/base/res/res_company.py:165
 #: model:ir.ui.menu,name:base.menu_email
 #: field:res.bank,email:0
 #: field:res.company,email:0
@@ -11361,7 +11339,7 @@ msgid "Resource Model"
 msgstr "리소스 모델"
 
 #. module: base
-#: code:addons/custom.py:555
+#: code:addons/custom.py:554
 #, python-format
 msgid ""
 "The sum of the data (2nd field) is null.\n"
@@ -11369,7 +11347,7 @@ msgid ""
 msgstr "데이터 합계 (두번 째 필드)에 값이 없습니다."
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "Information About the Bank"
 msgstr "은행에 대한 정보"
 
@@ -11391,7 +11369,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
 msgstr "2. 그룹 특정 규칙은 논리적 OR 작업자와 결합됩니다"
@@ -11417,7 +11395,7 @@ msgid "workflow"
 msgstr "업무 흐름"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_search
 msgid "Read Access Right"
 msgstr "접근 권한 읽기"
 
@@ -11427,12 +11405,12 @@ msgid "Jobs on Contracts"
 msgstr "계약 상의 업무"
 
 #. module: base
-#: view:ir.model.data:0
+#: view:ir.model.data:base.view_model_data_search
 msgid "Updatable"
 msgstr "업데이트 가능"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "3.  %x ,%X         ==> 12/05/08, 18:25:20"
 msgstr "3.  %x ,%X         ==> 12/05/08, 18:25:20"
 
@@ -11494,7 +11472,7 @@ msgid "Domain"
 msgstr "도메인"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:166
+#: code:addons/base/ir/ir_fields.py:175
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr "'네'일 경우 '1'을, '아니오'일 경우 '0'을 사용"
@@ -11515,13 +11493,13 @@ msgid "Binary File or URL"
 msgstr "이진 파일 또는 URL"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:313
+#: code:addons/base/ir/ir_fields.py:323
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr "'%%(field)s' 필드에 유효하지 않은 '%s' 데이터베이스 id"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_tree
 msgid "Update Languague Terms"
 msgstr "언어 용어 업데이트"
 
@@ -11536,17 +11514,26 @@ msgid "Timezone"
 msgstr "시간대"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_report_xml
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
+#: view:ir.sequence:base.sequence_view_tree
+#: view:ir.sequence:base.view_sequence_search
 #: model:ir.ui.menu,name:base.menu_ir_sequence_form
 msgid "Sequences"
 msgstr "순서"
+
+#. module: base
+#: code:addons/base/res/res_config.py:471
+#, python-format
+msgid ""
+"Disabling this option will also uninstall the following modules \n"
+"%s"
+msgstr ""
 
 #. module: base
 #: help:res.lang,code:0
@@ -11559,19 +11546,19 @@ msgid "Svalbard and Jan Mayen Islands"
 msgstr "스발바르드 얀마이엔 제도"
 
 #. module: base
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 msgid "Shared"
 msgstr "공유됨"
 
 #. module: base
-#: code:addons/base/module/module.py:357
+#: code:addons/base/module/module.py:376
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
 msgstr "외부 의존성이 충족되지 않음으로 \"%s\" 모듈을 설치할 수 없음: %s"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 msgid "Search modules"
 msgstr "모듈 검색"
 
@@ -11622,7 +11609,7 @@ msgid "Module Update"
 msgstr "모듈 업데이트"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:85
+#: code:addons/base/module/wizard/base_module_upgrade.py:99
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr "다음 모듈은 설치되지 않았거나 설치 여부를 알 수 없습니다: %s"
@@ -11637,15 +11624,16 @@ msgstr ""
 
 #. module: base
 #: field:change.password.user,user_id:0
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view_search
 #: field:ir.cron,user_id:0
-#: view:ir.filters:0
+#: view:ir.filters:base.ir_filters_view_search
 #: field:ir.filters,user_id:0
 #: field:ir.ui.view.custom,user_id:0
 #: field:ir.values,user_id:0
 #: model:res.groups,name:base.group_document_user
 #: model:res.groups,name:base.group_tool_user
-#: view:res.users:0
+#: view:res.users:base.view_users_search
+#: field:workflow.instance,uid:0
 msgid "User"
 msgstr "사용자"
 
@@ -11665,7 +11653,7 @@ msgid "Signal (Button Name)"
 msgstr "신호 (버튼명)"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_tree
 msgid "Open Window"
 msgstr "창 열기"
 
@@ -11700,7 +11688,7 @@ msgid "Switzerland"
 msgstr "스위스"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:361
+#: code:addons/base/res/res_partner.py:379
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -11720,7 +11708,7 @@ msgid "Trigger Configuration"
 msgstr "촉발자 구성"
 
 #. module: base
-#: view:base.language.install:0
+#: view:base.language.install:base.view_base_language_install
 msgid "Load"
 msgstr "불러오기"
 
@@ -11743,8 +11731,8 @@ msgid "Related Partner"
 msgstr "관련 협력업체"
 
 #. module: base
-#: code:addons/osv.py:172
 #: code:addons/osv.py:174
+#: code:addons/osv.py:176
 #, python-format
 msgid "Integrity Error"
 msgstr "완전성 오류"
@@ -11774,9 +11762,9 @@ msgid "Manufacturing Operations"
 msgstr "생산 작업"
 
 #. module: base
-#: view:base.language.export:0
-msgid "Here is the exported translation file:"
-msgstr "다음은 내보낸 번역 파일입니다:"
+#: selection:ir.property,type:0
+msgid "Float"
+msgstr "부동 소수"
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -11785,7 +11773,7 @@ msgid "RML Content"
 msgstr "RML 내용"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_tree
 msgid "Update Terms"
 msgstr "용어 업데이트"
 
@@ -11833,12 +11821,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:res.company,paper_format:0
+#: selection:res.company,rml_paper_format:0
 msgid "A4"
 msgstr "A4"
 
 #. module: base
-#: view:res.config.installer:0
+#: view:res.config.installer:base.res_config_installer
 msgid "Configuration Installer"
 msgstr "구성 인스톨러"
 
@@ -11848,8 +11836,8 @@ msgid "Customer"
 msgstr "고객"
 
 #. module: base
-#: view:res.partner:0
-#: view:res.users:0
+#: view:res.partner:base.view_partner_form
+#: view:res.users:base.view_users_simple_form
 msgid "e.g. +32.81.81.37.00"
 msgstr "예: +32.81.81.37.00"
 
@@ -11874,7 +11862,7 @@ msgid "Context Value"
 msgstr "문맥 값"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Hour 00->24: %(h24)s"
 msgstr "시간 00->24: %(h24)s"
 
@@ -11899,7 +11887,7 @@ msgid "Date sent"
 msgstr "전송일"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Month: %(month)s"
 msgstr "월: %(month)s"
 
@@ -11913,16 +11901,17 @@ msgstr "업데이트"
 #: field:ir.actions.act_window.view,sequence:0
 #: field:ir.actions.server,sequence:0
 #: field:ir.actions.todo,sequence:0
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view_tree
 #: field:ir.module.category,sequence:0
 #: field:ir.module.module,sequence:0
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
+#: view:ir.sequence:base.view_sequence_search
 #: field:ir.ui.menu,sequence:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_tree
 #: field:ir.ui.view,priority:0
-#: field:ir.ui.view_sc,sequence:0
 #: field:multi_company.default,sequence:0
 #: field:res.partner.bank,sequence:0
+#: field:workflow.transition,sequence:0
 msgid "Sequence"
 msgstr "순서"
 
@@ -11950,7 +11939,7 @@ msgid "Comoros"
 msgstr "코모로"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.module_form
 msgid "Cancel Install"
 msgstr "설치 취소"
 
@@ -12002,7 +11991,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "Legends for Date and Time Formats"
 msgstr "날짜와 시간 형식의 범례"
 
@@ -12023,8 +12012,8 @@ msgid "Fed. States"
 msgstr "주"
 
 #. module: base
-#: view:ir.model:0
-#: view:res.groups:0
+#: view:ir.model:base.view_model_form
+#: view:res.groups:base.view_groups_form
 msgid "Access Rules"
 msgstr "접근 규칙"
 
@@ -12074,25 +12063,22 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:474
+#: code:addons/base/ir/ir_mail_server.py:476
 #, python-format
 msgid "Mail delivery failed"
 msgstr "메일 전송을 실패함"
 
 #. module: base
-#: view:ir.actions.act_window:0
-#: field:ir.actions.report.xml,model:0
-#: field:ir.actions.server,model_id:0
-#: field:ir.actions.wizard,model:0
+#: view:ir.actions.act_window:base.view_window_action_form
 #: field:ir.cron,model:0
 #: field:ir.default,field_tbl:0
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_search
 #: field:ir.model.access,model_id:0
-#: view:ir.model.data:0
-#: view:ir.model.fields:0
+#: view:ir.model.data:base.view_model_data_search
+#: view:ir.model.fields:base.view_model_fields_search
 #: field:ir.rule,model_id:0
 #: selection:ir.translation,type:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 #: field:ir.ui.view,model:0
 #: field:multi_company.default,object_id:0
 #: field:res.request.link,object:0
@@ -12101,7 +12087,7 @@ msgid "Object"
 msgstr "객체"
 
 #. module: base
-#: code:addons/osv.py:169
+#: code:addons/osv.py:171
 #, python-format
 msgid ""
 "\n"
@@ -12123,7 +12109,7 @@ msgid "ir.default"
 msgstr "ir.default"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Minute: %(min)s"
 msgstr "분: %(min)s"
 
@@ -12180,6 +12166,67 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_report_webkit
+msgid ""
+"\n"
+"This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
+"to support reports designed in HTML + CSS.\n"
+"============================================================================="
+"========================================\n"
+"\n"
+"The module structure and some code is inspired by the report_openoffice "
+"module.\n"
+"\n"
+"The module allows:\n"
+"------------------\n"
+"    - HTML report definition\n"
+"    - Multi header support\n"
+"    - Multi logo\n"
+"    - Multi company support\n"
+"    - HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
+"    - JavaScript support\n"
+"    - Raw HTML debugger\n"
+"    - Book printing capabilities\n"
+"    - Margins definition\n"
+"    - Paper size definition\n"
+"\n"
+"Multiple headers and logos can be defined per company. CSS style, header "
+"and\n"
+"footer body are defined per company.\n"
+"\n"
+"For a sample report see also the webkit_report_sample module, and this "
+"video:\n"
+"    http://files.me.com/nbessi/06n92k.mov\n"
+"\n"
+"Requirements and Installation:\n"
+"------------------------------\n"
+"This module requires the ``wkthtmltopdf`` library to render HTML documents "
+"as\n"
+"PDF. Version 0.9.9 or later is necessary, and can be found at\n"
+"http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows "
+"(32bits).\n"
+"\n"
+"After installing the library on the OpenERP Server machine, you may need to "
+"set\n"
+"the path to the ``wkthtmltopdf`` executable file in a system parameter "
+"named\n"
+"``webkit_path`` in Settings -> Customization -> Parameters -> System "
+"Parameters\n"
+"\n"
+"If you are experiencing missing header/footer problems on Linux, be sure to\n"
+"install a 'static' version of the library. The default ``wkhtmltopdf`` on\n"
+"Ubuntu is known to have this issue.\n"
+"\n"
+"\n"
+"TODO:\n"
+"-----\n"
+"    * JavaScript support activation deactivation\n"
+"    * Collated and book format support\n"
+"    * Zip return for separated PDF\n"
+"    * Web client WYSIWYG\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
 msgstr "영국 - 회계"
@@ -12190,7 +12237,7 @@ msgid "Mrs."
 msgstr "Mrs."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/ir/ir_model.py:453
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -12203,7 +12250,7 @@ msgid "User Ref."
 msgstr "사용자 참조"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:226
+#: code:addons/base/ir/ir_fields.py:235
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr ""
@@ -12224,7 +12271,7 @@ msgid "Retailer"
 msgstr "소매업체"
 
 #. module: base
-#: view:ir.model.fields:0
+#: view:ir.model.fields:base.view_model_fields_search
 #: field:ir.model.fields,readonly:0
 #: field:res.partner.bank.type.field,readonly:0
 msgid "Readonly"
@@ -12255,7 +12302,7 @@ msgid "Partner"
 msgstr "협력업체"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:482
+#: code:addons/base/ir/ir_mail_server.py:491
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -12263,7 +12310,7 @@ msgid ""
 msgstr "서버가 SSL을 지원하지 않는 것으로 보입니다. STARTTLS를 대신 시도해 보세요."
 
 #. module: base
-#: code:addons/base/ir/workflow/workflow.py:100
+#: code:addons/base/workflow/workflow.py:102
 #, python-format
 msgid ""
 "Please make sure no workitems refer to an activity before deleting it!"
@@ -12280,7 +12327,7 @@ msgid "Falkland Islands"
 msgstr "포클랜드 제도"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:606
+#: code:addons/base/ir/ir_actions.py:840
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr ""
@@ -12291,19 +12338,19 @@ msgid "Lebanon"
 msgstr "레바논"
 
 #. module: base
-#: view:ir.actions.report.xml:0
+#: view:ir.actions.report.xml:base.act_report_xml_search_view
 #: field:ir.actions.report.xml,report_type:0
 msgid "Report Type"
 msgstr "보고서 유형"
 
 #. module: base
-#: view:res.bank:0
-#: view:res.company:0
-#: view:res.country.state:0
-#: view:res.partner:0
+#: view:res.bank:base.view_res_bank_form
+#: view:res.company:base.view_company_form
+#: view:res.country.state:base.view_country_state_form
+#: view:res.country.state:base.view_country_state_tree
+#: view:res.partner:base.view_partner_form
 #: field:res.partner,state_id:0
-#: view:res.partner.bank:0
-#: view:res.users:0
+#: view:res.partner.bank:base.view_partner_bank_form
 msgid "State"
 msgstr "주"
 
@@ -12318,7 +12365,7 @@ msgid "Norway"
 msgstr "노르웨이"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "4.  %b, %B         ==> Dec, December"
 msgstr "4.  %b, %B         ==> 12월, 12월"
 
@@ -12348,7 +12395,7 @@ msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: view:ir.mail_server:0
+#: view:ir.mail_server:base.ir_mail_server_form
 msgid "Connection Information"
 msgstr "연결 정보"
 
@@ -12390,14 +12437,15 @@ msgid "Inherits"
 msgstr "전승자"
 
 #. module: base
+#: selection:ir.property,type:0
 #: selection:ir.translation,type:0
 msgid "Selection"
 msgstr "선택"
 
 #. module: base
-#: view:change.password.wizard:0
+#: view:change.password.wizard:base.change_password_wizard_view
 #: model:ir.actions.act_window,name:base.change_password_wizard_action
-#: view:res.users:0
+#: view:res.users:base.view_users_form
 msgid "Change Password"
 msgstr "암호 변경"
 
@@ -12408,15 +12456,13 @@ msgstr "암호 변경"
 #: field:ir.actions.actions,type:0
 #: field:ir.actions.client,type:0
 #: field:ir.actions.report.xml,type:0
-#: view:ir.actions.server:0
-#: field:ir.actions.server,state:0
+#: view:ir.actions.server:base.view_server_action_search
 #: field:ir.actions.server,type:0
-#: field:ir.actions.wizard,type:0
 msgid "Action Type"
 msgstr "액션 유형"
 
 #. module: base
-#: code:addons/base/module/module.py:372
+#: code:addons/base/module/module.py:396
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -12426,20 +12472,20 @@ msgstr ""
 "그러나 후자 모듈은 시스템에 사용할 수 없습니다."
 
 #. module: base
-#: view:base.language.import:0
+#: view:base.language.import:base.view_base_import_language
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 msgid "Import Translation"
 msgstr "번역 불러오기"
 
 #. module: base
-#: view:ir.module.module:0
+#: view:ir.module.module:base.view_module_filter
 #: field:ir.module.module,category_id:0
 msgid "Category"
 msgstr "분류"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
@@ -12483,7 +12529,7 @@ msgid "Authentication via LDAP"
 msgstr "LDAP를 통한 인증"
 
 #. module: base
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 msgid "Conditions"
 msgstr "조건"
 
@@ -12494,15 +12540,12 @@ msgstr "기타 협력업체"
 
 #. module: base
 #: field:base.language.install,state:0
-#: field:base.module.import,state:0
 #: field:base.module.update,state:0
 #: field:ir.actions.todo,state:0
 #: field:ir.module.module,state:0
-#: field:ir.module.module.dependency,state:0
 #: field:ir.translation,state:0
-#: field:res.request,state:0
 #: field:workflow.instance,state:0
-#: view:workflow.workitem:0
+#: view:workflow.workitem:base.view_workflow_workitem_search
 #: field:workflow.workitem,state:0
 msgid "Status"
 msgstr "상태"
@@ -12510,7 +12553,8 @@ msgstr "상태"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
 #: model:ir.ui.menu,name:base.menu_action_currency_form
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_search
+#: view:res.currency:base.view_currency_tree
 msgid "Currencies"
 msgstr "통화"
 
@@ -12530,11 +12574,6 @@ msgid "Custom Python Parser"
 msgstr "사용자 정의 파이썬 파서"
 
 #. module: base
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "그룹명은 유일해야 합니다 !"
-
-#. module: base
 #: help:ir.translation,module:0
 msgid "Module this term belongs to"
 msgstr "이 용어가 속하는 모듈"
@@ -12550,7 +12589,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Hour 00->12: %(h12)s"
 msgstr "시간 00->12: %(h12)s"
 
@@ -12570,13 +12609,13 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
-#: code:addons/orm.py:479
+#: code:addons/orm.py:497
 #, python-format
 msgid "Unknown attribute %s in %s "
 msgstr "%s 내에 알 수 없는 %s 속성 "
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "10. %S              ==> 20"
 msgstr "10. %S  ==> 20"
 
@@ -12593,7 +12632,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/fields.py:130
+#: code:addons/fields.py:161
 #, python-format
 msgid "undefined get method !"
 msgstr "정의되지 않은 얻기 방식!"
@@ -12602,6 +12641,11 @@ msgstr "정의되지 않은 얻기 방식!"
 #: selection:base.language.install,lang:0
 msgid "Norwegian Bokmål / Norsk bokmål"
 msgstr "노르웨이 부크몰 / Norsk bokmål"
+
+#. module: base
+#: view:base.module.upgrade:base.view_base_module_upgrade
+msgid "This module will trigger the uninstallation of below modules."
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -12635,7 +12679,7 @@ msgid "Payroll Accounting"
 msgstr "급여 회계"
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form_simple_modif
 msgid "Change password"
 msgstr "암호 변경"
 
@@ -12650,7 +12694,7 @@ msgid "Dates on Sales Order"
 msgstr "판매 주문 상의 날짜"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 msgid "Creation Month"
 msgstr "생성월"
 
@@ -12745,7 +12789,7 @@ msgid "Occitan (FR, post 1500) / Occitan"
 msgstr "프로방스어 (프랑스, post 1500) / Occitan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:215
+#: code:addons/base/ir/ir_mail_server.py:217
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -12756,7 +12800,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_data
-#: view:ir.model.data:0
+#: view:ir.model.data:base.view_model_data_form
+#: view:ir.model.data:base.view_model_data_list
+#: view:ir.model.data:base.view_model_data_search
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
 msgstr "외부 식별자"
@@ -12816,7 +12862,7 @@ msgid "Number of Calls"
 msgstr "통화 횟수"
 
 #. module: base
-#: code:addons/base/res/res_bank.py:192
+#: code:addons/base/res/res_bank.py:185
 #, python-format
 msgid "BANK"
 msgstr "은행"
@@ -12863,7 +12909,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:295
+#: code:addons/base/ir/ir_model.py:302
 #, python-format
 msgid "Size of the field can never be less than 0 !"
 msgstr ""
@@ -12881,7 +12927,7 @@ msgid "Greece"
 msgstr "그리스"
 
 #. module: base
-#: view:res.config:0
+#: view:res.config:base.res_config_view_base
 msgid "Apply"
 msgstr "적용"
 
@@ -12956,7 +13002,7 @@ msgid "Update Module"
 msgstr "모듈 업데이트"
 
 #. module: base
-#: view:ir.model.fields:0
+#: view:ir.model.fields:base.view_model_fields_search
 msgid "Translate"
 msgstr "번역"
 
@@ -13010,7 +13056,7 @@ msgid "choose"
 msgstr "선택"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:446
+#: code:addons/base/ir/ir_mail_server.py:458
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -13018,7 +13064,7 @@ msgid ""
 msgstr "최소 한 개의 SMTP 서버를 정의하거나, SMTP 매개 변수를 명확히 제공하세요."
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 msgid "Filter on my documents"
 msgstr "내 문서에 필터 적용"
 
@@ -13051,7 +13097,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Suppliers"
 msgstr "공급업체"
 
@@ -13076,17 +13122,19 @@ msgid "Inventory, Logistic, Storage"
 msgstr "재고, 물류, 저장"
 
 #. module: base
-#: view:ir.actions.act_window:0
+#: view:ir.actions.act_window:base.view_window_action_form
+#: view:ir.actions.server:base.view_server_action_form
 #: selection:ir.translation,type:0
 msgid "Help"
 msgstr "도움말"
 
 #. module: base
-#: view:ir.model:0
-#: view:ir.rule:0
-#: view:res.groups:0
+#: view:ir.model:base.view_model_form
+#: view:ir.rule:base.view_rule_form
+#: view:res.groups:base.view_groups_form
 #: model:res.groups,name:base.group_erp_manager
-#: view:res.users:0
+#: view:res.users:base.view_users_form
+#: view:res.users:base.view_users_simple_form
 msgid "Access Rights"
 msgstr "접근 권한"
 
@@ -13096,13 +13144,13 @@ msgid "Greenland"
 msgstr "그린란드"
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
 msgstr "계정 번호"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
@@ -13116,7 +13164,7 @@ msgid "Thailand - Accounting"
 msgstr "태국 - 회계"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "1.  %c              ==> Fri Dec  5 18:25:20 2008"
 msgstr "1.  %c              ==> Fri Dec  5 18:25:20 2008"
 
@@ -13141,9 +13189,7 @@ msgid "Set Password"
 msgstr "암호 설정"
 
 #. module: base
-#: field:ir.actions.server,subject:0
-#: field:res.request,name:0
-#: view:res.request.link:0
+#: view:res.request.link:base.res_request_link_search_view
 msgid "Subject"
 msgstr "제목"
 
@@ -13179,7 +13225,7 @@ msgid "From"
 msgstr "보낸 사람"
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form
 msgid "Preferences"
 msgstr "기본 설정"
 
@@ -13228,13 +13274,13 @@ msgstr ""
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
-#: view:ir.ui.view:0
+#: view:ir.ui.view:base.view_view_search
 #: selection:ir.ui.view,type:0
 msgid "Kanban"
 msgstr "간판"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:298
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -13247,14 +13293,15 @@ msgid "Company Registry"
 msgstr "업체 레지스트리"
 
 #. module: base
-#: view:ir.actions.report.xml:0
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_form
 msgid "Miscellaneous"
 msgstr "기타"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
-#: view:ir.mail_server:0
+#: view:ir.mail_server:base.ir_mail_server_form
+#: view:ir.mail_server:base.ir_mail_server_list
+#: view:ir.mail_server:base.view_ir_mail_server_search
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
 msgstr "발송 메일 서버"
@@ -13368,14 +13415,15 @@ msgstr "프랑스 남부 영토"
 #: field:res.company,currency_id:0
 #: field:res.company,currency_ids:0
 #: field:res.country,currency_id:0
-#: view:res.currency:0
+#: view:res.currency:base.view_currency_form
+#: view:res.currency:base.view_currency_search
 #: field:res.currency,name:0
 #: field:res.currency.rate,currency_id:0
 msgid "Currency"
 msgstr "통화"
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
 
@@ -13426,7 +13474,7 @@ msgid "Administration"
 msgstr "관리"
 
 #. module: base
-#: view:base.module.update:0
+#: view:base.module.update:base.view_base_module_update
 msgid "Click on Update below to start the process..."
 msgstr "프로세스 시작을 위해 하단의 업데이트를 클릭하세요..."
 
@@ -13443,8 +13491,9 @@ msgstr "슬로바키아어 / Slovenský jazyk"
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
+#: field:ir.ui.view,model_ids:0
 #: field:res.partner,has_image:0
-#: field:res.users,user_email:0
+#: field:workflow.instance,transition_ids:0
 msgid "unknown"
 msgstr "알 수 없음"
 
@@ -13462,12 +13511,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:base.update.translations:0
+#: view:base.update.translations:base.wizard_update_translations
 msgid "Synchronize Translation"
 msgstr "번역 동기화"
 
 #. module: base
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_search
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
 msgstr "은행명"
@@ -13543,7 +13592,6 @@ msgstr "기초 객체"
 #. module: base
 #: field:ir.cron,priority:0
 #: field:ir.mail_server,sequence:0
-#: field:res.request,priority:0
 #: field:res.request.link,priority:0
 msgid "Priority"
 msgstr "우선 순위"
@@ -13637,13 +13685,14 @@ msgid "Resource ID"
 msgstr "리소스 ID"
 
 #. module: base
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view
 #: field:ir.model,info:0
+#: view:ir.module.module:base.module_form
 msgid "Information"
 msgstr "정보"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:146
+#: code:addons/base/ir/ir_fields.py:155
 #, python-format
 msgid "false"
 msgstr "거짓"
@@ -13680,15 +13729,15 @@ msgid "Right parent"
 msgstr "우측 부모"
 
 #. module: base
-#: view:base.module.update:0
+#: view:base.module.update:base.view_base_module_update
 msgid "Update Module List"
 msgstr "모듈 목록 업데이트"
 
 #. module: base
-#: code:addons/base/res/res_users.py:685
-#: code:addons/base/res/res_users.py:825
+#: code:addons/base/res/res_users.py:739
+#: code:addons/base/res/res_users.py:891
 #: selection:res.partner,type:0
-#: view:res.users:0
+#: view:res.users:base.user_groups_view
 #, python-format
 msgid "Other"
 msgstr "기타"
@@ -13747,13 +13796,13 @@ msgid ""
 msgstr "관리자가 번역이 필요할 수 있는 신규 용어를 찾을 수 있도록 자동으로 설정함"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:85
+#: code:addons/base/ir/ir_model.py:84
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr "osv_memory 필드는 = and != 연산자하고만 비교될 수 있습니다."
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Fax:"
 msgstr "팩스:"
 
@@ -13819,13 +13868,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:187
+#: code:addons/base/res/res_lang.py:191
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
 msgstr ""
 
 #. module: base
-#: view:ir.model.data:0
+#: view:ir.model.data:base.view_model_data_search
 #: field:ir.model.data,name:0
 msgid "External Identifier"
 msgstr "외부 식별자"
@@ -13859,15 +13908,59 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_event
-msgid "Events Organisation"
-msgstr "이벤트 계획"
+#: model:ir.module.module,description:base.module_l10n_ca
+msgid ""
+"\n"
+"This is the module to manage the English and French - Canadian accounting "
+"chart in OpenERP.\n"
+"============================================================================="
+"==============\n"
+"\n"
+"Canadian accounting charts and localizations.\n"
+"\n"
+"Fiscal positions\n"
+"----------------\n"
+"\n"
+"When considering taxes to be applied, it is the province where the delivery "
+"occurs that matters. \n"
+"Therefore we decided to implement the most common case in the fiscal "
+"positions: delivery is the \n"
+"responsibility of the supplier and done at the customer location.\n"
+"\n"
+"Some examples:\n"
+"\n"
+"1) You have a customer from another province and you deliver to his "
+"location.\n"
+"On the customer, set the fiscal position to his province.\n"
+"\n"
+"2) You have a customer from another province. However this customer comes to "
+"your location\n"
+"with their truck to pick up products. On the customer, do not set any fiscal "
+"position.\n"
+"\n"
+"3) An international supplier doesn't charge you any tax. Taxes are charged "
+"at customs \n"
+"by the customs broker. On the supplier, set the fiscal position to "
+"International.\n"
+"\n"
+"4) An international supplier charge you your provincial tax. They are "
+"registered with your\n"
+"provincial government and remit taxes themselves. On the supplier, do not "
+"set any fiscal \n"
+"position.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Macedonian / македонски јазик"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
 #: model:ir.ui.menu,name:base.menu_ir_sequence_actions
 #: model:ir.ui.menu,name:base.next_id_6
-#: view:workflow.activity:0
+#: view:workflow.activity:base.view_workflow_activity_form
 msgid "Actions"
 msgstr "액션"
 
@@ -13877,7 +13970,7 @@ msgid "Delivery Costs"
 msgstr "배송비용"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:263
+#: code:addons/base/ir/ir_cron.py:282
 #, python-format
 msgid ""
 "This cron task is currently being executed and may not be modified, please "
@@ -13885,7 +13978,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 #: field:ir.exports.line,export_id:0
 msgid "Export"
 msgstr "내보내기"
@@ -13902,7 +13995,7 @@ msgid "Bank Identifier Code"
 msgstr "은행 식별자 코드"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid ""
 "CSV format: you may edit it directly with your favorite spreadsheet "
 "software,\n"
@@ -13921,7 +14014,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
+#: view:ir.rule:base.view_rule_tree
 msgid "Record rules"
 msgstr "레코드 규칙"
 
@@ -13936,9 +14030,8 @@ msgid "Issue Tracker"
 msgstr ""
 
 #. module: base
-#: view:base.module.update:0
-#: view:base.module.upgrade:0
-#: view:base.update.translations:0
+#: view:base.module.update:base.view_base_module_update
+#: view:base.update.translations:base.wizard_update_translations
 msgid "Update"
 msgstr "업데이트"
 
@@ -14018,12 +14111,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Supplier Partners"
 msgstr "공급업체 협력업체"
 
 #. module: base
-#: view:res.config.installer:0
+#: view:res.config.installer:base.res_config_installer
 msgid "Install Modules"
 msgstr "모듈 설치"
 
@@ -14033,7 +14126,7 @@ msgid "Import & Synchronize"
 msgstr "가져오기 & 동기화"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_res_partner_filter
 msgid "Customer Partners"
 msgstr "고객 협력업체"
 
@@ -14048,7 +14141,7 @@ msgid "Default multi company"
 msgstr "기본 다중 업체"
 
 #. module: base
-#: field:ir.translation,src:0
+#: field:ir.translation,source:0
 msgid "Source"
 msgstr "소스"
 
@@ -14106,7 +14199,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:base.module.upgrade:0
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
 msgid "Start configuration"
 msgstr "구성 시작"
 
@@ -14126,7 +14219,7 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "세르비아어 (키릴 문자) / српски"
 
 #. module: base
-#: code:addons/orm.py:2650
+#: code:addons/orm.py:2712
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -14178,7 +14271,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.actions.server,trigger_obj_id:0
+#: field:ir.actions.server,wkf_field_id:0
 #: field:ir.model.fields,relation_field:0
 msgid "Relation Field"
 msgstr "관계 필드"
@@ -14273,12 +14366,12 @@ msgid "Luxembourg"
 msgstr "룩셈부르크"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "(edit company address)"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_base_calendar
+#: model:ir.module.module,summary:base.module_calendar
 msgid "Personal & Shared Calendar"
 msgstr "개인 & 공유 달력"
 
@@ -14288,18 +14381,18 @@ msgid "Low"
 msgstr "낮음"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:379
+#: code:addons/base/ir/ir_ui_menu.py:458
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "오류 ! 재귀적 메뉴를 생성할 수 없습니다."
 
 #. module: base
-#: view:ir.translation:0
+#: view:ir.translation:base.view_translation_search
 msgid "Web-only translations"
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
@@ -14368,7 +14461,7 @@ msgid "El Salvador"
 msgstr "엘살바도르"
 
 #. module: base
-#: code:addons/base/res/res_company.py:161
+#: code:addons/base/res/res_company.py:163
 #: field:res.bank,phone:0
 #: field:res.company,phone:0
 #: field:res.partner,phone:0
@@ -14472,7 +14565,7 @@ msgid "eInvoicing & Payments"
 msgstr "전자 송상 발행 & 지불"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid "General"
 msgstr "일반"
 
@@ -14482,7 +14575,6 @@ msgid "Uzbekistan"
 msgstr "우즈베키스탄"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_act_window
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
@@ -14510,7 +14602,6 @@ msgid "OpenERP Apps Unreachable"
 msgstr "OpenERP Apps에 도달할 수 없음"
 
 #. module: base
-#: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to Update"
 msgstr "업데이트 대상 모듈"
@@ -14521,8 +14612,14 @@ msgid "Multi-Companies"
 msgstr "다중업체"
 
 #. module: base
+#: code:addons/orm.py:1395
+#, python-format
+msgid "Resolve other errors first"
+msgstr ""
+
+#. module: base
 #: field:workflow,osv:0
-#: view:workflow.instance:0
+#: view:workflow.instance:base.view_workflow_instance_search
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
 msgstr "리소스 객체"
@@ -14582,7 +14679,7 @@ msgid "Child Field"
 msgstr "자식 필드"
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid "Detailed algorithm:"
 msgstr "상세 알고리즘:"
 
@@ -14594,7 +14691,6 @@ msgstr "상세 알고리즘:"
 #: field:ir.actions.client,usage:0
 #: field:ir.actions.report.xml,usage:0
 #: field:ir.actions.server,usage:0
-#: field:ir.actions.wizard,usage:0
 msgid "Action Usage"
 msgstr "액션 용도"
 
@@ -14636,7 +14732,7 @@ msgid "View Auto-Load"
 msgstr "화면 자동으로 불러오기"
 
 #. module: base
-#: view:res.country:0
+#: view:res.country:base.view_country_form
 msgid "Address format..."
 msgstr ""
 
@@ -14656,7 +14752,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.users:0
+#: view:res.users:base.view_users_form
 msgid "Allowed Companies"
 msgstr "허용된 업체"
 
@@ -14666,7 +14762,7 @@ msgid "Deutschland - Accounting"
 msgstr "독일 - 회계"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Day of the Year: %(doy)s"
 msgstr ""
 
@@ -14698,7 +14794,7 @@ msgid "Persian / فارس"
 msgstr "페르시아어 / فارس"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid "Export Settings"
 msgstr "내보내기 설정"
 
@@ -14708,14 +14804,14 @@ msgid "Source Model"
 msgstr "소스 모델"
 
 #. module: base
-#: view:ir.sequence:0
+#: view:ir.sequence:base.sequence_view
 msgid "Day of the Week (0:Monday): %(weekday)s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:509
-#: code:addons/base/ir/ir_model.py:570
-#: code:addons/base/ir/ir_model.py:1031
+#: code:addons/base/ir/ir_model.py:531
+#: code:addons/base/ir/ir_model.py:592
+#: code:addons/base/ir/ir_model.py:1096
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "모듈을 제거하려면 관리자 접근이 필요합니다"
@@ -14755,8 +14851,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3568
-#: code:addons/orm.py:3861
+#: code:addons/orm.py:3657
+#: code:addons/orm.py:3953
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -14782,8 +14878,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:5322
-#: code:addons/orm.py:5337
+#: code:addons/orm.py:5440
+#: code:addons/orm.py:5455
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -14823,12 +14919,12 @@ msgstr ""
 
 #. module: base
 #: field:ir.model,access_ids:0
-#: view:ir.model.access:0
+#: view:ir.model.access:base.ir_access_view_form
 msgid "Access"
 msgstr "접근"
 
 #. module: base
-#: code:addons/base/res/res_company.py:165
+#: code:addons/base/res/res_company.py:167
 #: field:res.partner,vat:0
 #, python-format
 msgid "TIN"
@@ -14861,7 +14957,7 @@ msgid "Bahrain"
 msgstr "바레인"
 
 #. module: base
-#: code:addons/base/res/res_company.py:162
+#: code:addons/base/res/res_company.py:164
 #: field:res.bank,fax:0
 #: field:res.company,fax:0
 #: field:res.partner,fax:0
@@ -14870,18 +14966,20 @@ msgid "Fax"
 msgstr "팩스"
 
 #. module: base
-#: view:ir.attachment:0
+#: view:ir.attachment:base.view_attachment_search
 #: field:ir.attachment,company_id:0
 #: field:ir.default,company_id:0
 #: field:ir.property,company_id:0
 #: field:ir.sequence,company_id:0
 #: field:ir.values,company_id:0
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 #: field:res.currency,company_id:0
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
+#: view:res.partner:base.view_res_partner_filter
 #: field:res.partner,company_id:0
 #: field:res.partner.bank,company_id:0
-#: view:res.users:0
+#: view:res.users:base.view_users_search
 #: field:res.users,company_id:0
 msgid "Company"
 msgstr "업체"
@@ -14940,7 +15038,8 @@ msgid "France - Accounting"
 msgstr "프랑스 - 회계"
 
 #. module: base
-#: view:ir.actions.todo:0
+#: view:ir.actions.todo:base.config_wizard_step_view_form
+#: view:ir.actions.todo:base.ir_actions_todo_tree
 msgid "Launch"
 msgstr "시작"
 
@@ -14994,7 +15093,7 @@ msgid "Officer"
 msgstr "임원"
 
 #. module: base
-#: code:addons/orm.py:787
+#: code:addons/orm.py:803
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -15036,7 +15135,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:165
+#: code:addons/base/ir/ir_model.py:164
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr ""
@@ -15047,10 +15146,12 @@ msgid "Azerbaijan"
 msgstr "아제르바이잔"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:481
-#: code:addons/base/ir/ir_sequence.py:259
-#: code:addons/base/res/res_partner.py:360
-#: code:addons/base/res/res_partner.py:566
+#: code:addons/base/ir/ir_actions.py:835
+#: code:addons/base/ir/ir_mail_server.py:490
+#: code:addons/base/ir/ir_sequence.py:260
+#: code:addons/base/res/res_partner.py:378
+#: code:addons/base/res/res_partner.py:550
+#: code:addons/base/res/res_partner.py:630
 #, python-format
 msgid "Warning"
 msgstr "경고"
@@ -15081,13 +15182,16 @@ msgid "Virgin Islands (British)"
 msgstr "버진 제도 (영국령)"
 
 #. module: base
-#: view:ir.property:0
+#: view:ir.property:base.ir_property_view
+#: view:ir.property:base.ir_property_view_search
+#: view:ir.property:base.ir_property_view_tree
 #: model:ir.ui.menu,name:base.menu_ir_property
 msgid "Parameters"
 msgstr "매개 변수"
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
 msgid "e.g. Sales Director"
 msgstr ""
 
@@ -15151,7 +15255,7 @@ msgstr "현재 창"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
-#: view:res.users:0
+#: view:res.users:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
@@ -15174,18 +15278,18 @@ msgstr "훈련, 회의, 미팅, 전시회, 등록"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
-#: view:res.bank:0
+#: view:res.bank:base.view_res_bank_form
 #: field:res.bank,country:0
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 #: field:res.company,country_id:0
-#: view:res.country:0
+#: view:res.country:base.view_country_form
+#: view:res.country:base.view_country_tree
 #: field:res.country.state,country_id:0
-#: view:res.partner:0
-#: field:res.partner,country:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_res_partner_filter
 #: field:res.partner,country_id:0
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank,country_id:0
-#: view:res.users:0
 msgid "Country"
 msgstr "국가"
 
@@ -15212,19 +15316,19 @@ msgid ""
 msgstr "참으로 설정할 경우, 마법사가 양식 화면의 우측 툴바에 나타나지 않습니다."
 
 #. module: base
-#: view:ir.values:0
+#: view:ir.values:base.values_view_tree_action
 msgid "Action Bindings/Defaults"
 msgstr "액션 결합/기본 값"
 
 #. module: base
-#: view:base.language.export:0
+#: view:base.language.export:base.wizard_lang_export
 msgid ""
 "file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
+#: view:ir.rule:base.view_rule_form
 msgid ""
 "1. Global rules are combined together with a logical AND operator, and with "
 "the result of the following steps"
@@ -15241,7 +15345,7 @@ msgid "South Georgia and the South Sandwich Islands"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
+#: view:res.lang:base.res_lang_form
 msgid "%X - Appropriate time representation."
 msgstr "%X - 적합한 시간 표시."
 
@@ -15268,7 +15372,7 @@ msgid "Automatic Installation"
 msgstr "자동 설치"
 
 #. module: base
-#: view:base.language.import:0
+#: view:base.language.import:base.view_base_import_language
 msgid "e.g. en_US"
 msgstr ""
 
@@ -15292,7 +15396,7 @@ msgid "Japan"
 msgstr "일본"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:418
+#: code:addons/base/ir/ir_model.py:439
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "열의 이름은 한 번에 한 개씩만 변경할 수 있습니다!"
@@ -15343,7 +15447,6 @@ msgid "Graph"
 msgstr "그래프"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_server
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.server"
 msgstr "ir.actions.server"
@@ -15387,7 +15490,6 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
 #: model:ir.model,name:base.model_ir_actions_todo
-#: model:ir.ui.menu,name:base.menu_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 msgid "Configuration Wizards"
 msgstr "구성 마법사"
@@ -15403,12 +15505,7 @@ msgid "Split Mode"
 msgstr "분할 모드"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "Note that this operation might take a few minutes."
-msgstr "해당 작업은 몇 분 소요될 수 있음을 참고하세요."
-
-#. module: base
-#: code:addons/base/ir/ir_fields.py:363
+#: code:addons/base/ir/ir_fields.py:373
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -15436,19 +15533,19 @@ msgid "View Editor"
 msgstr ""
 
 #. module: base
-#: view:ir.cron:0
+#: view:ir.cron:base.ir_cron_view_search
 msgid "Execution"
 msgstr "실행"
 
 #. module: base
 #: field:ir.actions.server,condition:0
-#: view:ir.values:0
+#: view:ir.values:base.values_view_form_defaults
 #: field:workflow.transition,condition:0
 msgid "Condition"
 msgstr "조건"
 
 #. module: base
-#: code:addons/base/module/module.py:669
+#: code:addons/base/module/module.py:684
 #, python-format
 msgid "Module not found"
 msgstr ""
@@ -15481,7 +15578,7 @@ msgid ""
 msgstr "오직 한 개의 클라이언트 액션만 실행되며  다중 클라이언트 액션일 경우, 최근 클라이언트가 간주됩니다."
 
 #. module: base
-#: model:ir.module.module,description:base.module_mrp_jit
+#: model:ir.module.module,description:base.module_procurement_jit
 msgid ""
 "\n"
 "This module allows Just In Time computation of procurement orders.\n"
@@ -15506,13 +15603,6 @@ msgid "Croatia"
 msgstr "크로아티아"
 
 #. module: base
-#: view:ir.module.module:0
-msgid ""
-"Do you confirm the uninstallation of this module? This will permanently "
-"erase all data currently stored by the module!"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.server,mobile:0
 msgid "Mobile No"
 msgstr "휴대전화 번호"
@@ -15526,7 +15616,7 @@ msgid "Partner Categories"
 msgstr "협력업체 분류"
 
 #. module: base
-#: view:base.module.upgrade:0
+#: view:base.module.upgrade:base.view_base_module_upgrade
 msgid "System Update"
 msgstr "시스템 업데이트"
 
@@ -15557,19 +15647,20 @@ msgid "Gold"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_company.py:173
+#: code:addons/base/res/res_company.py:175
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.ui.menu,name:base.menu_action_res_partner_bank_form
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 #: field:res.company,bank_ids:0
-#: view:res.partner.bank:0
+#: view:res.partner.bank:base.view_partner_bank_search
+#: view:res.partner.bank:base.view_partner_bank_tree
 #, python-format
 msgid "Bank Accounts"
 msgstr "은행 계정"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:185
+#: code:addons/base/res/res_lang.py:189
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
 msgstr ""
@@ -15580,9 +15671,107 @@ msgid "Sierra Leone"
 msgstr "시에라리온"
 
 #. module: base
-#: view:res.company:0
+#: view:res.company:base.view_company_form
 msgid "General Information"
 msgstr "일반 정보"
+
+#. module: base
+#: model:ir.module.module,description:base.module_auth_ldap
+msgid ""
+"\n"
+"Adds support for authentication by LDAP server.\n"
+"===============================================\n"
+"This module allows users to login with their LDAP username and password, "
+"and\n"
+"will automatically create OpenERP users for them on the fly.\n"
+"\n"
+"**Note:** This module only work on servers who have Python's ``ldap`` module "
+"installed.\n"
+"\n"
+"Configuration:\n"
+"--------------\n"
+"After installing this module, you need to configure the LDAP parameters in "
+"the\n"
+"Configuration tab of the Company details. Different companies may have "
+"different\n"
+"LDAP servers, as long as they have unique usernames (usernames need to be "
+"unique\n"
+"in OpenERP, even across multiple companies).\n"
+"\n"
+"Anonymous LDAP binding is also supported (for LDAP servers that allow it), "
+"by\n"
+"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
+"This does not allow anonymous authentication for users, it is only for the "
+"master\n"
+"LDAP account that is used to verify if a user exists before attempting to\n"
+"authenticate it.\n"
+"\n"
+"Securing the connection with STARTTLS is available for LDAP servers "
+"supporting\n"
+"it, by enabling the TLS option in the LDAP configuration.\n"
+"\n"
+"For further options configuring the LDAP settings, refer to the ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Security Considerations:\n"
+"------------------------\n"
+"Users' LDAP passwords are never stored in the OpenERP database, the LDAP "
+"server\n"
+"is queried whenever a user needs to be authenticated. No duplication of the\n"
+"password occurs, and passwords are managed in one place only.\n"
+"\n"
+"OpenERP does not manage password changes in the LDAP, so any change of "
+"password\n"
+"should be conducted by other means in the LDAP directory directly (for LDAP "
+"users).\n"
+"\n"
+"It is also possible to have local OpenERP users in the database along with\n"
+"LDAP-authenticated users (the Administrator account is one obvious "
+"example).\n"
+"\n"
+"Here is how it works:\n"
+"---------------------\n"
+"    * The system first attempts to authenticate users against the local "
+"OpenERP\n"
+"      database;\n"
+"    * if this authentication fails (for example because the user has no "
+"local\n"
+"      password), the system then attempts to authenticate against LDAP;\n"
+"\n"
+"As LDAP users have blank passwords by default in the local OpenERP database\n"
+"(which means no access), the first step always fails and the LDAP server is\n"
+"queried to do the authentication.\n"
+"\n"
+"Enabling STARTTLS ensures that the authentication query to the LDAP server "
+"is\n"
+"encrypted.\n"
+"\n"
+"User Template:\n"
+"--------------\n"
+"In the LDAP configuration on the Company form, it is possible to select a "
+"*User\n"
+"Template*. If set, this user will be used as template to create the local "
+"users\n"
+"whenever someone authenticates for the first time via LDAP authentication. "
+"This\n"
+"allows pre-setting the default groups and menus of the first-time users.\n"
+"\n"
+"**Warning:** if you set a password for the user template, this password will "
+"be\n"
+"         assigned as local password for each new LDAP user, effectively "
+"setting\n"
+"         a *master password* for these users (until manually changed). You\n"
+"         usually do not want this. One easy way to setup a template user is "
+"to\n"
+"         login once with a valid LDAP user, let OpenERP create a blank "
+"local\n"
+"         user with the same login (and a blank password), then rename this "
+"new\n"
+"         user to a username that does not exist in LDAP, and setup its "
+"groups\n"
+"         the way you want.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pt
@@ -15632,6 +15821,43 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ch
+msgid ""
+"\n"
+"Swiss localization\n"
+"==================\n"
+" **Multilang swiss STERCHI account chart and taxes**\n"
+"  **Author:** Camptocamp SA\n"
+"\n"
+"  **Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
+"\n"
+"  **Translation contributors:** brain-tec AG, Agile Business Group\n"
+"\n"
+" **This release will introduce major changes to l10n_ch.**\n"
+"\n"
+" Due to important refactoring needs and the Switzerland adoption of new "
+"international payment standard during 2013-2014. We have reorganised the "
+"swiss localization addons this way:\n"
+"\n"
+" - **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official "
+"addon)\n"
+" - **l10n_ch_base_bank**: Technical module that introduces a new and "
+"simplified version of bank type management\n"
+" - **l10n_ch_bank**: List of swiss banks\n"
+" - **l10n_ch_zip**: List of swiss postal zip\n"
+" - **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end "
+"2014)\n"
+" - **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and "
+"reconciliation. Report refactored with easy element positioning.\n"
+" - **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support "
+"will be completed during 2013/2014\n"
+"\n"
+" The modules will be soon available on OpenERP swiss localization on "
+"launchpad:\n"
+" https://launchpad.net/openerp-swiss-localization\n"
+msgstr ""
+
+#. module: base
 #: help:res.partner,vat:0
 msgid ""
 "Tax Identification Number. Check the box if this contact is subjected to "
@@ -15671,7 +15897,7 @@ msgid "Installed Modules"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:170
+#: code:addons/base/res/res_users.py:190
 #, python-format
 msgid "Company Switch Warning"
 msgstr "업체 변환 경고"
@@ -15689,6 +15915,7 @@ msgid "The next number of the sequence will be incremented by this number"
 msgstr "순서의 다음 번호가 해당 숫자만큼 증가합니다"
 
 #. module: base
+#: field:ir.logging,func:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
 msgstr "함수"
@@ -15729,7 +15956,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
 msgid "Internal Notes"
 msgstr "내부 메모"
 
@@ -15755,27 +15982,48 @@ msgid "Months"
 msgstr "달"
 
 #. module: base
-#: view:workflow.instance:0
+#: view:workflow.instance:base.view_workflow_instance_form
+#: view:workflow.instance:base.view_workflow_instance_search
+#: view:workflow.instance:base.view_workflow_instance_tree
 msgid "Workflow Instances"
 msgstr "업무 흐름 사례"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:684
+#: code:addons/base/res/res_partner.py:766
 #, python-format
 msgid "Partners: "
 msgstr "협력업체: "
 
 #. module: base
-#: view:res.partner:0
+#: view:res.partner:base.view_partner_form
+#: view:res.partner:base.view_partner_simple_form
 msgid "Is a Company?"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_company.py:173
+#: code:addons/base/res/res_company.py:175
 #: field:res.partner.bank,name:0
 #, python-format
 msgid "Bank Account"
 msgstr "은행 계정"
+
+#. module: base
+#: model:ir.module.module,description:base.module_note
+msgid ""
+"\n"
+"This module allows users to create their own notes inside OpenERP\n"
+"=================================================================\n"
+"\n"
+"Use notes to write meeting minutes, organize ideas, organize personal todo\n"
+"lists, etc. Each user manages his own personal Notes. Notes are available "
+"to\n"
+"their authors only, but they can share notes to others users so that "
+"several\n"
+"people can work on the same note in real time. It's very efficient to share\n"
+"meeting minutes.\n"
+"\n"
+"Notes can be found in the 'Home' menu.\n"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -15836,7 +16084,7 @@ msgid "Export Name"
 msgstr "내보내기 파일명"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:259
+#: code:addons/base/ir/ir_sequence.py:260
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr ""
@@ -15885,6 +16133,9 @@ msgstr "가입"
 #~ msgid "Can not create the module file: %s !"
 #~ msgstr "모듈 파일을 생성하지 못함: %s !"
 
+#~ msgid "Your system will be updated."
+#~ msgstr "시스템이 업데이트 됩니다."
+
 #, python-format
 #~ msgid ""
 #~ "You cannot delete the language which is Active !\n"
@@ -15909,6 +16160,12 @@ msgstr "가입"
 #~ msgid "Unmet dependency !"
 #~ msgstr "일치하지 않은 의존성 !"
 
+#~ msgid "Note that this operation might take a few minutes."
+#~ msgstr "해당 작업은 몇 분 소요될 수 있음을 참고하세요."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "그룹명은 유일해야 합니다 !"
+
 #~ msgid ""
 #~ "Manage the partner categories in order to better classify them for tracking "
 #~ "and analysis purposes. A partner may belong to several categories and "
@@ -15932,6 +16189,14 @@ msgstr "가입"
 #~ "OpenERP의 회계 모듈을 사용할 경우, 해당 자료를 기준으로 장부 및 계정이 자동으로 생성됩니다."
 
 #, python-format
+#~ msgid ""
+#~ "Can not create the module file:\n"
+#~ " %s"
+#~ msgstr ""
+#~ "다음 모듈 파일을 생성할수 없음:\n"
+#~ " %s"
+
+#, python-format
 #~ msgid "Please specify an action to launch !"
 #~ msgstr "시작할 액션을 지정하세요 !"
 
@@ -15952,6 +16217,24 @@ msgstr "가입"
 
 #~ msgid "Spanish - Accounting (PGCE 2008)"
 #~ msgstr "스페인어 - 회계 (PGCE 2008)"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is the module to manage the English and French - Canadian accounting "
+#~ "chart in OpenERP.\n"
+#~ "============================================================================="
+#~ "==============\n"
+#~ "\n"
+#~ "Canadian accounting charts and localizations.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "OpenERP에서 영어계 및 프랑스계 캐나다 회계 도표를 관리하는 모듈입니다.\n"
+#~ "============================================================================="
+#~ "==============\n"
+#~ "\n"
+#~ "캐나다 회계 도표 및 현지화.\n"
+#~ "    "
 
 #, python-format
 #~ msgid "Operation forbidden"

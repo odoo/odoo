@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-08 13:56+0000\n"
 "Last-Translator: youring <youring@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-09 06:52+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "会计.配置.设定"
 
 #. module: sale
 #: view:sale.order:0
@@ -56,13 +56,13 @@ msgid "Cancel Order"
 msgstr "取消订单"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:101
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "错误的数据"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:103
 #, python-format
 msgid "The value of Advance Amount must be positive."
 msgstr "定金必须是正的"
@@ -76,6 +76,11 @@ msgstr "允许在每个销售订单行 应用折扣"
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "如果要求你关注新消息，勾选此项"
+
+#. module: sale
+#: report:sale.order:0
+msgid "VAT"
+msgstr "增值税"
 
 #. module: sale
 #: view:res.partner:0
@@ -122,12 +127,6 @@ msgid "# of Qty"
 msgstr "数量#"
 
 #. module: sale
-#: code:addons/sale/sale.py:444
-#, python-format
-msgid "Customer Invoices"
-msgstr "客户发票"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
@@ -169,7 +168,7 @@ msgid "Disc.(%)"
 msgstr "折扣(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:764
+#: code:addons/sale/sale.py:770
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "请为这个产品定义收益科目: \"%s\" (id:%d)."
@@ -220,9 +219,9 @@ msgid "Other Information"
 msgstr "其它信息"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
-#: code:addons/sale/wizard/sale_make_invoice.py:42
-#: code:addons/sale/wizard/sale_make_invoice.py:55
+#: code:addons/sale/wizard/sale_line_invoice.py:106
+#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_make_invoice.py:57
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -255,7 +254,7 @@ msgid "Sales Make Invoice"
 msgstr "销售订单生成发票"
 
 #. module: sale
-#: code:addons/sale/sale.py:307
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "价格表警告！"
@@ -287,7 +286,7 @@ msgid "Shop Name"
 msgstr "商店名"
 
 #. module: sale
-#: code:addons/sale/sale.py:598
+#: code:addons/sale/sale.py:604
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "不能确认没有明细行的销售订单"
@@ -319,7 +318,7 @@ msgid "Quotation "
 msgstr "报价单 "
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:107
 #, python-format
 msgid "Advance of %s %%"
 msgstr "%s%% 的预付款"
@@ -410,8 +409,8 @@ msgid "View Invoice"
 msgstr "查看发票"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:113
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:115
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:114
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:116
 #, python-format
 msgid "Advance of %s %s"
 msgstr "预付款：%s %s"
@@ -488,7 +487,7 @@ msgid "Sales Order Lines ready to be invoiced"
 msgstr "销售订单行已经被开票"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:310
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -499,6 +498,13 @@ msgstr "如果你修改这订单的价格表（货币），现有订单明细的
 #: report:sale.order:0
 msgid "Tel. :"
 msgstr "电话:"
+
+#. module: sale
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -516,7 +522,7 @@ msgid "Before Delivery"
 msgstr "发运前"
 
 #. module: sale
-#: code:addons/sale/sale.py:781
+#: code:addons/sale/sale.py:787
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -534,7 +540,7 @@ msgid "Ordered month of the sales order"
 msgstr "下单超一个月的销售订单"
 
 #. module: sale
-#: code:addons/sale/sale.py:505
+#: code:addons/sale/sale.py:507
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -560,7 +566,7 @@ msgid "Invoiced"
 msgstr "已开票"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:203
 #, python-format
 msgid "Advance Invoice"
 msgstr "预付款发票"
@@ -735,15 +741,15 @@ msgstr ""
 "*当用户取消了销售订单，状态成为“取消”。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:93
 #, python-format
 msgid "There is no income account defined as global property."
 msgstr "没有收益科目定义为全局属性"
 
 #. module: sale
-#: code:addons/sale/sale.py:960
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:91
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
+#: code:addons/sale/sale.py:966
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "Configuration Error!"
 msgstr "设置错误!"
@@ -759,7 +765,7 @@ msgid "Send by Email"
 msgstr "以邮件发送"
 
 #. module: sale
-#: code:addons/sale/res_config.py:97
+#: code:addons/sale/res_config.py:98
 #, python-format
 msgid "Hour"
 msgstr "小时"
@@ -790,7 +796,7 @@ msgid "Currency"
 msgstr "币种"
 
 #. module: sale
-#: code:addons/sale/sale.py:942
+#: code:addons/sale/sale.py:948
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -806,7 +812,7 @@ msgid "Category of Product"
 msgstr "产品类别"
 
 #. module: sale
-#: code:addons/sale/sale.py:564
+#: code:addons/sale/sale.py:570
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "不能取消这个销售订单！"
@@ -820,6 +826,13 @@ msgstr "重新生成发票"
 #: report:sale.order:0
 msgid "Taxes :"
 msgstr "税:"
+
+#. module: sale
+#: code:addons/sale/sale.py:279
+#, python-format
+msgid ""
+"In order to delete a confirmed sales order, you must cancel it before!"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -932,7 +945,7 @@ msgstr ""
 "           供应商：别忘记要求快递。"
 
 #. module: sale
-#: code:addons/sale/sale.py:955
+#: code:addons/sale/sale.py:961
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "明细没有找到有效的价格表！"
@@ -979,7 +992,7 @@ msgid "Order Reference must be unique per Company!"
 msgstr "订单号必须在一个公司范围内唯一"
 
 #. module: sale
-#: code:addons/sale/sale.py:952
+#: code:addons/sale/sale.py:958
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1012,15 +1025,6 @@ msgid ""
 msgstr ""
 "允许使用不同的订单策略 制作报价单、销售订单 并管理相关的库存。\n"
 "                为此要安装模块sale_stock."
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' or "
-"'订单'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: report:sale.order:0
@@ -1074,7 +1078,7 @@ msgstr "运货地址:"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr "销售订单草稿状态"
+msgstr "草稿状态的销售订单"
 
 #. module: sale
 #: help:sale.order,message_ids:0
@@ -1092,7 +1096,7 @@ msgid "# of Sales Order"
 msgstr "销售订单的 #"
 
 #. module: sale
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:989
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "不能删除 '%s'状态的销售订单行。"
@@ -1103,12 +1107,14 @@ msgid "Properties on lines"
 msgstr "行上的属性"
 
 #. module: sale
-#: code:addons/sale/sale.py:865
+#: code:addons/sale/sale.py:871
 #, python-format
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr "在挑选产品前，在 销售表单选择一个客户"
+msgstr ""
+"在挑选产品前，\n"
+" 在销售表单中选择一个客户。"
 
 #. module: sale
 #: view:sale.order:0
@@ -1116,7 +1122,7 @@ msgid "Total Tax Included"
 msgstr "含税总金额"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:43
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
 msgstr "当销售订单未经确认时， 您不能创建发票。"
@@ -1125,6 +1131,12 @@ msgstr "当销售订单未经确认时， 您不能创建发票。"
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
 msgstr "销售订单的订购日期"
+
+#. module: sale
+#: code:addons/sale/sale.py:871
+#, python-format
+msgid "No Customer Defined!"
+msgstr ""
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1226,9 +1238,9 @@ msgid "Create Invoices"
 msgstr "创建发票"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:820
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:279
+#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
 msgstr "非法的动作"
@@ -1391,17 +1403,16 @@ msgid "Use pricelists to adapt your price per customers"
 msgstr "为每个客户使用价格表来适配你的价格"
 
 #. module: sale
-#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:187
 #, python-format
 msgid "There is no default shop for the current user's company!"
 msgstr "当前用户的公司没有默认的商店！"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
+#: code:addons/sale/sale.py:446
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before !"
-msgstr "要删除已经确认的订单，你必须先取消"
+msgid "Customer Invoices"
+msgstr "客户发票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.open_board_sales
@@ -1441,7 +1452,7 @@ msgid "Done"
 msgstr "已完成"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
@@ -1811,7 +1822,7 @@ msgid "Date on which sales order is confirmed."
 msgstr "销售订单的确认日期"
 
 #. module: sale
-#: code:addons/sale/sale.py:565
+#: code:addons/sale/sale.py:571
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "首先取消所有关联这个销售订单的发票。"
@@ -1840,12 +1851,6 @@ msgstr "预付款发票金额"
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "发票异常"
-
-#. module: sale
-#: code:addons/sale/sale.py:865
-#, python-format
-msgid "No Customer Defined !"
-msgstr "客户没有定义 ！"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -1878,12 +1883,12 @@ msgid "Project"
 msgstr "项目"
 
 #. module: sale
-#: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:363
-#: code:addons/sale/sale.py:504
-#: code:addons/sale/sale.py:598
-#: code:addons/sale/sale.py:763
-#: code:addons/sale/sale.py:780
+#: code:addons/sale/sale.py:187
+#: code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506
+#: code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769
+#: code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "错误!"
@@ -1939,7 +1944,7 @@ msgid "Date Confirm"
 msgstr "确认日期"
 
 #. module: sale
-#: code:addons/sale/sale.py:364
+#: code:addons/sale/sale.py:366
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "轻微公司 \"%s\" (id:%d) 定义销售分类账"
@@ -1950,8 +1955,8 @@ msgid "Contract Features"
 msgstr "合同特性"
 
 #. module: sale
-#: code:addons/sale/sale.py:287
-#: code:addons/sale/sale.py:584
+#: code:addons/sale/sale.py:289
+#: code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -1984,7 +1989,7 @@ msgid "Confirm"
 msgstr "确认"
 
 #. module: sale
-#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:826
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr "你不能取消已经开票的销售订单行"
@@ -2043,7 +2048,7 @@ msgid "Sales order lines done"
 msgstr "销售订单行完成"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -2071,7 +2076,7 @@ msgid "December"
 msgstr "12月"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:97
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr "在这个产品没有定义收益科目: \"%s\" (id:%d)."
@@ -2107,7 +2112,7 @@ msgid "June"
 msgstr "6月"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:55
+#: code:addons/sale/wizard/sale_make_invoice.py:57
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
 msgstr "您不可以为下列销售订单 %s 手工开票"
@@ -2213,7 +2218,7 @@ msgid "from stock"
 msgstr "来自库存"
 
 #. module: sale
-#: code:addons/sale/sale.py:944
+#: code:addons/sale/sale.py:950
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "没价格表！： "
@@ -2345,5 +2350,21 @@ msgstr "已装箱"
 msgid "Year"
 msgstr "年"
 
+#, python-format
+#~ msgid "No Customer Defined !"
+#~ msgstr "客户没有定义 ！"
+
+#~ msgid ""
+#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and "
+#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+#~ msgstr ""
+#~ "${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' or "
+#~ "'订单'} (Ref ${object.name or 'n/a' })"
+
 #~ msgid "Quotation send"
 #~ msgstr "报价单发送"
+
+#, python-format
+#~ msgid ""
+#~ "In order to delete a confirmed sales order, you must cancel it before !"
+#~ msgstr "要删除已经确认的订单，你必须先取消"
