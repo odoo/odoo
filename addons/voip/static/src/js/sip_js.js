@@ -117,9 +117,11 @@ openerp.voip = function(openerp) {
             this.trigger('sip_rejected');
             this.ringbacktone = document.getElementById("ringbacktone");
             ringbacktone.pause();
+            var temporary = true;
             if(response.reason_phrase != "Busy Here"){
                 this.trigger('sip_error', _t('The user credentials could be wrong or '+
-                    'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'));
+                    'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'),
+                    temporary);
                 this.blocked = true;
             }else if(this.blocked){
                 this.trigger('sip_error_resolved');

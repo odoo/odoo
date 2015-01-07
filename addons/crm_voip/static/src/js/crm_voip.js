@@ -209,16 +209,37 @@ openerp.crm_voip = function(instance) {
         },
 
         //When a configuration error occured, disable the panel
-        disable_panel: function(message){
-            this.$().block({message: message});
-            this.$('.blockOverlay').css('cursor', 'auto');
-            this.$('.blockOverlay').css('background', 'grey');
+        disable_panel: function(message, temporary){
+            if(temporary){
+                this.$().block({message: message});
+                var self = this;
+                this.$('.blockOverlay').on("click",function(){self.enable_panel();});
+                this.$('.blockOverlay').attr('title','Click to unblock');
+            }else{
+                this.$().block({message: message + '<br/><button type="button" class="btn btn-danger btn-sm btn-configuration">Configuration</button>'});
+                this.$('.btn-configuration').on("click",function(){
+                    //Call in order to get the id of the user's preference view instead of the user's form view
+                    new instance.web.Model("ir.model.data").call("xmlid_to_res_model_res_id",["base.view_users_form_simple_modif"]).then(function(data){
+                        openerp.client.action_manager.do_action(
+                            {
+                                name: "Change My Preferences",
+                                type: "ir.actions.act_window",
+                                res_model: "res.users",
+                                res_id: openerp.session.uid,
+                                target: "new",
+                                xml_id: "base.action_res_users_my",
+                                views: [[data[1], 'form']],
+                            }
+                        );
+                    });
+                });
+            }
         },
-
 
         enable_panel:function(){
             this.$().unblock();
-        }
+        },
+
     });
 
     crm_voip.DialingModel = openerp.Widget.extend({
@@ -312,11 +333,11 @@ openerp.crm_voip = function(instance) {
             }
         },
 
-        sip_error: function(message){
+        sip_error: function(message, temporary){
             this.on_call = false;
             this.UI.hangup();
             //new openerp.web.Model("crm.phonecall").call("error_config");
-            this.UI.disable_panel(message);
+            this.UI.disable_panel(message, temporary);
         },
 
         sip_error_resolved: function(){
