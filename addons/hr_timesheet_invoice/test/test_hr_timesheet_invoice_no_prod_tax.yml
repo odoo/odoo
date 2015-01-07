@@ -31,13 +31,6 @@
   !python {model: hr.analytic.timesheet}: |
     self.on_change_account_id(cr, uid, [ref('account_analytic_line_developyamlforhrmodule1')], ref('analytic.analytic_agrolait'))
 -
-  I create a Tax Code
--
-  !record {model: account.tax.code, id: tax_case}:
-    name: Tax_case
-    company_id: base.main_company
-    sign: 1
--
   I create a Tax
 -
   !record {model: account.tax, id: tax8}:
@@ -46,8 +39,7 @@
     type: fixed
     sequence: 1
     company_id: base.main_company
-    type_tax_use: all
-    tax_code_id: tax_case
+    type_tax_use: sale
 -
   I create an Account with the tax
 -
