@@ -93,7 +93,8 @@ class Website_less(Website):
     def multi_render(self, ids_or_xml_ids, values=None):
         res = {}
         for id_or_xml_id in ids_or_xml_ids:
-            res[id_or_xml_id] = request.env["ir.ui.view"].render(id_or_xml_id, values=values, engine='ir.qweb')
+            res[id_or_xml_id] = request.registry["ir.ui.view"].render(request.cr, request.uid,
+                id_or_xml_id, values=values, engine='ir.qweb', context=request.context)
         return res
 
     @http.route([
