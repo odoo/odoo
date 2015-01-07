@@ -76,7 +76,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
     _inherit = "sale.order.line.make.invoice"
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
-        result = super(sale_order_line_make_invoice, self)._prepare_invoice(cr, uid, order, lines, context=None)
+        result = super(sale_order_line_make_invoice, self)._prepare_invoice(cr, uid, order, lines, context=context)
         if order.section_id:
             result['section_id'] = order.section_id.id
         return result
