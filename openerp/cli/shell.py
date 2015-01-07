@@ -16,16 +16,20 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import code
 import os
 import signal
 import sys
 
 import openerp
+from openerp.api import Environment
 from . import Command
+
 
 def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()
+
 
 class Console(code.InteractiveConsole):
     def __init__(self, locals=None, filename="<console>"):
@@ -34,10 +38,12 @@ class Console(code.InteractiveConsole):
             import readline
             import rlcompleter
         except ImportError:
-            print 'readline or rlcompleter not available, autocomplete disabled.'
+            print('readline or rlcompleter not available,'
+                  ' autocomplete disabled.')
         else:
             readline.set_completer(rlcompleter.Completer(locals).complete)
             readline.parse_and_bind("tab: complete")
+
 
 class Shell(Command):
     """Start odoo in an interactive shell"""
@@ -52,22 +58,23 @@ class Shell(Command):
             exec sys.stdin in local_vars
         else:
             if 'env' not in local_vars:
-                print 'No evironement set, use `odoo.py shell -d dbname` to get one.'
+                print('No environment set, use `odoo.py shell -d dbname`'
+                      ' to get one.')
             for i in sorted(local_vars):
-                print '%s: %s' % (i, local_vars[i])
+                print('%s: %s' % (i, local_vars[i]))
             Console(locals=local_vars).interact()
 
     def shell(self, dbname):
         local_vars = {
             'openerp': openerp
         }
-        with openerp.api.Environment.manage():
+        with Environment.manage():
             if dbname:
                 registry = openerp.modules.registry.RegistryManager.get(dbname)
                 with registry.cursor() as cr:
                     uid = openerp.SUPERUSER_ID
-                    ctx = openerp.api.Environment(cr, uid, {})['res.users'].context_get()
-                    env = openerp.api.Environment(cr, uid, ctx)
+                    ctx = Environment(cr, uid, {})['res.users'].context_get()
+                    env = Environment(cr, uid, ctx)
                     local_vars['env'] = env
                     local_vars['self'] = env.user
                     self.console(local_vars)
