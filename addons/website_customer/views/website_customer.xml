@@ -97,7 +97,7 @@
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                        <a t-attf-href="/customers/#{ tag and 'tag/%s/' % slug(tag) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -106,6 +106,20 @@
             </t>
         </ul>
 
+    </xpath>
+</template>
+
+<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags">
+    <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+        <h3 t-if="len(tags)">References by Tag</h3>
+        <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
+            <a t-attf-class="" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }"> <span class="fa fa-1x fa-tags"/> All </a>&amp;nbsp;
+            <t t-foreach="tags" t-as="oTag">
+                <a t-attf-class="label label-#{oTag.classname}" t-esc="oTag.name" t-att-style="tag and tag.id==oTag.id and 'text-decoration: underline'"
+                    t-attf-href="/customers/#{ 'tag/%s/' % slug(oTag) }#{ current_country and 'country/%s' % slug(current_country)  or '' }#{ search_path }"/>
+            </t>
+        </ul>
     </xpath>
 </template>
 

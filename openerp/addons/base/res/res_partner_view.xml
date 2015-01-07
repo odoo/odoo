@@ -514,10 +514,10 @@
 
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Partner Categories</field>
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
-                <form string="Partner Tag">
+                <form string="Partner Category">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -527,11 +527,11 @@
             </field>
         </record>
         <record id="view_partner_category_list" model="ir.ui.view">
-            <field name="name">Partner Tags</field>
+            <field name="name">Partner Categories</field>
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Partner Tags">
+                <tree string="Partner Categories">
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -541,7 +541,7 @@
             <field name="model">res.partner.category</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="1" string="Partner Tags">
+                <tree toolbar="1" string="Partner Categories">
                     <field name="name"/>
                 </tree>
             </field>
@@ -560,7 +560,7 @@
         -->
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name">Partner Tags</field>
+            <field name="name">Partner Categories</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -577,21 +577,21 @@
         </record>
 
         <record id="action_partner_category_form" model="ir.actions.act_window">
-            <field name="name">Partner Tags</field>
+            <field name="name">Partner Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new partner tags.
+                Click to create a new partner Categories.
               </p><p>
-                Manage the partner tags to better classify them for tracking and analysis purposes.
-                A partner may have several tags and tags have a hierarchical structure: a partner with a tag has also the parent tags.
+                Manage the partner categories to better classify them for tracking and analysis purposes.
+                A partner may have several categories and categories have a hierarchical structure: a partner with a categorie has also the parent categorie.
               </p>
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Categories" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>
