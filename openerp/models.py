@@ -3255,25 +3255,23 @@ class BaseModel(object):
                         continue
                     f = field.name
                     translate = field.column.translate
-                    if translate is True:
-                        res_trans = ir_translation._get_ids(
-                            '%s,%s' % (self._name, f), 'model', context['lang'], ids
-                        )
-                        for vals in result:
-                            vals[f] = res_trans.get(vals['id']) or vals[f]
-                    elif translate and True:
-                        # TODO: replace "and True" by something like this:
-                        # context.get('website'): translate=lambda ... fields
-                        # should not be translated in the backend but must be
-                        # translated in the frontend. (e.g. ir.ui.view, you see
-                        # and write the english version only in the backend,
-                        # but it's translated in the frontend)
+                    if callable(translate):
+                        # TODO: add a condition like context.get('website') for
+                        # executing the code below: XML/HTML fields should be
+                        # translated in the frontend by a specific widget that
+                        # uses the English value and term translations
                         res_trans = ir_translation._get_terms_translations(
                             self._name, f, context['lang'], ids
                         )
                         for vals in result:
                             rec_trans = res_trans[vals['id']]
                             vals[f] = translate(lambda t: rec_trans.get(t) or t, vals[f])
+                    elif translate:
+                        res_trans = ir_translation._get_ids(
+                            '%s,%s' % (self._name, f), 'model', context['lang'], ids
+                        )
+                        for vals in result:
+                            vals[f] = res_trans.get(vals['id']) or vals[f]
 
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:
@@ -3849,15 +3847,7 @@ class BaseModel(object):
             if totranslate:
                 # TODO: optimize
                 for f in direct:
-                    if self._columns[f].translate is True:
-                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
-                        if not src_trans:
-                            src_trans = vals[f]
-                            # Inserting value to DB
-                            context_wo_lang = dict(context, lang=None)
-                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
-                    elif self._columns[f].translate:
+                    if callable(self._columns[f].translate):
                         # We do not handle the update of a field where translate
                         # is a callable. One should update the value without a
                         # language, or update translated terms separately.
@@ -3866,11 +3856,17 @@ class BaseModel(object):
                             "directly updated. You can either update its value "
                             "in English, or update translated terms separately."
                         ) % self._fields[f].string)
+                    elif self._columns[f].translate:
+                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
+                        if not src_trans:
+                            src_trans = vals[f]
+                            # Inserting value to DB
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
+                        self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
             else:
                 for f in direct:
-                    if self._columns[f].translate is True:
-                        pass
-                    elif self._columns[f].translate:
+                    if callable(self._columns[f].translate):
                         # The English value of a field has been modified,
                         # synchronize translated terms when possible.
                         self.pool['ir.translation']._sync_terms_translations(

@@ -756,11 +756,8 @@ def trans_generate(lang, modules, cr):
                     value = obj[field_name] or ''
                 except:
                     continue
-                if field_def.translate is True:
-                    push_translation(module, 'model', name, xml_name, encode(value))
-                else:
-                    for term in set(field_def.get_terms(value)):
-                        push_translation(module, 'model', name, xml_name, encode(term))
+                for term in set(field_def.get_terms(value)):
+                    push_translation(module, 'model', name, xml_name, encode(term))
 
         # End of data for ir.model.data query results
 

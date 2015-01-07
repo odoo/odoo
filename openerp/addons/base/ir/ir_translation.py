@@ -211,7 +211,7 @@ class ir_translation(osv.osv):
                 if model is None:
                     continue
                 field = model._fields[field_name]
-                if field.translate is True:
+                if not callable(field.translate):
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
                     result = model.read(cr, uid, [record.res_id], [field_name], context=context_no_lang)
@@ -229,7 +229,7 @@ class ir_translation(osv.osv):
             model_name, field_name = record.name.split(',')
             model = self.pool.get(model_name)
             field = model._fields[field_name]
-            if field.translate is True:
+            if not callable(field.translate):
                 # Make a context without language information, because we want
                 # to write on the value stored in db and not on the one
                 # associated with the current language. Also not removing lang
@@ -550,7 +550,7 @@ class ir_translation(osv.osv):
 
         for fld, rid in field_ids:
             src = record[fld.name] or None
-            if fld.translate is True:
+            if not callable(fld.translate):
                 # insert missing translations for src
                 query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
                             SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
