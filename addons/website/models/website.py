@@ -279,16 +279,16 @@ class website(osv.osv):
 
     @openerp.tools.ormcache(skiparg=4)
     def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        website_id = 1
-        if request:
-            ids = self.search(cr, uid, [('domain', '=', domain_name)], context=context)
-            if ids:
-                website_id = ids[0]
-        return website_id
+        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
+        if ids:
+            return ids[0]
+        else:
+            return self.search(cr, uid, [], limit=1, context=context)[0]
 
     def get_current_website(self, cr, uid, context=None):
         domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
         website_id = self._get_current_website_id(cr, uid, domain_name, context=context)
+        request.context['website_id'] = website_id
         return self.browse(cr, uid, website_id, context=context)
 
     def is_publisher(self, cr, uid, ids, context=None):
@@ -649,7 +649,6 @@ class website(osv.osv):
         id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
         size = '' if size is None else '/%s' % size
         return '/website/image/%s/%s/%s%s' % (model, id, field, size)
-
 
 class website_menu(osv.osv):
     _name = "website.menu"

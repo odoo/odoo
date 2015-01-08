@@ -999,7 +999,7 @@ define(['summernote/summernote'], function () {
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
         },
-        save: function () {
+        _save: function () {
             var self = this;
 
             var saved = {}; // list of allready saved views and data
@@ -1067,9 +1067,17 @@ define(['summernote/summernote'], function () {
                 });
             });
         },
+        save: function () {
+            return this._save().then(function () {
+                website.reload();
+            });
+        },
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
+        save_without_reload: function () {
+            return this._save();
+        },
         saveElement: function ($el) {
             var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
@@ -1118,10 +1126,10 @@ define(['summernote/summernote'], function () {
             if(this.loaded) {
                 return;
             }
-            openerp.jsonRpc('/website/customize_template_get', 'call', { 'xml_id': this.view_name }).then(
+            openerp.jsonRpc('/website/customize_template_get', 'call', { 'key': this.view_name }).then(
                 function(result) {
                     _.each(result, function (item) {
-                        if (item.xml_id === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
+                        if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
                         if (item.header) {
                             self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
                         } else {
