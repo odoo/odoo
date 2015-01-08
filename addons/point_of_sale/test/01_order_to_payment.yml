@@ -6,8 +6,8 @@
 - 
   !record {model: account.tax, id: account_tax_10_incl}:
     name: VAT 10 perc Incl
-    type: percent
-    amount: 0.10
+    amount_type: percent
+    amount: 10.0
     account_paid_id: account.iva
     account_collected_id: account.iva
     price_include: 1
@@ -21,8 +21,8 @@
 - 
   !record {model: account.tax, id: account_tax_05_incl}:
     name: VAT 05 perc Excl
-    type: percent
-    amount: 0.05
+    amount_type: percent
+    amount: 5.0
     account_paid_id: account.iva
     account_collected_id: account.iva
     price_include: 0
@@ -33,8 +33,8 @@
 -
   !record {model: account.tax, id: account_tax_05_incl_chicago}:
     name: VAT 05 perc Excl (US)
-    type: percent
-    amount: 0.05
+    amount_type: percent
+    amount: 5.0
     account_paid_id: account.iva
     account_collected_id: account.iva
     price_include: 0
