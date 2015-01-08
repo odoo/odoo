@@ -102,7 +102,7 @@
             var self = this;
 
             this.$button = $(openerp.qweb.render('website.snippets_button'))
-                .prependTo(this.parent.$("#website-top-edit ul"))
+                .prependTo(this.parent.$(".js_editor_placeholder"))
                 .find("button");
 
             this.$button.click(_.bind(this.show_blocks, this));

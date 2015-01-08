@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Website Builder',
     'category': 'Website',
@@ -14,6 +15,7 @@ OpenERP Website CMS
     'installable': True,
     'data': [
         'data/data.xml',
+        'data/demo.xml',
         'security/ir.model.access.csv',
         'security/ir_ui_view.xml',
         'views/website_templates.xml',
