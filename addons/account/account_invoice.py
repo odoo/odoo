@@ -1151,7 +1151,7 @@ class account_invoice(models.Model):
 
         inv_id, name = self.name_get()[0]
         if not round(total, self.company_id.currency_id.decimal_places) or writeoff_acc_id:
-            lines2rec.reconcile(writeoff_acc_id, writeoff_journal_id)
+            lines2rec.reconcile(self.env['account.account'].browse(writeoff_acc_id), self.env['account.journal'].browse(writeoff_journal_id))
         else:
             code = self.currency_id.symbol
             # TODO: use currency's formatting function

@@ -91,8 +91,8 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         pay = self.account_invoice_customer0.pay_and_reconcile(
             9050.0, self.env.ref('account.cash').id,
             datetime.date.today(), self.env.ref('account.bank_journal').id,
-            self.env.ref('account.cash'),
-            self.env.ref('account.bank_journal'),
+            self.env.ref('account.cash').id,
+            self.env.ref('account.bank_journal').id,
         )
         assert pay, "Incorrect Payment"
 
