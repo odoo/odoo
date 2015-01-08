@@ -6370,5 +6370,3 @@ instance.web.form.custom_widgets = new instance.web.Registry({
 });
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

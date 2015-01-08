@@ -784,5 +784,3 @@ $.fn.tooltip.Constructor.prototype.show = function () {
 instance.web.client_actions = new instance.web.Registry();
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

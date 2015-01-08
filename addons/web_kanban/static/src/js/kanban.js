@@ -1422,5 +1422,3 @@ instance.web_kanban.fields_registry = new instance.web.Registry({});
 instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Priority');
 instance.web_kanban.fields_registry.add('kanban_state_selection','instance.web_kanban.KanbanSelection');
 };
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

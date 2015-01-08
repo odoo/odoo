@@ -1581,5 +1581,3 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
 };
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
