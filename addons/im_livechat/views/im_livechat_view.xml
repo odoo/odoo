@@ -40,7 +40,6 @@
                     <field name="id"/>
                     <field name="fullname"/>
                     <field name="create_date"/>
-                    <field name="feedback_rating"/>
                 </tree>
             </field>
         </record>
@@ -51,14 +50,32 @@
             <field name="arch" type="xml">
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
-                       <group string="General">
-                            <field name="id"/>
-                            <field name="fullname" />
-                            <field name="create_date" readonly="1"/>
-                        </group>
-                        <group string="Feedback">
-                            <field name="feedback_rating"/>
-                            <field name="feedback_reason"/>
+                        <group>
+                            <group string="General">
+                                <field name="id"/>
+                                <field name="fullname" />
+                                <field name="create_date" readonly="1"/>
+                            </group>
+                            <group string="Feedback">
+                                <field name="rating_ids" mode="kanban" nolabel="1">
+                                    <kanban>
+                                        <field name="rating"/>
+                                        <field name="feedback"/>
+                                        <field name="res_name"/>
+                                        <field name="create_date"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_group_details" style="min-height: 40px">
+                                                    <img t-attf-src="rating/static/src/img/rating_#{record.rating.raw_value and record.rating.raw_value or 0}.png" class="oe_kanban_image" style="float:left; margin-right: 10px;"/>
+                                                    <span t-if="record.feedback.raw_value">
+                                                        <t t-esc="record.feedback.raw_value"/>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </group>
                         </group>
                         <field name="message_ids" type="tree">
                             <tree string="History">
@@ -176,6 +193,9 @@
                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('nbr_session','=', 0)]}" name="%(action_session_channel)d" icon="fa-comments">
                             <field string="Sessions" name="nbr_session" widget="statinfo"/>
                         </button>
+                        <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                            <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
+                        </button>
                     </div>
                     <group>
                         <group string="Operators">
@@ -266,10 +286,9 @@
         <!-- Menu items -->
         <menuitem name="Live Chat" parent="mail.mail_feeds_main" id="im_livechat" groups="group_im_livechat"/>
 
-        <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat"/>
+        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat" sequence="5"/>
 
-        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
-
+        <menuitem name="History" parent="im_livechat" id="session_history" action="action_session_history" groups="group_im_livechat" sequence="10"/>
 
     </data>
 </openerp>

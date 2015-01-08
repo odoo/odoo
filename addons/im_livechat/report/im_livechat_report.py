@@ -18,7 +18,6 @@ class im_livechat_report(osv.Model):
         'nbr_messages': fields.integer('Average message', readonly=True, group_operator="avg", help="Number of message in the conversation"),
         'nbr_user_messages': fields.integer('Average of messages/user', readonly=True, group_operator="avg", help="Average number of message per user"),
         'nbr_speakers': fields.integer('# of speakers', readonly=True, group_operator="avg", help="Number of different speakers"),
-        'rating': fields.float('Rating', readonly=True, group_operator="avg", help="Average Rating"),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
         'session_id': fields.many2one('im_chat.session', 'Session', readonly=True),
         'channel_id': fields.many2one('im_livechat.channel', 'Channel', readonly=True),
@@ -42,7 +41,6 @@ class im_livechat_report(osv.Model):
                     (SELECT count(distinct COALESCE(from_id, 0)) FROM im_chat_message WHERE to_id=S.id) as nbr_speakers,
                     (SELECT count(id) FROM im_chat_message WHERE to_id=S.id) as nbr_messages,
                     count(M.id) as nbr_user_messages,
-                    CAST(S.feedback_rating AS INT) as rating,
                     U.id as user_id,
                     S.channel_id as channel_id,
                     S.id as session_id
