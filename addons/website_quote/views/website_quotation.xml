@@ -310,6 +310,11 @@
 
                       <t t-call="website_quote.so_quotation_content"/>
 
+                      <!--
+                        DO NOT include the chatter in the so_quotation_content, since chatter template required website, which is not given to render a report
+                      -->
+                      <a id="discussion"/>
+                      <t t-call="website_quote.chatter"/>
                   </div><!-- //col-md-9 -->
               </div>
             </div>
@@ -409,8 +414,6 @@
       <a id="options"/>
       <t t-call="website_quote.optional_products"/>
 
-      <a id="discussion"/>
-      <t t-call="website_quote.chatter"/>
   </template>
 
 
