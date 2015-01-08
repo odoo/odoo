@@ -155,7 +155,7 @@
             website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
+                website.snippet.start_animation(true);
                 $("#wrapwrap *").off('mousedown mouseup click');
             });
 

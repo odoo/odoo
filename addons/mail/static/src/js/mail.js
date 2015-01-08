@@ -652,8 +652,8 @@ openerp.mail = function (session) {
             if (self.flag_post) {
                 return;
             }
-            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
+                self.flag_post = true;
                 if (this.is_log) {
                     this.do_send_message_post([], this.is_log);
                 }
@@ -880,7 +880,11 @@ openerp.mail = function (session) {
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
                 self.id = false;
                 // insert the message on dom after this message
-                self.parent_thread.switch_new_message(data, self.$el);
+                var element = self.$el;
+                if (self.thread_level === 0){
+                    element = element.parent();
+                }
+                self.parent_thread.switch_new_message(data, element);
                 self.animated_destroy(200);
             });
 
@@ -1890,7 +1894,7 @@ openerp.mail = function (session) {
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
                 'emails_from_on_composer': false,
-                'fetch_limit': 1000   // allow inbox to load all children messages
+                'fetch_limit': 30   // allow inbox to load all children messages
             }, this.action.params);
         },
 

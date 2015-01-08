@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -664,7 +664,7 @@ class module(osv.osv):
 
         apps_server = urlparse.urlparse(self.get_apps_server(cr, uid, context=context))
 
-        OPENERP = 'openerp'
+        OPENERP = openerp.release.product_name.lower()
         tmp = tempfile.mkdtemp()
         _logger.debug('Install from url: %r', urls)
         try:

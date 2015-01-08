@@ -624,6 +624,8 @@ class google_calendar(osv.AbstractModel):
                 new_google_internal_event_id = False
                 source_event_record = ev_obj.browse(cr, uid, att.event_id.recurrent_id, context)
                 source_attendee_record_id = att_obj.search(cr, uid, [('partner_id', '=', myPartnerID), ('event_id', '=', source_event_record.id)], context=context)
+                if not source_attendee_record_id:
+                    continue
                 source_attendee_record = att_obj.browse(cr, uid, source_attendee_record_id, context)[0]
 
                 if att.event_id.recurrent_id_date and source_event_record.allday and source_attendee_record.google_internal_event_id:
@@ -665,9 +667,9 @@ class google_calendar(osv.AbstractModel):
                     registry = openerp.modules.registry.RegistryManager.get(request.session.db)
                     with registry.cursor() as cur:
                         self.pool['res.users'].write(cur, uid, [uid], {'google_calendar_last_sync_date': False}, context=context)
-                error_key = simplejson.loads(e.read())
+                error_key = simplejson.loads(str(e))
                 error_key = error_key.get('error', {}).get('message', 'nc')
-                error_msg = "Google are lost... the next synchro will be a full synchro. \n\n %s" % error_key
+                error_msg = "Google is lost... the next synchro will be a full synchro. \n\n %s" % error_key
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _(error_msg), context=context)
 
             my_google_att_ids = att_obj.search(cr, uid, [
@@ -818,7 +820,8 @@ class google_calendar(osv.AbstractModel):
                             res = self.update_from_google(cr, uid, parent_event, event.GG.event, "copy", context)
                         else:
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                            calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
+                            if parent_oe_id:
+                                calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':

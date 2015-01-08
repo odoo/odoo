@@ -215,7 +215,7 @@
                                                 <div class="oe_module_vignette">
                                                 <a type="open">
                                                     <t t-if="record.has_image.raw_value === true">
-                                                        <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                     </t>
                                                     <t t-if="record.image and record.image.raw_value !== false">
                                                         <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>

@@ -50,7 +50,6 @@ Some statistics by journals are provided.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/billing',
-    'images': ['images/invoice_type.jpeg'],
     'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv',

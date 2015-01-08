@@ -721,9 +721,13 @@ class mrp_production(osv.osv):
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
         for production in self.browse(cr, uid, ids, context=context):
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
+            procs = proc_obj.search(cr, uid, [('move_dest_id', 'in', [x.id for x in production.move_lines])], context=context)
+            if procs:
+                proc_obj.cancel(cr, uid, procs, context=context)
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
         # Put related procurements in exception
