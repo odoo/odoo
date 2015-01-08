@@ -48,15 +48,23 @@
             <field name="res_model">res.partner.tag</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new partner tags.
-              </p><p>
-                Manage the partner tags to better classify them on your website.
-                You can add the filter by tag on your website in the "Customize" menu.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a new partner tag.
+                </p>
+                <p>
+                    Manage the partner tags to better classify them on your website.
+                    You can add the filter by tag on your website in the "Customize" menu.
+                </p>
             </field>
         </record>
 
-        <menuitem action="action_partner_tag_form" id="menu_partner_tag_form" name="Tags" sequence="2" parent="base.menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem
+            action="action_partner_tag_form"
+            id="menu_partner_tag_form"
+            name="Tags"
+            sequence="2"
+            parent="base.menu_config_address_book"
+            groups="base.group_no_one"
+        />
     </data>
 </openerp>
