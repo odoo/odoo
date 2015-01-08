@@ -95,7 +95,10 @@
                 defaultMessage: _t("How may I help you?"),
                 defaultUsername: _t("Visitor"),
             });
-            openerp.session = new openerp.Session(null, server_url, { use_cors: false });
+            // Let's check if a session exists first, otherwise it will replace it with an 'empty' one
+            if (!openerp.session) {
+                openerp.session = new openerp.Session(null, server_url, { use_cors: false });
+            }
             this.load_template(db, channel, options, rule);
         },
         _get_template_list: function(){
