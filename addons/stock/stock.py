@@ -395,9 +395,11 @@ class stock_quant(osv.osv):
         :param src_package_id: ID of the package that contains the quants to move
         :param dest_package_id: ID of the package that must be set on the moved quant
         """
+        context = context or {}
         quants_reconcile = []
         to_move_quants = []
-        self._check_location(cr, uid, location_to, context=context)
+        if not context.get('quants_move_do_not_check_location', False):
+            self._check_location(cr, uid, location_to, context=context)
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
