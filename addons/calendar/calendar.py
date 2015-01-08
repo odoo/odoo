@@ -971,12 +971,14 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.stop < event.start:
+            if event.start_datetime and event.stop_datetime < event.start_datetime:
+                return False
+            if event.start_date and event.stop_date < event.start_date:
                 return False
         return True
 
     _constraints = [
-        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['start', 'stop'])
+        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['start_datetime', 'stop_datetime', 'start_date', 'stop_date'])
     ]
 
     def onchange_allday(self, cr, uid, ids, start=False, end=False, starttime=False, endtime=False, startdatetime=False, enddatetime=False, checkallday=False, context=None):
