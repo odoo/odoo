@@ -399,6 +399,22 @@ class account_move(models.Model):
                 total += line.debit
             move.amount = total
 
+    @api.depends('line_id.debit', 'line_id.credit', 'line_id.reconcile_partial_ids.amount', 'line_id.reconcile_partial_with_ids.amount', 'line_id.account_id.user_type.type')
+    def _compute_reconcile_percentage(self):
+        for move in self:
+            total_amount = 0.0
+            total_reconciled = 0.0
+            for line in move.line_id:
+                if line.account_id.user_type.type in ('receivable', 'payable'):
+                    amount = abs(line.debit - line.credit)
+                    total_amount += amount
+                    for partial_line in (line.reconcile_partial_ids + line.reconcile_partial_with_ids):
+                        total_reconciled += partial_line.amount
+            if total_amount == 0.0:
+                move.reconciled_percentage = 0.0
+            else:
+                move.reconciled_percentage = total_reconciled / total_amount
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
@@ -417,6 +433,7 @@ class account_move(models.Model):
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
+    reconciled_percentage = fields.Float('Percentage Reconciled', compute='_compute_reconcile_percentage', digits=0, store=True, readonly=True)
 
     @api.multi
     def post(self):

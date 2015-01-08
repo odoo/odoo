@@ -77,6 +77,16 @@ class account_move_line(models.Model):
             journal_id = recs[0].id
         return journal_id
 
+    @api.depends('debit', 'credit', 'move_id.reconciled_percentage', 'move_id.journal_id')
+    def _compute_cash_basis(self):
+        for move_line in self:
+            if move_line.journal_id.type in ('sale', 'purchase'):
+                move_line.debit_cash_basis = move_line.debit * move_line.move_id.reconciled_percentage
+                move_line.credit_cash_basis = move_line.credit * move_line.move_id.reconciled_percentage
+            else:
+                move_line.debit_cash_basis = move_line.debit
+                move_line.credit_cash_basis = move_line.credit
+
     name = fields.Char(required=True)
     quantity = fields.Float(digits=(16,2),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
@@ -84,6 +94,8 @@ class account_move_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
+    debit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
+    credit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
