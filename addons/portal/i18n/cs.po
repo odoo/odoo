@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-06-20 14:30+0000\n"
 "Last-Translator: Jan Grmela <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -130,6 +130,15 @@ msgid "Share Wizard"
 msgstr "Průvodce sdílením"
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid ""
+"<p>\n"
+"                    You don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 ", so it may use Mako expressions.\n"
@@ -137,19 +146,6 @@ msgid ""
 msgstr ""
 ", takže může používat výrazy Mako.\n"
 "                                Vyhodnocovací kontext Mako nabízí:"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_news
-msgid ""
-"<p>\n"
-"                    Youd don't have unread company's news.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                   Máte všechny firemní novinky přečteny.\n"
-"                </p>\n"
-"            "
 
 #. module: portal
 #: field:portal.wizard.user,email:0
@@ -183,6 +179,7 @@ msgid "Jobs"
 msgstr "Pracovní místa"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users
 #: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Uživatelé"
@@ -200,7 +197,7 @@ msgid "No online payment acquirers configured"
 msgstr "Žádní online příjemci plateb nenastaveni"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:54
+#: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -225,17 +222,13 @@ msgid "Users you already shared with"
 msgstr "Uživatelé, se kterými jste už sdíleli"
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_jobs
+#: view:portal.payment.acquirer:0
 msgid ""
-"<p>\n"
-"                    Youd don't have unread job offers.\n"
-"                </p>\n"
-"            "
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
 msgstr ""
-"<p>\n"
-"                    Máte všechny nabídky pracovních míst přečteny.\n"
-"                </p>\n"
-"            "
+"object: dokument, na kterém je platební formulář vykreslen (obvykle faktura "
+"nebo záznam potvrzení objednávky)"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -291,9 +284,16 @@ msgid "News"
 msgstr "Novinky"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Poprodejní služby"
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
+msgstr "Přístup zamítnut"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "Příchozí zprávy"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
@@ -318,10 +318,10 @@ msgid "Projects"
 msgstr "Projekty"
 
 #. module: portal
-#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_inbox
-msgid "Inbox"
-msgstr "Příchozí zprávy"
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "Existující skupiny (např. skupiny portálu)"
 
 #. module: portal
 #: view:share.wizard:0
@@ -345,9 +345,9 @@ msgid "Access Groups"
 msgstr "Přístupové skupiny"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "uid: the current user id"
-msgstr "uid: id aktuálního uživatele"
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "Zpráva"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -382,11 +382,6 @@ msgstr ""
 "href=\"%s\">našeho zákaznického portálu</a></p>"
 
 #. module: portal
-#: field:portal.payment.acquirer,form_template:0
-msgid "Payment form template (HTML)"
-msgstr "Platba ze šablony (HTML)"
-
-#. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
 msgstr "Kontakt"
@@ -397,15 +392,19 @@ msgid "Outgoing Mails"
 msgstr "Odchozí pošta"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:193
-#, python-format
-msgid "Email required"
-msgstr "Požadován email"
+#: field:portal.payment.acquirer,form_template:0
+msgid "Payment form template (HTML)"
+msgstr "Platba ze šablony (HTML)"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
 msgstr "Zprávy"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "uid: the current user id"
+msgstr "uid: id aktuálního uživatele"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -424,10 +423,9 @@ msgid "Online Payment Acquirer"
 msgstr "Online příjemce plateb"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:53
-#, python-format
-msgid "Access Denied"
-msgstr "Přístup zamítnut"
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "Poprodejní služby"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -472,15 +470,6 @@ msgstr ""
 "                    nebo osob, jejichž zprávy odebíráte.\n"
 "                </p>\n"
 "            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sales order record)"
-msgstr ""
-"object: dokument, na kterém je platební formulář vykreslen (obvykle faktura "
-"nebo záznam potvrzení objednávky)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -608,10 +597,10 @@ msgid "Visible"
 msgstr "Viditelný"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:39
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
-msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Existující skupiny (např. skupiny portálu)"
+msgid "Email Required"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard:0
@@ -624,9 +613,13 @@ msgid "Apply"
 msgstr "Použít"
 
 #. module: portal
-#: model:ir.model,name:portal.model_mail_message
-msgid "Message"
-msgstr "Zpráva"
+#: model:ir.actions.client,help:portal.action_news
+msgid ""
+"<p>\n"
+"                    You don't have unread company's news.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -676,6 +669,10 @@ msgstr "Šablona formuláře"
 msgid "Details"
 msgstr "Podrobnosti"
 
+#, python-format
+#~ msgid "Email required"
+#~ msgstr "Požadován email"
+
 #~ msgid "Quotations and Sales Orders"
 #~ msgstr "Nabídky a potvrzení objednávky"
 
@@ -685,3 +682,25 @@ msgstr "Podrobnosti"
 #~ msgstr ""
 #~ "Přistupujte k vašim osobním dokumentům prostřednictvím <a href=\"%s\">našeho "
 #~ "zákaznického portálu</a>"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread company's news.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                   Máte všechny firemní novinky přečteny.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread job offers.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Máte všechny nabídky pracovních míst přečteny.\n"
+#~ "                </p>\n"
+#~ "            "

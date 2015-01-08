@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2013-03-10 10:06+0000\n"
-"Last-Translator: Radomil Urbánek <radek@sluzebnik.cz>\n"
+"Last-Translator: Radomil Urbánek <acrux@me.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:34+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:24+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:842
@@ -231,6 +231,11 @@ msgid "Configuration"
 msgstr "Nastavení"
 
 #. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr "Možnost prohlížet"
+
+#. module: share
 #: view:share.wizard:0
 msgid ""
 "Please select the action that opens the screen containing the data you want "
@@ -243,13 +248,6 @@ msgstr ""
 #: field:res.groups,share:0
 msgid "Share Group"
 msgstr "Sdílena skupina"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:835
-#: code:addons/share/wizard/share_wizard.py:866
-#, python-format
-msgid "Email required"
-msgstr "Požadován email"
 
 #. module: share
 #: view:share.wizard:0
@@ -501,9 +499,11 @@ msgid "Current View Type"
 msgstr "Stávající druh zobrazení"
 
 #. module: share
-#: selection:share.wizard,access_mode:0
-msgid "Can view"
-msgstr "Možnost prohlížet"
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
+#, python-format
+msgid "Email Required"
+msgstr ""
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -658,3 +658,7 @@ msgstr "nebo"
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
 msgstr "Přístupová práva, která přidělíte ke sdíleným dokumentům."
+
+#, python-format
+#~ msgid "Email required"
+#~ msgstr "Požadován email"

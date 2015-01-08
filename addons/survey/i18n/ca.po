@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -23,7 +23,7 @@ msgid "Single Textboxes"
 msgstr "Camp de text únic"
 
 #. module: survey
-#: code:addons/survey/survey.py:471
+#: code:addons/survey/survey.py:472
 #, python-format
 msgid ""
 "Minimum Required Answer you                                     entered is "
@@ -111,6 +111,11 @@ msgid "Date started"
 msgstr "Data d'inici"
 
 #. module: survey
+#: field:survey.response.answer,value_choice:0
+msgid "Value Choice"
+msgstr "Valor de la selecció"
+
+#. module: survey
 #: field:survey,history:0
 msgid "History Lines"
 msgstr "Línies històric"
@@ -177,7 +182,13 @@ msgid "Add Comment Field"
 msgstr "Camp per agregar comentari"
 
 #. module: survey
-#: code:addons/survey/survey.py:450
+#: code:addons/survey/report/survey_browse_response.py:238
+#, python-format
+msgid "Status :- "
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:451
 #, python-format
 msgid ""
 "#Required Answer you entered                                     is greater "
@@ -203,7 +214,7 @@ msgid "survey.name.wiz"
 msgstr "enquesta.nom.assist"
 
 #. module: survey
-#: code:addons/survey/survey.py:483
+#: code:addons/survey/survey.py:484
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
@@ -225,7 +236,7 @@ msgid "Send Reminder for Existing User"
 msgstr "Envia recordatori per a usuari existent"
 
 #. module: survey
-#: code:addons/survey/survey.py:525
+#: code:addons/survey/survey.py:526
 #, python-format
 msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
@@ -326,8 +337,8 @@ msgid "Rating Scale"
 msgstr "Escala de qualificació"
 
 #. module: survey
-#: code:addons/survey/survey.py:152
-#: code:addons/survey/survey.py:187
+#: code:addons/survey/survey.py:153
+#: code:addons/survey/survey.py:188
 #, python-format
 msgid ""
 "This survey has no question defined. Please define the questions and answers "
@@ -350,7 +361,7 @@ msgid "Survey Open Date"
 msgstr "Data d'obertura de l'enquesta"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:800
+#: code:addons/survey/wizard/survey_answer.py:804
 #, python-format
 msgid "You cannot select the same answer more than one time."
 msgstr ""
@@ -371,8 +382,8 @@ msgid "Edit Survey"
 msgstr "Edita enquesta"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:766
-#: code:addons/survey/wizard/survey_answer.py:961
+#: code:addons/survey/wizard/survey_answer.py:770
+#: code:addons/survey/wizard/survey_answer.py:965
 #, python-format
 msgid "Please enter an integer value."
 msgstr ""
@@ -383,7 +394,7 @@ msgid "Menu Choice"
 msgstr "Menú Selecció"
 
 #. module: survey
-#: code:addons/survey/survey.py:493
+#: code:addons/survey/survey.py:494
 #, python-format
 msgid ""
 "You must enter one or more menu choices                                 in "
@@ -399,6 +410,12 @@ msgstr "Com a màxim"
 #: view:survey:0
 #: view:survey.request:0
 msgid "My Survey(s)"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/report/survey_browse_response.py:219
+#, python-format
+msgid "Answered by : "
 msgstr ""
 
 #. module: survey
@@ -435,8 +452,9 @@ msgid "Text"
 msgstr "Text"
 
 #. module: survey
-#: view:survey:0
-msgid "Edit..."
+#: code:addons/survey/wizard/survey_answer.py:396
+#, python-format
+msgid "Exit"
 msgstr ""
 
 #. module: survey
@@ -457,10 +475,10 @@ msgid "survey.request"
 msgstr "sol·licitud.enquesta"
 
 #. module: survey
-#: field:survey.send.invitation,mail_subject:0
-#: field:survey.send.invitation,mail_subject_existing:0
-msgid "Subject"
-msgstr "Assumpte"
+#: code:addons/survey/wizard/survey_answer.py:379
+#, python-format
+msgid "Previous"
+msgstr ""
 
 #. module: survey
 #: field:survey.question,comment_maximum_float:0
@@ -496,7 +514,7 @@ msgid "Don't Validate Comment Text."
 msgstr "No valideu el text del comentari"
 
 #. module: survey
-#: code:addons/survey/survey.py:532
+#: code:addons/survey/survey.py:533
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
 msgstr ""
@@ -522,9 +540,10 @@ msgid "Search Survey Page"
 msgstr "Cerca pàgina de l'enquesta"
 
 #. module: survey
-#: field:survey.question.wiz,name:0
-msgid "Number"
-msgstr "Número"
+#: code:addons/survey/wizard/survey_answer.py:380
+#, python-format
+msgid "Next"
+msgstr ""
 
 #. module: survey
 #: view:survey.request:0
@@ -532,9 +551,9 @@ msgid "Evaluation Plan Phase"
 msgstr "Fase del pla d'avaluació"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_send_invitation.py:185
-#: code:addons/survey/wizard/survey_send_invitation.py:196
-#: code:addons/survey/wizard/survey_send_invitation.py:199
+#: code:addons/survey/wizard/survey_send_invitation.py:178
+#: code:addons/survey/wizard/survey_send_invitation.py:191
+#: code:addons/survey/wizard/survey_send_invitation.py:194
 #, python-format
 msgid "Unknown"
 msgstr ""
@@ -583,14 +602,24 @@ msgid "Required Answer"
 msgstr "Resposta obligatòria"
 
 #. module: survey
-#: code:addons/survey/survey.py:96
-#: code:addons/survey/survey.py:259
+#: code:addons/survey/survey.py:425
+#: code:addons/survey/survey.py:513
+#, python-format
+msgid ""
+"You must enter one or more column headings for question \"%s\" of page %s."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:97
+#: code:addons/survey/survey.py:260
 #, python-format
 msgid "%s (copy)"
 msgstr ""
 
 #. module: survey
+#: code:addons/survey/report/survey_browse_response.py:231
 #: selection:survey.response,state:0
+#, python-format
 msgid "Not Finished"
 msgstr "No acabat"
 
@@ -605,7 +634,7 @@ msgid "Select Partner"
 msgstr "Selecciona empresa"
 
 #. module: survey
-#: code:addons/survey/survey.py:527
+#: code:addons/survey/survey.py:528
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
 msgstr ""
@@ -624,6 +653,12 @@ msgstr "Respostes"
 #: selection:survey.response,response_type:0
 msgid "Link"
 msgstr "Enllaç"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_answer.py:178
+#, python-format
+msgid "Answer Of :- "
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_type_form
@@ -658,7 +693,7 @@ msgid "Error Message"
 msgstr "Missatge d'error"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:124
+#: code:addons/survey/wizard/survey_answer.py:125
 #, python-format
 msgid "You cannot answer this survey more than %s times."
 msgstr ""
@@ -705,17 +740,18 @@ msgid "Survey Requests"
 msgstr "Sol·licituds d'enquestes"
 
 #. module: survey
-#: model:ir.model,name:survey.model_survey_browse_answer
-msgid "survey.browse.answer"
-msgstr "enquesta.explora.respostes"
+#: code:addons/survey/report/survey_browse_response.py:74
+#, python-format
+msgid "Page : "
+msgstr ""
 
 #. module: survey
-#: selection:survey.question,comment_field_type:0
-msgid "Paragraph of Text"
-msgstr "Paràgraf de text"
+#: view:survey:0
+msgid "Edit..."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:477
+#: code:addons/survey/survey.py:478
 #, python-format
 msgid ""
 "Maximum Required Answer you                                     entered for "
@@ -746,7 +782,7 @@ msgid "Options"
 msgstr "Opcions"
 
 #. module: survey
-#: code:addons/survey/survey.py:436
+#: code:addons/survey/survey.py:437
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
@@ -851,11 +887,9 @@ msgid "Set to one if  you require only one Answer per user"
 msgstr "Estableix a un si només requereix una resposta per usuari."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
-#: code:addons/survey/survey.py:512
+#: code:addons/survey/wizard/survey_answer.py:179
 #, python-format
-msgid ""
-"You must enter one or more column headings for question \"%s\" of page %s."
+msgid " Answer :- "
 msgstr ""
 
 #. module: survey
@@ -870,7 +904,13 @@ msgid "Message"
 msgstr "Missatge"
 
 #. module: survey
-#: code:addons/survey/survey.py:497
+#: field:survey.send.invitation,mail_subject:0
+#: field:survey.send.invitation,mail_subject_existing:0
+msgid "Subject"
+msgstr "Assumpte"
+
+#. module: survey
+#: code:addons/survey/survey.py:498
 #, python-format
 msgid ""
 "You must enter one or more menu                                 choices in "
@@ -920,6 +960,11 @@ msgstr ""
 "Mostra aquest missatge d'error quan les seleccions no totalitzin correctament"
 
 #. module: survey
+#: field:survey,date_close:0
+msgid "Survey Close Date"
+msgstr "Data de tancament de l'enquesta"
+
+#. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form1
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -936,9 +981,9 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: field:survey,date_close:0
-msgid "Survey Close Date"
-msgstr "Data de tancament de l'enquesta"
+#: selection:survey.question,comment_field_type:0
+msgid "Paragraph of Text"
+msgstr "Paràgraf de text"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
@@ -955,6 +1000,14 @@ msgstr "Valida text"
 #: view:survey.name.wiz:0
 msgid "Start"
 msgstr "Inicia"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_selection.py:83
+#, python-format
+msgid ""
+"You cannot give more responses. Please contact the author of this survey for "
+"further assistance."
+msgstr ""
 
 #. module: survey
 #: field:survey.question,comment_maximum_no:0
@@ -984,6 +1037,7 @@ msgid "Matrix of Drop-down Menus"
 msgstr "Matriu de menús desplegables"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_answer.py:226
 #: view:survey:0
 #: field:survey.answer,answer:0
 #: field:survey.name.wiz,response:0
@@ -1002,6 +1056,7 @@ msgstr "Matriu de menús desplegables"
 #: field:survey.response.line,response_table_ids:0
 #: field:survey.send.invitation,partner_ids:0
 #: field:survey.tbl.column.heading,response_table_id:0
+#, python-format
 msgid "Answer"
 msgstr "Resposta"
 
@@ -1021,11 +1076,9 @@ msgid "Store Answer"
 msgstr "Desa resposta"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_selection.py:83
+#: code:addons/survey/report/survey_browse_response.py:216
 #, python-format
-msgid ""
-"You cannot give more responses. Please contact the author of this survey for "
-"further assistance."
+msgid "Print Date : "
 msgstr ""
 
 #. module: survey
@@ -1049,9 +1102,10 @@ msgid "Print Survey"
 msgstr "Imprimeix enquesta"
 
 #. module: survey
-#: field:survey.response.answer,value_choice:0
-msgid "Value Choice"
-msgstr "Valor de la selecció"
+#: code:addons/survey/report/survey_browse_response.py:309
+#, python-format
+msgid "No Answer"
+msgstr ""
 
 #. module: survey
 #: field:survey.response,response_type:0
@@ -1171,11 +1225,9 @@ msgid "Skiped"
 msgstr "Omès"
 
 #. module: survey
-#: code:addons/survey/survey.py:534
+#: code:addons/survey/wizard/survey_answer.py:996
 #, python-format
-msgid ""
-"You must enter one or more menu choices in column heading (white spaces not "
-"allowed)."
+msgid "You cannot select same answer more than one time.'"
 msgstr ""
 
 #. module: survey
@@ -1196,12 +1248,23 @@ msgid "Browse Answers"
 msgstr "Cerca respostes"
 
 #. module: survey
+#: model:ir.model,name:survey.model_survey_browse_answer
+msgid "survey.browse.answer"
+msgstr "enquesta.explora.respostes"
+
+#. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
 msgstr "Línia de resposta d'enquesta"
 
 #. module: survey
-#: code:addons/survey/survey.py:169
+#: code:addons/survey/report/survey_browse_response.py:226
+#, python-format
+msgid "Answer Date : "
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:170
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
@@ -1309,8 +1372,10 @@ msgid "Field Label"
 msgstr "Etiqueta del camp"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_answer.py:382
 #: view:survey.request:0
 #: selection:survey.request,state:0
+#, python-format
 msgid "Done"
 msgstr "Fet"
 
@@ -1352,7 +1417,7 @@ msgid "Open"
 msgstr "Obre"
 
 #. module: survey
-#: code:addons/survey/survey.py:508
+#: code:addons/survey/survey.py:509
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
@@ -1363,7 +1428,13 @@ msgid "Total Started Survey"
 msgstr "Total d'enquestes començades"
 
 #. module: survey
-#: code:addons/survey/survey.py:517
+#: code:addons/survey/wizard/survey_answer.py:178
+#, python-format
+msgid ",  Date :- "
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:518
 #, python-format
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
@@ -1421,7 +1492,7 @@ msgid "Email Notification on Answer"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:445
+#: code:addons/survey/wizard/survey_answer.py:449
 #, python-format
 msgid "Complete Survey Answer"
 msgstr "Enquesta completada"
@@ -1451,6 +1522,14 @@ msgstr "Envia invitació"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:535
+#, python-format
+msgid ""
+"You must enter one or more menu choices in column heading (white spaces not "
+"allowed)."
 msgstr ""
 
 #. module: survey
@@ -1513,19 +1592,19 @@ msgid "Supplier Selection"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:992
+#: code:addons/survey/report/survey_browse_response.py:232
 #, python-format
-msgid "You cannot select same answer more than one time.'"
+msgid "Finished"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:685
+#: code:addons/survey/survey.py:691
 #, python-format
 msgid "You cannot duplicate the resource!"
 msgstr "No podeu duplicar el recurs!"
 
 #. module: survey
-#: code:addons/survey/survey.py:523
+#: code:addons/survey/survey.py:524
 #, python-format
 msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
@@ -1533,6 +1612,11 @@ msgid ""
 msgstr ""
 "El mínim de respostes obligatòries que heu introduït és major que el número "
 "de respostes. Introduïu un número menor de %d."
+
+#. module: survey
+#: field:survey.question.wiz,name:0
+msgid "Number"
+msgstr "Número"
 
 #. module: survey
 #: view:survey:0
@@ -1551,12 +1635,18 @@ msgid "Surveys Answers"
 msgstr "Respostes de l'enquesta"
 
 #. module: survey
+#: code:addons/survey/report/survey_browse_response.py:249
+#, python-format
+msgid "Page :- "
+msgstr ""
+
+#. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
 msgid "Pages"
 msgstr "Pàgines"
 
 #. module: survey
-#: code:addons/survey/survey.py:455
+#: code:addons/survey/survey.py:456
 #, python-format
 msgid ""
 "#Required Answer you entered is                                     greater "
@@ -1606,49 +1696,49 @@ msgid "Error message"
 msgstr "Missatge d'error"
 
 #. module: survey
-#: code:addons/survey/survey.py:152
-#: code:addons/survey/survey.py:169
-#: code:addons/survey/survey.py:187
-#: code:addons/survey/survey.py:424
-#: code:addons/survey/survey.py:436
-#: code:addons/survey/survey.py:450
-#: code:addons/survey/survey.py:455
-#: code:addons/survey/survey.py:465
-#: code:addons/survey/survey.py:471
-#: code:addons/survey/survey.py:477
-#: code:addons/survey/survey.py:483
-#: code:addons/survey/survey.py:487
-#: code:addons/survey/survey.py:493
-#: code:addons/survey/survey.py:497
-#: code:addons/survey/survey.py:508
-#: code:addons/survey/survey.py:512
-#: code:addons/survey/survey.py:517
-#: code:addons/survey/survey.py:523
-#: code:addons/survey/survey.py:525
-#: code:addons/survey/survey.py:527
-#: code:addons/survey/survey.py:532
-#: code:addons/survey/survey.py:534
-#: code:addons/survey/survey.py:685
-#: code:addons/survey/wizard/survey_answer.py:117
-#: code:addons/survey/wizard/survey_answer.py:124
-#: code:addons/survey/wizard/survey_answer.py:707
-#: code:addons/survey/wizard/survey_answer.py:746
-#: code:addons/survey/wizard/survey_answer.py:766
-#: code:addons/survey/wizard/survey_answer.py:795
-#: code:addons/survey/wizard/survey_answer.py:800
-#: code:addons/survey/wizard/survey_answer.py:808
-#: code:addons/survey/wizard/survey_answer.py:819
-#: code:addons/survey/wizard/survey_answer.py:828
-#: code:addons/survey/wizard/survey_answer.py:833
-#: code:addons/survey/wizard/survey_answer.py:907
-#: code:addons/survey/wizard/survey_answer.py:943
-#: code:addons/survey/wizard/survey_answer.py:961
-#: code:addons/survey/wizard/survey_answer.py:989
-#: code:addons/survey/wizard/survey_answer.py:992
-#: code:addons/survey/wizard/survey_answer.py:995
-#: code:addons/survey/wizard/survey_answer.py:1007
-#: code:addons/survey/wizard/survey_answer.py:1014
-#: code:addons/survey/wizard/survey_answer.py:1017
+#: code:addons/survey/survey.py:153
+#: code:addons/survey/survey.py:170
+#: code:addons/survey/survey.py:188
+#: code:addons/survey/survey.py:425
+#: code:addons/survey/survey.py:437
+#: code:addons/survey/survey.py:451
+#: code:addons/survey/survey.py:456
+#: code:addons/survey/survey.py:466
+#: code:addons/survey/survey.py:472
+#: code:addons/survey/survey.py:478
+#: code:addons/survey/survey.py:484
+#: code:addons/survey/survey.py:488
+#: code:addons/survey/survey.py:494
+#: code:addons/survey/survey.py:498
+#: code:addons/survey/survey.py:509
+#: code:addons/survey/survey.py:513
+#: code:addons/survey/survey.py:518
+#: code:addons/survey/survey.py:524
+#: code:addons/survey/survey.py:526
+#: code:addons/survey/survey.py:528
+#: code:addons/survey/survey.py:533
+#: code:addons/survey/survey.py:535
+#: code:addons/survey/survey.py:691
+#: code:addons/survey/wizard/survey_answer.py:118
+#: code:addons/survey/wizard/survey_answer.py:125
+#: code:addons/survey/wizard/survey_answer.py:711
+#: code:addons/survey/wizard/survey_answer.py:750
+#: code:addons/survey/wizard/survey_answer.py:770
+#: code:addons/survey/wizard/survey_answer.py:799
+#: code:addons/survey/wizard/survey_answer.py:804
+#: code:addons/survey/wizard/survey_answer.py:812
+#: code:addons/survey/wizard/survey_answer.py:823
+#: code:addons/survey/wizard/survey_answer.py:832
+#: code:addons/survey/wizard/survey_answer.py:837
+#: code:addons/survey/wizard/survey_answer.py:911
+#: code:addons/survey/wizard/survey_answer.py:947
+#: code:addons/survey/wizard/survey_answer.py:965
+#: code:addons/survey/wizard/survey_answer.py:993
+#: code:addons/survey/wizard/survey_answer.py:996
+#: code:addons/survey/wizard/survey_answer.py:999
+#: code:addons/survey/wizard/survey_answer.py:1011
+#: code:addons/survey/wizard/survey_answer.py:1018
+#: code:addons/survey/wizard/survey_answer.py:1021
 #: code:addons/survey/wizard/survey_selection.py:80
 #: code:addons/survey/wizard/survey_selection.py:83
 #: code:addons/survey/wizard/survey_send_invitation.py:71
@@ -1657,7 +1747,7 @@ msgid "Warning!"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:465
+#: code:addons/survey/survey.py:466
 #, python-format
 msgid ""
 "Minimum Required Answer                                     you entered is "
@@ -1678,7 +1768,7 @@ msgid "ID"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:487
+#: code:addons/survey/survey.py:488
 #, python-format
 msgid ""
 "Maximum Required Answer is greater                                     than "
@@ -1729,12 +1819,14 @@ msgid "Float"
 msgstr "Float"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_answer.py:395
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
 #: view:survey.send.invitation:0
+#, python-format
 msgid "or"
 msgstr ""
 
@@ -1789,7 +1881,7 @@ msgid "Table"
 msgstr "Taula"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_answer.py:117
+#: code:addons/survey/wizard/survey_answer.py:118
 #, python-format
 msgid "You cannot answer because the survey is not open."
 msgstr ""

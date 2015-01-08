@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:29+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:15+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,12 +83,6 @@ msgid "Start Task"
 msgstr "Starta aktivitet"
 
 #. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr "Varning !"
-
-#. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
@@ -133,8 +127,9 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -413,7 +408,7 @@ msgid "Assigned to"
 msgstr "Tilldelad till"
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Användaren som ärendet delegeras till måste anges"
@@ -1174,7 +1169,7 @@ msgid "Done by"
 msgstr "Utfört av"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1248,9 +1243,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Beräknas som: Nedlagd tid + Återstående tid."
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -1295,6 +1290,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Team"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
 msgstr ""
 
 #. module: project
@@ -1463,7 +1464,7 @@ msgstr ""
 "projektledaren när aktiviteten har status preliminär."
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -1474,7 +1475,7 @@ msgid "Issue Version"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1584,7 +1585,7 @@ msgid "Overpassed Tasks"
 msgstr "Övertrasserade aktiviteter"
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1645,12 +1646,6 @@ msgid "CHECK: "
 msgstr "CHECK: "
 
 #. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr "Du måste tilldela medarbetare till projektet '%s'!"
-
-#. module: project
 #: view:project.project:0
 msgid "Pending Projects"
 msgstr "Vilande projekt"
@@ -1703,6 +1698,11 @@ msgstr "Viktigt"
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Definiera behov och planerade timmar"
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1873,7 +1873,7 @@ msgid "Starting Date"
 msgstr "Startdatum"
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2035,7 +2035,7 @@ msgid "Reevaluation Task"
 msgstr "Omvärdering av aktiviteten"
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Vänligen radera projektet som är länkat till detta konto först."
@@ -2180,3 +2180,11 @@ msgstr "År"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Aktivitetsetapper"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Varning !"
+
+#, python-format
+#~ msgid "You must assign members on the project '%s' !"
+#~ msgstr "Du måste tilldela medarbetare till projektet '%s'!"

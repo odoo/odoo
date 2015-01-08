@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2014-01-22 13:29+0000\n"
-"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
+"PO-Revision-Date: 2014-08-29 07:33+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-23 05:57+0000\n"
-"X-Generator: Launchpad (build 16901)\n"
+"X-Launchpad-Export-Date: 2014-08-30 07:31+0000\n"
+"X-Generator: Launchpad (build 17176)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -28,7 +28,7 @@ msgid "Server Name"
 msgstr "サーバ名"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
@@ -63,12 +63,12 @@ msgid ""
 msgstr "Eメールの原本を保存して、処理済みメッセージを添付するかどうかの指定。これを指定すると、メッセージ・データベースのサイズが倍になります。"
 
 #. module: fetchmail
-#: view:base.config.settings:0
+#: view:base.config.settings:fetchmail.inherit_view_general_configuration
 msgid "Configure the incoming email gateway"
 msgstr "受信メールゲートウェイを設定"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "いま読み取る。"
 
@@ -76,15 +76,15 @@ msgstr "いま読み取る。"
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Eメールサーバから読取り中"
+msgstr "受信メールサーバ"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "サーバタイプ IMAP"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "POP/MAPサーバ"
 
@@ -104,12 +104,12 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAPサーバ"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "確認をリセット"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
@@ -131,7 +131,7 @@ msgid ""
 msgstr "受信するEメールが作成したレコードによって、カスタムサーバの実行を起動するかどうかの選択"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_tree
 msgid "# of emails"
 msgstr "Eメールの数"
 
@@ -141,12 +141,12 @@ msgid "Keep Original"
 msgstr "原本を保持する"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "高度なオプション"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
 msgstr "設定"
@@ -157,9 +157,10 @@ msgid "Script"
 msgstr "スクリプト"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "受信Eメールサーバ"
+msgstr "受信メールサーバ"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
@@ -191,7 +192,7 @@ msgid ""
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "テスト・確認"
 
@@ -203,7 +204,7 @@ msgstr "サーバアクション"
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr "受信Eメールサーバ"
+msgstr "受信メールサーバ"
 
 #. module: fetchmail
 #: field:fetchmail.server,message_ids:0
@@ -212,9 +213,9 @@ msgid "Messages"
 msgstr "メッセージ"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "受信Eメールサーバを検索する"
+msgstr "受信メールサーバを検索"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -244,12 +245,12 @@ msgid "IMAP Server"
 msgstr "IMAP サーバー"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "サーバタイプPOP"
 
@@ -259,7 +260,7 @@ msgid "Password"
 msgstr "パスワード"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
 msgstr "受信Eメールに対する処理"
 
@@ -269,27 +270,27 @@ msgid "Server Type"
 msgstr "サーバタイプ"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "ログイン情報"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "サーバ情報"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "If SSL required."
 msgstr "SSLは必要ならば"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Advanced"
 msgstr "高度"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "サーバとログイン"
 

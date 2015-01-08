@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-14 14:39+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-15 07:37+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -103,6 +103,12 @@ msgstr "Үйлдвэрлэлийн Захиалга"
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
 msgstr "Үйлдвэрлэлийн ажиллагаа"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -202,6 +208,26 @@ msgid "Actual Production Date"
 msgstr "Үйлдвэрлэлийн бодит огноо"
 
 #. module: mrp_operations
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+"* Ажлын захиалга үүсгэгдсэн дараагаараа  'Ноорог' төлөвтэй байдаг.\n"
+"* Ажлын захиалгыг хэрэглэгч эхэлсэн горимд оруулахад 'Боловсруулагдаж буй' "
+"төлөвтэй болно.\n"
+"* Ажлыг захиалаг явагдаж байхад хэрэглэгж түүнийг зогсоох, өөрчлөлт хийхийг "
+"хүсвэл 'Шийд хүлээсэн' төлөвт оруулж болно.\n"
+"* Хэрэглэгч ажлын захиалгыг цуцласан бол 'Цуцласан' төлөвтэй болно.\n"
+"* Ажлын захиалга бүрэн дууссан тохиолдолд төлөв нь 'Дууссан' төлөвтэй болно."
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
 msgstr "Үйлдвэрлэлийн дамжлага"
@@ -253,12 +279,6 @@ msgstr "Төлөвлөсөн огноо"
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Барааны тоо"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#, python-format
-msgid "Manufacturing order cannot start in state \"%s\"!"
-msgstr "\"%s\" төлөвт байгаа үйлдвэрлэх захиалгыг эхлүүлж чадахгүй!"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -553,12 +573,6 @@ msgid "Finish the operation."
 msgstr "Ажиллагааг дуусгах."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
-#, python-format
-msgid "Operation is not started yet !"
-msgstr "Ажиллагаа хараахан эхлээгүй байна !"
-
-#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Үйлдвэрлэлийн захиалгаасх мэдээлэл."
@@ -621,24 +635,10 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
-"* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+#: code:addons/mrp_operations/mrp_operations.py:454
+#, python-format
+msgid "Operation is not started yet!"
 msgstr ""
-"* Ажлын захиалга үүсгэгдсэн дараагаараа  'Ноорог' төлөвтэй байдаг.\n"
-"* Ажлын захиалгыг хэрэглэгч эхэлсэн горимд оруулахад 'Боловсруулагдаж буй' "
-"төлөвтэй болно.\n"
-"* Ажлыг захиалаг явагдаж байхад хэрэглэгж түүнийг зогсоох, өөрчлөлт хийхийг "
-"хүсвэл 'Шийд хүлээсэн' төлөвт оруулж болно.\n"
-"* Хэрэглэгч ажлын захиалгыг цуцласан бол 'Цуцласан' төлөвтэй болно.\n"
-"* Ажлын захиалга бүрэн дууссан тохиолдолд төлөв нь 'Дууссан' төлөвтэй болно."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -830,3 +830,11 @@ msgstr "Жил"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Үргэлжлэх хугацаа"
+
+#, python-format
+#~ msgid "Manufacturing order cannot start in state \"%s\"!"
+#~ msgstr "\"%s\" төлөвт байгаа үйлдвэрлэх захиалгыг эхлүүлж чадахгүй!"
+
+#, python-format
+#~ msgid "Operation is not started yet !"
+#~ msgstr "Ажиллагаа хараахан эхлээгүй байна !"

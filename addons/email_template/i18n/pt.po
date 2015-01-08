@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-08-14 15:46+0000\n"
 "Last-Translator: Ricardo Santa Ana <ricardosantana@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:08+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -166,6 +166,12 @@ msgid "Email Templates"
 msgstr "Email Templates"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr ""
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -189,18 +195,9 @@ msgid "Sidebar action"
 msgstr "Ação da barra lateral"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
-"Tradução do idioma opcional (código ISO) para selecionar quando o envio de "
-"um e-mail. Se não for definida, a versão em Inglês será a utilizada. Este "
-"geralmente deve ser uma expressão de espaço reservado que fornece o código "
-"de idioma apropriado, por exemplo, ${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
+msgstr "Antevisão de"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -262,9 +259,10 @@ msgid "Advanced"
 msgstr "Avançado"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Antevisão de"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -373,9 +371,13 @@ msgid "Add context action"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
 
 #. module: email_template
@@ -498,6 +500,14 @@ msgid "Suppliers"
 msgstr ""
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -552,3 +562,14 @@ msgstr "Assunto"
 
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr "Endereço do remetente (espaços reservados podem ser usados ​​aqui)"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Tradução do idioma opcional (código ISO) para selecionar quando o envio de "
+#~ "um e-mail. Se não for definida, a versão em Inglês será a utilizada. Este "
+#~ "geralmente deve ser uma expressão de espaço reservado que fornece o código "
+#~ "de idioma apropriado, por exemplo, ${object.partner_id.lang.code}."

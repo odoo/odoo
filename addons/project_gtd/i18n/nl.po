@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-06-08 10:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:29+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -53,15 +53,20 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "Timebox legen proces met succes afgerond."
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one!"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
 msgstr "Taken in afwachting"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Er zijn geen onderliggende timeboxen!"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Taakkeuze"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -218,11 +223,6 @@ msgid "Context"
 msgstr "Context"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Taakkeuze"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Display"
 msgstr "Tonen"
@@ -303,3 +303,7 @@ msgstr "Voor het heropenen van taken"
 #: view:project.timebox.fill.plan:0
 msgid "or"
 msgstr "of"
+
+#, python-format
+#~ msgid "No timebox child of this one !"
+#~ msgstr "Er zijn geen onderliggende timeboxen!"

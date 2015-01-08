@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-06 09:20+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-07 07:24+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,12 +85,6 @@ msgid "Start Task"
 msgstr "Görevi Başlat"
 
 #. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr "Uyarı !"
-
-#. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
@@ -137,8 +131,9 @@ msgstr ""
 "formatında sipariş kanban görünümlerinde eklenecek."
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -419,7 +414,7 @@ msgid "Assigned to"
 msgstr "Atanan"
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Yetkili Kullanıcı belirtilmelidir"
@@ -1216,7 +1211,7 @@ msgid "Done by"
 msgstr "Bitiren"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz İşlem!"
@@ -1305,9 +1300,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Hesapla: Geçirilen Zaman + Kalan Zaman."
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -1353,6 +1348,12 @@ msgstr "Bir açıklama ekle..."
 #: view:project.project:0
 msgid "Team"
 msgstr "Takım"
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
+msgstr ""
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1520,7 +1521,7 @@ msgstr ""
 "durumundayken proje yöneticisi tarafından ayarlanır."
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr "Ekler"
@@ -1531,7 +1532,7 @@ msgid "Issue Version"
 msgstr "Sorun Sürümü"
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1649,7 +1650,7 @@ msgid "Overpassed Tasks"
 msgstr "Aşan Görevler"
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1712,12 +1713,6 @@ msgid "CHECK: "
 msgstr "KOTROL: "
 
 #. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr "Proje üyeleri atamalısınız '%s' !"
-
-#. module: project
 #: view:project.project:0
 msgid "Pending Projects"
 msgstr "Bekleyen Projeler"
@@ -1770,6 +1765,11 @@ msgstr "Önemli"
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Şartları belirleyip Planlanan Saatleri giriniz."
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1949,7 +1949,7 @@ msgid "Starting Date"
 msgstr "Başlama Tarihi"
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2112,7 +2112,7 @@ msgid "Reevaluation Task"
 msgstr "Yeniden Değerleme Görev"
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Önce bu hesap ile bağlantılı projeyi silin."
@@ -2256,8 +2256,16 @@ msgstr "Yıl"
 msgid "Tasks Stages"
 msgstr "Görev Aşamaları"
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Uyarı !"
+
 #~ msgid "Public"
 #~ msgstr "Genel"
+
+#, python-format
+#~ msgid "You must assign members on the project '%s' !"
+#~ msgstr "Proje üyeleri atamalısınız '%s' !"
 
 #~ msgid "Followers Only"
 #~ msgstr "Yalnızca İzleyiciler"

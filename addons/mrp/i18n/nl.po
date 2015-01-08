@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-11 11:34+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:20+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -76,7 +76,7 @@ msgstr ""
 "creëren zodra de minimum voorraad is bereikt."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
 msgstr "Kosten per uur"
@@ -215,12 +215,12 @@ msgid "Order Planning"
 msgstr "Order planning"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr "Maakt een detailplanning voor werkorders mogelijk"
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per product using properties"
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:633
+#: code:addons/mrp/mrp.py:666
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "Het is niet mogelijk de productieorder te annuleren!"
@@ -231,7 +231,7 @@ msgid "Cycle Account"
 msgstr "Cyclusrekening"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
 msgstr "Werk kosten"
@@ -247,6 +247,8 @@ msgid "Capacity Information"
 msgstr "Capaciteitsinformatie"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "Productiestappen"
@@ -415,7 +417,7 @@ msgid "Reference must be unique per Company!"
 msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: report:bom.structure:0
 #: view:mrp.bom:0
 #: field:mrp.product_price,number:0
@@ -561,7 +563,7 @@ msgid "Scheduled Date"
 msgstr "Geplande datum"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:129
+#: code:addons/mrp/procurement.py:121
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Productieorder <em>%s</em> aangemaakt."
@@ -759,7 +761,7 @@ msgid "Work Center Load"
 msgstr "Productiestap belasting"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:55
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Geen materiaallijst opgegeven voor dit product !"
@@ -932,8 +934,8 @@ msgstr ""
 "Een factor van 0,9 betekend een verlies van 10% in het productieproces."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:779
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -1002,7 +1004,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Productieorders welke wachten op grondstoffen."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -1097,7 +1099,7 @@ msgid "BoM Type"
 msgstr "Materiaallijst soort"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:57
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1121,7 +1123,7 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:634
+#: code:addons/mrp/mrp.py:667
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1137,8 +1139,8 @@ msgid "Minimum Stock"
 msgstr "Minimale voorraad"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:160
-#: code:addons/mrp/report/price.py:211
+#: code:addons/mrp/report/price.py:162
+#: code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "Totale kosten van %s %s"
@@ -1151,7 +1153,7 @@ msgid "Stockable Product"
 msgstr "Voorraadproduct"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
 msgstr "Productiestap naam"
@@ -1332,7 +1334,7 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
 msgstr "Kosten cycli"
@@ -1360,6 +1362,11 @@ msgid "Resources"
 msgstr "Resources"
 
 #. module: mrp
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
@@ -1374,7 +1381,7 @@ msgid "Analytic Journal"
 msgstr "Kostenplaatsdagboek"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
 msgstr "Leveranciersprijs per maateenheid."
@@ -1459,7 +1466,7 @@ msgstr ""
 "ingevuld."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1476,7 +1483,7 @@ msgstr ""
 "beschikbaar in het menu magazijn beheer en wordt ingesteld per product."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:187
+#: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
 msgstr "Component kosten van %s %s"
@@ -1507,7 +1514,7 @@ msgstr ""
 "(componenten) te definiëren voor het produceren van een eindproduct."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:375
+#: code:addons/mrp/mrp.py:379
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1518,7 +1525,7 @@ msgid "Production Scheduled Product"
 msgstr "Geplande productie product"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:204
+#: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
 msgstr "Werkkosten van %s %s"
@@ -1566,7 +1573,7 @@ msgid "Product Cost Structure"
 msgstr "Kostenstructuur product"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
 msgstr "Componenten leverancier"
@@ -1698,7 +1705,7 @@ msgid "SO Number"
 msgstr "Verkooporder nummer"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1736,9 +1743,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Productieorders te starten"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1990,7 +1995,7 @@ msgstr ""
 "                Dit installeert de module mrp_operations."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:779
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -2060,7 +2065,7 @@ msgid "Compute Data"
 msgstr "Bereken gegevens"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -2068,8 +2073,9 @@ msgid "Error!"
 msgstr "Fout!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: view:mrp.bom:0
+#: view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "Componenten"
@@ -2106,7 +2112,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Extra dagen productietijd"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -2120,6 +2126,11 @@ msgstr "Product hvh. VE"
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
 msgstr "Product mutatie"
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Operation"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2313,7 +2324,7 @@ msgid "Assignment from stock."
 msgstr "Toegewezen van voorraad"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
 msgstr "Kostprijs per maateenheid"
@@ -2341,7 +2352,7 @@ msgid "Manufacturing Steps."
 msgstr "Productiestappen"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:146
+#: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2368,7 +2379,7 @@ msgid "BOM Ref"
 msgstr "Referentie"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2408,7 +2419,7 @@ msgid "Bill of Materials"
 msgstr "Materiaallijst"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Kan geen materiaallijst vinden voor dit product."
@@ -2431,7 +2442,6 @@ msgid "Manage manual picking to fulfill manufacturing orders "
 msgstr "Beheer handmatig verzamelen om de productieorder uit te voeren "
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
 msgstr "Algemene informatie"
@@ -2553,13 +2563,6 @@ msgstr ""
 "                        order"
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr ""
-"Sta verschillende materiaallijsten toe per product, door gebruik te maken "
-"van eigenschappen."
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
@@ -2666,3 +2669,11 @@ msgstr "mrp.config.settings"
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Producten te verbruiken"
+
+#~ msgid "Allow several bill of materials per products using properties"
+#~ msgstr ""
+#~ "Sta verschillende materiaallijsten toe per product, door gebruik te maken "
+#~ "van eigenschappen."
+
+#~ msgid "Allow detailed planning of work order"
+#~ msgstr "Maakt een detailplanning voor werkorders mogelijk"

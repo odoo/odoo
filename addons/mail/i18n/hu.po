@@ -7,30 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-30 14:10+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-15 10:55+0000\n"
 "Last-Translator: Herczeg Péter <hp@erp-cloud.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:18+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-16 06:47+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mail
-#: view:mail.followers:0
+#: view:mail.followers:mail.view_mail_subscription_form
 msgid "Followers Form"
 msgstr "Követők űrlapjai"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:246
+#: code:addons/mail/mail_thread.py:385
 #, python-format
 msgid "%s created"
 msgstr "%s létrehozva"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: field:mail.message,author_id:0
 msgid "Author"
 msgstr "Szerző"
@@ -51,13 +51,19 @@ msgid "Activated by default when subscribing."
 msgstr "Alapértelmezetten aktiválva lesz a feliratkozásnál."
 
 #. module: mail
+#: field:mail.compose.message,vote_user_ids:0
+#: field:mail.message,vote_user_ids:0
+msgid "Votes"
+msgstr "Szavazatok"
+
+#. module: mail
 #: view:mail.message:0
 msgid "Comments"
 msgstr "Megjegyzés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:313
+#: code:addons/mail/static/src/xml/mail.xml:334
 #, python-format
 msgid "more messages"
 msgstr "több üzenet"
@@ -84,8 +90,11 @@ msgstr ""
 "helyről akarjuk az e-maileket megkapni"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:1970
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
-#: view:mail.compose.message:0
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#, python-format
 msgid "Compose Email"
 msgstr "Email írás"
 
@@ -99,7 +108,8 @@ msgstr ""
 "\"{'field': 'value'}\""
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_form
+#: view:mail.group:mail.view_group_tree
 msgid "Group Name"
 msgstr "Csoportnév"
 
@@ -110,18 +120,18 @@ msgstr "Nyilvános"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:277
+#: code:addons/mail/static/src/xml/mail.xml:297
 #, python-format
 msgid "to"
 msgstr "címzett:"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
 msgid "Body"
 msgstr "Levéltörzs"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_search
 msgid "Show messages to read"
 msgstr "Olvasásra váró üzenetek mutatása"
 
@@ -142,14 +152,14 @@ msgstr "Email varázsló"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:268
+#: code:addons/mail/static/src/xml/mail.xml:286
 #, python-format
 msgid "updated document"
 msgstr "módosította a dokumentumot"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:23
+#: code:addons/mail/static/src/xml/mail_followers.xml:28
 #, python-format
 msgid "Add others"
 msgstr "Hozzáadás"
@@ -179,7 +189,7 @@ msgstr "Olvasatlan üzenetek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:313
+#: code:addons/mail/static/src/xml/mail.xml:334
 #, python-format
 msgid "show"
 msgstr "mutat"
@@ -195,26 +205,31 @@ msgstr ""
 "feliratkozásukat."
 
 #. module: mail
+#: code:addons/mail/wizard/invite.py:76
+#, python-format
+msgid "Invitation to follow %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:1029
+#: code:addons/mail/static/src/js/mail.js:1021
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr "Valóban törölni kívánja ezt az üzenetet?"
 
 #. module: mail
-#: view:mail.message:0
-#: field:mail.notification,read:0
+#: field:mail.notification,is_read:0
 msgid "Read"
 msgstr "Olvas"
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_search
 msgid "Search Groups"
 msgstr "Csoportok keresése"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:110
+#: code:addons/mail/static/src/js/mail_followers.js:140
 #, python-format
 msgid ""
 "Warning! \n"
@@ -235,7 +250,7 @@ msgid "Related Document ID"
 msgstr "Kapcsolódó dokumentum azonosító ID"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:737
+#: code:addons/mail/mail_message.py:755
 #, python-format
 msgid "Access Denied"
 msgstr "Hozzáférés megtagadva"
@@ -253,7 +268,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:212
+#: code:addons/mail/static/src/xml/mail.xml:223
 #, python-format
 msgid "Uploading error"
 msgstr "Feltöltési hiba"
@@ -264,7 +279,7 @@ msgid "Support"
 msgstr "Támogatás"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:738
+#: code:addons/mail/mail_message.py:756
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -278,20 +293,20 @@ msgstr ""
 "(Dokumentum típus: %s, Művelet: %s)"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.mail,state:0
 msgid "Received"
 msgstr "Fogadott"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:71
+#: code:addons/mail/static/src/xml/mail.xml:74
 #, python-format
 msgid "Attach a File"
 msgstr "Mellékeljen egy fájlt"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Thread"
 msgstr "Szál"
 
@@ -325,7 +340,7 @@ msgid "References"
 msgstr "Hivatkozások"
 
 #. module: mail
-#: view:mail.wizard.invite:0
+#: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add Followers"
 msgstr "Követők hozzáadása"
 
@@ -341,15 +356,15 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:96
-#: code:addons/mail/static/src/xml/mail.xml:108
+#: code:addons/mail/static/src/xml/mail.xml:99
+#: code:addons/mail/static/src/xml/mail.xml:111
 #, python-format
 msgid "uploading"
 msgstr "feltöltés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:52
+#: code:addons/mail/static/src/xml/mail_followers.xml:62
 #, python-format
 msgid "more."
 msgstr "több."
@@ -380,7 +395,8 @@ msgid "Cancelled"
 msgstr "Megszakítva"
 
 #. module: mail
-#: field:mail.mail,reply_to:0
+#: field:mail.compose.message,reply_to:0
+#: field:mail.message,reply_to:0
 msgid "Reply-To"
 msgstr "Válaszcím"
 
@@ -392,7 +408,7 @@ msgstr "<div>Önt meghívták, hogy kövesse: %s</div>"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:53
+#: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message"
 msgstr "Üzenet küldése"
@@ -427,36 +443,35 @@ msgstr "Automatikus törlés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:294
+#: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "notified"
 msgstr "értesítve"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:274
+#: code:addons/mail/static/src/xml/mail.xml:292
 #, python-format
 msgid "logged a note"
 msgstr "naplózott egy jegyzetet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:12
-#: view:mail.group:0
+#: code:addons/mail/static/src/xml/mail_followers.xml:13
+#: view:mail.group:mail.view_group_kanban
 #, python-format
 msgid "Unfollow"
 msgstr "Követés leállítása"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:312
+#: code:addons/mail/static/src/xml/mail.xml:333
 #, python-format
 msgid "show one more message"
 msgstr "mutass még egy üzenetet"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:75
-#: code:addons/mail/res_users.py:69
+#: code:addons/mail/mail_message.py:177
 #, python-format
 msgid "Invalid Action!"
 msgstr "Érvénytelen lépés!"
@@ -471,8 +486,7 @@ msgstr "Felhasználói kép"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
 #: model:ir.ui.menu,name:mail.menu_mail_mail
-#: view:mail.mail:0
-#: view:mail.message:0
+#: view:mail.mail:mail.view_mail_tree
 msgid "Emails"
 msgstr "E-mailek"
 
@@ -520,7 +534,7 @@ msgid "System notification"
 msgstr "Rendszerüzenet"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_search
 msgid "To Read"
 msgstr "Olvasásra"
 
@@ -546,13 +560,13 @@ msgid "Partners"
 msgstr "Partnerek"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "Retry"
 msgstr "Újra"
 
 #. module: mail
 #: field:mail.compose.message,email_from:0
-#: field:mail.mail,email_from:0
 #: field:mail.message,email_from:0
 msgid "From"
 msgstr "Feladó"
@@ -561,13 +575,13 @@ msgstr "Feladó"
 #: field:mail.compose.message,subtype_id:0
 #: field:mail.followers,subtype_ids:0
 #: field:mail.message,subtype_id:0
-#: view:mail.message.subtype:0
+#: view:mail.message.subtype:mail.view_message_subtype_tree
 msgid "Subtype"
 msgstr "Altípus"
 
 #. module: mail
-#: view:mail.mail:0
-#: view:mail.message.subtype:0
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.message.subtype:mail.view_mail_message_subtype_form
 msgid "Email message"
 msgstr "Email üzenet"
 
@@ -578,47 +592,47 @@ msgstr "base.config.settings"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:157
+#: code:addons/mail/static/src/js/mail_followers.js:188
 #, python-format
 msgid "followers"
 msgstr "követők"
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_form
 msgid "Send a message to the group"
 msgstr "Üzenet küldése a csoport részére"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:36
-#: view:mail.compose.message:0
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Send"
 msgstr "Küldés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:153
+#: code:addons/mail/static/src/js/mail_followers.js:184
 #, python-format
 msgid "No followers"
 msgstr "Nincs követő"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Failed"
 msgstr "Sikertelen"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_tree
 msgid "Cancel Email"
 msgstr "Email elvetése"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:22
+#: code:addons/mail/static/src/xml/mail_followers.xml:27
 #: model:ir.actions.act_window,name:mail.action_view_followers
 #: model:ir.ui.menu,name:mail.menu_email_followers
-#: view:mail.followers:0
+#: view:mail.followers:mail.view_followers_tree
 #: field:mail.group,message_follower_ids:0
 #: field:mail.thread,message_follower_ids:0
 #: field:res.partner,message_follower_ids:0
@@ -633,48 +647,41 @@ msgid "Archives"
 msgstr "Archívum"
 
 #. module: mail
-#: view:mail.compose.message:0
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Subject..."
 msgstr "Tárgy..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:95
-#: code:addons/mail/static/src/xml/mail.xml:107
+#: code:addons/mail/static/src/xml/mail.xml:98
+#: code:addons/mail/static/src/xml/mail.xml:110
 #, python-format
 msgid "Delete this attachment"
 msgstr "Törli ezt a mellékletet"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:112
+#: code:addons/mail/mail_thread.py:173
 #, python-format
 msgid "New"
 msgstr "Új"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:155
+#: code:addons/mail/static/src/js/mail_followers.js:186
 #, python-format
 msgid "One follower"
 msgstr "Egy követő"
 
 #. module: mail
-#: field:mail.compose.message,model:0
-#: field:mail.followers,res_model:0
-#: field:mail.message,model:0
-#: field:mail.wizard.invite,res_model:0
-msgid "Related Document Model"
-msgstr "Ide vonatkozó dokumentum modell"
-
-#. module: mail
 #: field:mail.compose.message,type:0
+#: view:mail.message:mail.view_message_search
 #: field:mail.message,type:0
 msgid "Type"
 msgstr "Típus"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Email"
 msgstr "E-mail"
@@ -695,7 +702,7 @@ msgid "by"
 msgstr "által"
 
 #. module: mail
-#: code:addons/mail/res_users.py:89
+#: code:addons/mail/res_users.py:98
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s csatlakozott a %s hálózathoz."
@@ -712,14 +719,15 @@ msgstr ""
 "képet szeretne."
 
 #. module: mail
-#: view:mail.compose.message:0
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
 #: field:mail.message,partner_ids:0
+#: field:mail.wizard.invite,partner_ids:0
 msgid "Recipients"
 msgstr "Címzettek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:140
+#: code:addons/mail/static/src/xml/mail.xml:141
 #, python-format
 msgid "<<<"
 msgstr "<<<"
@@ -730,7 +738,10 @@ msgid "Authorized Group"
 msgstr "Jogosult csoport"
 
 #. module: mail
-#: view:mail.group:0
+#. openerp-web
+#: code:addons/mail/static/src/xml/suggestions.xml:30
+#: view:mail.group:mail.view_group_kanban
+#, python-format
 msgid "Join Group"
 msgstr "Csatlakozás a csoporthoz"
 
@@ -741,7 +752,7 @@ msgstr "Üzenet küldő, a felhasználói meghatározásokból vett."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:978
+#: code:addons/mail/static/src/js/mail.js:981
 #, python-format
 msgid "read more"
 msgstr "többet mutat"
@@ -765,7 +776,7 @@ msgstr "Minden üzenet (hozzászólások, beérkezett emailek, rendszer üzenete
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail_followers.js:252
+#: code:addons/mail/static/src/js/mail_followers.js:309
 #, python-format
 msgid ""
 "Warning! \n"
@@ -804,19 +815,19 @@ msgid "Invite wizard"
 msgstr "Meghívó varázsló"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
 msgid "Advanced"
 msgstr "Speciális"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:244
+#: code:addons/mail/static/src/xml/mail.xml:255
 #, python-format
 msgid "Move to Inbox"
 msgstr "Bejövő üzenetekbe mozgatás"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:193
+#: code:addons/mail/wizard/mail_compose_message.py:188
 #, python-format
 msgid "Re:"
 msgstr "Vissza:"
@@ -838,6 +849,13 @@ msgstr ""
 "használja a \"Beállítások > Felhasználók\" menüt."
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:348
+#, python-format
+msgid "like"
+msgstr "tetszik"
+
+#. module: mail
 #: help:mail.followers,res_model:0
 #: help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
@@ -845,21 +863,25 @@ msgstr "A követett forrás modellje"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:979
+#: code:addons/mail/static/src/xml/mail.xml:273
 #, python-format
 msgid "read less"
 msgstr "kevesebbet mutat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:337
+#: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
-msgid "like"
-msgstr "tetszik"
+msgid "Send a message to all followers of the document"
+msgstr ""
 
 #. module: mail
-#: view:mail.compose.message:0
-#: view:mail.wizard.invite:0
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:105
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.wizard.invite:mail.mail_wizard_invite_form
+#, python-format
 msgid "Cancel"
 msgstr "Mégsem"
 
@@ -890,7 +912,7 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_search
 msgid "Has attachments"
 msgstr "Vannak mellékletei"
 
@@ -900,7 +922,7 @@ msgid "on"
 msgstr "ezen:"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:926
+#: code:addons/mail/mail_message.py:930
 #, python-format
 msgid ""
 "The following partners chosen as recipients for the email have no email "
@@ -926,14 +948,14 @@ msgstr "Üzenet altípusok"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:37
-#: code:addons/mail/static/src/xml/mail.xml:55
+#: code:addons/mail/static/src/xml/mail.xml:56
 #, python-format
 msgid "Log a note"
 msgstr "Naplózzon egy jegyzetet"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.message,type:0
 msgid "Comment"
 msgstr "Megjegyzés"
@@ -970,18 +992,19 @@ msgstr "Ez egy üzenet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:188
+#: code:addons/mail/static/src/xml/mail.xml:189
 #, python-format
 msgid "Compose a new message"
 msgstr "Új üzenet küldés"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "Send Now"
 msgstr "Küldés most"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:75
+#: code:addons/mail/mail_message.py:177
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
@@ -1018,12 +1041,12 @@ msgstr ""
 "automatikusan új témákat hoznak létre."
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Month"
 msgstr "Hónap"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Email Search"
 msgstr "E-mail keresésée"
 
@@ -1039,7 +1062,7 @@ msgid "Owner"
 msgstr "Tulajdonos"
 
 #. module: mail
-#: code:addons/mail/res_partner.py:52
+#: code:addons/mail/res_partner.py:51
 #, python-format
 msgid "Partner Profile"
 msgstr "Partner profil"
@@ -1047,7 +1070,7 @@ msgstr "Partner profil"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
 #: field:mail.mail,mail_message_id:0
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_form
 #: field:mail.notification,message_id:0
 #: field:mail.wizard.invite,message:0
 msgid "Message"
@@ -1081,13 +1104,14 @@ msgstr ""
 "név lesz hozzáadva helyette."
 
 #. module: mail
-#: field:mail.compose.message,vote_user_ids:0
-#: field:mail.message,vote_user_ids:0
-msgid "Votes"
-msgstr "Szavazatok"
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:57
+#, python-format
+msgid "Log a note for this document. No notification will be sent"
+msgstr ""
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_search
 msgid "Group"
 msgstr "Csoport"
 
@@ -1105,19 +1129,19 @@ msgid "Privacy"
 msgstr "Adatvédelem"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Notification"
 msgstr "Értesítés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:654
+#: code:addons/mail/static/src/js/mail.js:611
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Kérem egészítse ki a partner információkat"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:190
+#: code:addons/mail/mail_mail.py:191
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
 msgstr ""
@@ -1167,29 +1191,27 @@ msgstr ""
 "            "
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_search
 #: field:mail.mail,state:0
 msgid "Status"
 msgstr "Állapot"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "Kimenő"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:54
-#: code:addons/mail/static/src/xml/mail.xml:191
-#: view:mail.compose.message:0
-#: view:mail.wizard.invite:0
+#: code:addons/mail/static/src/xml/mail.xml:56
 #, python-format
 msgid "or"
 msgstr "vagy"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:111
+#: code:addons/mail/mail_thread.py:172
 #, python-format
 msgid "You have one unread message"
 msgstr "Egy olvasatlan üzenete van"
@@ -1205,14 +1227,13 @@ msgstr "A név az ide vonatkozó dokumentumról levéve."
 #: model:ir.model,name:mail.model_mail_notification
 #: model:ir.ui.menu,name:mail.menu_email_notifications
 #: field:mail.compose.message,notification_ids:0
-#: view:mail.message:0
 #: field:mail.message,notification_ids:0
-#: view:mail.notification:0
+#: view:mail.notification:mail.view_notification_tree
 msgid "Notifications"
 msgstr "Értesítések"
 
 #. module: mail
-#: view:mail.alias:0
+#: view:mail.alias:mail.view_mail_alias_search
 msgid "Search Alias"
 msgstr "Álnév keresés"
 
@@ -1229,7 +1250,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:311
+#: code:addons/mail/static/src/xml/mail.xml:332
 #, python-format
 msgid "show more message"
 msgstr "mutassa a többi üzenetet"
@@ -1272,18 +1293,19 @@ msgid "Is a Follower"
 msgstr "Ez egy követő"
 
 #. module: mail
-#: view:mail.alias:0
-#: view:mail.mail:0
+#: view:mail.alias:mail.view_mail_alias_search
+#: view:mail.mail:mail.view_mail_form
+#: view:mail.mail:mail.view_mail_tree
 msgid "User"
 msgstr "Felhasználó"
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_tree
 msgid "Groups"
 msgstr "Csoportok"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_search
 msgid "Messages Search"
 msgstr "Üzenetek keresése"
 
@@ -1294,9 +1316,15 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
+
+#. module: mail
+#: code:addons/mail/mail_group.py:174
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
@@ -1305,21 +1333,21 @@ msgstr "Csak beérkező emailek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:292
+#: code:addons/mail/static/src/xml/mail.xml:310
 #, python-format
 msgid "more"
 msgstr "tovább"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:120
+#: code:addons/mail/static/src/xml/mail.xml:123
 #, python-format
 msgid "To:"
 msgstr "Címzett:"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:193
+#: code:addons/mail/static/src/xml/mail.xml:194
 #, python-format
 msgid "Write to my followers"
 msgstr "Bejegyzés írás a követőimnek"
@@ -1341,7 +1369,7 @@ msgstr "Felhasználók"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:246
+#: code:addons/mail/static/src/xml/mail.xml:257
 #, python-format
 msgid "Mark as Todo"
 msgstr "Megjelölés feladatkét"
@@ -1359,20 +1387,21 @@ msgid "Summary"
 msgstr "Összegzés"
 
 #. module: mail
-#: code:addons/mail/mail_mail.py:222
-#: code:addons/mail/mail_mail.py:244
-#, python-format
-msgid "\"Followers of %s\" <%s>"
-msgstr "\"%s követői\" <%s>"
+#: help:mail.message.subtype,res_model:0
+msgid ""
+"Model the subtype applies to. If False, this subtype applies to all models."
+msgstr ""
+"Az altípushoz alkalmazott minta. Ha téves, akkor ez az altípus lesz "
+"használva az összes mintához."
 
 #. module: mail
-#: view:mail.compose.message:0
-#: view:mail.wizard.invite:0
+#: view:mail.compose.message:mail.email_compose_message_wizard_form
+#: view:mail.wizard.invite:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
 msgstr "Értesíteni kívánt kapcsolatok hozzáadása..."
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_form
 msgid "Group Form"
 msgstr "Csoport űrlap"
 
@@ -1396,7 +1425,7 @@ msgstr "Hiba"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:13
+#: code:addons/mail/static/src/xml/mail_followers.xml:14
 #, python-format
 msgid "Following"
 msgstr "Követés"
@@ -1407,6 +1436,14 @@ msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
 "Sajnos ez az email álnév már használva van, kérem válasszon egy egyedit."
+
+#. module: mail
+#: code:addons/mail/mail_group.py:174
+#, python-format
+msgid ""
+"You cannot delete those groups, as the Whole Company group is required by "
+"other modules."
+msgstr ""
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1424,13 +1461,13 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:52
+#: code:addons/mail/static/src/xml/mail_followers.xml:62
 #, python-format
 msgid "And"
 msgstr "És"
 
 #. module: mail
-#: code:addons/mail/mail_thread.py:111
+#: code:addons/mail/mail_thread.py:172
 #, python-format
 msgid "You have %d unread messages"
 msgstr "%d olvasatlan üzenete van"
@@ -1451,7 +1488,7 @@ msgstr ""
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_form
 #: field:mail.message,attachment_ids:0
 msgid "Attachments"
 msgstr "Mellékletek"
@@ -1473,14 +1510,13 @@ msgid "Starred message that goes into the todo mailbox"
 msgstr "Csillagos üzenet amely a teendők levélládába megy"
 
 #. module: mail
-#: view:mail.group:0
+#: view:mail.group:mail.view_group_form
 msgid "Topics discussed in this group..."
 msgstr "A csoport által megbeszélt témák..."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:123
-#: view:mail.compose.message:0
+#: code:addons/mail/static/src/xml/mail.xml:127
 #, python-format
 msgid "Followers of"
 msgstr "Követők ehhez"
@@ -1498,7 +1534,7 @@ msgstr "Megbeszélés csoport"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:242
+#: code:addons/mail/static/src/xml/mail.xml:253
 #, python-format
 msgid "Done"
 msgstr "Kész"
@@ -1510,7 +1546,7 @@ msgstr "Hozzászólások"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:11
+#: code:addons/mail/static/src/xml/mail_followers.xml:12
 #, python-format
 msgid "Follow"
 msgstr "Követ"
@@ -1522,9 +1558,8 @@ msgstr "Teljes vállalat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:129
-#: code:addons/mail/static/src/xml/mail.xml:292
-#: view:mail.compose.message:0
+#: code:addons/mail/static/src/xml/mail.xml:137
+#: code:addons/mail/static/src/xml/mail.xml:310
 #, python-format
 msgid "and"
 msgstr "és"
@@ -1535,7 +1570,7 @@ msgid "Rich-text/HTML message"
 msgstr "Rich-text/HTML üzenet"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 msgid "Creation Month"
 msgstr "Létrehozás hónapja"
 
@@ -1554,7 +1589,7 @@ msgid "Show already read messages"
 msgstr "Olvasott üzenetek mutatása"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_search
 msgid "Content"
 msgstr "Tartalom"
 
@@ -1565,8 +1600,8 @@ msgstr "Címzett"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:245
-#: view:mail.mail:0
+#: code:addons/mail/static/src/xml/mail.xml:256
+#: view:mail.mail:mail.view_mail_form
 #, python-format
 msgid "Reply"
 msgstr "Válasz"
@@ -1579,7 +1614,7 @@ msgstr "Értesített partnerek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:126
+#: code:addons/mail/static/src/xml/mail.xml:127
 #, python-format
 msgid "this document"
 msgstr "ez a dokumentum"
@@ -1611,6 +1646,7 @@ msgstr "Üzenet egyedi azonosító"
 
 #. module: mail
 #: field:mail.group,description:0
+#: view:mail.message.subtype:mail.view_mail_message_subtype_form
 #: field:mail.message.subtype,description:0
 msgid "Description"
 msgstr "Leírás"
@@ -1622,29 +1658,30 @@ msgstr "Követők dokumentuma"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail_followers.xml:35
+#: code:addons/mail/static/src/xml/mail_followers.xml:41
 #, python-format
 msgid "Remove this follower"
 msgstr "Követő eltávolítása"
 
 #. module: mail
-#: selection:res.partner,notification_email_send:0
+#: selection:res.partner,notify_email:0
 msgid "Never"
 msgstr "Soha"
 
 #. module: mail
-#: field:mail.mail,mail_server_id:0
+#: field:mail.compose.message,mail_server_id:0
+#: field:mail.message,mail_server_id:0
 msgid "Outgoing mail server"
 msgstr "Kimenő levelező szerver"
 
 #. module: mail
-#: code:addons/mail/mail_message.py:930
+#: code:addons/mail/mail_message.py:934
 #, python-format
 msgid "Partners email addresses not found"
 msgstr "A partnerek e-mail címei nem találhatóak"
 
 #. module: mail
-#: view:mail.mail:0
+#: view:mail.mail:mail.view_mail_search
 #: selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Elküldött"
@@ -1688,7 +1725,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:213
+#: code:addons/mail/static/src/xml/mail.xml:224
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Kérem várjon amíg a fájl feltöltődik."
@@ -1707,21 +1744,21 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:243
+#: code:addons/mail/static/src/xml/mail.xml:254
 #, python-format
 msgid "Set back to Todo"
 msgstr "Visszahelyezés a feladatokhoz"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:154
+#: code:addons/mail/static/src/xml/mail.xml:155
 #, python-format
 msgid "Attach a note that will not be sent to the followers"
 msgstr "Megjezés hozzáfűzése, amely a követőknek nem lesz elküldve"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:279
+#: code:addons/mail/static/src/xml/mail.xml:280
 #, python-format
 msgid "nobody"
 msgstr "senki"
@@ -1754,15 +1791,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #: model:ir.ui.menu,name:mail.menu_mail_message
 #: field:mail.group,message_ids:0
-#: view:mail.message:0
+#: view:mail.message:mail.view_message_tree
 #: field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: mail
+#: code:addons/mail/mail_mail.py:222
+#: code:addons/mail/mail_mail.py:243
+#, python-format
+msgid "Followers of %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:139
+#: code:addons/mail/static/src/xml/mail.xml:146
 #, python-format
 msgid "others..."
 msgstr "mások..."
@@ -1774,8 +1818,8 @@ msgid "To-do"
 msgstr "Feladat"
 
 #. module: mail
-#: view:mail.alias:0
-#: field:mail.alias,alias_name:0
+#: view:mail.alias:mail.view_mail_alias_form
+#: view:mail.alias:mail.view_mail_alias_tree
 #: field:mail.group,alias_id:0
 #: field:res.users,alias_id:0
 msgid "Alias"
@@ -1798,7 +1842,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:149
+#: code:addons/mail/static/src/xml/mail.xml:156
 #, python-format
 msgid "(no email address)"
 msgstr "(hiányzó email címek)"
@@ -1810,14 +1854,14 @@ msgid "Messaging"
 msgstr "Üzenetek"
 
 #. module: mail
-#: view:mail.alias:0
+#: view:mail.alias:mail.view_mail_alias_search
 #: field:mail.message.subtype,res_model:0
 msgid "Model"
 msgstr "Modell"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:206
+#: code:addons/mail/static/src/xml/mail.xml:217
 #, python-format
 msgid "No messages."
 msgstr "Nincs üzenet."
@@ -1849,16 +1893,16 @@ msgid "Composition mode"
 msgstr "Összeállítási mód"
 
 #. module: mail
-#: help:mail.message.subtype,res_model:0
-msgid ""
-"Model the subtype applies to. If False, this subtype applies to all models."
-msgstr ""
-"Az altípushoz alkalmazott minta. Ha téves, akkor ez az altípus lesz "
-"használva az összes mintához."
+#: field:mail.compose.message,model:0
+#: field:mail.followers,res_model:0
+#: field:mail.message,model:0
+#: field:mail.wizard.invite,res_model:0
+msgid "Related Document Model"
+msgstr "Ide vonatkozó dokumentum modell"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:338
+#: code:addons/mail/static/src/xml/mail.xml:349
 #, python-format
 msgid "unlike"
 msgstr "nem tetszik"
@@ -1935,7 +1979,7 @@ msgstr "HR Emberi erőforrás menedzsment házirend"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:323
+#: code:addons/mail/static/src/xml/mail.xml:324
 #, python-format
 msgid "Compose new Message"
 msgstr "Új üzenet létrehozása"
@@ -1967,7 +2011,7 @@ msgstr "Altípusok"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr "e-amil álnevek"
+msgstr "Email álnevek"
 
 #. module: mail
 #: field:mail.group,image_small:0

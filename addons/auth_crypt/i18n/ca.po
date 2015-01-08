@@ -1,78 +1,28 @@
 # Catalan translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-03-26 18:08+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2014-11-03 10:32+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2014-11-04 07:00+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
-#. module: base_crypt
-#: model:ir.model,name:base_crypt.model_res_users
-msgid "Users"
+#. module: auth_crypt
+#: field:res.users,password_crypt:0
+msgid "Encrypted Password"
 msgstr ""
 
-#~ msgid ""
-#~ "This module replaces the cleartext password in the database with a password "
-#~ "hash,\n"
-#~ "preventing anyone from reading the original password.\n"
-#~ "For your existing user base, the removal of the cleartext passwords occurs "
-#~ "the first time\n"
-#~ "a user logs into the database, after installing base_crypt.\n"
-#~ "After installing this module it won't be possible to recover a forgotten "
-#~ "password for your\n"
-#~ "users, the only solution is for an admin to set a new password.\n"
-#~ "\n"
-#~ "Note: installing this module does not mean you can ignore basic security "
-#~ "measures,\n"
-#~ "as the password is still transmitted unencrypted on the network (by the "
-#~ "client),\n"
-#~ "unless you are using a secure protocol such as XML-RPCS.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "Aquest mòdul substitueix la contrasenya en text pla per un hash codificat,\n"
-#~ "prevenint que algú pugui llegir la contrasenya original.\n"
-#~ "Per a un usuari existent, l'esborrat de la contrasenya en text pla es "
-#~ "realitza la primera\n"
-#~ "vegada que l'usuari es connecta després d'instal·lar base_crypt.\n"
-#~ "Després d'instal·lar aquest mòdul, els usuaris no podran recuperar la seva "
-#~ "contrasenya,\n"
-#~ "un administrador haurà d'introduir una nova contrasenya.\n"
-#~ "\n"
-#~ "Nota: Instal·lar aquest mòdul no significa que podeu ignorar les mesures "
-#~ "bàsiques de seguretat,\n"
-#~ "perquè la contrasenya és enviada sense codificar pel client,\n"
-#~ "a menys que utilitzeu un protocol segur com XML-RPCS.\n"
-#~ "                    "
-
-#, python-format
-#~ msgid "Please specify the password !"
-#~ msgstr "Si us plau, escriviu una contrasenya!"
-
-#~ msgid "The chosen company is not in the allowed companies for this user"
-#~ msgstr ""
-#~ "La companyia seleccionada no està en les companyies permeses per aquest "
-#~ "usuari"
-
-#~ msgid "res.users"
-#~ msgstr "res.usuaris"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "Base - Password Encryption"
-#~ msgstr "Base - Encriptació de la Contrasenya"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "No podeu tenir dos usuaris amb el mateix identificador d'usuari!"
+#. module: auth_crypt
+#: model:ir.model,name:auth_crypt.model_res_users
+msgid "Users"
+msgstr ""

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -23,8 +23,20 @@ msgid "Tasks by User"
 msgstr "Công việc theo người sử dụng"
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr ""
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
 
 #. module: project_timesheet
@@ -38,7 +50,7 @@ msgid "Related Timeline Id"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
@@ -51,10 +63,9 @@ msgid "Project Task Work"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
 
 #. module: project_timesheet
@@ -223,8 +234,8 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
 msgstr ""
 
 #. module: project_timesheet
@@ -248,14 +259,9 @@ msgid "Trigger Invoice"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "Tháng Mười một"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Tháng Ba"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr ""
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -289,24 +295,14 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr ""
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Tháng Ba"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Cấu hình không hợp lệ !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "Tháng Mười một"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -369,7 +365,7 @@ msgid "After task is completed, Create its invoice."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -389,8 +385,12 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
 msgstr ""
 
 #. module: project_timesheet
@@ -403,3 +403,7 @@ msgstr "Năm"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr ""
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Cấu hình không hợp lệ !"

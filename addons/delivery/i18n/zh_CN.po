@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:07+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "由post送货"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr " 在功能 "
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "邮政编码"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr "送货网络明细"
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "计量单位"
 
@@ -64,14 +71,16 @@ msgstr "送货网络"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "体积"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "邮政编码"
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "送货单"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr "在选择运输网络里，没有一行匹配这个产品或者订单。"
@@ -173,7 +182,7 @@ msgid "Delivery Method"
 msgstr "送货方式"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "无可用价格！"
@@ -185,6 +194,7 @@ msgstr "库存调拨"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "承运方跟踪号"
@@ -324,6 +334,7 @@ msgstr "网络名"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "包装件数"
@@ -355,21 +366,9 @@ msgid ""
 msgstr "默认的运费的价格，如果根据目的地定价，这里留空。"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr "没有可用的送货网络"
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "单据不在草稿状态！"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -401,6 +400,12 @@ msgstr "条件"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "成本价"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -466,6 +471,12 @@ msgid ""
 msgstr "如果你计划按装运按装箱开发票请输入此字段。"
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -483,6 +494,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "重量的计量单位"
 
@@ -510,12 +523,6 @@ msgstr "送货价格表"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "价格"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "没有送货网络适用于此承运方"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -550,6 +557,7 @@ msgstr "根据目的地定价"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "承运方"
@@ -602,3 +610,15 @@ msgstr "计量单位 是测量重量的单位"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "价格类型"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "单据不在草稿状态！"
+
+#, python-format
+#~ msgid "No grid available !"
+#~ msgstr "没有可用的送货网络"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "没有送货网络适用于此承运方"

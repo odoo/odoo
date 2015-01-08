@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-08-09 09:00+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:08+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -160,6 +160,12 @@ msgid "Email Templates"
 msgstr "电子邮件模板"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "使用该模版的这种类型的文档都是可选的"
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -182,16 +188,9 @@ msgid "Sidebar action"
 msgstr "边栏动作"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
-"在发送邮件时可选择的语言代码（ISO "
-"代码）。如果没有设置，会使用英文版本。一般用占位符来确定合适的语言，如${object.partner_id.lang.code}。"
+#: view:email_template.preview:0
+msgid "Preview of"
+msgstr "的预览"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -249,9 +248,10 @@ msgid "Advanced"
 msgstr "高级选项"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "的预览"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -359,10 +359,14 @@ msgid "Add context action"
 msgstr "添加 context action"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "使用该模版的这种类型的文档都是可选的"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,email_recipients:0
@@ -476,6 +480,14 @@ msgid "Suppliers"
 msgstr "供应商"
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -524,3 +536,12 @@ msgstr "主题"
 
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr "发送者地址"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "在发送邮件时可选择的语言代码（ISO "
+#~ "代码）。如果没有设置，会使用英文版本。一般用占位符来确定合适的语言，如${object.partner_id.lang.code}。"

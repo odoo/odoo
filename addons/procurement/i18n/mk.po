@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-06-10 18:37+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-11-07 12:32+0000\n"
+"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:26+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:13+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 "Language: mk\n"
 
 #. module: procurement
@@ -62,14 +62,21 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "Нацрт набавка на производ и локација на таа целна точка"
 
 #. module: procurement
-#: view:product.product:0
+#: view:make.procurement:0
 msgid ""
-"required quantities are always\n"
-"                           available"
-msgstr "бараните количини секогаш се достапни"
+"Use this assistant to generate a procurement request for this\n"
+"                        product. According to the product configuration, "
+"this may\n"
+"                        trigger a draft purchase order, a manufacturing "
+"order or\n"
+"                        a new task."
+msgstr ""
+"Пополни го овој формулар за да лансирате барање на набавка за овој производ. "
+"Во согласност со конфигурацијата на производот, ова може да активира нацрт "
+"налог за набавка, налог за производство или нова задача."
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
 msgid "External note..."
 msgstr "Надворешна белешка..."
 
@@ -113,7 +120,7 @@ msgstr "Правила"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
-#: field:stock.warehouse.orderpoint,company_id:0
+#: field:procurement.rule,company_id:0
 msgid "Company"
 msgstr "Компанија"
 
@@ -172,7 +179,7 @@ msgid "Messages"
 msgstr "Пораки"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
 msgid "Cancel Procurement"
 msgstr "Откажи набавка"
 
@@ -197,7 +204,7 @@ msgid "If checked new messages require your attention."
 msgstr "Доколку се означени новите пораки, потребно е да обрнете внимание."
 
 #. module: procurement
-#: view:procurement.order.compute.all:0
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
 msgstr "Параметри на распоред"
 
@@ -212,7 +219,7 @@ msgid "Stockable products"
 msgstr "Производи на залиха"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:155
 #, python-format
 msgid "Invalid Action!"
 msgstr "Погрешна операција!"
@@ -313,7 +320,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Правило за минимум залиха"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:388
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Набавката '%s' е во исклучок: "
@@ -363,12 +370,6 @@ msgid "Best price (not yet active!)"
 msgstr "Најдобра цена (уште не е активна!)"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:110
-#, python-format
-msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr "НАБАВКА %d: од залиха - %3.2f %-5s - %s"
-
-#. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
 msgstr "Пресметај набавка"
@@ -389,26 +390,24 @@ msgid "Planned Date"
 msgstr "Планиран датум"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Group By"
 msgstr "Групирај по"
 
 #. module: procurement
-#: field:make.procurement,qty:0
 #: field:procurement.order,product_qty:0
 msgid "Quantity"
 msgstr "Количина"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:365
+#: code:addons/procurement/procurement.py:383
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
 "Недоволно дефинирани правила за залиха и за минимална точка на нарачка."
 
 #. module: procurement
-#: field:make.procurement,uom_id:0
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_tree_view
 msgid "Unit of Measure"
 msgstr "Единица мерка"
 
@@ -477,8 +476,8 @@ msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
-#: model:process.process,name:procurement.process_process_procurementprocess0
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement"
 msgstr "Набавка"
 
@@ -493,7 +492,7 @@ msgid "To Fix"
 msgstr "Да се поправи"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Exceptions"
 msgstr "Исклучоци"
 
@@ -519,7 +518,7 @@ msgid "Compute Stock"
 msgstr "Пресметај залиха"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "e.g. SO005"
 
@@ -582,7 +581,6 @@ msgstr ""
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
-#: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
 msgstr "Единица мерка на производот"
 
@@ -596,7 +594,7 @@ msgstr ""
 "стандардната единица мерка на производот"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_tree_view
 msgid "Procurement Lines"
 msgstr "Ставки на набавка"
 
@@ -631,8 +629,7 @@ msgstr "Нацрт"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
-#: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
-#: view:procurement.order.compute.all:0
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
 msgstr "Стартувај распореди"
 
@@ -642,7 +639,7 @@ msgid "This wizard will schedule procurements."
 msgstr "Овој волшебник ќе ги распореди нарачките."
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 #: field:procurement.order,state:0
 msgid "Status"
 msgstr "Состојба"
@@ -684,13 +681,13 @@ msgid "Is a Follower"
 msgstr "Е пратител"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:367
+#: code:addons/procurement/procurement.py:385
 #, python-format
 msgid "Not enough stock."
 msgstr "Нема доволно залиха."
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,active:0
+#: field:procurement.rule,active:0
 msgid "Active"
 msgstr "Активно"
 
@@ -700,7 +697,7 @@ msgid "Procure Products"
 msgstr "Набави производи"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:312
+#: code:addons/procurement/procurement.py:330
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
@@ -729,7 +726,7 @@ msgstr ""
 "дека"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:133
+#: code:addons/procurement/schedulers.py:125
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Автоматска ТП: %s"
@@ -768,7 +765,7 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
 msgid "Extra Information"
 msgstr "Екстра информации"
 
@@ -793,7 +790,7 @@ msgid "Date Closed"
 msgstr "Датум на затварање"
 
 #. module: procurement
-#: view:res.company:0
+#: view:res.company:procurement.mrp_company
 msgid "Logistics"
 msgstr "Логистика"
 
@@ -814,12 +811,6 @@ msgid "Properties composition"
 msgstr "Состав на својства"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
-#, python-format
-msgid "Data Insufficient !"
-msgstr "Недоволно податоци !"
-
-#. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property_group
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
@@ -832,12 +823,14 @@ msgid "Misc"
 msgstr "Разно"
 
 #. module: procurement
-#: field:stock.move,procurements:0
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: view:procurement.group:procurement.procurement_group_form_view
+#: field:procurement.group,procurement_ids:0
 msgid "Procurements"
 msgstr "Набавки"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Направи нарачка"
 
@@ -847,17 +840,20 @@ msgid "Done"
 msgstr "Завршено"
 
 #. module: procurement
-#: view:make.procurement:0
-#: view:procurement.order.compute:0
-#: view:procurement.order.compute.all:0
-#: view:procurement.orderpoint.compute:0
+#: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:329
+#, python-format
+msgid "Data Insufficient!"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Режим за преуредување"
+msgstr "Мод за повторна нарачка"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -871,10 +867,7 @@ msgstr "Не е итно"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
 msgstr "Исклучоци на набавки"
 
@@ -895,7 +888,7 @@ msgid "Compute all schedulers"
 msgstr "Пресметај ги сите распореди"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Late"
 msgstr "Доцна"
 
@@ -916,35 +909,18 @@ msgid "Minimum Stock Rules"
 msgstr "Правила за минимална залиха"
 
 #. module: procurement
-#: view:make.procurement:0
-msgid ""
-"Use this assistant to generate a procurement request for this\n"
-"                        product. According to the product configuration, "
-"this may\n"
-"                        trigger a draft purchase order, a manufacturing "
-"order or\n"
-"                        a new task."
-msgstr ""
-"Пополни го овој формулар за да лансирате барање на набавка за овој производ. "
-"Во согласност со конфигурацијата на производот, ова може да активира нацрт "
-"налог за набавка, налог за производство или нова задача."
-
-#. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
 msgstr "Затвори движење на крај"
 
 #. module: procurement
-#: view:procurement.order:0
+#: field:procurement.order,date_planned:0
 msgid "Scheduled Date"
 msgstr "Планиран датум"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_product_product
-#: field:make.procurement,product_id:0
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 #: field:procurement.order,product_id:0
-#: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Производ"
 
@@ -954,8 +930,6 @@ msgid "Temporary"
 msgstr "Привремено"
 
 #. module: procurement
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
 #: field:procurement.order,name:0
 msgid "Description"
 msgstr "Опис"
@@ -998,13 +972,19 @@ msgid "When you sell this product, OpenERP will"
 msgstr "Кога го продавате овој производ, OpenERP ќе"
 
 #. module: procurement
+#: view:product.product:0
+msgid ""
+"required quantities are always\n"
+"                           available"
+msgstr "бараните количини секогаш се достапни"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
 msgstr "Привремени исклучоци за набавки"
 
 #. module: procurement
-#: field:mrp.property,name:0
-#: field:stock.warehouse.orderpoint,name:0
+#: field:procurement.rule,name:0
 msgid "Name"
 msgstr "Име"
 
@@ -1023,7 +1003,7 @@ msgid "Reordering Rules"
 msgstr "Правила за преуредување"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
+#: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "Не може да се избрише Налог(зи) за набавка кои се во %s состојба."
@@ -1047,7 +1027,7 @@ msgstr ""
 "набавка."
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Search Procurement"
 msgstr "Барај набавка"
 
@@ -1072,7 +1052,7 @@ msgid "Messages and communication history"
 msgstr "Историја на пораки и комуникација"
 
 #. module: procurement
-#: view:procurement.order:0
+#: view:procurement.order:procurement.view_procurement_filter
 msgid "Procurement started late"
 msgstr "Набавката е стартувана доцна"
 
@@ -1090,7 +1070,7 @@ msgid "or"
 msgstr "или"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:134
+#: code:addons/procurement/schedulers.py:126
 #, python-format
 msgid "SCHEDULER"
 msgstr "РАСПОРЕДУВАЧ"
@@ -1101,13 +1081,7 @@ msgid "Request Procurement"
 msgstr "Барање за набавка"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:87
-#, python-format
-msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr "НАБАВКА %d: по налог - %3.2f %-5s - %s"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:339
+#: code:addons/procurement/procurement.py:357
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Производи резервирани од залиха."
@@ -1127,6 +1101,14 @@ msgstr "Производи резервирани од залиха."
 #~ "ќе генерира барање за набавка за да ја зголми залихата до максималната "
 #~ "количина."
 
+#, python-format
+#~ msgid "PROC %d: from stock - %3.2f %-5s - %s"
+#~ msgstr "НАБАВКА %d: од залиха - %3.2f %-5s - %s"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "Недоволно податоци !"
+
 #~ msgid ""
 #~ "Fill is this for to launch a procurement request for this\n"
 #~ "                        product. According to the product configuration, "
@@ -1138,3 +1120,7 @@ msgstr "Производи резервирани од залиха."
 #~ "Пополни го овој формулар за да лансирате барање на набавка за овој производ. "
 #~ "Во согласност со конфигурацијата на производот, ова може да активира нацрт "
 #~ "налог за набавка, налог за производство или нова задача."
+
+#, python-format
+#~ msgid "PROC %d: on order - %3.2f %-5s - %s"
+#~ msgstr "НАБАВКА %d: по налог - %3.2f %-5s - %s"
