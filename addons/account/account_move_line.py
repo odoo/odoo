@@ -729,12 +729,13 @@ class account_move_line(models.Model):
             self._update_check()
 
         # Check for centralisation
-        for line in self:
-            journal = line.move_id and line.move_id.journal_id or line.journal_id
-            journal = self._context.get('journal_id') and self.env['account.journal'].browse(self._context.get('journal_id')) or journal # Legacy
-            if journal.centralisation:
-                pass
-                # Do something here
+        # TODO : what happened with journal.centralisation ?
+        # for line in self:
+        #     journal = line.move_id and line.move_id.journal_id or line.journal_id
+        #     journal = self._context.get('journal_id') and self.env['account.journal'].browse(self._context.get('journal_id')) or journal # Legacy
+        #     if journal.centralisation:
+        #         pass
+        #         # Do something here
 
         todo_date = vals.pop('date', False)
         result = super(account_move_line, self).write(vals)
