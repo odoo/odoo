@@ -636,9 +636,10 @@ class account_tax(models.Model):
                 'analytic': boolean,
             }]
         } """
-
+        if not currency:
+            currency = self.company_id.currency_id
         taxes = []
-        prec = self.company_id.currency_id.decimal_places
+        prec = currency.decimal_places
         total_excluded = total_included = base = round(price_unit * quantity, prec)
         for tax in self:
             if tax.amount_type == 'group':
