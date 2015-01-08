@@ -135,7 +135,7 @@
         loadTemplates: function () {
             var self = this;
             var args = {
-                key: $(document.documentElement).data('view-xmlid'),
+                xml_id: $(document.documentElement).data('view-xmlid'),
                 full: true,
                 bundles: !!$('script[src*=".assets_common"]').length
             };

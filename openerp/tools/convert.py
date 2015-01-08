@@ -751,10 +751,6 @@ form: module.record_id""" % (xml_id,)
         record.append(Field(el.get('priority', "16"), name='priority'))
         if 'inherit_id' in el.attrib:
             record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
-        if 'website_id' in el.attrib:
-            record.append(Field(name='website_id', ref=el.get('website_id')))
-        if 'key' in el.attrib:
-            record.append(Field(el.get('key'), name='key'))
         if el.get('active') in ("True", "False"):
             view_id = self.id_get(cr, tpl_id, raise_if_not_found=False)
             if mode != "update" or not view_id:
