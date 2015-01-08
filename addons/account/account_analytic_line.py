@@ -85,7 +85,8 @@ class account_analytic_line(models.Model):
             ctx['uom'] = unit
         amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
         amount = amount_unit * quantity or 0.0
-        result = round(amount, self.currency_id.decimal_places)
+        currency = self.browse(cr, uid, id, context=context).currency_id
+        result = round(amount, currency.decimal_places)
         if not flag:
             result *= -1
         return {'value': {
