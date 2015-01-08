@@ -41,10 +41,7 @@ class WebsiteCustomer(http.Controller):
             ]
 
         if tag_id:
-            try:
-                tag_id = int(tag_id.split("-")[-1])
-            except:
-                tag_id = 0
+            tag_id = unslug(tag_id)[1] or 0
             domain += [('tag_ids', 'in', tag_id)]
 
         # group by country, based on customers found with the search(domain)
@@ -90,7 +87,8 @@ class WebsiteCustomer(http.Controller):
         partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
 
         tag_obj = request.registry['res.partner.tag']
-        tag_ids = tag_obj.get_tags_for_partners(cr, uid, partner_ids, context=context)
+        tag_ids = tag_obj.search(cr, uid, [('website_published', '=', True), ('partner_ids', 'in', partner_ids)],
+                                 order='name ASC', context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
         tag = tag_id and tag_obj.browse(cr, uid, tag_id, context=context) or False
 
