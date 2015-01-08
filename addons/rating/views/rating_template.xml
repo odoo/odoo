@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="rating_external_page_view">
+            <head>
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            </head>
+            <div class='well' t-if="not is_rated">
+                <h1>Thanks for voting !</h1>
+                <div class="oe_right">
+                    <p>Your vote has been taken into account.</p>
+                    <p>It was <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
+                </div>
+            </div>
+            <div class='well' t-if="is_rated">
+                <h1>Sorry you have already voted !</h1>
+            </div>
+        </template>
+    </data>
+</openerp>
