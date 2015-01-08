@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- project.project form view with rating satisfaction state button -->
+        <record id="view_project_project_rating_form" model="ir.ui.view">
+            <field name="name">project.project.rating.form.view</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="action_view_task_rating"
+                        attrs="{'invisible': ['|', ('use_tasks','=', False), ('percentage_satisfaction_task','=', -1)]}"
+                        class="oe_stat_button"
+                        type="object"
+                        icon="fa-smile-o">
+                        <field string="% Happy on task" name="percentage_satisfaction_task" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- inherit project.task.type form view to add email template for task -->
+        <record id="view_project_task_type_rating_form" model="ir.ui.view">
+            <field name="name">project.task.type.form.view.inherit</field>
+            <field name="model">project.task.type</field>
+            <field name="inherit_id" ref="project.task_type_edit"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence']" position="after">
+                     <field name="rating_template_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_project_rating_kanban" model="ir.ui.view">
+            <field name="name">rating.project.project.kanban.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="percentage_satisfaction_project" invisible="1"/>
+                    <field name="is_visible_happy_customer" invisible="1"/>
+                </field>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="after">
+                    <div class="row oe_margin_top_8 oe_kanban_project_list">
+                        <a t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt; -1" name="action_view_all_rating" type="object" title="Percentage of happy people about this project">
+                            <img t-if="record.percentage_satisfaction_project.raw_value &gt;= 0 and record.percentage_satisfaction_project.raw_value &lt;= 30" class="rating" src="rating/static/src/img/rating_0.png" style="width:10%;height:10%"></img>
+                            <img t-if="record.percentage_satisfaction_project.raw_value &gt; 30 and record.percentage_satisfaction_project.raw_value &lt;= 69" class="rating" src="rating/static/src/img/rating_5.png" style="width:10%;height:10%"></img>
+                            <img t-if="record.percentage_satisfaction_project.raw_value &gt;= 70" class="rating" src="rating/static/src/img/rating_10.png" style="width:10%;height:10%"></img>
+                            <img t-if="record.percentage_satisfaction_project.raw_value &lt; 0" class="rating" src="rating/static/src/img/rating_-1.png" style="width:10%;height:10%"></img>
+                            <t t-if="record.percentage_satisfaction_project.raw_value &gt;= 0">
+                                <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
+                            </t>
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
