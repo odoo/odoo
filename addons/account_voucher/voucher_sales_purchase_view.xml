@@ -49,8 +49,8 @@
             <field name="arch" type="xml">
                 <form string="Sales Receipt">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma" />
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight" type="object"/>
+                    <button name="cancel_voucher" string="Cancel Receipt" type="object" states="draft,proforma"/>
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
@@ -150,8 +150,8 @@
             <field name="arch" type="xml">
                 <form string="Purchase Voucher">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma" />
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight" type="object"/>
+                    <button name="cancel_voucher" string="Cancel Voucher" type="object" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>

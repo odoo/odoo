@@ -59,7 +59,7 @@ class account_voucher(models.Model):
         },
     }
 
-    voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]})
+    voucher_type = fields.Selection([('sale', 'Sale'), ('purchase', 'Purchase')], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
     name = fields.Char('Memo', readonly=True, states={'draft': [('readonly', False)]}, default='')
     date = fields.Date('Date', readonly=True, select=True, states={'draft': [('readonly', False)]},
                            help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
@@ -187,9 +187,9 @@ class account_voucher(models.Model):
         for voucher in self:
             debit = credit = 0.0
             if voucher.voucher_type == 'purchase':
-                credit = voucher._convert_amount(amount)
+                credit = voucher._convert_amount(voucher.amount)
             elif voucher.voucher_type == 'sale':
-                debit = voucher._convert_amount(amount)
+                debit = voucher._convert_amount(voucher.amount)
             if debit < 0.0: debit = 0.0
             if credit < 0.0: credit = 0.0
             sign = debit - credit < 0 and -1 or 1
@@ -306,7 +306,7 @@ class account_voucher(models.Model):
                     tot_line -= amount
                     move_line['credit'] = amount
 
-                if voucher.tax_id and voucher.type in ('sale', 'purchase'):
+                if voucher.tax_id and voucher.voucher_type in ('sale', 'purchase'):
                     move_line.update({
                         'account_tax_id': voucher.tax_id.id,
                     })
@@ -353,9 +353,8 @@ class account_voucher(models.Model):
             company_currency = voucher._get_company_currency()
             current_currency = voucher._get_current_currency()
             # we select the context to use accordingly if it's a multicurrency case or not
-            context = voucher._sel_context()
             # But for the operations made by _convert_amount, we always need to give the date in the context
-            ctx = context.copy()
+            ctx = local_context.copy()
             ctx['date'] = voucher.date
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
@@ -363,12 +362,12 @@ class account_voucher(models.Model):
             # Create the first line of the voucher
             move_line = self.env['account.move.line'].with_context(local_context).create(voucher.first_move_line_get(move.id, company_currency, current_currency))
             line_total = move_line.debit - move_line.credit
-            if voucher.type == 'sale':
+            if voucher.voucher_type == 'sale':
                 line_total = line_total - voucher._convert_amount(voucher.tax_amount)
-            elif voucher.type == 'purchase':
+            elif voucher.voucher_type == 'purchase':
                 line_total = line_total + voucher._convert_amount(voucher.tax_amount)
             # Create one move line per voucher line where amount is not 0.0
-            line_total = voucher.voucher_move_line_create(line_total, move_id, company_currency, current_currency)
+            line_total = voucher.voucher_move_line_create(line_total, move.id, company_currency, current_currency)
 
             # We post the voucher.
             voucher.write({
