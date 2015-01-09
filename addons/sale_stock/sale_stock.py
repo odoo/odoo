@@ -371,7 +371,7 @@ class stock_move(osv.osv):
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
@@ -411,7 +411,7 @@ class stock_picking(osv.osv):
         """
         saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
         saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
-        if saleorders and saleorders[0]:
+        if saleorders and saleorders[0] and saleorders[0].order_policy == 'picking':
             saleorder = saleorders[0]
             return saleorder.partner_invoice_id.id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)

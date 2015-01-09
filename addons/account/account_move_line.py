@@ -1339,24 +1339,23 @@ class account_move_line(osv.osv):
                 account_id = 'account_paid_id'
                 base_sign = 'ref_base_sign'
                 tax_sign = 'ref_tax_sign'
-            tmp_cnt = 0
+            base_adjusted = False
             for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=False).get('taxes'):
                 #create the base movement
-                if tmp_cnt == 0:
-                    if tax[base_code]:
-                        tmp_cnt += 1
-                        if tax_id.price_include:
-                            total = tax['price_unit']
-                        newvals = {
-                            'tax_code_id': tax[base_code],
-                            'tax_amount': tax[base_sign] * abs(total),
-                        }
-                        if tax_id.price_include:
-                            if tax['price_unit'] < 0:
-                                newvals['credit'] = abs(tax['price_unit'])
-                            else:
-                                newvals['debit'] = tax['price_unit']
-                        self.write(cr, uid, [result], newvals, context=context)
+                if base_adjusted == False:
+                    base_adjusted = True
+                    if tax_id.price_include:
+                        total = tax['price_unit']
+                    newvals = {
+                        'tax_code_id': tax[base_code],
+                        'tax_amount': tax[base_sign] * abs(total),
+                    }
+                    if tax_id.price_include:
+                        if tax['price_unit'] < 0:
+                            newvals['credit'] = abs(tax['price_unit'])
+                        else:
+                            newvals['debit'] = tax['price_unit']
+                    self.write(cr, uid, [result], newvals, context=context)
                 else:
                     data = {
                         'move_id': vals['move_id'],
@@ -1372,8 +1371,7 @@ class account_move_line(osv.osv):
                         'credit': 0.0,
                         'debit': 0.0,
                     }
-                    if data['tax_code_id']:
-                        self.create(cr, uid, data, context)
+                    self.create(cr, uid, data, context)
                 #create the Tax movement
                 data = {
                     'move_id': vals['move_id'],
@@ -1389,8 +1387,7 @@ class account_move_line(osv.osv):
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }
-                if data['tax_code_id']:
-                    self.create(cr, uid, data, context)
+                self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):

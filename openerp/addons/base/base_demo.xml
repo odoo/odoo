@@ -46,5 +46,12 @@ Mr Demo</field>
             <field name="image" type="base64" file="base/static/img/partner_root-image.jpg"/>
         </record>
 
+        <!-- new rate for demo transactions in multi currency -->
+        <record id="rateUSDbis" model="res.currency.rate">
+            <field name="rate">1.5289</field>
+            <field name="currency_id" ref="USD"/>
+            <field eval="time.strftime('%Y-06-06')" name="name"/>
+        </record>
+
     </data>
 </openerp>

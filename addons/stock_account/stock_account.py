@@ -194,14 +194,7 @@ class stock_quant(osv.osv):
             if move.product_id.cost_method == 'average':
                 valuation_amount = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' and cost or move.product_id.standard_price
             else:
-                # TODO check also in average price and correct product price
-                if move.origin_returned_move_id:
-                    # use the original cost of the returned product to cancel the cost
-                    valuation_amount = move.origin_returned_move_id.price_unit
-                elif move.product_id.cost_method == 'real':
-                    valuation_amount = cost
-                else:
-                    valuation_amount = move.product_id.standard_price
+                valuation_amount = move.product_id.cost_method == 'real' and cost or move.product_id.standard_price
         #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         #the company currency... so we need to use round() before creating the accounting entries.
         valuation_amount = currency_obj.round(cr, uid, move.company_id.currency_id, valuation_amount * qty)

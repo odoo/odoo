@@ -46,15 +46,15 @@ class hr_holidays_status(osv.osv):
         for holiday in self.pool['hr.holidays'].browse(cr, uid, holiday_ids, context=context):
             status_dict = result[holiday.holiday_status_id.id]
             if holiday.type == 'add':
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
+                status_dict['virtual_remaining_leaves'] += holiday.number_of_days_temp
                 if holiday.state == 'validate':
-                    status_dict['max_leaves'] += holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['max_leaves'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] += holiday.number_of_days_temp
             elif holiday.type == 'remove':  # number of days is negative
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
+                status_dict['virtual_remaining_leaves'] -= holiday.number_of_days_temp
                 if holiday.state == 'validate':
-                    status_dict['leaves_taken'] -= holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['leaves_taken'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] -= holiday.number_of_days_temp
         return result
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):

@@ -1677,7 +1677,7 @@ class BaseModel(object):
         if name in self._fields:
             convert = self._fields[name].convert_to_display_name
             for record in self:
-                result.append((record.id, convert(record[name])))
+                result.append((record.id, convert(record[name], record)))
         else:
             for record in self:
                 result.append((record.id, "%s,%s" % (record._name, record.id)))
@@ -2109,7 +2109,7 @@ class BaseModel(object):
             if f not in groupby_fields
             if f in self._fields
             if self._fields[f].type in ('integer', 'float')
-            if getattr(self._fields[f].base_field.column, '_classic_write')
+            if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
         field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
