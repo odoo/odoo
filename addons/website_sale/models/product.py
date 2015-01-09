@@ -46,15 +46,14 @@ class product_public_category(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
+        for cat in self.browse(cr, uid, ids, context=context):
+            names = [cat.name]
+            pcat = cat.parent_id
+            while pcat:
+                names.append(pcat.name)
+                pcat = pcat.parent_id
+            res.append((cat.id, ' / '.join(reversed(names))))
         return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
