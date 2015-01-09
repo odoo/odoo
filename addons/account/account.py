@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
+import math
 
 import openerp
 from openerp.osv import expression
@@ -651,7 +652,7 @@ class account_tax(models.Model):
                 continue
 
             if tax.amount_type == 'fixed':
-                tax_amount = tax.amount
+                tax_amount = math.copysign(tax.amount, base)
             elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
                 tax_amount = base * tax.amount / 100
             elif tax.amount_type == 'percent' and tax.price_include:

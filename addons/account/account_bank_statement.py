@@ -599,7 +599,7 @@ class account_bank_statement_line(models.Model):
 
         # Create the move line for the statement line
         st_line_move_line_vals = self._prepare_move_line(move, company_currency)
-        aml_obj.create(st_line_move_line_vals)
+        aml_obj.create(st_line_move_line_vals, check=False)
         
         # Complete the dicts
         # TODO : factorize with aml.process_reconciliation
@@ -658,10 +658,10 @@ class account_bank_statement_line(models.Model):
             if mv_line_dict.get('move_line'):
                 counterpart_move_line = mv_line_dict['move_line']
                 del mv_line_dict['move_line']
-                new_aml = aml_obj.create(mv_line_dict)
+                new_aml = aml_obj.create(mv_line_dict, check=False)
                 (new_aml|counterpart_move_line).reconcile()
             else:
-                aml_obj.create(mv_line_dict)
+                aml_obj.create(mv_line_dict, check=False)
         
         # Mark the statement line as reconciled
         self.journal_entry_id = move.id

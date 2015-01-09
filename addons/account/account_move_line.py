@@ -613,7 +613,14 @@ class account_move_line(models.Model):
     ####################################################
 
     @api.model
-    def create(self, vals, check=True):
+    def create(self, vals, check=True, apply_taxes=True):
+        """ :param check: check data consistency after move line creation. Eg. set to false to disable verification that the move
+                debit-credit == 0 while creating the move lines composing the move.
+            
+            :param apply_taxes: set to False if you don't want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
+                adjustment of the line amount (in case of a tax included in price). This is useful for use cases where you don't want to
+                apply taxes in the default fashion (eg. taxes).
+        """
         AccountObj = self.env['account.account']
         TaxObj = self.env['account.tax']
         MoveObj = self.env['account.move']
@@ -685,23 +692,47 @@ class account_move_line(models.Model):
         if not ok:
             raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
-        # WIP
         # Create tax lines
-        # if not context.get("dont_create_taxes") and vals.get('tax_ids') and vals['tax_ids']:
+        tax_lines_vals = []
+        if apply_taxes and vals.get('tax_ids') and vals['tax_ids']:
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
-            # taxes = TaxObj.compute_all(self._cr, self._uid, vals['tax_ids'], amount, vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)['taxes']
-            # for vals in self.get_tax_move_lines(taxes):
-                # super(account_move_line, self).create(vals)
+            res = self.env['account.tax']._model.compute_all(self._cr, self._uid, vals['tax_ids'], amount,
+                vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
+            # Adjust line amount if any tax is price_include
+            if abs(res['total_excluded']) < abs(amount):
+                if vals ['debit'] != 0.0: vals['debit'] = res['total_excluded']
+                if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
+                if vals.get('amount_currency'):
+                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (amount / res['total_excluded']))
+            # Create tax lines
+            for tax_vals in res['taxes']:
+                account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
+                if not account_id: account_id = vals['account_id']
+                tax_lines_vals.append({
+                    'account_id': account_id,
+                    'name': vals['name'] + ' ' + tax_vals['name'],
+                    'tax_line_id': tax_vals['id'],
+                    'move_id': vals['move_id'],
+                    'date': vals['date'],
+                    'partner_id': vals.get('partner_id'),
+                    'ref': vals.get('ref'),
+                    'statement_id': vals.get('statement_id'),
+                    'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
+                    'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                })
 
-        result = super(account_move_line, self).create(vals)
+        new_line = super(account_move_line, self).create(vals)
+        for tax_line_vals in tax_lines_vals:
+            # TODO: remove .with_context(context) once this context nonsense is solved
+            self.with_context(context).create(tax_line_vals, check=False)
 
         if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
             move = MoveObj.browse(vals['move_id'])
-            # TODO: FIX ME
-            # move.with_context(context)._post_validate()
+            move.with_context(context)._post_validate()
             if journal.entry_posted:
-                move.with_context(context).button_validate()
-        return result
+                move.with_context(context).post()
+        
+        return new_line
 
     @api.multi
     def unlink(self, check=True):
