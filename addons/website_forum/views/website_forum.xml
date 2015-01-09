@@ -675,6 +675,9 @@
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
+                        <li t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                            <a t-attf-class="fa fa-reply" href="#post_reply"> Reply</a>
+                        </li>
                         <li t-if="question.post_type == 'question'">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
                                 t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
@@ -697,7 +700,8 @@
                 <t t-set="answer" t-value="post_answer"/>
             </t>
         </div>
-        <div t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+        <div id="post_reply"
+                t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
             <t t-call="website_forum.post_answer"/>
         </div>
         <div t-if="question.post_type == 'question' and question.uid_has_answered" class="mb16">
@@ -769,9 +773,7 @@
                         </a>
                     </li>
                     <li t-if="question.post_type != 'question'">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" data-toggle="collapse"
+                        <a t-attf-class="fa fa-reply" style="cursor: pointer" data-toggle="collapse"
                             t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
                         </a>
                     </li>
