@@ -22,20 +22,17 @@ var DataExport = Widget.extend({
                     var string = $(this).attr('string');
                     self.add_field(id, string);
                 });
-            this.$el.find(".oe_export_file").removeAttr("disabled");
-            this.$el.find(".oe_button_unable").removeAttr("disabled");
+            self.show_buttons();
         },
         'click #remove_field': function () {
             this.$('#fields_list option:selected').remove();
             if (!(this.$('#fields_list option').val())) {
-                this.$el.find(".oe_export_file").attr("disabled", "disabled");
-                this.$el.find(".oe_button_unable").attr("disabled","disabled");
+                this.hide_buttons();
             }
         },
         'click #remove_all_field': function () {
             this.$('#fields_list').empty();
-            this.$el.find(".oe_export_file").attr("disabled", "disabled");
-            this.$el.find(".oe_button_unable").attr("disabled","disabled");
+            this.hide_buttons();
         },
         'click .oe_export_file':'on_click_export_data',
         'click #oe_export_cancel': 'exit',
@@ -52,7 +49,6 @@ var DataExport = Widget.extend({
         this.domain = action.params.domain;
         this.model_name = action.params.view;
         this.ascending = true;
-        this.history_back = action.params.history_back;
         this.selected_ids = action.params.selected_ids;
         this.exports = new data.DataSetSearch(
             this, 'ir.exports', this.action.params.context);
@@ -68,31 +64,21 @@ var DataExport = Widget.extend({
         self.$el.find(".oe_model_name").text(this.model_name);
         var got_fields = new $.Deferred();
         if (!export_fields.length) {
-            this.$el.find(".oe_export_file").attr("disabled", "disabled");
-            this.$el.find(".oe_button_unable").attr("disabled","disabled")
+            self.hide_buttons();
         }
         this.$el.find("#import_compat").on('change',function(){
+            self.$el.find('#field-tree-structure').remove();
+            var import_comp = "";
             if($(this).is(":checked")){
-                self.$el.find('#field-tree-structure').remove();
-                var import_comp = self.$el.find("#import_compat").prop("checked");
-                self.rpc("/web/export/get_fields", {
-                    model: self.action.params.model,
-                    import_compat: !!import_comp,
-                    }).done(function (records) {
-                        got_fields.resolve();
-                        self.on_show_data(records);
-                    });
-            }else {
-                self.$el.find('#field-tree-structure').remove();
-                var import_comp = "";
-                self.rpc("/web/export/get_fields", {
-                    model: self.action.params.model,
-                    import_compat: !!import_comp,
-                }).done(function (records) {
-                    got_fields.resolve();
-                    self.on_show_data(records);
-                });
+                import_comp = self.$el.find("#import_compat").prop("checked");
             }
+            self.rpc("/web/export/get_fields", {
+                model: self.action.params.model,
+                import_compat: !!import_comp,
+            }).done(function (records) {
+                got_fields.resolve();
+                self.on_show_data(records);
+            });
         });
         this.$el.find("#import_compat").trigger('change');
         var got_domain = $.when(domain).then(function (domain) {
@@ -114,6 +100,14 @@ var DataExport = Widget.extend({
                 self.$el.find('#export_format input:first').attr("checked","checked");
             }),
             this.show_exports_list());
+    },
+    show_buttons: function () {
+        this.$el.find(".oe_export_file").removeAttr("disabled");
+        this.$el.find(".oe_button_unable").removeAttr("disabled");
+    },
+    hide_buttons: function () {
+        this.$el.find(".oe_export_file").attr("disabled", "disabled");
+        this.$el.find(".oe_button_unable").attr("disabled","disabled")
     },
     on_click_move_up: function () {
         var prev_row = this.$('#fields_list option:selected').first().prev();
@@ -155,8 +149,7 @@ var DataExport = Widget.extend({
                     }).done(self.do_load_export_field);
                 }else {
                     self.$el.find('#delete_export_list').hide();
-                    self.$el.find(".oe_export_file").attr("disabled", "disabled");
-                    self.$el.find(".oe_button_unable").attr("disabled","disabled");
+                    self.hide_buttons();
                 }
             });
             self.$el.find('#delete_export_list').click(function() {
@@ -168,9 +161,8 @@ var DataExport = Widget.extend({
                         self.$el.find('#ExistsExportList').hide();
                     }
                 }
+                self.hide_buttons();
                 self.$el.find('#fields_list option').remove();
-                self.$el.find(".oe_export_file").attr("disabled", "disabled");
-                self.$el.find(".oe_button_unable").attr("disabled","disabled");
                 self.$el.find('#delete_export_list').hide();
             });
         });
@@ -180,8 +172,7 @@ var DataExport = Widget.extend({
         _(field_list).each(function (field) {
             export_node.append(new Option(field.label, field.name));
         });
-        this.$el.find(".oe_export_file").removeAttr("disabled");
-        this.$el.find(".oe_button_unable").removeAttr("disabled");
+        this.show_buttons();
     },
     on_save_export_list: function() {
         var self = this;
@@ -405,8 +396,7 @@ var DataExport = Widget.extend({
                 && !this.$el.find("#fields_list option[value='" + field_id + "']").length) {
             field_list.append(new Option(string, field_id));
         }
-        this.$el.find(".oe_export_file").removeAttr("disabled");
-        this.$el.find(".oe_button_unable").removeAttr("disabled");
+        this.show_buttons();
     },
     get_fields: function() {
         var export_fields = this.$("#fields_list option").map(function() {
