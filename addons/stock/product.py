@@ -327,6 +327,18 @@ class product_product(osv.osv):
         templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
         return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
 
+    def onchange_track_all(self, cr, uid, ids, track_all, context=None):
+        if not track_all:
+            return {}
+        unassigned_quants = self.pool['stock.quant'].search_count(cr, uid, [('product_id','in', ids), ('lot_id','=', False), ('location_id.usage','=', 'internal')], context=context)
+        if unassigned_quants:
+            return {'warning' : {
+                    'title': _('Warning!'),
+                    'message' : _("Lots are not defined for all the existing inventory of this product. You should assign serial numbers (e.g. by creating an inventory) first.")
+            }}
+        return {}
+
+
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
@@ -435,6 +447,12 @@ class product_template(osv.osv):
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
 
+    def onchange_track_all(self, cr, uid, ids, track_all, context=None):
+        if not track_all:
+            return {}
+        product_product = self.pool['product.product']
+        variant_ids = product_product.search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
+        return product_product.onchange_track_all(cr, uid, variant_ids, track_all, context=context)
 
     def _get_products(self, cr, uid, ids, context=None):
         products = []
