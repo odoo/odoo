@@ -134,6 +134,8 @@ openerp.web_timeline = function (session) {
                 'show_compose_message': this.view.is_action_enabled('edit') || false,
                 'show_link': this.parent.is_action_enabled('edit') ||true,
             }, this.node.params);
+
+            this.view_name = 'chatter';
         },
 
         start: function () {
@@ -179,16 +181,17 @@ openerp.web_timeline = function (session) {
         init: function (parent, dataset, view_id, options) {
             this._super(parent, dataset, view_id, options);
 
-            console.log("dataset", dataset);
-            console.log("options", options);
-
-
             this.dataset = dataset;
             this.model = dataset.model;
             this.domain = dataset.domain || [];
             this.context = dataset.context || {};
 
             this.options = options || {};
+            this.options = _.extend({
+                'fetch_limit' : 1000,
+            }, this.options);
+
+            this.view_name = parent.view_name || 'inbox';
 
             this.fields_view = {};
             this.fields_keys = [];
@@ -212,6 +215,11 @@ openerp.web_timeline = function (session) {
             this.add_qweb_template();
 
             this.has_been_loaded.resolve();
+        },
+
+        do_show: function () {
+            this.do_push_state({});
+            return this._super();
         },
 
         do_search: function (dom, cxt, group_by) {
@@ -321,6 +329,14 @@ openerp.web_timeline = function (session) {
                 });
         },
 
+        is_chatter: function () {
+            return this.view.view_name === 'chatter';
+        },
+
+        is_inbox: function () {
+            return this.view.view_name === 'inbox';
+        },
+
         message_render: function (search) {
             this.thread = new openerp.web_timeline.MailThread(this, {
                 'domain' : this.domain,
@@ -334,7 +350,12 @@ openerp.web_timeline = function (session) {
                 this.thread.compose_message.do_show_compact();
             }
 
-            this.thread.message_fetch(null, null, this.options.message_ids);
+            if (this.is_inbox()) {
+                this.thread.message_fetch(null, null, false, 'parent');
+            }
+            else if (this.is_chatter()) {
+                this.thread.message_fetch(null, null, this.options.message_ids, 'default');
+            }
         },
     });
     
@@ -393,22 +414,22 @@ openerp.web_timeline = function (session) {
          * @param {Object} replace_context: added to this.context
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
-        message_fetch: function (replace_domain, replace_context, ids, callback) {
-            return this.ds_message.call('message_read', [
+        message_fetch: function (add_domain, replace_context, ids, mode, callback) {
+            return this.ds_message.call('message_read2', [
                     // ids force to read
                     ids === false ? undefined : ids && ids.slice(0, this.options.fetch_limit),
                     // domain + additional
-                    (replace_domain ? replace_domain : this.domain), 
+                    (add_domain ? this.domain.concat(add_domain) : this.domain), 
                     // ids allready loaded
-                    (this.id ? [this.id].concat( this.get_child_ids() ) : this.get_child_ids()), 
-                    // thread level
-                    0,
+                    (this.id ? [this.id].concat(this.get_child_ids()) : this.get_child_ids()), 
+                    // parent_mode
+                    mode,
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
                     this.context.default_parent_id || undefined,
                     this.options.fetch_limit,
-                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')//);
+                 ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
                   ).done(this.proxy('message_fetch_set_read'));
         },
 
@@ -423,10 +444,10 @@ openerp.web_timeline = function (session) {
             var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
 
             _(records).each(function (record) {
-                // create object and attach to the thread object
-                var message = self.create_message_object(record);
-                // insert the message on dom
-                self.insert_message(message, dom_insert_after);
+                 // create object and attach to the thread object
+                 var message = self.create_message_object(record);
+                 // insert the message on dom
+                 self.insert_message(message, dom_insert_after);
             });
 
             if (!records.length && this.options.root_thread == this) {
@@ -488,13 +509,25 @@ openerp.web_timeline = function (session) {
             data.record_name = (data.record_name != '' && data.record_name) || 
                                (this.parent_message && this.parent_message.record_name);
 
-            var message = new openerp.web_timeline.ThreadMessage(this, data, {'context': {
-                'default_model': data.model,
-                'default_res_id': data.res_id,
-                'default_parent_id': data.id,
-            }});
+            if (data.type === 'parent') {
+                var message = new openerp.web_timeline.ParentMessage(this, data, {'context': {
+                    'default_model': data.model,
+                    'default_res_id': data.res_id,
+                    'default_parent_id': false,
+                }});
+            }
+            else if (data.type === 'expandable') {
 
-            // check if the message is already create
+            }
+            else {
+                var message = new openerp.web_timeline.ThreadMessage(this, data, {'context': {
+                    'default_model': data.model,
+                    'default_res_id': data.res_id,
+                    'default_parent_id': data.id,
+                }});
+            }
+
+            // check if the message is already created
             for (var i in this.messages) {
                 if (message.id && this.messages[i] && this.messages[i].id == message.id) {
                     this.messages[i].destroy();
@@ -714,6 +747,22 @@ openerp.web_timeline = function (session) {
         destroy: function () {
             this._super();
             this.parent_thread.on_message_destroy(this);
+        },
+    });
+
+    openerp.web_timeline.ParentMessage = openerp.web_timeline.MessageCommon.extend({
+        events: {
+           'click .oe_tl_parent_message':'on_parent_message',
+        },
+
+        start: function () {
+            this.$el.html(session.web.qweb.render('ParentMessage', {'widget': this}));
+            return this._super.apply(this, arguments);
+        },
+
+        on_parent_message: function (event) {
+            event.stopPropagation();
+            this.parent_thread.message_fetch([["parent_id", "=", this.id]], this.context, false, 'child');
         },
     });
 

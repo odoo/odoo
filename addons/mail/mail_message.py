@@ -22,6 +22,7 @@
 
 import pdb
 import logging
+from operator import methodcaller
 
 from openerp import tools
 
@@ -465,7 +466,7 @@ class mail_message(osv.Model):
                 'type': message.type,
                 'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': message.body,
-                'body_short': body_short,
+                #'body_short': body_short,
                 'model': message.model,
                 'model_desc': message.model_desc,
                 'res_id': message.res_id,
@@ -476,7 +477,7 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                'author_avatar': message.author_avatar,
+                #'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
@@ -581,6 +582,81 @@ class mail_message(osv.Model):
     @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
                         thread_level=0, context=None, parent_id=False, limit=None):
+        
+    
+        assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
+        domain = domain if domain is not None else []
+        message_unload_ids = message_unload_ids if message_unload_ids is not None else []
+        print "message_unload_ids : ", message_unload_ids
+        print "thread_level : ", thread_level
+        if message_unload_ids:
+            domain += [('id', 'not in', message_unload_ids)]
+        limit = limit or self._message_read_limit
+        message_tree = {}
+        message_list = []
+        parent_tree = {}
+
+        # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
+        if ids is None:
+            print "domain : ", domain
+            ids = self.search(cr, uid, domain, context=context, limit=limit)
+        print "message read ids : ", ids
+        print ""
+
+        # fetch parent if threaded, sort messages
+        for message in self.browse(cr, uid, ids, context=context):
+            message_id = message.id
+            #print "message_tree 1: ", message_tree
+            #print "- message id : ", message_id
+            if message_id in message_tree:
+                continue
+            message_tree[message_id] = message
+            #print "message_tree 2: ", message_tree
+
+            # find parent_id
+            if thread_level == 0:
+                tree_parent_id = parent_id
+            else:
+                tree_parent_id = message_id
+                parent = message
+                while parent.parent_id and parent.parent_id.id != parent_id:
+                    parent = parent.parent_id
+                    tree_parent_id = parent.id
+                if not parent.id in message_tree:
+                    message_tree[parent.id] = parent
+                #print "message_tree 3:", message_tree
+            # newest messages first
+            #print "- tree parent id : ", tree_parent_id
+            parent_tree.setdefault(tree_parent_id, [])
+            #print "parent_tree 1:", parent_tree
+            if tree_parent_id != message_id:
+                #print "query parent id :", self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context)
+                parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
+                #print "parent_tree 2: ", parent_tree
+
+        if thread_level:
+            for key, message_id_list in parent_tree.iteritems():
+                message_id_list.sort(key=lambda item: item['id'])
+                message_id_list.insert(0, self._message_read_dict(cr, uid, message_tree[key], context=context))
+
+        # create final ordered message_list based on parent_tree
+        parent_list = parent_tree.items()
+        #parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
+        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]), reverse=True)
+        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+                                                                   
+        # get the child expandable messages for the tree
+        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
+        self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
+            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+        
+        return message_list
+
+
+    @api.cr_uid_context
+    def message_read2(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
+                      mode='default', context=None, parent_id=False, limit=None):
+
         """ Read messages from mail.message, and get back a list of structured
             messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
@@ -605,12 +681,27 @@ class mail_message(osv.Model):
             :return list: list of message structure for the Chatter widget
         """
 
-        assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
+        def _get_parent(message):
+            return {
+                'id': message['id'],
+                'res_id': message['res_id'],
+                'record_name': message['record_name'],
+                'subject': message['subject'],
+                'model': message['model'],
+                'model_desc': message['model_desc'],
+                'body': message['body'],
+                'type': 'parent',
+            }
+
+        assert mode in ['default', 'parent', 'child'], 'message_read() mode should be default, parent or child; given %s.' % mode
+    
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
+        limit = limit or self._message_read_limit
+
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
-        limit = limit or self._message_read_limit
+
         message_tree = {}
         message_list = []
         parent_tree = {}
@@ -625,9 +716,9 @@ class mail_message(osv.Model):
             if message_id in message_tree:
                 continue
             message_tree[message_id] = message
-
+            
             # find parent_id
-            if thread_level == 0:
+            if mode == 'default':
                 tree_parent_id = parent_id
             else:
                 tree_parent_id = message_id
@@ -637,12 +728,14 @@ class mail_message(osv.Model):
                     tree_parent_id = parent.id
                 if not parent.id in message_tree:
                     message_tree[parent.id] = parent
+                
             # newest messages first
             parent_tree.setdefault(tree_parent_id, [])
+            
             if tree_parent_id != message_id:
                 parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
 
-        if thread_level:
+        if mode != 'default':
             for key, message_id_list in parent_tree.iteritems():
                 message_id_list.sort(key=lambda item: item['id'])
                 message_id_list.insert(0, self._message_read_dict(cr, uid, message_tree[key], context=context))
@@ -650,13 +743,24 @@ class mail_message(osv.Model):
         # create final ordered message_list based on parent_tree
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
-        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
 
-        # get the child expandable messages for the tree
-        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
-        self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
-            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+        if mode == 'parent':
+            message_list = [msg_list[0] for (key, msg_list) in parent_list]
+            message_list = map(_get_parent, message_list)
+        else:
+            message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+            self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
+
+        if mode == 'parent':
+            return message_list
+        
+        if mode == 'child':                                                                 
+            # get the child expandable messages for the tree
+            self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
+                thread_level=1, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+        
         return message_list
+
 
     def get_likers_list(self, cr, uid, ids, limit=10, context=None):
         """ Return the people list who liked this message. """
@@ -910,6 +1014,8 @@ class mail_message(osv.Model):
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
+
+        print "Values : ", values
 
         #pdb.set_trace()
 
