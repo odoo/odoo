@@ -33,21 +33,15 @@ This documents attempts to describe most of the installation options.
 
     Good for developing modules, can be used as base for production
     deployment.
-:ref:`setup/install/vcs`
-    Mostly has the same strengths and weaknesses as the
-    :ref:`setup/install/source`, but allows (technically) simpler
-    switching between versions of Odoo, as well as more structured patching
-    and customisations of Odoo itself (not through custom modules): with a
-    standard :ref:`setup/install/source`, a custom solution has to be
-    implemented to keep track of patches applied to Odoo (e.g. Quilt_). With
-    a VCS checkout, these changes can be implemented as standard Git revisions
-    or a custom Git branch, and can more easily be contributed back to the
-    main project.
+
+    The source code can be obtained by downloading a tarball or using git.
+    Using git makes it easier to update, switching between multiple versions
+    and contribute.
 
 .. _setup/install/demo:
 
-Demo_
-=====
+Demo
+====
 
 To simply get a quick idea of Odoo, demo_ instances are available. They are
 shared instances which only live for a few hours, and can be used to browse
@@ -57,8 +51,8 @@ Demo_ instances require no local installation, just a web browser.
 
 .. _setup/install/saas:
 
-SaaS_
-=====
+SaaS
+====
 
 Odoo's SaaS_ provides private instances and starts out free. It can be used to
 discover and test Odoo and do non-code customizations without having to
@@ -72,17 +66,41 @@ browser is sufficient.
 Packaged installers
 ===================
 
-.. Odoo provides packaged installers for Windows, deb-based distributions
-.. (Debian, Ubuntu, …) and RPM-based distributions (Fedora, CentOS, RHEL, …).
-
-Odoo provides packaged installers for Windows and deb-based distributions
-(Debian, Ubuntu, …).
+Odoo provides packaged installers for Windows, deb-based distributions
+(Debian, Ubuntu, …) and RPM-based distributions (Fedora, CentOS, RHEL, …).
 
 These packages automatically set up all dependencies, but may be difficult to
 keep up-to-date.
 
 Official packages with all relevant dependency requirements are available on
 https://nightly.odoo.com.
+
+Windows
+-------
+
+* download https://nightly.odoo.com/8.0/nightly/exe/odoo_8.0.latest.exe
+* run the downloaded file
+
+  .. warning:: on Windows 8, you may see a warning titled "Windows protected
+               your PC". Click :guilabel:`More Info` then
+               :guilabel:`Run anyway`
+
+* Accept the UAC_ prompt
+* Go through the various installation steps
+
+Odoo will automatically be started at the end of the installation.
+
+Configuration
+'''''''''''''
+
+The :ref:`configuration file <reference/cmdline/config>` can be found at
+:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\openerp-server.conf`.
+
+The configuration file can be edited to connect to a remote Postgresql, edit
+file locations or set a dbfilter.
+
+To reload the configuration file, restart the Odoo service via
+:menuselection:`Services --> odoo server`.
 
 Deb
 ---
@@ -98,10 +116,6 @@ commands as root:
 
 This will automatically install all dependencies, install Odoo itself as a
 daemon and automatically start it.
-
-.. postgres-server apparently automatically installed due to being a
-   recommended package, maybe install it explicitly for the purpose of this
-   document?
 
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
@@ -167,32 +181,6 @@ When the configuration file is edited, Odoo must be restarted via SystemD:
 
     $ sudo systemctl restart odoo
 
-Windows
--------
-
-* download https://nightly.odoo.com/8.0/nightly/exe/odoo_8.0.latest.exe
-* run the downloaded file
-
-  .. warning:: on Windows 8, you may see a warning titled "Windows protected
-               your PC". Click :guilabel:`More Info` then
-               :guilabel:`Run anyway`
-
-* Accept the UAC_ prompt
-* Go through the various installation steps
-
-Odoo will automatically be started at the end of the installation.
-
-Configuration
-'''''''''''''
-
-The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 8.0-{id}\\server\\openerp-server.conf`.
-
-The configuration file can be edited to connect to a remote Postgresql, edit
-file locations or set a dbfilter.
-
-To reload the configuration file, restart the Odoo service via
-:menuselection:`Services --> odoo server`.
 
 .. _setup/install/source:
 
@@ -214,77 +202,155 @@ edit a configuration file.
 Finally it provides greater control over the system's set up, and allows more
 easily keeping (and running) multiple versions of Odoo side-by-side.
 
-The Odoo source can be downloaded from
+There are two way to get the odoo sourcei source tarball or git.
+
+Using git allows simpler update and easier switching between differents
+versions of Odoo. It also simplifies maintaining non-module patches and
+contributions.  The primary drawback of git is that it is significantly larger
+than a tarball as it contains the entire history of the Odoo project.
+
+The Odoo tarball can be downloaded from
 https://nightly.odoo.com/8.0/nightly/src/odoo_8.0-latest.tar.gz
 
-.. warning:: Windows does not handle .tar.gz archives natively, you will have
-             to download and install `7-Zip <http://www.7-zip.org>`_ to
-             decompress the archive
+On windows `7-Zip <http://www.7-zip.org>`_ may be use to decompress the archive
+as Windows does not handle .tar.gz archives natively.
+
+The git repository is https://github.com/odoo/odoo.git and can be cloned using
+the command
+
+.. code-block:: console
+
+    $ git clone https://github.com/odoo/odoo.git
+
 
 Installing dependencies
 -----------------------
 
-Source installation requires manually installing dependencies, be them native
-dependencies or Python libraries:
+Source installation requires manually installing dependencies:
 
-* Python, should be preinstalled on most systems. On Windows, use `the
-  official Python 2.7 installer <https://www.python.org/downloads/windows/>`_.
+* Python 2.7.
 
-* PostgreSQL, if you want the database to be on the same machine as Odoo
-  (simplest and default)
+  - on Linux, already included
+  - on OS X, already included
+  - on Windows, use `the official Python 2.7 installer
+    <https://www.python.org/downloads/windows/>`_.
 
-  - on Linux, use your distribution's package
-  - on Windows, use `the official installer`_
-  - on OS X, `postgres.app <http://postgresapp.com>`_ is the simplest way to
-    get started
+* PostgreSQL, to use a local database
 
-  .. todo:: create new role?
+  After installation you will need to create a postgres user (also named a
+  role), by default the only user is ``postgres``, and Odoo forbids connecting
+  as ``postgres``.
 
-* the :file:`requirements.txt` file in the source lists all the Python
-  dependencies
-
-  - for Windows, http://www.lfd.uci.edu/~gohlke/pythonlibs/ provides a number
-    of libraries, for both pure-python and native, packaged as installers
-  - dependencies may be installable with the system's package manager
-  - pip_ can take the requirements file directly and install everything listed
-    in it, either globally or within a `virtual environment`_:
+  - on Linux, use your distribution's package, then create a postgres user
+    named like your login:
 
     .. code-block:: console
 
-        $ pip install -r path/to/requirements.txt
+        $ sudo su - postgres -c "createuser -s $USER"
 
-    For libraries using native code (Pillow, lxml, greenlet, gevent, psycopg2)
-    it may be necessary to install development tools and native dependencies
-    before pip is able to install the dependencies themselves:
+    Because the role login is the same as your unix login unix sockets can be
+    use without a password.
 
-    * Linux distributions generally require ``-dev`` or ``-devel`` packages
-      for Python, Postgres, libxml2, libxslt and libevent
-    * for OSX, install the Command Line Tools (``xcode-select --install``) the
-      native dependency via your preferred package manager (macports_,
-      homebrew_)
-    * for Windows
+  - on OS X, `postgres.app <http://postgresapp.com>`_ is the simplest way to
+    get started, then create a postgres user like on Linux.
 
-      .. danger:: you will have to remove ``python-ldap`` from the
-                  requirements file, it can not be installed via pip_ on
-                  Windows and must be installed as a precompiled binary
+  - on Windows, use `PostgreSQL for windows`_ then add PostgreSQL's ``bin``
+    directory (default: ``C:\Program Files\PostgreSQL\9.3\bin``) to your
+    :envvar:`PATH`
 
-      - install the `Visual C++ Compiler for Python 2.7`_ (and restart)
-      - install `PostgreSQL for windows`_ if not already done
-      - Add PostgreSQL's ``bin`` directory (default:
-        ``C:\Program Files\PostgreSQL\9.3\bin``) to your :envvar:`PATH`
+    Then create a postgres user with a password using the pg admin gui, for
+    example login ``odoo`` and password ``odoo``.
 
-      ``greenlet``, ``Pillow`` and ``lxml`` are available as pre-compiled
-      wheels_ and trivially installed by pip_, ``gevent`` only needs the
-      compiler to be installable and a local installation ``psycopg2``
+    This user and password will be provided with the -w and -r option or in the
+    config file.
 
-      .. note:: by default, Python scripts are not on the PATH in windows,
-                after installing pip_ add ``C:\Python27\Scripts`` to your
-                :envvar:`PATH`
+* Python dependencies listed in the :file:`requirements.txt` file.
 
-.. danger:: whatever the installation method, Odoo on Windows also needs
-            pywin32_ which is not listed in the requirements file. It can be
-            installed using pip_ with ``pip install pypiwin32``, or manually
-            by downloading the official pywin32_ installer and running it.
+
+  - on Linux python dependencies may be installable with the system's package
+    manager or using pip.
+
+    For libraries using native code (Pillow, lxml, greenlet, gevent, psycopg2) it
+    may be necessary to install development tools and native dependencies before
+    pip is able to install the dependencies themselves. These are available in
+    ``-dev`` or ``-devel`` packages for Python, Postgres, libxml2, libxslt and
+    libevent. Then the dependecies can be installed using 
+
+    .. code-block:: console
+
+        $ pip install -r requirements.txt
+
+  - on OS X, install the Command Line Tools (``xcode-select --install``) the
+    native dependency via your preferred package manager (macports_,
+    homebrew_). Then pip can be used.
+
+    .. code-block:: console
+
+        $ pip install -r requirements.txt
+
+  - on Windows you need to install some of the dependencies manually, tweak the
+    requirements.txt file, then run pip to install the remaning ones.
+
+    Install ``psycopg`` using the installer here
+    http://www.stickpeople.com/projects/python/win-psycopg/
+
+    Install ``pip`` from http://www.lfd.uci.edu/~gohlke/pythonlibs/
+
+    Then edit the requirements.txt file:
+
+    - remove ``psycopg`` as you already have it.
+
+    - remove the optional ``python-ldap``, ``gevent`` and ``psutil`` because they
+      require compilation.
+
+    - add ``pypiwin32`` because it's needed under windows.
+
+    Then use pip to install install the dependecies using the following command
+    from a cmd.exe prompt
+
+    .. code-block:: console
+
+        C:\> cd \YourOdooPath
+        C:\YourOdooPath> C:\Python27\Scripts\pip.exe install -r requirements.txt
+
+* Less css compiler via nodejs
+
+  - on Linux, use your distribution's package to install nodejs and npm.
+
+    In debian you need at least jessie, as the packaged version of npm before
+    that does not work. In Ubuntu you need at least Ubuntu 14.04, as the
+    packaged version of npm before that does not work. Otherwise install nodejs
+    and npm manually.
+
+    Once you have npm working, install less and less-plugin-clean-css.
+
+    .. code-block:: console
+
+        $ sudo npm install -g less less-plugin-clean-css
+
+    On debian and Ubuntu you also need to set a symbolic link from noejs to
+    node because the shebang line of lessc uses node.
+
+    .. code-block:: console
+
+        $ sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+
+  - on OS X, install nodejs via your preferred package manager (macports_,
+    homebrew_) then install less and less-plugin-clean-css.
+
+    .. code-block:: console
+
+        $ sudo npm install -g less less-plugin-clean-css
+
+
+  - on Windows, install nodejs then reboot and install less and
+    less-plugin-clean-css.
+
+    .. code-block:: console
+
+        C:\> npm install -g less less-plugin-clean-css
+
 
 Running Odoo
 ------------
@@ -297,31 +363,33 @@ Once all dependencies are set up, Odoo can be launched by running ``odoo.py``.
 
 Common necessary configurations are:
 
-* PostgreSQL host, port, user and password. Odoo has no defaults beyond
+* PostgreSQL host, port, user and password.
+
+  Odoo has no defaults beyond
   `psycopg2's defaults <http://initd.org/psycopg/docs/module.html>`_: connects
   over a UNIX socket on port 5432 with the current user and no password.
 
-  This may require creating new PostgreSQL roles, by default the only user is
-  ``postgres``, and Odoo forbids connecting as ``postgres``.
 * Custom addons path beyond the defaults, to load your own modules
 
-.. _setup/install/vcs:
+Under Windows a typical way to execute odoo would be:
 
-VCS Checkout
-============
+    .. code-block:: console
 
-The VCS Checkout installation method is similar to
-:ref:`source-based installation <setup/install/source>` in most respect.
+        C:\YourOdooPath> python odoo.py -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
-* Instead of downloading a tarball the Odoo source code is downloaded from
-  `the repository`_ using git_
-* This simplifies the development and contributions to Odoo itself
-* This also simplifies maintaining non-module patches on top of the base Odoo
-  system
+Where ``odoo``, ``odoo`` are the postgresql login and password,
+``../mymodules`` a directory with additional addons and ``mydb`` the default db
+to serve on localhost:8069
 
-The primary drawback of the VCS checkout method is that it is significantly
-larger than a :ref:`source install <setup/install/source>` as it contains
-the entire history of the Odoo project.
+Under Unix a typical way to execute odoo would be:
+
+    .. code-block:: console
+
+        $ ./odoo.py --addons-path=addons,../mymodules --db-filter=mydb$
+
+Where ``../mymodules`` is a directory with additional addons and ``mydb`` the default db
+to serve on localhost:8069
+
 
 .. _demo: https://demo.odoo.com
 .. _EPEL: https://fedoraproject.org/wiki/EPEL

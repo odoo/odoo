@@ -40,7 +40,7 @@ $(document).ready(function () {
         print_mode = true;
     }
 
-    // Quizz correction mode
+    // Quiz correction mode
     if (! _.isUndefined(scores_controller)) {
         quiz_correction_mode = true;
     }

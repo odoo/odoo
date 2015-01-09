@@ -41,7 +41,6 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
     'data' : ['product_expiry_view.xml', 'product_expiry_data.xml'],
     'auto_install': False,
     'installable': True,
-    'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
