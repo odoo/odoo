@@ -315,12 +315,25 @@ Source installation requires manually installing dependencies:
 
 * Less css compiler via nodejs
 
-  - on Linux, use your distribution's package to install nodejs, then install
-    less and less-plugin-clean-css.
+  - on Linux, use your distribution's package to install nodejs and npm.
+
+    In debian you need at least jessie, as the packaged version of npm before
+    that does not work. In Ubuntu you need at least Ubuntu 14.04, as the
+    packaged version of npm before that does not work. Otherwise install nodejs
+    and npm manually.
+
+    Once you have npm working, install less and less-plugin-clean-css.
 
     .. code-block:: console
 
         $ sudo npm install -g less less-plugin-clean-css
+
+    On debian and Ubuntu you also need to set a symbolic link from noejs to
+    node because the shebang line of lessc uses node.
+
+    .. code-block:: console
+
+        $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 
   - on OS X, install nodejs via your preferred package manager (macports_,
