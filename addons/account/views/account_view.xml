@@ -1431,58 +1431,61 @@
         </record>
         <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_folder" sequence="1"/>
 
-        <!-- Account Tax Templates 
+        <!-- Account Tax Templates -->
         <record id="view_account_tax_template_form" model="ir.ui.view">
             <field name="name">account.tax.template.form</field>
             <field name="model">account.tax.template</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Template">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="chart_template_id"/>
-                        <field name="type"/>
-                        <field name="type_tax_use"/>
-                        <field name="price_include"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="type_tax_use"/>
+                        </group>
                     </group>
                     <notebook>
-                        <page string="Tax Definition">
-                            <group col="4">
-                                <field name="applicable_type"/>
-                                <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}" widget="monetary"/>
-                                <field name="include_base_amount"/>
-                                <field name="domain"/>
-                                <newline/>
-                                <field name="account_collected_id"/>
-                                <label colspan="2" string="Keep empty to use the income account"/>
-                                <field name="account_paid_id"/>
-                                <label colspan="2" string="Keep empty to use the expense account"/>
-                                <field name="child_depend"/>
-                                <field name="sequence"/>
+                        <page string="Definition">
+                            <group>
+                                <group>
+                                    <field name="amount_type" />
+                                    <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <div attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                        <field name="amount" class="oe_inline" />
+                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                    </div>
+                                </group>
+                                <group attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                    <field name="account_id"/>
+                                    <field name="refund_account_id"/>
+                                </group>
                             </group>
+                            <field name="children_tax_ids"
+                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','as_child')]}"
+                                domain="[('type_tax_use','in',('as_child',type_tax_use)), ('amount_type','!=','group')]">
+                                <tree string="Children Taxes">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name"/>
+                                    <field name="amount_type" />
+                                    <field name="amount" />
+                                </tree>
+                            </field>
                         </page>
-                        <page string="Tax Declaration">
-                            <group col="4">
-                                <separator colspan="4" string="Invoices"/>
-                                <field name="base_code_id"/>
-                                <field name="base_sign"/>
-                                <field name="tax_code_id"/>
-                                <field name="tax_sign"/>
-
-                                <separator colspan="4" string="Credit Notes"/>
-                                <field name="ref_base_code_id"/>
-                                <field name="ref_base_sign"/>
-                                <field name="ref_tax_code_id"/>
-                                <field name="ref_tax_sign"/>
+                        <page string="Advanced Options">
+                            <group>
+                                <group>
+                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="analytic_cost" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <br/><br/>
+                                    <field name="active" groups="base.group_no_one"/>
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                </group>
+                                <group>
+                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                </group>
                             </group>
-                        </page>
-                        <page string="Special Computation">
-                            <separator string="Compute Code (if type=code)"/>
-                            <field name="python_compute" attrs="{'readonly':[('type','!=','code')]}"/>
-                            <separator string="Compute Code for Taxes Included Prices"/>
-                            <field name="python_compute_inv"/>
-                            <separator string="Applicable Code (if type=code)"/>
-                            <field name="python_applicable" attrs="{'readonly':[('applicable_type','=','true')]}"/>
                         </page>
                     </notebook>
                 </form>
@@ -1493,7 +1496,7 @@
             <field name="model">account.tax.template</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Template">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="description"/>
                 </tree>
             </field>
@@ -1517,7 +1520,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
-        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/> -->
+        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/>
 
         <!--  Wizard for Multi Charts of Accounts -->
         <record id="view_wizard_multi_chart" model="ir.ui.view">
