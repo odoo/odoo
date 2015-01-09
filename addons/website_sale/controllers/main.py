@@ -246,9 +246,8 @@ class website_sale(http.Controller):
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list)
 
-        category_ids = category_obj.search(cr, uid, [], context=context)
-        category_list = category_obj.name_get(cr, uid, category_ids, context=context)
-        category_list = sorted(category_list, key=lambda category: category[1])
+        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+        categs = category_obj.browse(cr, uid, category_ids, context=context)
 
         pricelist = self.get_pricelist()
 
@@ -268,7 +267,7 @@ class website_sale(http.Controller):
             'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
-            'category_list': category_list,
+            'categories': categs,
             'main_object': product,
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids
