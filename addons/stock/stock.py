@@ -4302,7 +4302,7 @@ class stock_picking_type(osv.osv):
         obj = self.pool.get('stock.picking')
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
-            'count_picking_waiting': [('state', '=', 'confirmed')],
+            'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
             'count_picking_late': [('min_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],

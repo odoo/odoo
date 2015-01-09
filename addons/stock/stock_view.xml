@@ -755,7 +755,7 @@
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                     <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
-                    <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','=', 'confirmed')]" help="Waiting Moves"/>
+                    <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
@@ -847,7 +847,7 @@
         </record>
 
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Availability Transfers</field>
+            <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1414,7 +1414,7 @@
                                             </a>
                                             <t t-if="record.count_picking_waiting.raw_value &gt; 0">
                                                 <a name="%(action_picking_tree_waiting)d" type="action" class="col-md-12">
-                                                    <field name="count_picking_waiting"/> Waiting Availability
+                                                    <field name="count_picking_waiting"/> Waiting
                                                 </a>
                                             </t>
                                             <a class="col-md-9 oe_kanban_stock_picking_type_list" id="transfers" name="%(action_picking_tree)d" type="action">Transfers</a>
