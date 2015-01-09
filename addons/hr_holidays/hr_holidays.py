@@ -291,15 +291,22 @@ class hr_holidays(osv.osv):
             result['value'] = {'department_id': employee.department_id.id}
         return result
 
-    # TODO: can be improved using resource calendar method
-    def _get_number_of_days(self, date_from, date_to):
+    def _get_number_of_days(self, cr, uid, date_from, date_to, context=None):
         """Returns a float equals to the timedelta between two dates given as string."""
-
-        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-        from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
-        to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
-        timedelta = to_dt - from_dt
-        diff_day = timedelta.days + float(timedelta.seconds) / 86400
+        date_from_dt = datetime.datetime.strptime(date_from, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        date_to_dt = datetime.datetime.strptime(date_to, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        calendar_id = None
+        employee_id = self.pool['hr.employee'].search(cr, uid, [('user_id', '=', uid)], limit=1, context=context)
+        if employee_id:
+            calendar_id = self.pool['hr.employee'].browse(cr, uid, employee_id, context=context).resource_id.calendar_id.id
+        if not calendar_id:
+            calendar_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'resource.timesheet_group1')
+        if calendar_id:
+            diff_day = self.pool['resource.calendar'].get_working_days(cr, uid, calendar_id, date_from_dt, date_to_dt, context=context)
+        else:
+            timedelta = date_to_dt - date_from_dt
+            diff_day = timedelta.days + float(timedelta.seconds) / 86400
+            diff_day = round(math.floor(diff_day))+1  # TDE: old stuff, had probably some reason
         return diff_day
 
     def unlink(self, cr, uid, ids, context=None):
@@ -327,8 +334,7 @@ class hr_holidays(osv.osv):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+            result['value']['number_of_days_temp'] = self._get_number_of_days(cr, uid, date_from, date_to)
         else:
             result['value']['number_of_days_temp'] = 0
 
@@ -346,8 +352,7 @@ class hr_holidays(osv.osv):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+            result['value']['number_of_days_temp'] = self._get_number_of_days(cr, uid, date_from, date_to)
         else:
             result['value']['number_of_days_temp'] = 0
         return result

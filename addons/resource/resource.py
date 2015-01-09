@@ -407,6 +407,30 @@ class resource_calendar(osv.osv):
                 context=context)
         return hours
 
+    def get_working_days(self, cr, uid, id, start_dt, end_dt, compute_leaves=False,
+                         resource_id=None, default_interval=None, context=None):
+        days = 0.0
+        print 'prout'
+        for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
+                               until=(end_dt + datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0),
+                               byweekday=self.get_weekdays(cr, uid, id, context=context)):
+            day_start_dt = day.replace(hour=0, minute=0, second=0)
+            if start_dt and day.date() == start_dt.date():
+                day_start_dt = start_dt
+            day_end_dt = day.replace(hour=23, minute=59, second=59)
+            if end_dt and day.date() == end_dt.date():
+                day_end_dt = end_dt
+            hours = self.get_working_hours_of_date(
+                cr, uid, id, start_dt=day_start_dt, end_dt=day_end_dt,
+                compute_leaves=compute_leaves, resource_id=resource_id,
+                default_interval=default_interval,
+                context=context)
+            print day_start_dt, day_end_dt, hours
+            if hours:
+                days += 1
+        print 'end', days
+        return days
+
     # --------------------------------------------------
     # Hours scheduling
     # --------------------------------------------------
