@@ -211,6 +211,31 @@
   </xpath>
 </template>
 
+<template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
+  <li t-att-class="'active' if categ.id == int(category or 0) else ''">
+      <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}"/>
+      <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-field="categ.name"></a>
+      <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
+           <t t-foreach="categ.child_id" t-as="categ">
+              <t t-call="website_sale.option_collapse_categories_recursive"/>
+          </t>
+      </ul>
+  </li>
+</template>
+
+<template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories" active="False" customize_show="True">
+  <xpath expr="//div[@id='products_grid_before']/ul" position="replace">
+      <ul class="nav nav-pills nav-stacked mt16" id="o_shop_collapse_category">
+          <li t-att-class=" '' if category else 'active' ">
+            <a t-att-href="keep('/shop',category=0)">All Products</a>
+          </li>
+          <t t-foreach="categories" t-as="categ">
+              <t t-call="website_sale.option_collapse_categories_recursive"/>
+          </t>
+      </ul>
+  </xpath>
+</template>
+
 <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <form class="js_attributes" method="get">
