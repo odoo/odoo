@@ -1,88 +1,70 @@
-.oe_main_menu_placeholder{
-    width: 220px;
-    background: #F8F8F8;
-    border-right: 1px solid #afafb6;
-    float: left;
-    padding-top: 1em;
-
+.oe_main_menu_placeholder {
+  width: 220px;
+  background: #F8F8F8;
+  border-right: 1px solid #afafb6;
+  float: left;
+  padding-top: 1em;
 }
-
-.oe_application_menu_placeholder{
-    display:none !important;
+.oe_application_menu_placeholder,
+.oe_main_menu_navbar {
+  display: none !important;
 }
-
-.oe_main_menu_navbar{
-    display:none;
-}
-
 .oe_webclient {
-    width: 100%;
-    display: flex;
-    position: relative;
-    height: 100%;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
-
 .openerp.openerp_webclient_container {
-    height: 100%;
+  height: 100%;
 }
-
 .oe_application {
-    float: right;
-    position:absolute;
+  float: right;
+  position: absolute;
 }
-
 .oe_structure {
-    width: 100%;
-    height:100%;
+  width: 100%;
+  height: 100%;
 }
-
 #wrap {
-    height: 100%;
+  height: 100%;
 }
-
 main {
-    width: 100%;
-    height:100%;
-    display: table-row;
+  width: 100%;
+  height: 100%;
+  display: table-row;
 }
-
 body {
-    overflow: hidden;
+  overflow: hidden;
 }
-
 #wrapwrap footer {
-    position: fixed;
-    bottom: -800px;
-    transition: all 0.2s linear;
-    height: auto;
-    width: 100%;
-    background-color: #F8F8F8;
-    border-top: 1px solid #e7e7e7;
-    z-index: 10;
+  position: fixed;
+  bottom: -800px;
+  transition: all 0.2s linear;
+  height: auto;
+  width: 100%;
+  background-color: #F8F8F8;
+  border-top: 1px solid #e7e7e7;
+  z-index: 10;
 }
-
 .wport_show_footer {
-    bottom: 0 !important;
+  bottom: 0 !important;
 }
-
 #show_footer {
-    position: fixed;
-    bottom: 2.5em;
-    width: 140px;
-    left: 40px;
-    opacity: 0.5;
-    z-index: 999;
+  position: fixed;
+  bottom: 2.5em;
+  width: 140px;
+  left: 40px;
+  opacity: 0.5;
+  z-index: 999;
 }
-
 #show_footer:hover {
-    opacity: 1;
+  opacity: 1;
 }
-
 .breadcrumb > .active {
-color: #777;
+  color: #777;
 }
-
 /* someone decided to add a background in website_forum */
 .oe_grey {
-    background-color: transparent;
+  background-color: transparent;
 }
