@@ -57,3 +57,5 @@ To fetch odoo merge pull requests refs use this command:
 ToDo:: Docker test with runbot (Worker Increased)
 
 -----------------
+
+Final test
