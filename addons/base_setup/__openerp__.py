@@ -43,6 +43,6 @@ Shows you a list of applications features to install from.
     ],
     'demo': [],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
