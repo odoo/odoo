@@ -6,7 +6,6 @@ from dateutil.relativedelta import relativedelta
 import time
 
 import openerp
-from openerp import SUPERUSER_ID
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -1374,7 +1373,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if self._uid != SUPERUSER_ID and not self.env.user.has_group('base.group_erp_manager'):
+        if self._uid != self.sudo()._uid and not self.env.user.has_group('base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
         company_id = self.company_id.id
