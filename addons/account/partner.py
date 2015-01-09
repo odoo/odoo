@@ -290,8 +290,8 @@ class res_partner(models.Model):
     ref_companies = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     last_time_entries_checked = fields.Datetime(oldname='last_reconciliation_date',
-        string='Latest Manual Reconciliation Date', readonly=True, copy=False,
-        help='Last time the manual reconciliation was performed for this partner. '
+        string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
+        help='Last time the invoices & payments matching was performed for this partner. '
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
              'or if you click the "Done" button.')
 

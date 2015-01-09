@@ -166,12 +166,12 @@ class account_account(models.Model):
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type.type', store=True)
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
-    last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
-        help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
+    last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
+        help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
 
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
-        help="Check this box if this account allows reconciliation of journal items.")
+    reconcile = fields.Boolean(string='Allow Invoices & Payments Matching', default=False,
+        help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
@@ -719,7 +719,7 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+    reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text(string='Note')
     tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
@@ -1544,7 +1544,7 @@ class account_bank_accounts_wizard(models.TransientModel):
 
 class account_operation_template(models.Model):
     _name = "account.operation.template"
-    _description = "Preset to create journal entries during a reconciliation"
+    _description = "Preset to create journal entries during a invoices and payments matching"
 
     # TODO :
     # - wait for account.analytic.account to ckeck that domain=[('state','not in',('close','cancelled'))] is correct

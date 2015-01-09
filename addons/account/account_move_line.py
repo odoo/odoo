@@ -165,7 +165,7 @@ class account_move_line(models.Model):
 
     @api.model
     def get_data_for_manual_reconciliation(self, res_type, res_id=None):
-        """ Returns the data required for the  manual reconciliation of partners/accounts.
+        """ Returns the data required for the invoices & payments matching of partners/accounts.
             If no res_id is passed, returns data for all partners/accounts that can be reconciled.
 
             :param res_type: either 'partner' or 'account'

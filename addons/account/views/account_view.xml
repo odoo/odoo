@@ -76,7 +76,7 @@
         <!-- Accounts -->
 
         <record id="action_reconcile_account" model="ir.actions.client">
-            <field name="name">Account Reconciliation</field>
+            <field name="name">Invoices &amp; Payments Matching</field>
             <field name="tag">manual_reconciliation_view</field>
             <field name="context">{'account_id': active_id}</field>
         </record>
@@ -105,7 +105,7 @@
                             <field name="internal_type" invisible="1"/>
                             <field name="last_time_entries_checked" readonly="1"
                                 attrs="{'invisible':['|','|',('reconcile','=',False),('internal_type','in',('payable', 'receivable')),('last_time_entries_checked','=',False)]}"/>
-                            <button colspan="2" string="Reconcile" type="action" class="oe_highlight" name="%(action_reconcile_account)d"
+                            <button colspan="2" string="Invoices &amp; payments matching" type="action" class="oe_highlight" name="%(action_reconcile_account)d"
                                 attrs="{'invisible':['|',('reconcile','=',False),('internal_type','in',('payable', 'receivable'))]}" />
                         </group>
                     </group>
@@ -596,7 +596,7 @@
             <field name="tag">manual_reconciliation_view</field>
         </record>
 
-        <menuitem id="menu_bank_manual_reconciliation" name="Manual Reconciliation" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
+        <menuitem id="menu_bank_manual_reconciliation" name="Invoices &amp; Payments Matching" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_manual_reconcile"/>
 
         <record id="view_account_operation_template_form" model="ir.ui.view">
             <field name="name">account.operation.template.form</field>
