@@ -746,9 +746,9 @@ instance.web.client_actions.add("reload_context", "instance.web.ReloadContext");
  * If can't go back in history stack, will go back to home.
  */
 instance.web.HistoryBack = function(parent) {
-    if (!parent.history_back()) {
+    parent.history_back().fail(function() {
         instance.web.Home(parent);
-    }
+    });
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 

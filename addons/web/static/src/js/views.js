@@ -119,18 +119,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.widgets.length > 1) {
             widget = this.widgets[this.widgets.length - 2];
             var index = widget.view_stack && widget.view_stack.length - 1;
-            this.select_widget(widget, index);
+            return this.select_widget(widget, index);
         }
+        return $.Deferred().reject();
     },
     select_widget: function(widget, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
-            return false;
+            return $.Deferred().reject();
         }
         var widget_index = this.widgets.indexOf(widget),
             def = $.when(widget.select_view && widget.select_view(index));
 
-        def.done(function () {
+        return def.done(function () {
             if (widget.__on_reverse_breadcrumb) {
                 widget.__on_reverse_breadcrumb();
             }
