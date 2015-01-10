@@ -754,7 +754,7 @@ class account_bank_statement_line(osv.osv):
                 if move_id != aml_obj.browse(cr, uid, mv_line_dict.get('counterpart_move_line_id'), context=context).move_id.id:
                     raise osv.except_osv(_('Error!'), _('You cannot mix items from different journal entries.'))
             # Link move lines to the bank statement
-            mv_line_ids =[line_dict['counterpart_move_line_id'] for line_dict in mv_line_dicts]
+            mv_line_ids = [line_dict['counterpart_move_line_id'] for line_dict in mv_line_dicts]
             aml_obj.write(cr, uid, mv_line_ids, {'statement_id': st_line.statement_id.id}, context=context)
             # Mark the statement line as reconciled
             self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
@@ -777,6 +777,7 @@ class account_bank_statement_line(osv.osv):
             amount = st_line.amount
         bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, amount, company_currency.id, context=context)
         aml_obj.create(cr, uid, bank_st_move_vals, context=context)
+        
         # Complete the dicts
         st_line_currency = st_line.currency_id or statement_currency
         st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or False
@@ -830,6 +831,7 @@ class account_bank_statement_line(osv.osv):
                 prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / st_line.amount_currency
                 mv_line_dict['amount_currency'] = prorata_factor * st_line.amount
             to_create.append(mv_line_dict)
+        
         # Create move lines
         move_line_pairs_to_reconcile = []
         for mv_line_dict in to_create:
@@ -840,9 +842,11 @@ class account_bank_statement_line(osv.osv):
             new_aml_id = aml_obj.create(cr, uid, mv_line_dict, context=context)
             if counterpart_move_line_id != None:
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
+        
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
             aml_obj.reconcile_partial(cr, uid, pair, context=context)
+        
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 

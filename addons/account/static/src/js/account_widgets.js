@@ -1270,8 +1270,6 @@ openerp.account = function (instance) {
             // Adjust to different cases
             if (balance_type === "equal") {
                 displayValidState(true);
-            } else if (self.is_rapprochement) {
-                // Do nothing ; just stay in invalid state
             } else if (balance_type === "greater") {
                 createOpenBalance("Create Write-off");
             } else if (balance_type === "lower") {
@@ -1320,11 +1318,6 @@ openerp.account = function (instance) {
             var self = this;
     
             self.$(".action_pane.active").removeClass("active");
-
-            if (self.is_rapprochement && (self.get("mode") === "create" || (self.get("mode") === "match" && self.$el.hasClass("no_match")))) {
-                self.set("mode", "inactive");
-                return;
-            }
 
             if (val.oldValue === "create")
                 self.addLineBeingEdited();
