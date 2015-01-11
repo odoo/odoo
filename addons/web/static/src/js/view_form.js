@@ -3215,9 +3215,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     click_change_value: function (event) {
         var val = $(event.target).val();
         val = this.field.type == "selection" ? val : +val;
-        if (val == this.get_value()) {
-            this.set_value(false);
-        } else {
+        if (val !== this.get_value()) {
             this.set_value(val);
         }
     },
@@ -4414,7 +4412,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             r = record;
             _.each(self.editor.form.fields, function(field){
                 field._inhibit_on_change_flag = true;
-                field.set_value(r.attributes[field.name]);
+                field.internal_set_value(r.attributes[field.name]);
                 field._inhibit_on_change_flag = false;
             });
             return _.every(self.editor.form.fields, function(field){

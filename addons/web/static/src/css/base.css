@@ -86,11 +86,13 @@
    */
 }
 .openerp.openerp_webclient_container {
+  height: 95%;
   height: calc(100% - 34px);
   overflow: auto;
 }
 @media (max-width: 768px) {
   .openerp.openerp_webclient_container {
+    height: 90%;
     height: calc(100% - 52px);
   }
 }
@@ -3256,11 +3258,23 @@ body.oe_single_form .oe_single_form_container {
 }
 
 @media print {
+  body {
+    height: auto !important;
+  }
+
+  .openerp#announcement_bar_table {
+    display: none;
+  }
+
   .openerp {
     text-shadow: none;
   }
+  .openerp .oe_application, .openerp .oe_view_manager_wrapper {
+    height: auto !important;
+  }
   .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
     overflow: visible;
+    position: relative !important;
   }
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;

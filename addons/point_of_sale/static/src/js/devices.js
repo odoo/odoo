@@ -695,7 +695,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 };
             }
 
-            if(parse_result.type in {'product':'', 'weight':'', 'price':'', 'discount':''}){    //ean is associated to a product
+            if(parse_result.type in {'product':'', 'weight':'', 'price':''}){    //ean is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }

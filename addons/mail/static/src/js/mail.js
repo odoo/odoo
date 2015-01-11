@@ -652,8 +652,8 @@ openerp.mail = function (session) {
             if (self.flag_post) {
                 return;
             }
-            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
+                self.flag_post = true;
                 if (this.is_log) {
                     this.do_send_message_post([], this.is_log);
                 }

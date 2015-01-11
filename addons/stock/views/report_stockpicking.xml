@@ -9,26 +9,41 @@
                             <div class="row"><div class="col-xs-4 pull-right">
                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
                             </div></div>
-                             <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
-                                 <span><strong>Supplier Address:</strong></span>
-                             </div>
-                             <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
-                                 <span><strong>Warehouse Address:</strong></span>
-                             </div>
-                             <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
-                                 <span><strong>Customer Address:</strong></span>
-                             </div>
-                             <div t-if="o.partner_id" name="partner_header">
-                                 <div t-field="o.partner_id" 
-                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                                <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                             </div>
-                             
-                             <h2>
-                             <span t-field="o.picking_type_id"/>: 
-                             <span t-field="o.name"/>
-                             </h2>
-                             <table class="table table-condensed">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
+                                        <span><strong>Supplier Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code=='internal' and o.partner_id">
+                                        <span><strong>Warehouse Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code=='outgoing' and o.partner_id">
+                                        <span><strong>Customer Address:</strong></span>
+                                    </div>
+                                    <div t-if="o.partner_id" name="partner_header">
+                                        <div t-field="o.partner_id"
+                                           t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 col-xs-offset-1">
+                                    <div t-if="o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
+                                        <span><strong>Delivery Address:</strong></span>
+                                        <div t-field="o.move_lines[0].partner_id"
+                                            t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code != 'internal' and (not o.move_lines[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
+                                        <span><strong>Warehouse Address:</strong></span>
+                                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                            t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2>
+                            <span t-field="o.picking_type_id"/>:
+                            <span t-field="o.name"/>
+                            </h2>
+                            <table class="table table-condensed">
                             <thead>
                                 <tr>
                                     <th><strong>Order (Origin)</strong></th>
