@@ -2536,7 +2536,7 @@
                         <field name="sign"/>
                         <field name="style_overwrite"/>
                     </group>
-                    <notebook attrs="{'invisible': [('type','not in',['accounts','account_type'])]}">
+                    <notebook attrs="{'invisible': [('type','not in',['accounts','account_type', 'account_report'])]}">
                         <page string="Report">
                             <group>
                                 <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>

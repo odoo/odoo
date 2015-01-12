@@ -346,6 +346,15 @@ class Post(osv.Model):
         'child_ids': list(),
     }
 
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
