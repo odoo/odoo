@@ -278,9 +278,7 @@ define(['summernote/summernote'], function () {
     /* hack for image and link editor */
 
     function getImgTarget () {
-      var rng = range.create();
-      var target = rng.sc.childNodes.length && rng.sc.childNodes[rng.so] || rng.sc;
-      return target;
+      return $(".note-control-selection").data('target');
     }
     eventHandler.editor.padding = function ($editable, sValue) {
         var $target = $(getImgTarget());
