@@ -147,6 +147,13 @@ class mrp_routing_workcenter(osv.osv):
         'hour_nbr': lambda *a: 0.0,
     }
 
+def _factor(factor, product_efficiency, product_rounding):
+    factor = factor / (product_efficiency or 1.0)
+    factor = _common.ceiling(factor, product_rounding)
+    if factor < product_rounding:
+        factor = product_rounding
+    return factor
+
 class mrp_bom(osv.osv):
     """
     Defines bills of material for a product.
@@ -232,6 +239,102 @@ class mrp_bom(osv.osv):
                     return bom.id
         return bom_empty_prop
 
+    def _bom_explode_get_workcenter(self, cr, uid, bom, wc_use, factor, level,
+                                    context=None):
+        '''Return a workcenter line to be consumed by _bom_explode.'''
+        wc = wc_use.workcenter_id
+        d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
+        mult = (d + (m and 1.0 or 0.0))
+        cycle = mult * wc_use.cycle_nbr
+        return {
+            'name': tools.ustr(wc_use.name) + ' - ' +
+            tools.ustr(bom.product_tmpl_id.name_get()[0][1]),
+            'workcenter_id': wc.id,
+            'sequence': level + (wc_use.sequence or 0),
+            'cycle': cycle,
+            'hour': float(wc_use.hour_nbr * mult + (
+                (wc.time_start or 0.0) + (wc.time_stop or 0.0) +
+                cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
+        }
+
+    def _bom_explode_check_line(self, cr, uid, bom_line_id, product,
+                                previous_products, master_bom, context=None):
+        '''Determine if a bom line should be part of the exploded bom'''
+        if bom_line_id.date_start and\
+                bom_line_id.date_start > time.strftime(
+                    DEFAULT_SERVER_DATETIME_FORMAT) or \
+                bom_line_id.date_stop and\
+                bom_line_id.date_stop < time.strftime(
+                    DEFAULT_SERVER_DATETIME_FORMAT):
+            return False
+        # all bom_line_id variant values must be in the product
+        if bom_line_id.attribute_value_ids:
+            if not product or (
+                    set(map(int, bom_line_id.attribute_value_ids or [])) -
+                    set(map(int, product.attribute_value_ids))):
+                return False
+
+        if previous_products and\
+                bom_line_id.product_id.product_tmpl_id.id in previous_products:
+            raise osv.except_osv(
+                _('Invalid Action!'),
+                _('BoM "%s" contains a BoM line with a product recursion:'
+                  ' "%s".') % (
+                      master_bom.name,
+                      bom_line_id.product_id.name_get()[0][1]
+                ))
+        return True
+
+    def _bom_explode_get_line_result(
+            self, cr, uid, bom, product, factor, bom_line_id, quantity, bom_id,
+            properties=None, level=0,
+            routing_id=False, previous_products=None, master_bom=None,
+            context=None):
+        '''Return lists of dictionaries for the exploded bom line'''
+        uom_obj = self.pool.get("product.uom")
+        result = []
+        result2 = []
+
+        #If BoM should not behave like PhantoM, just add the product, otherwise explode further
+        if bom_line_id.type != "phantom" and\
+                (not bom_id or self.browse(
+                    cr, uid, bom_id, context=context).type != "phantom"):
+            result.append({
+                'name': bom_line_id.product_id.name,
+                'product_id': bom_line_id.product_id.id,
+                'product_qty': quantity,
+                'product_uom': bom_line_id.product_uom.id,
+                'product_uos_qty': bom_line_id.product_uos and
+                _factor(bom_line_id.product_uos_qty * factor,
+                        bom_line_id.product_efficiency,
+                        bom_line_id.product_rounding) or False,
+                'product_uos': bom_line_id.product_uos and
+                bom_line_id.product_uos.id or False,
+            })
+        elif bom_id:
+            all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
+            bom2 = self.browse(cr, uid, bom_id, context=context)
+            # We need to convert to units/UoM of chosen BoM
+            factor2 = uom_obj._compute_qty(
+                cr, uid, bom_line_id.product_uom.id, quantity,
+                bom2.product_uom.id)
+            quantity2 = factor2 / bom2.product_qty
+            res = self._bom_explode(
+                cr, uid, bom2, bom_line_id.product_id, quantity2,
+                properties=properties, level=level + 10,
+                previous_products=all_prod, master_bom=master_bom,
+                context=context)
+            result = result + res[0]
+            result2 = result2 + res[1]
+        else:
+            raise osv.except_osv(
+                _('Invalid Action!'),
+                _('BoM "%s" contains a phantom BoM line but the product "%s" '
+                  'does not have any BoM defined.') % (
+                      master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+
+        return result, result2
+
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product template.
@@ -244,17 +347,8 @@ class mrp_bom(osv.osv):
         @return: result: List of dictionaries containing product details.
                  result2: List of dictionaries containing Work Center details.
         """
-        uom_obj = self.pool.get("product.uom")
         routing_obj = self.pool.get('mrp.routing')
         master_bom = master_bom or bom
-
-
-        def _factor(factor, product_efficiency, product_rounding):
-            factor = factor / (product_efficiency or 1.0)
-            factor = _common.ceiling(factor, product_rounding)
-            if factor < product_rounding:
-                factor = product_rounding
-            return factor
 
         factor = _factor(factor, bom.product_efficiency, bom.product_rounding)
 
@@ -264,55 +358,31 @@ class mrp_bom(osv.osv):
         routing = (routing_id and routing_obj.browse(cr, uid, routing_id)) or bom.routing_id or False
         if routing:
             for wc_use in routing.workcenter_lines:
-                wc = wc_use.workcenter_id
-                d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
-                mult = (d + (m and 1.0 or 0.0))
-                cycle = mult * wc_use.cycle_nbr
-                result2.append({
-                    'name': tools.ustr(wc_use.name) + ' - ' + tools.ustr(bom.product_tmpl_id.name_get()[0][1]),
-                    'workcenter_id': wc.id,
-                    'sequence': level + (wc_use.sequence or 0),
-                    'cycle': cycle,
-                    'hour': float(wc_use.hour_nbr * mult + ((wc.time_start or 0.0) + (wc.time_stop or 0.0) + cycle * (wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
-                })
+                workcenter_line = self._bom_explode_get_workcenter(
+                    cr, uid, bom, wc_use, factor, level, context=context)
+                if workcenter_line:
+                    result2.append(workcenter_line)
 
         for bom_line_id in bom.bom_line_ids:
-            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
-                    continue
-            # all bom_line_id variant values must be in the product
-            if bom_line_id.attribute_value_ids:
-                if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
-                    continue
+            if not self._bom_explode_check_line(
+                    cr, uid, bom_line_id, product, previous_products,
+                    master_bom, context=context):
+                continue
 
-            if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
-
-            quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
-            bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
-
-            #If BoM should not behave like PhantoM, just add the product, otherwise explode further
-            if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
-                result.append({
-                    'name': bom_line_id.product_id.name,
-                    'product_id': bom_line_id.product_id.id,
-                    'product_qty': quantity,
-                    'product_uom': bom_line_id.product_uom.id,
-                    'product_uos_qty': bom_line_id.product_uos and _factor(bom_line_id.product_uos_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding) or False,
-                    'product_uos': bom_line_id.product_uos and bom_line_id.product_uos.id or False,
-                })
-            elif bom_id:
-                all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
-                bom2 = self.browse(cr, uid, bom_id, context=context)
-                # We need to convert to units/UoM of chosen BoM
-                factor2 = uom_obj._compute_qty(cr, uid, bom_line_id.product_uom.id, quantity, bom2.product_uom.id)
-                quantity2 = factor2 / bom2.product_qty
-                res = self._bom_explode(cr, uid, bom2, bom_line_id.product_id, quantity2,
-                    properties=properties, level=level + 10, previous_products=all_prod, master_bom=master_bom, context=context)
-                result = result + res[0]
-                result2 = result2 + res[1]
-            else:
-                raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
+            quantity = _factor(
+                bom_line_id.product_qty * factor,
+                bom_line_id.product_efficiency, bom_line_id.product_rounding)
+            bom_id = self._bom_find(
+                cr, uid, product_id=bom_line_id.product_id.id,
+                properties=properties, context=context)
+            res = self._bom_explode_get_line_result(
+                cr, uid, bom, product, factor, bom_line_id, quantity, bom_id,
+                properties=properties,
+                level=level, routing_id=routing_id,
+                previous_products=previous_products, master_bom=master_bom,
+                context=context)
+            result += res[0]
+            result2 += res[1]
 
         return result, result2
 
