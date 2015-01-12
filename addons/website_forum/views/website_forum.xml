@@ -556,7 +556,7 @@
         <a t-attf-class="vote_up fa fa-caret-up no-decoration #{post.user_vote == 1 and 'text-success' or ''} #{((post.user_vote == 1 and not post.can_downvote) or not post.can_upvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{post.user_vote == 1 and post.forum_id.karma_downvote or post.forum_id.karma_upvote}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
-        <div class="vote_count text-muted" t-esc="post.vote_count"/>
+        <div itemprop="upvoteCount" class="vote_count text-muted" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-caret-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''} #{((post.user_vote == -1 and not post.can_upvote) or not post.can_downvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{post.user_vote == -1 and post.forum_id.karma_upvote or post.forum_id.karma_downvote}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
@@ -577,15 +577,15 @@
                     </div>
                 </t>
             </div>
-            <div t-attf-class="question-block #{not question.active and 'alert alert-danger' or ''}">
+            <div itemscope="" itemtype="http://schema.org/Question" t-attf-class="question-block #{not question.active and 'alert alert-danger' or ''}">
                 <h1 class="mt0 mb0">
                     <t t-if="question.post_type == 'link'">
-                        <a t-att-href="question.content_link">
+                        <a itemprop="name" t-att-href="question.content_link">
                             <t t-esc="question.name"/>
                         </a>
                     </t>
                     <t t-if="question.post_type in ('question', 'discussion')">
-                        <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" >
+                        <a itemprop="name" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" >
                             <t t-esc="question.name"/>
                         </a>
                     </t>
@@ -605,7 +605,7 @@
                         t-field="question.create_uid"
                         t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    on <span t-field="question.create_date" t-field-options='{"format":"short"}'/>
+                    on <span itemprop="dateCreated" t-field="question.create_date" t-field-options='{"format":"short"}'/>
                     • <span t-field="question.views"/> views
                 </div>
 
@@ -629,7 +629,7 @@
                         </t>
                     </div>
                 </div>
-                <div t-if="question.post_type != 'link'"><span t-field="question.content" class="oe_no_empty"/></div>
+                <div t-if="question.post_type != 'link'"><span itemprop="text" t-field="question.content" class="oe_no_empty"/></div>
 
                 <div class="clearfix">
                     <ul class="pull-right list-inline mb0" id="options">
@@ -709,7 +709,7 @@
 
 <template id="post_answers">
     <a t-attf-id="answer-#{str(answer.id)}"/>
-    <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
+    <div t-attf-class="forum_answer" itemscope="" itemtype="http://schema.org/Answer" t-attf-id="answer_#{answer.id}" >
         <div class="pull-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="answer"/>
@@ -729,7 +729,7 @@
                     style="display: inline-block;"/>
                 <div class="text-muted">On <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></div>
             </div>
-            <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
+            <div class="clearfix"><span itemprop="text" t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
                 <ul class="list-inline pull-right mb0">
                     <li>
