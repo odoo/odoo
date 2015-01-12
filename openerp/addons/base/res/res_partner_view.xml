@@ -177,8 +177,8 @@
                         <group name="partner_group_right">
                             <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
-                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
-                            <field name="mobile"/>
+                            <field name="phone" widget="phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="mobile" widget="phone"/>
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>

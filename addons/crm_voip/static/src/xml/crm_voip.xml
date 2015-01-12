@@ -177,4 +177,24 @@
                 </t>
             </span>
 </t>
+
+<t t-name="FieldPhone">
+    <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
+        <t t-if="widget.get('effective_readonly')">
+            <a href="#" class="oe_form_uri"/>
+        </t>
+        <t t-if="!widget.get('effective_readonly')">
+            <div>
+                <input type="text"
+                    t-att-id="widget.id_for_label"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                    t-att-placeholder="widget.node.attrs.placeholder"
+                    t-att-maxlength="widget.field.size"
+                />
+            </div>
+        </t>
+    </span>
+</t>
+
 </templates>

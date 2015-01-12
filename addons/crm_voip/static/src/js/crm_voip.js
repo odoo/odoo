@@ -473,6 +473,9 @@ openerp.crm_voip = function(instance) {
             _.each(old_widgets, function(w) {
                 w.destroy();
             });
+            if(self.dfd){
+                self.dfd.resolve();
+            }
         },
 
         //function which will add the phonecall in the queue and create the tooltip
@@ -696,7 +699,18 @@ openerp.crm_voip = function(instance) {
                     views: [[false, 'form']],
                 });
             }
-            
+        },
+
+        call_partner: function(number, partner_id){
+            var partner_model = new openerp.web.Model("res.partner");
+            var self = this;
+            partner_model.call("create_call_in_queue", [partner_id, number]).then(function(phonecall_id){
+                self.dfd = $.Deferred();
+                self.search_phonecalls_status();
+                self.dfd.done(function(){
+                    self.make_call(phonecall_id);
+                });
+            });
         },
     });
 
@@ -707,7 +721,7 @@ openerp.crm_voip = function(instance) {
                 var self = this;
                 if($('.oe_systray .oe_topbar_dialbutton_icon')){
                     self.update_promise.then(function() {
-                        var dial = new openerp.crm_voip.DialingUI(self);
+                        dial = openerp.web.dial = new openerp.crm_voip.DialingUI(self);
                         dial.appendTo(openerp.client.$el);
                         $('.oe_topbar_dialbutton_icon').parent().on("click", dial, _.bind(dial.switch_display, dial));
                     });
@@ -750,5 +764,32 @@ openerp.crm_voip = function(instance) {
 
     instance.web.client_actions.add("reload_panel", "openerp.crm_voip.reload_panel");
     instance.web.client_actions.add("transfer_call","openerp.crm_voip.transfer_call");
+
+
+    instance.crm_voip.FieldPhone = instance.web.form.FieldChar.extend({
+        template: 'FieldPhone',
+        initialize_content: function() {
+            this._super();
+        },
+        render_value: function() {
+            if (!this.get('effective_readonly')) {
+                this._super();
+            } else {
+                var self = this;
+                var phone_number = this.get('value');
+                if (phone_number) {
+                    this.$el.find('a.oe_form_uri')
+                        .text(phone_number)
+                        .on("click",function(){
+                            self.do_notify(_t('Start Calling'),_t('Calling ' + phone_number));
+                            openerp.web.dial.model.call_partner(phone_number, self.__parentedParent.datarecord.id);
+                        });
+                }
+            }
+        },
+    });
+
+    instance.web.form.widgets.add('phone', 'instance.crm_voip.FieldPhone');
+
     return crm_voip;
 };

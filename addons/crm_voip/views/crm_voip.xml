@@ -25,7 +25,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_call_client_notAvailable" model="email.template">
+        <record id="email_template_call_client_notAvailable" model="mail.template">
             <field name="name">Client not available</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
@@ -48,7 +48,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_call_interrupted" model="email.template">
+        <record id="email_template_call_interrupted" model="mail.template">
             <field name="name">Call interrupted</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
@@ -69,7 +69,7 @@
 
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_call_interrupted" model="email.template">
+        <record id="email_template_call_interrupted" model="mail.template">
             <field name="name">Call interrupted</field>
             <field name="model_id" ref="crm.model_res_partner"/>
             <field name="auto_delete" eval="True"/>
@@ -90,7 +90,7 @@
 
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_call_client_notAvailable" model="email.template">
+        <record id="email_template_call_client_notAvailable" model="mail.template">
             <field name="name">Client not available</field>
             <field name="model_id" ref="crm.model_res_partner"/>
             <field name="auto_delete" eval="True"/>

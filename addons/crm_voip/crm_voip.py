@@ -108,7 +108,7 @@ class crm_lead(models.Model):
             self.in_call_center_queue = False
 
     @api.multi
-    def create_call_center_call(self):
+    def create_call_in_queue(self):
         for opp in self:
             phonecall = self.env['crm.phonecall'].create({
                 'name': opp.name,
@@ -203,6 +203,22 @@ class crm_lead(models.Model):
                 'headless': True,
             },
         }
+
+class res_partner(models.Model):
+    _inherit = "res.partner"
+
+    @api.one
+    def create_call_in_queue(self, number):
+        phonecall = self.env['crm.phonecall'].create({
+            'name': 'Call for ' + self.name,
+            'duration': 0,
+            'user_id': self.env.user[0].id,
+            'partner_id': self.id,
+            'state': 'to_do',
+            'partner_phone': number,
+            'in_queue': True,
+        })
+        return phonecall.id
 
 
 class crm_phonecall_log_wizard(models.TransientModel):
