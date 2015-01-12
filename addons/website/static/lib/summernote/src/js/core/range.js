@@ -599,7 +599,7 @@ define([
            * if you select a span with PhantomJS put the carret on the last char of the previous text node
            * instead of put the caret on the parent node with the the ofset to target the node
            */
-          if (sc.nodeType === 3 && sc.nextSibling && sc.nextSibling.tagName && dom.nodeLength(sc) === so) {
+          if (sc.nodeType === 3 && sc.nextSibling && sc.nextSibling.nodeType !== 3 && sc.nextSibling.tagName !== "BR" && dom.nodeLength(sc) === so) {
             so = dom.listPrev(ec).length-1;
             sc = sc.parentNode;
           }
