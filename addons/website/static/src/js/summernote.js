@@ -1209,10 +1209,10 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                 event.preventDefault();
                 return false;
             }
-            var before = true;
+            var before = false;
             var next = dom.hasContentAfter(dom.ancestorHaveNextSibling(node));
             if (!dom.isContentEditable(next)) {
-                before = false;
+                before = true;
                 next = dom.hasContentBefore(dom.ancestorHavePreviousSibling(node));
             }
             dom.removeSpace(next.parentNode, next, 0, next, 0); // clean before jump for not select invisible space between 2 tag
@@ -1225,7 +1225,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             return true;
         }
         // merge with the next text node
-        else if (dom.isText(target) && (temp = dom.hasContentAfter(target)) && (dom.isText(temp) || dom.isBR(temp))) {
+        else if (dom.isText(target) && (temp = dom.hasContentAfter(target)) && dom.isText(temp)) {
             return true;
         }
         //merge with the next block
