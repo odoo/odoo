@@ -120,6 +120,12 @@ class purchase_order(osv.osv):
             result[order.id] = True
         return result.keys()
 
+    def _get_default_company(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        if not company_id:
+            raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+        return company_id
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
@@ -315,7 +321,13 @@ class purchase_order(osv.osv):
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'purchase.order') or '/'
         context = dict(context or {}, mail_create_nolog=True)
-        order = super(purchase_order, self).create(cr, uid, vals, context=context)
+        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position_id']):
+            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
+            if not vals.get('fiscal_position_id') and vals.get('partner_shipping_id'):
+                picking_onchange = self.onchange_picking_id(cr, uid, [], vals.get('company_id'), vals['partner_id'], vals.get('partner_shipping_id'), context=context)
+                defaults.update(picking_onchange['value'])
+            vals = dict(defaults, **vals)
+        order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
         return order
 
@@ -385,6 +397,14 @@ class purchase_order(osv.osv):
             value.update({'related_location_id': picktype.default_location_dest_id.id})
         return {'value': value}
 
+    def onchange_picking_id(self, cr, uid, ids, partner_id, picking_id, fiscal_position_id, context=None):
+        r = {'value':{}}
+        if not fiscal_position_id:
+            fiscal_position_id = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, partner_id, picking_id, context=context)
+            if fiscal_position_id:
+                r['value']['fiscal_position_id'] = fiscal_position_id
+        return r
+
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         partner = self.pool.get('res.partner')
         if not partner_id:
@@ -399,11 +419,57 @@ class purchase_order(osv.osv):
         fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
-        return {'value': {
+        value = {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
             'fiscal_position_id': fp or supplier.property_account_position_id and supplier.property_account_position_id.id or False,
             'payment_term_id': supplier.property_supplier_payment_term_id.id or False,
-            }}
+        }
+        picking_onchange = self.onchange_picking_id(cr, uid, ids, partner_id, supplier_address['default'], False, context=context)
+        value.update(picking_onchange['value'])
+        return {'value': value}
+
+    def onchange_fiscal_position(self, cr, uid, ids, fiscal_position_id, order_lines, context=None):
+        '''Update taxes of order lines for each line where a product is defined
+
+        :param list ids: not used
+        :param int fiscal_position_id: sale order fiscal position
+        :param list order_lines: command list for one2many write method
+        '''
+        order_line = []
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        product_obj = self.pool.get('product.product')
+        line_obj = self.pool.get('purchase.order.line')
+
+        fpos = False
+        if fiscal_position_id:
+            fpos = fiscal_obj.browse(cr, uid, fiscal_position_id, context=context)
+        
+        for line in order_lines:
+            # create    (0, 0,  { fields })
+            # update    (1, ID, { fields })
+            if line[0] in [0, 1]:
+                prod = None
+                if line[2].get('product_id'):
+                    prod = product_obj.browse(cr, uid, line[2]['product_id'], context=context)
+                elif line[1]:
+                    prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
+                if prod and prod.taxes_id:
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
+                order_line.append(line)
+
+            # link      (4, ID)
+            # link all  (6, 0, IDS)
+            elif line[0] in [4, 6]:
+                line_ids = line[0] == 4 and [line[1]] or line[2]
+                for line_id in line_ids:
+                    prod = line_obj.browse(cr, uid, line_id, context=context).product_id
+                    if prod and prod.taxes_id:
+                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]}])
+                    else:
+                        order_line.append([4, line_id])
+            else:
+                order_line.append(line)
+        return {'value': {'order_line': order_line}}
 
     def invoice_open(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
