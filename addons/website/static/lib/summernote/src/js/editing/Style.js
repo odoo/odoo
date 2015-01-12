@@ -79,9 +79,7 @@ define([
         styleInfo['line-height'] = lineHeight.toFixed(1);
       }
 
-      var target = rng.sc.childNodes.length && rng.sc.childNodes[rng.so] || rng.sc;
-
-      styleInfo.image = dom.isImg(target) && target;
+      styleInfo.image = rng.isOnImg();
       styleInfo.anchor = rng.isOnAnchor() && dom.ancestor(rng.sc, dom.isAnchor);
       styleInfo.ancestors = dom.listAncestor(rng.sc, dom.isEditable);
       styleInfo.range = rng;
