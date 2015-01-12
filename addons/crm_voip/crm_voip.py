@@ -217,9 +217,9 @@ class res_partner(models.Model):
             'state': 'to_do',
             'partner_phone': number,
             'in_queue': True,
+            'sequence': 1,
         })
         return phonecall.id
-
 
 class crm_phonecall_log_wizard(models.TransientModel):
     _name = 'crm.phonecall.log.wizard'
