@@ -72,7 +72,7 @@
         <field name="arch" type="xml">
             <search string="Stock Value At Date">
                 <field name="product_id"/>
-                <field name="location_id" filter_domain="[('name', 'child_of', self)]"/>
+                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="1" string="Group By">
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" name='group_by_product'/>
