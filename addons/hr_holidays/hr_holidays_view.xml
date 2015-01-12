@@ -105,7 +105,7 @@
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-                            <field name="payslip_status" groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}"/>
+                            <field name="payslip_status" groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
                         <div groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}">

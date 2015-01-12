@@ -6310,6 +6310,37 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
 
 });
 
+/**
+    This widget is intended to be used on boolean fields. It toggles a button
+    switching between a green bullet / gray bullet.
+*/
+instance.web.form.FieldToggleBoolean = instance.web.form.AbstractField.extend({
+    render_value: function () {
+        this.icon = this.get_value() ? 'gtk-yes.png' : 'gtk-normal.png';
+        this.$el.html(QWeb.render("FieldToggleBoolean", {'widget': this}));
+        this.$('.oe_toggle_button').on('click', this.set_toggle_button.bind(this));
+    },
+    set_toggle_button: function () {
+        var self = this;
+        var toggle_value = this.get_value() === false ? true: false;
+        if (this.view.get('actual_mode') == 'view') {
+            var rec_values = {};
+            rec_values[self.node.attrs.name] = toggle_value;
+            return this.view.dataset._model.call(
+                    'write', [
+                        [this.view.datarecord.id],
+                        rec_values,
+                        self.view.dataset.get_context()
+                    ]).done(function () { self.reload_record(); });
+        }
+        else {
+            this.set_value(toggle_value);
+        }
+    },
+    reload_record: function () {
+        this.view.reload();
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -6338,6 +6369,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'one2many_list' : 'instance.web.form.FieldOne2Many',
     'reference' : 'instance.web.form.FieldReference',
     'boolean' : 'instance.web.form.FieldBoolean',
+    'toggle_button' : 'instance.web.form.FieldToggleBoolean',
     'float' : 'instance.web.form.FieldFloat',
     'percentpie': 'instance.web.form.FieldPercentPie',
     'barchart': 'instance.web.form.FieldBarChart',
