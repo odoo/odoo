@@ -126,7 +126,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     select_widget: function(widget, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
-            return false;
+            return $.Deferred().reject();
         }
         var widget_index = this.widgets.indexOf(widget),
             def = $.when(widget.select_view && widget.select_view(index));
