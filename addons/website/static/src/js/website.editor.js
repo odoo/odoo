@@ -2164,7 +2164,7 @@ define(['summernote/summernote'], function () {
             var icons = this.icons;
             if (needle) {
                 icons = _(icons).filter(function (icon) {
-                    return icon.id.substring(3).indexOf(needle) !== -1;
+                    return icon.substring(3).indexOf(needle) !== -1;
                 });
             }
             this.$('div.font-icons-icons').html(
