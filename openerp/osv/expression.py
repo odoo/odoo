@@ -1066,15 +1066,15 @@ class expression(object):
 
                     subselect = """WITH temp_irt_current (id, name) as (
                             SELECT ct.id, coalesce(it.value,ct.{quote_left})
-                            FROM {current_table} ct 
-                            LEFT JOIN ir_translation it ON (it.name = %s and 
-                                        it.lang = %s and 
-                                        it.type = %s and 
-                                        it.res_id = ct.id and 
+                            FROM {current_table} ct
+                            LEFT JOIN ir_translation it ON (it.name = %s and
+                                        it.lang = %s and
+                                        it.type = %s and
+                                        it.res_id = ct.id and
                                         it.value != '')
-                            ) 
+                            )
                             SELECT id FROM temp_irt_current WHERE {name} {operator} {right} order by name
-                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'), 
+                            """.format(current_table=model._table, quote_left=_quote(left), name=unaccent('name'),
                                        operator=sql_operator, right=instr)
 
                     params = (

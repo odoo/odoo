@@ -1015,21 +1015,12 @@ openerp.account = function (instance) {
             }
             if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
 
-            // Warn the user if he's selecting reconciled and unreconciled lines
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
-            if (last_selected_line && last_selected_line.already_paid !== line.already_paid) {
-                new instance.web.CrashManager().show_warning({data: {
-                    exception_type: "Incorrect Operation",
-                    message: _t("You cannot mix reconciled and unreconciled items.")
-                }});
-                return;
-            }
-
             // Warn the user if he's selecting lines from both a payable and a receivable account
-            if (last_selected_line && last_selected_line.account_type != line.account_type) {
+            selected_lines_account_types = _.collect(self.get("mv_lines_selected").concat(line), function(l) { return l.account_type });
+            if (selected_lines_account_types.indexOf("payable") != -1 && selected_lines_account_types.indexOf("receivable") != -1) {
                 new instance.web.CrashManager().show_warning({data: {
                     exception_type: "Incorrect Operation",
-                    message: _.str.sprintf(_t("You are selecting transactions from accounts of different type : %s and %s."), last_selected_line.account_type, line.account_type)
+                    message: _t("You cannot mix items from receivable and payable accounts.")
                 }});
                 return;
             }
@@ -1635,7 +1626,6 @@ openerp.account = function (instance) {
             if (amount > 0) dict['credit'] = amount;
             if (amount < 0) dict['debit'] = -1 * amount;
             if (line.tax_id) dict['account_tax_id'] = line.tax_id;
-            if (line.is_tax_line) dict['is_tax_line'] = line.is_tax_line;
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
     
             return dict;
@@ -1657,8 +1647,9 @@ openerp.account = function (instance) {
         makeMoveLineDicts: function() {
             var self = this;
             var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
+            _.each(self.get("mv_lines_selected"), function(l) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(l)) });
+            created_lines = _.filter(self.getCreatedLines(), function(l) { return ! l.is_tax_line; }); // Tax lines are created via account_tax_id
+            _.each(self.getCreatedLines(), function(l) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(l)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },
