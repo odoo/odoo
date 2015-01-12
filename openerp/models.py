@@ -2945,11 +2945,8 @@ class BaseModel(object):
                 field.reset()
 
     @api.model
-    def _setup_fields(self, partial=False):
-        """ Setup the fields (dependency triggers, etc).
-
-            :param partial: ``True`` if all models have not been loaded yet.
-        """
+    def _setup_fields(self):
+        """ Setup the fields (dependency triggers, etc). """
         cls = type(self)
         if cls._setup_done:
             return
@@ -2960,6 +2957,7 @@ class BaseModel(object):
             self.env[parent]._setup_fields()
 
         # retrieve custom fields
+        partial = self._context.get('_setup_fields_partial')
         cls._init_manual_fields(self._cr, partial=partial)
 
         # retrieve inherited fields
