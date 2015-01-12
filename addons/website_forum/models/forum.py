@@ -321,6 +321,17 @@ class Post(models.Model):
         return post
 
     @api.multi
+    @api.depends('name', 'post_type')
+    def name_get(self):
+        result = []
+        for post in self:
+            if post.post_type == 'discussion' and post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
+
+    @api.multi
     def write(self, vals):
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)

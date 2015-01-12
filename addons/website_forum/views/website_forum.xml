@@ -727,7 +727,10 @@
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
-                <div class="text-muted">On <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></div>
+                <div class="text-muted">
+                    <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#answer_#{answer.id}">On</a> 
+                    <span t-field="answer.create_date" t-field-options='{"format":"short"}'/>
+                </div>
             </div>
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
