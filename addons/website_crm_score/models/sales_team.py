@@ -69,6 +69,7 @@ class crm_case_section(osv.osv):
     unassigned_leads = fields.Integer(compute='_unassigned_leads')
     capacity = fields.Integer(compute='_capacity')
     section_user_ids = fields.One2many('section.user', 'section_id', string='Salesman')
+    user_ids = fields.Many2many('res.users', 'section_user', 'section_id', 'user_id', readonly=True)  # Use for display in Kanban
     min_for_assign = fields.Integer("Minimum score", help="Minimum Score for a lead to be automatically assign (>=)", default=0, required=True)
 
     @api.model
