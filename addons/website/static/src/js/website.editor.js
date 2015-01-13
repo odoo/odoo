@@ -1417,7 +1417,12 @@ define(['summernote/summernote'], function () {
                         sc = dom.firstChild(so ? sc.childNodes[so] : sc);
                         so = 0;
                     } else if (so !== sc.textContent.length) {
-                        sc = sc.splitText(so);
+                        if (sc === ec) {
+                            ec = sc = sc.splitText(so);
+                            eo -= so;
+                        } else {
+                            sc = sc.splitText(so);
+                        }
                         so = 0;
                     }
                     if (ec.tagName) {
