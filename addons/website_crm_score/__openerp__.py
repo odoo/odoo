@@ -1,9 +1,9 @@
 {
     'name': "Lead Scoring",
-    'category': "Test",
+    'category': "CRM",
     'version': "1.0",
     'depends': ['base', 'sales_team', 'marketing', 'website_crm'],
-    'author': "OpenErp S.A.",
+    'author': "Odoo S.A.",
     'description': """\
     Lead scoring""",
     'data': [

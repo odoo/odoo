@@ -29,7 +29,7 @@
                 <field name="phone" position="after">
                     <field name="score" />
                 </field>
-                <field name="section_id" position="after">
+                <field name="team_id" position="after">
                     <field name="user_id" />
                 </field>
             </field>
@@ -71,7 +71,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
             <field name="arch" type="xml">
-                <field name="section_id" position="after">
+                <field name="team_id" position="after">
                     <field name="score" />
                 </field>
             </field>
@@ -101,14 +101,14 @@
 
         <!-- SALESTEAM -->
         <!-- SalesTeam Kanban View - Lead information added -->
-        <record id="crm_case_section_salesteams_view_kanban_inherit" model="ir.ui.view">
-            <field name="name">crm.case.section.kanban.inherit</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+        <record id="crm_team_salesteams_view_kanban_inherit" model="ir.ui.view">
+            <field name="name">crm.team.kanban.inherit</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
             <field name="arch" type="xml">
                 <data>
                     <field name="member_ids" position="after">
-                        <field name="section_user_ids"/>
+                        <field name="team_user_ids"/>
                     </field>
                     <xpath expr="//div[@class='oe_clear']" position="after">
                         <div class="oe_items_list">
@@ -175,21 +175,21 @@
 
         <!-- SalesTeam Form View - Lead information and page Assignation added -->
         <record model="ir.ui.view" id="sales_team_form_view_assign">
-            <field name="name">crm.case.section.form.inherit</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+            <field name="name">crm.team.form.inherit</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_title']" position="before">
                     <div class="oe_right oe_button_box" name="buttons">
                         <button class="oe_inline oe_stat_button" type="action" 
                             name="%(crm_score_views_action_graph)d" icon="fa-tags"
-                            context="{'search_default_section_id': active_id, 'search_default_unassigned': 1 }" 
+                            context="{'search_default_team_id': active_id, 'search_default_unassigned': 1 }" 
                             >
                             <field string="Unassigned leads" name="unassigned_leads" widget="statinfo"/>
                         </button>
                         <button class="oe_inline oe_stat_button" type="action" 
                             name="%(crm_score_views_action_table)d" icon="fa-tags"
-                            context="{'search_default_section_id': active_id}" 
+                            context="{'search_default_team_id': active_id}" 
                             >
                             <field string="Opportunities" name="leads_count" widget="statinfo"/>
                         </button>
@@ -197,7 +197,7 @@
                 </xpath>
                 <xpath expr="//group[@name='left']" position="after">
                     <group name="right">
-                        <field name="score_section_domain"  options="{'model': 'crm.lead'}"/>
+                        <field name="score_team_domain"  options="{'model': 'crm.lead'}"/>
                         <label for="assigned_leads"/>
                         <div>
                             <field name="assigned_leads" class="oe_inline"/> /
@@ -217,7 +217,7 @@
                 </xpath>
                 <xpath expr="//page[@string='Team Members']" position="replace">
                     <page string="Assignation">
-                        <field name="section_user_ids" widget="many2many_kanban"  context="{'default_section_id':active_id, 'ro_section':True}">
+                        <field name="team_user_ids" widget="many2many_kanban"  context="{'default_team_id':active_id, 'ro_team':True}">
                             <kanban quick_create="true" create="true" delete="true">
                                 <field name="user_id"/>
                                 <field name="running"/>
@@ -261,8 +261,8 @@
                                                                         <li><a type="open">
                                                                             <b><field name="name"/></b>
                                                                         </a></li>
-                                                                        <!-- <li><field name="section_user_domain" widget="smart_filters"/></li> -->
-                                                                        <li><field name="section_user_domain" widget='filters'/></li>
+                                                                        <!-- <li><field name="team_user_domain" widget="smart_filters"/></li> -->
+                                                                        <li><field name="team_user_domain" widget='filters'/></li>
                                                                     </ul>
                                                                 </td> 
                                                                 <td>

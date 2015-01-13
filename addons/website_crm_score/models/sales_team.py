@@ -1,9 +1,10 @@
-from openerp.osv import osv
+# -*- coding: utf-8 -*-
 from openerp import fields, api, models
-import datetime
+from openerp.osv import osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
 from random import randint, shuffle
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import datetime
 import logging
 import math
 
@@ -20,20 +21,22 @@ try:
         return bool(address.validate_address(mail))
 
 except ImportError:
-    _logger.warning('Flanker library not found, Flanker features (check email on lead) disabled. If you plan to use it, please install the Flanker library from http://pypi.python.org/pypi/flanker')
+    _logger.warning('Flanker library not found, Flanker features (check email on lead) disabled. \
+                     If you plan to use it, please install the Flanker library from http://pypi.python.org/pypi/flanker')
 
     def checkmail(mail):
         return True
 
-class section_user(models.Model):
-    _name = 'section.user'
+
+class team_user(models.Model):
+    _name = 'team.user'
 
     @api.one
     def _count_leads(self):
         if self.id:
             limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
             domain = [('user_id', '=', self.user_id.id),
-                      ('section_id', '=', self.section_id.id),
+                      ('team_id', '=', self.team_id.id),
                       ('assign_date', '>', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
                       ]
             self.leads_count = self.env['crm.lead'].search_count(domain)
@@ -48,19 +51,19 @@ class section_user(models.Model):
             self.percentage_leads = 0.0
 
     @api.one
-    @api.constrains('section_user_domain')
+    @api.constrains('team_user_domain')
     def _assert_valid_domain(self):
         try:
-            domain = safe_eval(self.section_user_domain or '[]', evaluation_context)
+            domain = safe_eval(self.team_user_domain or '[]', evaluation_context)
             self.env['crm.lead'].search(domain)
         except Exception:
             raise Warning('The domain is incorrectly formatted')
 
-    section_id = fields.Many2one('crm.case.section', string='SaleTeam', required=True)
+    team_id = fields.Many2one('crm.team', string='SaleTeam', required=True, oldname='section_id')
     user_id = fields.Many2one('res.users', string='Saleman', required=True)
     name = fields.Char(related='user_id.partner_id.display_name')
     running = fields.Boolean(string='Running', default=True)
-    section_user_domain = fields.Char('Domain')
+    team_user_domain = fields.Char('Domain')
     maximum_user_leads = fields.Integer('Leads Per Month')
     leads_count = fields.Integer('Assigned Leads', compute='_count_leads', help='Assigned Leads this last month')
     percentage_leads = fields.Float(compute='_get_percentage', string='Percentage leads')
@@ -70,13 +73,13 @@ class section_user(models.Model):
         self.running = not self.running
 
 
-class crm_case_section(osv.osv):
-    _inherit = "crm.case.section"
+class crm_team(osv.osv):
+    _inherit = "crm.team"
 
     @api.one
     def _count_leads(self):
         if self.id:
-            self.leads_count = self.env['crm.lead'].search_count([('section_id', '=', self.id)])
+            self.leads_count = self.env['crm.lead'].search_count([('team_id', '=', self.id)])
         else:
             self.leads_count = 0
 
@@ -84,37 +87,39 @@ class crm_case_section(osv.osv):
     def _assigned_leads(self):
         limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
         domain = [('assign_date', '>=', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-                  ('section_id', '=', self.id),
+                  ('team_id', '=', self.id),
                   ('user_id', '!=', False)
                   ]
         self.assigned_leads = self.env['crm.lead'].search_count(domain)
 
     @api.one
     def _unassigned_leads(self):
-        self.unassigned_leads = self.env['crm.lead'].search_count([('section_id', '=', self.id), ('user_id', '=', False), ('assign_date', '=', False)])
+        self.unassigned_leads = self.env['crm.lead'].search_count(
+            [('team_id', '=', self.id), ('user_id', '=', False), ('assign_date', '=', False)]
+        )
 
     @api.one
     def _capacity(self):
-        self.capacity = sum(s.maximum_user_leads for s in self.section_user_ids)
+        self.capacity = sum(s.maximum_user_leads for s in self.team_user_ids)
 
     @api.one
-    @api.constrains('score_section_domain')
+    @api.constrains('score_team_domain')
     def _assert_valid_domain(self):
         try:
-            domain = safe_eval(self.score_section_domain or '[]', evaluation_context)
+            domain = safe_eval(self.score_team_domain or '[]', evaluation_context)
             self.env['crm.lead'].search(domain)
         except Exception:
             raise Warning('The domain is incorrectly formatted')
 
     ratio = fields.Float(string='Ratio')
-    score_section_domain = fields.Char('Domain')
+    score_team_domain = fields.Char('Domain')
     leads_count = fields.Integer(compute='_count_leads')
     assigned_leads = fields.Integer(compute='_assigned_leads')
     unassigned_leads = fields.Integer(compute='_unassigned_leads')
     capacity = fields.Integer(compute='_capacity')
-    section_user_ids = fields.One2many('section.user', 'section_id', string='Salesman')
-    user_ids = fields.Many2many('res.users', 'section_user', 'section_id', 'user_id', readonly=True)  # Use for display in Kanban
-    min_for_assign = fields.Integer("Minimum score", help="Minimum Score for a lead to be automatically assign (>=)", default=0, required=True)
+    team_user_ids = fields.One2many('team.user', 'team_id', string='Salesman')
+    user_ids = fields.Many2many('res.users', 'team_user', 'team_id', 'user_id', readonly=True)  # Use for display in Kanban
+    min_for_assign = fields.Integer("Minimum score", help="Minimum score to be automatically assign (>=)", default=0, required=True)
 
     @api.model
     def direct_assign_leads(self, ids=[]):
@@ -134,8 +139,8 @@ class crm_case_section(osv.osv):
         while haslead:
             haslead = False
             for salesteam in all_salesteams:
-                domain = safe_eval(salesteam['score_section_domain'], evaluation_context)
-                domain.extend([('section_id', '=', False), ('user_id', '=', False)])
+                domain = safe_eval(salesteam['score_team_domain'], evaluation_context)
+                domain.extend([('team_id', '=', False), ('user_id', '=', False)])
                 domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
                 leads = self.env["crm.lead"].search(domain, limit=50)
                 haslead = haslead or (len(leads) == 50 and not dry)
@@ -145,10 +150,10 @@ class crm_case_section(osv.osv):
 
                 if dry:
                     for lead in leads:
-                        values = {'lead_id': lead.id, 'section_id': salesteam['id']}
+                        values = {'lead_id': lead.id, 'team_id': salesteam['id']}
                         self.env['leads.dry.run'].create(values)
                 else:
-                    leads.write({'section_id': salesteam['id']})
+                    leads.write({'team_id': salesteam['id']})
 
                     # Erase fake/false email
                     spams = map(lambda x: x.id, filter(lambda x: x.email_from and not checkmail(x.email_from), leads))
@@ -167,26 +172,26 @@ class crm_case_section(osv.osv):
                 self._cr.commit()
 
     @api.model
-    def assign_leads_to_salesmen(self, all_section_users, dry=False):
+    def assign_leads_to_salesmen(self, all_team_users, dry=False):
         users = []
-        for su in all_section_users:
+        for su in all_team_users:
             if (su.maximum_user_leads - su.leads_count) <= 0:
                 continue
-            domain = safe_eval(su.section_user_domain or '[]', evaluation_context)
+            domain = safe_eval(su.team_user_domain or '[]', evaluation_context)
             domain.append(('user_id', '=', False))
             domain.append(('assign_date', '=', False))
-            domain.append(('score', '>=', su.section_id.min_for_assign))
+            domain.append(('score', '>=', su.team_id.min_for_assign))
 
             # assignation rythm: 2 days of leads if a lot of leads should be assigned
             limit = int(math.ceil(su.maximum_user_leads / 15.0))
 
             if dry:
-                dry_leads = self.env["leads.dry.run"].search([('section_id', '=', su.section_id.id)])
+                dry_leads = self.env["leads.dry.run"].search([('team_id', '=', su.team_id.id)])
                 domain.append(['id', 'in', [dl.lead_id.id for dl in dry_leads]])
             else:
-                domain.append(('section_id', '=', su.section_id.id))
+                domain.append(('team_id', '=', su.team_id.id))
 
-            leads = self.env["crm.lead"].search(domain, order='score desc', limit=limit * len(su.section_id.section_user_ids))
+            leads = self.env["crm.lead"].search(domain, order='score desc', limit=limit * len(su.team_id.team_user_ids))
             users.append({
                 "su": su,
                 "nbr": min(su.maximum_user_leads - su.leads_count, limit),
@@ -196,8 +201,8 @@ class crm_case_section(osv.osv):
         assigned = {}
         while users:
             i = 0
-            # statistically select the user that should receive the next lead
 
+            # statistically select the user that should receive the next lead
             idx = randint(0, reduce(lambda nbr, x: nbr + x['nbr'], users, 0) - 1)
 
             while idx > users[i]['nbr']:
@@ -216,7 +221,7 @@ class crm_case_section(osv.osv):
             lead = user['leads'][0]
             assigned[lead] = True
             if dry:
-                values = {'lead_id': lead.id, 'section_id': user['su'].section_id.id, 'user_id': user['su'].user_id.id}
+                values = {'lead_id': lead.id, 'team_id': user['su'].team_id.id, 'user_id': user['su'].user_id.id}
                 self.env['leads.dry.run'].create(values)
             else:
                 # Assign date will be setted by write function
@@ -237,14 +242,15 @@ class crm_case_section(osv.osv):
                 TRUNCATE TABLE leads_dry_run;
             """)
 
-        all_salesteams = self.search_read(fields=['score_section_domain'], domain=[('score_section_domain', '!=', False)])
-        # casting the list into a dict to ease the access afterwards
+        all_salesteams = self.search_read(fields=['score_team_domain'], domain=[('score_team_domain', '!=', False)])
 
-        all_section_users = self.env['section.user'].search([('running', '=', True)])
+        all_team_users = self.env['team.user'].search([('running', '=', True)])
+
+        self.env['website.crm.score'].assign_scores_to_leads()
 
         self.assign_leads_to_salesteams(all_salesteams, dry=dry)
 
         # Compute score after assign to salesteam, because if a merge has been done, the score for leads is removed.
         self.env['website.crm.score'].assign_scores_to_leads()
 
-        self.assign_leads_to_salesmen(all_section_users, dry=dry)
+        self.assign_leads_to_salesmen(all_team_users, dry=dry)

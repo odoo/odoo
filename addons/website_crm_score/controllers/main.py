@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from openerp import addons, http, SUPERUSER_ID, fields
 from openerp.http import request
 
@@ -54,7 +55,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
         return super(ContactController, self).create_lead(request, values, kwargs)
 
     def create_lead(self, request, values, kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, context = request.cr, request.context
 
         lead_model = request.registry["crm.lead"]
         lead_id = lead_model.decode(request)
@@ -75,7 +76,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             # NOTE: the following should be changed when dynamic forms exist
             changed_values = {}
             for fieldname, fieldvalue in values.items():
-                if fieldname in lead._all_columns and fieldvalue:  # and not lead[fieldname]:  # rem : why this last condition ?
+                if fieldname in lead._all_columns and fieldvalue:
                     if lead[fieldname] and lead[fieldname] != fieldvalue:
                         changed_values[fieldname] = fieldvalue
                     else:
@@ -89,7 +90,6 @@ class ContactController(addons.website_crm.controllers.main.contactus):
 
         else:
             # either no lead_id cookie OR the lead_id doesn't exist in db OR the current one is closed -> a lead is created
-
             lang = context.get('lang', False)
             lang_id = request.registry["res.lang"].search(cr, SUPERUSER_ID, [('code', '=', lang)], context=context)
             lang_id = lang_id and lang_id[0] or False

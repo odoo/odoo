@@ -1,4 +1,5 @@
-from openerp import fields, models, SUPERUSER_ID
+# -*- coding: utf-8 -*-
+from openerp import fields, models, SUPERUSER_ID, tools
 from psycopg2 import IntegrityError
 
 
@@ -17,8 +18,6 @@ class pageview(models.Model):
         url = vals.get('url', None)
         view_date = fields.Datetime.now()
 
-        # registry = modules.registry.RegistryManager.get(request.session.db)
-        # with registry.cursor() as pv_cr:
         with self.pool.cursor() as pv_cr:
             if test:
                 pv_cr = cr
@@ -31,11 +30,12 @@ class pageview(models.Model):
             else:
                 # update failed
                 try:
-                    pv_cr.execute('''
-                        INSERT INTO website_crm_pageview (lead_id, partner_id, url, view_date)
-                        SELECT %s,%s,%s,%s
-                        RETURNING id;
-                        ''', (lead_id, partner_id, url, view_date))
+                    with tools.mute_logger('openerp.sql_db'):
+                        pv_cr.execute('''
+                            INSERT INTO website_crm_pageview (lead_id, partner_id, url, view_date)
+                            SELECT %s,%s,%s,%s
+                            RETURNING id;
+                            ''', (lead_id, partner_id, url, view_date))
                     fetch = pv_cr.fetchone()
                     if fetch:
                         # a new pageview has been created, a message is posted

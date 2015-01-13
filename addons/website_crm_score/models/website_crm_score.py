@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from openerp import fields, models, api
 from openerp.tools.safe_eval import safe_eval
 from openerp.osv.expression import expression
@@ -54,7 +55,7 @@ class website_crm_score(models.Model):
             domain = safe_eval(score['domain'], evaluation_context)
 
             # Don't replace the domain with a 'not in' like below... that doesn't make the same thing !!!
-            #domain.extend(['|', ('stage_id.on_change', '=', False), ('stage_id.probability', 'not in', [0,100])])
+            # domain.extend(['|', ('stage_id.on_change', '=', False), ('stage_id.probability', 'not in', [0,100])])
             domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
 
             e = expression(self._cr, self._uid, domain, self.pool['crm.lead'], self._context)
@@ -68,7 +69,7 @@ class website_crm_score(models.Model):
                                     FROM crm_lead
                                     WHERE %s RETURNING lead_id""" % (score['id'], where_clause), where_params)
 
-            # Todo: force recompute of fields that depends on score_ids
+            # Force recompute of fields that depends on score_ids
             lead_ids = [resp[0] for resp in self._cr.fetchall()]
             leads = self.env["crm.lead"].browse(lead_ids)
             leads.modified(['score_ids'])
