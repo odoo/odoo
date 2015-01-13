@@ -481,11 +481,7 @@ class BaseModel(object):
         # basic setup of field
         field.set_class_name(cls, name)
 
-        if field.store or field.column:
-            cls._columns[name] = field.to_column()
-        else:
-            # remove potential column that may be overridden by field
-            cls._columns.pop(name, None)
+        # cls._columns will be updated once fields are set up
 
     @classmethod
     def _pop_field(cls, name):
@@ -605,13 +601,6 @@ class BaseModel(object):
             # inferred metadata; use its ancestor instead
             parent_class = type(parent_model).__base__
 
-            # don't inherit custom fields
-            columns = dict((key, val)
-                for key, val in parent_class._columns.iteritems()
-                if not val.manual
-            )
-            columns.update(cls._columns)
-
             inherits = dict(parent_class._inherits)
             inherits.update(cls._inherits)
 
@@ -635,7 +624,6 @@ class BaseModel(object):
             attrs = {
                 '_name': name,
                 '_register': False,
-                '_columns': columns,
                 '_inherits': inherits,
                 '_depends': depends,
                 '_constraints': constraints,
@@ -648,7 +636,7 @@ class BaseModel(object):
         attrs = {
             '_name': name,
             '_register': False,
-            '_columns': dict(cls._columns),
+            '_columns': {},             # filled by _setup_fields()
             '_defaults': {},            # filled by Field._determine_default()
             '_inherits': dict(cls._inherits),
             '_depends': dict(cls._depends),
@@ -2874,18 +2862,12 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _inherits_reload(cls):
-        """ Recompute the _inherit_fields mapping, and inherited fields. """
-        struct = {}
+    def _init_inherited_fields(cls):
+        """ Determine inherited fields. """
+        # determine candidate inherited fields
         fields = {}
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
-            # old-api struct for _inherit_fields
-            for name, column in parent._columns.iteritems():
-                struct[name] = (parent_model, parent_field, column, parent_model)
-            for name, source in parent._inherit_fields.iteritems():
-                struct[name] = (parent_model, parent_field, source[2], source[3])
-            # new-api fields for _fields
             for name, field in parent._fields.iteritems():
                 fields[name] = field.new(
                     inherited=True,
@@ -2893,14 +2875,24 @@ class BaseModel(object):
                     related_sudo=False,
                 )
 
-        # old-api stuff
-        cls._inherit_fields = struct
-        cls._all_columns = cls._get_column_infos()
-
         # add inherited fields that are not redefined locally
         for name, field in fields.iteritems():
             if name not in cls._fields:
                 cls._add_field(name, field)
+
+    @classmethod
+    def _inherits_reload(cls):
+        """ Recompute the _inherit_fields and _all_columns mappings. """
+        cls._inherit_fields = struct = {}
+        for parent_model, parent_field in cls._inherits.iteritems():
+            parent = cls.pool[parent_model]
+            for name, column in parent._columns.iteritems():
+                struct[name] = (parent_model, parent_field, column, parent_model)
+            for name, source in parent._inherit_fields.iteritems():
+                struct[name] = (parent_model, parent_field, source[2], source[3])
+
+        # old-api stuff
+        cls._all_columns = cls._get_column_infos()
 
     @classmethod
     def _get_column_infos(cls):
@@ -2918,14 +2910,16 @@ class BaseModel(object):
     @classmethod
     def _inherits_check(cls):
         for table, field_name in cls._inherits.items():
-            if field_name not in cls._columns:
+            field = cls._fields.get(field_name)
+            if not field:
                 _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, cls._name)
-                cls._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
-                                                             required=True, ondelete="cascade")
-            elif not cls._columns[field_name].required or cls._columns[field_name].ondelete.lower() not in ("cascade", "restrict"):
+                from .fields import Many2one
+                field = Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
+                cls._add_field(field_name, field)
+            elif not field.required or field.ondelete.lower() not in ("cascade", "restrict"):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, cls._name)
-                cls._columns[field_name].required = True
-                cls._columns[field_name].ondelete = "cascade"
+                field.required = True
+                field.ondelete = "cascade"
 
         # reflect fields with delegate=True in dictionary cls._inherits
         for field in cls._fields.itervalues():
@@ -2967,16 +2961,16 @@ class BaseModel(object):
 
         # retrieve inherited fields
         cls._inherits_check()
-        cls._inherits_reload()
+        cls._init_inherited_fields()
 
-        # set up fields
-        for field in cls._fields.itervalues():
-            field.setup(self.env)
-
-        # update columns (fields may have changed)
+        # set up fields, and update their corresponding columns
         for name, field in cls._fields.iteritems():
-            if field.column:
+            field.setup(self.env)
+            if field.store or field.column:
                 cls._columns[name] = field.to_column()
+
+        # determine old-api cls._inherit_fields and cls._all_columns
+        cls._inherits_reload()
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
