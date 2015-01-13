@@ -6,7 +6,7 @@
 
         <!-- Scheduler for Lead Scoring and Assignation -->
         <record forcecreate="True" id="ir_cron_lead_assign" model="ir.cron">
-            <field name="name">Lead Scoring and Assignation Cron</field>
+            <field name="name">Lead Assignation</field>
             <field eval="False" name="active" />
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
@@ -14,9 +14,21 @@
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
             <field eval="'crm.case.section'" name="model" />
-            <field eval="'score_and_assign_leads'" name="function" />
+            <field eval="'direct_assign_leads'" name="function" />
         </record>
 
+        <!-- Scheduler for Lead Scoring -->
+        <record forcecreate="True" id="ir_cron_lead_scoring" model="ir.cron">
+            <field name="name">Lead Scoring </field>
+            <field eval="False" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field eval="'website.crm.score'" name="model" />
+            <field eval="'assign_scores_to_leads'" name="function" />
+        </record>
 
         <record id="action_score_now" model="ir.actions.server">
             <field name="name">Apply marked scores</field>
