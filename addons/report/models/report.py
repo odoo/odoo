@@ -49,10 +49,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
-    if wkhtmltopdf_bin is None:
-        raise IOError
-    return wkhtmltopdf_bin
+    return find_in_path('wkhtmltopdf')
 
 
 #--------------------------------------------------------------------------

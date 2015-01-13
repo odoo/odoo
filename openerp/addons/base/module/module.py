@@ -363,7 +363,9 @@ class module(osv.osv):
                     raise ImportError('No module named %s' % (pydep,))
 
         for binary in depends.get('bin', []):
-            if tools.find_in_path(binary) is None:
+            try:
+                tools.find_in_path(binary)
+            except IOError:
                 raise Exception('Unable to find %r in path' % (binary,))
 
     @classmethod
