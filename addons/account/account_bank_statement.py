@@ -257,22 +257,26 @@ class account_bank_statement(osv.osv):
         cur_id = False
         statement_currency_id = st_line.journal_id.currency.id or company_currency_id
         statement_line_currency_id = st_line.currency_id.id or statement_currency_id
-        if statement_line_currency_id != company_currency_id:
-            cur_id = statement_line_currency_id
-            amt_cur = amount
-            ctx = context.copy()
-            ctx['date'] = st_line.date
-            st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or 1
-            if statement_currency_id != company_currency_id:
-                amount = self.pool.get('res.currency').compute(cr, uid, statement_line_currency_id, company_currency_id, amount / st_line_currency_rate, context=ctx)
-            else:
+        st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or 1
+
+        if statement_currency_id == company_currency_id:
+            if statement_line_currency_id != statement_currency_id:
+                amt_cur = amount
+                cur_id = statement_line_currency_id
                 amount = amount / st_line_currency_rate
+        else:
+            cur_id = statement_currency_id
+            amt_cur = amount
+            if statement_line_currency_id == company_currency_id:
+                amount = amount / st_line_currency_rate
+            else:
+                ctx = context.copy()
+                ctx['date'] = st_line.date
+                amount = self.pool.get('res.currency').compute(cr, uid, statement_currency_id, company_currency_id, amount, context=ctx)
+
         debit = ((amount > 0) and amount) or 0.0
         credit = ((amount < 0) and -amount) or 0.0
-
-        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
-            amount_currency=amt_cur, currency_id=cur_id, account_id=account_id,
-            partner_id=partner_id, context=context)
+        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, amount_currency=amt_cur, currency_id=cur_id, account_id=account_id, partner_id=partner_id, context=context)
 
     def _prepare_move_line_vals(self, cr, uid, st_line, move_id, debit, credit, currency_id=False,
                 amount_currency=False, account_id=False, partner_id=False, context=None):
