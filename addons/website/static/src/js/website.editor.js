@@ -193,6 +193,8 @@ define(['summernote/summernote'], function () {
                 
             }
 
+            $container.find('.btn-group:has(button[data-event="imageShape"])').toggleClass("hidden", oStyle.image.tagName !== "IMG");
+
             $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
             $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
             $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("pull-right"));
@@ -348,8 +350,7 @@ define(['summernote/summernote'], function () {
     dom.isImg = function (node) {
         return node && (node.nodeName === "IMG" ||
             (node.className && node.className.match(/(^|\s)fa(-|\s|$)/i)) ||
-            (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) ||
-            (node.parentNode && node.parentNode.className && node.parentNode.className.match(/(^|\s)media_iframe_video(\s|$)/i)) );
+            (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) );
     };
     dom.isForbiddenNode = function (node) {
         return $(node).is(".media_iframe_video, .fa, img");
@@ -1748,6 +1749,7 @@ define(['summernote/summernote'], function () {
                 return;
             }
             if(this.rte) {
+                this.range.select();
                 this.rte.historyRecordUndo(this.media);
             }
 
@@ -1768,7 +1770,6 @@ define(['summernote/summernote'], function () {
                 this.range.insertNode(this.media, true);
                 this.active.media = this.media;
             }
-
             this.active.save();
 
             self.trigger("saved", self.active.media, self.media);
@@ -2266,6 +2267,66 @@ define(['summernote/summernote'], function () {
         },
     });
 
+
+    function createVideoNode(url) {
+        // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
+        var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+        var ytMatch = url.match(ytRegExp);
+
+        var igRegExp = /\/\/instagram.com\/p\/(.[a-zA-Z0-9]*)/;
+        var igMatch = url.match(igRegExp);
+
+        var vRegExp = /\/\/vine.co\/v\/(.[a-zA-Z0-9]*)/;
+        var vMatch = url.match(vRegExp);
+
+        var vimRegExp = /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/;
+        var vimMatch = url.match(vimRegExp);
+
+        var dmRegExp = /.+dailymotion.com\/(video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/;
+        var dmMatch = url.match(dmRegExp);
+
+        var youkuRegExp = /\/\/v\.youku\.com\/v_show\/id_(\w+)\.html/;
+        var youkuMatch = url.match(youkuRegExp);
+
+        var $video = $('<iframe>');
+        if (ytMatch && ytMatch[1].length === 11) {
+          var youtubeId = ytMatch[1];
+          $video = $('<iframe>')
+            .attr('src', '//www.youtube.com/embed/' + youtubeId)
+            .attr('width', '640').attr('height', '360');
+        } else if (igMatch && igMatch[0].length) {
+          $video = $('<iframe>')
+            .attr('src', igMatch[0] + '/embed/')
+            .attr('width', '612').attr('height', '710')
+            .attr('scrolling', 'no')
+            .attr('allowtransparency', 'true');
+        } else if (vMatch && vMatch[0].length) {
+          $video = $('<iframe>')
+            .attr('src', vMatch[0] + '/embed/simple')
+            .attr('width', '600').attr('height', '600')
+            .attr('class', 'vine-embed');
+        } else if (vimMatch && vimMatch[3].length) {
+          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
+            .attr('src', '//player.vimeo.com/video/' + vimMatch[3])
+            .attr('width', '640').attr('height', '360');
+        } else if (dmMatch && dmMatch[2].length) {
+          $video = $('<iframe>')
+            .attr('src', '//www.dailymotion.com/embed/video/' + dmMatch[2])
+            .attr('width', '640').attr('height', '360');
+        } else if (youkuMatch && youkuMatch[1].length) {
+          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
+            .attr('height', '498')
+            .attr('width', '510')
+            .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
+        } else {
+          // this is not a known video link. Now what, Cat? Now what?
+        }
+
+        $video.attr('frameborder', 0);
+
+        return $video;
+      };
+
     /**
      * VideoDialog widget. Lets users change a video, support all summernote
      * video, and embled iframe
@@ -2317,8 +2378,9 @@ define(['summernote/summernote'], function () {
         },
         get_video: function (event) {
             if (event) event.preventDefault();
-            var $video = eventHandler.editor.insertVideo(null, this.$("input#urlvideo").val(), true);
-            this.$iframe.attr("src", $video ? $video.attr("src") : "");
+            var $video = createVideoNode(this.$("input#urlvideo").val());
+            this.$iframe.replaceWith($video);
+            this.$iframe = $video;
             return false;
         },
         save: function () {
@@ -2331,7 +2393,7 @@ define(['summernote/summernote'], function () {
             var video_type = this.$("#video_type").val();
             var $iframe = $(
                 '<div class="media_iframe_video" data-src="'+this.$iframe.attr("src")+'">'+
-                    '<div class="css_editable_mode_display" contentEditable="false">&nbsp;</div>'+
+                    '<div class="css_editable_mode_display">&nbsp;</div>'+
                     '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
                     '<iframe src="'+this.$iframe.attr("src")+'" frameborder="0" allowfullscreen="allowfullscreen" contentEditable="false"></iframe>'+
                 '</div>');
