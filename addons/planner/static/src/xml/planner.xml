@@ -27,8 +27,7 @@
             </div>
             <div class="col-xs-6 next-block">
                 <t t-if="!end">
-                    <a data-toggle='collapse'
-                        t-attf-class="pull-right btn btn-#{start and 'primary' or 'default'} btn-next"
+                    <a  t-attf-class="pull-right btn btn-#{start and 'primary' or 'default'} btn-next"
                         t-attf-data-parent='#{current_page_id}'
                         t-attf-href='##{next_page_id}'>Next step<i class="fa fa-angle-right"></i>
                     </a>

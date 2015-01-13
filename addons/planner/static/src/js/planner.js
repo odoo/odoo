@@ -6,47 +6,27 @@
     var QWeb = instance.web.qweb;
     instance.planner = {};
 
-    instance.web.WebClient.include({
-        start: function() {
-            this.planner_manager =  new instance.planner.PlannerManager(this);
-            return this._super.apply(this, arguments);
+    instance.planner.PlannerLauncher = instance.web.Widget.extend({
+        template: "PlannerLauncher",
+        events: {
+            'click .oe_planner_progress': 'toggle_dialog'
         },
-        show_application: function() {
-            var self = this;
-            this._super.apply(this, arguments);
-            self.menu.on("top_menu_change", self.planner_manager, self.planner_manager.on_menu_clicked);
-        }
-    });
-
-    instance.web.Menu.include({
-        open_menu: function (id) {
-            this._super.apply(this, arguments);
-            // find the active menu with class '.active', instead of with click event to display planner in case of refresh
-            var active_top_menu = this.$el.find('.active a').data('menu');
-            if((active_top_menu != this.active_top_menu)){
-                this.active_top_menu = active_top_menu;
-                this.trigger('top_menu_change', active_top_menu);
-                this.reflow(); // re-arrange the top menu (hide overflow in 'more' menu)
-            }
-        },
-    });
-
-    instance.planner.PlannerManager = instance.web.Widget.extend({
         init: function(parent) {
-            var self = this;
             this._super(parent);
             this.planner_by_menu = {};
-            this.fetch_application_planner().done(function(apps) {
-                self.planner_apps = apps;
-            });
+            this.webclient = parent.getParent();
+            this.need_reflow = false;
         },
-        on_menu_clicked: function(menu_id) {
+        start: function() {
             var self = this;
-            self.planner_launcher && self.planner_launcher.destroy();
-            if (_.contains(_.keys(self.planner_apps), menu_id.toString())) {
-                self.planner_launcher = new instance.planner.PlannerLauncher(self, self.planner_apps[menu_id]);
-                self.planner_launcher.prependTo(window.$('.oe_systray'));
-            }
+            self._super();
+
+            self.webclient.menu.on("open_menu", self, self.on_menu_clicked);
+            self.$el.hide();  // hidden by default
+            return self.fetch_application_planner().done(function(apps) {
+                self.planner_apps = apps;
+                return apps;
+            });
         },
         fetch_application_planner: function() {
             var self = this;
@@ -63,28 +43,35 @@
                 }).fail(function() {def.reject();});
             }
             return def;
-        }
-    });
-
-    instance.planner.PlannerLauncher = instance.web.Widget.extend({
-        template: "PlannerLauncher",
-        events: {
-            'click .oe_planner_progress': 'toggle_dialog'
         },
-        init: function(parent, planner) {
-            this._super(parent);
+        on_menu_clicked: function(id, $clicked_menu) {
+            var menu_id = $clicked_menu.parents('.oe_secondary_menu').data('menu-parent'); // find top menu id
+            if (_.contains(_.keys(this.planner_apps), menu_id.toString())) {
+                this.$el.show();
+                this.setup(this.planner_apps[menu_id]);
+                this.need_reflow = true;
+            } else {
+                if (this.$el.is(":visible")) {
+                    this.$el.hide();
+                    this.need_reflow = true;
+                }
+            }
+            if (this.need_reflow) {
+                this.webclient.menu.reflow();
+                this.need_reflow = false;
+            }
+        },
+        setup: function(planner){
+            var self = this;
             this.planner = planner;
             this.dialog = new instance.planner.PlannerDialog(this, planner);
-        },
-        start: function() {
-            var self = this;
-            this._super.apply(this, arguments);
             this.$(".oe_planner_progress").tooltip({html: true, title: this.planner.tooltip_planner, placement: 'bottom', delay: {'show': 500}});
             this.dialog.on("planner_progress_changed", this, function(percent){
                 self.update_parent_progress_bar(percent);
             });
             this.dialog.appendTo(document.body);
         },
+        // event
         update_parent_progress_bar: function(percent) {
             this.$(".progress-bar").css('width', percent+"%");
         },
@@ -99,15 +86,15 @@
         calling the 'render' method (server side), then footer are appended to every pages (client side). Data are saved when a 'mark button' is clicked.
         Some element of the template MUST respect naming convention :
             * Input elements (select, textarea, radio, ...) MUST HAVE an 'id' as 'input_element_#####', where ##### is a string.
-            * Page div MUST HAVE the class "panel-collapse collapse" and an 'id' as 'planner_page#', where # is ideally a
-              number. !!! The order of the page are important. The 'id' number is NOT the sequence order.
+            * Page div MUST HAVE the class "planner-page" and an 'id' as 'planner_page#', where # is ideally a
+              number. !!! The declaration order of the page are important. The 'id' number is NOT the sequence order.
             * Menu item MUST HAVE an href attribute containing the id of the page they are referencing.
     */
     instance.planner.PlannerDialog = instance.web.Widget.extend({
         template: "PlannerDialog",
         events: {
-            'click .oe_planner div[id^="planner_page"] a[href^="#planner_page"]': 'next_page',
-            'click .oe_planner li a[href^="#planner_page"]': 'onclick_menu',
+            'click .oe_planner div[id^="planner_page"] a[href^="#planner_page"]': 'change_page',
+            'click .oe_planner li a[href^="#planner_page"]': 'change_page',
             'click .oe_planner div[id^="planner_page"] button[data-pageid^="planner_page"]': 'mark_as_done',
         },
         init: function(parent, planner) {
@@ -152,7 +139,7 @@
                 // show last opened page
                 var last_open_page = (openerp.session.get_cookie(self.cookie_name)) ? openerp.session.get_cookie(self.cookie_name) : self.planner.data['last_open_page'] || false;
                 if (last_open_page) {
-                    $(".oe_planner li a[href='#"+last_open_page+"']").trigger('click');
+                    self._switch_page(last_open_page);
                 }
                 // Call resize function at the beginning
                 self.resize_dialog();
@@ -191,21 +178,16 @@
             this.$('.side').height($modal.height() - 75);
         },
         // page switching
-        onclick_menu: function(ev) {
-            ev.stopPropagation();
+        change_page: function(ev) {
+            ev.preventDefault();
             var page_id = $(ev.currentTarget).attr('href').replace('#', '');
             this._switch_page(page_id);
-        },
-        next_page: function(ev) {
-            ev.stopPropagation();
-            var next_page_id = $(ev.currentTarget).attr('href').replace('#', '');
-            this._switch_page(next_page_id);
         },
         _switch_page: function(page_id) {
             this.$(".oe_planner li a[href^='#planner_page']").parent().removeClass('active');
             this.$(".oe_planner li a[href=#"+page_id+"]").parent().addClass('active');
-            this.$(".oe_planner div[id^='planner_page']").removeClass('in');
-            this.$(".oe_planner div[id="+page_id+"]").addClass('in');
+            this.$(".oe_planner div[id^='planner_page']").removeClass('visible');
+            this.$(".oe_planner div[id="+page_id+"]").addClass('visible');
             this.planner.data['last_open_page'] = page_id;
             openerp.session.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
         },
@@ -303,4 +285,11 @@
             self.update_planner(page_id);
         },
     });
+
+    // add planner launcher to the systray
+    // if it is empty, it won't be display. Then, each time a top menu is clicked
+    // a planner will be given to the launcher. The launcher will appears if the
+    // given planner is not null.
+    openerp.web.SystrayItems.push(instance.planner.PlannerLauncher);
+
 })();

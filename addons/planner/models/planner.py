@@ -48,5 +48,5 @@ class Planner(models.Model):
         if module_name:
             module = self.env['ir.module.module'].search([('name', '=', module_name)], limit=1)
             if module:
-                url = "&id=%s" % (module.id,)
+                url += "&id=%s" % (module.id,)
         return url

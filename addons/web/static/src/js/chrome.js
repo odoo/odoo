@@ -232,7 +232,7 @@ instance.web.Dialog = instance.web.Widget.extend({
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
-                    //keep class modal-open (deleted by bootstrap hide fnct) on body 
+                    //keep class modal-open (deleted by bootstrap hide fnct) on body
                     //to allow scrolling inside the modal
                     $('body').addClass('modal-open');
                 }
@@ -344,7 +344,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: error.data.arguments[2], 
+                {text: error.data.arguments[2],
                     oe_link_class : 'oe_highlight',
                     post_text : _t("or"),
                     click: function() {
@@ -765,6 +765,7 @@ instance.web.SystrayMenu = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.items = [];
+        this.widgets = [];
         this.load = $.Deferred();
     },
     start: function() {
@@ -779,9 +780,19 @@ instance.web.SystrayMenu = instance.web.Widget.extend({
         var self = this;
         _.each(instance.web.SystrayItems, function(widgetCls) {
             var cur_systray_item = new widgetCls(self);
+            self.widgets.push(cur_systray_item);
             self.items.push(cur_systray_item.appendTo(self.$el));
         });
     },
+    get_widget: function(searched_class){
+        for (i = 0; i < this.widgets.length; i++) {
+            var current = this.widgets[i];
+            if(current instanceof searched_class){
+                return current;
+            }
+        }
+        return undefined;
+    }
 });
 
 instance.web.Menu =  instance.web.Widget.extend({
@@ -859,13 +870,14 @@ instance.web.Menu =  instance.web.Widget.extend({
      * If not set, only the overflowing items are hidden.
      */
     reflow: function(behavior) {
+        console.log('reflow');
         var self = this;
         var $more_container = this.$('#menu_more_container').hide();
         var $more = this.$('#menu_more');
         var $systray = this.$el.parents().find('.oe_systray');
 
         $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
-        
+
         // 'all_outside' beahavior should display all the items, so hide the more menu and exit
         if (behavior === 'all_outside') {
             // Show list of menu items
@@ -1308,28 +1320,32 @@ instance.web.WebClient = instance.web.Client.extend({
         this.$('.oe_logo_edit_admin').click(function(ev) {
             self.logo_edit(ev);
         });
-
         this.$('.oe_logo img').click(function(ev) {
 	        self.on_logo_click(ev);
 	    });
+
+        // Menu is rendered server-side thus we don't want the widget to create any dom
+        self.menu = new instance.web.Menu(self);
+        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
+        self.menu.on('menu_click', this, this.on_menu_action);
+
         // Create the user menu (rendered client-side)
         self.user_menu = new instance.web.UserMenu(self);
         var user_menu_loaded = self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
+
         // Create the systray menu (rendered server-side)
         self.systray_menu = new instance.web.SystrayMenu(self);
         self.systray_menu.setElement(this.$el.parents().find('.oe_systray'));
         var systray_menu_loaded = self.systray_menu.start();
-        // Create and render the menu once both systray and user menus are rendered
+
+        // Start the menu once both systray and user menus are rendered
         // to prevent overflows while loading
-        // Menu is rendered server-side thus we don't want the widget to create any dom
-        self.menu = new instance.web.Menu(self);
-        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
-        self.menu.on('menu_click', this, this.on_menu_action);
         $.when(systray_menu_loaded, user_menu_loaded).done(function() {
             self.menu.start();
         });
+
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
