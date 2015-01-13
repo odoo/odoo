@@ -62,7 +62,7 @@ class crm_phonecall(models.Model):
                 "partner_image_small": self.partner_id.image_small,
                 "partner_email": self.partner_id.email,
                 "partner_title": self.partner_id.title.name,
-                "partner_phone": self.partner_phone or self.opportunity_id.phone or self.opportunity_id.partner_id.phone or self.opportunity_id.partner_id.mobile or False,
+                "partner_phone": self.partner_phone or self.partner_mobile or self.opportunity_id.phone or self.opportunity_id.partner_id.phone or self.opportunity_id.partner_id.mobile or False,
                 "opportunity_name": self.opportunity_id.name,
                 "opportunity_id": self.opportunity_id.id,
                 "opportunity_priority": self.opportunity_id.priority,

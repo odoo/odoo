@@ -32,18 +32,22 @@ openerp.voip = function(openerp) {
                 this.physical_phone = result.physical_phone;
                 this.ring_number = result.ring_number;
             }else{
-                this.trigger('sip_error', _t('One or more parameter is missing. Please check your configuration.'));
-                this.blocked = true;
+                this.trigger_error('One or more parameter is missing. Please check your configuration.');
                 error_found = true;
             }
             try{
+                //test the ws uri
+                var test_ws = new window.WebSocket(result.wsServer, 'sip');
+                var self = this;
+                test_ws.onerror = function(){
+                    self.trigger_error('The websocket uri could be wrong. Please check your configuration.');
+                };
                 this.ua = new SIP.UA(ua_config);
                 if(this.blocked && !error_found){
                     this.trigger('sip_error_resolved');
                 }
             }catch(err){
-                this.trigger('sip_error', _t('The server configuration could be wrong. Please check your configuration.'));
-                this.blocked = true;
+                this.trigger_error('The server configuration could be wrong. Please check your configuration.');
             }
             var audio = document.createElement("audio");
             audio.id = "remote_audio";
@@ -54,6 +58,11 @@ openerp.voip = function(openerp) {
             audio.loop = "true";
             audio.src = "/voip/static/src/sounds/ringbacktone.mp3";
             document.body.appendChild(audio);
+        },
+
+        trigger_error: function(msg, temporary){
+            this.trigger('sip_error', _t(msg), temporary);
+            this.blocked = true;
         },
 
         //success callback function of the getUserMedia function
@@ -78,9 +87,8 @@ openerp.voip = function(openerp) {
                         this.trigger('sip_error_resolved');
                     }
                 }catch(err){
-                    this.trigger('sip_error', _t('the connection cannot be made. '+
-                        'Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'));
-                    this.blocked = true;
+                    this.trigger_error('the connection cannot be made. '+
+                        'Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')');
                 }
                 self.ua.on('invite', function (invite_session){
                     console.log(invite_session.remoteIdentity.displayName);
@@ -119,8 +127,8 @@ openerp.voip = function(openerp) {
             ringbacktone.pause();
             var temporary = true;
             if(response.reason_phrase != "Busy Here"){
-                this.trigger('sip_error', _t('The user credentials could be wrong or '+
-                    'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')'),
+                this.trigger_error('The user credentials could be wrong or '+
+                    'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')',
                     temporary);
                 this.blocked = true;
             }else if(this.blocked){

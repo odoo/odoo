@@ -395,8 +395,6 @@ openerp.crm_voip = function(instance) {
             var number;
             if(this.current_phonecall.partner_phone){
                 number = this.current_phonecall.partner_phone;
-            } else if (this.current_phonecall.partner_mobile){
-                number = this.current_phonecall.partner_mobile;
             }else{
                 //TODO what to do when no number?
                 return {};
