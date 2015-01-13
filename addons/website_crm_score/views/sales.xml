@@ -66,6 +66,39 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="score_opp_tree_view">
+            <field name="name">crm.lead.tree.opp.score.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+            <field name="arch" type="xml">
+                <field name="section_id" position="after">
+                    <field name="score" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="score_opp_form_view">
+            <field name="name">crm.lead.form.opp.score.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="score" />
+                </field>
+                <xpath expr="//group[@string='References']" position="after">
+                    <group string="Scoring">
+                        <field name="score_ids"
+                            widget="many2many_tags"
+                            domain="[('object_id.model','=','crm.lead')]"
+                            context="{'object_name': 'crm.lead'}"
+                            readonly="1"
+                        />
+                        <field name="lang_id" readonly="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <!-- SALESTEAM -->
         <!-- SalesTeam Kanban View - Lead information added -->
         <record id="crm_case_section_salesteams_view_kanban_inherit" model="ir.ui.view">
