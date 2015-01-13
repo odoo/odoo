@@ -119,7 +119,8 @@ class crm_case_section(osv.osv):
 
     @api.model
     def direct_assign_leads(self, ids=[]):
-        self._assign_leads()
+        ctx = dict(self._context, mail_track_log_only=True)
+        self.with_context(ctx)._assign_leads()
 
     @api.model
     def dry_assign_leads(self, ids=[]):
@@ -139,6 +140,10 @@ class crm_case_section(osv.osv):
                 domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
                 leads = self.env["crm.lead"].search(domain, limit=50)
                 haslead = haslead or (len(leads) == 50 and not dry)
+
+                if not leads.exists():
+                    return
+
                 if dry:
                     for lead in leads:
                         values = {'lead_id': lead.id, 'section_id': salesteam['id']}
@@ -148,7 +153,8 @@ class crm_case_section(osv.osv):
 
                     # Erase fake/false email
                     spams = map(lambda x: x.id, filter(lambda x: x.email_from and not checkmail(x.email_from), leads))
-                    self.env["crm.lead"].browse(spams).write({'email_from': False})
+                    if spams:
+                        self.env["crm.lead"].browse(spams).write({'email_from': False})
 
                     # Merge duplicated lead
                     leads_done = []
@@ -158,7 +164,7 @@ class crm_case_section(osv.osv):
                             if len(leads_duplicated) > 1:
                                 self.env["crm.lead"].browse(leads_duplicated).merge_opportunity(False, False)
                             leads_done += leads_duplicated
-                    self._cr.commit()
+                        self._cr.commit()
 
     @api.model
     def assign_leads_to_salesmen(self, all_section_users, dry=False):
@@ -213,7 +219,8 @@ class crm_case_section(osv.osv):
                 values = {'lead_id': lead.id, 'section_id': user['su'].section_id.id, 'user_id': user['su'].user_id.id}
                 self.env['leads.dry.run'].create(values)
             else:
-                data = {'user_id': user['su'].user_id.id, 'assign_date': fields.Datetime.now()}
+                # Assign date will be setted by write function
+                data = {'user_id': user['su'].user_id.id}
                 lead.write(data)
 
                 lead.convert_opportunity(None)
