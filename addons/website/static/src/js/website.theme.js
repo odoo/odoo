@@ -170,7 +170,7 @@
             this.$('#'+data.split(",").join(", #")).each(function () {
                 var check = $(this).prop("checked");
                 var $label = $(this).closest("label");
-                $(this).attr("checked", enable);
+                $(this).prop("checked", enable);
                 if (enable) $label.addClass("checked");
                 else $label.removeClass("checked");
                 if (check != enable) {
