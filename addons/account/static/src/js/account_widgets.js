@@ -514,7 +514,7 @@ openerp.account = function (instance) {
                         }
                     }
                     if (!found)
-                        instance.web.Home(self);
+                        self.do_action('history_back');
                 });
         },
     

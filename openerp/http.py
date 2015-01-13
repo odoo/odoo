@@ -13,6 +13,7 @@ import inspect
 import logging
 import mimetypes
 import os
+import pprint
 import random
 import re
 import sys
@@ -48,6 +49,8 @@ from openerp.tools.func import lazy_property
 from openerp.tools import ustr
 
 _logger = logging.getLogger(__name__)
+rpc_request = logging.getLogger(__name__ + '.rpc.request')
+rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -86,8 +89,6 @@ def dispatch_rpc(service_name, method, params):
     in a upper layer.
     """
     try:
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
-        rpc_response = logging.getLogger(__name__ + '.rpc.response')
         rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
@@ -542,7 +543,36 @@ class JsonRequest(WebRequest):
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
+            rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+            rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+            if rpc_request_flag or rpc_response_flag:
+                endpoint = self.endpoint.method.__name__
+                model = self.params.get('model')
+                method = self.params.get('method')
+                args = self.params.get('args', [])
+
+                start_time = time.time()
+                _, start_vms = 0, 0
+                if psutil:
+                    _, start_vms = psutil.Process().get_memory_info()
+                if rpc_request and rpc_response_flag:
+                    rpc_request.debug('%s: %s %s, %s',
+                        endpoint, model, method, pprint.pformat(args))
+
             result = self._call_function(**self.params)
+
+            if rpc_request_flag or rpc_response_flag:
+                end_time = time.time()
+                _, end_vms = 0, 0
+                if psutil:
+                    _, end_vms = psutil.Process().get_memory_info()
+                logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
+                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                if rpc_response_flag:
+                    rpc_response.debug('%s, %s', logline, pprint.pformat(result))
+                else:
+                    rpc_request.debug(logline)
+
             return self._json_response(result)
         except Exception, e:
             return self._handle_exception(e)
