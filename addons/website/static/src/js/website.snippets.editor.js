@@ -132,7 +132,7 @@
 
             var _isNotBreakable = $.summernote.core.dom.isNotBreakable;
             $.summernote.core.dom.isNotBreakable = function (node, sc, so, ec, eo) {
-                return _isNotBreakable(node, sc, so, ec, eo) || website.snippet.globalSelector.is($(node));
+                return _isNotBreakable(node, sc, so, ec, eo) || $(node).is('div') || website.snippet.globalSelector.is($(node));
             };
         },
 
