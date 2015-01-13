@@ -89,6 +89,12 @@ class sale_order(osv.osv):
         invoice_vals['incoterms_id'] = order.incoterm.id or False
         return invoice_vals
 
+    def _get_delivery_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = len(picking for picking in order.picking_ids if picking.picking_type_id.code == 'outgoing')
+        return res
+
     _columns = {
         'incoterm': fields.many2one('stock.incoterms', 'Incoterms', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
@@ -105,6 +111,7 @@ class sale_order(osv.osv):
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
+        'delivery_count': fields.function(_get_delivery_count, type='integer', string='Delivery Orders'),
     }
     _defaults = {
         'warehouse_id': _get_default_warehouse,
@@ -136,8 +143,8 @@ class sale_order(osv.osv):
         #compute the number of delivery orders to display
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
-            pick_ids += [picking.id for picking in so.picking_ids]
-            
+            pick_ids += [picking.id for picking in so.picking_ids if picking.picking_type_id.code == 'outgoing']
+
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"

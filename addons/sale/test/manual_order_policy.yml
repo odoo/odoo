@@ -64,6 +64,6 @@
   !python {model: sale.order}: |
     sale_order = self.browse(cr, uid, ref("sale_order_2"))
     assert sale_order.invoice_ids, "Invoice should be created."
-    assert sale_order.invoice_exists, "Order is not invoiced."
+    assert sale_order.invoice_count, "Order is not invoiced."
     assert sale_order.invoiced, "Order is not paid."
     assert sale_order.state == 'done', 'Order should be Done.'

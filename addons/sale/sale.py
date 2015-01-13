@@ -68,47 +68,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
-
-    def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            if sale.invoiced:
-                res[sale.id] = 100.0
-                continue
-            tot = 0.0
-            for invoice in sale.invoice_ids:
-                if invoice.state not in ('draft', 'cancel'):
-                    tot += invoice.amount_untaxed
-            if tot:
-                res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
-            else:
-                res[sale.id] = 0.0
-        return res
-
-    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            res[sale.id] = False
-            if sale.invoice_ids:
-                res[sale.id] = True
-        return res
-
-    def _invoiced(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for sale in self.browse(cursor, user, ids, context=context):
-            res[sale.id] = True
-            invoice_existence = False
-            for invoice in sale.invoice_ids:
-                if invoice.state!='cancel':
-                    invoice_existence = True
-                    if invoice.state != 'paid':
-                        res[sale.id] = False
-                        break
-            if not invoice_existence or sale.state == 'manual':
-                res[sale.id] = False
-        return res
-
-    def _invoiced_search(self, cursor, user, obj, name, args, context=None):
+    def _search_invoiced(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         clause = ''
@@ -169,6 +129,17 @@ class sale_order(osv.osv):
                 return int(team_ids[0][0])
         return None
 
+    def _get_invoiced(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
+            res[order.id] = {
+                'invoice_count': len(order.invoice_ids),
+                'invoiced': False,
+            }
+            if order.state != 'manual' and any(invoice.state == 'paid' for invoice in order.invoice_ids):
+                res[order.id]['invoiced'] = True
+        return res
+
     _columns = {
         'name': fields.char('Order Reference', required=True, copy=False,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
@@ -206,13 +177,9 @@ class sale_order(osv.osv):
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, copy=False, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
-        'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced Ratio', type='float'),
-        'invoiced': fields.function(_invoiced, string='Paid',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
-        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
+        'invoice_count': fields.function(_get_invoiced, type='integer', string='Invoices', multi="counts"),
+        'invoiced': fields.function(_get_invoiced, fnct_search=_search_invoiced, type='boolean', string='Paid', multi="counts"),
         'note': fields.text('Terms and conditions'),
-
         'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
@@ -682,7 +649,7 @@ class sale_order(osv.osv):
 
     def action_ignore_delivery_exception(self, cr, uid, ids, context=None):
         for sale_order in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_exists else 'manual'}, context=context)
+            self.write(cr, uid, ids, {'state': 'progress' if sale_order.invoice_count else 'manual'}, context=context)
         return True
 
     def action_ship_create(self, cr, uid, ids, context=None):

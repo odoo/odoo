@@ -416,15 +416,21 @@ class purchase_order(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
-        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree2')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        action_id = mod_obj.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree2')
+        result = act_obj.read(cr, uid, action_id, context=context)
         inv_ids = []
         for po in self.browse(cr, uid, ids, context=context):
-            inv_ids+= [invoice.id for invoice in po.invoice_ids]
+            inv_ids += [invoice.id for invoice in po.invoice_ids]
         if not inv_ids:
             raise UserError(_('Please create Invoices.'))
-        result['domain'] = [('id', 'in', inv_ids)]
+
+        if len(inv_ids) > 1:
+            result['domain'] = [('id', 'in', inv_ids)]
+        else:
+            res = mod_obj.xmlid_to_res_id(cr, uid, 'account.invoice_supplier_form')
+            result['views'] = [(res, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
 
     def view_invoice(self, cr, uid, ids, context=None):
         '''
