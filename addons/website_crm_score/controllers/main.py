@@ -49,6 +49,10 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 pass  # lead_id == None because no lead was created
         return response
 
+    def create_real_lead(self, request, values, kwargs):
+        """ Make this function overridable to create a lead with another function that create_lead from webiste_crm """
+        return super(ContactController, self).create_lead(request, values, kwargs)
+
     def create_lead(self, request, values, kwargs):
         cr, uid, context = request.cr, request.uid, request.context
 
@@ -107,7 +111,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                     urls.append('<a href="' + url + '" target="_blank"><b>' + url + '</b></a>')
                 body = '<br/>'.join(urls)
 
-            new_lead_id = super(ContactController, self).create_lead(request, values, kwargs)
+            new_lead_id = self.create_real_lead(request, values, kwargs)
 
             # if pages were seen, a message is posted
             if body:
