@@ -63,12 +63,12 @@ class Lead(models.Model):
     def _merge_pageviews(self, cr, uid, opportunity_id, opportunities, context=None):
         lead_ids = [opp.id for opp in opportunities if opp.id != opportunity_id]
         pv_ids = self.pool.get('website.crm.pageview').search(cr, uid, [('lead_id', 'in', lead_ids)], context=context)
-        self.pool.get('website.crm.pageview').write(cr, uid, pv_ids, {'lead_id': opportunity_id}, context=context)
+        self.pool.get('website.crm.pageview').write(cr, SUPERUSER_ID, pv_ids, {'lead_id': opportunity_id}, context=context)
         return True
 
     def _merge_scores(self, cr, uid, opportunity_id, opportunities, context=None):
         # We needs to delete score from opportunity_id, to be sure that all rules will be re-evaluated.
-        self.write(cr, uid, [opportunity_id], {'score_ids': [(6, 0, [])]}, context=context)
+        self.write(cr, SUPERUSER_ID, [opportunity_id], {'score_ids': [(6, 0, [])]}, context=context)
         return True
 
     def merge_dependences(self, cr, uid, highest, opportunities, context=None):
