@@ -28,8 +28,16 @@ class contactus(http.Controller):
 
     def create_lead(self, request, values, kwargs):
         """ Allow to be overrided """
-        cr, context = request.cr, request.context
-        return request.registry['crm.lead'].create(cr, SUPERUSER_ID, values, context=dict(context, mail_create_nosubscribe=True))
+
+        try:
+            import phonenumbers
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                numb = phonenumbers.parse(values['phone'], country_code)
+                values['phone'] = phonenumbers.format_number(numb, phonenumbers.PhoneNumberFormat.E164)
+        except:
+            pass
+        return request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, values, request.context)
 
     def preRenderThanks(self, values, kwargs):
         """ Allow to be overrided """

@@ -204,6 +204,7 @@ class crm_lead(models.Model):
             },
         }
 
+
 class res_partner(models.Model):
     _inherit = "res.partner"
 
@@ -220,6 +221,7 @@ class res_partner(models.Model):
             'sequence': 1,
         })
         return phonecall.id
+
 
 class crm_phonecall_log_wizard(models.TransientModel):
     _name = 'crm.phonecall.log.wizard'
