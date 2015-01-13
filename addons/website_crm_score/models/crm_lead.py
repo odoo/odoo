@@ -55,7 +55,10 @@ class Lead(models.Model):
     def get_score_domain_cookies(self):
         # TODO should be return request.httprequest.host in master
         # return request.httprequest.host
-        return "." + ".".join(request.httprequest.host.rsplit(".", 2)[1:])
+        dom = "." + ".".join(request.httprequest.host.rsplit(".", 2)[1:])
+        if ':' in dom:  # Hack if in local mode with port
+            dom = request.httprequest.host
+        return dom
 
     def _merge_pageviews(self, cr, uid, opportunity_id, opportunities, context=None):
         lead_ids = [opp.id for opp in opportunities if opp.id != opportunity_id]
