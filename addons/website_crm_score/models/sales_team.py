@@ -164,6 +164,7 @@ class crm_case_section(osv.osv):
                                 self.env["crm.lead"].browse(leads_duplicated).merge_opportunity(False, False)
                             leads_done += leads_duplicated
                         self._cr.commit()
+                self._cr.commit()
 
     @api.model
     def assign_leads_to_salesmen(self, all_section_users, dry=False):
@@ -236,12 +237,7 @@ class crm_case_section(osv.osv):
                 TRUNCATE TABLE leads_dry_run;
             """)
 
-        salesteams_fields = ['score_section_domain',
-                             'assigned_leads',
-                             'capacity',
-                             'name'
-                             ]
-        all_salesteams = self.search_read(fields=salesteams_fields, domain=[('score_section_domain', '!=', False)])
+        all_salesteams = self.search_read(fields=['score_section_domain'], domain=[('score_section_domain', '!=', False)])
         # casting the list into a dict to ease the access afterwards
 
         all_section_users = self.env['section.user'].search([('running', '=', True)])
