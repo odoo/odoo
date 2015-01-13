@@ -1600,7 +1600,11 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         this.$save_name = this.$('.oe-save-name');
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
-        this.$inputs.eq(0).val(this.searchview.getParent().title);
+        // in non-conform views (i.e. mail.js), the prefill causes errors
+        // because there is no parent view
+        if (this.searchview.getParent()) {
+            this.$inputs.eq(0).val(this.searchview.getParent().title);
+        }
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
         $shared_filter.click(function () {$default_filter.prop('checked', false)});
