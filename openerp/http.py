@@ -859,10 +859,7 @@ class Model(object):
                 
             if method.startswith('_'):
                 raise Exception("Access denied")
-            mod = request.registry[self.model]
-            meth = getattr(mod, method)
-            cr = request.cr
-            result = meth(cr, request.uid, *args, **kw)
+            result = self.proxy.execute_kw(self.session._db, self.session._uid, self.session._password, self.model, method, args, kw)
             # reorder read
             if method == "read":
                 if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
