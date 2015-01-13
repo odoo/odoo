@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
             <form string="Pay Order">
                 <group>
-                    <field name="journal_id" />
+                    <field name="session_id" invisible="1"/>
+                    <field name="journal_id" context="{'pos_session_id':session_id}"/>
                     <field name="amount" />
                     <field name="payment_name"/>
                 </group>
