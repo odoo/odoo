@@ -706,12 +706,7 @@ class BaseModel(object):
 
     @classmethod
     def _init_manual_fields(cls, cr, partial=False):
-        # Check whether the query is already done
-        if cls.pool.fields_by_model is not None:
-            manual_fields = cls.pool.fields_by_model.get(cls._name, [])
-        else:
-            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (cls._name, 'manual'))
-            manual_fields = cr.dictfetchall()
+        manual_fields = cls.pool.get_manual_fields(cr, cls._name)
 
         for field in manual_fields:
             if field['name'] in cls._fields:
