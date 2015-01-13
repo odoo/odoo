@@ -7,32 +7,32 @@ openerp.account = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
-    
+
     instance.web.account = instance.web.account || {};
 
     /*
 
     ABOUT
-    
+
     In this closure, you'll find two abstract widgets : one that represent a single reconciliation (abstractReconciliationLine)
     and one that serves as container and parent for the former (abstractReconciliation), displaying title, progress, etc.
-    
+
     Those widgets are implemented for the bank statement reconciliation and the manual reconciliation.
-    
+
     "Implementation classes" must declare a this.children_widget = instance.web.account.implementationOfAbstractReconciliationLine
     property so abstractReconciliation can instanciate new reconciliations.
-    
+
     They may specify a template_prefix property (ex : methods in the abstract widget that renders templates will try
     template_prefix_some_template before to try some_template)
 
     When a method's body in an abstract widget is left empty, it means it should be defined by implementation classes
-    
+
 
     TODO
 
     Reconciliation widgets' instanciation performances can be improved by generating the shared DOM once in the parent
     then cloning it for each new child.
-    
+
     */
 
     instance.web.account.abstractReconciliation = instance.web.Widget.extend({
@@ -43,15 +43,15 @@ openerp.account = function (instance) {
             "click .presets_config_create": "presetConfigCreateClickHandler",
             "click .presets_config_edit": "presetConfigEditClickHandler",
         },
-    
+
         init: function(parent, context) {
             this._super(parent);
             this.max_reconciliations_displayed = 10;
-    
+
             // Only for statistical purposes
             this.lines_reconciled_with_ctrl_enter = 0;
             this.time_widget_loaded = Date.now();
-    
+
             this.action_manager = this.findAncestor(function(ancestor){ return ancestor instanceof instance.web.ActionManager });
             this.crash_manager = new instance.web.CrashManager();
             this.formatCurrencies; // Method that formats the currency ; loaded from the server
@@ -141,7 +141,7 @@ openerp.account = function (instance) {
                 },
             };
         },
-    
+
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
@@ -165,7 +165,7 @@ openerp.account = function (instance) {
                         self.formatCurrencies = new Function("amount, currency_id", data);
                     })
                 );
-                
+
                 // Bind ⌨ events
                 instance.web.bus.on("keypress", "body", function(e) {
                     self.keyboardShortcutsHandler(e);
@@ -250,7 +250,7 @@ openerp.account = function (instance) {
         presetConfigCreateClickHandler: function() {
             var self = this;
             // Fetch the ID of an action that will be pushed in the URL
-            // If the page is reloaded, this action will be loaded  
+            // If the page is reloaded, this action will be loaded
             new instance.web.Model("ir.model.data")
                 .call("get_object_reference", ['account', 'action_account_operation_template'])
                 .then(function (result) {
@@ -326,7 +326,7 @@ openerp.account = function (instance) {
             temp.remove();
             return html;
         },
-    
+
         keyboardShortcutsHandler: function(e) {
             var self = this;
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
@@ -337,11 +337,11 @@ openerp.account = function (instance) {
         processReconciliations: function(reconciliations) {},
 
         displayReconciliation: function() {},
-    
+
         childValidated: function(child) {},
-    
+
         displayDoneMessage: function() {},
-    
+
         updateProgressbar: function() {},
 
         // adds fields, prefixed with q_, to the move line for qweb rendering
@@ -359,10 +359,10 @@ openerp.account = function (instance) {
                 line.q_label = line.q_label + " : " + line.ref;
         },
     });
-    
+
     instance.web.account.abstractReconciliationLine = instance.web.Widget.extend({
         className: 'oe_reconciliation_line',
-        
+
         events: {
             "click .mv_line": "moveLineClickHandler",
             "click .created_line": "createdLineClickHandler",
@@ -414,7 +414,7 @@ openerp.account = function (instance) {
             // If you set("prop", value), you don't get the deferred back. So this is for the cases where you want
             // to wait until move lines (in the "match" pannel) are loaded after you set("mode", "match") for instance.
             this.finishedLoadingMoveLines;
-        
+
             this.set("presets", this.getParent().presets);
             this.on("change:presets", this, this.presetsChanged);
             this.set("mode", undefined);
@@ -434,7 +434,7 @@ openerp.account = function (instance) {
             this.on("change:lines_created", this, this.createdLinesChanged);
             this.on("change:line_created_being_edited", this, this.createdLinesChanged);
         },
-    
+
         start: function() {
             var self = this;
             return self._super().then(function() {
@@ -442,7 +442,7 @@ openerp.account = function (instance) {
                 // no animation while loading
                 self.animation_speed = 0;
                 self.aestetic_animation_speed = 0;
-    
+
                 self.is_consistent = false;
                 if (self.context.animate_entrance) {
                     self.$el.fadeOut(0);
@@ -455,7 +455,7 @@ openerp.account = function (instance) {
                         self.animation_speed = self.getParent().animation_speed;
                         self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
                         if (self.context.animate_entrance) {
-                            return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed); 
+                            return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed);
                         }
                     });
                 });
@@ -475,7 +475,7 @@ openerp.account = function (instance) {
                 if (create_form_fields.hasOwnProperty(key))
                     create_form_fields_arr.push(create_form_fields[key]);
             create_form_fields_arr.sort(function(a, b){ return b.index - a.index });
-        
+
             // field_manager
             var dataset = new instance.web.DataSet(this, "account.account", self.context);
             dataset.ids = [];
@@ -484,7 +484,7 @@ openerp.account = function (instance) {
                 children: [],
                 tag: "form"
             };
-        
+
             self.field_manager = new instance.web.FormView (
                 this, dataset, false, {
                     initial_mode: 'edit',
@@ -492,9 +492,9 @@ openerp.account = function (instance) {
                     $buttons: $(),
                     $pager: $()
             });
-        
+
             self.field_manager.load_form(dataset);
-        
+
             // fields default properties
             var Default_field = function() {
                 this.context = {};
@@ -517,13 +517,13 @@ openerp.account = function (instance) {
                     nolabel: "True",
                 };
             };
-        
+
             // Append fields to the field_manager
             self.field_manager.fields_view.fields = {};
             for (var i=0; i<create_form_fields_arr.length; i++) {
                 self.field_manager.fields_view.fields[create_form_fields_arr[i].id] = _.extend(new Default_field(), create_form_fields_arr[i].field_properties);
             }
-        
+
             // Returns a function that serves as a xhr response handler
             var hideGroupResponseClosureFactory = function(field_widget, $container, obj_key){
                 return function(has_group){
@@ -535,35 +535,35 @@ openerp.account = function (instance) {
                     }
                 };
             };
-        
+
             // generate the create "form"
             self.create_form = [];
             for (var i=0; i<create_form_fields_arr.length; i++) {
                 var field_data = create_form_fields_arr[i];
-        
+
                 // create widgets
                 var node = new Default_node(field_data.id);
                 if (! field_data.required) node.attrs.modifiers = "";
                 var field = new field_data.constructor(self.field_manager, node);
                 self[field_data.id+"_field"] = field;
                 self.create_form.push(field);
-        
+
                 // on update : change the last created line
                 field.corresponding_property = field_data.corresponding_property;
                 field.on("change:value", self, self.formCreateInputChanged);
-        
+
                 // append to DOM
                 var $field_container = $(QWeb.render("form_create_field", {id: field_data.id, label: field_data.label}));
                 field.appendTo($field_container.find("td"));
                 self.$(".create_form").prepend($field_container);
-        
+
                 // now that widget's dom has been created (appendTo does that), bind events and adds tabindex
                 if (field_data.field_properties.type != "many2one") {
                     // Triggers change:value TODO : moche bind ?
                     field.$el.find("input").keyup(function(e, field){ field.commit_value(); }.bind(null, null, field));
                 }
                 field.$el.find("input").attr("tabindex", field_data.tabindex);
-        
+
                 // Hide the field if group not OK
                 if (field_data.group !== undefined) {
                     var target = $field_container;
@@ -576,9 +576,9 @@ openerp.account = function (instance) {
             self.field_manager.do_show();
         },
 
-    
+
         /** Utils */
-    
+
         bindPopoverTo: function(el) {
             var self = this;
             $(el).addClass("bootstrap_popover");
@@ -598,7 +598,7 @@ openerp.account = function (instance) {
                 && line.account_id // must be defined (and will never be 0)
                 && line.label; // must be defined and not empty
         },
-        
+
         /* returns the created lines, plus the ones being edited if valid */
         getCreatedLines: function() {
             var self = this;
@@ -609,9 +609,9 @@ openerp.account = function (instance) {
                 return created_lines;
         },
 
-    
+
         /** Matching */
-    
+
         moveLineClickHandler: function(e) {
             var self = this;
             if (e.currentTarget.dataset.selected === "true") self.deselectMoveLine(e.currentTarget);
@@ -629,7 +629,7 @@ openerp.account = function (instance) {
                 self.mv_lines_deselected = _.filter(self.mv_lines_deselected, function(o) { return o.id != line_id });
             }
             if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
-            
+
             // Let inheriting function do the rest
             return line;
         },
@@ -648,17 +648,17 @@ openerp.account = function (instance) {
 
             return line;
         },
-    
+
 
         /** Matches pagination */
-    
+
         pagerControlLeftHandler: function() {
             var self = this;
             if (self.$(".pager_control_left").hasClass("disabled")) { return; /* shouldn't happen, anyway*/ }
             if (self.get("pager_index") === 0) { return; }
             self.set("pager_index", self.get("pager_index")-1 );
         },
-        
+
         pagerControlRightHandler: function() {
             var self = this;
             var new_index = self.get("pager_index")+1;
@@ -677,7 +677,7 @@ openerp.account = function (instance) {
 
 
         /** Creating */
-        
+
         initializeCreateForm: function() {
             var self = this;
 
@@ -687,27 +687,27 @@ openerp.account = function (instance) {
             self.amount_field.set("value", -1*self.get("balance"));
             self.account_id_field.focus();
         },
-        
+
         addLineBeingEdited: function() {
             var self = this;
             if (! self.islineCreatedBeingEditedValid()) return;
-            
+
             self.set("lines_created", self.get("lines_created").concat(self.get("line_created_being_edited")));
             // Add empty created line
             var new_id = self.get("line_created_being_edited")[0].id + 1;
             self.set("line_created_being_edited", [{'id': new_id}]);
-        
+
             self.initializeCreateForm();
         },
 
         createdLineClickHandler: function(e) {
             this.removeLine($(e.currentTarget));
         },
-        
+
         removeLine: function($line) {
             var self = this;
             var line_id = $line.data("lineid");
-        
+
             // if deleting the created line that is being edited, validate it before
             if (line_id === self.get("line_created_being_edited")[0].id) {
                 self.addLineBeingEdited();
@@ -749,15 +749,15 @@ openerp.account = function (instance) {
                 }
             }
         },
-    
-    
+
+
         /** Views updating */
-    
+
         updateAccountingViewMatchedLines: function() {
             var self = this;
             $.each(self.$(".tbody_matched_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_matched_lines").empty();
-            
+
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             _(self.get("mv_lines_selected")).each(function(line){
                 line.amount_str = self.formatCurrencies(Math.abs(line.debit + line.credit), self.get("currency_id"));
@@ -773,7 +773,7 @@ openerp.account = function (instance) {
             var self = this;
             $.each(self.$(".tbody_created_lines .bootstrap_popover"), function(){ $(this).popover('destroy') });
             self.$(".tbody_created_lines").empty();
-            
+
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_created_line") ? this.template_prefix : "") + "reconciliation_created_line";
             var previous_line = undefined;
             _(self.getCreatedLines()).each(function(line){
@@ -791,12 +791,12 @@ openerp.account = function (instance) {
                 previous_line = line;
             });
         },
-    
+
         updateMatchView: function() {
             var self = this;
             var table = self.$(".match table");
             var nothing_displayed = true;
-        
+
             // Display move lines
             var template_name = (QWeb.has_template(this.template_prefix+"reconciliation_move_line") ? this.template_prefix : "") + "reconciliation_move_line";
             $.each(self.$(".match table .bootstrap_popover"), function(){ $(this).popover('destroy') });
@@ -824,10 +824,10 @@ openerp.account = function (instance) {
             if (nothing_displayed && this.filter !== "")
                 table.append(QWeb.render("filter_no_match", {filter_str: self.filter}));
         },
-        
+
         updatePagerControls: function() {
             var self = this;
-        
+
             if (self.get("pager_index") === 0)
                 self.$(".pager_control_left").addClass("disabled");
             else
@@ -849,10 +849,10 @@ openerp.account = function (instance) {
                 self.set("mode", "create");
             }
         },
-    
-    
+
+
         /** Properties changed */
-    
+
         // Updates the validation button and the "open balance" line
         balanceChanged: function() {},
 
@@ -864,7 +864,7 @@ openerp.account = function (instance) {
                 this.$(".quick_add").show();
             }
         },
-    
+
         modeChanged: function(o, val) {
             var self = this;
 
@@ -872,13 +872,13 @@ openerp.account = function (instance) {
 
             if (val.oldValue === "create")
                 self.addLineBeingEdited();
-            
+
             if (self.get("mode") === "inactive") {
                 self.$(".match").slideUp(self.animation_speed);
                 self.$(".create").slideUp(self.animation_speed);
                 self.el.dataset.mode = "inactive";
                 if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
-            
+
             } else if (self.get("mode") === "match") {
                 self.updateMatches().then(function() {
                     if (self.$el.hasClass("no_match")) {
@@ -891,7 +891,7 @@ openerp.account = function (instance) {
                     self.el.dataset.mode = "match";
                     if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
                 });
-            
+
             } else if (self.get("mode") === "create") {
                 self.initializeCreateForm();
                 self.$(".match").slideUp(self.animation_speed);
@@ -900,18 +900,18 @@ openerp.account = function (instance) {
                 if (self.finishedLoadingMoveLines) self.finishedLoadingMoveLines.resolve();
             }
         },
-    
+
         pagerChanged: function() {
             this.updateMatches();
         },
-    
+
         mvLinesChanged: function() {
             var self = this;
             // If pager_index is out of range, set it to display the last page
             if (self.get("pager_index") !== 0 && self.get("mv_lines").length === 0 && ! self.can_fetch_more_move_lines) {
                 self.set("pager_index", 0);
             }
-        
+
             // If there is no match to display, disable match view and pass in mode inactive
             if (self.get("mv_lines").length + self.mv_lines_deselected.length === 0 && !self.can_fetch_more_move_lines && self.filter === "") {
                 self.$el.addClass("no_match");
@@ -921,12 +921,12 @@ openerp.account = function (instance) {
             } else {
                 self.$el.removeClass("no_match");
             }
-        
+
             self.updateMatchView();
             self.updatePagerControls();
         },
 
-    
+
         mvLinesSelectedChanged: function(elt, val) {
             var self = this;
             $.when(self.updateMatches()).then(function() {
@@ -934,10 +934,10 @@ openerp.account = function (instance) {
                 self.updateBalance();
             });
         },
-    
-    
+
+
         /** Model */
-        
+
         // Loads move lines according to the widget's state
         updateMatches: function() {
             var self = this;
@@ -947,7 +947,7 @@ openerp.account = function (instance) {
             var limit = (self.get("pager_index")+1) * self.max_move_lines_displayed - deselected_lines_num;
             if (limit > self.max_move_lines_displayed) limit = self.max_move_lines_displayed;
             var excluded_ids = _.collect(self.get("mv_lines_selected").concat(self.mv_lines_deselected), function(o) { return o.id; });
-            
+
             limit += 1; // To see if there's more move lines than we display
             if (limit > 0)
                 return self.updateMatchesGetMvLines(excluded_ids, offset, limit, function(move_lines) {
@@ -965,11 +965,11 @@ openerp.account = function (instance) {
             var self = this;
             var line_created_being_edited = self.get("line_created_being_edited");
             line_created_being_edited[0][elt.corresponding_property] = val.newValue;
-        
+
             // Specific cases
             if (elt === self.account_id_field)
                 line_created_being_edited[0].account_num = self.map_account_id_code[elt.get("value")];
-        
+
             // Update tax line
             var deferred_tax = new $.Deferred();
             if (elt === self.tax_id_field || elt === self.amount_field) {
@@ -981,7 +981,6 @@ openerp.account = function (instance) {
                         .then(function(data){
                             line_created_being_edited.length = 1; // remove tax lines
                             line_created_being_edited[0].amount = data.total_excluded;
-                            line_created_being_edited[0].amount_tax_included = data.total_included;
                             $.each(data.taxes, function(index, tax) {
                                 var tax_account_id = (amount > 0 ? tax.account_id : tax.refund_account_id);
                                 tax_account_id = tax_account_id !== false ? tax_account_id : line_created_being_edited[0].account_id;
@@ -1002,18 +1001,18 @@ openerp.account = function (instance) {
                     deferred_tax.resolve();
                 }
             } else { deferred_tax.resolve(); }
-        
+
             return deferred_tax.then(function() {
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // For some reason, previous line doesn't trigger change handler
             });
         },
-        
+
         createdLinesChanged: function() {
             var self = this;
             self.updateAccountingViewCreatedLines();
             self.updateBalance();
-        
+
             if (self.islineCreatedBeingEditedValid()) self.$(".add_line").show();
             else self.$(".add_line").hide();
         },
@@ -1041,10 +1040,8 @@ openerp.account = function (instance) {
                     account_id: line.account_id,
                     name: line.label
                 };
-                // If a tax is applied, send to process_reconciliation the amount tax included (so tax lines are properly created)
-                var amount = line.tax_id ? line.amount_tax_included : line.amount;
-                dict['credit'] = (amount > 0 ? amount : 0);
-                dict['debit'] = (amount < 0 ? -1 * amount : 0);
+                dict['credit'] = (line.amount > 0 ? line.amount : 0);
+                dict['debit'] = (line.amount < 0 ? -1 * line.amount : 0);
                 if (line.tax_id) dict['tax_ids'] = [line.tax_id];
                 if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
                 return dict;
@@ -1109,7 +1106,7 @@ openerp.account = function (instance) {
             // The same move line cannot be selected for multiple reconciliations
             this.excluded_move_lines_ids = {};
         },
-    
+
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
@@ -1126,7 +1123,7 @@ openerp.account = function (instance) {
                             self.title = data.statement_name;
                     })
                 );
-                
+
                 // Get the id of the menuitem
                 deferred_promises.push(new instance.web.Model("ir.model.data")
                     .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
@@ -1135,10 +1132,10 @@ openerp.account = function (instance) {
                         self.doReloadMenuReconciliation();
                     })
                 );
-        
+
                 // When queries are done, render template and reconciliation lines
                 return $.when.apply($, deferred_promises).then(function(){
-        
+
                     // If there is nothing to do, stop here
                     // Warning : there is something to do if not all lines are reconciled and/or not all statements are closed
                     // but it's easier to simply consider use cases : users should ne be able to try to recobncile closed statement(s)
@@ -1148,7 +1145,7 @@ openerp.account = function (instance) {
                             self.displayNotifications(self.notifications);
                         return;
                     }
-        
+
                     // Render and display
                     self.$el.prepend(QWeb.render("bank_statement_reconciliation", {
                         title: self.title,
@@ -1167,7 +1164,7 @@ openerp.account = function (instance) {
                         self.displayDoneMessage(true);
                         return;
                     }
-        
+
                     // Display the reconciliations
                     return self.model_bank_statement_line
                         .call("get_data_for_reconciliations", [reconciliations_to_show])
@@ -1178,7 +1175,7 @@ openerp.account = function (instance) {
                                 child_promises.push(self.displayReconciliation(datum.st_line.id, 'match', false, true, datum.st_line, datum.reconciliation_proposition));
                             while ((datum = data.shift()) !== undefined)
                                 child_promises.push(self.displayReconciliation(datum.st_line.id, 'inactive', false, true, datum.st_line, datum.reconciliation_proposition));
-                            
+
                             // When reconciliations are instanciated, make an entrance
                             $.when.apply($, child_promises).then(function(){
                                 self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed, function() {
@@ -1199,12 +1196,12 @@ openerp.account = function (instance) {
             this.$(".change_statement_name_container").show();
             this.$(".change_statement_name_field").focus();
         },
-        
+
         changeStatementNameFieldHandler: function(e) {
             var name = this.$(".change_statement_name_field").val();
             if (name === "") this.$(".change_statement_name_button").attr("disabled", "disabled");
             else this.$(".change_statement_name_button").removeAttr("disabled");
-            
+
             if (name !== "" && e.which === 13) // Enter
                 this.$(".change_statement_name_button").trigger("click");
             if (e.which === 27) { // Escape
@@ -1212,7 +1209,7 @@ openerp.account = function (instance) {
                 this.$(".change_statement_name_container").hide();
             }
         },
-        
+
         changeStatementButtonClickHandler: function() {
             var self = this;
             if (! self.single_statement) return;
@@ -1293,12 +1290,12 @@ openerp.account = function (instance) {
                     self.$(".reconciliation_lines_container").fadeIn(self.aestetic_animation_speed);
                 });
         },
-    
+
         displayReconciliation: function(line_id, mode, animate_entrance, initial_data_provided, line, reconciliation_proposition) {
             var self = this;
             animate_entrance = (animate_entrance === undefined ? true : animate_entrance);
             initial_data_provided = (initial_data_provided === undefined ? false : initial_data_provided);
-        
+
             var context = {
                 line_id: line_id,
                 mode: mode,
@@ -1316,7 +1313,7 @@ openerp.account = function (instance) {
         excludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
             var line_ids = _.collect(lines, function(o) { return o.id });
-        
+
             var excluded_ids = this.excluded_move_lines_ids[partner_id];
             var excluded_move_lines_changed = false;
             _.each(line_ids, function(line_id){
@@ -1327,7 +1324,7 @@ openerp.account = function (instance) {
             });
             if (! excluded_move_lines_changed)
                 return;
-        
+
             // Function that finds if an array of line objects contains at least a line identified by its id
             var contains_lines = function(lines_array, line_ids) {
                 for (var i = 0; i < lines_array.length; i++)
@@ -1336,7 +1333,7 @@ openerp.account = function (instance) {
                             return true;
                 return false;
             };
-        
+
             // Update children if needed
             _.each(self.getChildren(), function(child){
                 if (child.st_line === undefined) {
@@ -1353,7 +1350,7 @@ openerp.account = function (instance) {
                 }
             });
         },
-        
+
         unexcludeMoveLines: function(source_child, partner_id, lines) {
             var self = this;
             var line_ids = _.collect(lines, function(o) { return o.id });
@@ -1362,7 +1359,7 @@ openerp.account = function (instance) {
             this.excluded_move_lines_ids[partner_id] = _.difference(this.excluded_move_lines_ids[partner_id], line_ids);
             if (this.excluded_move_lines_ids[partner_id].length === initial_excluded_lines_num)
                 return;
-        
+
             // Update children if needed
             _.each(self.getChildren(), function(child){
                 if (child.partner_id === partner_id && child !== source_child && (child.get("mode") === "match" || child.$el.hasClass("no_match")))
@@ -1374,11 +1371,11 @@ openerp.account = function (instance) {
 
         childValidated: function() {
             var self = this;
-            
+
             self.reconciled_lines++;
             self.updateProgressbar();
             self.doReloadMenuReconciliation();
-            
+
             // Display new line if there are left
             if (self.last_displayed_reconciliation_index < self.lines.length) {
                 self.displayReconciliation(self.lines[self.last_displayed_reconciliation_index++], 'inactive');
@@ -1387,7 +1384,7 @@ openerp.account = function (instance) {
             if (self.reconciled_lines === self.lines.length) {
                 self.displayDoneMessage(false);
             }
-        
+
             // Put the first line in match mode
             if (self.reconciled_lines !== self.lines.length) {
                 var first_child = self.getChildren()[0];
@@ -1434,33 +1431,33 @@ openerp.account = function (instance) {
                     }
                 });
         },
-    
+
         // Congratulate the user / propose next action(s)
         displayDoneMessage: function(all_was_auto_reconciled) {
             var self = this;
-            
+
             if (all_was_auto_reconciled) {
                 var title = "There you go, it's all done !";
             } else {
                 var sec_taken = Math.round((Date.now()-self.time_widget_loaded)/1000);
                 var sec_per_item = Math.round(sec_taken/self.reconciled_lines);
                 var achievements = [];
-        
+
                 var time_taken;
                 if (sec_taken/60 >= 1) time_taken = Math.floor(sec_taken/60) +"' "+ sec_taken%60 +"''";
                 else time_taken = sec_taken%60 +" seconds";
-        
+
                 var title;
                 if (sec_per_item < 5) title = _t("Whew, that was fast !") + " <i class='fa fa-trophy congrats_icon'></i>";
                 else title = _t("Congrats, you're all done !") + " <i class='fa fa-thumbs-o-up congrats_icon'></i>";
-        
+
                 if (self.lines_reconciled_with_ctrl_enter === self.reconciled_lines)
                     achievements.push({
                         title: _t("Efficiency at its finest"),
                         desc: _t("Only use the ctrl-enter shortcut to validate reconciliations."),
                         icon: "fa-keyboard-o"}
                     );
-        
+
                 if (sec_per_item < 5)
                     achievements.push({
                         title: _t("Fast reconciler"),
@@ -1468,7 +1465,7 @@ openerp.account = function (instance) {
                         icon: "fa-bolt"}
                     );
             }
-    
+
             // Render it
             self.$(".protip").hide();
             self.$(".oe_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
@@ -1482,13 +1479,13 @@ openerp.account = function (instance) {
                 single_statement: self.single_statement,
                 multiple_statements: self.multiple_statements,
             }));
-    
+
             // Animate it
             var container = $("<div style='overflow: hidden;' />");
             self.$(".done_message").wrap(container).css("opacity", 0).css("position", "relative").css("left", "-50%");
             self.$(".done_message").animate({opacity: 1, left: 0}, self.aestetic_animation_speed*2, "easeOutCubic");
             self.$(".done_message").animate({opacity: 1}, self.aestetic_animation_speed*3, "easeOutCubic");
-    
+
             // Make it interactive
             if (self.$(".achievement").length !== 0)
                 self.$(".achievement").popover({'placement': 'top', 'container': self.el, 'trigger': 'hover'});
@@ -1519,7 +1516,7 @@ openerp.account = function (instance) {
             }
         },
     });
-    
+
     instance.web.account.bankStatementReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
         className: instance.web.account.abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line',
 
@@ -1531,7 +1528,7 @@ openerp.account = function (instance) {
             "click .do_partial_reconcile_button": "doPartialReconcileButtonClickHandler",
             "click .undo_partial_reconcile_button": "undoPartialReconcileButtonClickHandler",
         }, instance.web.account.abstractReconciliationLine.prototype.events),
-        
+
         init: function(parent, context) {
             this.template_prefix = "bank_statement_";
             this._super(parent, context);
@@ -1550,7 +1547,7 @@ openerp.account = function (instance) {
                 this.st_line = context.line;
                 this.decorateStatementLine(this.st_line);
                 this.set("currency_id", this.st_line.currency_id);
-    
+
                 // Exclude selected move lines
                 if (this.getParent().excluded_move_lines_ids[this.partner_id] === undefined)
                     this.getParent().excluded_move_lines_ids[this.partner_id] = [];
@@ -1574,7 +1571,7 @@ openerp.account = function (instance) {
             _.each(self.getParent().excluded_move_lines_ids, function(o){
                 excluded_move_lines_ids = excluded_move_lines_ids.concat(o);
             });
-            
+
             // Load statement line
             return self.model_bank_statement_line
                 .call("get_data_for_reconciliations", [[self.st_line_id], excluded_move_lines_ids])
@@ -1600,7 +1597,7 @@ openerp.account = function (instance) {
                 line: self.st_line,
                 presets: self.renderPresetsButtons(self.get("presets")),
             }));
-            
+
             // Stuff that require the template to be rendered
             self.$(".match").slideUp(0);
             self.$(".create").slideUp(0);
@@ -1613,7 +1610,7 @@ openerp.account = function (instance) {
                 self.$(".change_partner_container").show(0);
                 self.$el.addClass("no_partner");
             }
-            
+
             self.finishedLoadingMoveLines = $.Deferred();
             self.set("mode", self.context.mode);
             return $.when(self.finishedLoadingMoveLines).then(function(){
@@ -1658,7 +1655,7 @@ openerp.account = function (instance) {
                 });
             });
         },
-    
+
         /* create form widgets, append them to the dom and bind their events handlers */
         createFormWidgets: function() {
             var self = this;
@@ -1697,9 +1694,9 @@ openerp.account = function (instance) {
             });
             self.change_partner_field.$el.find("input").attr("placeholder", self.st_line.communication_partner_name || _t("Select Partner"));
         },
-    
+
         /** Utils */
-    
+
         /* TODO : if t-call for attr, all in qweb */
         decorateStatementLine: function(line){
             line.q_popover = QWeb.render("bank_statement_reconciliation_statement_line_details", {line: line});
@@ -1713,9 +1710,9 @@ openerp.account = function (instance) {
             this._super();
         },
 
-    
+
         /** Matching */
-    
+
         selectMoveLine: function(mv_line) {
             var self = this;
             var line = self._super(mv_line);
@@ -1762,9 +1759,9 @@ openerp.account = function (instance) {
             if (need_redraw) self.deselectMoveLine(mv_line);
         },
 
-    
+
         /** Display */
-    
+
         initialLineClickHandler: function() {
             var self = this;
             if (self.get("mode") !== "inactive") {
@@ -1773,7 +1770,7 @@ openerp.account = function (instance) {
                 self.set("mode", "match");
             }
         },
-    
+
         changePartnerClickHandler: function() {
             var self = this;
             self.$(".change_partner_container").find("input").attr("placeholder", self.st_line.partner_name);
@@ -1781,14 +1778,14 @@ openerp.account = function (instance) {
             self.$(".partner_name").hide();
             self.change_partner_field.$drop_down.trigger("click");
         },
-    
-    
+
+
         /** Properties changed */
-    
+
         // Updates the validation button, the "open balance" line and the  partial reconciliation sign
         balanceChanged: function() {
             var self = this;
-                
+
             // 'reset' the widget to invalid state
             self.is_valid = false;
             self.$(".tip_reconciliation_not_balanced").show();
@@ -1860,23 +1857,23 @@ openerp.account = function (instance) {
             self.is_rapprochement = added_lines.length > 0 && added_lines[0].is_reconciled;
             if (self.is_rapprochement)
                 self.set("lines_created", []);
-            
+
             self._super(elt, val);
         },
-    
+
         /** Model */
 
         doPartialReconcileButtonClickHandler: function(e) {
             var line_id = $(e.currentTarget).closest("tr").data("lineid");
             var line = _.find(this.get("mv_lines_selected"), function(o) { return o.id == line_id });
             this.partialReconcileLine(line);
-    
+
             $(e.currentTarget).popover('destroy');
             this.updateAccountingViewMatchedLines();
             this.updateBalance();
             e.stopPropagation();
         },
-    
+
         partialReconcileLine: function(line) {
             var balance = this.get("balance");
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
@@ -1887,18 +1884,18 @@ openerp.account = function (instance) {
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
         },
-    
+
         undoPartialReconcileButtonClickHandler: function(e) {
             var line_id = $(e.currentTarget).closest("tr").data("lineid");
             var line = _.find(this.get("mv_lines_selected"), function(o) { return o.id == line_id });
             this.unpartialReconcileLine(line);
-    
+
             $(e.currentTarget).popover('destroy');
             this.updateAccountingViewMatchedLines();
             this.updateBalance();
             e.stopPropagation();
         },
-    
+
         unpartialReconcileLine: function(line) {
             if (line.initial_amount > 0)
                 line.debit = line.initial_amount;
@@ -1907,7 +1904,7 @@ openerp.account = function (instance) {
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
         },
-    
+
         updateBalance: function() {
             var self = this;
             var mv_lines_selected = self.get("mv_lines_selected");
@@ -1980,17 +1977,17 @@ openerp.account = function (instance) {
                 };
             });
         },
-    
+
         // idem
         prepareOpenBalanceForPersisting: function() {
             var balance = this.get("balance");
             var dict = {};
-    
+
             dict['account_id'] = this.st_line.open_balance_account_id;
             dict['name'] = _t("Open balance");
             dict['debit'] = (balance > 0 ? balance : 0);
             dict['credit'] = (balance < 0 ? -1*balance : 0);
-    
+
             return dict;
         },
 
@@ -2013,7 +2010,7 @@ openerp.account = function (instance) {
                 };
             }
         },
-    
+
         // Persist data, notify parent view and terminate widget
         persistAndBowOut: function() {
             var self = this;
@@ -2036,7 +2033,7 @@ openerp.account = function (instance) {
             };
         },
     });
-    
+
     instance.web.client_actions.add('manual_reconciliation_view', 'instance.web.account.manualReconciliation');
     instance.web.account.manualReconciliation = instance.web.account.abstractReconciliation.extend({
         className: instance.web.account.abstractReconciliation.prototype.className + ' oe_manual_reconciliation',
@@ -2092,7 +2089,7 @@ openerp.account = function (instance) {
             if (this.partner_id && this.account_id)
                 console.error("[Warning] manualReconciliation instanciated with incorrect context.");
         },
-    
+
         start: function() {
             var self = this;
             return $.when(this._super()).then(function(){
@@ -2132,7 +2129,7 @@ openerp.account = function (instance) {
                         show_accounts: self.accounts_data.show,
                         show_accounts_type_controller: data_partner_len !== 0 && data_account_len !== 0
                     }));
-                    
+
                     // Process data
                     self.partners_data.num_total = data_partner_len;
                     self.accounts_data.num_total = data_account_len;
@@ -2220,7 +2217,7 @@ openerp.account = function (instance) {
                     child.data.displayed = false;
                 }
             });
-            
+
             // show next reconciliation(s)
             var children_promises = [];
             var items_to_display = _.filter(self.partners_data.items.concat(self.accounts_data.items), function(item) {
@@ -2278,7 +2275,7 @@ openerp.account = function (instance) {
             this.updateProgress();
         },
     });
-    
+
     instance.web.account.manualReconciliationLine = instance.web.account.abstractReconciliationLine.extend({
         className: instance.web.account.abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line',
 
@@ -2287,7 +2284,7 @@ openerp.account = function (instance) {
             "click .line_open_balance": "lineOpenBalanceClickHandler",
             "click .button_reconcile": "buttonReconcileClickHandler",
         }, instance.web.account.abstractReconciliationLine.prototype.events),
-    
+
         init: function(parent, context) {
             this.template_prefix = "manual_";
             this._super(parent, context);

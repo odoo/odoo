@@ -147,7 +147,7 @@ class account_invoice(models.Model):
                     'date': payment.date,
                 })
             self.payments_widget = json.dumps(info)
-    
+
     @api.one
     @api.depends('move_id.line_id.amount_residual')
     def _compute_payments(self):
@@ -574,7 +574,7 @@ class account_invoice(models.Model):
             # Delete non-manual tax lines
             self._cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (invoice.id,))
             self.invalidate_cache()
-            
+
             # Generate one tax line per tax, however many invoice lines it's applied to
             tax_grouped = {}
             for line in self.invoice_line:
@@ -609,7 +609,7 @@ class account_invoice(models.Model):
             # Create new tax lines
             for tax in tax_grouped.values():
                 account_invoice_tax.create(tax)
-        
+
         # dummy write on self to trigger recomputations
         ctx = dict(self._context) # TODO : why lang in context ?
         if self[0].partner_id.lang:
@@ -737,7 +737,8 @@ class account_invoice(models.Model):
                 'quantity': 1,
                 'price': tax_line.amount,
                 'account_id': tax_line.account_id.id,
-                'account_analytic_id': tax_line.account_analytic_id.id,
+                # TODO : find right analytic account to use
+                #'account_analytic_id': tax_line.account_analytic_id.id,
             })
         return res
 

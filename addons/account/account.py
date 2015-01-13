@@ -637,7 +637,7 @@ class account_tax(models.Model):
             }]
         } """
         if not currency:
-            currency = self.company_id.currency_id
+            currency = self[0].company_id.currency_id
         taxes = []
         prec = currency.decimal_places
         total_excluded = total_included = base = round(price_unit * quantity, prec)
@@ -665,8 +665,8 @@ class account_tax(models.Model):
                 base -= tax_amount
             else:
                 total_included += tax_amount
-                if tax.include_base_amount:
-                    base += tax_amount
+            if tax.include_base_amount:
+                base += tax_amount
             taxes.append({
                 'id': tax.id,
                 'name': tax.name,
@@ -1032,7 +1032,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     def _get_chart_parent_ids(self, chart_template):
         """ Returns the IDs of all ancestor charts, including the chart itself.
             (inverse of child_of operator)
-        
+
             :param browse_record chart_template: the account.chart.template record
             :return: the IDS of all ancestor charts, including the chart itself.
         """
@@ -1098,7 +1098,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 if model_data:
                     chart_id = model_data[0]['res_id']
             chart = account_chart_template.browse(chart_id)
-            chart_hierarchy_ids = self._get_chart_parent_ids(chart) 
+            chart_hierarchy_ids = self._get_chart_parent_ids(chart)
             if 'chart_template_id' in fields:
                 res.update({'only_one_chart_template': len(chart_templates) == 1,
                             'chart_template_id': chart_id})
