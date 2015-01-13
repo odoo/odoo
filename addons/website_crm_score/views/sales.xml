@@ -91,9 +91,11 @@
                             </div>
                         </div>
                     </xpath>
+
                     <xpath expr="//div[@class='oe_kanban_salesteams_avatars']" position="replace">
-                        <t t-foreach="record.section_user_ids.raw_value.slice(0,10)" t-as="member">
-                            <img t-att-src="kanban_image('res.partner', 'image_small', member.user_id)" t-att-data-member_id="member.user_id"/>
+                        <field name="user_ids" invisible="True" />
+                        <t t-foreach="record.user_ids.raw_value" t-as="member">
+                            <img t-att-src="kanban_image('res.users', 'image_small', member)" width="32" height="32" />
                         </t>
                     </xpath>
                 </data>
@@ -166,12 +168,15 @@
                         <label for="assigned_leads"/>
                         <div>
                             <field name="assigned_leads" class="oe_inline"/> /
-                            <field name="capacity" class="oe_inline"/>
+                            <field name="capacity" class="oe_inline"/>                            
+                        </div>
+                        <field name="min_for_assign" class="oe_inline"/>
+                        <div>
                             <br/>
                             <button name="direct_assign_leads" type="object" string="Assign Now" class="oe_link"/>
                             <span groups="base.group_no_one">
-                                <br/>
-                                <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
+                                 <br/>
+                                 <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
                             </span>
                         </div>
                         
@@ -191,7 +196,7 @@
                                                     <ul>
                                                         <li>
                                                             <a type="open">
-                                                                <img t-att-src="kanban_image('res.partner', 'image_small', record.user_id.id)" class="oe_kanban_image"/>
+                                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" class="oe_kanban_image"/>
                                                             </a>
                                                         </li>
                                                         <li>
