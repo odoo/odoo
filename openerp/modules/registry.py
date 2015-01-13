@@ -119,13 +119,13 @@ class Registry(Mapping):
         self._fields_by_model = None
 
     def get_manual_fields(self, cr, model_name):
-        """ Return the manual fields (as a list) for the given model. """
+        """ Return the manual fields (as a dict) for the given model. """
         if self._fields_by_model is None:
             # Query manual fields for all models at once
-            self._fields_by_model = dic = defaultdict(list)
+            self._fields_by_model = dic = defaultdict(dict)
             cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
             for field in cr.dictfetchall():
-                dic[field['model']].append(field)
+                dic[field['model']][field['name']] = field
         return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
