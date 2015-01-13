@@ -25,7 +25,6 @@ except ImportError:
     def checkmail(mail):
         return True
 
-
 class section_user(models.Model):
     _name = 'section.user'
 
@@ -119,7 +118,7 @@ class crm_case_section(osv.osv):
 
     @api.model
     def direct_assign_leads(self, ids=[]):
-        ctx = dict(self._context, mail_track_log_only=True)
+        ctx = dict(self._context, mail_notify_noemail=True)
         self.with_context(ctx)._assign_leads()
 
     @api.model

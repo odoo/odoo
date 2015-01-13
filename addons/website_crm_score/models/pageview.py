@@ -40,7 +40,8 @@ class pageview(models.Model):
                     if fetch:
                         # a new pageview has been created, a message is posted
                         body = '<a href="' + url + '" target="_blank"><b>' + url + '</b></a>'
-                        self.pool['crm.lead'].message_post(cr, SUPERUSER_ID, [lead_id], body=body, subject="Page visited", context=context)
+                        ctx = dict(context or {}, mail_notify_noemail=True)
+                        self.pool['crm.lead'].message_post(cr, SUPERUSER_ID, [lead_id], body=body, subject="Page visited", context=ctx)
                         return True
                 except IntegrityError:
                     return False
