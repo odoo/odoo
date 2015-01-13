@@ -427,7 +427,7 @@ class account_move_line(models.Model):
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
                 self.process_reconciliation(cr, uid, datum['mv_line_ids'], datum['new_mv_line_dicts'], context=context)
-        
+
             if datum['type'] == 'partner':
                 self.env['res.partner'].browse(datum['id']).mark_as_reconciled()
             if datum['type'] == 'account':
@@ -445,7 +445,7 @@ class account_move_line(models.Model):
         """
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
             raise Warning(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
-        
+
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             writeoff_lines = self.env['account.move.line']
@@ -457,7 +457,7 @@ class account_move_line(models.Model):
                     mv_line_dict['credit'] = account_currency.compute(mv_line_dict['credit'], company_currency)
                     amount_currency = mv_line_dict['debit'] - mv_line_dict['credit']
                 writeoff_lines += self._create_writeoff(mv_line_dict)
-            
+
             (self+writeoff_lines).reconcile()
         else:
             self.reconcile()
@@ -502,8 +502,8 @@ class account_move_line(models.Model):
             currency = sm_credit_move.currency_id
             amount_reconcile_currency = min(sm_debit_move.amount_residual_currency, -sm_credit_move.amount_residual_currency)
 
-        self.env['account.partial.reconcile'].create({'debit_move_id': sm_debit_move.id, 
-            'credit_move_id': sm_credit_move.id, 
+        self.env['account.partial.reconcile'].create({'debit_move_id': sm_debit_move.id,
+            'credit_move_id': sm_credit_move.id,
             'amount': amount_reconcile,
             'amount_currency': amount_reconcile_currency,
             'currency_id': currency and currency.id or False,})
@@ -536,7 +536,7 @@ class account_move_line(models.Model):
 
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
-        
+
         #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
         if writeoff_acc_id and writeoff_journal_id and remaining_moves:
             writeoff_to_reconcile = remaining_moves._create_writeoff({'account_id': writeoff_acc_id.id, 'journal_id': writeoff_journal_id.id})
@@ -544,8 +544,8 @@ class account_move_line(models.Model):
             remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
 
     def _create_writeoff(self, vals):
-        """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals, 
-            
+        """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals,
+
             :param vals: dict containing values suitable fot account_move_line.create(). The data in vals will
                 be processed to create bot writeoff acount.move.line and their enclosing account.move.
         """
@@ -580,7 +580,7 @@ class account_move_line(models.Model):
         second_line_dict['debit'], second_line_dict['credit'] = second_line_dict['credit'], second_line_dict['debit']
         if 'amount_currency' in vals:
             second_line_dict['amount_currency'] = - second_line_dict['amount_currency']
-        
+
         # Create the move
         writeoff_move = self.env['account.move'].create({
             'journal_id': vals['journal_id'],
@@ -616,10 +616,10 @@ class account_move_line(models.Model):
     def create(self, vals, check=True, apply_taxes=True):
         """ :param check: check data consistency after move line creation. Eg. set to false to disable verification that the move
                 debit-credit == 0 while creating the move lines composing the move.
-            
+
             :param apply_taxes: set to False if you don't want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
                 adjustment of the line amount (in case of a tax included in price). This is useful for use cases where you don't want to
-                apply taxes in the default fashion (eg. taxes).
+                apply taxes in the default fashion (eg. taxes). You can also pass 'dont_create_taxes' in context.
         """
         AccountObj = self.env['account.account']
         TaxObj = self.env['account.tax']
@@ -694,7 +694,7 @@ class account_move_line(models.Model):
 
         # Create tax lines
         tax_lines_vals = []
-        if apply_taxes and vals.get('tax_ids') and vals['tax_ids']:
+        if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids') and vals['tax_ids']:
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
             res = self.env['account.tax']._model.compute_all(self._cr, self._uid, vals['tax_ids'], amount,
                 vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
@@ -731,7 +731,7 @@ class account_move_line(models.Model):
             move.with_context(context)._post_validate()
             if journal.entry_posted:
                 move.with_context(context).post()
-        
+
         return new_line
 
     @api.multi
