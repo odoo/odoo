@@ -69,7 +69,7 @@ class crm_case_section(osv.osv):
     unassigned_leads = fields.Integer(compute='_unassigned_leads')
     capacity = fields.Integer(compute='_capacity')
     section_user_ids = fields.One2many('section.user', 'section_id', string='Salesman')
-    min_for_assign = fields.Integer("Minimum score", help="Minimum Score for a lead to be automatically assign (>=)")
+    min_for_assign = fields.Integer("Minimum score", help="Minimum Score for a lead to be automatically assign (>=)", default=0, required=True)
 
     @api.model
     def score_and_assign_leads(self):
@@ -95,16 +95,27 @@ class crm_case_section(osv.osv):
             for salesteam in all_salesteams:
                 domain = safe_eval(salesteam['score_section_domain'], evaluation_context)
                 domain.extend([('section_id', '=', False), ('user_id', '=', False)])
-                lead_fits = self.env["crm.lead"].search(domain, limit=50)
-                haslead = haslead or (len(lead_fits) == 50 and not dry)
+                leads = self.env["crm.lead"].search(domain, limit=50)
+                haslead = haslead or (len(leads) == 50 and not dry)
                 if dry:
-                    for lead_fit in lead_fits:
-                        values = {'lead_id': lead_fit.id, 'section_id': salesteam['id']}
+                    for lead in leads:
+                        values = {'lead_id': lead.id, 'section_id': salesteam['id']}
                         self.env['leads.dry.run'].create(values)
                 else:
-                    lead_fits.write({'section_id': salesteam['id']})
-                    spams = map(lambda x: x.id, filter(lambda x: x.email_from and not checkmail(x.email_from), lead_fits))
+                    leads.write({'section_id': salesteam['id']})
+
+                    # Erase fake/false email
+                    spams = map(lambda x: x.id, filter(lambda x: x.email_from and not checkmail(x.email_from), leads))
                     self.env["crm.lead"].browse(spams).write({'email_from': False})
+
+                    # Merge duplicated lead
+                    leads_done = []
+                    for lead in leads:
+                        if lead.id not in leads_done:
+                            leads_duplicated = lead.get_duplicated_leads(False)
+                            if len(leads_duplicated) > 1:
+                                self.env["crm.lead"].browse(leads_duplicated).merge_opportunity(False, False)
+                            leads_done += leads_duplicated
         self._cr.commit()
 
     @api.model
