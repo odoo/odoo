@@ -77,3 +77,14 @@ class Lead(models.Model):
 
         # Call default merge function
         super(Lead, self).merge_dependences(cr, uid, highest, opportunities, context=context)
+
+    # Overwritte ORM to add or remove the assign date
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('user_id'):
+            vals['assign_date'] = fields.datetime.now()
+        return super(Lead, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'user_id' in vals:
+            vals['assign_date'] = vals.get('user_id') and fields.datetime.now() or False
+        return super(Lead, self).write(cr, uid, ids, vals, context=context)
