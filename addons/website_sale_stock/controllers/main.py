@@ -12,7 +12,7 @@ class website_sale_stock(website_sale):
         '/shop/history',
         '/shop/history/page/<int:page>',
     ], type='http', auth='user', website=True)
-    def orders_followup(self, **post):
+    def orders_followup(self, page=1, **post):
         response = super(website_sale_stock, self).orders_followup(**post)
 
         order_shipping_lines = {}

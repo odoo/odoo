@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import base64
-import util
-from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website
@@ -29,7 +27,7 @@ class website_sale_digital(website_sale):
         '/shop/history',
         '/shop/history/page/<int:page>',
     ], type='http', auth='user', website=True)
-    def orders_followup(self, **post):
+    def orders_followup(self, page=1, **post):
         response = super(website_sale_digital, self).orders_followup(**post)
 
         order_products_attachments = {}
@@ -68,7 +66,7 @@ class website_sale_digital(website_sale):
 
     @http.route([
         '/shop/download',
-    ], auth='public')
+    ], type='http', auth='public')
     def download_attachment(self, attachment_id):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
@@ -85,7 +83,7 @@ class website_sale_digital(website_sale):
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = util.get_digital_purchases(request.uid)
+        purchased_products = request.env['account.invoice.line'].get_digital_purchases(request.uid)
 
         if res_model == 'product.product':
             if res_id not in purchased_products:

@@ -1314,7 +1314,7 @@
                   <div class="col-md-6">
                     <div class="row">
                       <div class="col-md-10 text-right">
-                        Untaxed Amount :
+                        Untaxed Amount:
                       </div>
                       <div class="col-md-2 text-right">
                         <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
@@ -1322,7 +1322,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-10 text-right">
-                        Taxes :
+                        Taxes:
                       </div>
                       <div class="col-md-2 text-right">
                         <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
@@ -1330,7 +1330,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-10 text-right">
-                        <strong>Total :</strong>
+                        <strong>Total:</strong>
                       </div>
                       <div class="col-md-2 text-right">
                         <strong><span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/></strong>
@@ -1373,7 +1373,7 @@
     <div class="row vertical-align">
       <div class="col-md-1 text-center">
         <a t-att-href="'/shop/product/%s' % str(ol.product_id.product_tmpl_id.id)">
-          <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % str(ol.product_id.id)"/>
+          <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
         </a>
       </div>
       <div id='product_name' class="col-md-8">

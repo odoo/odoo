@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from openerp import models, fields
 from openerp.addons.sale.res_config import sale_configuration
 

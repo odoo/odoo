@@ -1,10 +1,11 @@
+# -*- encoding: utf-8 -*-
 {
     'name': 'Website Sale Digital - Sell digital products',
-    'version': '0.0.1',
+    'version': '0.1',
     'description': """
 Sell digital product using attachments to virtual products
 """,
-    'author': 'OpenERP S.A.',
+    'author': 'Odoo S.A.',
     'depends': [
         'document',
         'website_sale',
@@ -15,7 +16,6 @@ Sell digital product using attachments to virtual products
         'views/website_sale_digital_view.xml',
     ],
     'demo': [
-    ],
-    'qweb': [
+        'demo.xml',
     ],
 }
