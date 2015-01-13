@@ -96,6 +96,7 @@ class crm_case_section(osv.osv):
             for salesteam in all_salesteams:
                 domain = safe_eval(salesteam['score_section_domain'], evaluation_context)
                 domain.extend([('section_id', '=', False), ('user_id', '=', False)])
+                domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
                 leads = self.env["crm.lead"].search(domain, limit=50)
                 haslead = haslead or (len(leads) == 50 and not dry)
                 if dry:
@@ -117,7 +118,7 @@ class crm_case_section(osv.osv):
                             if len(leads_duplicated) > 1:
                                 self.env["crm.lead"].browse(leads_duplicated).merge_opportunity(False, False)
                             leads_done += leads_duplicated
-        self._cr.commit()
+                    self._cr.commit()
 
     @api.model
     def assign_leads_to_salesmen(self, all_section_users, dry=False):
