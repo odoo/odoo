@@ -11,6 +11,7 @@ evaluation_context = {
     'context_today': datetime.datetime.now,
 }
 
+
 class website_crm_score(models.Model):
     _name = 'website.crm.score'
 

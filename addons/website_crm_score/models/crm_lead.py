@@ -10,7 +10,7 @@ class Lead(models.Model):
     def _count_pageviews(self):
         self.pageviews_count = len(self.score_pageview_ids)
 
-    @api.depends('score_ids.value')
+    @api.depends('score_ids', 'score_ids.value')
     def _compute_score(self):
         self._cr.execute("""
              SELECT
@@ -54,4 +54,23 @@ class Lead(models.Model):
 
     def get_score_domain_cookies(self):
         # TODO should be return request.httprequest.host in master
+        # return request.httprequest.host
         return "." + ".".join(request.httprequest.host.rsplit(".", 2)[1:])
+
+    def _merge_pageviews(self, cr, uid, opportunity_id, opportunities, context=None):
+        lead_ids = [opp.id for opp in opportunities if opp.id != opportunity_id]
+        pv_ids = self.pool.get('website.crm.pageview').search(cr, uid, [('lead_id', 'in', lead_ids)], context=context)
+        self.pool.get('website.crm.pageview').write(cr, uid, pv_ids, {'lead_id': opportunity_id}, context=context)
+        return True
+
+    def _merge_scores(self, cr, uid, opportunity_id, opportunities, context=None):
+        # We needs to delete score from opportunity_id, to be sure that all rules will be re-evaluated.
+        self.write(cr, uid, [opportunity_id], {'score_ids': [(6, 0, [])]}, context=context)
+        return True
+
+    def merge_dependences(self, cr, uid, highest, opportunities, context=None):
+        self._merge_pageviews(cr, uid, highest, opportunities, context=context)
+        self._merge_scores(cr, uid, highest, opportunities, context=context)
+
+        # Call default merge function
+        super(Lead, self).merge_dependences(cr, uid, highest, opportunities, context=context)

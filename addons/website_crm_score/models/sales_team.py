@@ -26,6 +26,51 @@ except ImportError:
         return True
 
 
+class section_user(models.Model):
+    _name = 'section.user'
+
+    @api.one
+    def _count_leads(self):
+        if self.id:
+            limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
+            domain = [('user_id', '=', self.user_id.id),
+                      ('section_id', '=', self.section_id.id),
+                      ('assign_date', '>', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                      ]
+            self.leads_count = self.env['crm.lead'].search_count(domain)
+        else:
+            self.leads_count = 0
+
+    @api.one
+    def _get_percentage(self):
+        try:
+            self.percentage_leads = round(100 * self.leads_count / float(self.maximum_user_leads), 2)
+        except ZeroDivisionError:
+            self.percentage_leads = 0.0
+
+    @api.one
+    @api.constrains('section_user_domain')
+    def _assert_valid_domain(self):
+        try:
+            domain = safe_eval(self.section_user_domain or '[]', evaluation_context)
+            self.env['crm.lead'].search(domain)
+        except Exception:
+            raise Warning('The domain is incorrectly formatted')
+
+    section_id = fields.Many2one('crm.case.section', string='SaleTeam', required=True)
+    user_id = fields.Many2one('res.users', string='Saleman', required=True)
+    name = fields.Char(related='user_id.partner_id.display_name')
+    running = fields.Boolean(string='Running', default=True)
+    section_user_domain = fields.Char('Domain')
+    maximum_user_leads = fields.Integer('Leads Per Month')
+    leads_count = fields.Integer('Assigned Leads', compute='_count_leads', help='Assigned Leads this last month')
+    percentage_leads = fields.Float(compute='_get_percentage', string='Percentage leads')
+
+    @api.one
+    def toggle_active(self):
+        self.running = not self.running
+
+
 class crm_case_section(osv.osv):
     _inherit = "crm.case.section"
 
@@ -71,11 +116,6 @@ class crm_case_section(osv.osv):
     section_user_ids = fields.One2many('section.user', 'section_id', string='Salesman')
     user_ids = fields.Many2many('res.users', 'section_user', 'section_id', 'user_id', readonly=True)  # Use for display in Kanban
     min_for_assign = fields.Integer("Minimum score", help="Minimum Score for a lead to be automatically assign (>=)", default=0, required=True)
-
-    @api.model
-    def score_and_assign_leads(self):
-        self.env['website.crm.score'].assign_scores_to_leads()
-        self._assign_leads()
 
     @api.model
     def direct_assign_leads(self, ids=[]):
@@ -183,8 +223,6 @@ class crm_case_section(osv.osv):
             if not user['nbr']:
                 del users[i]
 
-    # ids is needed when the button is used to start the function,
-    # the default [] is needed for the function to be usable by the cron
     @api.model
     def _assign_leads(self, dry=False):
         # Emptying the table
@@ -203,49 +241,8 @@ class crm_case_section(osv.osv):
         all_section_users = self.env['section.user'].search([('running', '=', True)])
 
         self.assign_leads_to_salesteams(all_salesteams, dry=dry)
+
+        # Compute score after assign to salesteam, because if a merge has been done, the score for leads is removed.
+        self.env['website.crm.score'].assign_scores_to_leads()
+
         self.assign_leads_to_salesmen(all_section_users, dry=dry)
-
-
-class section_user(models.Model):
-    _name = 'section.user'
-
-    @api.one
-    def _count_leads(self):
-        if self.id:
-            limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
-            domain = [('user_id', '=', self.user_id.id),
-                      ('section_id', '=', self.section_id.id),
-                      ('assign_date', '>', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-                      ]
-            self.leads_count = self.env['crm.lead'].search_count(domain)
-        else:
-            self.leads_count = 0
-
-    @api.one
-    def _get_percentage(self):
-        try:
-            self.percentage_leads = round(100 * self.leads_count / float(self.maximum_user_leads), 2)
-        except ZeroDivisionError:
-            self.percentage_leads = 0.0
-
-    @api.one
-    @api.constrains('section_user_domain')
-    def _assert_valid_domain(self):
-        try:
-            domain = safe_eval(self.section_user_domain or '[]', evaluation_context)
-            self.env['crm.lead'].search(domain)
-        except Exception:
-            raise Warning('The domain is incorrectly formatted')
-
-    section_id = fields.Many2one('crm.case.section', string='SaleTeam', required=True)
-    user_id = fields.Many2one('res.users', string='Saleman', required=True)
-    name = fields.Char(related='user_id.partner_id.display_name')
-    running = fields.Boolean(string='Running', default=True)
-    section_user_domain = fields.Char('Domain')
-    maximum_user_leads = fields.Integer('Leads Per Month')
-    leads_count = fields.Integer('Assigned Leads', compute='_count_leads', help='Assigned Leads this last month')
-    percentage_leads = fields.Float(compute='_get_percentage', string='Percentage leads')
-
-    @api.one
-    def toggle_active(self):
-        self.running = not self.running
