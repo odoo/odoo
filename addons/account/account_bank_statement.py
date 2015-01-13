@@ -591,6 +591,8 @@ class account_bank_statement_line(models.Model):
                 del mv_line_dict['counterpart_move_line_id']
                 if mv_line_dict['move_line'].reconciled:
                     raise Warning(_('A selected move line was already reconciled.'))
+            if mv_line_dict.get('tax_ids') and mv_line_dict['tax_ids'] and isinstance(mv_line_dict['tax_ids'][0], (int, long)):
+                mv_line_dict['tax_ids'] = map(lambda id: (4, id, None), mv_line_dict['tax_ids'])
 
         # Create the move
         move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)

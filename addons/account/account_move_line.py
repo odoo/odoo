@@ -7,7 +7,7 @@ from openerp import workflow
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
 from openerp.exceptions import RedirectWarning, Warning
-import openerp.addons.decimal_precision as dp
+from openerp.addons import decimal_precision as dp
 from openerp import tools
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
@@ -695,8 +695,10 @@ class account_move_line(models.Model):
         # Create tax lines
         tax_lines_vals = []
         if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids') and vals['tax_ids']:
+            # Get ids from triplets : https://www.odoo.com/documentation/master/reference/orm.html#openerp.models.Model.write
+            tax_ids = map(lambda tax: tax[1], vals['tax_ids'])
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
-            res = self.env['account.tax']._model.compute_all(self._cr, self._uid, vals['tax_ids'], amount,
+            res = self.env['account.tax']._model.compute_all(self._cr, self._uid, tax_ids, amount,
                 vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
