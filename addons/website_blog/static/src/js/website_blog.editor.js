@@ -72,7 +72,7 @@
         change : function(type, value, $li) {
             if (type !== 'click') return;
             var self = this;
-            var editor  = new website.editor.MediaDialog(this.$image, this.$image[0]);
+            var editor  = new website.editor.MediaDialog(this.$image, this.$image[0], {only_images: true});
             editor.appendTo('body');
             editor.on('saved', self, function (event, img) {
                 var url = self.$image.attr('src');
