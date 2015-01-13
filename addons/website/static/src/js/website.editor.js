@@ -359,21 +359,25 @@ define(['summernote/summernote'], function () {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* fix ie and re-range to don't break snippet*/
 
+    var initial_data = {};
     function reRangeSelectKey (event) {
-        if ((!event.keyCode || event.shiftKey) && !$(event.target).is("input, textarea, select")) {
+        initial_data.range = null;
+        if (event.shiftKey && event.keyCode >= 37 && event.keyCode <= 40 && !$(event.target).is("input, textarea, select")) {
             var r = range.create();
             if (r) {
-                r.reRange().select();
+                var rng = r.reRange(event.keyCode <= 38);
+                if (r !== rng) {
+                    rng.select();
+                }
             }
         }
     }
-
     function reRangeSelect (event, dx, dy) {
         var r = range.create();
         if (!r || r.isCollapsed()) return;
 
         // check if the user move the caret on up or down
-        var data = r.reRange(dy < 0);
+        var data = r.reRange(dy < 0 || (dy === 0 && dx < 0));
 
         if (data.sc !== r.sc || data.so !== r.so || data.ec !== r.ec || data.eo !== r.eo) {
             setTimeout(function () {
@@ -385,19 +389,39 @@ define(['summernote/summernote'], function () {
         $(data.sc).closest('.o_editable').data('range', r);
         return r;
     }
-    var cursor_mousedown;
     $(document).mousedown(function (event) {
-        cursor_mousedown = event;
+        if (!$(event.target).closest(".o_editable").length) {
+            return;
+        }
+        var r = range.create();
+        if (initial_data.range && event.shiftKey) {
+            initial_data.range.select();
+        }
+        if (event.shiftKey) {
+            var rect = r && r.getClientRects();
+            initial_data.rect = rect && rect.length ? rect[0] : { top: 0, left: 0 };
+        }
+        initial_data.event = event;
+    });
+    $(document).mouseup(function (event) {
+        if (!$(event.target).closest(".o_editable").length) {
+            return;
+        }
+        if (!initial_data.range || !event.shiftKey) {
+            setTimeout(function () {
+                initial_data.range = range.create();
+            },0);
+        }
     });
     function summernote_mouseup (event) {
         if ($(event.target).closest("#website-top-navbar, .note-popover").length) {
             return;
         }
         // don't rerange if simple click
-        if (cursor_mousedown) {
-            var dx = event.clientX-cursor_mousedown.clientX;
-            var dy = event.clientY-cursor_mousedown.clientY;
-            if (10 < Math.pow(dx, 2)+Math.pow(dy, 2) ) {
+        if (initial_data.event) {
+            var dx = event.clientX - (event.shiftKey ? initial_data.rect.left : initial_data.event.clientX);
+            var dy = event.clientY - (event.shiftKey ? initial_data.rect.top : initial_data.event.clientY);
+            if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
                 reRangeSelect(event, dx, dy);
             }
         }
@@ -484,7 +508,7 @@ define(['summernote/summernote'], function () {
         oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa', function (event) {
             new website.editor.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
         });
-        $(document).on("keydown keyup", reRangeSelectKey);
+        $(document).on("keyup", reRangeSelectKey);
         
         var clone_data = false;
         var $node = oLayoutInfo.editor;

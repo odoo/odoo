@@ -819,7 +819,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
         // if same node, keep range
         if (start === end || !start) {
-            return range.create(sc, so, ec, eo);
+            return this;
         }
 
         // reduce or extend the range to don't break a isNotBreakable area
