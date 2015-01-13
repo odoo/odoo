@@ -1150,6 +1150,7 @@ class task(osv.osv):
         defaults = {
             'name': msg.get('subject'),
             'planned_hours': 0.0,
+            'partner_id': msg.get('author_id', False)
         }
         defaults.update(custom_values)
         res = super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
