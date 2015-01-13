@@ -369,7 +369,6 @@ class crm_phonecall_transfer_wizard(models.TransientModel):
                     },
                 }
         return action
-        
 
 
 class res_users(models.Model):
