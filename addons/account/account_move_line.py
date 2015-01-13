@@ -784,7 +784,7 @@ class account_move_line(osv.osv):
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
                 'ref': line.move_id.ref,
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
-                'already_paid': line.move_id.is_reconciled,
+                'already_paid': line.account_id.type == 'liquidity',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -809,7 +809,7 @@ class account_move_line(osv.osv):
                 amount_currency = -amount_currency
 
             # For already reconciled lines, don't use amount_residual(_currency)
-            if line.move_id.is_reconciled:
+            if line.account_id.type == 'liquidity':
                 amount = abs(debit - credit)
                 amount_currency = line.amount_currency
 

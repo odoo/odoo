@@ -1224,16 +1224,6 @@ class account_move(osv.osv):
             result.setdefault(id, 0.0)
         return result
 
-    def _is_reconciled_compute(self, cr, uid, ids, name, args, context=None):
-        rs_data = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            res = True
-            for line in move.line_id:
-                if line.account_id.reconcile and not line.reconcile_id:
-                    res = False
-            rs_data[move.id] = res
-        return rs_data
-
     def _search_amount(self, cr, uid, obj, name, args, context):
         ids = set()
         for cond in args:
@@ -1284,7 +1274,6 @@ class account_move(osv.osv):
         'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
-        'is_reconciled': fields.function(_is_reconciled_compute, type='boolean'),
     }
 
     _defaults = {
