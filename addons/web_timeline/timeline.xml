@@ -9,7 +9,8 @@
             <timeline string="Mail Timeline">
                 <templates>
                 <t t-name="message_content">
-                    <div t-attf-class="row oe_tl_msg oe_tl_msg_#{widget.type} #{widget.subtype ? '' : 'oe_tl_msg_nobody'}">
+                    <div t-attf-class="row oe_tl_msg oe_tl_msg_#{widget.type} 
+                                       #{widget.subtype ? '' : 'oe_tl_msg_nobody'}">
 
                         <div class="col-md-2"> <!-- *** date *** -->
                             <div t-attf-class="oe_tl_msg_date">

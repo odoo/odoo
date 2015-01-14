@@ -235,13 +235,13 @@ openerp.web_timeline = function (session) {
             var opts = _.clone(this.options);
 
             return this.has_been_loaded.then(function() {
-                if (self.root) {
-                    $('<span class="oe_timeline-placeholder"/>').insertAfter(self.root.$el);
-                    self.root.destroy();
-                }
-                self.root = new openerp.web_timeline.MailRoot(self, ds, opts);
-                return self.root.replace(self.$('.oe_timeline-placeholder'));
-             });
+                if (self.root) {
+                    $('<span class="oe_timeline-placeholder"/>').insertAfter(self.root.$el);
+                    self.root.destroy();
+                }
+                self.root = new openerp.web_timeline.MailRoot(self, ds, opts);
+                return self.root.replace(self.$('.oe_timeline-placeholder'));
+            });
         },
 
         add_qweb_template: function () {
@@ -510,7 +510,7 @@ openerp.web_timeline = function (session) {
                                (this.parent_message && this.parent_message.record_name);
 
             if (data.type === 'parent') {
-                var message = new openerp.web_timeline.ParentMessage(this, data, {'context': {
+                var message = new openerp.web_timeline.ThreadParent(this, data, {'context': {
                     'default_model': data.model,
                     'default_res_id': data.res_id,
                     'default_parent_id': false,
@@ -527,17 +527,15 @@ openerp.web_timeline = function (session) {
                 }});
             }
 
-            console.log("message", message);
-
-            // check if the message is already created
-/*            for (var i in this.messages) {
-                if (message.id && this.messages[i] && this.messages[i].id == message.id) {
+            // check if the message is already created, then delete, except if parent
+            for (var i in this.messages) {
+                if (message.id && this.messages[i] 
+                               && this.messages[i].id == message.id 
+                               && this.messages[i].type != "parent") {
                     this.messages[i].destroy();
                 }
             }
-*/          this.messages.push(message);
-
-            console.log(this.messages);
+            this.messages.push(message);
 
             return message;
         },
@@ -559,7 +557,7 @@ openerp.web_timeline = function (session) {
 
             this.$('.oe_view_nocontent').remove();
 
-            if (dom_insert_after && this.$el[0] === dom_insert_after.parent()[0]) {
+            if (dom_insert_after) {
                 message.insertAfter(dom_insert_after);
             } 
             else if (prepend) {
@@ -753,11 +751,13 @@ openerp.web_timeline = function (session) {
         },
     });
 
-    openerp.web_timeline.ParentMessage = openerp.web_timeline.MessageCommon.extend({
-        template: 'ParentMessage',
+    openerp.web_timeline.ThreadParent = openerp.web_timeline.MessageCommon.extend({
+        template: 'ThreadParent',
 
         events: {
-             'click':'on_parent_message',
+             'click .oe_tl_parent_message.default':'on_parent_message',
+             'click .oe_tl_parent_message.disp':'on_parent_message_hide',
+             'click .oe_tl_parent_message.undisp':'on_parent_message_show',
         },
 
         on_parent_message: function (event) {
@@ -766,14 +766,33 @@ openerp.web_timeline = function (session) {
             var self = this;
             this.parent_thread.message_fetch(['|', ["parent_id", "=", this.id], ["id", "=", this.id]], 
                                              this.context, false, 'child', function (arg, data) {
-                // insert the message on dom after this message
-                self.parent_thread.switch_new_message(data, self.$el);
+                self.parent_thread.switch_new_message(data, self.$('.oe_tl_parent_message'));
+            }).then(function () {
+                self.$('.oe_tl_parent_message').removeClass('default').addClass('disp');
             });
+        },
+
+        on_parent_message_hide: function (event) {
+            event.stopPropagation();
+        
+            this.$('.oe_tl_thread_message').hide();
+            this.$('.oe_tl_parent_message').removeClass('disp').addClass('undisp');
+        },
+
+        on_parent_message_show: function (event) {
+            event.stopPropagation();
+
+            this.$('.oe_tl_thread_message').show();
+            this.$('.oe_tl_parent_message').removeClass('undisp').addClass('disp');
         },
     });
 
+    openerp.web_timeline.ThreadExpendable = openerp.web_timeline.MessageCommon.extend({
+
+    });
+
     openerp.web_timeline.ThreadMessage = openerp.web_timeline.MessageCommon.extend({
-        template: 'ThreadMessage',
+        className: 'oe_tl_thread_message',
 
         events: {
             'click .oe_read':'on_message_read',
@@ -794,8 +813,6 @@ openerp.web_timeline = function (session) {
         },
 
         start: function () {
-            console.log("start thread message");
-
             this.tracking_values = (this.tracking_value_ids.length > 0);
             this.partners = (this.partner_ids.length > 0);
             this.attachments = (this.attachment_ids.length > 0);
@@ -806,7 +823,7 @@ openerp.web_timeline = function (session) {
                 options: this.options,
             };
             
-            this.$el.append(QWeb.render(this.template, {
+            this.$el.html(QWeb.render('MessageContent', {
                 'widget': this, 
                 'content' : this.view.qweb.render("message_content", qweb_context)
             }));
@@ -1482,10 +1499,10 @@ openerp.web_timeline = function (session) {
                     var root = thread == self.options.root_thread;
 
                     // create object and attach to the thread object
-                    thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
+                    thread.message_fetch([["id", "=", message_id]], false, [message_id], 'default', function (arg, data) {
                         var message = thread.create_message_object( data.slice(-1)[0] );
                         // insert the message on dom
-                        thread.insert_message( message, root ? undefined : self.$el, root );
+                        thread.insert_message(message, root ? undefined : self.$el, root);
                     });
 
                     self.on_cancel();

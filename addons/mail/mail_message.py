@@ -754,10 +754,10 @@ class mail_message(osv.Model):
         if mode == 'parent':
             return message_list
         
-        #if mode == 'child':                                                                 
+        if mode == 'child':                                                                 
             # get the child expandable messages for the tree
-            #self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
-                #thread_level=1, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+            self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
+                thread_level=1, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         
         return message_list
 
