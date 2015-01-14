@@ -270,7 +270,7 @@ class account_bank_statement(osv.osv):
                 debit = currency_obj.round(cr, uid, company_currency, debit / st_line_currency_rate)
                 credit = currency_obj.round(cr, uid, company_currency, credit / st_line_currency_rate)
                 amt_cur = amount
-            else:
+            if st_line.statement_id.currency != company_currency:
                 amt_cur = amount / st_line_currency_rate
             cur_id = st_line.statement_id.currency.id != company_currency.id and st_line.statement_id.currency.id or st_line.currency_id.id
         if st_line.statement_id.currency.id != company_currency.id and st_line.currency_id != company_currency:
