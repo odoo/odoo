@@ -241,42 +241,43 @@ class account_bank_statement(osv.osv):
         """
         return st_line.partner_id and st_line.partner_id.id or False
 
-    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
+    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency, context=None):
         """Compute the args to build the dict of values to create the counter part move line from a
            statement line by calling the _prepare_move_line_vals.
 
            :param browse_record st_line: account.bank.statement.line record to create the move from.
            :param int/long move_id: ID of the account.move to link the move line
            :param float amount: amount of the move line
-           :param int/long company_currency_id: ID of currency of the concerned company
+           :param browse_record company_currency:  res.currency record of the concerned company
            :return: dict of value to create() the bank account.move.line
         """
+        currency_obj = self.pool.get('res.currency')
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['date'] = st_line.date
         account_id = self._get_counter_part_account(cr, uid, st_line, context=context)
         partner_id = self._get_counter_part_partner(cr, uid, st_line, context=context)
-        amt_cur = False
-        cur_id = False
-        statement_currency_id = st_line.journal_id.currency.id or company_currency_id
-        statement_line_currency_id = st_line.currency_id.id or statement_currency_id
-        st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or 1
-
-        if statement_currency_id == company_currency_id:
-            if statement_line_currency_id != statement_currency_id:
-                amt_cur = amount
-                cur_id = statement_line_currency_id
-                amount = amount / st_line_currency_rate
-        else:
-            cur_id = statement_currency_id
-            amt_cur = amount
-            if statement_line_currency_id == company_currency_id:
-                amount = amount / st_line_currency_rate
-            else:
-                ctx = context.copy()
-                ctx['date'] = st_line.date
-                amount = self.pool.get('res.currency').compute(cr, uid, statement_currency_id, company_currency_id, amount, context=ctx)
-
         debit = ((amount > 0) and amount) or 0.0
         credit = ((amount < 0) and -amount) or 0.0
-        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit, amount_currency=amt_cur, currency_id=cur_id, account_id=account_id, partner_id=partner_id, context=context)
+        cur_id = False
+        amt_cur = False
+        if st_line.statement_id.currency.id != company_currency.id or st_line.currency_id and st_line.amount_currency:
+            #the amount given is in foreign currency and needs to be converted at the ratio of the transaction
+            st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or 1
+            debit = currency_obj.round(cr, uid, company_currency, debit / st_line_currency_rate)
+            credit = currency_obj.round(cr, uid, company_currency, credit / st_line_currency_rate)
+        if st_line.statement_id.currency.id != company_currency.id:
+            debit = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, debit, context=ctx)
+            credit = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, credit, context=ctx)
+            amt_cur = amount
+            cur_id = st_line.statement_id.currency.id
+        elif st_line.currency_id and st_line.amount_currency:
+            amt_cur = amount
+            cur_id = st_line.currency_id.id
+        return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
+            amount_currency=amt_cur, currency_id=cur_id, account_id=account_id,
+            partner_id=partner_id, context=context)
 
     def _prepare_move_line_vals(self, cr, uid, st_line, move_id, debit, credit, currency_id=False,
                 amount_currency=False, account_id=False, partner_id=False, context=None):
@@ -587,7 +588,7 @@ class account_bank_statement_line(osv.osv):
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
-        domain += [('reconcile_id', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
+        domain += [('reconcile_id', '=', False)]
         domain += [('account_id.type', '=', (amount > 0 and 'receivable' or 'payable'))] # Make sure we can't mix receivable and payable
         if amount_field == 'amount_currency' and amount < 0:
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
@@ -772,7 +773,7 @@ class account_bank_statement_line(osv.osv):
 
             # Create the move line for the statement line
             st_line_amount = reduce(add, [x['credit'] - x['debit'] for x in to_create_mv_line_dicts])
-            bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, st_line_amount, company_currency.id, context=context)
+            bank_st_move_vals = bs_obj._prepare_bank_move_line(cr, uid, st_line, move_id, st_line_amount, company_currency, context=context)
             aml_obj.create(cr, uid, bank_st_move_vals, context=context)
 
             # Complete the dicts
@@ -799,6 +800,9 @@ class account_bank_statement_line(osv.osv):
                     if st_line.currency_id and statement_currency.id == company_currency.id:
                         debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
                         credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
+                    elif st_line.currency_id:
+                        debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)      
+                        credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
                     else:
                         debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)
                         credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
