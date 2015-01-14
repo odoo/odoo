@@ -407,6 +407,15 @@ class float(_column):
     def digits_change(self, cr):
         pass
 
+class monetary(_column):
+    _type = 'monetary'
+    _symbol_set = ('%s', lambda x: __builtin__.float(x or 0.0))
+    _symbol_get = lambda self,x: x or 0.0
+
+    def to_field_args(self):
+        raise NotImplementedError("fields.monetary is only supported in the new API, "
+                                  "but you can use widget='monetary' in client-side views")
+
 class date(_column):
     _type = 'date'
     __slots__ = []

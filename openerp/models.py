@@ -156,6 +156,7 @@ def pg_varchar(size=0):
 FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
+    fields.monetary: 'numeric',
     fields.text: 'text',
     fields.html: 'text',
     fields.date: 'date',

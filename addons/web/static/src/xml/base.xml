@@ -676,7 +676,7 @@
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
         t-att-style="color_for(record) + style "
-        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') ? 'oe_number' : ''}">
+        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') or (fields[field.attrs.name].type === 'monetary')? 'oe_number' : ''}">
 
         <span t-if="!field.attrs.modifiers.invisible" >
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
@@ -756,7 +756,7 @@
         <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
+        <t t-set="number" t-value="column.type === 'integer' or column.type == 'float' or column.type == 'monetary'"/>
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''} #{modifiers.required ? 'oe_required' : ''}"

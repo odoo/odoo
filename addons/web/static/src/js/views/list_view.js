@@ -1820,7 +1820,7 @@ var Column = Class.extend({
         return out;
     },
     to_aggregate: function () {
-        if (this.type !== 'integer' && this.type !== 'float') {
+        if (this.type !== 'integer' && this.type !== 'float' && this.type !== 'monetary') {
             return {};
         }
         var aggregation_func = this['group_operator'] || 'sum';
@@ -2060,6 +2060,26 @@ var ColumnUrl = Column.extend({
     }
 });
 
+var ColumnMonetary = Column.extend({
+
+    _format: function (row_data, options) {
+        //name of currency field is defined either by field attribute, in view options or we assume it is named currency_id
+        var currency_field = (this.options && this.options.currency_field) || this.currency_field || 'currency_id';
+        var currency_id = row_data[currency_field] && row_data[currency_field].value[0];
+        var currency = session.get_currency(currency_id);
+        var digits_precision = this.digits || (currency && currency.digits);
+        var value = formats.format_value(row_data[this.id].value || 0, {type: this.type, digits: digits_precision}, options.value_if_empty);
+        if (currency) {
+            if (currency.position === "after") {
+                value += ' ' + currency.symbol;
+            } else {
+                value = currency.symbol + ' ' + value;
+            }
+        }
+        return value;
+    },
+});
+
 var ColumnToggleButton = Column.extend({
     format: function (row_data, options) {
         this._super(row_data, options);
@@ -2100,7 +2120,8 @@ list_widget_registry
     .add('field.reference', ColumnReference)
     .add('field.many2many', ColumnMany2Many)
     .add('field.url', ColumnUrl)
-    .add('button.toggle_button', ColumnToggleButton);
+    .add('button.toggle_button', ColumnToggleButton)
+    .add('field.monetary', ColumnMonetary);
 
 function for_ (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);

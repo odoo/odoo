@@ -1083,6 +1083,45 @@ class Float(Field):
         return float_round(value, precision_digits=digits[1]) if digits else value
 
 
+class Monetary(Field):
+    """ The decimal precision and currency symbol are taken from the attribute
+
+    :param currency_field: name of the field holding the currency this monetary
+                           field is expressed in (default: `currency_id`)
+    """
+    type = 'monetary'
+    _slots = {
+        'currency_field': None,
+    }
+
+    def __init__(self, string=None, currency_field=None, **kwargs):
+        super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
+
+    _column_currency_field = property(attrgetter('currency_field'))
+    _related_currency_field = property(attrgetter('currency_field'))
+    _description_currency_field = property(attrgetter('currency_field'))
+
+    def _setup_regular(self, env):
+        super(Monetary, self)._setup_regular(env)
+        if not self.currency_field:
+            self.currency_field = 'currency_id'
+        assert self.currency_field in env[self.model_name]._fields, \
+            "Field %s with unknown currency_field %r" % (self, self.currency_field)
+
+    def convert_to_write(self, value, target=None, fnames=None):
+        if target is not None:
+            currency = target[self.currency_field]
+            # FIXME @rco-odoo: currency may not be already initialized if it is
+            # a function or related field!
+            if currency:
+                return currency.round(float(value or 0.0))
+            return float(value or 0.0)
+        return value
+
+    def convert_to_cache(self, value, record, validate=True):
+        return self.convert_to_write(value, record)
+
+
 class _String(Field):
     """ Abstract class for string fields. """
     _slots = {

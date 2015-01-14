@@ -1439,18 +1439,18 @@ var FieldMonetary = FieldFloat.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.set({"currency": false});
-        if (this.options.currency_field) {
-            this.field_manager.on("field_changed:" + this.options.currency_field, this, function() {
-                this.set({"currency": this.field_manager.get_field_value(this.options.currency_field)});
+        var currency_field = (this.options && this.options.currency_field) || this.currency_field || 'currency_id';
+        if (currency_field) {
+            this.field_manager.on("field_changed:" + currency_field, this, function() {
+                this.set({"currency": this.field_manager.get_field_value(currency_field)});
             });
         }
         this.on("change:currency", this, this.get_currency_info);
         this.get_currency_info();
-        this.ci_dm = new utils.DropMisordered();
     },
     start: function() {
         var tmp = this._super();
-        this.on("change:currency_info", this, this.reinitialize);
+        this.on("change:currency_info", this, this.update);
         return tmp;
     },
     get_currency_info: function() {
@@ -1459,16 +1459,23 @@ var FieldMonetary = FieldFloat.extend({
             this.set({"currency_info": null});
             return;
         }
-        return this.ci_dm.add(self.alive(new Model("res.currency").query(["symbol", "position"])
-            .filter([["id", "=", self.get("currency")]]).first())).then(function(res) {
-            self.set({"currency_info": res});
-        });
+        return self.set({"currency_info": session.get_currency(self.get("currency"))});
     },
+    update: function() {
+        if (this.view.options.is_list_editable){
+            return;
+        } else {
+            return this.reinitialize();
+        }
+    },
+    get_digits_precision: function() {
+        return this.node.attrs.digits || this.field.digits || (this.get('currency_info') && this.get('currency_info').digits);
+     },
     parse_value: function(val, def) {
-        return formats.parse_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
+        return formats.parse_value(val, {type: "float", digits: this.get_digits_precision()}, def);
     },
     format_value: function(val, def) {
-        return formats.format_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
+        return formats.format_value(val, {type: "float", digits: this.get_digits_precision()}, def);
     },
 });
 
