@@ -699,12 +699,12 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         return $(node).closest('[contenteditable]').is('[contenteditable="true"]');
     };
 
-
     dom.isFont = function (node) {
         var nodeName = node && node.nodeName.toUpperCase();
         return node && (nodeName === "FONT" ||
-            (nodeName === "SPAN" &&
-                (node.className.match(/(^|\s)(text|bg)-/i) ||
+            (nodeName === "SPAN" && (
+                node.className.match(/(^|\s)fa(\s|$)/i) ||
+                node.className.match(/(^|\s)(text|bg)-/i) ||
                 (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color):/i)))) );
     };
     dom.isVisibleText = function (textNode) {
@@ -1828,10 +1828,10 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
               }
 
               if (color.indexOf('text-') !== -1) {
-                font.className = className + " " + color;
+                font.className = className.join(" ") + " " + color;
                 font.style.color = "inherit";
               } else {
-                font.className = className;
+                font.className = className.join(" ");
                 font.style.color = color;
               }
             }
@@ -1844,10 +1844,10 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
               }
 
               if (bgcolor.indexOf('bg-') !== -1) {
-                font.className = className + " " + bgcolor;
+                font.className = className.join(" ") + " " + bgcolor;
                 font.style.backgroundColor = "inherit";
               } else {
-                font.className = className;
+                font.className = className.join(" ");
                 font.style.backgroundColor = bgcolor;
               }
             }
@@ -1907,7 +1907,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         for (var i=0; i<nodes.length; i++) {
           node = nodes[i];
 
-          if (!dom.isVisibleText(node)) {
+          if ((dom.isText(node) || dom.isBR(node)) && !dom.isVisibleText(node)) {
             remove(node);
             nodes.splice(i,1);
             i--;
