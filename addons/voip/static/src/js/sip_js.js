@@ -25,7 +25,7 @@ openerp.voip = function(openerp) {
                     authorizationUser: result.login,
                     password: result.password,
                     hackIpInContact: true,
-                    log: {level: "error"},
+                    log: {level: "debug"},
                     traceSip: false,
                 };
                 this.always_transfert = result.always_transfert;
@@ -126,7 +126,7 @@ openerp.voip = function(openerp) {
             this.ringbacktone = document.getElementById("ringbacktone");
             ringbacktone.pause();
             var temporary = true;
-            if(response.reason_phrase != "Busy Here"){
+            if(response.status_code == 404 || response.status_code == 488){
                 this.trigger_error('The user credentials could be wrong or '+
                     'the connection cannot be made. Please check your configuration.</br> (Reason receives :' + response.reason_phrase+')',
                     temporary);

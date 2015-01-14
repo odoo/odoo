@@ -315,6 +315,7 @@ openerp.crm_voip = function(instance) {
             }else{
                 this.stop_automatic_call();
             }
+            this.do_notify(_t('Customer unavailable'),_t('The customer is temporary unavailable. Please try later.'));
         },
 
         sip_bye: function(){
