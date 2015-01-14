@@ -173,7 +173,6 @@ class account_analytic_account(models.Model):
             pass
         return result
 
-
     #TODO: 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
