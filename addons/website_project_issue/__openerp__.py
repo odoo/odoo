@@ -21,20 +21,22 @@
 
 
 {
-    'name': 'Portal Claim',
+    'name': 'Website Project Issue',
     'version': '0.1',
     'category': 'Tools',
     'complexity': 'easy',
     'description': """
-This module adds claim menu and features to your portal if claim and portal are installed.
-==========================================================================================
+This module adds issue menu and features to your portal if project_issue and portal are installed.
+==================================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm_claim','portal'],
+    'depends': ['project_issue','portal', 'website'],
     'data': [
-        'portal_claim_view.xml',
-        'security/ir.model.access.csv',
         'security/portal_security.xml',
+        'security/ir.model.access.csv',
+        'portal_project_issue_view.xml',
+        'website_project_issue_view.xml',
+        'views/portal_project_issue.xml',
     ],
     'installable': True,
     'auto_install': True,
