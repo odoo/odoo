@@ -31,6 +31,7 @@ except ImportError:
 
 import openerp
 import openerp.modules.registry
+import openerp.tools.safe_eval
 from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.modules import get_module_resource
 from openerp.tools import topological_sort
@@ -328,8 +329,55 @@ def clean_action(action):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
+        fix_view_modes(action)
+        _load_empty_list_help(action)
+        _preevaluate_context(action)
     return action
+
+def _load_empty_list_help(action):
+    """ Sets the action's "empty list" help message. The message is fetched
+    via :meth:`~openerp.models.Model.get_empty_list_help`
+    """
+    try: # no Environment.get
+        Model = request.env[action.get('res_model')]
+    except KeyError:
+        return
+
+    eval_dict = {
+        'active_model': request.context.get('active_model'),
+        'active_id': request.context.get('active_id'),
+        'active_ids': request.context.get('active_ids'),
+    }
+    try:
+        with openerp.tools.mute_logger("openerp.tools.safe_eval"):
+            eval_context = openerp.tools.safe_eval.safe_eval(
+                action['context'] or "{}", eval_dict)
+    except Exception:
+        pass
+    else:
+        action['help'] = Model.with_context(**eval_context)\
+            .get_empty_list_help(action.get('help', ''))
+
+def _preevaluate_context(action):
+    """ Evaluates a returned action's context using the current request
+    context to allow bridging informations from one to the next via
+    ``context.get``
+    """
+    eval_dict = {
+        'active_model': request.context.get('active_model'),
+        'active_id': request.context.get('active_id'),
+        'active_ids': request.context.get('active_ids'),
+        'uid': request.uid,
+        'context': request.context,
+    }
+    try:
+        with openerp.tools.mute_logger("openerp.tools.safe_eval"):
+            eval_context = openerp.tools.safe_eval.safe_eval(
+                action['context'] or "{}", eval_dict)
+    except Exception:
+        pass
+    else:
+        action['context'] = str(eval_context)
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
