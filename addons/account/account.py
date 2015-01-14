@@ -579,7 +579,7 @@ class account_tax(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
+    analytic_cost = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -845,7 +845,7 @@ class account_chart_template(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_view_id = fields.Many2one('account.account.template', string='Bank Account')
+    bank_account_code_char = fields.Char(string='Code of the main bank account')
     property_account_receivable = fields.Many2one('account.account.template', string='Receivable Account')
     property_account_payable = fields.Many2one('account.account.template', string='Payable Account')
     property_account_expense_categ = fields.Many2one('account.account.template', string='Expense Category Account')
@@ -858,7 +858,7 @@ class account_chart_template(models.Model):
     @api.one
     def try_loading_for_current_company(self):
         company = self.env.user.company_id
-        accounts = self.env['account.account'].search([('company_id', '=', company.id), ('deprecated', '=', False), ('name', '!=', 'Chart for Automated Accounts'),
+        accounts = self.env['account.account'].search([('company_id', '=', company.id), ('deprecated', '=', False), ('name', 'not ilike', 'Automated Test'),
             ('name', 'not ilike', '(test)')], limit=1)
         # If we don't have any accounts, install this chart of account
         if not accounts:
@@ -875,7 +875,7 @@ class account_chart_template(models.Model):
             JournalObj.create(vals_journal)
         return True
 
-    @api.one
+    @api.model
     def generate_journals(self, acc_template_ref, company):
         """
         This method is used for creating journals.
@@ -890,7 +890,7 @@ class account_chart_template(models.Model):
             self.check_created_journals(vals_journal, company)
         return True
 
-    @api.one
+    @api.multi
     def _prepare_all_journals(self, acc_template_ref, company):
         def _get_analytic_journal(journal_type):
             # Get the analytic journal
@@ -933,6 +933,7 @@ class account_chart_template(models.Model):
             'situation': _('OPEJ'),
         }
 
+        self.ensure_one()
         journal_data = []
         for journal_type in ['sale', 'purchase', 'general', 'situation']:
             vals = {
@@ -948,16 +949,17 @@ class account_chart_template(models.Model):
             journal_data.append(vals)
         return journal_data
 
-    @api.one
+    @api.multi
     def generate_properties(self, acc_template_ref, company):
         """
         This method used for creating properties.
 
-        :param self: current chart template for which we need to create properties
+        :param self: chart templates for which we need to create properties
         :param acc_template_ref: Mapping between ids of account templates and real accounts created from them
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
+        self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
             ('property_account_receivable', 'res.partner','account.account'),
@@ -987,7 +989,7 @@ class account_chart_template(models.Model):
                     PropertyObj.create(vals)
         return True
 
-    @api.one
+    @api.multi
     def _install_template(self, company, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
@@ -1004,6 +1006,7 @@ class account_chart_template(models.Model):
             * a similar dictionary for mapping the tax templates and taxes, as second item,
         :rtype: tuple(dict, dict, dict)
         '''
+        self.ensure_one()
         if acc_ref is None:
             acc_ref = {}
         if taxes_ref is None:
@@ -1017,7 +1020,7 @@ class account_chart_template(models.Model):
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
 
-    @api.one
+    @api.multi
     def _load_template(self, company, code_digits=None, account_ref=None, taxes_ref=None):
         '''
         This function generates all the objects from the templates
@@ -1033,6 +1036,7 @@ class account_chart_template(models.Model):
             * a similar dictionary for mapping the tax templates and taxes, as second item,
         :rtype: tuple(dict, dict, dict)
         '''
+        self.ensure_one()
         if account_ref is None:
             account_ref = {}
         if taxes_ref is None:
@@ -1051,10 +1055,10 @@ class account_chart_template(models.Model):
 
         # writing account values on tax after creation of accounts
         for key, value in generated_tax_res['account_dict'].items():
-            if value['account_collected_id'] or value['account_paid_id']:
+            if value['refund_account_id'] or value['account_id']:
                 AccountTaxObj.browse(key).write({
-                    'account_collected_id': account_ref.get(value['account_collected_id'], False),
-                    'account_paid_id': account_ref.get(value['account_paid_id'], False),
+                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
+                    'account_id': account_ref.get(value['account_id'], False),
                 })
 
         # Create Journals
@@ -1068,7 +1072,7 @@ class account_chart_template(models.Model):
 
         return account_ref, taxes_ref
 
-    @api.one
+    @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
         """
         This method for generating accounts from templates.
@@ -1081,9 +1085,10 @@ class account_chart_template(models.Model):
         :returns: return acc_template_ref for reference purpose.
         :rtype: dict
         """
-
+        self.ensure_one()
         company_name = company.name
-        acc_template = self.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
+        account_tmpl_obj = self.env['account.account.template']
+        acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
         for account_template in acc_template:
             tax_ids = []
             for tax in account_template.tax_ids:
@@ -1105,10 +1110,9 @@ class account_chart_template(models.Model):
             }
             new_account = self.env['account.account'].create(vals)
             acc_template_ref[account_template.id] = new_account.id
-
         return acc_template_ref
 
-    @api.one
+    @api.multi
     def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
         """
         This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
@@ -1119,7 +1123,8 @@ class account_chart_template(models.Model):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
-        positions = self.search([('chart_template_id', '=', self.id)])
+        self.ensure_one()
+        positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
         for position in positions:
             new_fp = self.env['account.fiscal.position'].create({'company_id': company.id, 'name': position.name, 'note': position.note})
             for tax in position.tax_ids:
@@ -1156,9 +1161,9 @@ class account_tax_template(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 3))
-    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account',
+    account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account',
         help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
-    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
+    refund_account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
         help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
