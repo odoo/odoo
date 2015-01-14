@@ -1,0 +1,390 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <record model="account.tax.code.template" id="vat_code_balance_net">
+            <field name="name">Solde de TVA a payer a l'AFC</field>
+            <field name="code">500</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_tva">
+            <field name="name">TVA Due </field>
+            <field name="code">399</field>
+            <field name="parent_id" ref="vat_code_balance_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_tva80">
+            <field name="name">TVA due a 8.0% (TN)</field>
+            <field name="code">301b</field>
+            <field name="parent_id" ref="vat_code_due_tva"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_tva25">
+            <field name="name">TVA due a 2.5% (TR)</field>
+            <field name="code">311b</field>
+            <field name="parent_id" ref="vat_code_due_tva"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_tva38">
+            <field name="name">TVA due a 3.8% (TS)</field>
+            <field name="code">341b</field>
+            <field name="parent_id" ref="vat_code_due_tva"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_payable">
+            <field name="name">TVA préalable sur acquisitions (a récupérer)</field>
+            <field name="code">479</field>
+            <field name="parent_id" ref="vat_code_balance_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_payable_bs">
+            <field name="name">TVA préalable sur biens et services</field>
+            <field name="code">400</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_payable_invest">
+            <field name="name">TVA préalable sur invest. et autres ch.</field>
+            <field name="code">405</field>
+            <field name="parent_id" ref="vat_code_payable"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_base_net">
+            <field name="name">Base de calcul de TVA</field>
+            <field name="code"/>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_base_ca_total">
+            <field name="name">Chiffre d'affaires - total</field>
+            <field name="code">200</field>
+            <field name="parent_id" ref="vat_code_base_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_base_due">
+            <field name="name">Chiffre d'affaires imposable</field>
+            <field name="code">299</field>
+            <field name="parent_id" ref="vat_code_base_ca_total"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_80">
+            <field name="name">Chiffre d'affaires imposable a 8.0% (TN)</field>
+            <field name="code">301a</field>
+            <field name="parent_id" ref="vat_code_base_due"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_25">
+            <field name="name">Chiffre d'affaires imposable a 2.5% (TR)</field>
+            <field name="code">311a</field>
+            <field name="parent_id" ref="vat_code_base_due"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_38">
+            <field name="name">Chiffre d'affaires imposable a 3.8% (TS)</field>
+            <field name="code">341a</field>
+            <field name="parent_id" ref="vat_code_base_due"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_0">
+            <field name="name">Chiffre d'affaires imposable a 0% (export)</field>
+            <field name="code">200-220</field>
+            <field name="parent_id" ref="vat_code_base_ca_total"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_due_0_exclu">
+            <field name="name">Chiffre d'affaires non-imposable a 0% (exclu)</field>
+            <field name="code">200-230</field>
+            <field name="parent_id" ref="vat_code_base_ca_total"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_net">
+            <field name="name">Acquisition - total</field>
+            <field name="code"/>
+            <field name="parent_id" ref="vat_code_base_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base">
+            <field name="name">Acquisition de biens et services</field>
+            <field name="code"/>
+            <field name="parent_id" ref="vat_code_receivable_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_0">
+            <field name="name">Acquisition de biens et services a 0%</field>
+            <field name="code">Babs0</field>
+            <field name="parent_id" ref="vat_code_receivable_base"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_80">
+            <field name="name">Acquisition de biens et services a 8.0% (TN)</field>
+            <field name="code">Babs8</field>
+            <field name="parent_id" ref="vat_code_receivable_base"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_25">
+            <field name="name">Acquisition de biens et services a 2.5% (TR)</field>
+            <field name="code">Babs25</field>
+            <field name="parent_id" ref="vat_code_receivable_base"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_38">
+            <field name="name">Acquisition de biens et services a 3.8% (TS)</field>
+            <field name="code">Babs38</field>
+            <field name="parent_id" ref="vat_code_receivable_base"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_invest">
+            <field name="name">Acquisition de biens d'invest. et autres charges</field>
+            <field name="code"/>
+            <field name="parent_id" ref="vat_code_receivable_net"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_invest80">
+            <field name="name">Acquisition de biens d'invest. et autres charges a 8.0% (TN)</field>
+            <field name="code">Binv8</field>
+            <field name="parent_id" ref="vat_code_receivable_base_invest"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_invest25">
+            <field name="name">Acquisition de biens d'invest. et autres charges a 2.5% (TR)</field>
+            <field name="code">Binv25</field>
+            <field name="parent_id" ref="vat_code_receivable_base_invest"/>
+        </record>
+        <record model="account.tax.code.template" id="vat_code_receivable_base_invest38">
+            <field name="name">Acquisition de biens d'invest. et autres charges a 3.8% (TS)</field>
+            <field name="code">Binv38</field>
+            <field name="parent_id" ref="vat_code_receivable_base_invest"/>
+        </record>
+        <!--
+        #  TVA - Taxe sur la Valeur Ajoutée
+        -->
+        <record model="account.tax.template" id="vat_25">
+            <field name="name">TVA due a 2.5% (TR)</field>
+            <field name="description">2.5%</field>
+            <field name="amount" eval="0.025"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_due_25"/>
+            <field name="tax_code_id" ref="vat_code_due_tva25"/>
+            <field name="ref_base_code_id" ref="vat_code_due_25"/>
+            <field name="ref_tax_code_id" ref="vat_code_due_tva25"/>
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="account_collected_id" ref="ch_1170"/>
+            <field name="account_paid_id" ref="ch_1170"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record model="account.tax.template" id="vat_25_purchase">
+            <field name="name">TVA 2.5% sur achat B&amp;S (TR)</field>
+            <field name="description">2.5% achat</field>
+            <field name="amount" eval="0.025"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_25"/>
+            <field name="tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_25"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="python_compute">result = round((price_unit * 0.025) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.025))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_25_invest">
+            <field name="name">TVA 2.5% sur invest. et autres ch. (TR)</field>
+            <field name="description">2.5% invest.</field>
+            <field name="amount" eval="0.025"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_invest25"/>
+            <field name="tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest25"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="python_compute">result = round((price_unit * 0.025) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.025))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+
+        <record model="account.tax.template" id="vat_38">
+            <field name="name">TVA due a 3.8% (TS)</field>
+            <field name="description">3.8%</field>
+            <field name="amount" eval="0.038"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_due_38"/>
+            <field name="tax_code_id" ref="vat_code_due_tva38"/>
+            <field name="ref_base_code_id" ref="vat_code_due_38"/>
+            <field name="ref_tax_code_id" ref="vat_code_due_tva38"/>
+            <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="account_collected_id" ref="ch_1170"/>
+            <field name="account_paid_id" ref="ch_1170"/>
+        </record>
+        <record model="account.tax.template" id="vat_38_purchase">
+            <field name="name">TVA 3.8% sur achat B&amp;S (TS)</field>
+            <field name="description">3.8% achat</field>
+            <field name="amount" eval="0.038"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_38"/>
+            <field name="tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_38"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_38_invest">
+            <field name="name">TVA 3.8% sur invest. et autres ch. (TS)</field>
+            <field name="description">3.8% invest</field>
+            <field name="amount" eval="0.038"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_invest38"/>
+            <field name="tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest38"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="python_compute">result = round((price_unit * 0.038) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.038))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_80">
+            <field name="name">TVA due a 8.0% (TN)</field>
+            <field name="description">8.0%</field>
+            <field name="amount" eval="0.080"/>
+            <field name="sequence" eval="0"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_due_80"/>
+            <field name="tax_code_id" ref="vat_code_due_tva80"/>
+            <field name="ref_base_code_id" ref="vat_code_due_80"/>
+            <field name="ref_tax_code_id" ref="vat_code_due_tva80"/>
+            <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="account_collected_id" ref="ch_1170"/>
+            <field name="account_paid_id" ref="ch_1170"/>
+        </record>
+        <record model="account.tax.template" id="vat_80_purchase">
+            <field name="name">TVA 8.0% sur achat B&amp;S (TN)</field>
+            <field name="description">8.0% achat</field>
+            <field name="amount" eval="0.080"/>
+            <field name="type">percent</field>
+            <field name="sequence" eval="0"/>
+            <field name="base_code_id" ref="vat_code_receivable_base_80"/>
+            <field name="tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_80"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_80_invest">
+            <field name="name">TVA 8.0% sur invest. et autres ch. (TN)</field>
+            <field name="description">8.0% invest.</field>
+            <field name="amount" eval="0.080"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_invest80"/>
+            <field name="tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_invest80"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+            <field name="python_compute">result = round((price_unit * 0.080) / 0.05) * 0.05</field>
+            <field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.080))) /0.05) * 0.05</field>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_XO">
+            <field name="name">TVA due a 0% (Exportations)</field>
+            <field name="amount" eval="0.00"/>
+            <field name="description">0%</field>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_due_0"/>
+<!--            <field name="tax_code_id" ref="vat_code_due_tva0"/>  -->
+            <field name="ref_base_code_id" ref="vat_code_due_0"/>
+<!--            <field name="ref_tax_code_id" ref="vat_code_due_tva0"/>      -->
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="account_collected_id" ref="ch_1170"/>
+            <field name="account_paid_id" ref="ch_1170"/>
+        </record>
+        <record model="account.tax.template" id="vat_O_exclude">
+            <field name="name">TVA 0% exclue</field>
+            <field name="description">0% excl.</field>
+            <field name="amount" eval="0.00"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_due_0_exclu"/>
+<!--            <field name="tax_code_id" ref="vat_code_due_tva0"/>   -->
+            <field name="ref_base_code_id" ref="vat_code_due_0_exclu"/>
+<!--            <field name="ref_tax_code_id" ref="vat_code_due_tva0"/> -->
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_O_import">
+            <field name="name">TVA 0% Importations de biens et services</field>
+            <field name="description">0% import.</field>
+            <field name="amount" eval="0.00"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_receivable_base_0"/>
+            <field name="tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="ref_base_code_id" ref="vat_code_receivable_base_0"/>
+            <field name="ref_tax_code_id" ref="vat_code_payable_bs"/>
+            <field name="base_sign" eval="-1.0"/>
+            <field name="tax_sign" eval="-1.0"/>
+            <field name="ref_base_sign" eval="1.0"/>
+            <field name="ref_tax_sign" eval="1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+        <!--# 100% on import !! the tax percentage is 00-->
+        <record model="account.tax.template" id="vat_100_import">
+            <field name="name">100% dédouanement TVA</field>
+            <field name="description">100% imp.</field>
+            <field name="amount" eval="0.0"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_payable_bs"/>
+            <field name="ref_base_code_id" ref="vat_code_payable_bs"/>
+            <field name="base_sign" eval="1.0"/>
+            <field name="tax_sign" eval="1.0"/>
+            <field name="ref_base_sign" eval="-1.0"/>
+            <field name="ref_tax_sign" eval="-1.0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_collected_id" ref="ch_1171"/>
+            <field name="account_paid_id" ref="ch_1171"/>
+        </record>
+    </data>
+</openerp>
