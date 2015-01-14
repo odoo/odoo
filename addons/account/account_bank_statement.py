@@ -263,19 +263,19 @@ class account_bank_statement(osv.osv):
         credit = ((amount < 0) and -amount) or 0.0
         cur_id = False
         amt_cur = False
-        if st_line.statement_id.currency.id != company_currency.id or st_line.currency_id and st_line.amount_currency:
+        if st_line.statement_id.currency.id != company_currency.id or (st_line.currency_id and st_line.amount_currency):
             #the amount given is in foreign currency and needs to be converted at the ratio of the transaction
             st_line_currency_rate = st_line.currency_id and (st_line.amount_currency / st_line.amount) or 1
-            debit = currency_obj.round(cr, uid, company_currency, debit / st_line_currency_rate)
-            credit = currency_obj.round(cr, uid, company_currency, credit / st_line_currency_rate)
-        if st_line.statement_id.currency.id != company_currency.id:
+            if st_line.currency_id != company_currency:
+                debit = currency_obj.round(cr, uid, company_currency, debit / st_line_currency_rate)
+                credit = currency_obj.round(cr, uid, company_currency, credit / st_line_currency_rate)
+                amt_cur = amount
+            else:
+                amt_cur = amount / st_line_currency_rate
+            cur_id = st_line.statement_id.currency.id != company_currency.id and st_line.statement_id.currency.id or st_line.currency_id.id
+        if st_line.statement_id.currency.id != company_currency.id and st_line.currency_id != company_currency:
             debit = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, debit, context=ctx)
             credit = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, credit, context=ctx)
-            amt_cur = amount
-            cur_id = st_line.statement_id.currency.id
-        elif st_line.currency_id and st_line.amount_currency:
-            amt_cur = amount
-            cur_id = st_line.currency_id.id
         return self._prepare_move_line_vals(cr, uid, st_line, move_id, debit, credit,
             amount_currency=amt_cur, currency_id=cur_id, account_id=account_id,
             partner_id=partner_id, context=context)
@@ -803,12 +803,15 @@ class account_bank_statement_line(osv.osv):
                     mv_line_dict['amount_currency'] = mv_line_dict['debit'] - mv_line_dict['credit']
                     mv_line_dict['currency_id'] = st_line_currency.id
                     if st_line.currency_id and statement_currency.id == company_currency.id:
+                        #statement is in company currency but the transaction is in foreign currency
                         debit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['debit'] / st_line_currency_rate)
                         credit_at_current_rate = self.pool.get('res.currency').round(cr, uid, company_currency, mv_line_dict['credit'] / st_line_currency_rate)
                     elif st_line.currency_id:
+                        #statement is in foreign currency and the transaction is in another one
                         debit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)      
                         credit_at_current_rate = currency_obj.compute(cr, uid, statement_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
                     else:
+                        #statement is in foreign currency and no extra currency is given for the transaction
                         debit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['debit'] / st_line_currency_rate, context=ctx)
                         credit_at_current_rate = currency_obj.compute(cr, uid, st_line_currency.id, company_currency.id, mv_line_dict['credit'] / st_line_currency_rate, context=ctx)
                     if mv_line_dict.get('counterpart_move_line_id'):
