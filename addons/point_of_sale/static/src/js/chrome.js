@@ -235,11 +235,11 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
-                var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
+                var ean = self.pos.barcode_reader.barcode_parser.sanitize_ean(self.$('input.ean').val() || '0');
                 self.$('input.ean').val(ean);
                 self.pos.barcode_reader.scan(ean);
             });
-            this.$('.button.reference').click(function(){
+            this.$('.button.barcode').click(function(){
                 self.pos.barcode_reader.scan(self.$('input.ean').val());
             });
             this.$('.button.show_orders').click(function(){
@@ -266,12 +266,6 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                         self.pos.db.remove_all_unpaid_orders();
                         window.location = '/';
                     },
-                });
-            });
-            _.each(this.eans, function(ean, name){
-                self.$('.button.'+name).click(function(){
-                    self.$('input.ean').val(ean);
-                    self.pos.barcode_reader.scan(ean);
                 });
             });
             _.each(this.events, function(name){
@@ -417,6 +411,8 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
 
             this.widget = {};   // contains references to subwidgets instances
 
+            this.cleanup_dom();
+
             this.pos.ready.done(function(){
                 self.build_chrome();
                 self.build_widgets();
@@ -428,7 +424,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             });
         },
 
-        build_chrome: function() { 
+        cleanup_dom:  function() {
             // remove default webclient handlers that induce click delay
             $(document).off();
             $(window).off();
@@ -438,7 +434,9 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             $('document').off();
             $('.oe_web_client').off();
             $('.openerp_webclient_container').off();
+        },
 
+        build_chrome: function() { 
             FastClick.attach(document.body);
 
             instance.webclient.set_content_full_screen(true);

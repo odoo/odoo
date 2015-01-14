@@ -69,10 +69,7 @@ def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
     if config.get('bin_path') and config['bin_path'] != 'None':
         path.append(config['bin_path'])
-    try:
-        return which(name, path=os.pathsep.join(path))
-    except IOError:
-        return None
+    return which(name, path=os.pathsep.join(path))
 
 def find_pg_tool(name):
     path = None

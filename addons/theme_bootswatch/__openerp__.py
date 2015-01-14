@@ -8,5 +8,5 @@
     'data': [
         'views/theme.xml',
     ],
-    'application': True,
+    'application': False,
 }
