@@ -300,6 +300,7 @@ core.search_filters_registry
     .add('date', ExtendedSearchProposition.Date)
     .add('integer', ExtendedSearchProposition.Integer)
     .add('float', ExtendedSearchProposition.Float)
+    .add('monetary', ExtendedSearchProposition.Float)
     .add('boolean', ExtendedSearchProposition.Boolean)
     .add('selection', ExtendedSearchProposition.Selection)
     .add('id', ExtendedSearchProposition.Id);

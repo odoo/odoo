@@ -821,7 +821,9 @@ class ImageConverter(osv.AbstractModel):
 
 class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
-    ``display_currency``.
+    ``display_currency`` only if field is not of type Monetary.
+    Otherwise, if we are in presence of a monetary field, the field definition must
+    have a currency_field attribute set.
 
     The currency is used for formatting *and rounding* of the float value. It
     is assumed that the linked res_currency has a non-empty rounding value and
@@ -845,19 +847,21 @@ class MonetaryConverter(osv.AbstractModel):
         if context is None:
             context = {}
         Currency = self.pool['res.currency']
-        display_currency = self.display_currency(cr, uid, options['display_currency'], options)
+        cur_field = record._fields[field_name]
+        display_currency = False
+        #currency should be specified by monetary field
+        if cur_field.type == 'monetary' and cur_field.currency_field:
+            display_currency = record[cur_field.currency_field]
+        #otherwise fall back to old method
+        if not display_currency:
+            display_currency = self.display_currency(cr, uid, options['display_currency'], options)
 
         # lang.format mandates a sprintf-style format. These formats are non-
         # minimal (they have a default fixed precision instead), and
         # lang.format will not set one by default. currency.round will not
         # provide one either. So we need to generate a precision value
         # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        #
-        # The log10 of the rounding should be the number of digits involved if
-        # negative, if positive clamp to 0 digits and call it a day.
-        # nb: int() ~ floor(), we want nearest rounding instead
-        precision = int(math.floor(math.log10(display_currency.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        fmt = "%.{0}f".format(display_currency.decimal_places)
 
         from_amount = record[field_name]
 

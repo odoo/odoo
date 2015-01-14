@@ -718,6 +718,7 @@ core.search_widgets_registry
     .add('integer', IntegerField)
     .add('id', IntegerField)
     .add('float', FloatField)
+    .add('monetary', FloatField)
     .add('selection', SelectionField)
     .add('datetime', DateTimeField)
     .add('date', DateField)

@@ -46,6 +46,7 @@ function format_value (value, descriptor, value_if_empty) {
         case 'integer':
             return utils.insert_thousand_seps(
                 _.str.sprintf('%d', value));
+        case 'monetary':
         case 'float':
             var digits = descriptor.digits ? descriptor.digits : [69,2];
             digits = typeof digits === "string" ? py.eval(digits) : digits;
@@ -133,6 +134,7 @@ function parse_value (value, descriptor, value_if_empty) {
             if (isNaN(tmp) || tmp % 1)
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
+        case 'monetary':
         case 'float':
             tmp = Number(value);
             if (!isNaN(tmp))
