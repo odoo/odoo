@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     'name': 'Account Bank Statement Import',
+    'category' : 'Accounting & Finance',
     'version': '1.0',
     'author': 'OpenERP SA',
     'depends': ['account'],
