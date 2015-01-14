@@ -1516,7 +1516,6 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="company_id"/>
-                        <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                         <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                         <field name="parent_id" />
                         <field name="code_digits" />
@@ -1545,10 +1544,8 @@
             <field name="arch" type="xml">
                 <search string="Search Chart of Account Templates">
                     <field name="name" string="Account Template"/>
-                    <field name="account_root_id"/>
                     <field name="bank_account_view_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Root Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'account_root_id'}"/>
                         <filter string="Bank Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'bank_account_view_id'}"/>
                         <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable'}"/>
                         <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable'}"/>
@@ -1565,7 +1562,6 @@
                 <tree string="Chart of Accounts Template">
                     <field name="name"/>
                     <field name="company_id"/>
-                    <field name="account_root_id"/>
                     <field name="bank_account_view_id"/>
                     <field name="property_account_receivable" invisible="1"/>
                     <field name="property_account_payable" invisible="1"/>

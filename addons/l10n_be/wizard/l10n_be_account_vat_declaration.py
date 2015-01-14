@@ -43,7 +43,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _columns = {
         'name': fields.char('File Name'),
         'date': fields.date('Account Date', required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to make or not?'),

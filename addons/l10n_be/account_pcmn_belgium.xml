@@ -3,9 +3,6 @@
     <data>
 
         <!-- account.account.type -->
-        <record id="user_type_view" model="account.account.type">
-            <field name="name">Vue</field>
-        </record>
         <record id="user_type_stock" model="account.account.type">
             <field name="name">Stock et Encours</field>
             <field name="report_type">asset</field>
@@ -13,255 +10,299 @@
 
         <!-- Chart template of l10n_be -->
             <!-- Account template definition -->
-        <record id="a_root" model="account.account.template">
-            <field name="name">PLAN COMPTABLE MINIMUM NORMALISE</field>
-            <field name="code">0</field>
-            <field name="user_type" ref="user_type_view"/>
-        </record>
         <record id="a1" model="account.account.template">
             <field name="name">CLASSE 1</field>
             <field name="code">1</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a10" model="account.account.template">
             <field name="name">CAPITAL</field>
             <field name="code">10</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a100" model="account.account.template">
             <field name="name">Capital souscrit ou capital personnel</field>
             <field name="code">100</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1000" model="account.account.template">
             <field name="name">Capital non amorti</field>
             <field name="code">1000</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1001" model="account.account.template">
             <field name="name">Capital amorti</field>
             <field name="code">1001</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a101" model="account.account.template">
             <field name="name">Capital non appelé</field>
             <field name="code">101</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a109" model="account.account.template">
             <field name="name">Compte de l'exploitant</field>
             <field name="code">109</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1090" model="account.account.template">
             <field name="name">Opérations courantes</field>
             <field name="code">1090</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1091" model="account.account.template">
             <field name="name">Impôts personnels</field>
             <field name="code">1091</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1092" model="account.account.template">
             <field name="name">Rémunérations et autres avantages</field>
             <field name="code">1092</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a11" model="account.account.template">
             <field name="name">PRIMES D'EMISSION</field>
             <field name="code">11</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a12" model="account.account.template">
             <field name="name">PLUS-VALUES DE REEVALUATION</field>
             <field name="code">12</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a120" model="account.account.template">
             <field name="name">Plus-values de réévaluation sur immobilisations incorporelles</field>
             <field name="code">120</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1200" model="account.account.template">
             <field name="name">Plus-values de réévaluation</field>
             <field name="code">1200</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1201" model="account.account.template">
             <field name="name">Reprises de réductions de valeur</field>
             <field name="code">1201</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a121" model="account.account.template">
             <field name="name">Plus-values de réévaluation sur immobilisations corporelles</field>
             <field name="code">121</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1210" model="account.account.template">
             <field name="name">Plus-values de réévaluation</field>
             <field name="code">1210</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1211" model="account.account.template">
             <field name="name">Reprises de réductions de valeur</field>
             <field name="code">1211</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a122" model="account.account.template">
             <field name="name">Plus-values de réévaluation sur immobilisations financières</field>
             <field name="code">122</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1220" model="account.account.template">
             <field name="name">Plus-values de réévaluation</field>
             <field name="code">1220</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1221" model="account.account.template">
             <field name="name">Reprises de réductions de valeur</field>
             <field name="code">1221</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a123" model="account.account.template">
             <field name="name">Plus-values de réévaluation sur stocks</field>
             <field name="code">123</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a124" model="account.account.template">
             <field name="name">Reprises de réductions de valeur sur placements de trésorerie</field>
             <field name="code">124</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a13" model="account.account.template">
             <field name="name">RESERVES</field>
             <field name="code">13</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a130" model="account.account.template">
             <field name="name">Réserve légale</field>
             <field name="code">130</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a131" model="account.account.template">
             <field name="name">Réserves indisponibles</field>
             <field name="code">131</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1310" model="account.account.template">
             <field name="name">Réserve pour actions propres</field>
             <field name="code">1310</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1311" model="account.account.template">
             <field name="name">Autres réserves indisponibles</field>
             <field name="code">1311</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a132" model="account.account.template">
             <field name="name">Réserves immunisées</field>
             <field name="code">132</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a133" model="account.account.template">
             <field name="name">Réserves disponibles</field>
             <field name="code">133</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1330" model="account.account.template">
             <field name="name">Réserve pour régularisation de dividendes</field>
             <field name="code">1330</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1331" model="account.account.template">
             <field name="name">Réserve pour renouvellement des immobilisations</field>
             <field name="code">1331</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1332" model="account.account.template">
             <field name="name">Réserve pour installations en faveur du personnel  1333 Réserves libres</field>
             <field name="code">1332</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a14" model="account.account.template">
             <field name="name">BENEFICE (PERTE) REPORTE(E)</field>
             <field name="code">14</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a140" model="account.account.template">
             <field name="name">Bénéfice reporté</field>
             <field name="code">140</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a141" model="account.account.template">
             <field name="name">Perte reportée</field>
             <field name="code">141</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a15" model="account.account.template">
             <field name="name">SUBSIDES EN CAPITAL</field>
             <field name="code">15</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a150" model="account.account.template">
             <field name="name">Montants obtenus</field>
             <field name="code">150</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a151" model="account.account.template">
             <field name="name">Montants transférés aux résultats</field>
             <field name="code">151</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a16" model="account.account.template">
             <field name="name">PROVISIONS ET IMPOTS DIFFERES</field>
             <field name="code">16</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1600" model="account.account.template">
             <field name="name">Provisions pour pensions et obligations similaires</field>
             <field name="code">1600</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a1601" model="account.account.template">
             <field name="name">Provisions pour prépensions</field>
             <field name="code">1601</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a161" model="account.account.template">
             <field name="name">Provisions pour charges fiscales</field>
             <field name="code">161</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a162" model="account.account.template">
             <field name="name">Provisions pour grosses réparations et gros entretiens</field>
             <field name="code">162</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a163" model="account.account.template">
             <field name="name">Provisions pour autres risques et charges</field>
             <field name="code">163</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a164" model="account.account.template">
             <field name="name">Provisions pour sûretés personnelles ou réelles constituées à l'appui de dettes et d'engagements de tiers</field>
             <field name="code">164</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a165" model="account.account.template">
             <field name="name">Provisions pour engagements relatifs à l'acquisition ou à la cession d'immobilisations</field>
             <field name="code">165</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a166" model="account.account.template">
             <field name="name">Provisions pour exécution de commandes passées ou reçues</field>
             <field name="code">166</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a167" model="account.account.template">
             <field name="name">Provisions pour positions et marchés à terme en devises ou positions et marchés à terme en marchandises</field>
             <field name="code">167</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a168" model="account.account.template">
             <field name="name">Impôts différés</field>

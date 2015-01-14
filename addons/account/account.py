@@ -777,46 +777,6 @@ class account_account_template(models.Model):
             res.append((record.id, name))
         return res
 
-    @api.model
-    def generate_account(self, chart_template_id, tax_template_ref, acc_template_ref, code_digits, company_id):
-        """
-        This method for generating accounts from templates.
-
-        :param chart_template_id: id of the chart template chosen in the wizard
-        :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-        :paramacc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-        :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: return acc_template_ref for reference purpose.
-        :rtype: dict
-        """
-        company_name = self.env['res.company'].browse(company_id).name
-        acc_template = self.search([('nocreate', '!=', True), '|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', '=', False)], order='id')
-        for account_template in acc_template:
-            tax_ids = []
-            for tax in account_template.tax_ids:
-                tax_ids.append(tax_template_ref[tax.id])
-
-            code_main = account_template.code and len(account_template.code) or 0
-            code_acc = account_template.code or ''
-            if code_main > 0 and code_main <= code_digits:
-                code_acc = str(code_acc) + (str('0' * (code_digits - code_main)))
-            vals = {
-                'name': company_name or account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'user_type': account_template.user_type and account_template.user_type.id or False,
-                'reconcile': account_template.reconcile,
-                'note': account_template.note,
-                'tax_ids': [(6,0,tax_ids)],
-                'company_id': company_id,
-            }
-            new_account = self.env['account.account'].create(vals)
-            acc_template_ref[account_template.id] = new_account.id
-
-        return acc_template_ref
-
-
 class account_add_tmpl_wizard(models.TransientModel):
     """Add one more account from the template.
 
@@ -882,7 +842,7 @@ class account_chart_template(models.Model):
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
-    account_root_id = fields.Many2one('account.account.template', string='Root Account')
+    account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
     bank_account_view_id = fields.Many2one('account.account.template', string='Bank Account')
@@ -895,6 +855,286 @@ class account_chart_template(models.Model):
     property_account_income_opening = fields.Many2one('account.account.template', string='Opening Entries Income Account')
     property_account_expense_opening = fields.Many2one('account.account.template', string='Opening Entries Expense Account')
 
+    @api.one
+    def try_loading_for_current_company(self):
+        company = self.env.user.company_id
+        accounts = self.env['account.account'].search([('company_id', '=', company.id), ('deprecated', '=', False), ('name', '!=', 'Chart for Automated Accounts'),
+            ('name', 'not ilike', '(test)')], limit=1)
+        # If we don't have any accounts, install this chart of account
+        if not accounts:
+            self._load_template(company)
+
+    @api.model
+    def check_created_journals(self, vals_journal, company):
+        """
+        This method used for checking journals already created or not. If not then create new journal.
+        """
+        JournalObj = self.env['account.journal']
+        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company.id)], limit=1)
+        if not rec_list:
+            JournalObj.create(vals_journal)
+        return True
+
+    @api.one
+    def generate_journals(self, acc_template_ref, company):
+        """
+        This method is used for creating journals.
+
+        :param chart_temp_id: Chart Template Id.
+        :param acc_template_ref: Account templates reference.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
+        """
+        journal_data = self._prepare_all_journals(acc_template_ref, company)
+        for vals_journal in journal_data:
+            self.check_created_journals(vals_journal, company)
+        return True
+
+    @api.one
+    def _prepare_all_journals(self, acc_template_ref, company):
+        def _get_analytic_journal(journal_type):
+            # Get the analytic journal
+            data = False
+            try:
+                if journal_type == 'sale':
+                    data = self.env.ref('account.analytic_journal_sale')
+                elif journal_type == 'purchase':
+                    data = self.env.ref('account.exp')
+                elif journal_type == 'general':
+                    pass
+            except ValueError:
+                pass
+            return data and data.id or False
+
+        def _get_default_account(journal_type, type='debit'):
+            # Get the default accounts
+            default_account = False
+            if journal_type == 'sale':
+                default_account = acc_template_ref.get(self.property_account_income_categ.id)
+            elif journal_type == 'purchase':
+                default_account = acc_template_ref.get(self.property_account_expense_categ.id)
+            elif journal_type == 'situation':
+                if type == 'debit':
+                    default_account = acc_template_ref.get(self.property_account_expense_opening.id)
+                else:
+                    default_account = acc_template_ref.get(self.property_account_income_opening.id)
+            return default_account
+
+        journal_names = {
+            'sale': _('Sales Journal'),
+            'purchase': _('Purchase Journal'),
+            'general': _('Miscellaneous Journal'),
+            'situation': _('Opening Entries Journal'),
+        }
+        journal_codes = {
+            'sale': _('SAJ'),
+            'purchase': _('EXJ'),
+            'general': _('MISC'),
+            'situation': _('OPEJ'),
+        }
+
+        journal_data = []
+        for journal_type in ['sale', 'purchase', 'general', 'situation']:
+            vals = {
+                'type': journal_type,
+                'name': journal_names[journal_type],
+                'code': journal_codes[journal_type],
+                'company_id': company.id,
+                'analytic_journal_id': _get_analytic_journal(journal_type),
+                'default_credit_account_id': _get_default_account(journal_type, 'credit'),
+                'default_debit_account_id': _get_default_account(journal_type, 'debit'),
+                'refund_sequence': True,
+            }
+            journal_data.append(vals)
+        return journal_data
+
+    @api.one
+    def generate_properties(self, acc_template_ref, company):
+        """
+        This method used for creating properties.
+
+        :param self: current chart template for which we need to create properties
+        :param acc_template_ref: Mapping between ids of account templates and real accounts created from them
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
+        """
+        PropertyObj = self.env['ir.property']
+        todo_list = [
+            ('property_account_receivable', 'res.partner','account.account'),
+            ('property_account_payable', 'res.partner','account.account'),
+            ('property_account_expense_categ', 'product.category','account.account'),
+            ('property_account_income_categ', 'product.category','account.account'),
+            ('property_account_expense', 'product.template','account.account'),
+            ('property_account_income', 'product.template','account.account'),
+        ]
+        for record in todo_list:
+            account = getattr(self, record[0])
+            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+            if value:
+                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
+                vals = {
+                    'name': record[0],
+                    'company_id': company.id,
+                    'fields_id': field.id,
+                    'value': value,
+                }
+                property_ids = PropertyObj.search([('name','=', record[0]), ('company_id', '=', company.id)])
+                if property_ids:
+                    #the property exist: modify it
+                    property_ids.write(vals)
+                else:
+                    #create the property
+                    PropertyObj.create(vals)
+        return True
+
+    @api.one
+    def _install_template(self, company, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
+        '''
+        This function recursively loads the template objects and create the real objects from them.
+
+        :param template_id: id of the chart template to load
+        :param company_id: id of the company the wizard is running for
+        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
+        :param obj_wizard: the current wizard for generating the COA from the templates
+        :param acc_ref: Mapping between ids of account templates and real accounts created from them
+        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+        :returns: return a tuple with a dictionary containing
+            * the mapping between the account template ids and the ids of the real accounts that have been generated
+              from them, as first item,
+            * a similar dictionary for mapping the tax templates and taxes, as second item,
+        :rtype: tuple(dict, dict, dict)
+        '''
+        if acc_ref is None:
+            acc_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if self.parent_id:
+            tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
+            acc_ref.update(tmp1)
+            taxes_ref.update(tmp2)
+        tmp1, tmp2, tmp3 = self._load_template(company, code_digits=code_digits, account_ref=acc_ref, taxes_ref=taxes_ref)
+        acc_ref.update(tmp1)
+        taxes_ref.update(tmp2)
+        return acc_ref, taxes_ref
+
+    @api.one
+    def _load_template(self, company, code_digits=None, account_ref=None, taxes_ref=None):
+        '''
+        This function generates all the objects from the templates
+
+        :param self: id of the chart template to load
+        :param company: id the company
+        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
+        :param acc_ref: Mapping between ids of account templates and real accounts created from them
+        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
+        :returns: return a tuple with a dictionary containing
+            * the mapping between the account template ids and the ids of the real accounts that have been generated
+              from them, as first item,
+            * a similar dictionary for mapping the tax templates and taxes, as second item,
+        :rtype: tuple(dict, dict, dict)
+        '''
+        if account_ref is None:
+            account_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if not code_digits:
+            code_digits = self.code_digits
+        AccountTaxObj = self.env['account.tax']
+
+        # Generate taxes from templates.
+        generated_tax_res = self.tax_template_ids._generate_tax(company)
+        taxes_ref.update(generated_tax_res['tax_template_to_tax'])
+
+        # Generating Accounts from templates.
+        account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
+        account_ref.update(account_template_ref)
+
+        # writing account values on tax after creation of accounts
+        for key, value in generated_tax_res['account_dict'].items():
+            if value['account_collected_id'] or value['account_paid_id']:
+                AccountTaxObj.browse(key).write({
+                    'account_collected_id': account_ref.get(value['account_collected_id'], False),
+                    'account_paid_id': account_ref.get(value['account_paid_id'], False),
+                })
+
+        # Create Journals
+        self.generate_journals(account_ref, company)
+
+        # generate properties function
+        self.generate_properties(account_ref, company)
+
+        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
+        self.generate_fiscal_position(taxes_ref, account_ref, company)
+
+        return account_ref, taxes_ref
+
+    @api.one
+    def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
+        """
+        This method for generating accounts from templates.
+
+        :param self: the chart template chosen
+        :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+        :paramacc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+        :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: return acc_template_ref for reference purpose.
+        :rtype: dict
+        """
+
+        company_name = company.name
+        acc_template = self.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
+        for account_template in acc_template:
+            tax_ids = []
+            for tax in account_template.tax_ids:
+                tax_ids.append(tax_template_ref[tax.id])
+
+            code_main = account_template.code and len(account_template.code) or 0
+            code_acc = account_template.code or ''
+            if code_main > 0 and code_main <= code_digits:
+                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            vals={
+                'name': company_name or account_template.name,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': code_acc,
+                'user_type': account_template.user_type and account_template.user_type.id or False,
+                'reconcile': account_template.reconcile,
+                'note': account_template.note,
+                'tax_ids': [(6,0,tax_ids)],
+                'company_id': company.id,
+            }
+            new_account = self.env['account.account'].create(vals)
+            acc_template_ref[account_template.id] = new_account.id
+
+        return acc_template_ref
+
+    @api.one
+    def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
+        """
+        This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
+
+        :param chart_temp_id: Chart Template Id.
+        :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
+        :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
+        :param company_id: company_id selected from wizard.multi.charts.accounts.
+        :returns: True
+        """
+        positions = self.search([('chart_template_id', '=', self.id)])
+        for position in positions:
+            new_fp = self.env['account.fiscal.position'].create({'company_id': company.id, 'name': position.name, 'note': position.note})
+            for tax in position.tax_ids:
+                self.env['account.fiscal.position.tax'].create({
+                    'tax_src_id': tax_template_ref[tax.tax_src_id.id],
+                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                    'position_id': new_fp.id
+                })
+            for acc in position.account_ids:
+                self.env['account.fiscal.position.account'].create({
+                    'account_src_id': acc_template_ref[acc.account_src_id.id],
+                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                    'position_id': new_fp.id
+                })
+        return True
 
 class account_tax_template(models.Model):
     _name = 'account.tax.template'
@@ -941,11 +1181,12 @@ class account_tax_template(models.Model):
         return res
 
     @api.multi
-    def _generate_tax(self, company_id):
+    def _generate_tax(self, company):
         """
         This method generate taxes from templates.
 
-        :param company_id: id of the company the wizard is running for
+        :param self: diffent tax templates
+        :param company: the company the taxes should be created
         :returns:
             {
             'tax_template_to_tax': mapping between tax template and the newly generated taxes corresponding,
@@ -961,7 +1202,7 @@ class account_tax_template(models.Model):
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
-                'company_id': company_id,
+                'company_id': company.id,
                 'children_tax_ids': tax.children_tax_ids,
                 'sequence': tax.sequence,
                 'amount': tax.amount,
@@ -992,34 +1233,6 @@ class account_fiscal_position_template(models.Model):
     account_ids = fields.One2many('account.fiscal.position.account.template', 'position_id', string='Account Mapping')
     tax_ids = fields.One2many('account.fiscal.position.tax.template', 'position_id', string='Tax Mapping')
     note = fields.Text(string='Notes')
-
-    @api.model
-    def generate_fiscal_position(self, chart_temp_id, tax_template_ref, acc_template_ref, company_id):
-        """
-        This method generate Fiscal Position, Fiscal Position Accounts and Fiscal Position Taxes from templates.
-
-        :param chart_temp_id: Chart Template Id.
-        :param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
-        :param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
-        """
-        positions = self.search([('chart_template_id', '=', chart_temp_id)])
-        for position in positions:
-            new_fp = self.env['account.fiscal.position'].create({'company_id': company_id, 'name': position.name, 'note': position.note})
-            for tax in position.tax_ids:
-                self.env['account.fiscal.position.tax'].create({
-                    'tax_src_id': tax_template_ref[tax.tax_src_id.id],
-                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp.id
-                })
-            for acc in position.account_ids:
-                self.env['account.fiscal.position.account'].create({
-                    'account_src_id': acc_template_ref[acc.account_src_id.id],
-                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp.id
-                })
-        return True
 
 
 class account_fiscal_position_tax_template(models.Model):
@@ -1185,214 +1398,6 @@ class wizard_multi_charts_accounts(models.TransientModel):
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    @api.model
-    def check_created_journals(self, vals_journal, company_id):
-        """
-        This method used for checking journals already created or not. If not then create new journal.
-        """
-        JournalObj = self.env['account.journal']
-        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company_id)], limit=1)
-        if not rec_list:
-            JournalObj.create(vals_journal)
-        return True
-
-    @api.model
-    def generate_journals(self, chart_template_id, acc_template_ref, company_id):
-        """
-        This method is used for creating journals.
-
-        :param chart_temp_id: Chart Template Id.
-        :param acc_template_ref: Account templates reference.
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
-        """
-        journal_data = self._prepare_all_journals(chart_template_id, acc_template_ref, company_id)
-        for vals_journal in journal_data:
-            self.check_created_journals(vals_journal, company_id)
-        return True
-
-    @api.model
-    def _prepare_all_journals(self, chart_template_id, acc_template_ref, company_id):
-        def _get_analytic_journal(journal_type):
-            # Get the analytic journal
-            data = False
-            try:
-                if journal_type == 'sale':
-                    data = self.env.ref('account.analytic_journal_sale')
-                elif journal_type == 'purchase':
-                    data = self.env.ref('account.exp')
-                elif journal_type == 'general':
-                    pass
-            except ValueError:
-                pass
-            return data and data.id or False
-
-        def _get_default_account(journal_type, type='debit'):
-            # Get the default accounts
-            default_account = False
-            if journal_type == 'sale':
-                default_account = acc_template_ref.get(template.property_account_income_categ.id)
-            elif journal_type == 'purchase':
-                default_account = acc_template_ref.get(template.property_account_expense_categ.id)
-            elif journal_type == 'situation':
-                if type == 'debit':
-                    default_account = acc_template_ref.get(template.property_account_expense_opening.id)
-                else:
-                    default_account = acc_template_ref.get(template.property_account_income_opening.id)
-            return default_account
-
-        journal_names = {
-            'sale': _('Sales Journal'),
-            'purchase': _('Purchase Journal'),
-            'general': _('Miscellaneous Journal'),
-            'situation': _('Opening Entries Journal'),
-        }
-        journal_codes = {
-            'sale': _('SAJ'),
-            'purchase': _('EXJ'),
-            'general': _('MISC'),
-            'situation': _('OPEJ'),
-        }
-
-        template = self.env['account.chart.template'].browse(chart_template_id)
-
-        journal_data = []
-        for journal_type in ['sale', 'purchase', 'general', 'situation']:
-            vals = {
-                'type': journal_type,
-                'name': journal_names[journal_type],
-                'code': journal_codes[journal_type],
-                'company_id': company_id,
-                'analytic_journal_id': _get_analytic_journal(journal_type),
-                'default_credit_account_id': _get_default_account(journal_type, 'credit'),
-                'default_debit_account_id': _get_default_account(journal_type, 'debit'),
-                'refund_sequence': True,
-            }
-            journal_data.append(vals)
-        return journal_data
-
-    @api.model
-    def generate_properties(self, chart_template_id, acc_template_ref, company_id):
-        """
-        This method used for creating properties.
-
-        :param chart_template_id: id of the current chart template for which we need to create properties
-        :param acc_template_ref: Mapping between ids of account templates and real accounts created from them
-        :param company_id: company_id selected from wizard.multi.charts.accounts.
-        :returns: True
-        """
-        PropertyObj = self.env['ir.property']
-        todo_list = [
-            ('property_account_receivable', 'res.partner','account.account'),
-            ('property_account_payable', 'res.partner','account.account'),
-            ('property_account_expense_categ', 'product.category','account.account'),
-            ('property_account_income_categ', 'product.category','account.account'),
-            ('property_account_expense', 'product.template','account.account'),
-            ('property_account_income', 'product.template','account.account'),
-        ]
-        template = self.env['account.chart.template'].browse(chart_template_id)
-        for record in todo_list:
-            account = getattr(template, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
-            if value:
-                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
-                vals = {
-                    'name': record[0],
-                    'company_id': company_id,
-                    'fields_id': field.id,
-                    'value': value,
-                }
-                property_ids = PropertyObj.search([('name','=', record[0]), ('company_id', '=', company_id)])
-                if property_ids:
-                    #the property exist: modify it
-                    property_ids.write(vals)
-                else:
-                    #create the property
-                    PropertyObj.create(vals)
-        return True
-
-    @api.model
-    def _install_template(self, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None):
-        '''
-        This function recursively loads the template objects and create the real objects from them.
-
-        :param template_id: id of the chart template to load
-        :param company_id: id of the company the wizard is running for
-        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
-        :param obj_wizard: the current wizard for generating the COA from the templates
-        :param acc_ref: Mapping between ids of account templates and real accounts created from them
-        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :returns: return a tuple with a dictionary containing
-            * the mapping between the account template ids and the ids of the real accounts that have been generated
-              from them, as first item,
-            * a similar dictionary for mapping the tax templates and taxes, as second item,
-        :rtype: tuple(dict, dict, dict)
-        '''
-        if acc_ref is None:
-            acc_ref = {}
-        if taxes_ref is None:
-            taxes_ref = {}
-        template = self.env['account.chart.template'].browse(template_id)
-        if template.parent_id:
-            tmp1, tmp2 = self._install_template(template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
-            acc_ref.update(tmp1)
-            taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref)
-        acc_ref.update(tmp1)
-        taxes_ref.update(tmp2)
-        return acc_ref, taxes_ref
-
-    @api.model
-    def _load_template(self, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None):
-        '''
-        This function generates all the objects from the templates
-
-        :param template_id: id of the chart template to load
-        :param company_id: id of the company the wizard is running for
-        :param code_digits: integer that depicts the number of digits the accounts code should have in the COA
-        :param obj_wizard: the current wizard for generating the COA from the templates
-        :param acc_ref: Mapping between ids of account templates and real accounts created from them
-        :param taxes_ref: Mapping between ids of tax templates and real taxes created from them
-        :returns: return a tuple with a dictionary containing
-            * the mapping between the account template ids and the ids of the real accounts that have been generated
-              from them, as first item,
-            * a similar dictionary for mapping the tax templates and taxes, as second item,
-        :rtype: tuple(dict, dict, dict)
-        '''
-        if account_ref is None:
-            account_ref = {}
-        if taxes_ref is None:
-            taxes_ref = {}
-        template = self.env['account.chart.template'].browse(template_id)
-        AccountTaxObj = self.env['account.tax']
-
-        # Generate taxes from templates.
-        generated_tax_res = template.tax_template_ids._generate_tax(company_id)
-        taxes_ref.update(generated_tax_res['tax_template_to_tax'])
-
-        # Generating Accounts from templates.
-        account_template_ref = self.env['account.account.template'].generate_account(template_id, taxes_ref, account_ref, code_digits, company_id)
-        account_ref.update(account_template_ref)
-
-        # writing account values on tax after creation of accounts
-        for key, value in generated_tax_res['account_dict'].items():
-            if value['account_id'] or value['refund_account_id']:
-                AccountTaxObj.browse(key).write({
-                    'account_id': account_ref.get(value['account_id'], False),
-                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
-                })
-
-        # Create Journals
-        self.generate_journals(template_id, account_ref, company_id)
-
-        # generate properties function
-        self.generate_properties(template_id, account_ref, company_id)
-
-        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        self.env['account.fiscal.position.template'].generate_fiscal_position(template_id, taxes_ref, account_ref, company_id)
-
-        return account_ref, taxes_ref
-
     @api.one
     def _create_tax_templates_from_rates(self, company_id):
         '''
@@ -1425,12 +1430,12 @@ class wizard_multi_charts_accounts(models.TransientModel):
         if self._uid != self.sudo()._uid and not self.env.user.has_group('base.group_erp_manager'):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
-        company_id = self.company_id.id
+        company = self.company_id
 
         self.company_id.write({'currency_id': self.currency_id.id, 'accounts_code_digits': self.code_digits})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
-        if company_id==1:
+        if company.id==1:
             for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
                 try:
                     tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
@@ -1438,19 +1443,20 @@ class wizard_multi_charts_accounts(models.TransientModel):
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(company_id)
+        self._create_tax_templates_from_rates(company.id)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref = self._install_template(self.chart_template_id.id, company_id, code_digits=self.code_digits, obj_wizard=self)
+
+        acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits)
 
         # write values of default taxes for product as super user
         if self.sale_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax.id]], for_all_users=True, company_id=company.id)
         if self.purchase_tax and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company_id)
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax.id]], for_all_users=True, company_id=company.id)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(company_id, acc_template_ref)
+        self._create_bank_journals_from_o2m(company, acc_template_ref)
         return {}
 
     @api.model

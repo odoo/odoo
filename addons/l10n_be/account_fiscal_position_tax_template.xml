@@ -223,6 +223,9 @@
             <field name="tax_src_id" ref="attn_VAT-IN-V83-21"/>
             <field name="tax_dest_id" ref="attn_VAT-IN-V83-21-ROW-CC"/>
         </record>
+        <function model="account_chart_template" name="try_loading_for_current_company">
+            <!-- ids = -->                   <value eval="env.ref('l10nbe_chart_template')"/>
+        </function>
 
     </data>
 </openerp>
