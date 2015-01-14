@@ -341,6 +341,9 @@ class Image(orm.AbstractModel):
             max_size = '%sx%s' % (max_width, max_height)
 
         src = self.pool['website'].image_url(cr, uid, record, field_name, max_size)
+        if options.get('resize'):
+            src = "%s/%s" % (src, options.get('resize'))
+
         img = '<img class="%s" src="%s" style="%s"/>' % (classes, src, options.get('style', ''))
         return ir_qweb.HTMLSafe(img)
 

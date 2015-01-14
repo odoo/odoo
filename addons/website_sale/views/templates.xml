@@ -77,7 +77,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <img itemprop="image" class="img img-responsive" t-att-src="website.image_url(product, 'image', None if product_image_big else '300x300')"/>
+          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image" #{None if product_image_big else ", \"resize\": \"300x300\""}}'/>
       </a>
   </div>
   <section>
