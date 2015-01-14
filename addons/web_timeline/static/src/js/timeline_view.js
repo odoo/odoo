@@ -435,19 +435,19 @@ openerp.web_timeline = function (session) {
 
         /**
          * get the parent thread of the messages.
-         * Each message is send to his parent object (or parent thread flat mode) for creating the object message.
+         * Each message is send to his parent object for creating the object message.
          * @param : {Array} datas from calling RPC to "message_read"
          */
          switch_new_message: function (records, dom_insert_after) {
             console.log("Records", records);
             var self = this;
-            var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
+            var insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
 
             _(records).each(function (record) {
                  // create object and attach to the thread object
                  var message = self.create_message_object(record);
                  // insert the message on dom
-                 self.insert_message(message, dom_insert_after);
+                 self.insert_message(message, insert_after);
             });
 
             if (!records.length && this.options.root_thread == this) {
@@ -527,13 +527,17 @@ openerp.web_timeline = function (session) {
                 }});
             }
 
+            console.log("message", message);
+
             // check if the message is already created
-            for (var i in this.messages) {
+/*            for (var i in this.messages) {
                 if (message.id && this.messages[i] && this.messages[i].id == message.id) {
                     this.messages[i].destroy();
                 }
             }
-            this.messages.push(message);
+*/          this.messages.push(message);
+
+            console.log(this.messages);
 
             return message;
         },
@@ -548,22 +552,21 @@ openerp.web_timeline = function (session) {
          * @param : {object} ThreadMessage object
          */
         insert_message: function (message, dom_insert_after, prepend) {
-            var self = this;
-
             if (this.options.show_compact_message) {
                 this.instantiate_compose_message();
                 this.compose_message.do_show_compact();
             }
 
             this.$('.oe_view_nocontent').remove();
-            if (dom_insert_after && dom_insert_after.parent()[0] == self.$el[0]) {
+
+            if (dom_insert_after && this.$el[0] === dom_insert_after.parent()[0]) {
                 message.insertAfter(dom_insert_after);
             } 
             else if (prepend) {
-                message.prependTo(self.$el);
+                message.prependTo(this.$el);
             } 
             else {
-                message.appendTo(self.$el);
+                message.appendTo(this.$el);
             }
 
             return message
@@ -751,18 +754,21 @@ openerp.web_timeline = function (session) {
     });
 
     openerp.web_timeline.ParentMessage = openerp.web_timeline.MessageCommon.extend({
-        events: {
-           'click .oe_tl_parent_message':'on_parent_message',
-        },
+        template: 'ParentMessage',
 
-        start: function () {
-            this.$el.html(session.web.qweb.render('ParentMessage', {'widget': this}));
-            return this._super.apply(this, arguments);
+        events: {
+             'click':'on_parent_message',
         },
 
         on_parent_message: function (event) {
             event.stopPropagation();
-            this.parent_thread.message_fetch([["parent_id", "=", this.id]], this.context, false, 'child');
+            
+            var self = this;
+            this.parent_thread.message_fetch(['|', ["parent_id", "=", this.id], ["id", "=", this.id]], 
+                                             this.context, false, 'child', function (arg, data) {
+                // insert the message on dom after this message
+                self.parent_thread.switch_new_message(data, self.$el);
+            });
         },
     });
 
@@ -788,6 +794,8 @@ openerp.web_timeline = function (session) {
         },
 
         start: function () {
+            console.log("start thread message");
+
             this.tracking_values = (this.tracking_value_ids.length > 0);
             this.partners = (this.partner_ids.length > 0);
             this.attachments = (this.attachment_ids.length > 0);
@@ -1051,7 +1059,7 @@ openerp.web_timeline = function (session) {
                                             {'widget': this}));
         },
     });
-  
+ 
     openerp.web_timeline.ThreadComposeMessage = openerp.web_timeline.MessageCommon.extend({
         template: 'ComposeMessage',
 

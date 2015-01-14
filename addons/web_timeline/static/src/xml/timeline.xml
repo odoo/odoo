@@ -189,18 +189,18 @@
 </t>
 
 <div t-name="ParentMessage" class="oe_tl_parent_message">
-        <t t-if="widget.record_name and widget.subject">
-            <t t-raw="widget.record_name"/> : <t t-raw="widget.subject"/>
-        </t>
-        <t t-if="widget.record_name and !widget.subject">
-            <t t-raw="widget.record_name"/> 
-        </t>
-        <t t-if="!widget.record_name and widget.subject">
-            <t t-raw="widget.subject"/>
-        </t>
-        <t t-if="!widget.record_name and !widget.subject">
-            No subject
-        </t>
+    <t t-if="widget.record_name and widget.subject">
+        <t t-raw="widget.record_name"/> : <t t-raw="widget.subject"/>
+    </t>
+    <t t-if="widget.record_name and !widget.subject">
+        <t t-raw="widget.record_name"/> 
+    </t>
+    <t t-if="!widget.record_name and widget.subject">
+        <t t-raw="widget.subject"/>
+    </t>
+    <t t-if="!widget.record_name and !widget.subject">
+        No subject
+    </t>
 </div>
 
 <t t-name="ThreadMessage">
