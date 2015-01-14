@@ -3398,8 +3398,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
 
-        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
-        self.pool.get('res.company').write(cr, uid, [company_id], {'accounts_code_digits': obj_wizard.code_digits})
+        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id, 'accounts_code_digits': obj_wizard.code_digits}, context=context)
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
