@@ -1944,16 +1944,19 @@
             }
         },
 
-        on_clone: function () {
+        on_clone: function (event) {
+            event.preventDefault();
             var $clone = this.$target.clone(false);
             this.$target.after($clone);
             for (var i in this.styles){
                 this.styles[i].on_clone($clone);
             }
+            this.BuildingBlock.create_overlay(this.$target);
             return false;
         },
 
-        on_remove: function () {
+        on_remove: function (event) {
+            event.preventDefault();
             this.on_blur();
 
             this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
@@ -1976,6 +1979,10 @@
                     node.firstChild.parentNode.removeChild(node.firstChild);
                 }
             }
+
+            // clean editor if they are image or table in deleted content
+            $(".note-control-selection").hide();
+            $('.o_table_handler').remove();
 
             return false;
         },
