@@ -60,6 +60,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
 
             return this.obj.call('create', [{name:name}]).then(function(record) {
                 self.element.attr('value', record);
+                self.objects.push({'id': record, 'text': name});
             })
         },
     });
@@ -235,13 +236,13 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
 
         // UTMS selects widgets
         var campaign_select = new openerp.website_links.SelectBox('utm.campaign');
-        campaign_select.start($("#campaign-select"), 'e.g. Promotion of June, Winter Newsletter, ..');
+        campaign_select.start($("#campaign-select"), _t('e.g. Promotion of June, Winter Newsletter, ..'));
 
         var medium_select = new openerp.website_links.SelectBox('utm.medium');
-        medium_select.start($("#channel-select"), 'e.g. Newsletter, Social Network, ..');
+        medium_select.start($("#channel-select"), _t('e.g. Newsletter, Social Network, ..'));
 
         var source_select = new openerp.website_links.SelectBox('utm.source');
-        source_select.start($("#source-select"), 'e.g. Search Engine, Website page, ..');
+        source_select.start($("#source-select"), _t('e.g. Search Engine, Website page, ..'));
 
         // Recent Links Widgets
         var recent_links;
@@ -281,6 +282,7 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
             if($('#btn_shorten_url').hasClass('btn-copy') && e.which != 13) {
                 $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
                 $('#generated_tracked_link').css('display', 'none');
+                $('.o_website_links_utm_forms').show();
             }
         });
 
@@ -328,11 +330,11 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
 
             var params = {};
             params.url = $("#url").val();
-            if(campaign_id != '') { params.campaign_id = campaign_id; }
-            if(medium_id != '') { params.medium_id = medium_id; }
-            if(source_id != '') { params.source_id = source_id; }
+            if(campaign_id != '') { params.campaign_id = parseInt(campaign_id); }
+            if(medium_id != '') { params.medium_id = parseInt(medium_id); }
+            if(source_id != '') { params.source_id = parseInt(source_id); }
 
-            $('#btn_shorten_url').text('Generating link...');
+            $('#btn_shorten_url').text(_t('Generating link...'));
 
             openerp.jsonRpc("/website_links/new", 'call', params)
                 .then(function (result) {
@@ -365,6 +367,8 @@ openerp.website.if_dom_contains('div.o_website_links_create_tracked_url', functi
                         $('#campaign-select').select2('val', '');
                         $('#channel-select').select2('val', '');
                         $('#source-select').select2('val', '');
+
+                        $('.o_website_links_utm_forms').hide();
                     }
                 });
         });

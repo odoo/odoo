@@ -227,6 +227,10 @@ class mail_compose_message(osv.TransientModel):
     #------------------------------------------------------
     # Wizard validation and send
     #------------------------------------------------------
+    # action buttons call with positionnal arguments only, so we need an intermediary function
+    # to ensure the context is passed correctly
+    def send_mail_action(self, cr, uid, ids, context=None):
+        self.send_mail(cr, uid, ids, context=context)
 
     def send_mail(self, cr, uid, ids, auto_commit=False, context=None):
         """ Process the wizard content and proceed with sending the related

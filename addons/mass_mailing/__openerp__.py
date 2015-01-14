@@ -62,4 +62,5 @@ professional emails and reuse templates in a few clicks.
     ],
     'installable': True,
     'auto_install': False,
+    'application': True,
 }

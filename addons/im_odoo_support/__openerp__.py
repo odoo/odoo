@@ -23,5 +23,5 @@ Ask your functionnal question directly to the Odoo Operators with the livechat s
     ],
     'installable': True,
     'auto_install': True,
-    'application': True,
+    'application': False,
 }

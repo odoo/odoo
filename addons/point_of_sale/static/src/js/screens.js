@@ -1641,7 +1641,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 return;
             }
 
-            var plines = currentOrder.get('paymentLines').models;
+            var plines = order.get_paymentlines();
             for (var i = 0; i < plines.length; i++) {
                 if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
                     this.pos_widget.screen_selector.show_popup('error',{
