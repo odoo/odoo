@@ -228,7 +228,7 @@ class crm_team(osv.osv):
                 data = {'user_id': user['su'].user_id.id}
                 lead.write(data)
 
-                lead.convert_opportunity(None)
+                lead.convert_opportunity(lead.partner_id and lead.partner_id.id or None)
                 self._cr.commit()
 
             user['nbr'] -= 1
