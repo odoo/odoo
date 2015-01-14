@@ -25,6 +25,8 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'expects_chart_of_accounts': fields.boolean('Expects a Chart of Accounts'),
+        'bank_account_code_char': fields.char('Code of the main bank account'),
+        'accounts_code_digits': fields.integer('Number of digits in an account code'),
         'tax_calculation_rounding_method': fields.selection([
             ('round_per_line', 'Round per Line'),
             ('round_globally', 'Round Globally'),
@@ -37,6 +39,7 @@ class res_company(osv.osv):
     _defaults = {
         'expects_chart_of_accounts': True,
         'tax_calculation_rounding_method': 'round_per_line',
+        'accounts_code_digits': 6,
         'overdue_msg': '''Dear Sir/Madam,
 
 Our records indicate that some payments on your account are still due. Please find details below.

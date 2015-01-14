@@ -719,7 +719,6 @@ class account_account(osv.osv):
         self._check_moves(cr, uid, ids, "unlink", context=context)
         return super(account_account, self).unlink(cr, uid, ids, context=context)
 
-
 class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
@@ -3399,7 +3398,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
 
-        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
+        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id, 'accounts_code_digits': obj_wizard.code_digits}, context=context)
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
@@ -3429,80 +3428,90 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
         return {}
 
-    def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
+    def _prepare_bank_journal(self, cr, uid, company, line, default_account_id, context=None):
         '''
         This function prepares the value to use for the creation of a bank journal created through the wizard of
         generating COA from templates.
 
         :param line: dictionary containing the values encoded by the user related to his bank account
-        :param current_num: integer corresponding to a counter of the already created bank journals through this wizard.
         :param default_account_id: id of the default debit.credit account created before for this journal.
         :param company_id: id of the company for which the wizard is running
         :return: mapping of field names and values
         :rtype: dict
         '''
-        obj_data = self.pool.get('ir.model.data')
         obj_journal = self.pool.get('account.journal')
         
-
-        # we need to loop again to find next number for journal code
-        # because we can't rely on the value current_num as,
-        # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank)
-        # and the next number for account code might have been already used before for journal
-        for num in xrange(current_num, 100):
+        # we need to loop to find next number for journal code
+        for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
+            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company.id)], context=context)
             if not ids:
                 break
         else:
             raise osv.except_osv(_('Error!'), _('Cannot generate an unused journal code.'))
 
-        vals = {
+        return {
                 'name': line['acc_name'],
                 'code': journal_code,
                 'type': line['account_type'] == 'cash' and 'cash' or 'bank',
-                'company_id': company_id,
+                'company_id': company.id,
                 'analytic_journal_id': False,
-                'currency': False,
+                'currency': line['currency_id'] or False,
                 'default_credit_account_id': default_account_id,
                 'default_debit_account_id': default_account_id,
-        }
-        if line['currency_id']:
-            vals['currency'] = line['currency_id']
-        
-        return vals
+        }        
 
-    def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):
+    def _prepare_bank_account(self, cr, uid, company, line, acc_template_ref=False, ref_acc_bank=False, context=None):
         '''
         This function prepares the value to use for the creation of the default debit and credit accounts of a
         bank journal created through the wizard of generating COA from templates.
 
+        :param company: company for which the wizard is running
         :param line: dictionary containing the values encoded by the user related to his bank account
-        :param new_code: integer corresponding to the next available number to use as account code
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
         :param ref_acc_bank: browse record of the account template set as root of all bank accounts for the chosen
             template
-        :param company_id: id of the company for which the wizard is running
         :return: mapping of field names and values
         :rtype: dict
         '''
         obj_data = self.pool.get('ir.model.data')
+        obj_acc = self.pool.get('account.account')
+
+        # Seek the next available number for the account code
+        code_digits = company.accounts_code_digits or 0
+        bank_account_code_char = company.bank_account_code_char or ''
+        for num in xrange(1, 100):
+            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
+            ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company.id)])
+            if not ids:
+                break
+        else:
+            raise osv.except_osv(_('Error!'), _('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
         cash_type = tmp and tmp[1] or False
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
         bank_type = tmp and tmp[1] or False
+        parent_id = False
+        if acc_template_ref:
+            parent_id = acc_template_ref[ref_acc_bank.id]
+        else:
+            tmp = self.pool.get('account.account').search(cr, uid, [('code', '=', company.bank_account_code_char)], context=context)
+            if tmp:
+                parent_id = tmp[0]
+        
         return {
                 'name': line['acc_name'],
-                'currency_id': line['currency_id'],
+                'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
                 'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
-                'company_id': company_id,
+                # TODO: refactor when parent_id removed from account.account
+                'parent_id': parent_id,
+                'company_id': company.id,
         }
 
     def _create_bank_journals_from_o2m(self, cr, uid, obj_wizard, company_id, acc_template_ref, context=None):
@@ -3518,7 +3527,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         '''
         obj_acc = self.pool.get('account.account')
         obj_journal = self.pool.get('account.journal')
-        code_digits = obj_wizard.code_digits
+        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
 
         # Build a list with all the data to process
         journal_data = []
@@ -3530,28 +3539,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'currency_id': acc.currency_id.id,
                 }
                 journal_data.append(vals)
+        
         ref_acc_bank = obj_wizard.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
             raise osv.except_osv(_('Configuration Error!'), _('You have to set a code for the bank account defined on the selected chart of accounts.'))
+        self.pool.get('res.company').write(cr, uid, [company.id], {'bank_account_code_char': ref_acc_bank.code}, context=context)
 
-        current_num = 1
         for line in journal_data:
-            # Seek the next available number for the account code
-            while True:
-                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
-                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
-                if not ids:
-                    break
-                else:
-                    current_num += 1
             # Create the default debit/credit accounts for this bank journal
-            vals = self._prepare_bank_account(cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=context)
+            vals = self._prepare_bank_account(cr, uid, company, line, acc_template_ref, ref_acc_bank, context=context)
             default_account_id  = obj_acc.create(cr, uid, vals, context=context)
 
             #create the bank journal
-            vals_journal = self._prepare_bank_journal(cr, uid, line, current_num, default_account_id, company_id, context=context)
+            vals_journal = self._prepare_bank_journal(cr, uid, company, line, default_account_id, context=context)
             obj_journal.create(cr, uid, vals_journal)
-            current_num += 1
         return True
 
 

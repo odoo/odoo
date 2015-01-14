@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 {
     'name': 'Import OFX Bank Statement',
+    'category' : 'Accounting & Finance',
     'version': '1.0',
     'author': 'OpenERP SA',
     'depends': ['account_bank_statement_import'],
@@ -17,7 +18,8 @@ creation of the Financial Accounting records).
     
     """,
     'data' : [],
+    'depends': ['account_bank_statement_import'],
     'demo': [],
-    'auto_install': False,
+    'auto_install': True,
     'installable': True,
 }
