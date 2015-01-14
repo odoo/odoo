@@ -87,7 +87,9 @@ class stock_history(osv.osv):
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
-        'source': fields.char('Source')
+        'source': fields.char('Source'),
+        'product_template_id': fields.many2one('product.template', 'Product Template', required=True),
+        'serial_number': fields.char('Serial Number', required=True),
     }
 
     def init(self, cr):
@@ -100,10 +102,12 @@ class stock_history(osv.osv):
                 company_id,
                 product_id,
                 product_categ_id,
+                product_template_id,
                 SUM(quantity) as quantity,
                 date,
                 price_unit_on_quant,
-                source
+                source,
+                serial_number
                 FROM
                 ((SELECT
                     stock_move.id::text || '-' || quant.id::text AS id,
@@ -112,23 +116,31 @@ class stock_history(osv.osv):
                     dest_location.id AS location_id,
                     dest_location.company_id AS company_id,
                     stock_move.product_id AS product_id,
+                    product_template.id AS product_template_id,
                     product_template.categ_id AS product_categ_id,
                     quant.qty AS quantity,
                     stock_move.date AS date,
                     quant.cost as price_unit_on_quant,
-                    stock_move.origin AS source
+                    stock_move.origin AS source,
+                    stock_production_lot.name AS serial_number
                 FROM
-                    stock_quant as quant, stock_quant_move_rel, stock_move
+                    stock_quant as quant
                 LEFT JOIN
-                   stock_location dest_location ON stock_move.location_dest_id = dest_location.id
+                    stock_quant_move_rel ON stock_quant_move_rel.quant_id = quant.id
+                LEFT JOIN
+                    stock_move ON stock_move.id = stock_quant_move_rel.move_id
+                LEFT JOIN
+                    stock_production_lot ON stock_production_lot.id = quant.lot_id
+                LEFT JOIN
+                    stock_location dest_location ON stock_move.location_dest_id = dest_location.id
                 LEFT JOIN
                     stock_location source_location ON stock_move.location_id = source_location.id
                 LEFT JOIN
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                WHERE stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
-                AND stock_quant_move_rel.move_id = stock_move.id AND ((source_location.company_id is null and dest_location.company_id is not null) or
+                WHERE stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit')
+                AND ((source_location.company_id is null and dest_location.company_id is not null) or
                 (source_location.company_id is not null and dest_location.company_id is null) or source_location.company_id != dest_location.company_id)
                 ) UNION
                 (SELECT
@@ -138,13 +150,21 @@ class stock_history(osv.osv):
                     source_location.id AS location_id,
                     source_location.company_id AS company_id,
                     stock_move.product_id AS product_id,
+                    product_template.id AS product_template_id,
                     product_template.categ_id AS product_categ_id,
                     - quant.qty AS quantity,
                     stock_move.date AS date,
                     quant.cost as price_unit_on_quant,
-                    stock_move.origin AS source
+                    stock_move.origin AS source,
+                    stock_production_lot.name AS serial_number
                 FROM
-                    stock_quant as quant, stock_quant_move_rel, stock_move
+                    stock_quant as quant
+                LEFT JOIN
+                    stock_quant_move_rel ON stock_quant_move_rel.quant_id = quant.id
+                LEFT JOIN
+                    stock_move ON stock_move.id = stock_quant_move_rel.move_id
+                LEFT JOIN
+                    stock_production_lot ON stock_production_lot.id = quant.lot_id
                 LEFT JOIN
                     stock_location source_location ON stock_move.location_id = source_location.id
                 LEFT JOIN
@@ -153,10 +173,10 @@ class stock_history(osv.osv):
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                WHERE stock_move.state = 'done' AND source_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
-                AND stock_quant_move_rel.move_id = stock_move.id AND ((dest_location.company_id is null and source_location.company_id is not null) or
+                WHERE stock_move.state = 'done' AND source_location.usage in ('internal', 'transit')
+                AND ((dest_location.company_id is null and source_location.company_id is not null) or
                 (dest_location.company_id is not null and source_location.company_id is null) or dest_location.company_id != source_location.company_id)
                 ))
                 AS foo
-                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source
+                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source, product_template_id, serial_number
             )""")
