@@ -62,10 +62,19 @@
     .arrow
         display: none
 
-.o_editable[data-oe-model][data-oe-type]:hover
-    -moz-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8)
-    -webkit-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8)
-    box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8)
+.o_editable
+    &:not(:empty),&[data-oe-type]
+        &:not(:focus):hover
+            -moz-box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset
+            -webkit-box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset
+            box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset
+    &:focus,&[data-oe-type]
+        min-height: 0.8em
+        min-width: 8px
+    &.o_is_inline_editable
+        display: inline-block
+.editor_enable [data-oe-readonly]:hover
+    cursor: default
 
 // }}}
 
@@ -133,7 +142,7 @@
 .o_editable .css_editable_mode_hidden
     display: none
 
-.o_editable .css_non_editable_mode_hidden
+.editor_enable .css_non_editable_mode_hidden
     display: block !important
 
 .o_editable .media_iframe_video .css_editable_mode_display

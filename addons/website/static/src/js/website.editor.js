@@ -915,7 +915,6 @@ define(['summernote/summernote'], function () {
             this.$('#website-top-view').hide();
             this.$el.show();
             this.$('#website-top-edit').show();
-            $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
             
             if (!no_editor) {
                 this.rte.start_edition();
@@ -943,7 +942,7 @@ define(['summernote/summernote'], function () {
             var defs = $('.o_editable')
                 .filter('.o_dirty')
                 .removeAttr('contentEditable')
-                .removeClass('o_dirty o_editable oe_carlos_danger')
+                .removeClass('o_dirty o_editable oe_carlos_danger o_is_inline_editable')
                 .map(function () {
                     var $el = $(this);
 
@@ -1207,6 +1206,12 @@ define(['summernote/summernote'], function () {
             $('.o_editable').each(function () {
                 var node = this;
                 var $node = $(node);
+
+                // add class to display inline-block for empty t-field
+                if(window.getComputedStyle(node).display === "inline") {
+                    $node.addClass('o_is_inline_editable');
+                }
+
                 // start element observation
                 observer.observe(node, OBSERVER_CONFIG);
                 $(node).one('content_changed', function () {
@@ -1221,6 +1226,22 @@ define(['summernote/summernote'], function () {
                 $('#wrapwrap, .o_editable').on('click', '*', function (event) {
                     event.preventDefault();
                 });
+
+                $('body').addClass("editor_enable");
+
+                $(document)
+                    .tooltip({
+                        selector: '[data-oe-readonly]',
+                        container: 'body',
+                        trigger: 'hover',
+                        delay: { "show": 1000, "hide": 100 },
+                        placement: 'bottom',
+                        title: _t("Readonly field")
+                    })
+                    .on('click', function () {
+                        $(this).tooltip('hide');
+                    });
+
                 self.trigger('rte:ready');
             }
         },

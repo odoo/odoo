@@ -68,10 +68,21 @@
   display: none;
 }
 
-.o_editable[data-oe-model][data-oe-type]:hover {
-  -moz-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
-  -webkit-box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
-  box-shadow: 0 0 10px 3px rgba(94, 255, 0, 0.8);
+.o_editable:not(:empty):not(:focus):hover, .o_editable[data-oe-type]:not(:focus):hover {
+  -moz-box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset;
+  -webkit-box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset;
+  box-shadow: rgba(94, 255, 0, 0.8) 0 0 5px 2px inset;
+}
+.o_editable:focus, .o_editable[data-oe-type] {
+  min-height: 0.8em;
+  min-width: 8px;
+}
+.o_editable.o_is_inline_editable {
+  display: inline-block;
+}
+
+.editor_enable [data-oe-readonly]:hover {
+  cursor: default;
 }
 
 /* Prevent the text contents of draggable elements from being selectable. */
@@ -155,7 +166,7 @@
   display: none;
 }
 
-.o_editable .css_non_editable_mode_hidden {
+.editor_enable .css_non_editable_mode_hidden {
   display: block !important;
 }
 
