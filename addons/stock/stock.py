@@ -2579,12 +2579,15 @@ class stock_move(osv.osv):
             'product_uos_qty': uos_qty,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
-            'restrict_partner_id': restrict_partner_id,
             'split_from': move.id,
             'procurement_id': move.procurement_id.id,
             'move_dest_id': move.move_dest_id.id,
             'origin_returned_move_id': move.origin_returned_move_id.id,
         }
+
+        if restrict_partner_id:
+            defaults['restrict_partner_id'] = restrict_partner_id
+
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
         new_move = self.copy(cr, uid, move.id, defaults, context=context)
