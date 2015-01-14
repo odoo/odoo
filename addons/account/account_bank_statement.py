@@ -109,7 +109,7 @@ class account_bank_statement(osv.osv):
     def _all_lines_reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            res[statement.id] = all([line.journal_entry_id.id for line in statement.line_ids])
+            res[statement.id] = all([line.journal_entry_ids.ids for line in statement.line_ids])
         return res
 
     _order = "date desc, id desc"
@@ -216,6 +216,7 @@ class account_bank_statement(osv.osv):
            :return: dict of value to create() the account.move
         """
         return {
+            'statement_line_id': st_line.id,
             'journal_id': st_line.statement_id.journal_id.id,
             'period_id': st_line.statement_id.period_id.id,
             'date': st_line.date,
@@ -348,7 +349,7 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if not st_line.amount:
                     continue
-                if st_line.account_id and not st_line.journal_entry_id.id:
+                if st_line.account_id and not st_line.journal_entry_ids.ids:
                     #make an account move as before
                     vals = {
                         'debit': st_line.amount < 0 and -st_line.amount or 0.0,
@@ -357,9 +358,9 @@ class account_bank_statement(osv.osv):
                         'name': st_line.name
                     }
                     self.pool.get('account.bank.statement.line').process_reconciliation(cr, uid, st_line.id, [vals], context=context)
-                elif not st_line.journal_entry_id.id:
+                elif not st_line.journal_entry_ids.ids:
                     raise osv.except_osv(_('Error!'), _('All the account entries lines must be processed in order to close the statement.'))
-                move_ids.append(st_line.journal_entry_id.id)
+                move_ids += st_line.journal_entry_ids.ids
             if move_ids:
                 self.pool.get('account.move').post(cr, uid, move_ids, context=context)
             self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st.name,), context=context)
@@ -426,7 +427,7 @@ class account_bank_statement(osv.osv):
 
     def number_of_lines_reconciled(self, cr, uid, ids, context=None):
         bsl_obj = self.pool.get('account.bank.statement.line')
-        return bsl_obj.search_count(cr, uid, [('statement_id', 'in', ids), ('journal_entry_id', '!=', False)], context=context)
+        return bsl_obj.search_count(cr, uid, [('statement_id', 'in', ids), ('journal_entry_ids', '!=', [])], context=context)
 
     def link_bank_to_partner(self, cr, uid, ids, context=None):
         for statement in self.browse(cr, uid, ids, context=context):
@@ -443,7 +444,7 @@ class account_bank_statement_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for item in self.browse(cr, uid, ids, context=context):
-            if item.journal_entry_id:
+            if item.journal_entry_ids:
                 raise osv.except_osv(
                     _('Invalid Action!'),
                     _('In order to delete a bank statement line, you must first cancel it to delete related journal items.')
@@ -454,15 +455,17 @@ class account_bank_statement_line(osv.osv):
         account_move_obj = self.pool.get('account.move')
         move_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            if line.journal_entry_id:
-                move_ids.append(line.journal_entry_id.id)
-                for aml in line.journal_entry_id.line_id:
-                    if aml.reconcile_id:
-                        move_lines = [l.id for l in aml.reconcile_id.line_id]
-                        move_lines.remove(aml.id)
-                        self.pool.get('account.move.reconcile').unlink(cr, uid, [aml.reconcile_id.id], context=context)
-                        if len(move_lines) >= 2:
-                            self.pool.get('account.move.line').reconcile_partial(cr, uid, move_lines, 'auto', context=context)
+            if line.journal_entry_ids.ids :
+                move_ids += line.journal_entry_ids.ids
+                account_move_obj.write(cr, uid, move_ids, {'statement_line_id': False}, context=context)
+                for move in account_move_obj.browse(cr, uid, move_ids, context=context):
+                    for aml in move.line_id:
+                        if aml.reconcile_id:
+                            move_lines = [l.id for l in aml.reconcile_id.line_id]
+                            move_lines.remove(aml.id)
+                            self.pool.get('account.move.reconcile').unlink(cr, uid, [aml.reconcile_id.id], context=context)
+                            if len(move_lines) >= 2:
+                                self.pool.get('account.move.line').reconcile_partial(cr, uid, move_lines, 'auto', context=context)
         if move_ids:
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
@@ -625,7 +628,7 @@ class account_bank_statement_line(osv.osv):
         # Domain to fetch reconciled move lines (use case where you register a payment before you get the bank statement)
         domain_rapprochement = ['&', ('statement_id', '=', False), ('account_id', 'in', [st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id])]
 
-        # Domain for classic reconciliation (match transactions with unreconciled journal items)
+        # Domain to fetch unreconciled move lines (the bank reconciliation process will create a payment journal entry to reconcile with)
         domain_reconciliation = [('reconcile_id', '=', False)]
         if st_line.partner_id.id:
             domain_reconciliation = expression.AND([domain_reconciliation, [('account_id.type', 'in', ['payable', 'receivable'])]])
@@ -729,7 +732,7 @@ class account_bank_statement_line(osv.osv):
 
     def process_reconciliation(self, cr, uid, id, mv_line_dicts, context=None):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified.
-            Finally, mark the statement line as reconciled by putting the newly created move id in the column journal_entry_id.
+            Finally, mark the statement line as reconciled by putting the reconciled moves ids in the column journal_entry_ids.
 
             :param int id: id of the bank statement line
             :param list of dicts mv_line_dicts: move lines to create. If counterpart_move_line_id is specified, reconcile with it
@@ -745,7 +748,7 @@ class account_bank_statement_line(osv.osv):
         currency_obj = self.pool.get('res.currency')
 
         # Checks
-        if st_line.journal_entry_id.id:
+        if st_line.journal_entry_ids.ids:
             raise osv.except_osv(_('Error!'), _('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
             for field in ['debit', 'credit', 'amount_currency']:
@@ -760,6 +763,8 @@ class account_bank_statement_line(osv.osv):
         to_reconcile_mv_line_ids = [x['counterpart_move_line_id'] for x in mv_line_dicts if x.get('already_paid', False)]
         if to_reconcile_mv_line_ids:
             aml_obj.write(cr, uid, to_reconcile_mv_line_ids, {'statement_id': st_line.statement_id.id}, context=context)
+            for aml in aml_obj.browse(cr, uid, to_reconcile_mv_line_ids, context=context):
+                am_obj.write(cr, uid, aml.move_id.id, {'statement_line_id': st_line.id}, context=context)
 
         # Otherwise, we create a move line. Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
@@ -843,15 +848,12 @@ class account_bank_statement_line(osv.osv):
             for pair in move_line_pairs_to_reconcile:
                 aml_obj.reconcile_partial(cr, uid, pair, context=context)
 
-        # Mark the statement line as reconciled
-        self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
-
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
-    # return [('journal_entry_id', '=', False)]
+    # return [('journal_entry_ids', '!=', True)]
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     def _needaction_domain_get(self, cr, uid, context=None):
         user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_id', '=', False)]
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_ids', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
@@ -871,7 +873,7 @@ class account_bank_statement_line(osv.osv):
         'note': fields.text('Notes'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'journal_entry_id': fields.many2one('account.move', 'Journal Entry', copy=False),
+        'journal_entry_ids': fields.one2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
     }
