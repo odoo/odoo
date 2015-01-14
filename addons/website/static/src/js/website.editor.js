@@ -58,7 +58,7 @@ define(['summernote/summernote'], function () {
                 title: _t('Center'),
                 event: 'floatMe',
                 value: 'center'
-            })).insertAfter('[data-event="floatMe"][data-value="left"]');
+            })).insertAfter($imagePopover.find('[data-event="floatMe"][data-value="left"]'));
         $imagePopover.find('button[data-event="removeMedia"]').parent().remove();
         $imagePopover.find('button[data-event="floatMe"][data-value="none"]').remove();
 
@@ -80,8 +80,24 @@ define(['summernote/summernote'], function () {
         $ul.append('<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>');
         $ul.append('<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>');
 
+        // circle, boxed... options became toggled
+        $imagePopover.find('[data-event="imageShape"]:not([data-value])').remove();
+        var $button = $(tplIconButton('fa fa-sun-o', {
+                title: _t('Shadow'),
+                event: 'imageShape',
+                value: 'shadow'
+            })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+
+        // add spin for fa
+        var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
+        $(tplIconButton('fa fa-spinner', {
+                title: _t('Spin'),
+                event: 'imageShape',
+                value: 'fa-spin'
+            })).appendTo($spin);
+
         // resize for fa
-        var $resizefa = $('<div class="btn-group hidden"/>')
+        var $resizefa = $('<div class="btn-group hidden only_fa"/>')
             .insertAfter($imagePopover.find('.btn-group:has([data-event="resize"])'));
         $(tplButton('<span class="note-fontsize-10">1x</span>', {
           title: "1x",
@@ -175,25 +191,31 @@ define(['summernote/summernote'], function () {
 
             if ($(oStyle.image).is(".fa")) {
 
-                $container.find('.btn-group:has(button[data-event="resize"])').addClass("hidden");
-                $container.find('.btn-group:has(button[data-event="resizefa"])').removeClass("hidden");
+                $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-event="imageShape"])').addClass("hidden");
+                $container.find('.only_fa').removeClass("hidden");
                 $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
                 $container.find('button[data-event="resizefa"][data-value="3"]').toggleClass("active", $(oStyle.image).hasClass("fa-3x"));
                 $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
                 $container.find('button[data-event="resizefa"][data-value="5"]').toggleClass("active", $(oStyle.image).hasClass("fa-5x"));
                 $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
+
+                $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
                 
             } else {
 
-                $container.find('.btn-group:has(button[data-event="resizefa"])').addClass("hidden");
-                $container.find('.btn-group:has(button[data-event="resize"])').removeClass("hidden");
+                $container.find('.hidden:not(.only_fa)').removeClass("hidden");
+                $container.find('.only_fa').addClass("hidden");
                 $container.find('button[data-event="resize"][data-value="1"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive"));
                 $container.find('button[data-event="resize"][data-value="0.5"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive-50"));
                 $container.find('button[data-event="resize"][data-value="0.25"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive-25"));
-                
-            }
 
-            $container.find('.btn-group:has(button[data-event="imageShape"])').toggleClass("hidden", oStyle.image.tagName !== "IMG");
+                $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
+                
+                if (!$(oStyle.image).is("img")) {
+                    $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
+                }
+
+            }
 
             $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
             $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
@@ -317,6 +339,11 @@ define(['summernote/summernote'], function () {
             case 'left': $target.toggleClass('pull-left').removeClass('pull-right center-block'); break;
             case 'right': $target.toggleClass('pull-right').removeClass('pull-left center-block'); break;
         }
+    };
+    eventHandler.editor.imageShape = function ($editable, sValue) {
+        var $target = $(getImgTarget());
+        $editable.data('NoteHistory').recordUndo();
+        $target.toggleClass(sValue);
     };
 
     eventHandler.dialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
