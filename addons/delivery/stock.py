@@ -140,7 +140,33 @@ class stock_picking(osv.osv):
         'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
     }
 
-stock_picking()
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = dict(default or {},
+            number_of_packages=0,
+            carrier_tracking_ref=False,
+            volume=0.0)
+        return super(stock_picking, self).copy(cr, uid, id, default=default, context=context)
+
+    def do_partial(self, cr, uid, ids, partial_datas, context=None):
+        res = super(stock_picking, self).do_partial(cr, uid, ids, partial_datas, context=context)
+        for backorder_id, picking_vals in res.iteritems():
+            if backorder_id != picking_vals.get('delivered_picking'):
+                # delivery info is set on backorder but not on new picking
+                backorder = self.browse(cr, uid, backorder_id, context=context)
+                self.write(cr, uid, picking_vals['delivered_picking'], {
+                    'carrier_tracking_ref': backorder.carrier_tracking_ref,
+                    'number_of_packages': backorder.number_of_packages,
+                    'volume': backorder.volume,
+                }, context=context)
+                # delivery info are not relevant to backorder
+                self.write(cr, uid, backorder_id, {
+                    'carrier_tracking_ref': False,
+                    'number_of_packages': 0,
+                    'volume': 0,
+                }, context=context)
+
+        return res
+
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
