@@ -693,7 +693,7 @@ class BaseModel(object):
                     pool._store_function[model].sort(key=lambda x: x[4])
 
     @classmethod
-    def _init_manual_fields(cls, cr, partial=False):
+    def _init_manual_fields(cls, cr, partial):
         # Check whether the query is already done
         if cls.pool.fields_by_model is not None:
             manual_fields = cls.pool.fields_by_model.get(cls._name, [])
@@ -2932,8 +2932,8 @@ class BaseModel(object):
                 cls._inherits[field.comodel_name] = field.name
 
     @api.model
-    def _prepare_setup_fields(self):
-        """ Prepare the setup of fields once the models have been loaded. """
+    def _prepare_setup(self):
+        """ Prepare the setup of the model and its fields. """
         type(self)._setup_done = False
         for name, field in self._fields.items():
             if field.inherited:
@@ -2942,35 +2942,35 @@ class BaseModel(object):
                 field.reset()
 
     @api.model
-    def _setup_fields(self, partial=False):
-        """ Setup the fields (dependency triggers, etc).
-
-            :param partial: ``True`` if all models have not been loaded yet.
-        """
+    def _setup_base(self, partial):
+        """ Determine the inherited and custom fields of the model. """
         cls = type(self)
         if cls._setup_done:
             return
-        cls._setup_done = True
 
-        # first make sure that parent models are all set up
-        for parent in self._inherits:
-            self.env[parent]._setup_fields()
+        # first make sure that parent models determine all their fields
+        cls._inherits_check()
+        for parent in cls._inherits:
+            self.env[parent]._setup_base(partial)
 
         # retrieve custom fields
-        cls._init_manual_fields(self._cr, partial=partial)
+        cls._init_manual_fields(self._cr, partial)
 
         # retrieve inherited fields
-        cls._inherits_check()
         cls._init_inherited_fields()
+
+        cls._setup_done = True
+
+    @api.model
+    def _setup_fields(self):
+        """ Setup the fields, except for recomputation triggers. """
+        cls = type(self)
 
         # set up fields, and update their corresponding columns
         for name, field in cls._fields.iteritems():
             field.setup(self.env)
             if field.store or field.column:
                 cls._columns[name] = field.to_column()
-
-        # determine old-api cls._inherit_fields and cls._all_columns
-        cls._inherits_reload()
 
         # group fields by compute to determine field.computed_fields
         fields_by_compute = defaultdict(list)
@@ -2980,6 +2980,27 @@ class BaseModel(object):
                 field.computed_fields.append(field)
             else:
                 field.computed_fields = []
+
+    @api.model
+    def _setup_complete(self):
+        """ Setup recomputation triggers, and complete the model setup. """
+        cls = type(self)
+
+        # set up field triggers
+        for field in cls._fields.itervalues():
+            field.setup_triggers(self.env)
+
+        # add invalidation triggers on model dependencies
+        if cls._depends:
+            triggers = [(field, None) for field in cls._fields.itervalues()]
+            for model_name, field_names in cls._depends.iteritems():
+                model = self.env[model_name]
+                for field_name in field_names:
+                    field = model._fields[field_name]
+                    field._triggers.update(triggers)
+
+        # determine old-api cls._inherit_fields and cls._all_columns
+        cls._inherits_reload()
 
         # check constraints
         for func in cls._constraint_methods:
