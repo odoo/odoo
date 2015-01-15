@@ -166,7 +166,7 @@ class stock_location(osv.osv):
         loc = location
         while loc:
             if loc.putaway_strategy_id:
-                res = putaway_obj.putaway_apply(cr, uid, loc.putaway_strategy_id, product, context=context)
+                res = putaway_obj.putaway_apply(cr, uid, loc.putaway_strategy_id, product, loc, context=context)
                 if res:
                     return res
             loc = loc.location_id
