@@ -10,24 +10,23 @@ class PageController(addons.website.controllers.main.Website):
         response = super(PageController, self).page(page, **opt)
         # duplication of ir_http.py
 
-        if hasattr(response, 'status_code') and response.status_code == 200:
+        if getattr(response, 'status_code', 0) == 200:
             try:
                 view = request.website.get_template(page)
+            except:
+                pass  # view not found
+            else:
                 if view.track:  # avoid tracking redirected page
                     cr, uid, context = request.cr, request.uid, request.context
-                    lead_id = request.registry["crm.lead"].decode(request)
+                    lead_id = request.env["crm.lead"].decode(request)
                     url = request.httprequest.url
-                    vals = {'lead_id': lead_id, 'partner_id': request.session.get('uid', None), 'url': url}
+                    vals = {'lead_id': lead_id, 'user_id': request.session.get('uid'), 'url': url}
 
-                    if lead_id and request.registry['website.crm.pageview'].create_pageview(cr, uid, vals, context=context):
-                        # create_pageview was successful
-                        pass
-                    else:
+                    if not lead_id or request.registry['website.crm.pageview'].create_pageview(cr, uid, vals, context=context):
+                        # create_pageview failed
                         response.delete_cookie('lead_id')
                         request.session.setdefault('pages_viewed', {})[url] = fields.Datetime.now()
                         request.session.modified = True
-            except:
-                pass  # view not found
 
         return response
 
@@ -46,8 +45,6 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 # sign the lead_id
                 sign = lead_model.encode(lead_id)
                 response.set_cookie('lead_id', sign, domain=lead_model.get_score_domain_cookies())
-            else:
-                pass  # lead_id == None because no lead was created
         return response
 
     def create_real_lead(self, request, values, kwargs):
@@ -101,7 +98,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 url_list = []
                 pages_viewed = request.session['pages_viewed']
                 for url, date in pages_viewed.iteritems():
-                    vals = {'partner_id': request.session.get('uid', None), 'url': url, 'view_date': date}
+                    vals = {'user_id': request.session.get('uid'), 'url': url, 'view_date': date}
                     score_pageview_ids.append((0, 0, vals))
                     url_list.append(url)
                 del request.session['pages_viewed']
@@ -117,5 +114,4 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             if body:
                 request.registry['crm.lead'].message_post(cr, SUPERUSER_ID, [new_lead_id], body=body, subject="Pages visited", context=context)
 
-            # TODO : try to write the cookies here, after retreiving a response ?
             return new_lead_id

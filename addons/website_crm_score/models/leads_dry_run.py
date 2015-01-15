@@ -15,16 +15,12 @@ class leads_dry_run(models.TransientModel):
         # Once the user agrees with the result shown by a dry run
         # It differs from launching the assignement process again,
         # because salemen would be selected at random again
-        dry_run_fields = ['lead_id',
-                          'team_id',
-                          'user_id',
-                          ]
-        all_dry_run = self.search_read(domain=[('user_id', '!=', False)], fields=dry_run_fields)
+        all_dry_run = self.search([('user_id', '!=', False)])
         for dry_run in all_dry_run:
-            lead_record = self.env['crm.lead'].browse(dry_run['lead_id'][0])
+            lead_record = dry_run.lead_id
             values = {
-                'team_id': dry_run['team_id'][0],
-                'user_id': dry_run['user_id'][0],
+                'team_id': dry_run.team_id.id,
+                'user_id': dry_run.user_id.id,
                 'assign_date': fields.Datetime.now()
             }
             lead_record.write(values)

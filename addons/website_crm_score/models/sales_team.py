@@ -157,17 +157,18 @@ class crm_team(osv.osv):
 
                     # Erase fake/false email
                     spams = map(lambda x: x.id, filter(lambda x: x.email_from and not checkmail(x.email_from), leads))
+
                     if spams:
                         self.env["crm.lead"].browse(spams).write({'email_from': False})
 
                     # Merge duplicated lead
-                    leads_done = []
+                    leads_done = set()
                     for lead in leads:
                         if lead.id not in leads_done:
                             leads_duplicated = lead.get_duplicated_leads(False)
                             if len(leads_duplicated) > 1:
                                 self.env["crm.lead"].browse(leads_duplicated).merge_opportunity(False, False)
-                            leads_done += leads_duplicated
+                            leads_done.update(leads_duplicated)
                         self._cr.commit()
                 self._cr.commit()
 
@@ -178,16 +179,18 @@ class crm_team(osv.osv):
             if (su.maximum_user_leads - su.leads_count) <= 0:
                 continue
             domain = safe_eval(su.team_user_domain or '[]', evaluation_context)
-            domain.append(('user_id', '=', False))
-            domain.append(('assign_date', '=', False))
-            domain.append(('score', '>=', su.team_id.min_for_assign))
+            domain.extend([
+                ('user_id', '=', False),
+                ('assign_date', '=', False),
+                ('score', '>=', su.team_id.min_for_assign)
+            ])
 
             # assignation rythm: 2 days of leads if a lot of leads should be assigned
             limit = int(math.ceil(su.maximum_user_leads / 15.0))
 
             if dry:
                 dry_leads = self.env["leads.dry.run"].search([('team_id', '=', su.team_id.id)])
-                domain.append(['id', 'in', [dl.lead_id.id for dl in dry_leads]])
+                domain.append(['id', 'in', dry_leads.mapped('lead_id.id')])
             else:
                 domain.append(('team_id', '=', su.team_id.id))
 
@@ -198,7 +201,7 @@ class crm_team(osv.osv):
                 "leads": leads
             })
 
-        assigned = {}
+        assigned = set()
         while users:
             i = 0
 
@@ -219,7 +222,7 @@ class crm_team(osv.osv):
 
             #lead convert for this user
             lead = user['leads'][0]
-            assigned[lead] = True
+            assigned.add(lead)
             if dry:
                 values = {'lead_id': lead.id, 'team_id': user['su'].team_id.id, 'user_id': user['su'].user_id.id}
                 self.env['leads.dry.run'].create(values)
