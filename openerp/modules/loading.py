@@ -126,13 +126,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     _logger.info('loading %d modules...', len(graph))
 
-    # Query manual fields for all models at once and save them on the registry
-    # so the initialization code for each model does not have to do it
-    # one model at a time.
-    registry.fields_by_model = {}
-    cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
-    for field in cr.dictfetchall():
-        registry.fields_by_model.setdefault(field['model'], []).append(field)
+    registry.clear_manual_fields()
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
@@ -227,9 +221,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
-    # The query won't be valid for models created later (i.e. custom model
-    # created after the registry has been loaded), so empty its result.
-    registry.fields_by_model = None
+    registry.clear_manual_fields()
 
     cr.commit()
 
