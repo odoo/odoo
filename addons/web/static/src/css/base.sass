@@ -336,11 +336,6 @@ $sheet-padding: 16px
         font-family: "mnmliconsRegular" !important
         font-size: 21px
         font-weight: 300 !important
-    .oe_e
-        font-family: "entypoRegular" !important
-        font-size: 34px
-        font-weight: 300 !important
-        line-height: 100%
     .oe_left
         float: left
         margin-right: 8px
@@ -475,7 +470,8 @@ $sheet-padding: 16px
         text-shadow: 0 0 2px black
         vertical-align: top
         position: relative
-        top: -8px
+        top: 4px
+        font-size: 22px
     .oe_star_on:hover, .oe_star_off:hover
         text-decoration: none
     .oe_star_on
@@ -837,6 +833,8 @@ $sheet-padding: 16px
             flex-grow: 1
             position: relative
             a
+                color: $link-color
+            i
                 color: $link-color
             > div
                 position: absolute
@@ -1763,11 +1761,10 @@ $sheet-padding: 16px
                 box-shadow: none
                 border: none
                 text-shadow: none
-                .oe_e
+                .fa
                     position: relative
-                    top: -10px
-                    left: -9px                    
-            input.oe_form_binary_file
+                    font-size: 18px
+                input.oe_form_binary_file
                 display: inline-block
                 margin-left: -85px
                 height: 22px
@@ -1787,10 +1784,10 @@ $sheet-padding: 16px
                 padding: 2px
                 padding-left: 4px
                 padding-right: 4px
-                .oe_e
+                .fa
                     font-size: 23px
                     margin-top: -5px
-                .oe_e:hover
+                .fa:hover
                     text-decoration: none
             .oe_attachment:nth-child(odd)
                 background: white
@@ -1807,9 +1804,10 @@ $sheet-padding: 16px
             top: 2px
             right: 0px
         .oe_m2o_cm_button
-            line-height: 14px
+            line-height: 27px
             float: right
             padding-left: 2px
+            font-size: 19px
         input
             padding-right: 13px
     &.ui-autocomplete
@@ -2533,7 +2531,7 @@ body.oe_single_form
         .tree_header button, .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more, .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add
             visibility: hidden
         a
-            &.oe_m2o_cm_button, &.oe_e
+            &.oe_m2o_cm_button, &.fa
                 visibility: hidden
         .oe_form
             .oe_form_field_date img, .oe_form_field_datetime img

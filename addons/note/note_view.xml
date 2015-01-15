@@ -61,15 +61,15 @@
 
                   <!-- dropdown menu -->
                   <span class="oe_dropdown_toggle">
-                    <span class="oe_e">i</span>
+                    <i class="fa fa-bars"/>
                     <ul class="oe_dropdown_menu">
                       <li><a type="delete">Delete</a></li>
                       <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                     </ul>
                   </span>
                   <div style="display: inline">
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
+                    <i name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="fa fa-check"/>
+                    <i name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="fa fa-check"/>
                   </div>
                 </div>
                 <!-- kanban note -->
