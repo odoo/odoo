@@ -108,7 +108,7 @@ class account_bank_statement(osv.osv):
     def _all_lines_reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            res[statement.id] = all([line.journal_entry_id.id for line in statement.line_ids])
+            res[statement.id] = all([line.journal_entry_id.id or line.account_id.id for line in statement.line_ids])
         return res
 
     _order = "date desc, id desc"
