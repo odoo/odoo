@@ -1028,7 +1028,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         }
 
         if (last === node && !dom.isBR(node)) {
-            node = r.insertNode(br);
+            node = r.insertNode(br, true);
             do {
                 node = dom.hasContentAfter(node);
             } while (node && dom.isBR(node));
