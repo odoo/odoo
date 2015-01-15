@@ -43,6 +43,8 @@
                         !$snipped_id.data("snippet-view")) {
                     website.snippet.readyAnimation.push($snipped_id);
                     $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
+                } else if ($snipped_id.data("snippet-view")) {
+                    $snipped_id.data("snippet-view").start(editable_mode);
                 }
             });
         }
