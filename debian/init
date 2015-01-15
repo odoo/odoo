@@ -15,9 +15,12 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
 DAEMON=/usr/bin/openerp-server
 NAME=odoo
 DESC=odoo
-CONFIG=/etc/odoo/openerp-server.conf
-LOGFILE=/var/log/odoo/odoo-server.log
 PIDFILE=/var/run/${NAME}.pid
+CONFIGFILE=/etc/odoo/openerp-server.conf
+if [ ! -e $CONFIGFILE ]; then
+    CONFIGFILE=/etc/odoo/odoo.conf
+fi 
+LOGFILE=/var/log/odoo/odoo-server.log
 USER=odoo
 export LOGNAME=$USER
 
@@ -25,7 +28,7 @@ test -x $DAEMON || exit 0
 set -e
 
 function _start() {
-    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE
+    start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIGFILE --logfile $LOGFILE
 }
 
 function _stop() {
