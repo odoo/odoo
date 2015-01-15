@@ -183,7 +183,8 @@
                     <field name="progress" widget="progressbar"
                                 groups="project.group_time_work_estimation_tasks"/>
                 </field>
-                <xpath expr="//notebook/page[@name='description_page']" position="inside">
+                <xpath expr="//notebook/page[@name='description_page']" position="after">
+                    <page string="Timesheets">
                     <field name="timesheet_ids" groups="project.group_tasks_work_on_tasks" context="{'default_account_id' : analytic_account_id, 'hr_timesheet' : 1}">
                         <tree editable="top" string="Timesheet Activities">
                             <field name="date"/>
@@ -205,6 +206,7 @@
                         <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" groups="project.group_time_work_estimation_tasks"/>
                      </group>
                     </group>
+                </page>
                 </xpath>
                 <xpath expr="//tree[@name='delegated_task']" position="inside">
                     <field name="effective_hours" widget="float_time"/>

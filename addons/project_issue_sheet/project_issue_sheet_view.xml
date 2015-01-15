@@ -18,21 +18,21 @@
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
-                    <page string="Worklogs">
+                    <page string="Timesheets">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'hr_timesheet':1}"
                                 groups="base.group_user">
-                            <tree editable="top" string="Timesheets">
-                                <field name="name"/>
-                                <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" widget="float_time"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, context)" groups="analytic.group_analytic_accounting"/>
+                            <tree editable="top" string="Timesheet Activities">
                                 <field name="date"/>
-                                <field name="user_id"/>
-                                <field invisible="1" name="journal_id"/>
-                                <field invisible="1" name="product_id"/>
-                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)"/>
-                                <field invisible="1" name="amount"/>
-                                <field invisible="1" name="general_account_id"/>
+                                <field name="user_id" required="1"/>
+                                <field name="name"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, context)" groups="analytic.group_analytic_accounting"/>
+                                <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" widget="float_time"/>
                                 <field invisible="1" name="to_invoice"/>
+                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)"/>
+                                <field name="journal_id" invisible="1"/>
+                                <field invisible="1" name="amount"/>
+                                <field name="general_account_id" invisible="1"/>
+                                <field invisible="1" name="product_id"/>
                             </tree>
                         </field>
                     </page>
