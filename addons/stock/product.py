@@ -475,7 +475,7 @@ class product_putaway_strategy(osv.osv):
         'method': 'fixed',
     }
 
-    def putaway_apply(self, cr, uid, putaway_strat, product, location, context=None):
+    def putaway_apply(self, cr, uid, putaway_strat, product, location=None, context=None):
         if putaway_strat.method == 'fixed':
             for strat in putaway_strat.fixed_location_ids:
                 categ = product.categ_id
