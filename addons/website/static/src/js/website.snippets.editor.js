@@ -1691,8 +1691,8 @@
             this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
         },
         clean_for_save: function () {
+            this.on_blur();
             this._super();
-            this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
         }
     });
 

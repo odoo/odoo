@@ -90,7 +90,7 @@ define(['summernote/summernote'], function () {
 
         // add spin for fa
         var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
-        $(tplIconButton('fa fa-spinner', {
+        $(tplIconButton('fa fa-refresh', {
                 title: _t('Spin'),
                 event: 'imageShape',
                 value: 'fa-spin'
@@ -175,6 +175,16 @@ define(['summernote/summernote'], function () {
 
     var fn_boutton_update = eventHandler.popover.button.update;
     eventHandler.popover.button.update = function ($container, oStyle) {
+        // stop animation when edit content
+        var previous = $(".note-control-selection").data('target');
+        if (previous) {
+            $(previous).css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        }
+        if (oStyle.image) {
+            $(oStyle.image).css({"-webkit-animation": "none", "animation": "none"});
+        }
+        // end
+
         fn_boutton_update.call(this, $container, oStyle);
 
         $container.find('button[data-event="undo"]').attr('disabled', !history.hasUndo());
@@ -189,7 +199,7 @@ define(['summernote/summernote'], function () {
             $container.find('a[data-event="padding"][data-value="xl"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
             $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
-            if ($(oStyle.image).is(".fa")) {
+            if (dom.isImgFont(oStyle.image)) {
 
                 $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-event="imageShape"])').addClass("hidden");
                 $container.find('.only_fa').removeClass("hidden");
@@ -374,13 +384,32 @@ define(['summernote/summernote'], function () {
         new website.editor.alt($editable, media).appendTo(document.body);
     };
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     dom.isImg = function (node) {
-        return node && (node.nodeName === "IMG" ||
-            (node.className && node.className.match(/(^|\s)fa(-|\s|$)/i)) ||
-            (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) );
+        return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) ));
     };
     dom.isForbiddenNode = function (node) {
         return $(node).is(".media_iframe_video, .fa, img");
+    };
+
+    dom.isImgFont = function (node) {
+        var nodeName = node && node.nodeName.toUpperCase();
+        var className = (node && node.className || "");
+        if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
+            var classNames = className.split(/\s+/);
+            for (var k=0; k<website.editor.fontIcons.length; k++) {
+                if (_.intersection(website.editor.fontIcons[k].icons, classNames).length) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    // re-overwrite font to include theme icons
+    var isFont = dom.isFont;
+    dom.isFont = function (node) {
+        return dom.isImgFont(node) || isFont(node);
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1123,6 +1152,8 @@ define(['summernote/summernote'], function () {
             this.EditorBar = EditorBar;
             $('.inline-media-link').remove();
             this._super.apply(this, arguments);
+
+            computeFonts();
         },
         /**
          * Add a record undo to history
@@ -2182,6 +2213,7 @@ define(['summernote/summernote'], function () {
         },
     });
 
+
     function getCssSelectors(filter) {
         var classes = [];
         var sheets = document.styleSheets;
@@ -2199,6 +2231,22 @@ define(['summernote/summernote'], function () {
         }
         return classes;
     }
+    function computeFonts() {
+        _.each(website.editor.fontIcons, function (data) {
+            data.icons = _.map(getCssSelectors(data.parser), function (css) {
+                return css.replace(/::?before$/, '');
+            });
+        });
+    }
+
+    /* list of font icons to load by editor. The icons are displayed in the media editor and
+     * identified like font and image (can be colored, spinned, resized with fa classes).
+     * To add font, push a new object {base, parser}
+     * - base: class who appear on all fonts (eg: fa fa-refresh)
+     * - parser: regular expression used to select all font in css style sheets
+     */
+    website.editor.fontIcons = [{'base': 'fa', 'parser': /(?=^|\s)(\.fa-[0-9a-z_-]+::?before)/i}];
+
 
     /**
      * FontIconsDialog widget. Lets users change a font awsome, suport all
@@ -2223,10 +2271,15 @@ define(['summernote/summernote'], function () {
                 this.update_preview();
             },
         }),
-        // extract list of FontAwesome from the cheatsheet.
-        icons: _.map(getCssSelectors(/(?=^|\s)(\.fa-[0-9a-z_-]+::?before)/i), function (css) {
-            return css.replace(/::?before$/, '');
-        }),
+
+        // extract list of font (like awsome) from the cheatsheet.
+        renderElement: function() {
+            this.iconsParser = website.editor.fontIcons;
+            this.icons = _.flatten(_.map(website.editor.fontIcons, function (data) {
+                    return data.icons;
+                }));
+            this._super();
+        },
 
         init: function (parent, media) {
             this._super();
@@ -2238,27 +2291,40 @@ define(['summernote/summernote'], function () {
             return this._super().then(this.proxy('load_data'));
         },
         search: function (needle) {
-            var icons = this.icons;
+            var iconsParser = this.iconsParser;
             if (needle) {
-                icons = _(icons).filter(function (icon) {
-                    return icon.substring(3).indexOf(needle) !== -1;
-                });
+                var parser = [];
+                var fontIcons = website.editor.fontIcons, fontIcon;
+
+                for (var k=0; k<fontIcons.length; k++) {
+                    fontIcon = fontIcons[k];
+                    var icons = _(fontIcon.icons).filter(function (icon) {
+                        return icon.indexOf(needle) !== -1;
+                    });
+                    if (icons.length) {
+                        parser.push({
+                            base: fontIcon.base,
+                            icons: icons
+                        });
+                    }
+                }
+                iconsParser = parser;
             }
             this.$('div.font-icons-icons').html(
-                openerp.qweb.render(
-                    'website.editor.dialog.font-icons.icons',
-                    {icons: icons}));
+                openerp.qweb.render('website.editor.dialog.font-icons.icons', {'iconsParser': iconsParser}));
         },
         /**
          * Removes existing FontAwesome classes on the bound element, and sets
          * all the new ones if necessary.
          */
         save: function () {
+            var self = this;
             this.parent.trigger("save", this.media);
+            var icons = this.icons;
             var style = this.media.attributes.style ? this.media.attributes.style.textContent : '';
             var classes = (this.media.className||"").split(/\s+/);
             var non_fa_classes = _.reject(classes, function (cls) {
-                return cls === 'fa' || /^(fa|img)-/.test(cls);
+                return self.getFont(cls);
             });
             var final_classes = non_fa_classes.concat(this.get_fa_classes());
             if (this.media.tagName !== "SPAN") {
@@ -2266,8 +2332,33 @@ define(['summernote/summernote'], function () {
                 $(this.media).replaceWith(media);
                 this.media = media;
             }
-            $(this.media).attr("class", final_classes.join(' ')).attr("style", style);
+            $(this.media).attr("class", _.compact(final_classes).join(' ')).attr("style", style);
         },
+        /**
+         * return the data font object (with base, parser and icons) or null
+         */
+        getFont: function (classNames) {
+            if (!(classNames instanceof Array)) {
+                classNames = (classNames||"").split(/\s+/);
+            }
+            var fontIcons = website.editor.fontIcons, fontIcon, className;
+            for (var i=0; i<classNames.length; i++) {
+                className = classNames[i];
+                for (var k=0; k<fontIcons.length; k++) {
+                    fontIcon = fontIcons[k];
+                    if (className === fontIcon.base || fontIcon.icons.indexOf(className) !== -1) {
+                        return {
+                            'base': fontIcon.base,
+                            'parser': fontIcon.parser,
+                            'icons': fontIcon.icons,
+                            'font': className
+                        };
+                    }
+                }
+            }
+            return null;
+        },
+
         /**
          * Looks up the various FontAwesome classes on the bound element and
          * sets the corresponding template/form elements to the right state.
@@ -2295,8 +2386,12 @@ define(['summernote/summernote'], function () {
                         this.$('#fa-border').prop('checked', true);
                         continue;
                     default:
-                        if (!/^fa-/.test(cls)) { continue; }
-                        this.$('#fa-icon').val(cls);
+                        for (var k=0; k<this.icons.length; k++) {
+                            if (this.icons.indexOf(cls) !== -1) {
+                                this.$('#fa-icon').val(cls);
+                                break;
+                            }
+                        }
                 }
             }
             this.update_preview();
@@ -2306,9 +2401,10 @@ define(['summernote/summernote'], function () {
          * the base ``fa``.
          */
         get_fa_classes: function () {
+            var font = this.getFont(this.$('#fa-icon').val());
             return [
-                'fa',
-                this.$('#fa-icon').val(),
+                font ? font.base : 'fa',
+                font ? font.font : "",
                 this.$('#fa-size').val(),
                 this.$('#fa-rotation').val(),
                 this.$('#fa-border').prop('checked') ? 'fa-border' : ''
