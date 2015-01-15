@@ -360,7 +360,7 @@
             <input type="hidden" id="fa-size" value="fa-1x"/>
             <div class="font-icons-icons">
                 <t t-call="website.editor.dialog.font-icons.icons">
-                    <t t-set="icons" t-value="widget.icons"/>
+                    <t t-set="iconsParser" t-value="widget.iconsParser"/>
                 </t>
             </div>
             <div class="form-group mt32" id="fa-preview">
@@ -369,9 +369,11 @@
         </form>
     </t>
     <t t-name="website.editor.dialog.font-icons.icons">
-        <span t-foreach="icons" t-as="icon"
-              t-attf-class="fa font-icons-icon #{icon}"
-              t-att-data-id="icon"/>
+        <t t-foreach="iconsParser" t-as="data">
+            <span t-foreach="data.icons" t-as="icon"
+                  t-attf-class="#{data.base} font-icons-icon #{icon}"
+                  t-att-data-id="icon"/>
+        </t>
     </t>
 
     <t t-name="website.editor.dialog.video">
