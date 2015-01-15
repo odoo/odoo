@@ -317,10 +317,22 @@ Source installation requires manually installing dependencies:
 
   - on Linux, use your distribution's package to install nodejs and npm.
 
-    In debian you need at least jessie, as the packaged version of npm before
-    that does not work. In Ubuntu you need at least Ubuntu 14.04, as the
-    packaged version of npm before that does not work. Otherwise install nodejs
-    and npm manually.
+    In debian wheezy and Ubuntu 13.10 and before you need to install nodejs
+    manually.
+
+    .. code-block:: console
+
+        $ wget -qO- https://deb.nodesource.com/setup | bash -
+        $ apt-get install -y nodejs
+
+    Starting from jessie and Ubuntu 14.04 the distribution's package works. But
+    you may need to had a symlink as npm packages shebngs uses node whereas
+    debian uses nodejs.
+
+    .. code-block:: console
+
+        $ apt-get install -y npm
+        $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
     Once you have npm working, install less and less-plugin-clean-css.
 
@@ -328,12 +340,6 @@ Source installation requires manually installing dependencies:
 
         $ sudo npm install -g less less-plugin-clean-css
 
-    On debian and Ubuntu you also need to set a symbolic link from noejs to
-    node because the shebang line of lessc uses node.
-
-    .. code-block:: console
-
-        $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 
   - on OS X, install nodejs via your preferred package manager (macports_,

@@ -231,8 +231,9 @@
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
-
-            return this.ensure_saved().then(function () {
+            return this.ensure_saved().then(function(){
+                return $.when.apply(null, self.editor.form.render_value_defs);
+            }).then(function () {
                 var $recordRow = self.groups.get_row_for(record);
                 var cells = self.get_cells_for($recordRow);
                 var fields = {};

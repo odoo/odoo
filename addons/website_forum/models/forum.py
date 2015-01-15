@@ -37,7 +37,7 @@ class Forum(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
-        'description': fields.html('Description'),
+        'description': fields.html('Description', translate=True),
         # karma generation
         'karma_gen_question_new': fields.integer('Asking a question'),
         'karma_gen_question_upvote': fields.integer('Question upvoted'),
