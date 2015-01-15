@@ -954,3 +954,23 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
+
+    # link to the backend for portal users
+    @http.route('/shop/backend', type='http', auth="public")
+    def shop_backend(self, **post):
+        if request.session.uid:
+            cr, uid = request.cr, request.session.uid
+            portal_user = request.registry['res.users'].has_group(cr, uid, 'base.group_portal')
+            normal_user = request.registry['res.users'].has_group(cr, uid, 'base.group_user')
+            imd = request.env['ir.model.data']
+
+            if portal_user and not normal_user:
+                action= imd.xmlid_to_res_id("portal_sale.action_orders_portal")
+                menu= imd.xmlid_to_res_id("portal.portal_orders")
+                return werkzeug.utils.redirect('/web#menu_id=%s&action=%s' % (menu,action))
+            else:
+                action= imd.xmlid_to_res_id("sale.action_orders")
+                menu= imd.xmlid_to_res_id("base.menu_sales")
+                return werkzeug.utils.redirect('/web#menu_id=%s&action=%s' % (menu,action))
+        else:
+            return login_redirect()
