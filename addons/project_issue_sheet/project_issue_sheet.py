@@ -48,7 +48,7 @@ class project_issue(osv.osv):
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
                 'project.task': (_get_issue_task, ['progress'], 10),
             }),
-        'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
+        'timesheet_ids': fields.one2many('account.analytic.line', 'issue_id', 'Timesheets'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'), 
     }
     
@@ -84,15 +84,6 @@ class project_issue(osv.osv):
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'account analytic line'
-    _columns = {
-        'create_date' : fields.datetime('Create Date', readonly=True),
-    }
-
-
-class hr_analytic_issue(osv.osv):
-
-    _inherit = 'hr.analytic.timesheet'
-    _description = 'hr analytic timesheet'
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
