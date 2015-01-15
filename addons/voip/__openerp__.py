@@ -10,8 +10,8 @@
         Long description of module's purpose
     """,
 
-    'author': "OpenERP SA",
-    'website': "http://www.odoo.com",
+    'author': "Odoo SA",
+    'website': "https://www.odoo.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
@@ -31,5 +31,5 @@
     'js': ['static/src/js/*.js'],
     'css': ['static/src/css/*.css'],
     'qweb': ['static/src/xml/*.xml'],
-    'application' : True,
+    'application' : False,
 }

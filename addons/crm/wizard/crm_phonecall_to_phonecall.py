@@ -59,10 +59,13 @@ class crm_phonecall2phonecall(osv.osv_memory):
                     this.team_id and this.team_id.id or False, \
                     this.categ_id and this.categ_id.id or False, \
                     context=context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload_panel',
-        }
+        if self.pool.get('ir.model.data').search(cr,uid,[('module','=','crm_voip')],context=context):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload_panel',
+            }
+        else:
+            return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
     
     def default_get(self, cr, uid, fields, context=None):
         """
