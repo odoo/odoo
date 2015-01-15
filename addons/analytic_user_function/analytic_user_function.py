@@ -65,7 +65,7 @@ class account_analytic_account(osv.osv):
 
 
 class hr_analytic_timesheet(osv.osv):
-    _inherit = "hr.analytic.timesheet"
+    _inherit = "account.analytic.line"
     # Look in account, if no value for the user => look in parent until there is no more parent to look
     # Take the first found... if nothing found => return False
     def _get_related_user_account_recursiv(self, cr, uid, user_id, account_id):
@@ -79,25 +79,25 @@ class hr_analytic_timesheet(osv.osv):
             else:
                 return False
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0, context=None):
         res = {}
         if not (account_id):
             #avoid a useless call to super
             return res
 
         if not (user_id):
-            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)
+            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id, user_id, context)
 
         #get the browse record related to user_id and account_id
         temp = self._get_related_user_account_recursiv(cr, uid, user_id, account_id)
         if not temp:
             #if there isn't any record for this user_id and account_id
-            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)
+            return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id, user_id, context)
         else:
             #get the old values from super and add the value from the new relation analytic_user_funct_grid
             r = self.pool.get('analytic.user.funct.grid').browse(cr, uid, temp)[0]
             res.setdefault('value',{})
-            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)['value']
+            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id, user_id, context)['value']
             res['value']['product_id'] = r.product_id.id
             res['value']['product_uom_id'] = r.product_id.uom_id.id
 
@@ -117,7 +117,8 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
-        res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
+        #res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
+        res = {}
 
         if account_id:
             #get the browse record related to user_id and account_id
@@ -146,8 +147,6 @@ class hr_analytic_timesheet(osv.osv):
                 res ['value']['general_account_id']= a
         return res
 
-class account_analytic_line(osv.osv):
-    _inherit = "account.analytic.line"
     def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
         for grid in account.user_product_ids:
             if grid.user_id.id==user_id:
