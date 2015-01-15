@@ -11,7 +11,6 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="state">draft</field>
             <field name="type">in_invoice</field>
-            <field name="account_id" ref="account.a_pay"/>
             <field eval="0" name="reconciled"/>
             <field name="date_invoice" eval="time.strftime('%Y')+'-01-01'"/>
             <field eval="14.0" name="amount_untaxed"/>

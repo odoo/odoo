@@ -57,7 +57,6 @@ Wizards provided by this module:
         'account',
         'base_vat',
         'base_iban',
-        'account_chart',
         'l10n_be_coda',
         'l10n_multilang',
     ],
@@ -79,7 +78,8 @@ Wizards provided by this module:
         'views/report_vatintraprint.xml',
         'views/report_vatpartnerlisting.xml',
     ],
-    'demo': [],
-    'installable': False,
+    'demo': ['../account/demo/account_invoice_demo.yml'],
+    'test': ['../account/test/account_invoice_state.yml'],
+    'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
 }

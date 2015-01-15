@@ -1015,7 +1015,7 @@ class account_chart_template(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2, tmp3 = self._load_template(company, code_digits=code_digits, account_ref=acc_ref, taxes_ref=taxes_ref)
+        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
@@ -1285,6 +1285,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     bank_accounts_id = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True)
+    bank_account_code_char = fields.Char('Bank Accounts Code')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
     sale_tax = fields.Many2one('account.tax.template', string='Default Sale Tax')
     purchase_tax = fields.Many2one('account.tax.template', string='Default Purchase Tax')
@@ -1334,7 +1335,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 res['domain']['sale_tax'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax'] = repr(purchase_tax_domain)
             if self.chart_template_id.code_digits:
-               res['value']['code_digits'] = self.chart_template_id.code_digits
+                res['value']['code_digits'] = self.chart_template_id.code_digits
+            if self.chart_template_id.bank_account_code_char:
+                res['value']['bank_account_code_char'] = self.chart_template_id.bank_account_code_char
         return res
 
     @api.model
@@ -1534,8 +1537,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 'company_id': company.id,
         }
 
-    @api.one
-    def _create_bank_journals_from_o2m(self, company_id, acc_template_ref):
+    @api.multi
+    def _create_bank_journals_from_o2m(self, company, acc_template_ref):
         '''
         This function creates bank journals and its accounts for each line encoded in the field bank_accounts_id of the
         wizard.
@@ -1545,8 +1548,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             of the accounts that have been generated from them.
         :return: True
         '''
-        company = self.env['res.company'].browse(company_id)
-
+        self.ensure_one()
         # Build a list with all the data to process
         journal_data = []
         if self.bank_accounts_id:
@@ -1557,10 +1559,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
                     'currency_id': acc.currency_id.id,
                 }
                 journal_data.append(vals)
-        ref_acc_bank = self.chart_template_id.bank_account_view_id
-        if journal_data and not ref_acc_bank.code:
-            raise UserError(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
-        company.write({'bank_account_code_char': ref_acc_bank.code})
+        ref_acc_bank = self.bank_account_code_char
+        if journal_data and not ref_acc_bank:
+            raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
+        company.write({'bank_account_code_char': ref_acc_bank})
 
         for line in journal_data:
             # Create the default debit/credit accounts for this bank journal

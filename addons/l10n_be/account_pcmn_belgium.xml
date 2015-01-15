@@ -2,12 +2,6 @@
 <openerp>
     <data>
 
-        <!-- account.account.type -->
-        <record id="user_type_stock" model="account.account.type">
-            <field name="name">Stock et Encours</field>
-            <field name="report_type">asset</field>
-        </record>
-
         <!-- Chart template of l10n_be -->
             <!-- Account template definition -->
         <record id="a1000" model="account.account.template">
@@ -1621,199 +1615,199 @@
         <record id="a300" model="account.account.template">
             <field name="name">Valeur d'acquisition</field>
             <field name="code">300</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a309" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">309</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3100" model="account.account.template">
             <field name="name">Matières d'approvisionnement</field>
             <field name="code">3100</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3101" model="account.account.template">
             <field name="name">Energie, charbon, coke, Mazout, essence, propane</field>
             <field name="code">3101</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3102" model="account.account.template">
             <field name="name">Produits d'entretien</field>
             <field name="code">3102</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3103" model="account.account.template">
             <field name="name">Fournitures diverses et petit outillage</field>
             <field name="code">3103</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3104" model="account.account.template">
             <field name="name">Imprimés et fournitures de bureau</field>
             <field name="code">3104</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3105" model="account.account.template">
             <field name="name">Fournitures de services sociaux</field>
             <field name="code">3105</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a31060" model="account.account.template">
             <field name="name">Emballages perdus</field>
             <field name="code">31060</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a31061" model="account.account.template">
             <field name="name">Emballages récupérables</field>
             <field name="code">31061</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a319" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">319</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3200" model="account.account.template">
             <field name="name">Produits semi-ouvrés</field>
             <field name="code">3200</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3201" model="account.account.template">
             <field name="name">Produits en cours de fabrication</field>
             <field name="code">3201</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3202" model="account.account.template">
             <field name="name">Travaux en cours</field>
             <field name="code">3202</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3205" model="account.account.template">
             <field name="name">Déchets</field>
             <field name="code">3205</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3206" model="account.account.template">
             <field name="name">Rebuts</field>
             <field name="code">3206</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3209" model="account.account.template">
             <field name="name">Travaux en association momentanée</field>
             <field name="code">3209</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a329" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">329</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3300" model="account.account.template">
             <field name="name">Produits finis</field>
             <field name="code">3300</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a339" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">339</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3400" model="account.account.template">
             <field name="name">Groupe A</field>
             <field name="code">3400</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3401" model="account.account.template">
             <field name="name">Groupe B</field>
             <field name="code">3401</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a349" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">349</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3500" model="account.account.template">
             <field name="name">Immeuble A</field>
             <field name="code">3500</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3501" model="account.account.template">
             <field name="name">Immeuble B</field>
             <field name="code">3501</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3510" model="account.account.template">
             <field name="name">Immeuble A</field>
             <field name="code">3510</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a3511" model="account.account.template">
             <field name="name">Immeuble B</field>
             <field name="code">3511</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a359" model="account.account.template">
             <field name="name">Réductions de valeurs actées</field>
             <field name="code">359</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a360" model="account.account.template">
             <field name="name">Acomptes versés</field>
             <field name="code">360</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a369" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">369</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a370" model="account.account.template">
             <field name="name">Valeur d'acquisition</field>
             <field name="code">370</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a371" model="account.account.template">
             <field name="name">Bénéfice pris en compte</field>
             <field name="code">371</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a379" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">379</field>
-            <field name="user_type" ref="user_type_stock"/>
+            <field name="user_type" ref="account.user_type_stock"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
         </record>
         <record id="a_recv" model="account.account.template">

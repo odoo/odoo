@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-      <record model="account.account.type" id="data_account_type_view">
-          <field name="name">View</field>
-          <field name="close_method">none</field>
-        </record>
-        <record model="account.account.type" id="data_account_type_asset_view">
-          <field name="name">Fixed Assets</field>
-          <field name="close_method">none</field>
-          <field name="include_initial_balance" eval="True"/>
-        </record>
+        <!-- account.account.type -->
         <record model="account.account.type" id="data_account_type_receivable">
           <field name="name">Receivable</field>
           <field name="type">receivable</field>

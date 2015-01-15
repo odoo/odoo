@@ -97,10 +97,10 @@ You could use this simplified accounting in case you work with an (external) acc
     ],
     'demo': [
         'demo/account_demo.xml',
-        'demo/account_minimal.xml',
-        'demo/account_invoice_demo.xml',
-        'demo/account_bank_statement.xml',
-        'views/account_unit_test.xml',
+        #'demo/account_minimal.xml',
+        #'demo/account_invoice_demo.yml',
+        #'demo/account_bank_statement.xml',
+        #'views/account_unit_test.xml',
     ],
     'test': [
 #         'test/account_report.yml',
