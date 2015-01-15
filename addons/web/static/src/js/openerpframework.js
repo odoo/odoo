@@ -1272,6 +1272,9 @@ openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.Translati
     add_module_translation: function(mod) {
         var self = this;
         _.each(mod.messages, function(message) {
+            if (message.id === 'Create a product') {
+                debugger;
+            }
             self.db[message.id] = message.string;
         });
     },
@@ -1285,6 +1288,9 @@ openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.Translati
         return fcnt;
     },
     get: function(key) {
+        if (key === 'Create a product') {
+            debugger;
+        }
         return this.db[key];
     },
     /**
