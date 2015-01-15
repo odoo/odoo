@@ -162,13 +162,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             registry.setup_models(cr, partial=True)
             init_module_models(cr, package.name, models)
 
-        # Can't put this line out of the loop: ir.module.module will be
-        # registered by init_module_models() above.
-        modobj = registry['ir.module.module']
-
-        if perform_checks:
-            modobj.check(cr, SUPERUSER_ID, [module_id])
-
         idref = {}
 
         mode = 'update'
@@ -176,6 +169,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            # Can't put this line out of the loop: ir.module.module will be
+            # registered by init_module_models() above.
+            modobj = registry['ir.module.module']
+
+            if perform_checks:
+                modobj.check(cr, SUPERUSER_ID, [module_id])
+
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
