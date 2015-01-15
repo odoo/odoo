@@ -292,7 +292,6 @@ class account_analytic_line(osv.osv):
         return invoices
 
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, context=None):
-        print "debug trace , ctx : " , context
         if context and "hr_timesheet" in context:
             res = {}
             if not account_id:
