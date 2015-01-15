@@ -3121,6 +3121,10 @@ class stock_picking_in(osv.osv):
         defaults.update(in_defaults)
         return defaults
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        return self.pool['stock.picking'].copy(cr, uid, id, default=default, context=context)
+
+
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
@@ -3193,6 +3197,10 @@ class stock_picking_out(osv.osv):
         out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(out_defaults)
         return defaults
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        return self.pool['stock.picking'].copy(cr, uid, id, default=default, context=context)
+
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
