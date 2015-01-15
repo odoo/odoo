@@ -112,7 +112,7 @@ class plugin_handler(osv.osv_memory):
             if not email_from:
                 author_id = False
             else:
-                authors = mail_thread_obj.message_find_partner_from_emails(cr, uid, [res_id], [email_from])
+                authors = mail_thread_obj.message_partner_info_from_emails(cr, uid, [res_id], [email_from])
                 author_id = authors and authors[0].get('partner_id') or False
 
             model_obj.message_post(cr, uid, [res_id],

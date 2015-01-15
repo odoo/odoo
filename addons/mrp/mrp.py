@@ -24,7 +24,7 @@ from datetime import datetime
 
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, orm
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
@@ -294,8 +294,8 @@ class mrp_bom(osv.osv):
         if properties is None:
             properties = []
         domain = [('product_id', '=', product_id), ('bom_id', '=', False),
-                   '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-                   '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+                   '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+                   '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         ids = self.search(cr, uid, domain)
         max_prop = 0
         result = False
@@ -363,6 +363,9 @@ class mrp_bom(osv.osv):
                         'hour': float(wc_use.hour_nbr*mult + ((wc.time_start or 0.0)+(wc.time_stop or 0.0)+cycle*(wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
+                if (bom2.date_start and bom2.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT)) or \
+                    (bom2.date_stop and bom2.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT)):
+                    continue
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
                 result = result + res[0]
                 result2 = result2 + res[1]
@@ -613,6 +616,26 @@ class mrp_production(osv.osv):
         self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
     
+    def _prepare_lines(self, cr, uid, production, properties=None, context=None):
+        # search BoM structure and route
+        bom_obj = self.pool.get('mrp.bom')
+        uom_obj = self.pool.get('product.uom')
+        bom_point = production.bom_id
+        bom_id = production.bom_id.id
+        if not bom_point:
+            bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
+            if bom_id:
+                bom_point = bom_obj.browse(cr, uid, bom_id)
+                routing_id = bom_point.routing_id.id or False
+                self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
+
+        if not bom_id:
+            raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
+
+        # get components and workcenter_lines from BoM structure
+        factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
+        return bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
+
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
         @return: product_lines
@@ -621,8 +644,6 @@ class mrp_production(osv.osv):
         if properties is None:
             properties = []
         results = []
-        bom_obj = self.pool.get('mrp.bom')
-        uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
 
@@ -632,23 +653,8 @@ class mrp_production(osv.osv):
     
             #unlink workcenter_lines
             workcenter_line_obj.unlink(cr, SUPERUSER_ID, [line.id for line in production.workcenter_lines], context=context)
-    
-            # search BoM structure and route
-            bom_point = production.bom_id
-            bom_id = production.bom_id.id
-            if not bom_point:
-                bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
-                if bom_id:
-                    bom_point = bom_obj.browse(cr, uid, bom_id)
-                    routing_id = bom_point.routing_id.id or False
-                    self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
-    
-            if not bom_id:
-                raise osv.except_osv(_('Error!'), _("Cannot find a bill of material for this product."))
-    
-            # get components and workcenter_lines from BoM structure
-            factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
+
+            res = self._prepare_lines(cr, uid, production, properties=properties, context=context)
             results = res[0] # product_lines
             results2 = res[1] # workcenter_lines
     
@@ -895,7 +901,7 @@ class mrp_production(osv.osv):
         """
         res = True
         for production in self.browse(cr, uid, ids):
-            boms = self._action_compute_lines(cr, uid, [production.id])
+            boms = self._prepare_lines(cr, uid, production)[0]
             res = False
             for bom in boms:
                 product = self.pool.get('product.product').browse(cr, uid, bom['product_id'])
