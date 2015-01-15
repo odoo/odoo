@@ -811,9 +811,6 @@ class BaseModel(object):
         # introduce magic fields
         cls._add_magic_fields()
 
-        # register stuff about low-level function fields and custom fields
-        cls._init_function_fields(pool, cr)
-
         # register constraints and onchange methods
         cls._init_constraints_onchanges()
 
@@ -3001,6 +2998,9 @@ class BaseModel(object):
 
         # determine old-api cls._inherit_fields and cls._all_columns
         cls._inherits_reload()
+
+        # register stuff about low-level function fields
+        cls._init_function_fields(cls.pool, self._cr)
 
         # check constraints
         for func in cls._constraint_methods:
