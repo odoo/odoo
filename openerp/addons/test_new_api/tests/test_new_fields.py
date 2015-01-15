@@ -294,7 +294,7 @@ class TestNewFields(common.TransactionCase):
         # by default related fields are not stored
         field = message._fields['discussion_name']
         self.assertFalse(field.store)
-        self.assertTrue(field.readonly)
+        self.assertFalse(field.readonly)
 
         # check value of related field
         self.assertEqual(message.discussion_name, discussion.name)
