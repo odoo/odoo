@@ -468,6 +468,7 @@ ALL_LANGUAGES = {
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
+        'de_CH': u'German (CH) / Deutsch (CH)',
         'el_GR': u'Greek / Ελληνικά',
         'en_CA': u'English (CA)',
         'en_GB': u'English (UK)',
