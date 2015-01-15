@@ -904,7 +904,7 @@ class account_invoice(models.Model):
                 'date': inv.date_invoice,
                 'narration': inv.comment,
                 'company_id': inv.company_id.id,
-            }su
+            }
             ctx['company_id'] = inv.company_id.id
             period = inv.period_id
             if not period:
