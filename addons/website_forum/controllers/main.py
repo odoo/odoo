@@ -371,7 +371,7 @@ class WebsiteForum(http.Controller):
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
         step = 30
-        tag_count = len(User.search([('karma', '>', 1), ('website_published', '=', True)]))
+        tag_count = User.search_count([('karma', '>', 1), ('website_published', '=', True)])
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
@@ -426,28 +426,22 @@ class WebsiteForum(http.Controller):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         values = self._prepare_forum_values(forum=forum, **post)
 
-        # questions and answers by user
-        user_question_ids = Post.search([
+        # displaying only the 20 most recent questions
+        user_questions = Post.search([
             ('parent_id', '=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
-            order='create_date desc')
-        count_user_questions = len(user_question_ids)
+            limit=20, order='create_date desc')
 
         if (user_id != request.session.uid and not
                 (user.website_published or
-                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
+                    (user_questions and current_user.karma > forum.karma_unlink_all))):
             return request.website.render("website_forum.private_profile", values)
 
-        # displaying only the 20 most recent questions
-        user_questions = user_question_ids[:20]
-
-        user_answer_ids = Post.search([
+        # displaying only the 20  most recent answers
+        user_answers = Post.search([
             ('parent_id', '!=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
-            order='create_date desc')
-        count_user_answers = len(user_answer_ids)
-        # displaying only the 20  most recent answers
-        user_answers = user_answer_ids[:20]
+            limit=20, order='create_date desc')
 
         # showing questions which user following
         post_ids = [follower.res_id for follower in Followers.sudo().search([('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]
@@ -470,7 +464,7 @@ class WebsiteForum(http.Controller):
 
         # activity by user.
         model, comment = Data.get_object_reference('mail', 'mt_comment')
-        activities = Activity.search([('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)],
+        activities = Activity.search([('res_id', 'in', (user_questions + user_answers).ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)],
                                      order='date DESC', limit=100)
 
         posts = {}
@@ -491,9 +485,7 @@ class WebsiteForum(http.Controller):
             'main_object': user,
             'searches': post,
             'questions': user_questions,
-            'count_questions': count_user_questions,
             'answers': user_answers,
-            'count_answers': count_user_answers,
             'followed': followed,
             'favourite': favourite,
             'up_votes': up_votes,
