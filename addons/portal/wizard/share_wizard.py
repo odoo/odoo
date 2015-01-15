@@ -81,7 +81,7 @@ class share_wizard_portal(osv.TransientModel):
 
            :param portal: browse_record of portal, constructed with a context WITHOUT language
         """
-        parent_menu_id = self._create_or_get_submenu_named(cr, uid, portal.parent_menu_id.id, SHARED_DOCS_MENU, context=context)
+        parent_menu_id = self._create_or_get_submenu_named(cr, uid, portal, SHARED_DOCS_MENU, context=context)
         if parent_menu_id:
             child_menu_id = self._create_or_get_submenu_named(cr, uid, parent_menu_id, SHARED_DOCS_CHILD_MENU, context=context)
             return child_menu_id
