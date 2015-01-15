@@ -2132,17 +2132,18 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         $editable = $editable.is('[contenteditable]') ? $editable : $editable.find('[contenteditable]');
         $editable.data('NoteHistory').recordUndo($editable);
 
-        event.preventDefault();
-        var r = range.create();
-        if (!r.isCollapsed()) {
-            r = r.deleteContents();
-            r.select();
-        }
+        if (["INPUT", "TEXTAREA"].indexOf(event.target.tagName) === -1) {
+            var r = range.create();
+            if (!r.isCollapsed()) {
+                r = r.deleteContents();
+                r.select();
+            }
 
-        var text = clipboardData.getData("text/plain").replace(/</g, "&lt;");
-        dom.pasteText(r.sc, r.so, text);
-        event.preventDefault();
-        return false;
+            var text = clipboardData.getData("text/plain").replace(/</g, "&lt;");
+            dom.pasteText(r.sc, r.so, text);
+            event.preventDefault();
+            return false;
+        }
     }
 
     var fn_attach = eventHandler.attach;
