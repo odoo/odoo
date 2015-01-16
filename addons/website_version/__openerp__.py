@@ -17,10 +17,11 @@ OpenERP Website CMS
         'views/marketing_view.xml',
         'views/website_version_views.xml',
         'views/res_config.xml',
-        'data/demo.xml',
         'data/data.xml',
     ],
-    'demo': [],
+    'demo': [
+        'data/demo.xml',
+    ],
     'qweb': ['static/src/xml/*.xml'],
     'application': True,
 }

@@ -10,7 +10,7 @@ class version(models.Model):
     """
 
     _name = "website_version.version"
-    
+
     name = fields.Char(string="Title", required=True)
     view_ids = fields.One2many('ir.ui.view', 'version_id', string="View", copy=True)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
@@ -32,11 +32,9 @@ class version(models.Model):
         return super(version, self).unlink()
 
     @api.multi
-    def action_publish(self, ids):
-        for id in ids:
-            view_ids = self.env['ir.ui.view'].search([('version_id', '=', id)])
-            if view_ids:
-                view_ids.publish()
+    def action_publish(self):
+        for version in self:
+            self.view_ids.publish()
 
     @api.one
     def publish_version(self, save_master, copy_master_name):

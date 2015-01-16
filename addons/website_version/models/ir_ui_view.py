@@ -47,9 +47,9 @@ class view(models.Model):
         self.copy({'version_id': None})
 
     #To publish a view in backend
-    @api.model
-    def action_publish(self, ids):
-        self.browse(ids).publish()
+    @api.multi
+    def action_publish(self):
+        self.publish()
 
     @api.model
     def get_view_id(self, xml_id):

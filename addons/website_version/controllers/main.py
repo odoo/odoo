@@ -12,12 +12,12 @@ GOOGLE_ANALYTICS_NOT_CONFIGURED = 0
 
 class Versioning_Controller(Website):
 
-    @http.route(['/website_version/change_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/change_version', type='json', auth="user", website=True)
     def change_version(self, version_id):
         request.session['version_id'] = version_id
         return version_id
 
-    @http.route(['/website_version/create_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/create_version', type='json', auth="user", website=True)
     def create_version(self, name, version_id=None):
         if not name:
             name = datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -27,7 +27,7 @@ class Versioning_Controller(Website):
         request.session['version_id'] = new_version.id
         return new_version.id
 
-    @http.route(['/website_version/delete_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/delete_version', type='json', auth="user", website=True)
     def delete_version(self, version_id):
         version = request.env['website_version.version'].browse(version_id)
         name = version.name
@@ -37,13 +37,13 @@ class Versioning_Controller(Website):
             request.session['version_id'] = 0
         return name
 
-    @http.route(['/website_version/check_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/check_version', type='json', auth="user", website=True)
     def check_version(self, version_id):
         #To check if the version is in a running or paused experiment
         Exp = request.env['website_version.experiment']
         return bool(Exp.search(['|', ('state', '=', 'running'), ('state', '=', 'paused'), ('experiment_version_ids.version_id', '=', version_id)], limit=1))
-    
-    @http.route(['/website_version/all_versions'], type='json', auth="public", website=True)
+
+    @http.route('/website_version/all_versions', type='json', auth="public", website=True)
     def all_versions(self, view_id):
         #To get all versions in the menu
         view = request.env['ir.ui.view'].browse(view_id)
@@ -65,18 +65,18 @@ class Versioning_Controller(Website):
             result.append({'id': current_version_id, 'name': Version.browse(current_version_id).name, 'bold': 1})
         return result
 
-    @http.route(['/website_version/has_experiments'], type='json', auth="user", website=True)
+    @http.route('/website_version/has_experiments', type='json', auth="user", website=True)
     def has_experiments(self, view_id):
         v = request.env['ir.ui.view'].browse(view_id)
         website_id = request.context.get('website_id')
         return bool(request.env["website_version.experiment.version"].search([('version_id.view_ids.key', '=', v.key), ('experiment_id.website_id.id', '=', website_id)], limit=1))
 
-    @http.route(['/website_version/publish_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/publish_version', type='json', auth="user", website=True)
     def publish_version(self, version_id, save_master, copy_master_name):
         request.session['version_id'] = 0
         return request.env['website_version.version'].browse(version_id).publish_version(save_master, copy_master_name)
 
-    @http.route(['/website_version/diff_version'], type='json', auth="user", website=True)
+    @http.route('/website_version/diff_version', type='json', auth="user", website=True)
     def diff_version(self, version_id):
         mod_version = request.env['website_version.version']
         version = mod_version.browse(version_id)
@@ -85,7 +85,7 @@ class Versioning_Controller(Website):
             name_list.append(view.name)
         return name_list
 
-    @http.route(['/website_version/google_access'], type='json', auth="user")
+    @http.route('/website_version/google_access', type='json', auth="user")
     def google_authorize(self, **kw):
         #Check if client_id and client_secret are set to get the authorization from Google
         gs_obj = request.env['google.service']
@@ -106,7 +106,7 @@ class Versioning_Controller(Website):
             "url": url
         }
 
-    @http.route(['/website_version/set_google_access'], type='json', auth="user", website=True)
+    @http.route('/website_version/set_google_access', type='json', auth="user", website=True)
     def set_google_access(self, ga_key, view_id, client_id, client_secret):
         #To set ga_key, view_id, client_id, client_secret
         website_id = request.context.get('website_id')
@@ -117,7 +117,7 @@ class Versioning_Controller(Website):
             icp.set_param('google_management_client_id', client_id.strip() or '', groups=['base.group_system'])
             icp.set_param('google_management_client_secret', client_secret.strip() or '', groups=['base.group_system'])
 
-    @http.route(['/website_version/all_versions_all_goals'], type='json', auth="user", website=True)
+    @http.route('/website_version/all_versions_all_goals', type='json', auth="user", website=True)
     def all_versions_all_goals(self, view_id):
         #To get all versions and all goals to create an experiment
         view = request.env['ir.ui.view']
@@ -137,7 +137,7 @@ class Versioning_Controller(Website):
             check_conf = GOOGLE_ANALYTICS_NOT_CONFIGURED
         return {'tab_version': tab_version, 'tab_goal': tab_goal, 'check_conf': check_conf}
 
-    @http.route(['/website_version/launch_experiment'], type='json', auth="user", website=True)
+    @http.route('/website_version/launch_experiment', type='json', auth="user", website=True)
     def launch_experiment(self, name, version_ids, goal_id):
         existing_experiment = request.env['website_version.experiment'].check_no_overlap(version_ids)
         if not existing_experiment['existing']:

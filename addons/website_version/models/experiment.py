@@ -25,9 +25,6 @@ class Experiment_version(models.Model):
     google_index = fields.Integer(string='Google index')
 
 
-#This model allow to define the Google analytics goals in a experiment
-
-
 class Goals(models.Model):
     """ Allow to define the goal of an experiment.
     The goals are defined in the Google Analytics account and can be synchronised in backend.
