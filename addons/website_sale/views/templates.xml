@@ -1276,10 +1276,10 @@
                             <a t-att-href="report_url"><span t-field="i.number"/></a>
                             <span class="text-muted" t-field="i.date_invoice"/>
                             <t t-if="i.state == 'paid'">
-                              <span class="label label-success label-text-align"><i class="fa fa-fw fa-check"/> Paid</span>
+                              <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
                             </t>
                             <t t-if="i.state != 'paid'">
-                              <span class="label label-info label-text-align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                              <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                             </t>
                           </div>
                         </t>
@@ -1379,7 +1379,7 @@
     </div>
   </div>
   <t t-foreach="o.order_line" t-as="ol">
-    <div class="row vertical-align">
+    <div class="row orders_vertical_align">
       <div class="col-md-1 text-center">
         <a t-att-href="'/shop/product/%s' % str(ol.product_id.product_tmpl_id.id)">
           <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
