@@ -1181,7 +1181,7 @@ class procurement_order(osv.osv):
                 uom = procurement.purchase_line_id.product_uom
                 product_qty = uom_obj._compute_qty_obj(cr, uid, procurement.product_uom, procurement.product_qty, uom, context=context)
                 if procurement.purchase_line_id.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(_('Error!'),
+                    raise UserError(
                         _('Can not cancel this procurement like this as the related purchase order has been confirmed already.  Please cancel the purchase order first. '))
                 if float_compare(procurement.purchase_line_id.product_qty, product_qty, 0, precision_rounding=uom.rounding) > 0:
                     purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - product_qty}, context=context)

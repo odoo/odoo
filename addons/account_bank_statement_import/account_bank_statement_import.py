@@ -94,12 +94,12 @@ class account_bank_statement_import(osv.TransientModel):
                         -o 'partner_name': string
                         -o 'ref': string
         """
-        raise osv.except_osv(_('Error'), _('Could not make sense of the given file.\nDid you install the module to support this type of file ?'))
+        raise UserError(_('Could not make sense of the given file.\nDid you install the module to support this type of file ?'))
 
     def _check_parsed_data(self, cr, uid, stmts_vals, context=None):
         """ Basic and structural verifications """
         if len(stmts_vals) == 0:
-            raise osv.except_osv(_('Error'), _('This file doesn\'t contain any statement.'))
+            raise UserError(_('This file doesn\'t contain any statement.'))
 
         no_st_line = True
         for vals in stmts_vals:
@@ -107,7 +107,7 @@ class account_bank_statement_import(osv.TransientModel):
                 no_st_line = False
                 break
         if no_st_line:
-            raise osv.except_osv(_('Error'), _('This file doesn\'t contain any transaction.'))
+            raise UserError(_('This file doesn\'t contain any transaction.'))
 
     def _find_additional_data(self, cr, uid, currency_code, account_number, context=None):
         """ Get the res.currency ID and the res.partner.bank ID """
@@ -140,7 +140,7 @@ class account_bank_statement_import(osv.TransientModel):
             bank_account = bank_pool.browse(cr, uid, bank_account_id, context=context)
             if journal_id:
                 if bank_account.journal_id.id and bank_account.journal_id.id != journal_id:
-                    raise osv.except_osv(_('Error'), _('The account of this statement is linked to another journal.'))
+                    raise UserError(_('The account of this statement is linked to another journal.'))
                 if not bank_account.journal_id.id:
                     bank_pool.write(cr, uid, [bank_account_id], {'journal_id': journal_id}, context=context)
             else:
@@ -151,7 +151,7 @@ class account_bank_statement_import(osv.TransientModel):
         if journal_id:
             journal_currency_id = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context).currency.id
             if currency_id and currency_id != journal_currency_id:
-                raise osv.except_osv(_('Error'), _('The currency of the bank statement is not the same as the currency of the journal !'))
+                raise UserError(_('The currency of the bank statement is not the same as the currency of the journal !'))
 
         # If there is no journal, create one (and its account)
         if not journal_id and account_number:
@@ -161,7 +161,7 @@ class account_bank_statement_import(osv.TransientModel):
 
         # If we couldn't find/create a journal, everything is lost
         if not journal_id:
-            raise osv.except_osv(_('Error'), _('Cannot find in which journal import this statement. Please manually select a journal.'))
+            raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
 
         return journal_id
 

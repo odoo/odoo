@@ -88,7 +88,7 @@ class purchase_requisition(osv.osv):
 
     def tender_in_progress(self, cr, uid, ids, context=None):
         if not all(obj.line_ids for obj in self.pool['purchase.requisition'].browse(cr, uid, ids, context=context)):
-            raise osv.except_osv(_('Warning!'), _('You can not confirm call because there is no product line.'))
+            raise UserError(_('You can not confirm call because there is no product line.'))
         return self.write(cr, uid, ids, {'state': 'in_progress'}, context=context)
 
     def tender_open(self, cr, uid, ids, context=None):

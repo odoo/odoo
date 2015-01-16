@@ -3479,7 +3479,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if not ids:
                 break
         else:
-            raise osv.except_osv(_('Error!'), _('Cannot generate an unused account code.'))
+            raise UserError(_('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
         tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')

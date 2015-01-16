@@ -727,7 +727,7 @@ class product_template(osv.osv):
                 old_uom = product.uom_id
                 if old_uom != new_uom:
                     if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', [x.id for x in product.product_variant_ids]), ('state', '!=', 'cancel')], context=context):
-                        raise osv.except_osv(_('Unit of Measure can not be changed anymore!'), _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
+                        raise UserError(_('Unit of Measure can not be changed anymore!') + " " + _("As there are existing stock moves of this product, you can not change the Unit of Measurement anymore. "))
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
