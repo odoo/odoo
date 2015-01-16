@@ -1556,11 +1556,13 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context):
             journal = move.journal_id
             amount = 0
+            currency_ammount = 0
             line_ids = []
             line_draft_ids = []
             company_id = None
             for line in move.line_id:
                 amount += line.debit - line.credit
+                currency_ammount += line.amount_currency
                 line_ids.append(line.id)
                 if line.state=='draft':
                     line_draft_ids.append(line.id)
@@ -1574,7 +1576,7 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
                         raise osv.except_osv(_('Error!'), _("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
 
-            if abs(amount) < 10 ** -4:
+            if abs(amount) < 10 ** -4 and abs(currency_ammount) < 10 ** -4:
                 # If the move is balanced
                 # Add to the list of valid moves
                 # (analytic lines will be created later for valid moves)
