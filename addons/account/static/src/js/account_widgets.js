@@ -980,6 +980,7 @@ openerp.account = function (instance) {
                         .call("compute_all", [tax_id, amount, self.get("currency_id")])
                         .then(function(data){
                             line_created_being_edited.length = 1; // remove tax lines
+                            line_created_being_edited[0].amount_before_tax = amount;
                             line_created_being_edited[0].amount = data.total_excluded;
                             $.each(data.taxes, function(index, tax) {
                                 var tax_account_id = (amount > 0 ? tax.account_id : tax.refund_account_id);
@@ -1040,8 +1041,10 @@ openerp.account = function (instance) {
                     account_id: line.account_id,
                     name: line.label
                 };
-                dict['credit'] = (line.amount > 0 ? line.amount : 0);
-                dict['debit'] = (line.amount < 0 ? -1 * line.amount : 0);
+                // Use amount_before_tax since the amount of the newly created line is adjusted to
+                // reflect tax included in price in account_move_line.create()
+                dict['credit'] = (line.amount_before_tax > 0 ? line.amount_before_tax : 0);
+                dict['debit'] = (line.amount_before_tax < 0 ? -1 * line.amount_before_tax : 0);
                 if (line.tax_id) dict['tax_ids'] = [line.tax_id];
                 if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
                 return dict;
