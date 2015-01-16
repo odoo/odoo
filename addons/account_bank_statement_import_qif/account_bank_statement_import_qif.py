@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import dateutil.parser
-from tempfile import TemporaryFile
+import StringIO
 
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
@@ -23,7 +23,7 @@ class account_bank_statement_import(osv.TransientModel):
     }
 
     def _get_journal(self, cr, uid, currency_id, bank_account_id, account_number, context=None):
-        """ As .QIF format does not allow us to detect the journal, we need to let the user choose it. 
+        """ As .QIF format does not allow us to detect the journal, we need to let the user choose it.
             We set it in context before to call super so it's the same as calling the widget from a journal """
         if context is None:
             context = {}
@@ -36,18 +36,14 @@ class account_bank_statement_import(osv.TransientModel):
     def _check_qif(self, cr, uid, data_file, context=None):
         return data_file.strip().startswith('!Type:')
 
-    def _parse_file(self, cr, uid, data_file=None, context=None):
+    def _parse_file(self, cr, uid, data_file, context=None):
         if not self._check_qif(cr, uid, data_file, context=context):
             return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
 
         try:
-            fileobj = TemporaryFile('wb+')
-            fileobj.write(data_file)
-            fileobj.seek(0)
             file_data = ""
-            for line in fileobj.readlines():
+            for line in StringIO.StringIO(data_file).readlines():
                 file_data += line
-            fileobj.close()
             if '\r' in file_data:
                 data_list = file_data.split('\r')
             else:

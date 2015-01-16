@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
+import StringIO
 
 from openerp.osv import osv
 from openerp.tools.translate import _
@@ -28,17 +28,8 @@ class account_bank_statement_import(osv.TransientModel):
             return False
         return ofx
 
-    def _parse_file(self, cr, uid, data_file=None, context=None):
-        try:
-            tempfile = open("temp.ofx", "w+")
-            tempfile.write(data_file)
-            tempfile.read()
-            pathname = os.path.dirname('temp.ofx')
-            path = os.path.join(os.path.abspath(pathname), 'temp.ofx')
-        except:
-            raise UserError(_('File handling error.'))
-        
-        ofx = self._check_ofx(cr, uid, file(path), context=context)
+    def _parse_file(self, cr, uid, data_file, context=None):
+        ofx = self._check_ofx(cr, uid, StringIO.StringIO(data_file), context=context)
         if not ofx:
             return super(account_bank_statement_import, self)._parse_file(cr, uid, data_file, context=context)
 
@@ -65,7 +56,6 @@ class account_bank_statement_import(osv.TransientModel):
                 total_amt += float(transaction.amount)
                 transactions.append(vals_line)
         except Exception, e:
-            os.remove(path)
             raise UserError(_("The following problem occurred during import. The file might not be valid.\n\n %s" % e.message))
 
         vals_bank_statement = {
@@ -74,5 +64,4 @@ class account_bank_statement_import(osv.TransientModel):
             'balance_start': ofx.account.statement.balance,
             'balance_end_real': float(ofx.account.statement.balance) + total_amt,
         }
-        os.remove(path)
         return ofx.account.statement.currency, ofx.account.number, [vals_bank_statement]

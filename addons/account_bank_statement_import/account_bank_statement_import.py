@@ -70,7 +70,7 @@ class account_bank_statement_import(osv.TransientModel):
             'type': 'ir.actions.client',
         }
 
-    def _parse_file(self, cr, uid, data_file=None, context=None):
+    def _parse_file(self, cr, uid, data_file, context=None):
         """ Each module adding a file support must extends this method. It processes the file if it can, returns super otherwise, resulting in a chain of responsability.
             This method parses the given file and returns the data required by the bank statement import process, as specified below.
             rtype: triplet (if a value can't be retrieved, use None)
