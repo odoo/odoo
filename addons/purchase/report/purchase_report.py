@@ -98,7 +98,8 @@ class purchase_report(osv.osv):
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
                     partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id
+                    partner.commercial_partner_id as commercial_partner_id,
+                    analytic_account.id as account_analytic_id
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                     join res_partner partner on s.partner_id = partner.id
@@ -107,6 +108,7 @@ class purchase_report(osv.osv):
                             LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                    left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
                 group by
                     s.company_id,
                     s.create_uid,
@@ -134,6 +136,7 @@ class purchase_report(osv.osv):
                     u.id,
                     u2.factor,
                     partner.country_id,
-                    partner.commercial_partner_id
+                    partner.commercial_partner_id,
+                    analytic_account.id
             )
         """)
