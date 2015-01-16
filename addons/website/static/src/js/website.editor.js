@@ -357,15 +357,24 @@ define(['summernote/summernote'], function () {
     };
 
     eventHandler.dialog.showLinkDialog = function ($editable, $dialog, linkInfo) {
+        $editable.data('range').select();
+        $editable.data('NoteHistory').recordUndo();
+        
         var editor = new website.editor.LinkDialog($editable, linkInfo);
         editor.appendTo(document.body);
 
         var def = new $.Deferred();
         editor.on("save", this, function (linkInfo) {
+            linkInfo.range.select();
+            $editable.data('range', linkInfo.range);
             def.resolve(linkInfo);
+            $editable.data('NoteHistory').popUndo();
             $('.note-popover .note-link-popover').show();
         });
-        editor.on("cancel", this, function () { def.reject(); });
+        editor.on("cancel", this, function () {
+            def.reject();
+            $editable.data('NoteHistory').popUndo();
+        });
         return def;
     };
     eventHandler.dialog.showImageDialog = function ($editable) {
@@ -806,6 +815,7 @@ define(['summernote/summernote'], function () {
         };
 
         this.popUndo = function () {
+            pos--;
             aUndo.pop();
         };
 
