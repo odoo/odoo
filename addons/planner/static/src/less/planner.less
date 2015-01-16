@@ -1,54 +1,6 @@
 // FONTS
 
 @font-face {
-    font-family: 'LatoLatin';
-    src: url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.eot');
-    src: url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.woff2') format('woff2'),
-         url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.woff') format('woff'),
-         url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.ttf') format('truetype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-thin-webfont.svg#latolight') format('svg');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LatoLatin';
-    src: url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.eot');
-    src: url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.woff2') format('woff2'),
-         url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.woff') format('woff'),
-         url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.ttf') format('truetype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-light-webfont.svg#latolight') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LatoLatin';
-    src: url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.eot');
-    src: url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.woff2') format('woff2'),
-         url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.woff') format('woff'),
-         url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.ttf') format('truetype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-semibold-webfont.svg#latosemibold') format('svg');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LatoLatin';
-    src: url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.eot');
-    src: url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.woff2') format('woff2'),
-         url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.woff') format('woff'),
-         url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.ttf') format('truetype'),
-         url('/planner/static/src/fonts/LatoLatin/lato-regular-webfont.svg#latoregular') format('svg');
-    font-weight: medium;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'Simple-Line-Icons';
     src:url('/planner/static/src/fonts/Simple-Line-Icons.eot');
     src:url('/planner/static/src/fonts/Simple-Line-Icons.eot?#iefix') format('embedded-opentype'),
@@ -60,7 +12,7 @@
 }
 
 // use data attributes for inserting  icons
-// http://www.issme.net/india/assets/plugins/line-icons/ 
+// http://www.issme.net/india/assets/plugins/line-icons/
 
 [data-icon]:before {
     font-family: 'Simple-Line-Icons';
@@ -249,7 +201,7 @@
 
     .planner-dialog {
         width: 85%;
-        font-family: "LatoLatin", serif;
+        font-family: "Lato", serif;
         max-width: 1024px;
         overflow: hidden;
         margin-left: auto;
@@ -392,7 +344,7 @@
                 opacity: 1;
             }
             .mark_as_done span {
-                font-family: "LatoLatin", serif;
+                font-family: "Lato", serif;
             }
         }
          // MARKED ANIMATION
@@ -416,7 +368,7 @@
             -webkit-animation: markAnim ease-in-out 1s;
             -webkit-animation-iteration-count: 1;
             -webkit-transform-origin: 50% 50%;
-            -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/ 
+            -webkit-animation-fill-mode:forwards; /*Chrome 16+, Safari 4+*/
             -moz-animation: markAnim ease-in-out 1s;
             -moz-animation-iteration-count: 1;
             -moz-transform-origin: 50% 50%;
@@ -438,7 +390,7 @@
                 border-right: 1px solid #E5E5E5;
                 background: #f7f7f7;
                 padding: 10px 12px 0 12px;
-                
+
                 i.fa{
                     font-size: 1.7em;
                     padding-left: 0;
@@ -510,9 +462,9 @@
             }
         }
         .side {
-            padding: 5px 5px 20px 10px; 
+            padding: 5px 5px 20px 10px;
             border-right: 1px solid #E5E5E5;
-            background: #f7f7f7; 
+            background: #f7f7f7;
             overflow-x: hidden;
             overflow-y: auto;
             .nav-stacked h4 {
@@ -524,7 +476,7 @@
             }
             .nav-stacked h4 i {
                 margin-right: 8px;
-                color: #A24689; 
+                color: #A24689;
             }
             .nav-stacked li a {
                 padding: 3px 0 3px 38px;
