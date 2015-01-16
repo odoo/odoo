@@ -758,7 +758,7 @@ class account_move_line(osv.osv):
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def prepare_move_lines_for_reconciliation_widget(self, cr, uid, lines, target_currency=False, target_date=False, context=None):
-        """ Returns move lines formatted for the manual/bank reconciliation widget
+        """ Returns move lines formatted for the bank reconciliation widget
 
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
@@ -783,6 +783,8 @@ class account_move_line(osv.osv):
                 'id': line.id,
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
                 'ref': line.move_id.ref,
+                # For reconciliation between statement transactions and already registered payments (eg. checks)
+                'already_paid': line.account_id.type == 'liquidity',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -805,6 +807,11 @@ class account_move_line(osv.osv):
                 debit, credit = credit, debit
                 amount = -amount
                 amount_currency = -amount_currency
+
+            # For already reconciled lines, don't use amount_residual(_currency)
+            if line.account_id.type == 'liquidity':
+                amount = abs(debit - credit)
+                amount_currency = line.amount_currency
 
             # Get right debit / credit:
             target_currency = target_currency or company_currency

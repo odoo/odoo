@@ -600,21 +600,21 @@
                     <notebook>
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_id!=False">
+                                <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <field name="journal_entry_id" invisible="1"/>
-                                    <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="journal_entry_ids" invisible="1"/>
+                                    <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="partner_id" domain="[
                                         '&amp;',
                                             '|',('parent_id','=',False),('is_company','=',True),
                                             '|',('customer','=',True),('supplier','=',True)]"
                                          context="{'default_supplier': 1}"
-                                         attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                         attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="bank_account_id" groups="base.group_no_one"/>
                                 </tree>
                             </field>

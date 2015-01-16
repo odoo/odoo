@@ -133,7 +133,7 @@ openerp.account = function (instance) {
             this._super();
             var self = this;
             // Retreive statement infos and reconciliation data from the model
-            var lines_filter = [['journal_entry_id', '=', false], ['account_id', '=', false]];
+            var lines_filter = [['journal_entry_ids', '=', false], ['account_id', '=', false]];
             var deferred_promises = [];
             
             // Working on specified statement(s)
@@ -688,6 +688,7 @@ openerp.account = function (instance) {
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
+            this.is_rapprochement; // matching a statement line with an already reconciled journal item
             this.can_fetch_more_move_lines; // Tell if we can show more move lines
             this.filter = "";
             // In rare cases like when deleting a statement line's partner we don't want the server to
@@ -1047,12 +1048,12 @@ openerp.account = function (instance) {
             if (! line) return; // If no line found, we've got a syncing problem (let's turn a deaf ear)
 
             // Warn the user if he's selecting lines from both a payable and a receivable account
-            var last_selected_line = _.last(self.get("mv_lines_selected"));
-            if (last_selected_line && last_selected_line.account_type != line.account_type) {
-                new instance.web.Dialog(this, {
-                    title: _t("Warning"),
-                    size: 'medium',
-                }, $("<div />").text(_.str.sprintf(_t("You are selecting transactions from both a payable and a receivable account.\n\nIn order to proceed, you first need to deselect the %s transactions."), last_selected_line.account_type))).open();
+            selected_lines_account_types = _.collect(self.get("mv_lines_selected").concat(line), function(l) { return l.account_type });
+            if (selected_lines_account_types.indexOf("payable") != -1 && selected_lines_account_types.indexOf("receivable") != -1) {
+                new instance.web.CrashManager().show_warning({data: {
+                    exception_type: "Incorrect Operation",
+                    message: _t("You cannot mix items from receivable and payable accounts.")
+                }});
                 return;
             }
 
@@ -1305,7 +1306,11 @@ openerp.account = function (instance) {
 
             // Show or hide partial reconciliation
             if (self.get("mv_lines_selected").length > 0) {
-                var propose_partial = self.getCreatedLines().length === 0 && self.get("mv_lines_selected").length === 1 && balance_type === "greater" && ! self.get("mv_lines_selected")[0].partial_reconcile;
+                var propose_partial = self.getCreatedLines().length === 0
+                    && self.get("mv_lines_selected").length === 1
+                    && balance_type === "greater"
+                    && ! self.get("mv_lines_selected")[0].partial_reconcile
+                    && ! self.is_rapprochement;
                 self.get("mv_lines_selected")[0].propose_partial_reconcile = propose_partial;
                 self.updateAccountingViewMatchedLines();
             }
@@ -1411,7 +1416,9 @@ openerp.account = function (instance) {
         
             self.getParent().excludeMoveLines(self, self.partner_id, added_lines);
             self.getParent().unexcludeMoveLines(self, self.partner_id, removed_lines);
-        
+
+            self.is_rapprochement = added_lines.length > 0 && added_lines[0].already_paid;
+
             $.when(self.updateMatches()).then(function(){
                 self.updateAccountingViewMatchedLines();
                 self.updateBalance();
@@ -1575,6 +1582,7 @@ openerp.account = function (instance) {
             balance = Math.round(balance*1000)/1000;
 
             self.set("balance", balance);
+    
         },
 
         // Loads move lines according to the widget's state
@@ -1636,6 +1644,7 @@ openerp.account = function (instance) {
                 debit: line.debit,
                 credit: line.credit,
                 counterpart_move_line_id: line.id,
+                already_paid: line.already_paid,
             };
         },
     
@@ -1649,7 +1658,6 @@ openerp.account = function (instance) {
             if (amount > 0) dict['credit'] = amount;
             if (amount < 0) dict['debit'] = -1 * amount;
             if (line.tax_id) dict['account_tax_id'] = line.tax_id;
-            if (line.is_tax_line) dict['is_tax_line'] = line.is_tax_line;
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
     
             return dict;
@@ -1671,8 +1679,9 @@ openerp.account = function (instance) {
         makeMoveLineDicts: function() {
             var self = this;
             var mv_line_dicts = [];
-            _.each(self.get("mv_lines_selected"), function(o) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(o)) });
-            _.each(self.getCreatedLines(), function(o) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(o)) });
+            _.each(self.get("mv_lines_selected"), function(l) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(l)) });
+            created_lines = _.filter(self.getCreatedLines(), function(l) { return ! l.is_tax_line; }); // Tax lines are created via account_tax_id
+            _.each(self.getCreatedLines(), function(l) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(l)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },

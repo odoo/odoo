@@ -155,7 +155,7 @@
     </t>
 
     <t t-name="bank_statement_reconciliation_move_line">
-        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
+        <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
             <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
@@ -186,6 +186,9 @@
                 <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
                 <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
             </td></tr>
+            <tr class="one_line_info" t-if='line.already_paid'>
+                <td colspan="2">This payment is registered but not reconciled.</td>
+            </tr>
         </table>
     </t>
 
