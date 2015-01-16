@@ -613,7 +613,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$header_col = this.$header.find('.oe-header-title');
         this.$search_col = this.$header.find('.oe-view-manager-search-view');
         this.$switch_buttons.click(function (event) {
-            self.switch_mode($(this).data('view-type'));
+            var view_type = $(this).data('view-type');
+            if ((view_type === 'form') && (self.active_view.type === 'form')) {
+                self._display_view(view_type);
+            } else {
+                self.switch_mode(view_type);
+            }
         });
         var views_ids = {};
         _.each(this.views, function (view) {
@@ -639,7 +644,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     switch_mode: function(view_type, no_store, view_options) {
         var self = this,
             view = this.views[view_type];
-
         if (!view) {
             return $.Deferred().reject();
         }
@@ -716,15 +720,17 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .empty()
             .append($breadcrumbs);
 
-        function make_breadcrumb (bc, is_active) {
-            var handler = function () {
-                self.action_manager.select_widget(bc.widget, bc.index);
-            };
-            return $('<li>')
-                    .append(is_active ? bc.title : $('<a>').text(bc.title))
-                    .toggleClass('active', is_active)
-                    .click(handler);
-        }
+        function make_breadcrumb (bc, is_last) {
+            var $bc = $('<li>')
+                    .append(is_last ? bc.title : $('<a>').text(bc.title))
+                    .toggleClass('active', is_last);
+            if (!is_last) {
+                $bc.click(function () {
+                    self.action_manager.select_widget(bc.widget, bc.index);
+                });
+            }
+            return $bc;
+ç        }
     },
     create_view: function(view) {
         var self = this,
