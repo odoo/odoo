@@ -84,8 +84,19 @@ $(document).ready(function () {
             var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
                 .done(function(json_data){
                     _.each(json_data, function(value, key){
-                        the_form.find(".form-control[name=" + key + "]").val(value);
-                        the_form.find("input[name^=" + key + "]").each(function(){
+
+                        // prefill of text/number/date boxes
+                        var input = the_form.find(".form-control[name=" + key + "]");
+                        input.val(value);
+
+                        // special case for comments under multiple suggestions questions
+                        if (_.string.endsWith(key, "_comment") &&
+                            (input.parent().hasClass("js_comments") || input.parent().hasClass("js_ck_comments"))) {
+                            input.siblings().find('>input').attr("checked","checked");
+                        }
+
+                        // checkboxes and radios
+                        the_form.find("input[name^=" + key + "][type!='text']").each(function(){
                             $(this).val(value);
                         });
                     });
