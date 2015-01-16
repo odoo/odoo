@@ -2,18 +2,18 @@
 <openerp>
     <data>
 
-        <record id="view_marketing_configuration_mass_mailing" model="ir.ui.view">
-            <field name="name">marketing.config.settings.mass.mailing</field>
+        <record id="view_marketing_configuration" model="ir.ui.view">
+            <field name="name">marketing.campaign.config.settings</field>
             <field name="model">marketing.config.settings</field>
             <field name="inherit_id" ref="marketing.view_marketing_configuration"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='config_setting']" position="after">
-                    <separator string="Mass Mailing"/>
+                    <separator string="Marketing Campaigns"/>
                     <group>
                         <label for="id" string="Settings"/>
                         <div>
-                            <field name="group_mass_mailing_campaign" class="oe_inline"/>
-                            <label for="group_mass_mailing_campaign"/>
+                            <field name="module_marketing_campaign_crm_demo" class="oe_inline"/>
+                            <label for="module_marketing_campaign_crm_demo"/>
                         </div>
                     </group>
                 </xpath>

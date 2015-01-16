@@ -186,10 +186,13 @@
                     </page>
                     <page string="Extra Info">
                         <group>
-                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                            <group name="categorization" string="Marketing" >
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     options="{'no_create': True}"/>
+                                <field name="campaign_id" />
+                                <field name="medium_id"/>
+                                <field name="source_id" />
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
@@ -502,6 +505,11 @@
                                     <field name="function"/>
                                     <field name="mobile"/>
                                     <field name="fax"/>
+                                </group>
+                                <group string="Marketing">
+                                    <field name="campaign_id" />
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
                                 </group>
                                 <group string="Mailings" name="mailings">
                                     <field name="opt_out"/>

@@ -90,7 +90,4 @@ class sale_config_settings(osv.osv_memory):
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
         'module_sale' : fields.boolean('SALE'),
-        'module_mass_mailing': fields.boolean(
-            'Manage mass mailing campaigns',
-            help='Get access to statistics with your mass mailing, manage campaigns.'),
     }

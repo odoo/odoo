@@ -3,7 +3,7 @@
 from openerp.osv import fields, osv
 
 
-class CrmMarketingConfig(osv.TransientModel):
+class MarketingCampaignConfig(osv.TransientModel):
     _name = 'marketing.config.settings'
     _inherit = 'marketing.config.settings'
 
