@@ -84,7 +84,7 @@ $(document).ready(function () {
             .done(function(json_data){
                 _.each(json_data, function(value, key){
                     the_form.find(".form-control[name=" + key + "]").val(value);
-                    the_form.find("input[name^=" + key + "]").each(function(){
+                    the_form.find("input[name=" + key + "]").each(function(){
                         $(this).val(value);
                     });
                 });
