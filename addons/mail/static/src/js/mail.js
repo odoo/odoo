@@ -695,9 +695,8 @@ openerp.mail = function (session) {
                 }
                 // create object and attach to the thread object
                 thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
-                    var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
-                    thread.insert_message( message, root ? undefined : self.$el, root );
+                    thread.append_messages(data.splice(-1), root ? undefined : self.$el, root);
                 });
                 self.on_cancel();
                 self.flag_post = false;
@@ -884,7 +883,7 @@ openerp.mail = function (session) {
                 if (self.thread_level === 0){
                     element = element.parent();
                 }
-                self.parent_thread.switch_new_message(data, element);
+                self.parent_thread.append_messages(data, element);
                 self.animated_destroy(200);
             });
 
@@ -1321,45 +1320,6 @@ openerp.mail = function (session) {
         },
 
         /**
-         *search a thread in all thread and child thread.
-         * This method return an object thread.
-         * @param {object}{int} option.id
-         * @param {object}{string} option.model
-         * @param {object}{boolean} option._go_thread_wall
-         *      private for check the top thread
-         * @param {object}{boolean} option.default_return_top_thread
-         *      return the top thread (wall) if no thread found
-         * @return thread object
-         */
-        browse_thread: function (options) {
-            // goto the wall thread for launch browse
-            if (!options._go_thread_wall) {
-                options._go_thread_wall = true;
-                return this.options.root_thread.browse_thread(options);
-            }
-
-            if (this.id == options.id) {
-                return this;
-            }
-
-            if (options.id) {
-                for (var i in this.messages) {
-                    if (this.messages[i].thread) {
-                        var res = this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
-                        if (res) return res;
-                    }
-                }
-            }
-
-            //if option default_return_top_thread, return the top if no found thread
-            if (options.default_return_top_thread) {
-                return this;
-            }
-
-            return false;
-        },
-
-        /**
          *search a message in all thread and child thread.
          * This method return an object message.
          * @param {object}{int} option.id
@@ -1417,11 +1377,10 @@ openerp.mail = function (session) {
                     // option for sending in flat mode by server
                     this.options.flat_mode, 
                     // context + additional
-                    (replace_context ? replace_context : this.context), 
+                    (replace_context ? replace_context : this.context),
                     // parent_id
-                    this.context.default_parent_id || undefined,
-                    this.options.fetch_limit,
-                ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message')
+                    this.context.default_parent_id || undefined
+                ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('create_thread')
                 ).done(this.proxy('message_fetch_set_read'));
         },
 
@@ -1440,70 +1399,64 @@ openerp.mail = function (session) {
         },
 
         /**
-         *create the message object and attached on this thread.
-         * When the message object is create, this method call insert_message for,
-         * displaying this message on the DOM.
+         *create the message objects and attached on this thread.
          * @param : {object} data from calling RPC to "message_read"
          */
-        create_message_object: function (data) {
+        create_message_objects: function (messages) {
             var self = this;
-
-            data.thread_level = self.thread_level || 0;
-            data.options = _.extend(data.options || {}, self.options);
-
-            if (data.type=='expandable') {
-                var message = new mail.ThreadExpandable(self, data, {'context':{
-                    'default_model': data.model || self.context.default_model,
-                    'default_res_id': data.res_id || self.context.default_res_id,
-                    'default_parent_id': self.id,
-                }});
-            } else {
-                data.record_name= (data.record_name != '' && data.record_name) || (self.parent_message && self.parent_message.record_name);
-                var message = new mail.ThreadMessage(self, data, {'context':{
-                    'default_model': data.model,
-                    'default_res_id': data.res_id,
-                    'default_parent_id': data.id,
-                }});
-            }
-
-            // check if the message is already create
-            for (var i in self.messages) {
-                if (message.id && self.messages[i] && self.messages[i].id == message.id) {
-                    self.messages[i].destroy();
+            var res = [];
+            _(messages).each(function(data){
+                data.thread_level = self.thread_level || 0;
+                data.options = _.extend(data.options || {}, self.options);
+                if (data.type=='expandable') {
+                    var message = new mail.ThreadExpandable(self, data, {'context':{
+                        'default_model': data.model || self.context.default_model,
+                        'default_res_id': data.res_id || self.context.default_res_id,
+                        'default_parent_id': self.id,
+                    }});
+                } else {
+                    data.record_name= (data.record_name != '' && data.record_name) || (self.parent_message && self.parent_message.record_name);
+                    var message = new mail.ThreadMessage(self, data, {'context':{
+                        'default_model': data.model,
+                        'default_res_id': data.res_id,
+                        'default_parent_id': data.id,
+                    }});
                 }
-            }
-            self.messages.push( message );
-
-            return message;
+                // check if the message is already create
+                self.messages.filter(function(msg) { return msg.id != message.id; })
+                self.messages.push(message);
+                res.push(message);
+            });
+            return res;
         },
 
         /**
-         *insert the message on the DOM.
-         * All message (and expandable message) are sorted. The method get the
-         * older and newer message to insert the message (before, after).
-         * If there are no older or newer, the message is prepend or append to
-         * the thread (parent object or on root thread for flat view).
-         * The sort is define by the thread_level (O for newer on top).
-         * @param : {object} ThreadMessage object
+         * render thread: append all messages to thead into DOM
          */
-        insert_message: function (message, dom_insert_after, prepend) {
-            var self=this;
-            if (this.options.show_compact_message > this.thread_level) {
-                this.instantiate_compose_message();
-                this.compose_message.do_show_compact();
-            }
-
-            this.$('.oe_view_nocontent').remove();
+        render_thread: function(messages,dom_insert_after, prepend){
+            var self = this;
             if (dom_insert_after && dom_insert_after.parent()[0] == self.$el[0]) {
-                message.insertAfter(dom_insert_after);
+                _(messages).invoke('insertAfter', dom_insert_after)
             } else if (prepend) {
-                message.prependTo(self.$el);
+                _(messages).invoke('prependTo', self.$el)
             } else {
-                message.appendTo(self.$el);
+                _(messages).invoke('appendTo', self.$el)
             }
-            message.$el.hide().fadeIn(500);
+        },
 
-            return message
+        /**
+        * append message: append message into DOM
+        */
+        append_messages: function(records, dom_insert_after, prepend){
+            var self = this;
+            var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
+            this.$('.oe_view_nocontent').remove();
+            if(this.options.flat_mode) {
+                self.create_thread(records);
+            } else {
+                var messages = self.create_message_objects(records);
+                self.render_thread(messages, dom_insert_after, prepend);
+            }
         },
         
         /**
@@ -1511,18 +1464,21 @@ openerp.mail = function (session) {
          * Each message is send to his parent object (or parent thread flat mode) for creating the object message.
          * @param : {Array} datas from calling RPC to "message_read"
          */
-        switch_new_message: function (records, dom_insert_after) {
+        create_thread: function(records, dom_insert_after) {
             var self=this;
-            var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
-            _(records).each(function (record) {
-                var thread = self.browse_thread({
-                    'id': record.parent_id, 
-                    'default_return_top_thread':true
+            var group_records = _.groupBy(records, "parent_id");
+            // create perent thread and render it
+            var messages = _.compact(_.union(group_records.false, group_records.null))
+            var msg = self.create_message_objects(messages);
+            self.render_thread(msg, dom_insert_after);
+            // append children thread in parent thread and render it
+            _(group_records).each(function(child_msg, parent){
+                _(msg).each(function(message){
+                    if (message.id == parent) {
+                       var messages = message.thread.create_message_objects(child_msg);
+                       message.thread.render_thread(messages, dom_insert_after);
+                    }
                 });
-                // create object and attach to the thread object
-                var message = thread.create_message_object( record );
-                // insert the message on dom
-                thread.insert_message( message, dom_insert_after);
             });
             if (!records.length && this.options.root_thread == this) {
                 this.no_message();
