@@ -487,7 +487,7 @@ class Home(http.Controller):
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
-
+        request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
 
@@ -495,10 +495,6 @@ class Home(http.Controller):
             request.uid = openerp.SUPERUSER_ID
 
         values = request.params.copy()
-        if not redirect:
-            redirect = '/web?' + request.httprequest.query_string
-        values['redirect'] = redirect
-
         try:
             values['databases'] = http.db_list()
         except openerp.exceptions.AccessDenied:
@@ -508,6 +504,9 @@ class Home(http.Controller):
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
+                request.params['login_success'] = True
+                if not redirect:
+                    redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
