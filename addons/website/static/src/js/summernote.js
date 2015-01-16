@@ -492,12 +492,17 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         range.create(data.sc, data.so, data.ec, data.eo).select();
     };
     dom.removeBetween = function (sc, so, ec, eo, towrite) {
-        if (ec.tagName && ec.childNodes[eo]) {
-            ec = ec.childNodes[eo];
-            eo = 0;
+        if (ec.tagName) {
+            if (ec.childNodes[eo]) {
+                ec = ec.childNodes[eo];
+                eo = 0;
+            } else {
+                ec = dom.lastChild(ec);
+                eo = dom.nodeLength(ec);
+            }
         }
-        if (sc.tagName && sc.childNodes[so]) {
-            sc = sc.childNodes[so];
+        if (sc.tagName) {
+            sc = sc.childNodes[so] || dom.firstChild(ec);
             so = 0;
             if (!dom.hasContentBefore(sc)) {
                 sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
