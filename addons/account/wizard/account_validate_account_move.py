@@ -20,6 +20,7 @@
 ##############################################################################
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class validate_account_move(osv.osv_memory):
     _name = "validate.account.move"
@@ -36,7 +37,7 @@ class validate_account_move(osv.osv_memory):
         data = self.read(cr, uid, ids[0], context=context)
         ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_id','in',tuple(data['journal_ids'])),('period_id','in',tuple(data['period_ids']))], order='date')
         if not ids_move:
-            raise osv.except_osv(_('Warning!'), _('Specified journals do not have any account move entries in draft state for the specified periods.'))
+            raise UserError(_('Specified journals do not have any account move entries in draft state for the specified periods.'))
         obj_move.button_validate(cr, uid, ids_move, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -57,6 +58,6 @@ class validate_account_move_lines(osv.osv_memory):
                 move_ids.append(line.move_id.id)
         move_ids = list(set(move_ids))
         if not move_ids:
-            raise osv.except_osv(_('Warning!'), _('Selected Entry Lines does not have any account move entries in draft state.'))
+            raise UserError(_('Selected Entry Lines does not have any account move entries in draft state.'))
         obj_move.button_validate(cr, uid, move_ids, context)
         return {'type': 'ir.actions.act_window_close'}

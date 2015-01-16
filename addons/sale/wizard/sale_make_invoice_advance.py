@@ -21,6 +21,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -88,18 +89,17 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop_id = prop and prop.id or False
                 account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
                 if not account_id:
-                    raise osv.except_osv(_('Configuration Error!'),
+                    raise UserError(
                             _('There is no income account defined as global property.'))
                 res['account_id'] = account_id
             if not res.get('account_id'):
-                raise osv.except_osv(_('Configuration Error!'),
+                raise UserError(
                         _('There is no income account defined for this product: "%s" (id:%d).') % \
                             (wizard.product_id.name, wizard.product_id.id,))
 
             # determine invoice amount
             if wizard.amount <= 0.00:
-                raise osv.except_osv(_('Incorrect Data'),
-                    _('The value of Advance Amount must be positive.'))
+                raise UserError(_('The value of Advance Amount must be positive.'))
             if wizard.advance_payment_method == 'percentage':
                 inv_amount = sale.amount_total * wizard.amount / 100
                 if not res.get('name'):

@@ -25,6 +25,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
+from openerp.exceptions import UserError
 
 
 class crm_helpdesk(osv.osv):
@@ -112,7 +113,7 @@ class crm_helpdesk(osv.osv):
                 if parent_id.change_responsible and parent_id.user_id:
                     data['user_id'] = parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error!'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+                raise UserError(_('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
         return True
 

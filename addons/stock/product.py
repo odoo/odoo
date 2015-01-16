@@ -24,6 +24,7 @@ from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 import openerp.addons.decimal_precision as dp
 from openerp.tools.float_utils import float_round
+from openerp.exceptions import UserError
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -451,7 +452,7 @@ class product_template(osv.osv):
         if 'uom_po_id' in vals:
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)], context=context)
             if self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', product_ids)], context=context, limit=1):
-                raise osv.except_osv(_('Error!'), _("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product.") % ())
+                raise UserError(_("You can not change the unit of measure of a product that has already been used in a stock move. If you need to change the unit of measure, you may deactivate this product."))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
 

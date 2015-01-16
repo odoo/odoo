@@ -27,6 +27,7 @@ from urlparse import urljoin
 from itertools import product
 from collections import Counter
 from collections import OrderedDict
+from openerp.exceptions import UserError
 
 import datetime
 import logging
@@ -436,13 +437,12 @@ class survey_survey(osv.Model):
         ''' Open a window to compose an email, pre-filled with the survey
         message '''
         if not self._has_questions(cr, uid, ids, context=None):
-            raise osv.except_osv(_('Error!'), _('You cannot send an invitation for a survey that has no questions.'))
+            raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
         if survey_browse.stage_id.closed:
-            raise osv.except_osv(_('Warning!'),
-                _("You cannot send invitations for closed surveys."))
+            raise UserError(_("You cannot send invitations for closed surveys."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
@@ -895,8 +895,7 @@ class survey_user_input(osv.Model):
     ]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
+        raise UserError(_('You cannot duplicate this element!'))
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
@@ -1027,8 +1026,7 @@ class survey_user_input_line(osv.Model):
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
+        raise UserError(_('You cannot duplicate this element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):

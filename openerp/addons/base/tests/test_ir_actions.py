@@ -1,6 +1,6 @@
 import unittest2
 
-from openerp.osv.orm import except_orm
+from openerp.exceptions import ValidationError
 import openerp.tests.common as common
 from openerp.tools import mute_logger
 
@@ -398,7 +398,7 @@ workflow"""
         self.assertEqual(res.get('type'), 'ir.actions.act_url')
 
         # Test loops
-        with self.assertRaises(except_orm):
+        with self.assertRaises(ValidationError):
             self.ir_actions_server.write(cr, uid, [self.act_id], {
                 'child_ids': [(6, 0, [self.act_id])]
             })

@@ -83,10 +83,13 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     return [response]
 
 def xmlrpc_handle_exception_int(e):
-    if isinstance(e, openerp.osv.orm.except_orm): # legacy
+    if isinstance(e, openerp.exceptions.UserError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.Warning) or isinstance(e, openerp.exceptions.RedirectWarning):
+    elif isinstance(e, openerp.exceptions.RedirectWarning):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.MissingError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, openerp.exceptions.AccessError):
@@ -106,6 +109,7 @@ def xmlrpc_handle_exception_int(e):
         if hasattr(e, 'message') and e.message == 'AccessDenied': # legacy
             fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
             response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+        #InternalError
         else:
             info = sys.exc_info()
             # Which one is the best ?
@@ -116,11 +120,13 @@ def xmlrpc_handle_exception_int(e):
     return response
 
 def xmlrpc_handle_exception_string(e):
-    if isinstance(e, openerp.osv.orm.except_orm):
+    if isinstance(e, openerp.exceptions.UserError):
         fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.Warning):
+    elif isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+    elif isinstance(e, openerp.exceptions.MissingError):
+        fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
@@ -133,6 +139,7 @@ def xmlrpc_handle_exception_string(e):
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    #InternalError
     else:
         info = sys.exc_info()
         formatted_info = "".join(traceback.format_exception(*info))

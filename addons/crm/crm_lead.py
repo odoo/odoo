@@ -30,6 +30,7 @@ from openerp.addons.base.res.res_partner import format_address
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
+from openerp.exceptions import UserError, AccessError
 
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
@@ -390,10 +391,9 @@ class crm_lead(format_address, osv.osv):
                 else:
                     stages_leads[stage_id] = [lead.id]
             else:
-                raise osv.except_osv(_('Warning!'),
-                    _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
-                        'probability = 0 %, select "Change Probability Automatically".\n'
-                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+                raise UserError(_('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
+                                    'probability = 0 %, select "Change Probability Automatically".\n'
+                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
@@ -410,10 +410,9 @@ class crm_lead(format_address, osv.osv):
                 else:
                     stages_leads[stage_id] = [lead.id]
             else:
-                raise osv.except_osv(_('Warning!'),
-                    _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
-                        'probability = 100 % and select "Change Probability Automatically".\n'
-                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+                raise UserError(_('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
+                                    'probability = 100 % and select "Change Probability Automatically".\n'
+                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
@@ -428,7 +427,7 @@ class crm_lead(format_address, osv.osv):
                     if case.team_id.parent_id.user_id:
                         data['user_id'] = case.team_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
+                raise UserError(_("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
@@ -637,7 +636,7 @@ class crm_lead(format_address, osv.osv):
             context = {}
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning!'), _('Please select more than one element (lead or opportunity) from the list view.'))
+            raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
@@ -763,10 +762,7 @@ class crm_lead(format_address, osv.osv):
             contact_name = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]
             partner_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
         else:
-            raise osv.except_osv(
-                _('Warning!'),
-                _('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")')
-            )
+            raise UserError(_('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")'))
         return partner_id
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
@@ -996,7 +992,7 @@ class crm_lead(format_address, osv.osv):
                     self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
                 elif lead.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
-        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 

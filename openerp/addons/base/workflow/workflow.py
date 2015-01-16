@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.workflow
@@ -39,7 +39,7 @@ class workflow(osv.osv):
     }
 
     def copy(self, cr, uid, id, values, context=None):
-        raise Warning(_("Duplicating workflows is not possible, please create a new workflow"))
+        raise UserError(_("Duplicating workflows is not possible, please create a new workflow"))
 
     def write(self, cr, user, ids, vals, context=None):
         if not context:
@@ -98,8 +98,7 @@ class wkf_activity(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None: context = {}
         if not context.get('_force_unlink') and self.pool.get('workflow.workitem').search(cr, uid, [('act_id', 'in', ids)]):
-            raise osv.except_osv(_('Operation Forbidden'),
-                                 _('Please make sure no workitems refer to an activity before deleting it!'))
+            raise UserError(_('Please make sure no workitems refer to an activity before deleting it!'))
         super(wkf_activity, self).unlink(cr, uid, ids, context=context)
 
 wkf_activity()

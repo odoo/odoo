@@ -4,7 +4,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.event.tests.common import TestEventCommon
-from openerp.exceptions import AccessError, ValidationError, Warning
+from openerp.exceptions import AccessError, ValidationError, UserError
 from openerp.tools import mute_logger
 
 
@@ -57,7 +57,7 @@ class TestEventFlow(TestEventCommon):
         test_event.button_done()
 
         # EventUser cancels -> not possible when having attendees
-        with self.assertRaises(Warning):
+        with self.assertRaises(UserError):
             test_event.button_cancel()
 
 

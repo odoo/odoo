@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.exceptions import UserError
 
 
 class accounting_report(osv.osv_memory):
@@ -69,7 +70,7 @@ class accounting_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to_cmp']
         elif data['form']['filter_cmp'] == 'filter_period':
             if not data['form']['period_from_cmp'] or not data['form']['period_to_cmp']:
-                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period'))
+                raise UserError(_('Select a starting and an ending period'))
             result['period_from'] = data['form']['period_from_cmp']
             result['period_to'] = data['form']['period_to_cmp']
         return result

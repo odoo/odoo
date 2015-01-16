@@ -1,6 +1,7 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 from openerp.addons.account.wizard.pos_box import CashBox
 
@@ -19,8 +20,7 @@ class PosBox(CashBox):
             bank_statements = [record.cash_register_id for record in records if record.cash_register_id]
 
             if not bank_statements:
-                raise osv.except_osv(_('Error!'),
-                                     _("There is no cash register for this PoS Session"))
+                raise UserError(_("There is no cash register for this PoS Session"))
 
             return self._run(cr, uid, ids, bank_statements, context=context)
         else:

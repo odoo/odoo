@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 
 class account_crossovered_analytic(osv.osv_memory):
@@ -59,7 +60,7 @@ class account_crossovered_analytic(osv.osv_memory):
                 flag = False
                 break
         if flag:
-            raise osv.except_osv(_('User Error!'),_('There are no analytic lines related to account %s.' % name))
+            raise UserError(_('There are no analytic lines related to account %s.' % name))
 
         datas = {
              'ids': [],

@@ -54,7 +54,7 @@ def _child_get(node, self=None, tagname=None):
                         except GeneratorExit:
                             continue
                         except Exception, e:
-                            _logger.warning('rml_except: "%s"', n.get('rml_except',''), exc_info=True)
+                            _logger.info('rml_except: "%s"', n.get('rml_except',''), exc_info=True)
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -66,7 +66,7 @@ def _child_get(node, self=None, tagname=None):
                         except GeneratorExit:
                             yield n
                         except Exception, e:
-                            _logger.warning('rml_tag: "%s"', n.get('rml_tag',''), exc_info=True)
+                            _logger.info('rml_tag: "%s"', n.get('rml_tag',''), exc_info=True)
                             yield n
                     else:
                         yield n
@@ -77,7 +77,7 @@ def _child_get(node, self=None, tagname=None):
             except GeneratorExit:
                 continue
             except Exception, e:
-                _logger.warning('rml_except: "%s"', n.get('rml_except',''), exc_info=True)
+                _logger.info('rml_except: "%s"', n.get('rml_except',''), exc_info=True)
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
@@ -90,7 +90,7 @@ def _child_get(node, self=None, tagname=None):
             except GeneratorExit:
                 pass
             except Exception, e:
-                _logger.warning('rml_tag: "%s"', n.get('rml_tag',''), exc_info=True)
+                _logger.info('rml_tag: "%s"', n.get('rml_tag',''), exc_info=True)
                 pass
         if (tagname is None) or (n.tag==tagname):
             yield n
@@ -122,7 +122,7 @@ def _process_text(self, txt):
                     if txt and isinstance(txt, basestring):
                         txt = tools.ustr(txt)
                 except Exception:
-                    _logger.error("Failed to evaluate expression [[ %s ]] with context %r while rendering report, ignored.", expr, self.localcontext)
+                    _logger.info("Failed to evaluate expression [[ %s ]] with context %r while rendering report, ignored.", expr, self.localcontext)
                 if isinstance(txt, basestring):
                     result += txt
                 elif txt and (txt is not None) and (txt is not False):

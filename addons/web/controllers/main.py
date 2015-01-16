@@ -38,6 +38,7 @@ from openerp.tools.translate import _
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -959,7 +960,7 @@ class DataSet(http.Controller):
                 return records
 
         if method.startswith('_'):
-            raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
+            raise AccessError(_("Underscore prefixed methods cannot be remotely called"))
 
         return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 

@@ -24,6 +24,7 @@ from datetime import date, datetime
 from openerp.osv import fields, osv
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
@@ -121,7 +122,7 @@ class crossovered_budget_lines(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
-                raise osv.except_osv(_('Error!'),_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
+                raise UserError(_("The Budget '%s' has no accounts!") % ustr(line.general_budget_id.name))
             date_to = line.date_to
             date_from = line.date_from
             if line.analytic_account_id.id:

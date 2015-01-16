@@ -596,8 +596,8 @@ class google_calendar(osv.AbstractModel):
                     att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
                     cr.commit()
                 else:
-                    _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                    _logger.warning("Response : %s" % response)
+                    _logger.warning("Impossible to create event %s. [%s] Enable DEBUG for response detail.", att.event_id.id, st)
+                    _logger.debug("Response : %s" % response)
         return new_ids
 
     def get_context_no_virtual(self, context):
@@ -643,7 +643,7 @@ class google_calendar(osv.AbstractModel):
                             cr.commit()
                         else:
                             _logger.warning("Impossible to create event %s. [%s]" % (att.event_id.id, st))
-                            _logger.warning("Response : %s" % response)
+                            _logger.debug("Response : %s" % response)
                     except:
                         pass
         return new_ids

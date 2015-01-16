@@ -1,7 +1,7 @@
 import unittest2
 from lxml import etree
 
-import openerp
+from openerp.exceptions import AccessError
 from openerp.tools.misc import mute_logger
 from openerp.tests import common
 
@@ -86,9 +86,9 @@ class TestACL(common.TransactionCase):
         # Now restrict access to the field and check it's forbidden
         self._set_field_groups(self.res_partner, 'bank_ids', GROUP_TECHNICAL_FEATURES)
 
-        with self.assertRaises(openerp.osv.orm.except_orm):
+        with self.assertRaises(AccessError):
             self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
-        with self.assertRaises(openerp.osv.orm.except_orm):
+        with self.assertRaises(AccessError):
             self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})
 
         # Add the restricted group, and check that it works again
@@ -111,11 +111,12 @@ class TestACL(common.TransactionCase):
         # accessing fields must no raise exceptions...
         part.name
         # ... except if they are restricted
-        with self.assertRaises(openerp.osv.orm.except_orm) as cm:
+        with self.assertRaises(AccessError) as cm:
             with mute_logger('openerp.models'):
                 part.email
 
-        self.assertEqual(cm.exception.args[0], 'AccessError')
+        #Useless because we get the title in the client side now in the chrome.js file(map_title)
+        #self.assertEqual(cm.exception.args[0], 'Access Error')
 
 if __name__ == '__main__':
     unittest2.main()

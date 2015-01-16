@@ -24,6 +24,7 @@ import cStringIO
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
@@ -36,7 +37,7 @@ class base_update_translations(osv.osv_memory):
         lang_obj = self.pool.get('res.lang')
         ids = lang_obj.search(cr, uid, [('code', '=', lang_code)])
         if not ids:
-            raise osv.except_osv(_('Error!'), _('No language with code "%s" exists') % lang_code)
+            raise UserError(_('No language with code "%s" exists') % lang_code)
         lang = lang_obj.browse(cr, uid, ids[0])
         return lang.name
 
