@@ -166,6 +166,11 @@ class WebsiteSurvey(http.Controller):
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
+
+            #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
+            if not page:
+                page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=True, context=context)
+
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
