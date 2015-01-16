@@ -49,7 +49,7 @@ up a management by affair.
         'hr_timesheet_installer.xml',
         'hr_timesheet_data.xml'
     ],
-#    'demo': ['hr_timesheet_demo.xml'],
+    'demo': ['hr_timesheet_demo.xml'],
     'test': [
         'test/hr_timesheet_users.yml',
         'test/test_hr_timesheet.yml',

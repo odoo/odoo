@@ -39,7 +39,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     ],
     'data': [
         'project_issue_sheet_view.xml',
-#        'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
     ],
     'demo': [],
     'installable': True,

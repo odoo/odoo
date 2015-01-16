@@ -47,8 +47,8 @@ The validation can be configured in the company:
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
     'data': [
-#        'security/ir.model.access.csv',
-#        'security/hr_timesheet_sheet_security.xml',
+        'security/ir.model.access.csv',
+        'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
         'report/hr_timesheet_report_view.xml',
