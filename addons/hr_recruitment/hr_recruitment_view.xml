@@ -200,10 +200,9 @@
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <graph string="Cases By Stage and Estimates">
-                <field name="job_id"/>
-                <field name="stage_id"/>
-                <field name="salary_expected" type="measure"/>
+              <graph string="Cases By Stage and Estimates" stacked="True">
+                <field name="create_date" interval="week"/>
+                <field name="stage_id" type="col"/>
             </graph>
         </field>
     </record>

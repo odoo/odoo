@@ -11,6 +11,7 @@ openerp.account = function (instance) {
         className: 'oe_bank_statement_reconciliation',
 
         events: {
+            "click *[rel='do_action']": "doActionClickHandler",
             "click .statement_name span": "statementNameClickHandler",
             "keyup .change_statement_name_field": "changeStatementNameFieldHandler",
             "click .change_statement_name_button": "changeStatementButtonClickHandler",
@@ -24,6 +25,7 @@ openerp.account = function (instance) {
             this.single_statement = this.statement_ids !== undefined && this.statement_ids.length === 1;
             this.multiple_statements = this.statement_ids !== undefined && this.statement_ids.length > 1;
             this.title = context.context.title || _t("Reconciliation");
+            this.notifications = context.context.notifications || [];
             this.st_lines = [];
             this.last_displayed_reconciliation_index = undefined; // Flow control
             this.reconciled_lines = 0; // idem
@@ -249,9 +251,39 @@ openerp.account = function (instance) {
                         $.when.apply($, child_promises).then(function(){
                             self.$(".reconciliation_lines_container").animate({opacity: 1}, self.aestetic_animation_speed);
                             self.getChildren()[0].set("mode", "match");
+                            if (self.notifications) {
+                                self.displayNotifications(self.notifications);
+                            }
                         });
                     });
             });
+        },
+
+        doActionClickHandler: function(e) {
+            var name = e.currentTarget.dataset.action_nam;
+            var model = e.currentTarget.dataset.model;
+            var ids = e.currentTarget.dataset.ids.split(",").map(Number);
+            this.action_manager.do_action({
+                name: name,
+                res_model: model,
+                domain: [['id', 'in', ids]],
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: "list",
+                view_mode: "list"
+            });
+        },
+
+        displayNotifications: function(notifications, speed) {
+            speed = speed === undefined ? this.aestetic_animation_speed : speed;
+            for (var i=0; i<notifications.length; i++) {
+                var $notification = $(QWeb.render("reconciliation_notification", {
+                    type: notifications[i].type,
+                    message: notifications[i].message,
+                    details: notifications[i].details,
+                })).hide();
+                $notification.appendTo(this.$(".notification_area")).slideDown(speed);
+            }
         },
 
         statementNameClickHandler: function() {

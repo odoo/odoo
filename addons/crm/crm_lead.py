@@ -238,6 +238,7 @@ class crm_lead(format_address, osv.osv):
                                      multi='day_open', type="float",
                                      store={'crm.lead': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
+        'date_conversion': fields.datetime('Conversion Date', readonly=1),
 
         # Messaging and marketing
         'message_bounce': fields.integer('Bounce'),
@@ -701,6 +702,7 @@ class crm_lead(format_address, osv.osv):
             'date_open': fields.datetime.now(),
             'email_from': customer and customer.email or lead.email_from,
             'phone': customer and customer.phone or lead.phone,
+            'date_conversion': fields.datetime.now(),
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
             val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ('opportunity', 'both'))], context=context)

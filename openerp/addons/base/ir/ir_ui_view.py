@@ -858,7 +858,9 @@ class view(osv.osv):
                 node_model = self.pool[node.getchildren()[0].get('object')]
                 node_fields = node_model.fields_get(cr, user, None, context)
                 fields.update(node_fields)
-                if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
+                if not node.get("create") and \
+                   not node_model.check_access_rights(cr, user, 'create', raise_exception=False) or \
+                   not context.get("create", True):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
@@ -871,7 +873,9 @@ class view(osv.osv):
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
+                if not node.get(action) and \
+                   not Model.check_access_rights(cr, user, operation, raise_exception=False) or \
+                   not context.get(action, True):
                     node.set(action, 'false')
         if node.tag in ('kanban'):
             group_by_name = node.get('default_group_by')
@@ -880,7 +884,9 @@ class view(osv.osv):
                 if group_by_field.type == 'many2one':
                     group_by_model = Model.pool[group_by_field.comodel_name]
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                        if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
+                        if not node.get(action) and \
+                           not group_by_model.check_access_rights(cr, user, operation, raise_exception=False) or \
+                           not context.get(action, True):
                             node.set(action, 'false')
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
