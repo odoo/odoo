@@ -26,7 +26,7 @@
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
-                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
+                    <button class="oe_full" title="Open the full mail composer"><i class='fa fa-pencil-square-o'/></button>
                     <t t-call="mail.thread.list_recipients"/>
                     <textarea class="field_text"></textarea>
                 </div>
@@ -70,7 +70,7 @@
         <span class="oe_attachment_file">
             <span class="oe_add">
                 <!-- uploader of file -->
-                <button class="oe_attach"><span class="oe_e">'</span></button> 
+                <button class="oe_attach"><i class="fa fa-paperclip"/></button>
                 <span class='oe_attach_label'>Attach a File</span>
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
@@ -95,7 +95,9 @@
                         <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
+                    <div class="oe_delete">
+                        <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                    </div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -107,7 +109,9 @@
                         <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
+                    <div class="oe_delete">
+                        <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                    </div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -235,11 +239,11 @@
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons' t-if="!widget.options.readonly">
-                    <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
-                    <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
-                    <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Move to Inbox" class="oe_e">v</a></span>
-                    <span class='oe_reply' t-if="widget.options.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
-                    <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Mark as Todo" class="oe_e">7</a></span>
+                    <span class='oe_read' t-if="widget.options.show_read"><i title="Done" class="fa fa-check"/></span>
+                    <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><i title="Set back to Todo" class="fa fa-inbox"/></span>
+                    <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><i title="Move to Inbox" class="fa fa-inbox"/></span>
+                    <span class='oe_reply' t-if="widget.options.show_reply_button"><i title="Reply" class="fa fa-reply"/></span>
+                    <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><i title="Mark as Todo" class="fa fa-star"/></span>
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
