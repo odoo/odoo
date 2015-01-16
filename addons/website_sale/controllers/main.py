@@ -337,8 +337,8 @@ class website_sale(http.Controller):
         return value
 
     @http.route([
-        '/shop/history',
-        '/shop/history/page/<int:page>',
+        '/shop/orders',
+        '/shop/orders/page/<int:page>',
     ], type='http', auth="user", website=True)
     def orders_followup(self, page=1, **post):
         partner = request.env['res.users'].browse(request.uid).partner_id
@@ -348,7 +348,7 @@ class website_sale(http.Controller):
         nbr_pages = max((len(orders) / by) + (1 if len(orders) % by > 0 else 0), 1)
         page = min(page, nbr_pages)
         pager = request.website.pager(
-            url='/shop/history', total=nbr_pages, page=page, step=1,
+            url='/shop/orders', total=nbr_pages, page=page, step=1,
             scope=by, url_args=post
         )
         orders = orders[by*(page-1):by*(page-1)+by]
@@ -954,23 +954,3 @@ class website_sale(http.Controller):
             }
             ret['lines'] = self.order_lines_2_google_api(order.order_line)
         return ret
-
-    # link to the backend for portal users
-    @http.route('/shop/backend', type='http', auth="public")
-    def shop_backend(self, **post):
-        if request.session.uid:
-            cr, uid = request.cr, request.session.uid
-            portal_user = request.registry['res.users'].has_group(cr, uid, 'base.group_portal')
-            normal_user = request.registry['res.users'].has_group(cr, uid, 'base.group_user')
-            imd = request.env['ir.model.data']
-
-            if portal_user and not normal_user:
-                action= imd.xmlid_to_res_id("portal_sale.action_orders_portal")
-                menu= imd.xmlid_to_res_id("portal.portal_orders")
-                return werkzeug.utils.redirect('/web#menu_id=%s&action=%s' % (menu,action))
-            else:
-                action= imd.xmlid_to_res_id("sale.action_orders")
-                menu= imd.xmlid_to_res_id("base.menu_sales")
-                return werkzeug.utils.redirect('/web#menu_id=%s&action=%s' % (menu,action))
-        else:
-            return login_redirect()

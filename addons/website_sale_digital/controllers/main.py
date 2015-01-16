@@ -11,7 +11,7 @@ from werkzeug.utils import redirect
 
 class website_sale_digital(website_sale):
 
-    orders_page = '/shop/history'
+    orders_page = '/shop/orders'
 
     @http.route([
         '/shop/confirmation',
@@ -24,8 +24,8 @@ class website_sale_digital(website_sale):
         return response
 
     @http.route([
-        '/shop/history',
-        '/shop/history/page/<int:page>',
+        '/shop/orders',
+        '/shop/orders/page/<int:page>',
     ], type='http', auth='user', website=True)
     def orders_followup(self, page=1, **post):
         response = super(website_sale_digital, self).orders_followup(**post)

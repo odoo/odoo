@@ -1346,15 +1346,20 @@
         <t t-if="len(orders) >= 2">
           <t t-call="website_sale.orders_followup_navbar"/>
         </t>
-        <h4 class="text-muted text-center mt64 mb64">
-          If you wish to access the complete application to manage your orders, you can follow 
-          <a href="/shop/backend">this link</a>.
-        </h4>
 
       </div>
       <div class="oe_structure mb32"/>
     </div>
   </t>
+</template>
+
+<template id="sales_backend_access" inherit_id='website_sale.orders_followup' customize_show="True" name="Backend Access">
+  <xpath expr="//div[@class='container oe_website_sale']" position="before">
+    <h4 class="text-muted text-center mt64 mb64">
+      If you wish to access the complete application to manage your orders, you can follow 
+      <a href="/web#action=portal_sale.action_orders_portal">this link</a>.
+    </h4>
+  </xpath>
 </template>
 
 <template id="order_invoice" name="Display Products similarly to Invoice form view" inherit_id="website_sale.orders_followup">
@@ -1414,7 +1419,7 @@
 
 <template id="orders_followup_link" name="Orders Followup Link from User Account" inherit_id="website.layout">
   <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'Logout')]" position="before">
-    <li><a href="/shop/history" role="menuitem">My Orders</a></li>
+    <li><a href="/shop/orders" role="menuitem">My Orders</a></li>
   </xpath>
 </template>
 
