@@ -619,6 +619,20 @@ class account_tax(models.Model):
             NB : It might make more sense to first filter out first-level taxes that appear in groups. """
         return self.mapped(lambda r: r.amount_type == 'group' and r.children_tax_ids or r).sorted()
 
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+        """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
+            price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
+        """
+        self.ensure_one()
+        if self.amount_type == 'fixed':
+            return math.copysign(self.amount, base_amount)
+        if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
+            return base_amount * self.amount / 100
+        if self.amount_type == 'percent' and self.price_include:
+            return base_amount - (base_amount / (1 + self.amount / 100))
+        if self.amount_type == 'division' and not self.price_include:
+            return base_amount / (1 - self.amount / 100) - base_amount
+
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
@@ -641,6 +655,7 @@ class account_tax(models.Model):
         taxes = []
         prec = currency.decimal_places
         total_excluded = total_included = base = round(price_unit * quantity, prec)
+
         for tax in self:
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
@@ -651,22 +666,18 @@ class account_tax(models.Model):
                 taxes += ret['taxes']
                 continue
 
-            if tax.amount_type == 'fixed':
-                tax_amount = math.copysign(tax.amount, base)
-            elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
-                tax_amount = base * tax.amount / 100
-            elif tax.amount_type == 'percent' and tax.price_include:
-                tax_amount = base - (base / (1 + tax.amount / 100))
-            elif tax.amount_type == 'division' and not tax.price_include:
-                tax_amount = base / (1 - tax.amount / 100) - base
+            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
             tax_amount = currency.round(tax_amount)
+
             if tax.price_include:
                 total_excluded -= tax_amount
                 base -= tax_amount
             else:
                 total_included += tax_amount
+
             if tax.include_base_amount:
                 base += tax_amount
+
             taxes.append({
                 'id': tax.id,
                 'name': tax.name,
@@ -676,6 +687,7 @@ class account_tax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
+
         return {
             'taxes': taxes,
             'total_excluded': currency.round(total_excluded),
