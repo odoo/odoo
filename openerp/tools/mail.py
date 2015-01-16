@@ -574,6 +574,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
             instead of converting it into html
     """
     html = ustr(html)
+    if not content:
+        return html
     if plaintext and preserve:
         content = u'\n<pre>%s</pre>\n' % ustr(content)
     elif plaintext:
@@ -596,7 +598,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 #----------------------------------------------------------
 
 # matches any email in a body of text
-email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE) 
+email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})""", re.VERBOSE)
 
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$""", re.VERBOSE)
