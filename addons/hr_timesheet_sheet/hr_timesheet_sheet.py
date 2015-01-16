@@ -366,9 +366,8 @@ class account_analytic_line(osv.osv):
                 return False
         return True
 
-    # TODO tac : This function seems conceptually wrong: we can still modify all other fields.
     _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
+        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state','unit_amount', 'user_id','account_id']),
     ]
 
     # def unlink(self, cr, uid, ids, *args, **kwargs):
