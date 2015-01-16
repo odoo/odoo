@@ -30,7 +30,6 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
-from openerp.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
