@@ -60,13 +60,13 @@ class Lead(models.Model):
     def _merge_pageviews(self, opportunity_id, opportunities):
         crmpv = self.env['website.crm.pageview']
         lead_ids = [opp.id for opp in opportunities if opp.id != opportunity_id]
-        pv_ids = crmpv.search([('lead_id', 'in', lead_ids)])
-        crmpv.sudo().write(pv_ids, {'lead_id': opportunity_id})
+        pv_ids = crmpv.sudo().search([('lead_id', 'in', lead_ids)])
+        pv_ids.write({'lead_id': opportunity_id})
 
     @api.model
     def _merge_scores(self, opportunity_id, opportunities):
         # We needs to delete score from opportunity_id, to be sure that all rules will be re-evaluated.
-        self.sudo().write([opportunity_id], {'score_ids': [(6, 0, [])]})
+        self.sudo().browse(opportunity_id).write({'score_ids': [(6, 0, [])]})
 
     @api.model
     def merge_dependences(self, highest, opportunities):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import fields, api, models
 from openerp.osv import osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
 from random import randint, shuffle
 import datetime
@@ -37,7 +36,7 @@ class team_user(models.Model):
             limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
             domain = [('user_id', '=', self.user_id.id),
                       ('team_id', '=', self.team_id.id),
-                      ('assign_date', '>', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+                      ('assign_date', '>', fields.Datetime.to_string(limit_date))
                       ]
             self.leads_count = self.env['crm.lead'].search_count(domain)
         else:
@@ -86,7 +85,7 @@ class crm_team(osv.osv):
     @api.one
     def _assigned_leads(self):
         limit_date = datetime.datetime.now() - datetime.timedelta(days=30)
-        domain = [('assign_date', '>=', limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+        domain = [('assign_date', '>=', fields.Datetime.to_string(limit_date)),
                   ('team_id', '=', self.id),
                   ('user_id', '!=', False)
                   ]

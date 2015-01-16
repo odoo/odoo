@@ -60,10 +60,15 @@ class ContactController(addons.website_crm.controllers.main.contactus):
         # domain: leads that are still open:
         # NOT [ on_change AND (proba = 0 OR proba = 100) ]
         # the condition on the lead_id is prepended
-        domain = [('id', '=', lead_id),
-                  '!', '&', ('stage_id.on_change', '!=', True),
-                       '|', ('stage_id.probability', '!=', 0.0), ('stage_id.probability', '!=', 100.0)
-                  ]
+        domain = [
+            ('id', '=', lead_id),
+            '|',
+            ('stage_id.on_change', '=', False),
+            '&',
+            ('stage_id.probability', '!=', 0),
+            ('stage_id.probability', '!=', 100)
+        ]
+        domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
         lead_instance = lead_model.search(cr, SUPERUSER_ID, domain, context=context)
 
         if lead_instance:
