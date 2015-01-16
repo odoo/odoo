@@ -37,6 +37,10 @@ This documents attempts to describe most of the installation options.
     The source code can be obtained by downloading a tarball or using git.
     Using git makes it easier to update, switch between multiple versions
     (including the current development version) or contribute.
+`docker image <https://registry.hub.docker.com/_/odoo/>`_
+    if you usually use docker_ for development or deployment, an official
+    docker_ base image is available, see the image's help document for more
+    information
 
 .. _setup/install/demo:
 
@@ -406,6 +410,7 @@ Where ``../mymodules`` is a directory with additional addons and ``mydb`` the
 default db to serve on localhost:8069
 
 .. _demo: https://demo.odoo.com
+.. _docker: https://www.docker.com
 .. _EPEL: https://fedoraproject.org/wiki/EPEL
 .. _PostgreSQL: http://www.postgresql.org
 .. _the official installer:
