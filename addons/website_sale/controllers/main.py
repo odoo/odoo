@@ -340,10 +340,9 @@ class website_sale(http.Controller):
         '/shop/orders',
         '/shop/orders/page/<int:page>',
     ], type='http', auth="user", website=True)
-    def orders_followup(self, page=1, **post):
+    def orders_followup(self, page=1, by = 5, **post):
         partner = request.env['res.users'].browse(request.uid).partner_id
         orders = request.env['sale.order'].sudo().search([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
-        by = 5 # number of items per page
 
         nbr_pages = max((len(orders) / by) + (1 if len(orders) % by > 0 else 0), 1)
         page = min(page, nbr_pages)
