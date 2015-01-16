@@ -78,21 +78,6 @@
             },
             {
                 waitNot:   '.modal-content:visible',
-                element:   '#wrap img.product_detail_img',
-                placement: 'top',
-                title:     _t("Update image"),
-                content:   _t("You can also upload an image of your own."),
-            },
-            {
-                waitFor:   '.modal-content:visible',
-                element:   '.modal-content .btn-default[type=submit]',
-                placement: 'top',
-                title:     _t("Product Images"),
-                content:   _t("Add an image from an URL link."),
-                popover:   { fixed: true },
-            },
-            {
-                waitNot:   '.modal-content:visible',
                 element:   'button[data-action=snippet]',
                 placement: 'bottom',
                 title:     _t("Describe the Product"),
