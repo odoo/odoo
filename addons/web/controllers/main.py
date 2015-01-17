@@ -1118,17 +1118,20 @@ class Binary(http.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        res = {}
 
         Model = request.session.model(model)
         fields = [field]
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
-        elif id:
-            res = Model.read([int(id)], fields, context)[0]
-        else:
-            res = Model.default_get(fields, context)
+            res[field] = data
+            fields.remove(field)
+        if fields:
+            if id:
+                res.update(Model.read([int(id)], fields, context)[0])
+            else:
+                res.update(Model.default_get(fields, context))
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
