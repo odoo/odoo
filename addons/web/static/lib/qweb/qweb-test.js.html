@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
 <head>
-    <script src="http://code.jquery.com/jquery-1.5.2.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen"/>
-    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.15.0.css" type="text/css" media="screen"/>
+    <script type="text/javascript" src="http://code.jquery.com/qunit/qunit-1.15.0.js"></script>
 
     <script type="text/javascript" src="qweb2.js"></script>
 
@@ -15,238 +15,58 @@
         function render(template, context) {
             return trim(QWeb.render(template, context)).toLowerCase();
         }
+
+        /**
+         * Loads the template file, and executes all the test template in a
+         * qunit module $title
+         */
+        function test(title, template) {
+            QUnit.module(title, {
+                setup: function () {
+                    var self = this;
+                    this.qweb = new QWeb2.Engine();
+                    QUnit.stop();
+                    this.qweb.add_template(template, function (_, doc) {
+                        self.doc = doc;
+                        QUnit.start();
+                    })
+                }
+            });
+            QUnit.test('autotest', function (assert) {
+                var templates = this.qweb.templates;
+                for (var template in templates) {
+                    if (!templates.hasOwnProperty(template)) { continue; }
+                    // ignore templates whose name starts with _, they're
+                    // helpers/internal
+                    if (/^_/.test(template)) { continue; }
+
+                    var params = this.doc.querySelector('params#' + template);
+                    var args = params ? JSON.parse(params.textContent) : {};
+
+                    var results = this.doc.querySelector('result#' + template);
+                    assert.equal(
+                        trim(this.qweb.render(template, args)),
+                        trim(results.textContent),
+                        template);
+                }
+            });
+        }
         $(document).ready(function() {
-            module("Basic output tests", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-output.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
+            test("Output", 'qweb-test-output.xml');
+            test("Context-setting", 'qweb-test-set.xml');
+            test("Conditionals", 'qweb-test-conditionals.xml');
+            test("Attributes manipulation", 'qweb-test-attributes.xml');
+            test("Template calling (to the faraway pages)",
+                 'qweb-test-call.xml');
+            test("Foreach", 'qweb-test-foreach.xml');
 
-            test("Basic escaped output", function () {
-                equals(render('esc-literal', {}), "ok", "Render a literal string");
-                equals(render('esc-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                equals(render('esc-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
-            });
-            test("Basic unescaped output", function () {
-                equals(render('raw-literal', {}), "ok", "Render a literal string");
-                equals(render('raw-variable', {ok: 'ok'}), "ok", "Render a string variable");
-                equals(render('raw-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
-            });
-
-            module("Context-setting tests", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-set.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            test("Set literal value", function () {
-                equals(render('set-from-attribute-literal', {}), "ok",
-                        "Set a literal value via @t-value");
-                equals(render('set-from-body-literal', {}), "ok",
-                        "Set a literal value via @t-set body");
-            });
-            test("Set value looked up from context", function () {
-                equals(render('set-from-attribute-lookup', {value: 'ok'}), "ok",
-                        "Set a value looked up in context via @t-value");
-                equals(render('set-from-body-lookup', {value: 'ok'}), 'ok',
-                        "Set a value looked up in context via @t-set body and @t-esc");
-            });
-
-            module("Conditionals", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-conditionals.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            test('Basic (single boolean) conditionals', function () {
-                equals(render('literal-conditional', {}), 'ok',
-                    "Test on a literal value");
-                equals(render('boolean-value-conditional', {value: true}), 'ok',
-                    "Test on a truthy variable value");
-                equals(render('boolean-value-conditional-false', {value: false}), '',
-                    "Test on a falsy variable value");
-            });
-            test('Boolean expressions in conditionals', function () {
-                equals(render('negify', {}), 'ok',
-                    "Negative");
-                equals(render('equality', {}), 'ok',
-                    "Equality");
-                equals(render('difference', {}), 'ok',
-                    "Difference");
-                equals(render('and', {}), 'ok',
-                    "Boolean and");
-                equals(render('and-js', {}), 'ok',
-                    "Boolean and via manually escaped JS operator");
-                equals(render('or', {}), 'ok',
-                    "Boolean or");
-                equals(render('or-js', {}), 'ok',
-                    "Boolean or using JS operator");
-            });
-            test('Comparison boolean tests in conditionals', function () {
-                equals(render('greater', {}), 'ok',
-                    "Greater");
-                equals(render('greater-js', {}), 'ok',
-                    "Greater, JS operator");
-                equals(render('lower', {}), 'ok',
-                    "Lower");
-                equals(render('lower-js', {}), 'ok',
-                    "Lower, JS operator");
-                equals(render('greater-or-equal', {}), 'ok',
-                    "Greater or Equal");
-                equals(render('greater-or-equal-js', {}), 'ok',
-                    "Greater or Equal, JS operator");
-                equals(render('lower-or-equal', {}), 'ok',
-                    "Lower or Equal");
-                equals(render('lower-or-equal-js', {}), 'ok',
-                    "Lower or Equal, JS operator");
-            });
-
-            module("Attributes manipulation", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-attributes.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            test('Fixed-name attributes', function () {
-                equals(render('fixed-literal', {}), '<div foo="bar"/>',
-                    "Fixed name and literal attribute value");
-                equals(render('fixed-variable', {value: 'ok'}), '<div foo="ok"/>',
-                    "Fixed name and variable attribute value");
-            });
-            test('Tuple-based attributes', function () {
-                equals(render('tuple-literal', {}), '<div foo="bar"/>',
-                    "Tuple-based literal attributes");
-                equals(render('tuple-variable', {att: ['foo', 'bar']}), '<div foo="bar"/>',
-                    "Tuple-based variable attributes");
-            });
-            test('Fixed name, formatted value attributes', function () {
-                equals(render('format-literal', {}), '<div foo="bar"/>',
-                    "Literal format");
-                equals(render('format-value', {value:'a'}), '<div foo="bar"/>',
-                    "Valued format");
-            });
-
-            module("Template calling (including)", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-call.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            test('Trivial call invocation', function () {
-                equals(render('basic-caller', {}), 'ok',
-                    "Direct call of a second template");
-            });
-            test('Call invocation with body', function () {
-                equals(render('with-unused-body', {}), 'ok',
-                    "Call of a second template with body unused");
-                equals(render('with-unused-setbody', {}), 'ok',
-                    "Call of a second template with body directives unused");
-            });
-            test('Call invocation with body (used by callee)', function () {
-                equals(render('with-used-body', {}), 'ok',
-                    "Call of a second template with body used");
-            });
-            test('Call invocation with parameters set (in body)', function () {
-                equals(render('with-used-setbody', {}), 'ok',
-                    "Call of a second template with parameters");
-            });
-            test('Call invocation in-context (via import)', function () {
-                equals(render('in-context-import', {}), 'ok',
-                    "Call with t-import (calls in current context)");
-            });
-
-            module("Foreach", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-foreach.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            var seq = [4,3,2,1,0];
-            test('Basic foreach repetition', function () {
-                equals(QWeb.render('repetition-text-content', {seq:seq}), '*****',
-                    "Repetition of text content via foreach");
-                equals(QWeb.render('repetition-dom-content', {seq:seq}).toLowerCase(), '<b/><b/><b/><b/><b/>',
-                    "Repetition of node content via foreach");
-                equals(QWeb.render('repetition-self', {seq:seq}).toLowerCase(), '<b/><b/><b/><b/><b/>',
-                    "A node with a foreach repeats itself");
-            });
-            test("Foreach scope content", function () {
-                equals(QWeb.render('scope-self', {seq:seq}), '43210',
-                    "each value of the sequence is available via the sequence name");
-                equals(QWeb.render('scope-value', {seq:seq}), '43210',
-                    "each value of the sequence is also via the _value");
-                equals(QWeb.render('scope-index', {seq:seq}), '01234',
-                    "the current 0-based index is available via _index");
-                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false ',
-                    "_first says whether the current item is the first of the sequence");
-                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true ',
-                    "_last says whether the current item is the last of the sequence");
-                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even ',
-                    "the parity (odd/even) of the current row is available via _parity");
-                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5 ',
-                    "the total length of the sequence is available through _size");
-            });
-            test('Name aliasing via t-as', function () {
-                equals(QWeb.render('aliasing', {seq:seq}), '43210',
-                    "the inner value can be re-bound via t-as");
-                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even ',
-                    "inner loop variables should be rebound as well");
-            });
-
-            module("Template inheritance tests", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-extend.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-
-            test("jQuery extend", function () {
-                equals(render('jquery-extend', {}), '<hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>[[end]]</b></footer>',
-                        "Extend template with jQuery");
-                equals(render('jquery-extend-clone', {}), '<ul><li>one</li><li>[[cloned template]]</li></ul>',
-                        "Clone template");
-            });
+            test('Template inheritance', 'qweb-test-extend.xml');
         });
     </script>
 
 </head>
 <body>
-<h1 id="qunit-header">QWeb test suite</h1>
-
-<h2 id="qunit-banner"></h2>
-
-<div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent"></h2>
-<ol id="qunit-tests"></ol>
-<div id="qunit-fixture">test markup, will be hidden</div>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
 </body>
 </html>

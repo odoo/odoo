@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-04 07:49+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:53+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-05 07:26+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:277
+#: code:addons/analytic/analytic.py:278
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -82,9 +83,8 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
-"Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
-"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der "
-"Standardwährung des Unternehmens."
+"Berechnet durch Multiplikation von Menge und Anschaffungskosten des "
+"Produkts. Die Angabe erfolgt immer in der Standardwährung des Unternehmens."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -115,7 +115,7 @@ msgstr "Vertrag beendet"
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Contract Information"
-msgstr "Vertragsinformationen"
+msgstr "Vertragsinformation"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
@@ -156,18 +156,18 @@ msgstr "Vertrag: "
 #. module: analytic
 #: field:account.analytic.line,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: analytic
 #: field:account.analytic.account,create_uid:0
 #: field:account.analytic.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: analytic
 #: field:account.analytic.account,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -192,7 +192,7 @@ msgstr "Datum"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum der zuletzt gesendeten Nachricht"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -224,7 +224,7 @@ msgstr "Fehler ! Sie können keine rekursiven Kostenstellen anlegen."
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "Ablaufdatum"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
@@ -250,7 +250,7 @@ msgstr ""
 #: field:account.analytic.account,id:0
 #: field:account.analytic.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
@@ -288,6 +288,12 @@ msgid ""
 "analytic account of type 'view'. This can be really useful for consolidation "
 "purposes of several companies charts with different currencies, for example."
 msgstr ""
+"Wenn Sie ein Unternehmen definieren wollen, muß zwingend die ausgewählte "
+"Währung der Unternehmenswährung entsprechen. Sie können beispielsweise das "
+"mit einer Währung verknüpfte Unternehmen nur für den Kontotyp 'Ansicht' "
+"entfernen und erneut definieren. Dies kann für eine Konsolidierung "
+"verschiedener Unternehmen mit unterschiedlichen Kontenplänen überaus "
+"sinnvoll sein."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -302,19 +308,19 @@ msgstr "Ist ein Follower"
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum der letzten Nachricht"
 
 #. module: analytic
 #: field:account.analytic.account,write_uid:0
 #: field:account.analytic.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: analytic
 #: field:account.analytic.account,write_date:0
 #: field:account.analytic.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -371,7 +377,7 @@ msgid "Quantity"
 msgstr "Anzahl"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "Quick account creation disallowed."
 msgstr "Schnellanlage ist temporär verboten"
@@ -379,7 +385,7 @@ msgstr "Schnellanlage ist temporär verboten"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr "Kostenstellennummer"
+msgstr "Referenz"
 
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
@@ -452,7 +458,7 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:271
+#: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "Warning"
 msgstr "Warnung"

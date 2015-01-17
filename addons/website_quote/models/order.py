@@ -137,7 +137,8 @@ class sale_order(osv.osv):
 
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', readonly=True,
+            states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Expiry Date'),
@@ -222,6 +223,23 @@ class sale_order(osv.osv):
             'target': 'self',
             'res_id': id,
         }
+
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        action = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
+        ir_model_data = self.pool.get('ir.model.data')
+        quote_template_id = self.read(cr, uid, ids, ['template_id'], context=context)[0]['template_id']
+        if quote_template_id:
+            try:
+                template_id = ir_model_data.get_object_reference(cr, uid, 'website_quote', 'email_template_edi_sale')[1]
+            except ValueError:
+                pass
+            else:
+                action['context'].update({
+                    'default_template_id': template_id,
+                    'default_use_template': True
+                })
+
+        return action
 
 
 class sale_quote_option(osv.osv):

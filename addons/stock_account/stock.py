@@ -191,7 +191,7 @@ class stock_picking(osv.osv):
         pick = self.browse(cr, uid, picking_id, context=context)
         moves = [x.id for x in pick.move_lines]
         move_obj= self.pool.get("stock.move")
-        move_obj.write(cr, uid, moves, {'invoice_state': pick.invoice_state})
+        move_obj.write(cr, uid, moves, {'invoice_state': value}, context=context)
 
     _columns = {
         'invoice_state': fields.function(__get_invoice_state, type='selection', selection=[
@@ -250,7 +250,7 @@ class stock_picking(osv.osv):
             invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
         return invoices
 
-    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, origin, context=None):
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
         if context is None:
             context = {}
         partner, currency_id, company_id, user_id = key
@@ -261,7 +261,7 @@ class stock_picking(osv.osv):
             account_id = partner.property_account_payable.id
             payment_term = partner.property_supplier_payment_term.id or False
         return {
-            'origin': origin,
+            'origin': move.picking_id.name,
             'date_invoice': context.get('date_inv', False),
             'user_id': user_id,
             'partner_id': partner.id,
@@ -284,12 +284,17 @@ class stock_picking(osv.osv):
             partner, user_id, currency_id = move_obj._get_master_data(cr, uid, move, company, context=context)
 
             key = (partner, currency_id, company.id, user_id)
+            invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
 
             if key not in invoices:
                 # Get account and payment terms
-                invoice_vals = self._get_invoice_vals(cr, uid, key, inv_type, journal_id, origin, context=context)
                 invoice_id = self._create_invoice_from_picking(cr, uid, move.picking_id, invoice_vals, context=context)
                 invoices[key] = invoice_id
+            else:
+                invoice = invoice_obj.browse(cr, uid, invoices[key], context=context)
+                if not invoice.origin or invoice_vals['origin'] not in invoice.origin.split(', '):
+                    origin = filter(None, [invoice.origin, invoice_vals['origin']])
+                    invoice.write({'origin': ', '.join(origin)})
 
             invoice_line_vals = move_obj._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
             invoice_line_vals['invoice_id'] = invoices[key]
@@ -300,3 +305,13 @@ class stock_picking(osv.osv):
 
         invoice_obj.button_compute(cr, uid, invoices.values(), context=context, set_total=(inv_type in ('in_invoice', 'in_refund')))
         return invoices.values()
+
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Need to pass invoice_state of picking when an extra move is created which is not a copy of a previous
+        """
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        res.update({'invoice_state': op.picking_id.invoice_state})
+        if op.linked_move_operation_ids:
+            res.update({'price_unit': op.linked_move_operation_ids[-1].move_id.price_unit})
+        return res

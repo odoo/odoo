@@ -1,17 +1,22 @@
 ============================
-odoo developer documentation
+Odoo Technical Documentation
 ============================
 
-.. TODO: replace or style
+.. todo:: what's the documentation's license?
 
-.. hidden toctree w/o titlesonly otherwise the titlesonly "sticks" to
-   in-document toctrees and we can't have a toctree showing both "sibling"
-   pages and current document sections
-
+.. rst-class:: index-tree
+.. titlesonly breaks level 3 (~in-document) toc of left navbar, so use
+   maxdepth instead
 .. toctree::
-    :hidden:
+    :maxdepth: 2
 
     tutorials
-    guides
+    setup
     reference
-    modules
+    api_integration
+
+.. ifconfig:: todo_include_todos
+
+    .. rubric:: Things to add and fix
+
+    .. todolist::

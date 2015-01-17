@@ -270,9 +270,13 @@ class account_analytic_account(osv.osv):
         if child_ids:
             #Search all invoice lines not in cancelled state that refer to this analytic account
             inv_line_obj = self.pool.get("account.invoice.line")
-            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', '!=', 'cancel')], context=context)
+            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', 'not in', ['draft', 'cancel']), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in inv_line_obj.browse(cr, uid, inv_lines, context=context):
-                res[line.account_analytic_id.id] += line.price_subtotal
+                if line.invoice_id.type == 'out_refund':
+                    res[line.account_analytic_id.id] -= line.price_subtotal
+                else:
+                    res[line.account_analytic_id.id] += line.price_subtotal
+
         for acc in self.browse(cr, uid, res.keys(), context=context):
             res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
 
@@ -370,11 +374,14 @@ class account_analytic_account(osv.osv):
         inv_ids = []
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 if line.invoice_id not in inv_ids:
                     inv_ids.append(line.invoice_id)
-                    res[account.id] += line.invoice_id.amount_untaxed
+                    if line.invoice_id.type == 'out_refund':
+                        res[account.id] -= line.invoice_id.amount_untaxed
+                    else:
+                        res[account.id] += line.invoice_id.amount_untaxed
         return res
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):

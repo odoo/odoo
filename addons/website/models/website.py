@@ -4,13 +4,13 @@ import contextlib
 import datetime
 import hashlib
 import inspect
-import itertools
 import logging
 import math
 import mimetypes
 import unicodedata
 import os
 import re
+import time
 import urlparse
 
 from PIL import Image
@@ -25,8 +25,7 @@ except ImportError:
 
 import openerp
 from openerp.osv import orm, osv, fields
-from openerp.tools import html_escape as escape
-from openerp.tools import ustr as ustr
+from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
 
@@ -78,7 +77,8 @@ def is_multilang_url(local_url, langs=None):
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path, query_args=query_string)[0]
+        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
+        func = router.match(path, method='POST', query_args=query_string)[0]
         return func.routing.get('website', False) and func.routing.get('multilang', True)
     except Exception:
         return False
@@ -513,7 +513,7 @@ class website(osv.osv):
             response.data = f.read()
             return response.make_conditional(request.httprequest)
 
-    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, context=None):
+    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -536,7 +536,7 @@ class website(osv.osv):
 
         ids = Model.search(cr, uid,
                            [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._all_columns:
+        if not ids and 'website_published' in Model._fields:
             ids = Model.search(cr, openerp.SUPERUSER_ID,
                                [('id', '=', id), ('website_published', '=', True)], context=context)
         if not ids:
@@ -565,18 +565,24 @@ class website(osv.osv):
         response.set_etag(hashlib.sha1(record[field]).hexdigest())
         response.make_conditional(request.httprequest)
 
+        if cache:
+            response.cache_control.max_age = cache
+            response.expires = int(time.time() + cache)
+
         # conditional request match
         if response.status_code == 304:
             return response
 
         data = record[field].decode('base64')
+        image = Image.open(cStringIO.StringIO(data))
+        response.mimetype = Image.MIME[image.format]
+
+        filename = '%s_%s.%s' % (model.replace('.', '_'), id, str(image.format).lower())
+        response.headers['Content-Disposition'] = 'inline; filename="%s"' % filename
 
         if (not max_width) and (not max_height):
             response.data = data
             return response
-
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
         max_w = int(max_width) if max_width else maxint
@@ -585,13 +591,22 @@ class website(osv.osv):
         if w < max_w and h < max_h:
             response.data = data
         else:
-            image.thumbnail((max_w, max_h), Image.ANTIALIAS)
-            image.save(response.stream, image.format)
+            size = (max_w, max_h)
+            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
+            image_save_for_web(img, response.stream, format=image.format)
             # invalidate content-length computed by make_conditional as
             # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
 
         return response
+
+    def image_url(self, cr, uid, record, field, size=None, context=None):
+        """Returns a local url that points to the image field of a given browse record."""
+        model = record._name
+        sudo_record = record.sudo()
+        id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
+        size = '' if size is None else '/%s' % size
+        return '/website/image/%s/%s/%s%s' % (model, id, field, size)
 
 
 class website_menu(osv.osv):
@@ -668,19 +683,15 @@ class ir_attachment(osv.osv):
             if attach.url:
                 result[attach.id] = attach.url
             else:
-                result[attach.id] = urlplus('/website/image', {
-                    'model': 'ir.attachment',
-                    'field': 'datas',
-                    'id': attach.id
-                })
+                result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
-        return dict(
-            (attach['id'], self._compute_checksum(attach))
-            for attach in self.read(
-                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
-                context=context)
-        )
+        result = dict.fromkeys(ids, False)
+        attachments = self.read(cr, uid, ids, ['res_model'], context=context)
+        view_attachment_ids = [attachment['id'] for attachment in attachments if attachment['res_model'] == 'ir.ui.view']
+        for attach in self.read(cr, uid, view_attachment_ids, ['res_model', 'res_id', 'type', 'datas'], context=context):
+            result[attach['id']] = self._compute_checksum(attach)
+        return result
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
@@ -696,7 +707,7 @@ class ir_attachment(osv.osv):
             return result
 
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.datas: continue
+            if record.res_model != 'ir.ui.view' or not record.datas: continue
             try:
                 result[record.id] = openerp.tools.image_resize_image_big(record.datas)
             except IOError: # apparently the error PIL.Image.open raises
@@ -769,7 +780,7 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('http://maps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)

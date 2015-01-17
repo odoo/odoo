@@ -7,15 +7,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-06 06:25+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:07+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:03+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_event
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is "
+"confirmed and will be held from "
+"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
+"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        For any further information please contact our event "
+"department.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+"\n"
+"        <p>Hallo ${object.name},</p>\n"
+"        <p>Die Veranstaltung ${object.event_id.name}, zu der wir Ihre "
+"Anmeldung erhalten haben wurde bestätigt und findet statt vom "
+"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} bis "
+"zum ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        Für weitere Informationen können Sie uns gerne kontaktieren.</p>\n"
+"        <p>Vielen Dank für Ihre Teilnahme und</p>\n"
+"        <p>freundliche Grüsse</p>"
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_registration
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>We confirm that your registration to the event "
+"${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical "
+"information (such as the schedule, the agenda...) as soon as the event is "
+"confirmed.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr ""
+"\n"
+"        <p>Guten Tag ${object.name},</p>\n"
+"        <p>wir bestätigen Ihre Anmeldung zur Veranstaltung "
+"${object.event_id.name}, die wir gerne \n"
+"             entgegengenommen haben. Sie erhalten automatisch eine E-Mail "
+"mit weiterführenden Informationen, \n"
+"             sobald die Veranstaltung bestätigt wird. \n"
+"        <p>Danke für Ihre Anmeldung !</p>\n"
+"        <p>Freundliche Grüsse</p>"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
@@ -573,33 +621,16 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
-
-#. module: event
-#: model:email.template,body_html:event.confirmation_event
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"        <p>The event ${object.event_id.name} that you registered for is "
-"confirmed and will be held from "
-"${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to "
-"${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
-"        For any further information please contact our event "
-"department.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr ""
-
-#. module: event
-#: model:email.template,body_html:event.confirmation_registration
-msgid ""
-"<p>Hello ${object.name},</p>\n"
-"        <p>We confirm that your registration to the event "
-"${object.event_id.name} has been recorded.\n"
-"        You will automatically receive an email providing you more practical "
-"information (such as the schedule, the agenda...) as soon as the event is "
-"confirmed.</p>\n"
-"        <p>Thank you for your participation!</p>\n"
-"        <p>Best regards</p>"
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Klicken Sie um eine neue Veranstaltung zu erstellen.\n"
+"             </p><p>\n"
+"               Osoo hilft bei der Terminierung und effizienten Organisation "
+"von Veranstaltungen:\n"
+"               Verfolgen Sie die Anmeldungen und Teilnahmen, automatisieren "
+"Sie den E-Mail-Versand\n"
+"               von Anmeldebestätigungen, verkaufen Sie Tickets für "
+"Veranstaltungen, etc.. </p>\n"
+"           "
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -622,7 +653,7 @@ msgstr "An Veranstaltung teilgenommen"
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Verfügbare Sitzplätze"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -659,6 +690,7 @@ msgstr "Aktivieren Sie dieses Feld, wenn der Kontakt ein Referent ist"
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr ""
+"Das Ende am Datum kann nicht vor dem Beginn am Datum terminiert werden."
 
 #. module: event
 #: field:event.event,company_id:0
@@ -671,7 +703,7 @@ msgstr "Unternehmen"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Konferenz zu Business Anwendung"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -726,7 +758,7 @@ msgstr "Land"
 #: field:event.registration,create_uid:0
 #: field:event.type,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: event
 #: field:event.confirm,create_date:0
@@ -734,7 +766,7 @@ msgstr ""
 #: field:event.registration,create_date:0
 #: field:event.type,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -745,7 +777,7 @@ msgstr "Aktuelle Anmeldungen"
 #: help:event.event,message_last_post:0
 #: help:event.registration,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum der zuletzt gesendeten Nachricht"
 
 #. module: event
 #: field:event.type,default_registration_max:0
@@ -793,12 +825,12 @@ msgstr "E-Mail"
 #. module: event
 #: model:ir.model,name:event.model_event_event
 msgid "Email Thread"
-msgstr ""
+msgstr "E-Mail Thread"
 
 #. module: event
 #: field:event.event,date_end:0
 msgid "End Date"
-msgstr "Enddatum:"
+msgstr "Ende am"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
@@ -831,15 +863,14 @@ msgid "Event Confirmation Email"
 msgstr "Veranstaltung Bestätigungs-E-Mail"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,event_date:0
 msgid "Event Date"
-msgstr ""
+msgstr "Datum der Veranstaltung"
 
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "Veranstaltungsbeschreibung"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -847,9 +878,14 @@ msgid "Event Details"
 msgstr "Details Veranstaltung"
 
 #. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Month"
+msgstr "Veranstaltungsmonat"
+
+#. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "Termin Bezeichnung"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -868,10 +904,9 @@ msgstr "Veranstaltungsanmeldung"
 #: code:addons/event/event.py:341
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "Bestätigte Eventanmeldung"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,user_id:0
 msgid "Event Responsible"
 msgstr "Veranstaltungsmanager"
@@ -915,7 +950,7 @@ msgstr "Veranstaltungen"
 #: model:ir.actions.act_window,name:event.action_report_event_registration
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 msgid "Events Analysis"
-msgstr "Veranstaltungs-Statistik"
+msgstr "Statistik Veranstaltungen"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -951,14 +986,14 @@ msgstr "Followers"
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
-msgstr ""
+msgstr "Funktionales Webinar"
 
 #. module: event
 #: view:event.event:event.view_event_search
 #: view:event.registration:event.view_registration_search
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppierung"
 
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
@@ -999,6 +1034,10 @@ msgid ""
 "status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Wenn eine Veranstaltung erstellt wird, ist der Status zunächst \"im "
+"Entwurf\". Vor der endgültigen Bestätigung ist der Status \"Bestätigt\". "
+"Erst wenn die Veranstaltung tatsächlich beendet ist, wird der Status auf "
+"Erledigt oder Abgebrochen gesetzt."
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
@@ -1051,7 +1090,7 @@ msgstr ""
 #: field:event.event,message_last_post:0
 #: field:event.registration,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum der letzten Nachricht"
 
 #. module: event
 #: field:event.confirm,write_uid:0
@@ -1059,7 +1098,7 @@ msgstr ""
 #: field:event.registration,write_uid:0
 #: field:event.type,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: event
 #: field:event.confirm,write_date:0
@@ -1067,7 +1106,7 @@ msgstr ""
 #: field:event.registration,write_date:0
 #: field:event.type,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -1087,12 +1126,12 @@ msgstr "Manager"
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "Max. Sitzungen"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Max. verfügbare Sitzungen"
 
 #. module: event
 #: field:event.event,message_ids:0
@@ -1109,7 +1148,7 @@ msgstr "Nachrichten und Kommunikation"
 #. module: event
 #: field:event.event,seats_min:0
 msgid "Minimum Reserved Seats"
-msgstr ""
+msgstr "Min. reservierte Sitze"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1150,12 +1189,17 @@ msgstr "Neue Anmeldebestätigung: %s"
 #: code:addons/event/event.py:330
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "Keine frei verfügbaren Plätze"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
 msgid "No ticket available."
 msgstr "Kein Ticket vorhanden"
+
+#. module: event
+#: field:report.event.registration,nbevent:0
+msgid "Number of Events"
+msgstr "Eventanzahl"
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -1165,12 +1209,12 @@ msgstr "Anzahl Teilnehmer"
 #. module: event
 #: field:event.event,seats_used:0
 msgid "Number of Participations"
-msgstr ""
+msgstr "Anzahl Teilnehmer"
 
 #. module: event
-#: field:report.event.registration,nbevent:0
+#: field:report.event.registration,nbregistration:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Anzahl Registrierung"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1180,7 +1224,7 @@ msgstr "Nur"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "Open Days in Los Angeles"
 
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
@@ -1195,17 +1239,13 @@ msgstr "Organisiert durch"
 #. module: event
 #: field:event.event,organizer_id:0
 msgid "Organizer"
-msgstr ""
+msgstr "Veranstalter"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
 msgid "Participant"
 msgstr "Teilnehmer"
-
-#. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
-msgid "Participant / Contact"
-msgstr "Teilnehmer / Kontakt"
 
 #. module: event
 #: field:report.event.registration,name_registration:0
@@ -1230,7 +1270,6 @@ msgid "Reference of the sales order which created the registration"
 msgstr "Referenz des Auftrags, der die Anmeldung verursacht hat"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,user_id_registration:0
 msgid "Register"
 msgstr "Anmelden"
@@ -1262,15 +1301,14 @@ msgstr "Anmeldedatum"
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "Tag der Registrierung"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "Registrierungsmonat"
 
 #. module: event
-#: view:report.event.registration:event.view_report_event_registration_search
 #: field:report.event.registration,registration_state:0
 msgid "Registration State"
 msgstr "Anmeldestatus"
@@ -1307,7 +1345,7 @@ msgstr "Antwort an E-Mail"
 #. module: event
 #: field:event.event,seats_reserved:0
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Reservierte Sitze"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1358,7 +1396,7 @@ msgstr "Beginn am"
 #. module: event
 #: view:event.event:event.view_event_search
 msgid "Start Month"
-msgstr ""
+msgstr "Start Monat"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1372,12 +1410,12 @@ msgstr "Status"
 #: view:event.event:event.view_event_kanban
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr "Abonnieren"
+msgstr "Anmelden"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
 msgid "Subscribed"
-msgstr "Abonniert"
+msgstr "Angemeldet"
 
 #. module: event
 #: field:event.event,message_summary:0
@@ -1388,7 +1426,7 @@ msgstr "Übersicht"
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Technical Training"
-msgstr ""
+msgstr "Technisches Training"
 
 #. module: event
 #: help:event.event,reply_to:0
@@ -1423,6 +1461,11 @@ msgid ""
 "registration of event ticket. If you have too much registrations you are not "
 "able to confirm your event. (0 to ignore this rule )"
 msgstr ""
+"Die max. Anmeldestufen bezüglich Anzahl der Anmeldungen entspricht der Summe "
+"der max. Registrierungen einer Ticketveranstaltung. Sollte es mehr "
+"Anmeldungen als freie Plätze geben, kann die Veranstaltung nicht bestätigt "
+"werden. \r\n"
+"(Eingabe von \"0\", um diese Regel auszublenden)."
 
 #. module: event
 #: help:event.event,email_registration_id:0
@@ -1436,7 +1479,7 @@ msgstr ""
 #. module: event
 #: field:event.event,date_tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "Zeitzone"
 
 #. module: event
 #: field:event.event,type:0
@@ -1459,7 +1502,7 @@ msgstr "Nicht bestätigte Anmeldungen"
 #. module: event
 #: field:event.event,seats_unconfirmed:0
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Unbestätigte Reservierungen"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1548,3 +1591,6 @@ msgstr "Ticket"
 #: view:event.event:event.view_event_kanban
 msgid "tickets"
 msgstr "Tickets"
+
+#~ msgid "Participant / Contact"
+#~ msgstr "Teilnehmer / Kontakt"

@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import uuid
+from werkzeug.exceptions import Forbidden
 
+import logging
 import openerp
-from openerp import tools
+
+from openerp import api, tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
+from openerp.exceptions import Warning
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
 
+_logger = logging.getLogger(__name__)
 
-class KarmaError(ValueError):
+class KarmaError(Forbidden):
     """ Karma-related error, used for forum and posts. """
     pass
 
@@ -22,42 +28,48 @@ class Forum(osv.Model):
     _description = 'Forums'
     _inherit = ['mail.thread', 'website.seo.metadata']
 
+    def init(self, cr):
+        """ Add forum uuid for user email validation. """
+        forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
+        if not forum_uuids:
+            self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'faq': fields.html('Guidelines'),
-        'description': fields.html('Description'),
+        'description': fields.html('Description', translate=True),
         # karma generation
-        'karma_gen_question_new': fields.integer('Karma earned for new questions'),
-        'karma_gen_question_upvote': fields.integer('Karma earned for upvoting a question'),
-        'karma_gen_question_downvote': fields.integer('Karma earned for downvoting a question'),
-        'karma_gen_answer_upvote': fields.integer('Karma earned for upvoting an answer'),
-        'karma_gen_answer_downvote': fields.integer('Karma earned for downvoting an answer'),
-        'karma_gen_answer_accept': fields.integer('Karma earned for accepting an anwer'),
-        'karma_gen_answer_accepted': fields.integer('Karma earned for having an answer accepted'),
-        'karma_gen_answer_flagged': fields.integer('Karma earned for having an answer flagged'),
+        'karma_gen_question_new': fields.integer('Asking a question'),
+        'karma_gen_question_upvote': fields.integer('Question upvoted'),
+        'karma_gen_question_downvote': fields.integer('Question downvoted'),
+        'karma_gen_answer_upvote': fields.integer('Answer upvoted'),
+        'karma_gen_answer_downvote': fields.integer('Answer downvoted'),
+        'karma_gen_answer_accept': fields.integer('Accepting an answer'),
+        'karma_gen_answer_accepted': fields.integer('Answer accepted'),
+        'karma_gen_answer_flagged': fields.integer('Answer flagged'),
         # karma-based actions
-        'karma_ask': fields.integer('Karma to ask a new question'),
-        'karma_answer': fields.integer('Karma to answer a question'),
-        'karma_edit_own': fields.integer('Karma to edit its own posts'),
-        'karma_edit_all': fields.integer('Karma to edit all posts'),
-        'karma_close_own': fields.integer('Karma to close its own posts'),
-        'karma_close_all': fields.integer('Karma to close all posts'),
-        'karma_unlink_own': fields.integer('Karma to delete its own posts'),
-        'karma_unlink_all': fields.integer('Karma to delete all posts'),
-        'karma_upvote': fields.integer('Karma to upvote'),
-        'karma_downvote': fields.integer('Karma to downvote'),
-        'karma_answer_accept_own': fields.integer('Karma to accept an answer on its own questions'),
-        'karma_answer_accept_all': fields.integer('Karma to accept an answers to all questions'),
-        'karma_editor_link_files': fields.integer('Karma for linking files (Editor)'),
-        'karma_editor_clickable_link': fields.integer('Karma for clickable links (Editor)'),
-        'karma_comment_own': fields.integer('Karma to comment its own posts'),
-        'karma_comment_all': fields.integer('Karma to comment all posts'),
-        'karma_comment_convert_own': fields.integer('Karma to convert its own answers to comments and vice versa'),
-        'karma_comment_convert_all': fields.integer('Karma to convert all answers to answers and vice versa'),
-        'karma_comment_unlink_own': fields.integer('Karma to unlink its own comments'),
-        'karma_comment_unlink_all': fields.integer('Karma to unlinnk all comments'),
-        'karma_retag': fields.integer('Karma to change question tags'),
-        'karma_flag': fields.integer('Karma to flag a post as offensive'),
+        'karma_ask': fields.integer('Ask a question'),
+        'karma_answer': fields.integer('Answer a question'),
+        'karma_edit_own': fields.integer('Edit its own posts'),
+        'karma_edit_all': fields.integer('Edit all posts'),
+        'karma_close_own': fields.integer('Close its own posts'),
+        'karma_close_all': fields.integer('Close all posts'),
+        'karma_unlink_own': fields.integer('Delete its own posts'),
+        'karma_unlink_all': fields.integer('Delete all posts'),
+        'karma_upvote': fields.integer('Upvote'),
+        'karma_downvote': fields.integer('Downvote'),
+        'karma_answer_accept_own': fields.integer('Accept an answer on its own questions'),
+        'karma_answer_accept_all': fields.integer('Accept an answer to all questions'),
+        'karma_editor_link_files': fields.integer('Linking files (Editor)'),
+        'karma_editor_clickable_link': fields.integer('Clickable links (Editor)'),
+        'karma_comment_own': fields.integer('Comment its own posts'),
+        'karma_comment_all': fields.integer('Comment all posts'),
+        'karma_comment_convert_own': fields.integer('Convert its own answers to comments and vice versa'),
+        'karma_comment_convert_all': fields.integer('Convert all answers to comments and vice versa'),
+        'karma_comment_unlink_own': fields.integer('Unlink its own comments'),
+        'karma_comment_unlink_all': fields.integer('Unlink all comments'),
+        'karma_retag': fields.integer('Change question tags'),
+        'karma_flag': fields.integer('Flag a post as offensive'),
     }
 
     def _get_default_faq(self, cr, uid, context=None):
@@ -69,7 +81,7 @@ class Forum(osv.Model):
     _defaults = {
         'description': 'This community is for professionals and enthusiasts of our products and services.',
         'faq': _get_default_faq,
-        'karma_gen_question_new': 2,
+        'karma_gen_question_new': 0,  # set to null for anti spam protection
         'karma_gen_question_upvote': 5,
         'karma_gen_question_downvote': -2,
         'karma_gen_answer_upvote': 10,
@@ -77,8 +89,8 @@ class Forum(osv.Model):
         'karma_gen_answer_accept': 2,
         'karma_gen_answer_accepted': 15,
         'karma_gen_answer_flagged': -100,
-        'karma_ask': 0,
-        'karma_answer': 0,
+        'karma_ask': 3,  # set to not null for anti spam protection
+        'karma_answer': 3,  # set to not null for anti spam protection
         'karma_edit_own': 1,
         'karma_edit_all': 300,
         'karma_close_own': 100,
@@ -91,8 +103,8 @@ class Forum(osv.Model):
         'karma_answer_accept_all': 500,
         'karma_editor_link_files': 20,
         'karma_editor_clickable_link': 20,
-        'karma_comment_own': 1,
-        'karma_comment_all': 1,
+        'karma_comment_own': 3,
+        'karma_comment_all': 5,
         'karma_comment_convert_own': 50,
         'karma_comment_convert_all': 500,
         'karma_comment_unlink_own': 50,
@@ -106,6 +118,31 @@ class Forum(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         return super(Forum, self).create(cr, uid, values, context=create_context)
+
+    def _tag_to_write_vals(self, cr, uid, ids, tags='', context=None):
+        User = self.pool['res.users']
+        Tag = self.pool['forum.tag']
+        result = {}
+        for forum in self.browse(cr, uid, ids, context=context):
+            post_tags = []
+            existing_keep = []
+            for tag in filter(None, tags.split(',')):
+                if tag.startswith('_'):  # it's a new tag
+                    # check that not already created meanwhile or maybe excluded by the limit on the search
+                    tag_ids = Tag.search(cr, uid, [('name', '=', tag[1:])], context=context)
+                    if tag_ids:
+                        existing_keep.append(int(tag_ids[0]))
+                    else:
+                        # check if user have Karma needed to create need tag
+                        user = User.browse(cr, uid, uid, context=context)
+                        if user.exists() and user.karma >= forum.karma_retag:
+                            post_tags.append((0, 0, {'name': tag[1:], 'forum_id': forum.id}))
+                else:
+                    existing_keep.append(int(tag))
+            post_tags.insert(0, [6, 0, existing_keep])
+            result[forum.id] = post_tags
+
+        return result
 
 
 class Post(osv.Model):
@@ -309,16 +346,25 @@ class Post(osv.Model):
         'child_ids': list(),
     }
 
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        post = self.browse(cr, SUPERUSER_ID, post_id, context=context)  # SUPERUSER_ID to avoid read access rights issues when creating
+        post = self.browse(cr, uid, post_id, context=context)
         # karma-based access
-        if post.parent_id and not post.can_ask:
+        if not post.parent_id and not post.can_ask:
             raise KarmaError('Not enough karma to create a new question')
-        elif not post.parent_id and not post.can_answer:
+        elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
         # messaging and chatter
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
@@ -370,10 +416,40 @@ class Post(osv.Model):
                 self.message_post(cr, uid, obj_id, body=body, subtype=subtype, context=context)
         return res
 
+
+    def reopen(self, cr, uid, ids, context=None):
+        if any(post.parent_id or post.state != 'close'
+                    for post in self.browse(cr, uid, ids, context=context)):
+            return False
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.closed_reason_id.id in (reason_offensive, reason_spam):
+                _logger.info('Upvoting user <%s>, reopening spam/offensive question',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * -5,
+                                                 context=context)
+        self.pool['forum.post'].write(cr, SUPERUSER_ID, ids, {'state': 'active'}, context=context)
+
     def close(self, cr, uid, ids, reason_id, context=None):
         if any(post.parent_id for post in self.browse(cr, uid, ids, context=context)):
             return False
-        return self.pool['forum.post'].write(cr, uid, ids, {
+
+        reason_offensive = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_7')
+        reason_spam = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'website_forum.reason_8')
+        if reason_id in (reason_offensive, reason_spam):
+            for post in self.browse(cr, uid, ids, context=context):
+                _logger.info('Downvoting user <%s> for posting spam/offensive contents',
+                             post.create_uid)
+                # TODO: in master, consider making this a tunable karma parameter
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id],
+                                                 post.forum_id.karma_gen_question_downvote * 5,
+                                                 context=context)
+
+        self.pool['forum.post'].write(cr, uid, ids, {
             'state': 'close',
             'closed_uid': uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
@@ -392,13 +468,6 @@ class Post(osv.Model):
         return super(Post, self).unlink(cr, uid, ids, context=context)
 
     def vote(self, cr, uid, ids, upvote=True, context=None):
-        posts = self.browse(cr, uid, ids, context=context)
-
-        if upvote and any(not post.can_upvote for post in posts):
-            raise KarmaError('Not enough karma to upvote.')
-        elif not upvote and any(not post.can_downvote for post in posts):
-            raise KarmaError('Not enough karma to downvote.')
-
         Vote = self.pool['forum.post.vote']
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
         new_vote = '1' if upvote else '-1'
@@ -439,7 +508,7 @@ class Post(osv.Model):
         }
         message_id = self.pool['forum.post'].message_post(
             cr, uid, question.id,
-            context=dict(context, mail_create_nosubcribe=True),
+            context=dict(context, mail_create_nosubscribe=True),
             **values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
@@ -508,6 +577,18 @@ class Post(osv.Model):
         res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
         return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
 
+    @api.cr_uid_ids_context
+    def message_post(self, cr, uid, thread_id, type='notification', subtype=None, context=None, **kwargs):
+        if thread_id and type == 'comment':  # user comments have a restriction on karma
+            if isinstance(thread_id, (list, tuple)):
+                post_id = thread_id[0]
+            else:
+                post_id = thread_id
+            post = self.browse(cr, uid, post_id, context=context)
+            if not post.can_comment:
+                raise KarmaError('Not enough karma to comment')
+        return super(Post, self).message_post(cr, uid, thread_id, type=type, subtype=subtype, context=context, **kwargs)
+
 
 class PostReason(osv.Model):
     _name = "forum.post.reason"
@@ -547,6 +628,17 @@ class Vote(osv.Model):
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
         vote = self.browse(cr, uid, vote_id, context=context)
+
+        # own post check
+        if vote.user_id.id == vote.post_id.create_uid.id:
+            raise Warning('Not allowed to vote for its own post')
+        # karma check
+        if vote.vote == '1' and not vote.post_id.can_upvote:
+            raise KarmaError('Not enough karma to upvote.')
+        elif vote.vote == '-1' and not vote.post_id.can_downvote:
+            raise KarmaError('Not enough karma to downvote.')
+
+        # karma update
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
         else:
@@ -557,6 +649,16 @@ class Vote(osv.Model):
     def write(self, cr, uid, ids, values, context=None):
         if 'vote' in values:
             for vote in self.browse(cr, uid, ids, context=context):
+                # own post check
+                if vote.user_id.id == vote.post_id.create_uid.id:
+                    raise Warning('Not allowed to vote for its own post')
+                # karma check
+                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
+                    raise KarmaError('Not enough karma to upvote.')
+                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
+                    raise KarmaError('Not enough karma to downvote.')
+
+                # karma update
                 if vote.post_id.parent_id:
                     karma_value = self._get_karma_value(vote.vote, values['vote'], vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
                 else:

@@ -36,7 +36,7 @@ class website_hr_recruitment(http.Controller):
         countries = set(o.country_id for o in offices if o.country_id)
 
         # Default search by user country
-        if not (country or department or office_id):
+        if not (country or department or office_id or kwargs.get('all_countries')):
             country_code = request.session['geoip'].get('country_code')
             if country_code:
                 countries_ = Country.search([('code', '=', country_code)])

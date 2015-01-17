@@ -5,6 +5,7 @@
 import ast
 import collections
 import contextlib
+import datetime
 import errno
 import functools
 import getpass
@@ -12,6 +13,7 @@ import inspect
 import logging
 import mimetypes
 import os
+import pprint
 import random
 import re
 import sys
@@ -21,9 +23,9 @@ import time
 import traceback
 import urlparse
 import warnings
+from zlib import adler32
 
 import babel.core
-import psutil
 import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
@@ -33,13 +35,22 @@ import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
+from werkzeug.wsgi import wrap_file
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
+from openerp.tools import ustr
 
 _logger = logging.getLogger(__name__)
+rpc_request = logging.getLogger(__name__ + '.rpc.request')
+rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -63,6 +74,14 @@ def replace_request_password(args):
         args[2] = '*'
     return tuple(args)
 
+# don't trigger debugger for those exceptions, they carry user-facing warnings
+# and indications, they're not necessarily indicative of anything being
+# *broken*
+NO_POSTMORTEM = (openerp.osv.orm.except_orm,
+                 openerp.exceptions.AccessError,
+                 openerp.exceptions.AccessDenied,
+                 openerp.exceptions.Warning,
+                 openerp.exceptions.RedirectWarning)
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
@@ -70,14 +89,13 @@ def dispatch_rpc(service_name, method, params):
     in a upper layer.
     """
     try:
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
-        rpc_response = logging.getLogger(__name__ + '.rpc.response')
         rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
             start_rss, start_vms = 0, 0
-            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            if psutil:
+                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
             if rpc_request and rpc_response_flag:
                 openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -98,7 +116,8 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
             end_rss, end_vms = 0, 0
-            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            if psutil:
+                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
@@ -106,9 +125,7 @@ def dispatch_rpc(service_name, method, params):
                 openerp.netsvc.log(rpc_request, logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
-    except (openerp.osv.orm.except_orm, openerp.exceptions.AccessError, \
-            openerp.exceptions.AccessDenied, openerp.exceptions.Warning, \
-            openerp.exceptions.RedirectWarning):
+    except NO_POSTMORTEM:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(openerp.tools.exception_to_unicode(e))
@@ -197,6 +214,7 @@ class WebRequest(object):
 
     @lazy_property
     def lang(self):
+        self.session._fix_lang(self.context)
         return self.context["lang"]
 
     @lazy_property
@@ -252,13 +270,18 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
+        if not isinstance(exception, NO_POSTMORTEM):
+            openerp.tools.debugger.post_mortem(
+                openerp.tools.config, sys.exc_info())
         raise
 
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
-            raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                % (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type))
+            msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
+            params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
+            _logger.error(msg, *params)
+            raise werkzeug.exceptions.BadRequest(msg % params)
 
         kwargs.update(self.endpoint.arguments)
 
@@ -459,7 +482,13 @@ class JsonRequest(WebRequest):
             request = self.httprequest.stream.read()
 
         # Read POST content or POST Form Data named "request"
-        self.jsonrequest = simplejson.loads(request)
+        try:
+            self.jsonrequest = simplejson.loads(request)
+        except simplejson.JSONDecodeError:
+            msg = 'Invalid JSON data: %r' % (request,)
+            _logger.error('%s: %s', self.httprequest.path, msg)
+            raise werkzeug.exceptions.BadRequest(msg)
+
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
@@ -490,27 +519,60 @@ class JsonRequest(WebRequest):
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
-           to abitrary responses. Anything returned (except None) will
+           to arbitrary responses. Anything returned (except None) will
            be used as response."""
         try:
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
-            _logger.exception("Exception during JSON request handling.")
+            if not isinstance(exception, (openerp.exceptions.Warning, SessionExpiredException)):
+                _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
-                    'message': "OpenERP Server Error",
+                    'message': "Odoo Server Error",
                     'data': serialize_exception(exception)
             }
             if isinstance(exception, AuthenticationError):
                 error['code'] = 100
-                error['message'] = "OpenERP Session Invalid"
+                error['message'] = "Odoo Session Invalid"
+            if isinstance(exception, SessionExpiredException):
+                error['code'] = 100
+                error['message'] = "Odoo Session Expired"
             return self._json_response(error=error)
 
     def dispatch(self):
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
+            rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+            rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
+            if rpc_request_flag or rpc_response_flag:
+                endpoint = self.endpoint.method.__name__
+                model = self.params.get('model')
+                method = self.params.get('method')
+                args = self.params.get('args', [])
+
+                start_time = time.time()
+                _, start_vms = 0, 0
+                if psutil:
+                    _, start_vms = psutil.Process().get_memory_info()
+                if rpc_request and rpc_response_flag:
+                    rpc_request.debug('%s: %s %s, %s',
+                        endpoint, model, method, pprint.pformat(args))
+
             result = self._call_function(**self.params)
+
+            if rpc_request_flag or rpc_response_flag:
+                end_time = time.time()
+                _, end_vms = 0, 0
+                if psutil:
+                    _, end_vms = psutil.Process().get_memory_info()
+                logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
+                    endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                if rpc_response_flag:
+                    rpc_response.debug('%s, %s', logline, pprint.pformat(result))
+                else:
+                    rpc_request.debug(logline)
+
             return self._json_response(result)
         except Exception, e:
             return self._handle_exception(e)
@@ -519,7 +581,7 @@ def serialize_exception(e):
     tmp = {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
-        "message": u"%s" % e,
+        "message": ustr(e),
         "arguments": to_jsonable(e.args),
     }
     if isinstance(e, openerp.osv.osv.except_osv):
@@ -543,7 +605,7 @@ def to_jsonable(o):
         for k, v in o.items():
             tmp[u"%s" % k] = to_jsonable(v)
         return tmp
-    return u"%s" % o
+    return ustr(o)
 
 def jsonrequest(f):
     """ 
@@ -777,7 +839,9 @@ def routing_map(modules, nodb_only, converters=None):
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
 
-                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods']))
+                            xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
+                            kw = {k: routing[k] for k in xtra_keys if k in routing}
+                            routing_map.add(werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw))
     return routing_map
 
 #----------------------------------------------------------
@@ -823,9 +887,9 @@ class Model(object):
                 or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
-            mod = request.registry.get(self.model)
             if method.startswith('_'):
                 raise Exception("Access denied")
+            mod = request.registry[self.model]
             meth = getattr(mod, method)
             cr = request.cr
             result = meth(cr, request.uid, *args, **kw)
@@ -932,7 +996,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         :param dict context: context to fix
         """
-        lang = context['lang']
+        lang = context.get('lang')
 
         # inane OpenERP locale
         if lang == 'ar_AR':
@@ -1403,6 +1467,103 @@ def db_monodb(httprequest=None):
     if len(dbs) == 1:
         return dbs[0]
     return None
+
+def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
+              add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
+    """This is a modified version of Flask's send_file()
+
+    Sends the contents of a file to the client. This will use the
+    most efficient method available and configured.  By default it will
+    try to use the WSGI server's file_wrapper support.
+
+    By default it will try to guess the mimetype for you, but you can
+    also explicitly provide one.  For extra security you probably want
+    to send certain files as attachment (HTML for instance).  The mimetype
+    guessing requires a `filename` or an `attachment_filename` to be
+    provided.
+
+    Please never pass filenames to this function from user sources without
+    checking them first.
+
+    :param filepath_or_fp: the filename of the file to send.
+                           Alternatively a file object might be provided
+                           in which case `X-Sendfile` might not work and
+                           fall back to the traditional method.  Make sure
+                           that the file pointer is positioned at the start
+                           of data to send before calling :func:`send_file`.
+    :param mimetype: the mimetype of the file if provided, otherwise
+                     auto detection happens.
+    :param as_attachment: set to `True` if you want to send this file with
+                          a ``Content-Disposition: attachment`` header.
+    :param filename: the filename for the attachment if it differs from the file's filename or
+                     if using file object without 'name' attribute (eg: E-tags with StringIO).
+    :param mtime: last modification time to use for contitional response.
+    :param add_etags: set to `False` to disable attaching of etags.
+    :param conditional: set to `False` to disable conditional responses.
+
+    :param cache_timeout: the timeout in seconds for the headers.
+    """
+    if isinstance(filepath_or_fp, (str, unicode)):
+        if not filename:
+            filename = os.path.basename(filepath_or_fp)
+        file = open(filepath_or_fp, 'rb')
+        if not mtime:
+            mtime = os.path.getmtime(filepath_or_fp)
+    else:
+        file = filepath_or_fp
+        if not filename:
+            filename = getattr(file, 'name', None)
+
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+
+    if mimetype is None and filename:
+        mimetype = mimetypes.guess_type(filename)[0]
+    if mimetype is None:
+        mimetype = 'application/octet-stream'
+
+    headers = werkzeug.datastructures.Headers()
+    if as_attachment:
+        if filename is None:
+            raise TypeError('filename unavailable, required for sending as attachment')
+        headers.add('Content-Disposition', 'attachment', filename=filename)
+        headers['Content-Length'] = size
+
+    data = wrap_file(request.httprequest.environ, file)
+    rv = Response(data, mimetype=mimetype, headers=headers,
+                                    direct_passthrough=True)
+
+    if isinstance(mtime, str):
+        try:
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
+        except Exception:
+            mtime = None
+    if mtime is not None:
+        rv.last_modified = mtime
+
+    rv.cache_control.public = True
+    if cache_timeout:
+        rv.cache_control.max_age = cache_timeout
+        rv.expires = int(time.time() + cache_timeout)
+
+    if add_etags and filename and mtime:
+        rv.set_etag('odoo-%s-%s-%s' % (
+            mtime,
+            size,
+            adler32(
+                filename.encode('utf-8') if isinstance(filename, unicode)
+                else filename
+            ) & 0xffffffff
+        ))
+        if conditional:
+            rv = rv.make_conditional(request.httprequest)
+            # make sure we don't send x-sendfile for servers that
+            # ignore the 304 status code for x-sendfile.
+            if rv.status_code == 304:
+                rv.headers.pop('x-sendfile', None)
+    return rv
 
 #----------------------------------------------------------
 # RPC controller

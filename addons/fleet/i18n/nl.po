@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-27 11:54+0000\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-24 09:49+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:34+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-09-25 06:59+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:387
@@ -46,7 +46,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new contract. \n"
+"                Click to create a new contract.\n"
 "              </p><p>\n"
 "                Manage all your contracts (leasing, insurances, etc.) with\n"
 "                their related services, costs. Odoo will automatically warn\n"
@@ -99,7 +99,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new fuel log. \n"
+"                Click to create a new fuel log.\n"
 "              </p><p>\n"
 "                Here you can add refuelling entries for all vehicles.  You "
 "can\n"
@@ -141,7 +141,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new odometer log. \n"
+"                Click to create a new odometer log.\n"
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
@@ -167,7 +167,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new service entry. \n"
+"                Click to create a new service entry.\n"
 "              </p><p>\n"
 "                Odoo helps you keeping track of all the services done\n"
 "                on your vehicle. Services can be of many type: occasional\n"
@@ -208,7 +208,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new vehicle. \n"
+"                Click to create a new vehicle.\n"
 "              </p><p>\n"
 "                You will be able to manage your fleet by keeping track of "
 "the\n"
@@ -228,8 +228,8 @@ msgstr ""
 "                contracten, onderhoud, vaste en terugkerende kosten,\n"
 "                kilometerstanden en brandstof verbruik per voertuig.\n"
 "            </p><p>\n"
-"                Odoo waarschuwt u waneer diensten of contracten\n"
-"                will warn you when services or contract have to be renewed.\n"
+"                Odoo waarschuwt u wanneer diensten of contracten\n"
+"                vernieuwd dienen te worden.           \n"
 "              </p>\n"
 "            "
 
@@ -1278,6 +1278,11 @@ msgid "Models"
 msgstr "Modellen"
 
 #. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Month"
+msgstr "Maand"
+
+#. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Monthly"
 msgstr "Maandelijks"
@@ -1894,11 +1899,6 @@ msgstr "Voertuig kosten"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
-msgid "Vehicle Costs Month"
-msgstr "Voertuig kosten maand"
-
-#. module: fleet
-#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs by Month"
 msgstr "Voertuig kosten per maand"
 
@@ -1962,8 +1962,9 @@ msgid "Vehicles Services Logs"
 msgstr "Voertuig onderhoud logboek"
 
 #. module: fleet
-#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_report
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_effective_costs_report
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_indicative_costs_report
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
 msgid "Vehicles costs"
 msgstr "Voertuig kosten"
@@ -2083,3 +2084,48 @@ msgstr "Toon de kilometerteller logs van dit voertuig"
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
 msgstr "Toon de service log van dit voertuig"
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                Click to create a new fuel log. \n"
+#~ "              </p><p>\n"
+#~ "                Here you can add refuelling entries for all vehicles.  You "
+#~ "can\n"
+#~ "                also filter logs of a particular vehicle using the search\n"
+#~ "                field.\n"
+#~ "              </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                Klik om een nieuwe brandstof log te maken. \n"
+#~ "              </p><p>\n"
+#~ "                Hier kunt u tankbeurt informatie voor alle voertuigen "
+#~ "maken,\n"
+#~ "                U kunt ook filteren op een bepaalde voertuig met het zoek "
+#~ "veld.\n"
+#~ "              </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                Click to create a new odometer log. \n"
+#~ "              </p>\n"
+#~ "              <p>\n"
+#~ "                Here you can add various odometer entries for all vehicles.\n"
+#~ "                You can also show odometer value for a particular vehicle "
+#~ "using\n"
+#~ "                the search field.\n"
+#~ "              </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                Klik voor het aanmaken van een kilometerregistratie. \n"
+#~ "              </p>\n"
+#~ "              <p>\n"
+#~ "                Hier kunt de verschillende kilometerstanden voor alle "
+#~ "voertuigen invoeren.\n"
+#~ "                U kunt ook de kilometerstand van een bepaald voertuig "
+#~ "bekijken door gebruik\n"
+#~ "                te maken van het zoekveld.\n"
+#~ "              </p>\n"
+#~ "            "

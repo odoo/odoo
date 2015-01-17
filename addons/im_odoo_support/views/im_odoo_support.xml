@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="assets_backend" name="im_odoo_support assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+               <script type="text/javascript" src="/im_odoo_support/static/src/js/im_odoo_support.js"></script>
+                <script type="text/javascript">
+                    (function() {
+                        openerp.im_odoo_support.support = new openerp.im_odoo_support.OdooSupport(
+                            "<t t-esc="request.session.login"/>",
+                            "<t t-esc="request.registry['ir.config_parameter'].get_param(request.cr, request.uid, 'database.uuid')"/>"
+                        );
+                    })();
+                </script>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

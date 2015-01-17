@@ -144,7 +144,7 @@ class report_custom(report_rml):
 
         for product in product_pool.browse(cr, uid, ids, context=context):
             product_uom_name = to_xml(product.uom_id.name)
-            bom_id = bom_pool._bom_find(cr, uid, product.uom_id.id, product_id=product.id, context=context)
+            bom_id = bom_pool._bom_find(cr, uid, product_id=product.id, context=context)
             title = "<title>%s</title>" %(_("Cost Structure"))
             title += "<title>%s</title>" % (to_xml(product.name))
             xml += "<lines style='header'>" + title + prod_header + "</lines>"

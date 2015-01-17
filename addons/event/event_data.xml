@@ -5,7 +5,7 @@
         <record id="action_client_event_menu" model="ir.actions.client">
             <field name="name">Open Event Menu</field>
             <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('event.event_main_menu')}"/>
+            <field name="params" eval="{'menu_id': ref('event.menu_event_event')}"/>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_event_menu"/>

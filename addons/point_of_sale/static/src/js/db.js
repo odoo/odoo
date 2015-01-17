@@ -129,18 +129,25 @@ function openerp_pos_db(instance, module){
             this.cache[store] = data;
         },
         _product_search_string: function(product){
-            var str = '' + product.id + ':' + product.display_name;
-            if(product.ean13){
+            var str = product.display_name;
+            if (product.ean13) {
                 str += '|' + product.ean13;
             }
-            if(product.default_code){
+            if (product.default_code) {
                 str += '|' + product.default_code;
             }
+            if (product.description) {
+                str += '|' + product.description;
+            }
+            if (product.description_sale) {
+                str += '|' + product.description_sale;
+            }
             var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
-            for(var i = 0; i < packagings.length; i++){
+            for (var i = 0; i < packagings.length; i++) {
                 str += '|' + packagings[i].ean;
             }
-            return str + '\n';
+            str  = product.id + ':' + str.replace(':','') + '\n';
+            return str;
         },
         add_products: function(products){
             var stored_categories = this.product_by_category_id;
@@ -200,7 +207,7 @@ function openerp_pos_db(instance, module){
             }
         },
         _partner_search_string: function(partner){
-            var str = '' + partner.id + ':' + partner.name;
+            var str =  partner.name;
             if(partner.ean13){
                 str += '|' + partner.ean13;
             }
@@ -216,16 +223,17 @@ function openerp_pos_db(instance, module){
             if(partner.email){
                 str += '|' + partner.email;
             }
-            return str + '\n';
+            str = '' + partner.id + ':' + str.replace(':','') + '\n';
+            return str;
         },
         add_partners: function(partners){
             var updated_count = 0;
+            var new_write_date = '';
             for(var i = 0, len = partners.length; i < len; i++){
                 var partner = partners[i];
 
-                if (!this.partner_write_date) {
-                    this.partner_write_date = partner.write_date;
-                } else if ( this.partner_by_id[partner.id] &&
+                if (    this.partner_write_date && 
+                        this.partner_by_id[partner.id] &&
                         new Date(this.partner_write_date).getTime() + 1000 >=
                         new Date(partner.write_date).getTime() ) {
                     // FIXME: The write_date is stored with milisec precision in the database
@@ -233,8 +241,8 @@ function openerp_pos_db(instance, module){
                     // you read partners modified strictly after time X, you get back partners that were
                     // modified X - 1 sec ago. 
                     continue;
-                } else if ( this.partner_write_date < partner.write_date ) { 
-                    this.partner_write_date = partner.write_date;
+                } else if ( new_write_date < partner.write_date ) { 
+                    new_write_date  = partner.write_date;
                 }
                 if (!this.partner_by_id[partner.id]) {
                     this.partner_sorted.push(partner.id);
@@ -243,6 +251,8 @@ function openerp_pos_db(instance, module){
 
                 updated_count += 1;
             }
+
+            this.partner_write_date = new_write_date || this.partner_write_date;
 
             if (updated_count) {
                 // If there were updates, we need to completely 
@@ -328,7 +338,7 @@ function openerp_pos_db(instance, module){
             }
             var pack = this.packagings_by_ean13[ean13];
             if(pack){
-                return this.product_by_id[pack.product_id[0]];
+                return this.product_by_id[pack.product_tmpl_id[0]];
             }
             return undefined;
         },

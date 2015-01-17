@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
 "PO-Revision-Date: 2014-08-14 16:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:17+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:14+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -30,23 +30,23 @@ msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
-msgid "#Nbr"
-msgstr "#Nbr"
+msgid "# Nbr Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
-msgid "#Total Attendance"
-msgstr "#Toplam Katılımcı"
+msgid "# Total Attendance"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
-msgid "#Total Diff"
-msgstr "#Toplam Diff"
+msgid "# Total Diff"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
-msgid "#Total Timesheet"
-msgstr "# Toplam ZamanÇizelge"
+msgid "# Total Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -283,13 +283,18 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:85
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:378
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:491
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:519
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
+
+#. module: hr_timesheet_sheet
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
+msgid "External Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -374,8 +379,13 @@ msgstr ""
 "bağlantı gerekir."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:253
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:255
+#: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
+msgid "Internal Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz İşlem!"
@@ -500,7 +510,7 @@ msgid "Please create an employee and associate it with this user."
 msgstr "Lütfen bir çalışan oluşturun  ve bu kullanıcı ile ilişkilendirin"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:128
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
@@ -721,8 +731,8 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:493
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:512
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid "User Error!"
 msgstr "Kullanıcı Hatası!"
@@ -744,7 +754,7 @@ msgid "Warning !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:128
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -766,20 +776,20 @@ msgid "Week"
 msgstr "Hafta"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:245
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
 msgid "Week "
 msgstr "Hafta "
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:493
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:491
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
@@ -787,13 +797,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:255
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
 msgstr "Katılım girişleri var zamançizelgesini silemezsiniz."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:253
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Onaylandıktan sonra bir zaman çizelgesini silemezsiniz."
@@ -805,7 +815,7 @@ msgid "You cannot duplicate a timesheet."
 msgstr "Bir zamançizelgesi çift olamaz."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:512
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -835,13 +845,13 @@ msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
 msgstr "Onaylanan/Biten zamançizelgesi  girişi değiştiremezsiniz!"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:519
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr "Doğrulanmış bir girdi zamançizelgesinde değiştiremezsiniz"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:378
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Onaylamış ZamanÇizelgesi bir girişi değiştiremezsiniz."
@@ -854,3 +864,15 @@ msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
 msgstr ""
+
+#~ msgid "#Total Timesheet"
+#~ msgstr "# Toplam ZamanÇizelge"
+
+#~ msgid "#Total Attendance"
+#~ msgstr "#Toplam Katılımcı"
+
+#~ msgid "#Nbr"
+#~ msgstr "#Nbr"
+
+#~ msgid "#Total Diff"
+#~ msgstr "#Toplam Diff"

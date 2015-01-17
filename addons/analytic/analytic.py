@@ -255,6 +255,7 @@ class account_analytic_account(osv.osv):
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
+        'manager_id': lambda self, cr, uid, ctx: ctx.get('manager_id', False),
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'currency_id': _get_default_currency,
     }

@@ -1,4 +1,9 @@
-$(document).ready(function () {
+(function () {
+'use strict';
+var website = openerp.website;
+
+website.if_dom_contains('div.o_website_quote', function () {
+
     $('a.js_update_line_json').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
@@ -61,7 +66,7 @@ $(document).ready(function () {
             $('#modelaccept').modal('hide');
             window.location.href = '/quote/'+order_id[1]+'/'+token+'?message=3';
         });
-        return false
+        return false;
     });
 
     // automatically generate a menu from h1 and h2 tag in content
@@ -71,6 +76,7 @@ $(document).ready(function () {
     var sub_ul = null;
     $("[id^=quote_header_], [id^=quote_]", $container).attr("id", "");
     $("h1, h2", $container).each(function() {
+        var id;
         switch (this.tagName.toLowerCase()) {
             case "h1":
                 id = _.uniqueId('quote_header_');
@@ -90,5 +96,6 @@ $(document).ready(function () {
                 break;
             }
     });
-
 });
+
+}());

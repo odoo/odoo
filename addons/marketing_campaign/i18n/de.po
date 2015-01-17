@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-15 08:36+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:25+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:16+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -42,25 +43,24 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_1
-msgid "<p>Hello, you will receive your welcome pack via email shortly.</p>"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"<p>Hi, we are delighted to let you know that you have entered the select "
-"circle of our Gold Partners</p>"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:email.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"<p>Hi, we are delighted to welcome you among our Silver Partners as of "
-"today!</p>"
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klicken Sie zur Erstellung einer Marketing Kampagne.\n"
+"          </p><p>\n"
+"            Odoo unterstützt die automatische Kommunikation mit "
+"Interessenten. Sie können hierzu\n"
+"            einfach Ihre Kontakte segmentieren, um auf Basis dieser "
+"Zielgruppen die potenziellen\n"
+"            Empfänger Ihrer Werbung zu spezifizieren.\n"
+"          </p><p>\n"
+"            Eine Kampagne kann viele Aktivitäten wie das Senden einer E-Mail "
+"beinhalten, z.B. den Serien-Druck\n"
+"            eines Werbebriefs, die automatische Zuweisung zu einem Team "
+"u.s.w. Diese Aktivitäten werden durch\n"
+"            bestimmte definierte Situationen, wie z.B. 10 Tage nach "
+"Ausfüllen des Kontaktformulars \n"
+"            oder nach Beendigung eines Interessenten etc. ausgelöst.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,server_action_id:0
@@ -279,7 +279,7 @@ msgstr "Land"
 #: field:marketing.campaign.transition,create_uid:0
 #: field:marketing.campaign.workitem,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,create_date:0
@@ -288,7 +288,7 @@ msgstr ""
 #: field:marketing.campaign.transition,create_date:0
 #: field:marketing.campaign.workitem,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -315,7 +315,6 @@ msgid "Date this segment was last closed or cancelled."
 msgstr "Datum der letzten Ausführung"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,day:0
 msgid "Day"
 msgstr "Tag"
@@ -433,7 +432,7 @@ msgstr "Ausführung am"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Execution Month"
-msgstr ""
+msgstr "Durchführungsperiode"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -487,7 +486,26 @@ msgstr "Erinnerung"
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
+msgstr "Gruppierung"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr "Hallo, Sie werden das Willkommenspaket in Kürze per E-Mail erhalten"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle "
+"of our Gold Partners"
 msgstr ""
+"Hallo, wir teilen Ihnen mit, daß wir Sie zum Gold Partner ernennen dürfen"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr "Hallo, wir sind glücklich Sie als Silber Partner zu begrüssen!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -507,7 +525,7 @@ msgstr "Wie wird die Folgeaktion angestossen"
 #: field:marketing.campaign.transition,id:0
 #: field:marketing.campaign.workitem,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -586,7 +604,7 @@ msgstr "Letzte Synchronisierung"
 #: field:marketing.campaign.transition,write_uid:0
 #: field:marketing.campaign.workitem,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,write_date:0
@@ -595,7 +613,7 @@ msgstr ""
 #: field:marketing.campaign.transition,write_date:0
 #: field:marketing.campaign.workitem,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_run:0
@@ -605,7 +623,7 @@ msgstr "Start am"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr ""
+msgstr "Startperiode"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
@@ -643,10 +661,11 @@ msgstr "Marketing-Kampagne Segment"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign Statistics"
-msgstr ""
+msgstr "Statistik Kampagnen"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
+#: view:campaign.analysis:marketing_campaign.view_report_campaign_analysis_graph
 msgid "Marketing Reports"
 msgstr "Marketing-Auswertungen"
 
@@ -776,7 +795,6 @@ msgid "Outgoing Transitions"
 msgstr "Abgehende Verbindung"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,partner_id:0
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
@@ -849,7 +867,6 @@ msgid "Reset"
 msgstr "Zurücksetzen"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,res_id:0
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
 #: field:marketing.campaign,object_id:0
@@ -958,7 +975,7 @@ msgstr "Beginn"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Statistics"
-msgstr ""
+msgstr "Statistik"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -1172,7 +1189,7 @@ msgstr "Variable Kosten"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "Herzlich Willkommen im Odoo Partnerkanal!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1185,7 +1202,6 @@ msgid "Workitems"
 msgstr "Auftragspositionen"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "Jahr"
@@ -1200,3 +1216,16 @@ msgstr "Jahr(e)"
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
 msgstr "Duplizieren einer Kampagne ist derzeit nicht möglich"
+
+#~ msgid ""
+#~ "<p>Hi, we are delighted to welcome you among our Silver Partners as of "
+#~ "today!</p>"
+#~ msgstr "<p>Hallo, wir begrüßen Sie als unseren Silber-Partner!</p>"
+
+#~ msgid "<p>Hello, you will receive your welcome pack via email shortly.</p>"
+#~ msgstr "<p>Hallo, Sie erhalten Ihr Begrüßungspaket in Kürze per E-Mail.</p>"
+
+#~ msgid ""
+#~ "<p>Hi, we are delighted to let you know that you have entered the select "
+#~ "circle of our Gold Partners</p>"
+#~ msgstr "<p>Hallo, wir begrüßen Sie als unseren Gold-Partner!</p>"

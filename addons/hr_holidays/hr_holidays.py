@@ -46,15 +46,15 @@ class hr_holidays_status(osv.osv):
         for holiday in self.pool['hr.holidays'].browse(cr, uid, holiday_ids, context=context):
             status_dict = result[holiday.holiday_status_id.id]
             if holiday.type == 'add':
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
+                status_dict['virtual_remaining_leaves'] += holiday.number_of_days_temp
                 if holiday.state == 'validate':
-                    status_dict['max_leaves'] += holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['max_leaves'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] += holiday.number_of_days_temp
             elif holiday.type == 'remove':  # number of days is negative
-                status_dict['virtual_remaining_leaves'] += holiday.number_of_days
+                status_dict['virtual_remaining_leaves'] -= holiday.number_of_days_temp
                 if holiday.state == 'validate':
-                    status_dict['leaves_taken'] -= holiday.number_of_days
-                    status_dict['remaining_leaves'] += holiday.number_of_days
+                    status_dict['leaves_taken'] += holiday.number_of_days_temp
+                    status_dict['remaining_leaves'] -= holiday.number_of_days_temp
         return result
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
@@ -68,7 +68,7 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, context=context)
         else:
-            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
+            res = dict((res_id, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0}) for res_id in ids)
         return res
 
     _columns = {
@@ -90,7 +90,8 @@ class hr_holidays_status(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-
+        if context is None:
+            context = {}
         if not context.get('employee_id',False):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(hr_holidays_status, self).name_get(cr, uid, ids, context=context)
@@ -385,7 +386,8 @@ class hr_holidays(osv.osv):
                 if record.user_id and record.user_id.partner_id:
                     meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
                     
-                meeting_id = meeting_obj.create(cr, uid, meeting_vals)
+                ctx_no_email = dict(context or {}, no_email=True)
+                meeting_id = meeting_obj.create(cr, uid, meeting_vals, context=ctx_no_email)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
             elif record.holiday_type == 'category':
@@ -430,7 +432,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        meeting_obj = self.pool.get('calendar.event')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.meeting_id:

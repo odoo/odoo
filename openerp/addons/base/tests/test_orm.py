@@ -111,6 +111,18 @@ class TestORM(common.TransactionCase):
         found = self.partner.search_read(self.cr, UID, [['name', '=', 'Does not exists']], ['name'])
         self.assertEqual(len(found), 0)
 
+    def test_exists(self):
+        partner = self.partner.browse(self.cr, UID, [])
+
+        # check that records obtained from search exist
+        recs = partner.search([])
+        self.assertTrue(recs)
+        self.assertEqual(recs.exists(), recs)
+
+        # check that there is no record with id 0
+        recs = partner.browse([0])
+        self.assertFalse(recs.exists())
+
     def test_groupby_date(self):
         partners = dict(
             A='2012-11-19',
@@ -226,7 +238,7 @@ class TestInherits(common.TransactionCase):
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo',
-                                                 'login_date': '2016-01-01'})
+                                                 'login_date': '2016-01-01', 'signature': 'XXX'})
         par_id = self.partner.create(self.cr, UID, {'name': 'Bar'})
 
         foo_before, = self.user.read(self.cr, UID, [foo_id])
@@ -244,8 +256,9 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertEqual(bar.partner_id.id, par_id)
         self.assertEqual(bar.login, 'bar', "login is given from copy parameters")
-        self.assertEqual(bar.login_date, foo.login_date, "login_date copied from original record")
+        self.assertFalse(bar.login_date, "login_date should not be copied from original record")
         self.assertEqual(bar.name, 'Bar', "name is given from specific partner")
+        self.assertEqual(bar.signature, foo.signature, "signature should be copied")
 
 
 

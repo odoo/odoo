@@ -85,6 +85,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
             measures = groupbys.measures;
 
         if (!this.graph_widget) {
+            this.widget_config.context = _.clone(context);
+            this.widget_config.context.group_by_no_leaf = true;
             if (group_by.length) {
                 this.widget_config.row_groupby = group_by;
             }

@@ -24,28 +24,46 @@
                     <sheet>
                         <group>
                             <field name="name"/>
-                            <field name="karma_ask"/>
-                            <field name="karma_edit_own"/>
-                            <field name="karma_edit_all"/>
-                            <field name="karma_close_own"/>
-                            <field name="karma_close_all"/>
-                            <field name="karma_unlink_own"/>
-                            <field name="karma_unlink_all"/>
+                            <field name="description"/>
                         </group>
-                        <group>
-                            <field name="karma_upvote"/>
-                            <field name="karma_downvote"/>
-                            <field name="karma_answer_accept_own"/>
-                            <field name="karma_answer_accept_all"/>
-                            <field name="karma_editor_link_files"/>
-                            <field name="karma_editor_clickable_link"/>
-                            <field name="karma_comment_own"/>
-                            <field name="karma_comment_all"/>
-                            <field name="karma_comment_convert_own"/>
-                            <field name="karma_comment_convert_all"/>
-                            <field name="karma_comment_unlink_own"/>
-                            <field name="karma_comment_unlink_all"/>
-                        </group>
+                        <notebook>
+                            <page string='Karma Gains'>
+                                <group>
+                                    <field name="karma_gen_question_new"/>
+                                    <field name="karma_gen_question_upvote"/>
+                                    <field name="karma_gen_question_downvote"/>
+                                    <field name="karma_gen_answer_upvote"/>
+                                    <field name="karma_gen_answer_downvote"/>
+                                    <field name="karma_gen_answer_accept"/>
+                                    <field name="karma_gen_answer_accepted"/>
+                                </group>
+                            </page>
+                            <page string='Karma Requirements'>
+                                <group>
+                                    <group>
+                                        <field name="karma_ask"/>
+                                        <field name="karma_upvote"/>
+                                        <field name="karma_downvote"/>
+                                        <field name="karma_edit_own"/>
+                                        <field name="karma_edit_all"/>
+                                        <field name="karma_close_own"/>
+                                        <field name="karma_close_all"/>
+                                        <field name="karma_unlink_own"/>
+                                        <field name="karma_unlink_all"/>
+                                    </group>
+                                    <group>
+                                        <field name="karma_answer_accept_own"/>
+                                        <field name="karma_answer_accept_all"/>
+                                        <field name="karma_comment_own"/>
+                                        <field name="karma_comment_all"/>
+                                        <field name="karma_comment_convert_own"/>
+                                        <field name="karma_comment_convert_all"/>
+                                        <field name="karma_comment_unlink_own"/>
+                                        <field name="karma_comment_unlink_all"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>

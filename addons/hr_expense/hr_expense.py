@@ -297,6 +297,7 @@ class hr_expense_expense(osv.osv):
             if not taxes:
                 continue
             tax_l = []
+            base_tax_amount = line.total_amount
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
@@ -312,10 +313,10 @@ class hr_expense_expense(osv.osv):
                     ## We need to deduce the price for the tax
                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
                     # tax amount countains base amount without the tax
-                    tax_amount = (line.total_amount - tax['amount']) * tax['base_sign']
+                    base_tax_amount = (base_tax_amount - tax['amount']) * tax['base_sign']
                 else:
-                    tax_amount = line.total_amount * tax['base_sign']
-                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
+                    base_tax_amount = base_tax_amount * tax['base_sign']
+
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
@@ -327,6 +328,8 @@ class hr_expense_expense(osv.osv):
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
                 tax_l.append(assoc_tax)
+
+            res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, base_tax_amount, context={'date': exp.date_confirm})
             res += tax_l
         return res
 

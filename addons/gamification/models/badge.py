@@ -38,7 +38,7 @@ class gamification_badge_user(osv.Model):
     _rec_name = "badge_name"
 
     _columns = {
-        'user_id': fields.many2one('res.users', string="User", required=True),
+        'user_id': fields.many2one('res.users', string="User", required=True, ondelete="cascade"),
         'sender_id': fields.many2one('res.users', string="Sender", help="The user who has send the badge"),
         'badge_id': fields.many2one('gamification.badge', string='Badge', required=True, ondelete="cascade"),
         'challenge_id': fields.many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge"),
@@ -95,7 +95,7 @@ class gamification_badge(osv.Model):
             the total number of time this badge was granted
             the total number of users this badge was granted to
         """
-        result = dict.fromkeys(ids, {'stat_count':0, 'stat_count_distinct':0, 'unique_owner_ids':[]})
+        result = dict((res_id, {'stat_count': 0, 'stat_count_distinct': 0, 'unique_owner_ids': []}) for res_id in ids)
 
         cr.execute("""
             SELECT badge_id, count(user_id) as stat_count,

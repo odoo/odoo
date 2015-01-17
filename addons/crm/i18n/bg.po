@@ -7,23 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-10-23 13:26+0000\n"
+"Last-Translator: Stoyan <mishev@abvsoft.bg>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:59+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-24 07:05+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
 
 #. module: crm
 #: field:crm.lead,meeting_count:0
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
-msgstr ""
+msgstr "Срещи"
 
 #. module: crm
+#: field:crm.lead.report,nbr_cases:0
+#: field:crm.opportunity.report,nbr_cases:0
 #: field:crm.phonecall.report,nbr:0
 msgid "# of Cases"
 msgstr ""
@@ -246,14 +248,14 @@ msgid ""
 "<ul>\n"
 "<li>Name: ${object.name}</li>\n"
 "<li>ID: ${object.id}</li>\n"
-"<li>Description: ${object.description}</li>\n"
+"<li>Description: ${object.description}</field></li>\n"
 "</ul>"
 msgstr ""
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "A Meeting"
-msgstr ""
+msgstr "Среща"
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,exclude_contact:0
@@ -299,7 +301,7 @@ msgid "Alias Domain"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:298
+#: code:addons/crm/base_partner_merge.py:304
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
@@ -363,6 +365,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,opening_date:0
+#: field:crm.opportunity.report,opening_date:0
 msgid "Assignation Date"
 msgstr ""
 
@@ -398,17 +401,29 @@ msgstr ""
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_leads_country
+#: model:ir.filters,name:crm.filter_opportunity_country
 msgid "By Country"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_leads_salesperson
-msgid "By Salespersons"
+#: model:ir.filters,name:crm.filter_crm_phonecall_sales_team
+msgid "By Sales Team"
 msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_salesperson
+#: model:ir.filters,name:crm.filter_opportunity_salesperson
+msgid "By Salespersons"
+msgstr "По търговци"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Analysis"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_opportunity_report
+msgid "CRM Opportunity Analysis"
 msgstr ""
 
 #. module: crm
@@ -432,7 +447,7 @@ msgstr ""
 #: view:crm.lead:crm.crm_case_kanban_view_leads
 #: view:res.partner:crm.view_partners_form_crm1
 msgid "Calls"
-msgstr ""
+msgstr "Позвънявания"
 
 #. module: crm
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
@@ -441,8 +456,10 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,campaign_id:0
 #: field:crm.lead.report,campaign_id:0
+#: field:crm.opportunity.report,campaign_id:0
 #: view:crm.tracking.campaign:crm.crm_tracking_campaign_form
 #: view:crm.tracking.campaign:crm.crm_tracking_campaign_tree
 #: field:crm.tracking.mixin,campaign_id:0
@@ -499,7 +516,6 @@ msgstr "Категоризация"
 
 #. module: crm
 #: field:crm.phonecall,categ_id:0
-#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
@@ -517,8 +533,10 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,medium_id:0
 #: field:crm.lead.report,medium_id:0
+#: field:crm.opportunity.report,medium_id:0
 #: view:crm.tracking.medium:crm.crm_tracking_medium_view_form
 #: field:crm.tracking.mixin,medium_id:0
 #: view:crm.tracking.source:crm.crm_tracking_source_view_form
@@ -580,7 +598,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of opportunities."
-msgstr ""
+msgstr "Натиснете за показване на детайлен анализ на възможностите"
 
 #. module: crm
 #: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
@@ -589,6 +607,7 @@ msgstr "Затваряне"
 
 #. module: crm
 #: field:crm.lead.report,date_closed:0
+#: field:crm.opportunity.report,date_closed:0
 #: field:crm.phonecall.report,date_closed:0
 msgid "Close Date"
 msgstr "Дата на затваряне"
@@ -600,7 +619,7 @@ msgid "Closed"
 msgstr "Приключен"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:120
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
 msgstr ""
@@ -611,11 +630,13 @@ msgid "Color Index"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,company_id:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,company_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,company_id:0
 #: field:crm.phonecall,company_id:0
-#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #: field:crm.phonecall.report,company_id:0
 msgid "Company"
 msgstr "Фирма"
@@ -623,7 +644,7 @@ msgstr "Фирма"
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
 msgid "Company Name"
-msgstr ""
+msgstr "Име на фирма"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
@@ -691,7 +712,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 msgid "Convert To Opportunity"
-msgstr ""
+msgstr "Превърни във възможност"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
@@ -705,7 +726,7 @@ msgstr ""
 #: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
 #: view:crm.phonecall:crm.crm_case_phone_tree_view
 msgid "Convert to Opportunity"
-msgstr ""
+msgstr "Превърни във възможност"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
@@ -717,14 +738,17 @@ msgstr ""
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 msgid "Convert to opportunity"
-msgstr ""
+msgstr "Превърни във възможност"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_leads
 #: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,country_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,country_id:0
 msgid "Country"
 msgstr ""
 
@@ -792,15 +816,19 @@ msgstr "Създаване"
 #. module: crm
 #: field:crm.lead,create_date:0
 #: field:crm.lead.report,create_date:0
+#: field:crm.opportunity.report,create_date:0
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
 #: field:crm.phonecall,create_date:0
-#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Creation Date"
 msgstr "Дата на създаване"
 
 #. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
-msgid "Creation date"
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Creation Month"
 msgstr ""
 
 #. module: crm
@@ -819,21 +847,21 @@ msgid "Current Line"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:959
+#: code:addons/crm/crm_lead.py:989
 #: view:crm.lead:crm.crm_case_form_view_leads
 #: view:crm.lead:crm.crm_case_form_view_oppor
 #: view:crm.lead:crm.crm_case_tree_view_oppor
 #: view:crm.lead:crm.view_crm_case_leads_filter
-#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #, python-format
 msgid "Customer"
 msgstr "Клиент"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:961
+#: code:addons/crm/crm_lead.py:991
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -868,7 +896,7 @@ msgstr "Дни до затваряне"
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 msgid "Dead"
-msgstr ""
+msgstr "Отпаднал"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
@@ -892,12 +920,19 @@ msgid "Default to New Sales Team"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_delay_to_close
+msgid "Delay To Close"
+msgstr ""
+
+#. module: crm
 #: field:crm.lead.report,delay_open:0
+#: field:crm.opportunity.report,delay_open:0
 msgid "Delay to Assign"
 msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,delay_close:0
+#: field:crm.opportunity.report,delay_close:0
 msgid "Delay to Close"
 msgstr ""
 
@@ -994,16 +1029,16 @@ msgid "Email address of the contact"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:295
-#: code:addons/crm/base_partner_merge.py:298
-#: code:addons/crm/base_partner_merge.py:310
-#: code:addons/crm/base_partner_merge.py:439
+#: code:addons/crm/base_partner_merge.py:301
+#: code:addons/crm/base_partner_merge.py:304
+#: code:addons/crm/base_partner_merge.py:316
+#: code:addons/crm/base_partner_merge.py:445
 #, python-format
 msgid "Error"
 msgstr "Грешка"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:429
+#: code:addons/crm/crm_lead.py:430
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -1045,32 +1080,45 @@ msgid "Execution Status"
 msgstr "Статус на изпълнение"
 
 #. module: crm
-#: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,date_deadline:0
+#: field:crm.opportunity.report,date_deadline:0
 msgid "Exp. Closing"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:crm.view_crm_case_leads_filter
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,date_deadline:0
 #: help:crm.lead.report,date_deadline:0
+#: help:crm.opportunity.report,date_deadline:0
 msgid "Expected Closing"
-msgstr ""
+msgstr "Очаквано сключване на сделка"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
+#: field:crm.lead.report,probable_revenue:0
+#: field:crm.opportunity.report,expected_revenue:0
 msgid "Expected Revenue"
-msgstr "Очаквани приходи"
+msgstr "Очакван приход"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
 #: view:crm.lead:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
+msgstr "Очаквани приходи"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing"
+msgstr ""
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing Month"
 msgstr ""
 
 #. module: crm
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "Extended Filters"
 msgstr ""
 
@@ -1106,7 +1154,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:295
+#: code:addons/crm/base_partner_merge.py:301
 #, python-format
 msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
@@ -1119,7 +1167,7 @@ msgid "Force assignation"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:561
+#: code:addons/crm/crm_lead.py:562
 #, python-format
 msgid "From %s : %s"
 msgstr ""
@@ -1152,6 +1200,7 @@ msgstr ""
 #: view:crm.lead:crm.view_crm_case_leads_filter
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Group By"
@@ -1182,6 +1231,7 @@ msgstr "Задържан"
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "High"
@@ -1205,6 +1255,7 @@ msgstr ""
 #: field:crm.lead2opportunity.partner,id:0
 #: field:crm.lead2opportunity.partner.mass,id:0
 #: field:crm.merge.opportunity,id:0
+#: field:crm.opportunity.report,id:0
 #: field:crm.partner.binding,id:0
 #: field:crm.payment.mode,id:0
 #: field:crm.phonecall,id:0
@@ -1270,7 +1321,7 @@ msgstr ""
 #: view:crm.lead:crm.crm_case_form_view_leads
 #: view:crm.lead:crm.crm_case_form_view_oppor
 msgid "Internal Notes"
-msgstr ""
+msgstr "Бележки"
 
 #. module: crm
 #: field:base.partner.merge.automatic.wizard,group_by_is_company:0
@@ -1302,7 +1353,6 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
-#: view:crm.lead:crm.view_crm_case_opportunities_filter
 msgid "Last Message"
 msgstr ""
 
@@ -1314,8 +1364,8 @@ msgstr ""
 
 #. module: crm
 #: field:crm.lead,date_last_stage_update:0
-#: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,date_last_stage_update:0
+#: field:crm.opportunity.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
 
@@ -1361,12 +1411,14 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:854
+#: code:addons/crm/crm_lead.py:884
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:crm.crm_case_form_view_oppor
 #: selection:crm.lead,type:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
 #, python-format
 msgid "Lead"
 msgstr ""
@@ -1415,7 +1467,7 @@ msgid "Leads"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:83
+#: code:addons/crm/crm_lead.py:84
 #, python-format
 msgid "Leads / Opportunities"
 msgstr ""
@@ -1424,7 +1476,7 @@ msgstr ""
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_graph
 #: view:crm.lead.report:crm.view_report_crm_lead_graph_two
-#: view:crm.lead.report:crm.view_report_crm_opportunity_graph
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_graph
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
@@ -1529,24 +1581,31 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Logged Calls"
+msgstr "Описани тел. обаждания"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1049
+#, python-format
+msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1019
-#, python-format
-msgid "Logged a call for %(date)s. %(description)s"
+#: model:ir.filters,name:crm.filter_leads_long_term_revenue
+msgid "Long Term Revenue"
 msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "Lost"
 msgstr "Загуби"
 
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Low"
@@ -1597,12 +1656,12 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
-msgstr ""
+msgstr "Загубен"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_oppor
 msgid "Mark Won"
-msgstr ""
+msgstr "Спечелен"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
@@ -1626,10 +1685,11 @@ msgid "Meeting"
 msgstr "Среща"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1033
+#: code:addons/crm/crm_lead.py:1063
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
+"Срещата е планирана на '%s'<br> Относно: %s <br> Продължителност: %s час(а)"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_form_view_oppor
@@ -1699,31 +1759,31 @@ msgid "Merge with existing opportunities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:546
+#: code:addons/crm/crm_lead.py:547
 #, python-format
 msgid "Merged lead"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:540
+#: code:addons/crm/crm_lead.py:541
 #, python-format
 msgid "Merged leads"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:542
+#: code:addons/crm/crm_lead.py:543
 #, python-format
 msgid "Merged opportunities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:546
+#: code:addons/crm/crm_lead.py:547
 #, python-format
 msgid "Merged opportunity"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:320
+#: code:addons/crm/base_partner_merge.py:326
 #, python-format
 msgid "Merged with the following partners:"
 msgstr ""
@@ -1812,7 +1872,9 @@ msgstr "Преговори"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "New"
 msgstr "Нов"
 
@@ -1841,13 +1903,13 @@ msgid "Next Action Date"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:974
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
 msgid "No Subject"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:731
+#: code:addons/crm/crm_lead.py:761
 #, python-format
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
@@ -1863,6 +1925,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Normal"
@@ -1890,12 +1953,14 @@ msgstr "Бележки"
 
 #. module: crm
 #: help:crm.lead.report,delay_close:0
+#: help:crm.opportunity.report,delay_close:0
 #: help:crm.phonecall.report,delay_close:0
 msgid "Number of Days to close the case"
 msgstr ""
 
 #. module: crm
 #: help:crm.lead.report,delay_open:0
+#: help:crm.opportunity.report,delay_open:0
 #: help:crm.phonecall.report,delay_open:0
 msgid "Number of Days to open the case"
 msgstr ""
@@ -1906,7 +1971,7 @@ msgid "Object Name"
 msgstr "Име на обект"
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:310
+#: code:addons/crm/base_partner_merge.py:316
 #, python-format
 msgid ""
 "Only the destination contact may be linked to existing Journal Items. Please "
@@ -1959,6 +2024,7 @@ msgid "Opportunities"
 msgstr "Възможности"
 
 #. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
@@ -1977,12 +2043,22 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
+msgid "Opportunities Cohort"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
+msgid "Opportunities Won Per Team"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 msgid "Opportunities that are assigned to me"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:834
+#: code:addons/crm/crm_lead.py:864
 #: field:calendar.event,opportunity_id:0
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:crm.crm_case_tree_view_oppor
@@ -1990,6 +2066,8 @@ msgstr ""
 #: selection:crm.lead,type:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
 #: view:crm.phonecall:crm.crm_case_phone_form_view
 #: field:res.partner,opportunity_count:0
 #, python-format
@@ -2060,6 +2138,8 @@ msgstr "Изходящо"
 
 #. module: crm
 #: field:crm.lead.report,delay_expected:0
+#: field:crm.opportunity.report,delay_expected:0
+#: model:ir.filters,name:crm.filter_leads_overpassed_deadline
 msgid "Overpassed Deadline"
 msgstr ""
 
@@ -2070,12 +2150,10 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
-#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,partner_id:0
-#: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,partner_id:0
+#: field:crm.opportunity.report,partner_id:0
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
-#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #: field:crm.phonecall.report,partner_id:0
 #: field:crm.phonecall2phonecall,partner_id:0
 #: model:ir.model,name:crm.model_res_partner
@@ -2176,6 +2254,11 @@ msgid "Phone Calls Analysis"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_phone_call_to_do
+msgid "Phone Calls To Do"
+msgstr ""
+
+#. module: crm
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Phone Calls that are assigned to me"
 msgstr ""
@@ -2245,18 +2328,13 @@ msgid "Planned Date"
 msgstr "Планирана дата"
 
 #. module: crm
-#: field:crm.lead.report,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Планирани приходи"
-
-#. module: crm
 #: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
 #: field:crm.case.section,monthly_planned_revenue:0
 msgid "Planned Revenue per Month"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:601
+#: code:addons/crm/crm_lead.py:633
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -2269,27 +2347,22 @@ msgstr ""
 
 #. module: crm
 #: field:crm.lead,priority:0
-#: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,priority:0
+#: field:crm.opportunity.report,priority:0
 #: field:crm.phonecall,priority:0
-#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 #: field:crm.phonecall.report,priority:0
 msgid "Priority"
 msgstr "Приоритет"
 
 #. module: crm
 #: field:crm.lead.report,probability:0
+#: field:crm.opportunity.report,probability:0
 msgid "Probability"
 msgstr "Вероятност"
 
 #. module: crm
 #: field:crm.case.stage,probability:0
 msgid "Probability (%)"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,probable_revenue:0
-msgid "Probable Revenue"
 msgstr ""
 
 #. module: crm
@@ -2347,7 +2420,7 @@ msgstr ""
 #: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.partner.binding,action:0
 msgid "Related Customer"
-msgstr ""
+msgstr "Свързан клиент"
 
 #. module: crm
 #: model:email.template,subject:crm.email_template_opportunity_reminder_mail
@@ -2372,6 +2445,11 @@ msgstr "Изисквания"
 #: field:crm.phonecall,user_id:0
 msgid "Responsible"
 msgstr "Отговорен"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_revenue_per_lead
+msgid "Revenue Per Lead"
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation.line,name:0
@@ -2402,17 +2480,20 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Sales Tags"
-msgstr ""
+msgstr "Тагове"
 
 #. module: crm
 #: field:crm.case.categ,section_id:0
 #: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,section_id:0
 #: field:crm.lead2opportunity.partner,section_id:0
 #: field:crm.lead2opportunity.partner.mass,section_id:0
 #: field:crm.merge.opportunity,section_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,section_id:0
 #: field:crm.payment.mode,section_id:0
 #: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
 #: field:crm.phonecall,section_id:0
@@ -2425,7 +2506,7 @@ msgstr "Търговски отдел"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_section
 msgid "Sales Teams"
-msgstr ""
+msgstr "Търговски екипи"
 
 #. module: crm
 #: help:crm.phonecall,section_id:0
@@ -2445,9 +2526,10 @@ msgstr ""
 #: field:crm.lead2opportunity.partner,user_id:0
 #: field:crm.lead2opportunity.partner.mass,user_id:0
 #: field:crm.merge.opportunity,user_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "Търговец"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_phone_form_view
@@ -2457,12 +2539,12 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
 msgid "Schedule Call"
-msgstr ""
+msgstr "Следващо позвъняване"
 
 #. module: crm
 #: view:crm.lead:crm.crm_case_kanban_view_leads
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Определяне на среща"
 
 #. module: crm
 #: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
@@ -2489,16 +2571,16 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
 msgid "Schedule/Log a Call"
-msgstr ""
+msgstr "Определяне/Записаване на разговор"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Scheduled Calls"
-msgstr ""
+msgstr "Планирани обаждания"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1021
+#: code:addons/crm/crm_lead.py:1051
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -2622,15 +2704,17 @@ msgstr ""
 #. module: crm
 #: model:res.groups,name:crm.group_scheduled_calls
 msgid "Show Scheduled Calls Menu"
-msgstr ""
+msgstr "Покажи менюто за планирани обаждания"
 
 #. module: crm
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "Show only lead"
 msgstr ""
 
 #. module: crm
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "Show only opportunity"
 msgstr ""
 
@@ -2646,8 +2730,10 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: field:crm.lead,source_id:0
 #: field:crm.lead.report,source_id:0
+#: field:crm.opportunity.report,source_id:0
 #: field:crm.tracking.mixin,source_id:0
 #: model:ir.actions.act_window,name:crm.crm_tracking_source_action
 #: model:ir.model,name:crm.model_crm_tracking_source
@@ -2667,6 +2753,8 @@ msgstr ""
 #: field:crm.lead,stage_id:0
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,stage_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,stage_id:0
 msgid "Stage"
 msgstr "Етап"
 
@@ -2749,7 +2837,7 @@ msgstr "Относно"
 #. module: crm
 #: field:crm.lead,probability:0
 msgid "Success Rate (%)"
-msgstr ""
+msgstr "Вероятност за успех"
 
 #. module: crm
 #: field:crm.lead,message_summary:0
@@ -2766,12 +2854,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,categ_ids:0
 msgid "Tags"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:crm.view_crm_case_opportunities_filter
-msgid "Team"
-msgstr "Екип"
+msgstr "Тагове"
 
 #. module: crm
 #: help:crm.case.section,alias_id:0
@@ -2853,7 +2936,7 @@ msgstr "Тези хора ще получат имейл."
 #. module: crm
 #: help:sale.config.settings,group_scheduled_calls:0
 msgid "This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"
-msgstr ""
+msgstr "Това добавя меню 'Планирани обаждания' под 'Продажби/Обаждания'"
 
 #. module: crm
 #: help:crm.case.stage,type:0
@@ -2865,6 +2948,7 @@ msgstr ""
 #. module: crm
 #: help:crm.lead,campaign_id:0
 #: help:crm.lead.report,campaign_id:0
+#: help:crm.opportunity.report,campaign_id:0
 #: help:crm.tracking.mixin,campaign_id:0
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
@@ -2874,6 +2958,7 @@ msgstr ""
 #. module: crm
 #: help:crm.lead,medium_id:0
 #: help:crm.lead.report,medium_id:0
+#: help:crm.opportunity.report,medium_id:0
 #: help:crm.tracking.mixin,medium_id:0
 msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
 msgstr ""
@@ -2881,6 +2966,7 @@ msgstr ""
 #. module: crm
 #: help:crm.lead,source_id:0
 #: help:crm.lead.report,source_id:0
+#: help:crm.opportunity.report,source_id:0
 #: help:crm.tracking.mixin,source_id:0
 msgid ""
 "This is the source of the link Ex: Search Engine, another domain, or name of "
@@ -2914,7 +3000,7 @@ msgid "To Do"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:392
+#: code:addons/crm/crm_lead.py:393
 #, python-format
 msgid ""
 "To relieve your sales pipe and group all Lost opportunities, configure one "
@@ -2925,7 +3011,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:412
+#: code:addons/crm/crm_lead.py:413
 #, python-format
 msgid ""
 "To relieve your sales pipe and group all Won opportunities, configure one of "
@@ -2947,6 +3033,17 @@ msgid "Tools"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_top_opportunities
+msgid "Top Opportunities"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,planned_revenue:0
+#: field:crm.opportunity.report,total_revenue:0
+msgid "Total Revenue"
+msgstr ""
+
+#. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor6
 msgid "Training"
 msgstr ""
@@ -2954,14 +3051,15 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
-#: view:crm.lead.report:crm.view_report_crm_lead_filter
 #: field:crm.lead.report,type:0
+#: field:crm.opportunity.report,type:0
 msgid "Type"
 msgstr "Тип"
 
 #. module: crm
 #: help:crm.lead,type:0
 #: help:crm.lead.report,type:0
+#: help:crm.opportunity.report,type:0
 msgid "Type is used to separate Leads and Opportunities"
 msgstr ""
 
@@ -3005,6 +3103,7 @@ msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,user_id:0
+#: field:crm.opportunity.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
 msgstr "Потребител"
@@ -3032,22 +3131,24 @@ msgstr "Стойност"
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
 msgid "Very High"
 msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
 msgid "Very Low"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:391
-#: code:addons/crm/crm_lead.py:411
-#: code:addons/crm/crm_lead.py:601
-#: code:addons/crm/crm_lead.py:730
+#: code:addons/crm/crm_lead.py:392
+#: code:addons/crm/crm_lead.py:412
+#: code:addons/crm/crm_lead.py:633
+#: code:addons/crm/crm_lead.py:760
 #: code:addons/crm/crm_phonecall.py:291
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:120
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -3067,6 +3168,7 @@ msgstr "Помощник"
 #: model:crm.case.stage,name:crm.stage_lead6
 #: view:crm.lead:crm.view_crm_case_opportunities_filter
 #: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
 msgid "Won"
 msgstr ""
 
@@ -3076,7 +3178,7 @@ msgid "Working Time"
 msgstr "Работно време"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:429
+#: code:addons/crm/crm_lead.py:430
 #, python-format
 msgid ""
 "You are already at the top level of your sales-team category.\n"
@@ -3084,7 +3186,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/base_partner_merge.py:440
+#: code:addons/crm/base_partner_merge.py:446
 #, python-format
 msgid "You have to specify a filter for your selection"
 msgstr ""
@@ -3106,13 +3208,13 @@ msgid "e.g. Call for proposal"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:932
+#: code:addons/crm/crm_lead.py:962
 #, python-format
 msgid "lead"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:90
+#: code:addons/crm/crm_lead.py:91
 #, python-format
 msgid "leads"
 msgstr ""
@@ -3128,13 +3230,19 @@ msgid "oe_kanban_text_red"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:930
+#: code:addons/crm/crm_lead.py:960
 #, python-format
 msgid "opportunity"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1030
+#: code:addons/crm/crm_lead.py:1060
 #, python-format
 msgid "unknown"
 msgstr "неизвестен"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Планирани приходи"
+
+#~ msgid "Team"
+#~ msgstr "Екип"

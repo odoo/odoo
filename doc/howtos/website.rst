@@ -1,16 +1,14 @@
 .. queue:: website/series
 
 ==================
-Building a website
+Building a Website
 ==================
 
 .. warning::
 
     * This guide assumes `basic knowledge of Python
       <http://docs.python.org/2/tutorial/>`_
-    * This guide assumes an installed Odoo
-    * For production deployment, see the :ref:`dedicated deployment guides
-      <guides/deployment>`
+    * This guide assumes :ref:`an installed Odoo <setup/install>`
 
 Creating a basic module
 =======================
@@ -144,7 +142,7 @@ First define an Odoo model file and import it:
 .. patch::
 
 Then setup :ref:`basic access control <reference/security/acl>` for the model
-and and add them to the manifest:
+and add them to the manifest:
 
 .. patch::
 
@@ -213,7 +211,7 @@ integration and a few other services (e.g. default styling, theming) via the
 #. then add the ``website=True`` flag on the controller, this sets up a few
    new variables on :ref:`the request object <reference/http/request>` and
    allows using the website layout in our template
-#. use the wesite layout in the template
+#. use the website layout in the template
 
 .. patch::
 
@@ -280,11 +278,12 @@ then change the list of model to link to our new controller:
 
 .. patch::
 
-You can now visit each teacher's page. Try adding blocks to a teacher's page
-to write his biography, then go to an other teacher's page… your biography
-is shared between all teachers, because blocks are added to the *template*,
-and the *biography* template is shared between all teachers, when one page
-is edited they're all edited at the same time.
+Restart Odoo and upgrade the module, then you can visit each teacher's page.
+As an exercise, try adding blocks to a teacher's page to write a biography,
+then go to another teacher's page and so forth. You will discover, that your
+biography is shared between all teachers, because blocks are added to the
+*template*, and the *biography* template is shared between all teachers, when
+one page is edited they're all edited at the same time.
 
 Field edition
 =============
@@ -306,10 +305,10 @@ interfaces. Change the *person* template to use ``t-field``:
 
 .. patch::
 
-Restart Odoo, there is now a placeholder under the teacher's name and a new
-zone for blocks in :guilabel:`Edit` mode. Content dropped there is stored in
-the correspoding teacher's ``biography`` field, and thus specific to that
-teacher.
+Restart Odoo and upgrade the module, there is now a placeholder under the
+teacher's name and a new zone for blocks in :guilabel:`Edit` mode. Content
+dropped there is stored in the corresponding teacher's ``biography`` field, and
+thus specific to that teacher.
 
 The teacher's name is also editable, and when saved the change is visible on
 the index page.
@@ -345,7 +344,7 @@ The conceptual structure of the Odoo backend is simple:
 #. actions. Actions have various types: links, reports, code which Odoo should
    execute or data display. Data display actions are called *window actions*,
    and tell Odoo to display a given *model* according to a set of views…
-#. a view has a type, a the broad category to which it corresponds (a list,
+#. a view has a type, a broad category to which it corresponds (a list,
    a graph, a calendar) and an *architecture* which customises the way the
    model is displayed inside the view.
 
@@ -361,10 +360,10 @@ Let's create a menu for our model:
 .. patch::
 
 then accessing http://localhost:8069/web/ in the top left should be a menu
-:guilabel:`Academy` (which is selected by default, as it is the first menu),
-selected by default and having opened a listing of teachers. From the listing
-it is possible to :guilabel:`Create` new teacher records, and to switch to
-the "form" by-record view.
+:guilabel:`Academy`, which is selected by default, as it is the first menu,
+and having opened a listing of teachers. From the listing it is possible to
+:guilabel:`Create` new teacher records, and to switch to the "form" by-record
+view.
 
 If there is no definition of how to present records (a
 :ref:`view <reference/views>`) Odoo will automatically create a basic one
@@ -458,8 +457,8 @@ though they may have to be looked for.
     * to extend a model in-place, it's :attr:`inherited
       <openerp.models.Model._inherit>` without giving it a new
       :attr:`~openerp.models.Model._name`
-    * ``product.template`` already uses the discussions system, so we don't
-      can remove it from our extension model
+    * ``product.template`` already uses the discussions system, so we can
+      remove it from our extension model
     * we're creating our courses as *published* by default so they can be
       seen without having to log in
 
@@ -500,18 +499,17 @@ Altering view architectures is done in 3 steps:
 
 The second thing we will change is making the product categories sidebar
 visible by default: :menuselection:`Customize --> Product Categories` lets
-you toggle a tree of product categories (used to filter the main dispay) on
+you toggle a tree of product categories (used to filter the main display) on
 and off.
 
-This is done via the *optional application* of extension templates: an
-extension template (such as the one we've just created) can be
-"always applied", "optional and enabled" or "optional and disabled". The
-latter two will display the view in the :guilabel:`Customize` menu with a
-check box, allowing administrators to enable or disable them (and easily
-customize their website pages).
+This is done via the ``customize_show`` and ``active`` fields of extension
+templates: an extension template (such as the one we've just created) can be
+*customize_show=True*. This choice will display the view in the :guilabel:`Customize`
+menu with a check box, allowing administrators to activate or disable them
+(and easily customize their website pages).
 
 We simply need to modify the *Product Categories* record and set its default
-to ``enabled``:
+to *active="True"*:
 
 .. patch::
 

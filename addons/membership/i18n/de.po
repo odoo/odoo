@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-10-06 06:23+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:26+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-07 07:03+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: membership
 #: field:report.membership,num_invoiced:0
@@ -81,7 +82,7 @@ msgstr "Zugehöriger Partner"
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr "Basismitgliedschaft"
+msgstr "Basis-Mitglied"
 
 #. module: membership
 #: view:res.partner:membership.view_partner_form
@@ -137,13 +138,13 @@ msgstr "Kontakte"
 #: field:membership.invoice,create_uid:0
 #: field:membership.membership_line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Erstellt durch"
 
 #. module: membership
 #: field:membership.invoice,create_date:0
 #: field:membership.membership_line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
@@ -154,7 +155,7 @@ msgstr "Aktueller Mitgliedschaftsstatus"
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current Membership Status"
-msgstr "Aktueller Mitgliedsschaftsstatus"
+msgstr "Aktueller Status"
 
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
@@ -165,11 +166,6 @@ msgstr "Kunden"
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Customers"
 msgstr "Kunden"
-
-#. module: membership
-#: view:report.membership:membership.view_report_membership_search
-msgid "Date"
-msgstr ""
 
 #. module: membership
 #: help:product.template,membership_date_from:0
@@ -185,7 +181,7 @@ msgstr "Eintrittsdatum des Mitglied"
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr "Datum an dem die Mitgliedschaft gekündigt wurde."
+msgstr "Datum an dem die Mitgliedschaft gekündigt wurde"
 
 #. module: membership
 #: help:product.template,membership_date_to:0
@@ -211,7 +207,7 @@ msgstr "Ende Mitgliedschaft am"
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr ""
+msgstr "Bis Monat"
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -221,7 +217,7 @@ msgstr "Ende Mitgliedschaft"
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Ending Month Of Membership"
-msgstr ""
+msgstr "Ende der Mitgliedschaft"
 
 #. module: membership
 #: sql_constraint:product.template:0
@@ -256,7 +252,7 @@ msgstr "Prognose"
 #: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr "Freie Mitglieder"
+msgstr "Freiwilliges Mitglied"
 
 #. module: membership
 #: field:membership.membership_line,date_from:0
@@ -266,18 +262,18 @@ msgstr "Von"
 #. module: membership
 #: view:product.template:membership.membership_product_search_form_view
 msgid "From Month"
-msgstr ""
+msgstr "Von Monat"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
 msgid "Gold Membership"
-msgstr ""
+msgstr "Gold-Mitglied"
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr ""
+msgstr "Gruppierung"
 
 #. module: membership
 #: view:product.template:membership.membership_product_search_form_view
@@ -289,7 +285,7 @@ msgstr "Gruppierung..."
 #: field:membership.membership_line,id:0
 #: field:report.membership,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: membership
 #: view:product.template:membership.membership_product_search_form_view
@@ -337,6 +333,14 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Zeigt den Mitgliedschaftsstatuts:\n"
+"- Kein Mitglied: Partner, der keine Mitgliedschaft beantragt hat.\n"
+"- Gekündigtes Mitglied: Mitglied, das seine Mitgliedschaft gekündigt hat.\n"
+"- Ehemaliges Mitglied: Mitglied, dessen Mitgliedschaft abgelaufen ist.\n"
+"- Wartendes Mitglied: Mitglied, der eine Mitgliedschaft beantragt hat und "
+"dessen Rechnung erzeugt wird.\n"
+"- Abgerechnetes Mitglied: Mitglied, dessen Rechnung angelegt wurde.\n"
+"- Zahlendes Mitglied: Mitglied, der seinen Mitgliedsbeitrag bezahlt hat."
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -356,18 +360,13 @@ msgid ""
 "amount."
 msgstr ""
 "Zeigt den Mitgliedschaftsstatuts:\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Kein Mitglied: Partner, der keine "
-"Mitgliedschaft beantragt hat.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Gekündigetes Mitglied: Mitglied, das seine "
-"Mitgliedschaft gekündigt hat.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Ehemaliges Mitglied: Mitglied, dessen "
-"Mitgliedschaft abgelaufen ist.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Wartendes Mitglied: Mitglied, der eine "
-"Mitgliedschaft beantragt hat und dessen Rechnung erzeugt wird.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Abgrechnetes Mitglied: Mitglied, dessen "
-"Rechnung angelegt wurde.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Zahlendes Mitglied: Mitglied, das seinen "
-"Mitgliedsbeitrag bezahlt hat."
+"- Kein Mitglied: Partner, der keine Mitgliedschaft beantragt hat.\n"
+"- Gekündigetes Mitglied: Mitglied, das seine Mitgliedschaft gekündigt hat.\n"
+"- Ehemaliges Mitglied: Mitglied, dessen Mitgliedschaft abgelaufen ist.\n"
+"- Wartendes Mitglied: Mitglied, der eine Mitgliedschaft beantragt hat und "
+"dessen Rechnung erzeugt wird.\n"
+"- Abgerechnetes Mitglied: Mitglied, dessen Rechnung angelegt wurde.\n"
+"- Zahlendes Mitglied: Mitglied, das seinen Mitgliedsbeitrag bezahlt hat."
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -378,13 +377,13 @@ msgstr "Datum Beitritt"
 #: field:membership.invoice,write_uid:0
 #: field:membership.membership_line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: membership
 #: field:membership.invoice,write_date:0
 #: field:membership.membership_line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: membership
 #: field:report.membership,partner_id:0
@@ -413,7 +412,7 @@ msgstr "Mitglieder"
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Members Analysis"
-msgstr "Mitgliederanalyse"
+msgstr "Statistik Mitgliederzahlen"
 
 #. module: membership
 #: field:membership.invoice,product_id:0
@@ -507,6 +506,11 @@ msgid "Memberships"
 msgstr "Mitgliedschaft"
 
 #. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Month"
+msgstr "Monat"
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -561,6 +565,11 @@ msgid "Product Template"
 msgstr "Produkt Vorlage"
 
 #. module: membership
+#: field:report.membership,quantity:0
+msgid "Quantity"
+msgstr "Anzahl"
+
+#. module: membership
 #: view:report.membership:membership.view_report_membership_search
 msgid "Revenue Done"
 msgstr "Generierter Umsatz"
@@ -580,7 +589,7 @@ msgstr "Zur Vergabe freier Mitgliedschaft aktivieren"
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr "Silber-Mitgliedschaft"
+msgstr "Silber-Mitglied"
 
 #. module: membership
 #: field:report.membership,start_date:0
@@ -590,12 +599,12 @@ msgstr "Von Datum"
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Start Month"
-msgstr ""
+msgstr "Start Monat"
 
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "Starting Month Of Membership"
-msgstr ""
+msgstr "Monat in dem die Mitgliedschaft beginnt"
 
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter

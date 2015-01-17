@@ -370,12 +370,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         var inline = action.target === 'inline' || action.target === 'inlineview';
+        var form = _.str.startsWith(action.view_mode, 'form');
         action.flags = _.defaults(action.flags || {}, {
             views_switcher : !popup && !inline,
             search_view : !popup && !inline,
             action_buttons : !popup && !inline,
             sidebar : !popup && !inline,
-            pager : !popup && !inline,
+            pager : (!popup || !form) && !inline,
             display_title : !popup,
             search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
         });
@@ -410,7 +411,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            var pre_dialog = this.dialog;
+            var pre_dialog = (this.dialog && !this.dialog.isDestroyed()) ? this.dialog : null;
             if (pre_dialog){
                 // prevent previous dialog to consider itself closed,
                 // right now, as we're opening a new one (prevents
@@ -673,15 +674,13 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
-                if (controller) {
-                    var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
-                    if (view_name === view_type) {
-                        container.show();
-                        controller.do_show(view_options || {});
-                    } else {
-                        container.hide();
-                        controller.do_hide();
-                    }
+                var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
+                if (view_name === view_type) {
+                    container.show();
+                    if (controller) controller.do_show(view_options || {});
+		} else {
+                    container.hide();
+                    if (controller) controller.do_hide();
                 }
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
@@ -1548,15 +1547,7 @@ instance.web.View = instance.web.Widget.extend({
     do_switch_view: function() {
         this.trigger.apply(this, ['switch_mode'].concat(_.toArray(arguments)));
     },
-    /**
-     * Cancels the switch to the current view, switches to the previous one
-     *
-     * @param {Object} [options]
-     * @param {Boolean} [options.created=false] resource was created
-     * @param {String} [options.default=null] view to switch to if no previous view
-     */
-
-    do_search: function(view) {
+    do_search: function(domain, context, group_by) {
     },
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();

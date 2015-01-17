@@ -24,6 +24,7 @@ _logger = logging.getLogger(__name__)
 def fragment_to_query_string(func):
     @functools.wraps(func)
     def wrapper(self, *a, **kw):
+        kw.pop('debug', False)
         if not kw:
             return """<html><head><script>
                 var l = window.location;
@@ -69,9 +70,9 @@ class OAuthLogin(Home):
         return providers
 
     def get_state(self, provider):
-        redirect = request.params.get('redirect', 'web')
+        redirect = request.params.get('redirect') or 'web'
         if not redirect.startswith(('//', 'http://', 'https://')):
-            redirect = '%s%s' % (request.httprequest.url_root, redirect)
+            redirect = '%s%s' % (request.httprequest.url_root, redirect[1:] if redirect[0] == '/' else redirect)
         state = dict(
             d=request.session.db,
             p=provider['id'],

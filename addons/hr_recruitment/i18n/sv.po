@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"PO-Revision-Date: 2014-09-09 07:10+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@dermanord.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:15+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:13+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: hr_recruitment
 #: view:hr.job:hr_recruitment.hr_job_survey
@@ -142,6 +142,19 @@ msgid ""
 "              </p>\n"
 "         "
 msgstr ""
+"<p>\n"
+"                 Odoo hjälper dig att organisera de sökande i rekryterings- "
+"\n"
+"                 processen och följa upp all verksamhet: möten, intervjuer, "
+"etc. \n"
+"              </p><p>\n"
+"                Sökande och deras bifogade CV skapas automatiskt när ett "
+"email skickas in. \n"
+"                 Om du installerar Dokumenthanteringsmodulerna indexeras "
+"alla meritförteckningar automatiskt, \n"
+"                 så att du enkelt kan söka igenom dess innehåll. \n"
+"              </p>\n"
+"         "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -159,6 +172,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                 Odoo hjälper dig att organisera de sökande i rekryterings- "
+"\n"
+"                 processen och följa upp all verksamhet: möten, intervjuer, "
+"etc. \n"
+"              </p><p>\n"
+"                Sökande och deras bifogade CV skapas automatiskt när ett "
+"email skickas in. \n"
+"                 Om du installerar Dokumenthanteringsmodulerna indexeras "
+"alla meritförteckningar automatiskt, \n"
+"                 så att du enkelt kan söka igenom dess innehåll. \n"
+"              </p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:survey.page,description:hr_recruitment.recruitment_1
@@ -180,7 +206,7 @@ msgid ""
 "        If I do not answer, please let me a message with some schedules to "
 "call you back.</p>\n"
 "        <p>Kind regards,</p>\n"
-"        <br>\n"
+"        <br/>\n"
 "         ${object.user_id.signature | safe}"
 msgstr ""
 
@@ -195,7 +221,7 @@ msgid ""
 "        campaign has reached its term.</p>\n"
 "        <p>If you want more details, feel free to contact us by phone.</p>\n"
 "        <p>Kind regards,</p>\n"
-"        <br>\n"
+"        <br/>\n"
 "         ${object.user_id and object.user_id.signature | safe or ''}"
 msgstr ""
 
@@ -290,7 +316,7 @@ msgid "Applicant's Name"
 msgstr "Sökandes namn"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:92
+#: code:addons/hr_recruitment/hr_recruitment.py:93
 #: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
 #: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
 #, python-format
@@ -475,14 +501,14 @@ msgid "Company Website"
 msgstr "Företagets webbplats"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:374
+#: code:addons/hr_recruitment/hr_recruitment.py:377
 #: field:hr.applicant,partner_id:0
 #, python-format
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:376
+#: code:addons/hr_recruitment/hr_recruitment.py:379
 #, python-format
 msgid "Contact Email"
 msgstr "Kontaktpersonens e-postadress"
@@ -553,10 +579,15 @@ msgid "Created on"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 #: field:hr.applicant,create_date:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 msgid "Creation Date"
 msgstr "Skapad datum"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Creation Week"
+msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_last_post:0
@@ -602,7 +633,6 @@ msgstr ""
 #: field:hr.applicant,type_id:0
 #: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
 #: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -711,6 +741,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"E-post alias för denna befattning. Nya inkommande e-postmeddelanden kommer "
+"automatiskt att skapa nya sökande till denna befattning."
 
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
@@ -984,7 +1016,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,last_stage_id:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,last_stage_id:0
 msgid "Last Stage"
 msgstr ""
@@ -992,7 +1023,6 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 #: field:hr.applicant,date_last_stage_update:0
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,date_last_stage_update:0
 msgid "Last Stage Update"
 msgstr ""
@@ -1039,6 +1069,10 @@ msgid ""
 "management  module in order to allow you to search using specific keywords "
 "through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
+"Hantera dina CVn och personliga brev med anknytning till alla sökande. \n"
+"-Detta Installerar modulen document_ftp. Detta installerar "
+"kunskapshanteringsmodulen så att du kan söka med specifika sökord genom "
+"innehållet i alla dokument (PDF, docx ...)"
 
 #. module: hr_recruitment
 #: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
@@ -1049,13 +1083,6 @@ msgstr ""
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
 msgstr "Magisterexamen"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
-msgid ""
-"Match this group by with a specific stage filter in order to analyse the "
-"recruitment process"
-msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.crm_case_form_view_job
@@ -1115,7 +1142,7 @@ msgid "New Applicant"
 msgstr "Ny sökande"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:496
+#: code:addons/hr_recruitment/hr_recruitment.py:504
 #, python-format
 msgid "New Employee %s Hired"
 msgstr ""
@@ -1126,8 +1153,8 @@ msgid "New Mail"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:414
-#: code:addons/hr_recruitment/hr_recruitment.py:441
+#: code:addons/hr_recruitment/hr_recruitment.py:421
+#: code:addons/hr_recruitment/hr_recruitment.py:449
 #, python-format
 msgid "New application from %s"
 msgstr ""
@@ -1148,7 +1175,7 @@ msgid "Next Actions"
 msgstr "Nästa åtgärd"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:388
+#: code:addons/hr_recruitment/hr_recruitment.py:391
 #, python-format
 msgid "No Subject"
 msgstr "Inget ämne"
@@ -1184,7 +1211,6 @@ msgid "Office location"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Företag"
@@ -1369,7 +1395,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
-msgstr ""
+msgstr "Sök bland Sökande"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1606,7 +1632,7 @@ msgid "Very important"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:499
+#: code:addons/hr_recruitment/hr_recruitment.py:507
 #, python-format
 msgid "Warning!"
 msgstr "Varning!"
@@ -1642,7 +1668,7 @@ msgid "Word of Mouth"
 msgstr "Muntliga rykten"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:499
+#: code:addons/hr_recruitment/hr_recruitment.py:507
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1658,10 +1684,10 @@ msgid "e.g. Call for interview"
 msgstr "eg Kalla till intervju"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:512
+#: code:addons/hr_recruitment/hr_recruitment.py:520
 #, python-format
 msgid "job applicants"
-msgstr ""
+msgstr "Jobbsökande"
 
 #. module: hr_recruitment
 #: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant

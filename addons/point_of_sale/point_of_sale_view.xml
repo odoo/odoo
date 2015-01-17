@@ -496,7 +496,7 @@
             <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
                 <tree string="Product Product Categories">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -546,6 +546,24 @@
                         <field name="expense_pdt"/>
                     </group>
                 </group>
+            </field>
+        </record>
+        <record id="product_template_form_view_inherit_ean" model="ir.ui.view">
+            <field name="name">product.template.only.form.inherit.ean</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <field name="ean13" position="after">
+                    <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN"
+                            attrs="{'invisible': [('product_variant_count', '>', 1)]}" class="oe_link oe_edit_only"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_normal_form_view_inherit_ean" model="ir.ui.view">
+            <field name="name">product.form.inherit.ean</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
                 <field name="ean13" position="after">
                     <button colspan="2" name="%(action_edit_ean)d" type="action" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
@@ -655,7 +673,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
-                        <field name="journal_ids" colspan="4" nolabel="1">
+                        <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1}">
                             <tree string="Journals">
                                 <field name="code" />
                                 <field name="name" />
@@ -681,7 +699,7 @@
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" placeholder="A custom receipt header footage"/>
+                            <field name="receipt_footer" placeholder="A custom receipt footer message"/>
                         </group>
                         <group string="Barcode Types" col="1">
                             <p>

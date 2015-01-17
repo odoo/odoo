@@ -85,10 +85,15 @@ class Discussion(models.Model):
         'test_new_api_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users')
     messages = fields.One2many('test_new_api.message', 'discussion')
+    message_changes = fields.Integer(string='Message changes')
 
     @api.onchange('moderator')
     def _onchange_moderator(self):
         self.participants |= self.moderator
+
+    @api.onchange('messages')
+    def _onchange_messages(self):
+        self.message_changes = len(self.messages)
 
 
 class Message(models.Model):
@@ -101,7 +106,7 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name', readonly=True)
+    discussion_name = fields.Char(related='discussion.name')
 
     @api.one
     @api.constrains('author', 'discussion')
@@ -112,7 +117,7 @@ class Message(models.Model):
     @api.one
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
-        self.name = "[%s] %s" % (self.discussion.name or '', self.author.name)
+        self.name = "[%s] %s" % (self.discussion.name or '', self.author.name or '')
 
     @api.one
     @api.depends('author.name', 'discussion.name', 'body')

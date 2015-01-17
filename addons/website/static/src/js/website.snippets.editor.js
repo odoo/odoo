@@ -155,7 +155,7 @@
             website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                website.snippet.start_animation();
+                website.snippet.start_animation(true);
                 $("#wrapwrap *").off('mousedown mouseup click');
             });
 
@@ -972,7 +972,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, .content>.row, [data-slide]').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content.row, [data-slide]').attr('contentEditable', 'true');
         },
         clean_for_save: function () {
             this._super();
@@ -1003,7 +1003,19 @@
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
-            var $clone = this.$target.find(".item.active").clone();
+            // clone the best candidate from template to use new features
+            var $snippets = this.BuildingBlock.$snippets.find('.oe_snippet_body.carousel');
+            var point = 0;
+            var selection;
+            var className = _.compact(this.$target.attr("class").split(" "));
+            $snippets.each(function () {
+                var len = _.intersection(_.compact(this.className.split(" ")), className).length;
+                if (len > point) {
+                    point = len;
+                    selection = this;
+                }
+            });
+            var $clone = $(selection).find('.item:first').clone();
 
             // insert
             $clone.removeClass('active').insertAfter($active);
@@ -1115,10 +1127,10 @@
             var self = this;
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
-
-            this.$target.find('.carousel-image, .carousel-inner .content > div').attr('contentEditable', 'true');
-            this.$target.find('.carousel-image').attr('attributeEditable', 'true');
             this._super();
+
+            /* Fix: backward compatibility saas-3 */
+            this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
         },
     });
 
@@ -1485,10 +1497,11 @@
             this.$target.transfo({
                 hide: true,
                 callback: function () {
-                    var pos = $(this).data("transfo").$center.offset();
+                    var center = $(this).data("transfo").$markup.find('.transfo-scaler-mc').offset();
+                    var $option = self.$overlay.find('.btn-group:first');
                     self.$overlay.css({
-                        'top': pos.top,
-                        'left': pos.left,
+                        'top': center.top - $option.height()/2,
+                        'left': center.left,
                         'position': 'absolute',
                     });
                     self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");

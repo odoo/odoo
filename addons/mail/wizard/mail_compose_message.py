@@ -73,6 +73,9 @@ class mail_compose_message(osv.TransientModel):
         result['res_id'] = result.get('res_id', context.get('active_id'))
         result['parent_id'] = result.get('parent_id', context.get('message_id'))
 
+        if not result['model'] or not self.pool.get(result['model']) or not hasattr(self.pool[result['model']], 'message_post'):
+            result['no_auto_thread'] = True
+
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
         if result['composition_mode'] == 'reply':
             result['composition_mode'] = 'comment'
@@ -221,7 +224,9 @@ class mail_compose_message(osv.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
-            sliced_res_ids = [res_ids[i:i + self._batch_size] for i in range(0, len(res_ids), self._batch_size)]
+            batch_size = int(self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'mail.batch_size')) or self._batch_size
+
+            sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
             for res_ids in sliced_res_ids:
                 all_mail_values = self.get_mail_values(cr, uid, wizard, res_ids, context=context)
                 for res_id, mail_values in all_mail_values.iteritems():

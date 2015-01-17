@@ -39,7 +39,7 @@ Additional features
 -------------------
 
 * versions switcher, uses the ``canonical_root`` setting and an additional
-  ``versions`` setting which should be a space-separated list of available
+  ``versions`` setting which should be a comma-separated list of available
   versions. Appends the each version and page name to the root, and displays
   a list of those links on the current page
 * canonical urls, requires a ``canonical_root`` setting value, and optionally

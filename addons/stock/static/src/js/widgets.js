@@ -471,12 +471,14 @@ function openerp_picking_widgets(instance){
             return new instance.web.Model('stock.picking.type').get_func('search_read')([],[])
                 .then(function(types){
                     self.picking_types = types;
+                    type_ids = [];
                     for(var i = 0; i < types.length; i++){
                         self.pickings_by_type[types[i].id] = [];
+                        type_ids.push(types[i].id);
                     }
                     self.pickings_by_type[0] = [];
 
-                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']]], [] ], {context: new instance.web.CompoundContext()});
+                    return new instance.web.Model('stock.picking').call('search_read',[ [['state','in', ['assigned', 'partially_available']], ['picking_type_id', 'in', type_ids]], [] ], {context: new instance.web.CompoundContext()});
 
                 }).then(function(pickings){
                     self.pickings = pickings;
@@ -484,7 +486,7 @@ function openerp_picking_widgets(instance){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);
                         self.pickings_by_id[picking.id] = picking;
-                        self.picking_search_string += '' + picking.id + ':' + picking.name.toUpperCase() + '\n'
+                        self.picking_search_string += '' + picking.id + ':' + (picking.name ? picking.name.toUpperCase(): '') + '\n';
                     }
 
                 });
@@ -669,7 +671,7 @@ function openerp_picking_widgets(instance){
                     .call('read',[[parseInt(picking_id)], [], new instance.web.CompoundContext()])
                     .then(function(picking){
                         self.picking = picking[0];
-
+                        self.picking_type_id = picking[0].picking_type_id[0];
                         return load_picking_list(self.picking.picking_type_id[0]);
                     });
             }else{
@@ -841,7 +843,7 @@ function openerp_picking_widgets(instance){
         scan: function(ean){ //scans a barcode, sends it to the server, then reload the ui
             var self = this;
             var product_visible_ids = this.picking_editor.get_visible_ids();
-            new instance.web.Model('stock.picking')
+            return new instance.web.Model('stock.picking')
                 .call('process_barcode_from_ui', [self.picking.id, ean, product_visible_ids])
                 .then(function(result){
                     if (result.filter_loc !== false){
@@ -866,7 +868,7 @@ function openerp_picking_widgets(instance){
         },
         scan_product_id: function(product_id,increment,op_id){ //performs the same operation as a scan, but with product id instead
             var self = this;
-            new instance.web.Model('stock.picking')
+            return new instance.web.Model('stock.picking')
                 .call('process_product_id_from_ui', [self.picking.id, product_id, op_id, increment])
                 .then(function(result){
                     return self.refresh_ui(self.picking.id);
@@ -876,9 +878,10 @@ function openerp_picking_widgets(instance){
             var self = this;
             var pack_op_ids = self.picking_editor.get_current_op_selection(false);
             if (pack_op_ids.length !== 0){
-                new instance.web.Model('stock.picking')
+                return new instance.web.Model('stock.picking')
                     .call('action_pack',[[[self.picking.id]], pack_op_ids])
-                    .then(function(){
+                    .then(function(pack){
+                        //TODO: the functionality using current_package_id in context is not needed anymore
                         instance.session.user_context.current_package_id = false;
                         return self.refresh_ui(self.picking.id);
                     });
@@ -888,7 +891,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             var pack_op_ids = self.picking_editor.get_current_op_selection(true);
             if (pack_op_ids.length !== 0){
-                new instance.web.Model('stock.pack.operation')
+                return new instance.web.Model('stock.pack.operation')
                     .call('action_drop_down', [pack_op_ids])
                     .then(function(){
                             return self.refresh_ui(self.picking.id).then(function(){
@@ -901,7 +904,7 @@ function openerp_picking_widgets(instance){
         },
         done: function(){
             var self = this;
-            new instance.web.Model('stock.picking')
+            return new instance.web.Model('stock.picking')
                 .call('action_done_from_ui',[self.picking.id, {'default_picking_type_id': self.picking_type_id}])
                 .then(function(new_picking_ids){
                     if (new_picking_ids){
@@ -914,7 +917,7 @@ function openerp_picking_widgets(instance){
         },
         create_lot: function(op_id, lot_name){
             var self = this;
-            new instance.web.Model('stock.pack.operation')
+            return new instance.web.Model('stock.pack.operation')
                 .call('create_and_assign_lot',[parseInt(op_id), lot_name])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
@@ -926,7 +929,7 @@ function openerp_picking_widgets(instance){
             if (is_src_dst){
                 vals = {'location_id': loc_id};
             }
-            new instance.web.Model('stock.pack.operation')
+            return new instance.web.Model('stock.pack.operation')
                 .call('write',[op_id, vals])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
@@ -934,7 +937,7 @@ function openerp_picking_widgets(instance){
         },
         print_package: function(package_id){
             var self = this;
-            new instance.web.Model('stock.quant.package')
+            return new instance.web.Model('stock.quant.package')
                 .call('action_print',[[package_id]])
                 .then(function(action){
                     return self.do_action(action);
@@ -942,9 +945,9 @@ function openerp_picking_widgets(instance){
         },
         print_picking: function(){
             var self = this;
-            new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
+            return new instance.web.Model('stock.picking.type').call('read', [[self.picking_type_id], ['code'], new instance.web.CompoundContext()])
                 .then(function(pick_type){
-                    new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
+                    return new instance.web.Model('stock.picking').call('do_print_picking',[[self.picking.id]])
                            .then(function(action){
                                 return self.do_action(action);
                            });
@@ -974,9 +977,9 @@ function openerp_picking_widgets(instance){
         },
         delete_package_op: function(pack_id){
             var self = this;
-            new instance.web.Model('stock.pack.operation').call('search', [[['result_package_id', '=', pack_id]]])
+            return new instance.web.Model('stock.pack.operation').call('search', [[['result_package_id', '=', pack_id]]])
                 .then(function(op_ids) {
-                    new instance.web.Model('stock.pack.operation').call('write', [op_ids, {'result_package_id':false}])
+                    return new instance.web.Model('stock.pack.operation').call('write', [op_ids, {'result_package_id':false}])
                         .then(function() {
                             return self.refresh_ui(self.picking.id);
                         });
@@ -985,7 +988,7 @@ function openerp_picking_widgets(instance){
         set_operation_quantity: function(quantity, op_id){
             var self = this;
             if(quantity >= 0){
-                new instance.web.Model('stock.pack.operation')
+                return new instance.web.Model('stock.pack.operation')
                     .call('write',[[op_id],{'qty_done': quantity }])
                     .then(function(){
                         self.refresh_ui(self.picking.id);
@@ -995,13 +998,13 @@ function openerp_picking_widgets(instance){
         },
         set_package_pack: function(package_id, pack){
             var self = this;
-                new instance.web.Model('stock.quant.package')
+                return new instance.web.Model('stock.quant.package')
                     .call('write',[[package_id],{'ul_id': pack }]);
             return;
         },
         reload_pack_operation: function(){
             var self = this;
-            new instance.web.Model('stock.picking')
+            return new instance.web.Model('stock.picking')
                 .call('do_prepare_partial',[[self.picking.id]])
                 .then(function(){
                     self.refresh_ui(self.picking.id);

@@ -104,7 +104,7 @@
                             domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field name="partner_mobile"/>
                         <field name="priority" widget="priority"/>
-                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)"/>
+                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)" context="{'opportunity_id': opportunity_id}"/>
                     </group>
                     <field name="description" placeholder="Description..."/>
                 </sheet>
@@ -177,7 +177,7 @@
                 <filter string="My Team" domain="[('section_id.user_id', '=', uid)]"/>
                 <filter string="Unassigned" domain="[('user_id','=',False)]"/>
                 <separator/>
-                <filter string="To Do" name="current" domain="[('state','=','open')]"/>
+                <filter string="To Do" name="current" domain="[('state','in',('open','pending'))]"/>
                 <separator/>
                 <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>

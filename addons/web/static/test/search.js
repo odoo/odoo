@@ -629,7 +629,7 @@ openerp.testing.section('search.completions', {
             dataset: {get_context: function () { return {flag: 1}; }}
         };
         var f = new instance.web.search.ManyToOneField(
-            {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
+            {attrs: {string: 'Dummy', domain: [["foo", "=", "bar"]]}},
             {relation: 'dummy.model'}, view);
         return f.expand("bob");
     });

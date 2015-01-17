@@ -42,6 +42,5 @@ SUNAT 2011 (PCGE 2010).
     'demo': [],
     'active': False,
     'installable': True,
-    'images': ['images/config_chart_l10n_pe.jpeg','images/l10n_pe_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

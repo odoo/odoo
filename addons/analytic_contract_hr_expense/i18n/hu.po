@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-14 13:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-10-05 08:23+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 06:54+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"X-Launchpad-Export-Date: 2014-10-06 07:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: analytic_contract_hr_expense
 #: model:ir.model,name:analytic_contract_hr_expense.model_account_analytic_account
@@ -35,12 +35,12 @@ msgstr "Költségek  költségek számlázára"
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "Expenses"
-msgstr ""
+msgstr "Költségek, ráfordítások"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "Expenses and Timesheet Invoicing Ratio"
-msgstr ""
+msgstr "Költségek és Bértábla dőkimutatás számlázási arány"
 
 #. module: analytic_contract_hr_expense
 #: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:135
@@ -88,6 +88,10 @@ msgid ""
 "'invisible':[('invoice_on_timesheets','=',False), "
 "('charge_expenses','=',False)]}"
 msgstr ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], "
+"'invisible':[('invoice_on_timesheets','=',False), "
+"('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form

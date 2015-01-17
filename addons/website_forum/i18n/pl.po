@@ -7,20 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-31 20:29+0000\n"
-"Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
-"<monika.grzelak@openglobe.pl>\n"
+"POT-Creation-Date: 2014-09-23 16:28+0000\n"
+"PO-Revision-Date: 2014-09-22 13:15+0000\n"
+"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-01 09:14+0000\n"
-"X-Generator: Launchpad (build 17176)\n"
+"X-Launchpad-Export-Date: 2014-09-24 09:43+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 
 #. module: website_forum
 #: view:website:website_forum.header
-#: view:website:website_forum.post_comment
 msgid "&times;"
 msgstr "&times;"
 
@@ -220,7 +218,7 @@ msgstr "Może konwertować do komentarza"
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr "Można zagłosować w dół"
+msgstr "Można oddać głos negatywny"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
@@ -235,7 +233,7 @@ msgstr "Można odlinkować"
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr "Można zagłosować w górę"
+msgstr "Można oddać głos pozytywny"
 
 #. module: website_forum
 #: view:website:website_forum.user_badges
@@ -506,6 +504,7 @@ msgstr "Obserwatorzy"
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,forum_id:0
+#: field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
@@ -713,12 +712,12 @@ msgstr "Zdobyto karmę za nowe pytania"
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
 msgid "Karma earned for upvoting a question"
-msgstr "Zdobyto karmę za zagłosowanie w górę na pytanie"
+msgstr "Zdobyto karmę za pozytywny głos dla pytania"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Karma earned for upvoting an answer"
-msgstr "Zdobyto karmę za zagłosowanie w górę na odpowiedź"
+msgstr "Zdobyto karmę za pozytywny głos dla odpowiedzi"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
@@ -824,7 +823,7 @@ msgstr "Karma do usunięcia własnych postów"
 #: field:forum.forum,karma_downvote:0
 #: field:forum.post,karma_downvote:0
 msgid "Karma to downvote"
-msgstr "Karma do zagłosowania w dół"
+msgstr "Karma dla oddania negatywnego głosu"
 
 #. module: website_forum
 #: field:forum.post,karma_edit:0
@@ -865,12 +864,12 @@ msgstr "Karma do odlinkowania wszystkich komentarzy"
 #: field:forum.forum,karma_upvote:0
 #: field:forum.post,karma_upvote:0
 msgid "Karma to upvote"
-msgstr "Karma do zagłosowania w górę"
+msgstr "Karma dla oddania pozytywnego głosu"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Keep Informed"
-msgstr "Być na bieżąco"
+msgstr "Bądź na bieżąco"
 
 #. module: website_forum
 #: field:forum.forum,message_last_post:0
@@ -1147,6 +1146,11 @@ msgid "Posts"
 msgstr "Posty"
 
 #. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Public profile"
+msgstr ""
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
@@ -1245,7 +1249,7 @@ msgstr "Wyszukiwanie"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Search a question..."
-msgstr "Przeszukaj pytanie..."
+msgstr "Przeszukaj pytania..."
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -1255,7 +1259,7 @@ msgstr "Szukaj w poście"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr "Widzieli:"
+msgstr "Oglądano:"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -1350,6 +1354,11 @@ msgid "The question has been closed"
 msgstr "To pytanie zostało zamknięte"
 
 #. module: website_forum
+#: help:forum.post.vote,recipient_id:0
+msgid "The user receiving the vote"
+msgstr ""
+
+#. module: website_forum
 #: view:website:website_forum.private_profile
 msgid "This profile is private!"
 msgstr "Ten profil jest prywatny!"
@@ -1358,6 +1367,11 @@ msgstr "Ten profil jest prywatny!"
 #: field:forum.post,name:0
 msgid "Title"
 msgstr "Tytuł"
+
+#. module: website_forum
+#: field:forum.post.vote,recipient_id:0
+msgid "To"
+msgstr ""
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1433,7 +1447,7 @@ msgstr "Przejrzyj swoje odznaki"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "Views"
-msgstr "Widoki"
+msgstr "Odsłony"
 
 #. module: website_forum
 #: field:forum.post.vote,vote:0
@@ -1724,7 +1738,7 @@ msgstr "użytkownicy"
 #. module: website_forum
 #: view:website:website_forum.display_post
 msgid "views"
-msgstr "widoki"
+msgstr "odsłony"
 
 #. module: website_forum
 #: view:website:website_forum.display_post

@@ -131,14 +131,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         {
             model:  'res.users',
             fields: ['name','company_id'],
-            domain: function(self){ return [['id','=',self.session.uid]]; },
+            ids:    function(self){ return [self.session.uid]; },
             loaded: function(self,users){ self.user = users[0]; },
         },{ 
             model:  'res.company',
-            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' ],
-            domain: function(self){ return [['id','=',self.user.company_id[0]]]; },
+            fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id'],
+            ids:    function(self){ return [self.user.company_id[0]] },
             loaded: function(self,companies){ self.company = companies[0]; },
         },{
+            model:  'decimal.precision',
+            fields: ['name','digits'],
+            loaded: function(self,dps){
+                self.dp  = {};
+                for (var i = 0; i < dps.length; i++) {
+                    self.dp[dps[i].name] = dps[i].digits;
+                }
+            },
+        },{ 
             model:  'product.uom',
             fields: [],
             domain: null,
@@ -159,17 +168,35 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self,users){ self.users = users; },
         },{
             model:  'res.partner',
-            fields: ['name','street','city','country_id','phone','zip','mobile','email','ean13','write_date'],
-            domain: null,
+            fields: ['name','street','city','state_id','country_id','vat','phone','zip','mobile','email','ean13','write_date'],
+            domain: [['customer','=',true]],
             loaded: function(self,partners){
                 self.partners = partners;
                 self.db.add_partners(partners);
             },
         },{
+            model:  'res.country',
+            fields: ['name'],
+            loaded: function(self,countries){
+                self.countries = countries;
+                self.company.country = null;
+                for (var i = 0; i < countries.length; i++) {
+                    if (countries[i].id === self.company.country_id[0]){
+                        self.company.country = countries[i];
+                    }
+                }
+            },
+        },{
             model:  'account.tax',
-            fields: ['name','amount', 'price_include', 'type'],
+            fields: ['name','amount', 'price_include', 'include_base_amount', 'type'],
             domain: null,
-            loaded: function(self,taxes){ self.taxes = taxes; },
+            loaded: function(self,taxes){ 
+                self.taxes = taxes; 
+                self.taxes_by_id = {};
+                for (var i = 0; i < taxes.length; i++) {
+                    self.taxes_by_id[taxes[i].id] = taxes[i];
+                }
+            },
         },{
             model:  'pos.session',
             fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
@@ -210,19 +237,25 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },{
             model: 'stock.location',
             fields: [],
-            domain: function(self){ return [['id','=', self.config.stock_location_id[0]]]; },
+            ids:    function(self){ return [self.config.stock_location_id[0]]; },
             loaded: function(self, locations){ self.shop = locations[0]; },
         },{
             model:  'product.pricelist',
             fields: ['currency_id'],
-            domain: function(self){ return [['id','=',self.config.pricelist_id[0]]]; },
+            ids:    function(self){ return [self.config.pricelist_id[0]]; },
             loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
         },{
             model: 'res.currency',
             fields: ['symbol','position','rounding','accuracy'],
-            domain: function(self){ return [['id','=',self.pricelist.currency_id[0]]]; },
+            ids:    function(self){ return [self.pricelist.currency_id[0]]; },
             loaded: function(self, currencies){
                 self.currency = currencies[0];
+                if (self.currency.rounding > 0) {
+                    self.currency.decimals = Math.ceil(Math.log(1.0 / self.currency.rounding) / Math.log(10));
+                } else {
+                    self.currency.decimals = 0;
+                }
+
             },
         },{
             model: 'product.packaging',
@@ -243,7 +276,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             fields: ['display_name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 
                      'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description',
                      'product_tmpl_id'],
-            domain:  function(self){ return [['sale_ok','=',true],['available_in_pos','=',true]]; },
+            domain: [['sale_ok','=',true],['available_in_pos','=',true]],
             context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
             loaded: function(self, products){
                 self.db.add_products(products);
@@ -321,13 +354,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         c.height = height
                     var ctx = c.getContext('2d');
                         ctx.drawImage(self.company_logo,0,0, width, height);
-                    
+
                     self.company_logo_base64 = c.toDataURL();
                     logo_loaded.resolve();
                 };
                 self.company_logo.onerror = function(){
                     logo_loaded.reject();
                 };
+                    self.company_logo.crossOrigin = "anonymous";
                 self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
 
                 return logo_loaded;
@@ -352,11 +386,17 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                     var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context; 
+                    var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     progress += progress_step;
                     
+
                     if( model.model ){
-                        new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
-                            .then(function(result){
+                        if (model.ids) {
+                            var records = new instance.web.Model(model.model).call('read',[ids,fields],context);
+                        } else {
+                            var records = new instance.web.Model(model.model).query(fields).filter(domain).context(context).all()
+                        }
+                        records.then(function(result){
                                 try{    // catching exceptions in model.loaded(...)
                                     $.when(model.loaded(self,result,tmp))
                                         .then(function(){ load_model(index + 1); },
@@ -406,7 +446,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         def.reject();
                     }
-                }, function(){ def.reject(); });    
+                }, function(err,event){ event.preventDefault(); def.reject(); });    
             return def;
         },
 
@@ -670,8 +710,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = round_pr(quant, unit.rounding);
-                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    if (unit.rounding) {
+                        this.quantity    = round_pr(quant, unit.rounding);
+                        this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
+                    } else {
+                        this.quantity    = round_pr(quant, 1);
+                        this.quantityStr = this.quantity.toFixed(0);
+                    }
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -696,7 +741,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // return the unit of measure of the product
         get_unit: function(){
-            var unit_id = (this.product.uos_id || this.product.uom_id);
+            var unit_id = this.product.uom_id;
             if(!unit_id){
                 return undefined;
             }
@@ -765,16 +810,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            this.price = round_di(parseFloat(price) || 0, 2);
+            this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
             this.trigger('change',this);
         },
         get_unit_price: function(){
+            return this.price;
+        },
+        get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
-            return round_pr(this.price,rounding);
+            return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
         },
         get_display_price: function(){
-            var rounding = this.pos.currency.rounding;
-            return  round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
+            return this.get_base_price();
         },
         get_price_without_tax: function(){
             return this.get_all_prices().priceWithoutTax;
@@ -785,23 +832,37 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax: function(){
             return this.get_all_prices().tax;
         },
+        get_applicable_taxes: function(){
+            // Shenaningans because we need
+            // to keep the taxes ordering.
+            var ptaxes_ids = this.get_product().taxes_id;
+            var ptaxes_set = {};
+            for (var i = 0; i < ptaxes_ids.length; i++) {
+                ptaxes_set[ptaxes_ids[i]] = true;
+            }
+            var taxes = [];
+            for (var i = 0; i < this.pos.taxes.length; i++) {
+                if (ptaxes_set[this.pos.taxes[i].id]) {
+                    taxes.push(this.pos.taxes[i]);
+                }
+            }
+            return taxes;
+        },
         get_tax_details: function(){
             return this.get_all_prices().taxDetails;
         },
         get_all_prices: function(){
             var self = this;
             var currency_rounding = this.pos.currency.rounding;
-            var base = round_pr(this.get_quantity() * this.get_unit_price() * (1.0 - (this.get_discount() / 100.0)), currency_rounding);
+            var base = this.get_base_price();
             var totalTax = base;
             var totalNoTax = base;
             
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
-            var taxes =  self.pos.taxes;
+            var taxes = this.get_applicable_taxes();
             var taxtotal = 0;
             var taxdetail = {};
-            _.each(taxes_ids, function(el) {
-                var tax = _.detect(taxes, function(t) {return t.id === el;});
+            _.each(taxes, function(tax) {
                 if (tax.price_include) {
                     var tmp;
                     if (tax.type === "percent") {
@@ -824,7 +885,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
+
                     tmp = round_pr(tmp,currency_rounding);
+                    
+                    if (tax.include_base_amount) {
+                        base += tmp;
+                    }
+
                     taxtotal += tmp;
                     totalTax += tmp;
                     taxdetail[tax.id] = tmp;
@@ -850,21 +917,29 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.cashregister = options.cashregister;
             this.name = this.cashregister.journal_id[1];
             this.selected = false;
+            this.pos = options.pos;
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
-            this.amount = round_di(parseFloat(value) || 0, 2);
+            this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
             this.trigger('change:amount',this);
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
             return this.amount;
         },
+        get_amount_str: function(){
+            return this.amount.toFixed(this.pos.currency.decimals);
+        },
         set_selected: function(selected){
             if(this.selected !== selected){
                 this.selected = selected;
                 this.trigger('change:selected',this);
             }
+        },
+        // returns the payment type: 'cash' | 'bank'
+        get_type: function(){
+            return this.cashregister.journal.type
         },
         // returns the associated cashregister
         //exports as JSON for server communication
@@ -984,7 +1059,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         addPaymentline: function(cashregister) {
             var paymentLines = this.get('paymentLines');
-            var newPaymentline = new module.Paymentline({},{cashregister:cashregister});
+            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos:this.pos});
             if(cashregister.journal.type !== 'cash'){
                 newPaymentline.set_amount( Math.max(this.getDueLeft(),0) );
             }
@@ -1029,11 +1104,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getTaxDetails: function(){
             var details = {};
             var fulldetails = [];
-            var taxes_by_id = {};
-            
-            for(var i = 0; i < this.pos.taxes.length; i++){
-                taxes_by_id[this.pos.taxes[i].id] = this.pos.taxes[i];
-            }
 
             this.get('orderLines').each(function(line){
                 var ldetails = line.get_tax_details();
@@ -1046,7 +1116,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             for(var id in details){
                 if(details.hasOwnProperty(id)){
-                    fulldetails.push({amount: details[id], tax: taxes_by_id[id]});
+                    fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name});
                 }
             }
 

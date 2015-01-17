@@ -241,7 +241,7 @@ class stock_quant(osv.osv):
                                       'line_id': move_lines,
                                       'period_id': period_id,
                                       'date': move.date,
-                                      'ref': move.picking_id and move.picking_id.name}, context=context)
+                                      'ref': move.picking_id.name}, context=context)
 
     #def _reconcile_single_negative_quant(self, cr, uid, to_solve_quant, quant, quant_neg, qty, context=None):
     #    move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
@@ -267,7 +267,6 @@ class stock_move(osv.osv):
     def _store_average_cost_price(self, cr, uid, move, context=None):
         ''' move is a browe record '''
         product_obj = self.pool.get('product.product')
-        move.refresh()
         if any([q.qty <= 0 for q in move.quant_ids]):
             #if there is a negative quant, the standard price shouldn't be updated
             return
@@ -282,17 +281,25 @@ class stock_move(osv.osv):
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
+        tmpl_dict = {}
         for move in self.browse(cr, uid, ids, context=context):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                product_avail = product.qty_available
-                if product.qty_available <= 0:
+                prod_tmpl_id = move.product_id.product_tmpl_id.id
+                qty_available = move.product_id.product_tmpl_id.qty_available
+                if tmpl_dict.get(prod_tmpl_id):
+                    product_avail = qty_available + tmpl_dict[prod_tmpl_id]
+                else:
+                    tmpl_dict[prod_tmpl_id] = 0
+                    product_avail = qty_available
+                if product_avail <= 0:
                     new_std_price = move.price_unit
                 else:
                     # Get the standard price
                     amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
+                tmpl_dict[prod_tmpl_id] += move.product_qty
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)
 

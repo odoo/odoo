@@ -197,7 +197,7 @@
 
 <template id="layout">
     <t t-call="website.layout">
-      <div id="wrap" class="js_event">
+      <div id="wrap" class="js_event o_website_event">
         <div class="container">
             <div class="row mt8">
                 <div class="col-sm-7" id="event_menu">
@@ -404,7 +404,7 @@
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img class="img-rounded img-responsive" t-attf-src="/website/image/res.country/{{ country.id }}/image"></img>
+                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')"></img>
                         <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">

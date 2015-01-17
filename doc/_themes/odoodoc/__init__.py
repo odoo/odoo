@@ -15,6 +15,9 @@ def setup(app):
     app.add_node(exercise, html=(
         lambda self, node: self.visit_admonition(node, 'exercise'),
         lambda self, node: self.depart_admonition(node)
+    ), latex=(
+        lambda self, node: self.visit_admonition(node),
+        lambda self, node: self.depart_admonition(node)
     ))
 
 from docutils import nodes
@@ -25,3 +28,8 @@ class Exercise(admonitions.BaseAdmonition):
 
 from sphinx.locale import admonitionlabels, l_
 admonitionlabels['exercise'] = l_('Exercise')
+
+# monkeypatch PHP lexer to not require <?php
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+lexers['php'] = PhpLexer(startinline=True)

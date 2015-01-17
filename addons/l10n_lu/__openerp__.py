@@ -40,6 +40,7 @@ This is the base module to manage the accounting chart for Luxembourg.
     'data': [
         # basic accounting data
         'account_financial_report.xml',
+        'account_financial_report_abr.xml',
         'account.account.type-2011.csv',
         'account.account.template-2011.csv',
         'account.tax.code.template-2011.csv',
@@ -55,7 +56,6 @@ This is the base module to manage the accounting chart for Luxembourg.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'images': ['images/config_chart_l10n_lu.jpeg','images/l10n_lu_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

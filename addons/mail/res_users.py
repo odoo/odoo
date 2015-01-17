@@ -150,7 +150,7 @@ class res_users(osv.Model):
         return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        return dict.fromkeys(ids, list())
+        return dict((res_id, list()) for res_id in ids)
 
     def stop_showing_groups_suggestions(self, cr, uid, user_id, context=None):
         """Update display_groups_suggestions value to False"""
