@@ -43,7 +43,6 @@ import werkzeug.contrib.fixers
 
 import openerp
 import openerp.tools.config as config
-import websrv_lib
 
 _logger = logging.getLogger(__name__)
 
