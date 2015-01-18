@@ -8,11 +8,13 @@ import threading
 import traceback
 import tempfile
 import zipfile
+import json
+import socket
 
 import psycopg2
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import api, SUPERUSER_ID
 from openerp.exceptions import Warning
 import openerp.release
 import openerp.sql_db
@@ -171,24 +173,73 @@ def _set_pg_password_in_environment(func):
                 del os.environ['PGPASSWORD']
     return wrapper
 
-def exp_dump(db_name):
+def exp_dump(db_name, format='odoo'):
     with tempfile.TemporaryFile() as t:
-        dump_db(db_name, t)
+        dump_db(db_name, t, format=format)
         t.seek(0)
         return t.read().encode('base64')
 
 @_set_pg_password_in_environment
-def dump_db(db, stream):
+def dump_db(db, stream, format='odoo'):
     """Dump database `db` into file-like object `stream`"""
-    with openerp.tools.osutil.tempdir() as dump_dir:
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        with registry.cursor() as cr:
-            filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
-            if os.path.exists(filestore):
-                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+    if format == 'odoo':
+        with openerp.tools.osutil.tempdir() as dump_dir:
+            registry = openerp.modules.registry.RegistryManager.get(db)
+            with registry.cursor() as cr:
+                # collect some information
+                pg_version = \
+                    "%d.%d" % divmod(cr._obj.connection.server_version / 100,
+                                     100)
+                with api.Environment.manage():
+                    modules = [
+                        x['name']
+                        for x in registry['ir.module.module'].read(
+                            cr, SUPERUSER_ID,
+                            registry['ir.module.module'].search(
+                                cr, SUPERUSER_ID, [('state','=','installed')]),
+                            ['name'])
+                    ]
+                    users = registry['res.users'].search(cr, 1, [], count=True)
+                # build manifest
+                with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
+                    manifest = {
+                        'version': openerp.release.version,
+                        'version_info': openerp.release.version_info,
+                        'major_version': openerp.release.major_version,
+                        'pg_version': pg_version,
+                        'modules': modules,
+                        'users': users,
+                        'hostname': socket.gethostname(),
+                    }
+                    json.dump(manifest, fh, indent=4)
+                    fh.write("\n")
+                # copy filestore
+                filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
+                if os.path.exists(filestore):
+                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
 
-        dump_file = os.path.join(dump_dir, 'dump.sql')
-        cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]
+            # database dump
+            dump_file = os.path.join(dump_dir, 'dump.sql')
+            cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]
+            if openerp.tools.config['db_user']:
+                cmd.append('--username=' + openerp.tools.config['db_user'])
+            if openerp.tools.config['db_host']:
+                cmd.append('--host=' + openerp.tools.config['db_host'])
+            if openerp.tools.config['db_port']:
+                cmd.append('--port=' + str(openerp.tools.config['db_port']))
+            cmd.append(db)
+
+            if openerp.tools.exec_pg_command(*cmd):
+                _logger.error('DUMP DB: %s failed! Please verify the configuration of the database '
+                              'password on the server. You may need to create a .pgpass file for '
+                              'authentication, or specify `db_password` in the server configuration '
+                              'file.', db)
+                raise Exception("Couldn't dump database")
+
+            openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+
+    elif format == 'custom':
+        cmd = ['pg_dump', '--format=c', '--no-owner']
         if openerp.tools.config['db_user']:
             cmd.append('--username=' + openerp.tools.config['db_user'])
         if openerp.tools.config['db_host']:
@@ -197,14 +248,18 @@ def dump_db(db, stream):
             cmd.append('--port=' + str(openerp.tools.config['db_port']))
         cmd.append(db)
 
-        if openerp.tools.exec_pg_command(*cmd):
+        try:
+            stdin, stdout = openerp.tools.exec_pg_command_pipe(*cmd)
+            shutil.copyfileobj(stdout, stream)
+        except Exception:
             _logger.error('DUMP DB: %s failed! Please verify the configuration of the database '
                           'password on the server. You may need to create a .pgpass file for '
                           'authentication, or specify `db_password` in the server configuration '
                           'file.', db)
             raise Exception("Couldn't dump database")
 
-        openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+    else:
+        raise Exception("Not recognized dump format: %s" % format)
 
     _logger.info('DUMP DB successful: %s', db)
 
