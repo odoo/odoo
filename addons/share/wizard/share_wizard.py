@@ -832,7 +832,7 @@ class share_wizard(osv.TransientModel):
             body += '%s\n\n' % ((user.signature or ''))
             body += "--\n"
             body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
-                      "It is open source and can be found on http://www.openerp.com.")
+                      "It is open source and can be found on https://www.odoo.com.")
             msg_id = message_obj.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='', context=context)
             notification_obj.create(cr, uid, {'user_id': result_line.user_id.id, 'message_id': msg_id}, context=context)
     
@@ -866,7 +866,7 @@ class share_wizard(osv.TransientModel):
             body += "\n\n%s\n\n" % ( (user.signature or '') )
             body += "--\n"
             body += _("Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
-                      "It is open source and can be found on http://www.openerp.com.")
+                      "It is open source and can be found on https://www.odoo.com.")
             mail_ids.append(mail_mail.create(cr, uid, {
                     'email_from': user.email,
                     'email_to': email_to,

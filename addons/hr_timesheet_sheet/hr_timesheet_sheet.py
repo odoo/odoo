@@ -219,7 +219,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def _sheet_date(self, cr, uid, ids, forced_user_id=False, context=None):
         for sheet in self.browse(cr, uid, ids, context=context):
-            new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
+            new_user_id = forced_user_id or sheet.employee_id.user_id and sheet.employee_id.user_id.id
             if new_user_id:
                 cr.execute('SELECT id \
                     FROM hr_timesheet_sheet_sheet \

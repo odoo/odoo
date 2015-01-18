@@ -393,7 +393,7 @@ class pos_session(osv.osv):
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
-                jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
+                jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_id': jid}, context=context)
             else:
                 raise osv.except_osv( _('error!'),
                     _("Unable to open the session. You have to assign a sale journal to your point of sale."))
@@ -407,8 +407,8 @@ class pos_session(osv.osv):
                 if not cashids:
                     cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
-            journal_proxy.write(cr, uid, cashids, {'journal_user': True})
-            jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
+            journal_proxy.write(cr, openerp.SUPERUSER_ID, cashids, {'journal_user': True})
+            jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
         pos_config = jobj.browse(cr, uid, config_id, context=context)
@@ -1352,15 +1352,14 @@ class pos_category(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
+        for cat in self.browse(cr, uid, ids, context=context):
+            names = [cat.name]
+            pcat = cat.parent_id
+            while pcat:
+                names.append(pcat.name)
+                pcat = pcat.parent_id
+            res.append((cat.id, ' / '.join(reversed(names))))
         return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):

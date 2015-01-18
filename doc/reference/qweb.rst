@@ -418,7 +418,7 @@ the name of the template to alter as parameter.
 The alteration is then performed with any number of ``t-jquery``
 sub-directives::
 
-    <t t-extends="base.template">
+    <t t-extend="base.template">
         <t t-jquery="ul" t-operation="append">
             <li>new element</li>
         </t>

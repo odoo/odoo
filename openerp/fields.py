@@ -460,7 +460,8 @@ class Field(object):
         # determine dependencies, compute, inverse, and search
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
-        self.inverse = self._inverse_related
+        if not (self.readonly or field.readonly):
+            self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related

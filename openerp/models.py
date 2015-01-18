@@ -4176,7 +4176,7 @@ class BaseModel(object):
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
         # fields, e.g., a one2many checking constraints on records
-        recs.modified([u[0] for u in updates])
+        recs.modified(self._fields)
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
@@ -5927,10 +5927,10 @@ def itemgetter_tuple(items):
 def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
                  r'not-null constraint\n',
-                 str(e))
+                 tools.ustr(e))
     field_name = m and m.group('field')
     if not m or field_name not in fields:
-        return {'message': unicode(e)}
+        return {'message': tools.ustr(e)}
     message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
@@ -5942,10 +5942,10 @@ def convert_pgerror_23502(model, fields, info, e):
 
 def convert_pgerror_23505(model, fields, info, e):
     m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
-                 str(e))
+                 tools.ustr(e))
     field_name = m and m.group('field')
     if not m or field_name not in fields:
-        return {'message': unicode(e)}
+        return {'message': tools.ustr(e)}
     message = _(u"The value for the field '%s' already exists.") % field_name
     field = fields.get(field_name)
     if field:
@@ -5958,7 +5958,7 @@ def convert_pgerror_23505(model, fields, info, e):
 
 PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
-    lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
+    lambda: (lambda model, fvg, info, pgerror: {'message': tools.ustr(pgerror)}), {
     # not_null_violation
     '23502': convert_pgerror_23502,
     # unique constraint error

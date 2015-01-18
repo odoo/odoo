@@ -62,7 +62,8 @@ class PaymentAcquirer(osv.Model):
         'name': fields.char('Name', required=True),
         'provider': fields.selection(_provider_selection, string='Provider', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
+        'pre_msg': fields.html('Message', translate=True,
+            help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
         'validation': fields.selection(
             [('manual', 'Manual'), ('automatic', 'Automatic')],
