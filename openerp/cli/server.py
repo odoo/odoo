@@ -141,6 +141,12 @@ def main(args):
 
     config = openerp.tools.config
 
+    if config["db_name"]:
+        try:
+            openerp.service.db._create_empty_database(config["db_name"])
+        except openerp.service.db.DatabaseExists:
+            pass
+
     if config["test_file"]:
         config["test_enable"] = True
 
