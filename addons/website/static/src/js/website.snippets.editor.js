@@ -360,7 +360,7 @@
             var self = this;
             var snipped_event_flag;
             $(document).on('click', '*', function (event) {
-                var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target));
+                var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target) || event.target);
                 if (snipped_event_flag===srcElement || !srcElement) {
                     return;
                 }

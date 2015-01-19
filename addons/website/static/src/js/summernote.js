@@ -506,9 +506,6 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             so = 0;
             if (!dom.hasContentBefore(sc)) {
                 sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
-                if (sc === ec) {
-                    eo++;
-                }
             }
         }
         if (!eo && sc !== ec) {
@@ -535,12 +532,10 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
 
             var node = dom.node(sc);
-            var before = sc;
-            if (so) {
-                dom.splitTree(ancestor_sc, {'node': sc, 'offset': so});
-            } else {
-                before = dom.hasContentBefore(dom.ancestorHavePreviousSibling(sc));
+            if (!dom.isNotBreakable(node)) {
+                sc = dom.splitTree(ancestor_sc, {'node': sc, 'offset': so});
             }
+            var before = dom.hasContentBefore(dom.ancestorHavePreviousSibling(sc));
 
             var after;
             if (ec.textContent.slice(eo, Infinity).match(/\S|\u00A0/)) {
@@ -569,7 +564,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                 so -= sc.textContent.length - text.length;
                 sc.textContent = text;
             }
-            if (towrite && !node.firstChild) {
+            if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
                 var br = $("<br/>")[0];
                 node.appendChild(br);
                 sc = br;
@@ -587,8 +582,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         eo = so;
         if(!dom.isBR(sc) && !sc.textContent.match(/\S|\u00A0/)) {
             ancestor = dom.node(sc);
-            sc = document.createTextNode('\u00A0');
-            $(ancestor).prepend(sc);
+            var text = document.createTextNode('\u00A0');
+            $(sc).before(text);
+            sc = text;
             so = 0;
             eo = 1;
         }
@@ -697,7 +693,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     };
     dom.isNotBreakable = function (node, sc, so, ec, eo) {
         // avoid triple click => crappy dom
-        return false; node === ec && !dom.isText(ec) && !dom.isBR(dom.firstChild(ec));
+        return node === ec && !dom.isText(ec) && !dom.isBR(dom.firstChild(ec));
     };
 
     dom.isContentEditable = function (node) {
@@ -856,6 +852,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     range.WrappedRange.prototype.deleteContents = function (towrite) {
         var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
 
+        $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
         return new range.WrappedRange(
           prevBP.sc,
           prevBP.so,
@@ -1266,9 +1263,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                     $.summernote.pluginEvents.delete(event, editor, layoutInfo);
                 }
             }
-            event.preventDefault();
-            return false;
         }
+
+        $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
         event.preventDefault();
         return false;
     };
@@ -1403,6 +1400,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
         var rng = range.create();
         if (rng) {
+            $(dom.node(rng.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
             dom.scrollIntoViewIfNeeded(rng.sc.parentNode.previousElementSibling || rng.sc);
         }
 
