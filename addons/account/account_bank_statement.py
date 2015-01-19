@@ -585,8 +585,7 @@ class account_bank_statement_line(osv.osv):
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
-        domain += [('reconcile_id', '=', False)]
-        domain += [('account_id.type', '=', (amount > 0 and 'receivable' or 'payable'))] # Make sure we can't mix receivable and payable
+        domain += [('account_id.type', 'in', ((amount > 0 and 'receivable' or 'payable'), 'liquidity'))] # Make sure we can't mix receivable and payable
         if amount_field == 'amount_currency' and amount < 0:
             domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
         else:
