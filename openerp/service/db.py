@@ -171,22 +171,20 @@ def _set_pg_password_in_environment(func):
                 del os.environ['PGPASSWORD']
     return wrapper
 
-def exp_dump(db_name, format):
+def exp_dump(db_name, format='odoo'):
     with tempfile.TemporaryFile() as t:
-        dump_db(db_name, t, format)
+        dump_db(db_name, t, format=format)
         t.seek(0)
         return t.read().encode('base64')
 
 @_set_pg_password_in_environment
-def dump_db(db, stream, format):
-    """Dump database `db` into file-like object `stream`"""
+def dump_db_odoo(db, stream):
     with openerp.tools.osutil.tempdir() as dump_dir:
         registry = openerp.modules.registry.RegistryManager.get(db)
-        if format == 'zip':
-            with registry.cursor() as cr:
-                filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
-                if os.path.exists(filestore):
-                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+        with registry.cursor() as cr:
+            filestore = registry['ir.attachment']._filestore(cr, SUPERUSER_ID)
+            if os.path.exists(filestore):
+                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
 
         dump_file = os.path.join(dump_dir, 'dump.sql')
         cmd = ['pg_dump', '--format=p', '--no-owner', '--file=' + dump_file]
@@ -207,6 +205,36 @@ def dump_db(db, stream, format):
 
         openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
 
+@_set_pg_password_in_environment
+def dump_db_custom(db, stream):
+    cmd = ['pg_dump', '--format=c', '--no-owner']
+    if openerp.tools.config['db_user']:
+        cmd.append('--username=' + openerp.tools.config['db_user'])
+    if openerp.tools.config['db_host']:
+        cmd.append('--host=' + openerp.tools.config['db_host'])
+    if openerp.tools.config['db_port']:
+        cmd.append('--port=' + str(openerp.tools.config['db_port']))
+    cmd.append(db)
+
+    try:
+        stdin, stdout = openerp.tools.exec_pg_command_pipe(*cmd)
+        shutil.copyfileobj(stdout, stream)
+    except Exception:
+        _logger.error('DUMP DB: %s failed! Please verify the configuration of the database '
+                      'password on the server. You may need to create a .pgpass file for '
+                      'authentication, or specify `db_password` in the server configuration '
+                      'file.', db)
+        raise Exception("Couldn't dump database")
+
+@_set_pg_password_in_environment
+def dump_db(db, stream, format='odoo'):
+    """Dump database `db` into file-like object `stream`"""
+    if format == 'odoo':
+        dump_db_odoo(db, stream)
+    elif format == 'custom':
+        dump_db_custom(db, stream)
+    else:
+        raise Exception("Not recognized dump format: %s" % format)
     _logger.info('DUMP DB successful: %s', db)
 
 def exp_restore(db_name, data, copy=False):
