@@ -4,7 +4,7 @@ import werkzeug.utils
 
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import login_redirect
+from openerp.addons.web.controllers.main import login_redirect, abort_and_redirect
 
 _logger = logging.getLogger(__name__)
 
@@ -15,6 +15,7 @@ class PosController(http.Controller):
     def a(self, debug=False, **k):
         cr, uid, context, session = request.cr, request.uid, request.context, request.session
 
+        # if user not logged in, log him in
         if not session.uid:
             return login_redirect()
 
@@ -25,3 +26,4 @@ class PosController(http.Controller):
         PosSession.login(cr, uid, pos_session_ids, context=context)
         
         return request.render('point_of_sale.index')
+
