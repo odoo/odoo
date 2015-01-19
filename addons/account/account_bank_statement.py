@@ -761,6 +761,7 @@ class account_bank_statement_line(osv.osv):
 
         # Otherwise, we create a move line. Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
+        move_id = None
         to_create_mv_line_dicts = [x for x in mv_line_dicts if not x.get('already_paid', False)]
         if to_create_mv_line_dicts:
 
@@ -867,6 +868,8 @@ class account_bank_statement_line(osv.osv):
             # Reconcile
             for pair in move_line_pairs_to_reconcile:
                 aml_obj.reconcile_partial(cr, uid, pair, context=context)
+
+        return move_id
 
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
     # return [('journal_entry_ids', '!=', True)]
