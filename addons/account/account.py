@@ -857,12 +857,23 @@ class account_chart_template(models.Model):
 
     @api.one
     def try_loading_for_current_company(self):
+        self.ensure_one()
         company = self.env.user.company_id
         accounts = self.env['account.account'].search([('company_id', '=', company.id), ('deprecated', '=', False), ('name', 'not ilike', 'Automated Test'),
             ('name', 'not ilike', '(test)')], limit=1)
         # If we don't have any accounts, install this chart of account
         if not accounts:
             self._load_template(company)
+            # Create account and journal for cash
+            company.write({'bank_account_code_char': self.bank_account_code_char, 'accounts_code_digits': self.code_digits})
+            wiz_obj = self.env['wizard.multi.charts.accounts']
+            acc_obj = self.env['account.account']
+            line = {'acc_name': 'cash', 'account_type': 'cash', 'currency_id': False}
+            vals = wiz_obj._prepare_bank_account(company, line)
+            cash_account = acc_obj.create(vals)
+            vals = wiz_obj._prepare_bank_journal(company, line, cash_account.id)
+            self.env['account.journal'].create(vals)
+
 
     @api.model
     def check_created_journals(self, vals_journal, company):
@@ -1156,11 +1167,11 @@ class account_tax_template(models.Model):
         help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
-    children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
+    children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
 
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 3))
+    amount = fields.Float(required=True, digits=(16, 3), default=0.0)
     account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account',
         help="Account that will be set on invoice tax lines for invoices or refund. Leave empty to use the expense account.")
     refund_account_id = fields.Many2one('account.account.template', domain=[('deprecated', '=', False)], string='Tax Account on Refunds',
