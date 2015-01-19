@@ -168,7 +168,10 @@ def dump_db_manifest(cr):
     return manifest
 
 def dump_db(db_name, stream, backup_format='zip'):
-    """Dump database `db` into file-like object `stream`"""
+    """Dump database `db` into file-like object `stream` if stream is None
+    return a file object with the dump """
+
+    _logger.info('DUMP DB: %s format %s', db_name, backup_format)
 
     cmd = ['pg_dump', '--no-owner']
     if openerp.tools.config['db_user']:
@@ -191,20 +194,20 @@ def dump_db(db_name, stream, backup_format='zip'):
                     json.dump(manifest, fh, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             openerp.tools.exec_pg_command(*cmd)
-            openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+            if stream:
+                openerp.tools.osutil.zip_dir(dump_dir, stream, include_dir=False)
+            else:
+                t=tempfile.TemporaryFile()
+                openerp.tools.osutil.zip_dir(dump_dir, t, include_dir=False)
+                t.seek(0)
+                return t
     else:
         cmd.insert(-1, '--format=c')
-        print cmd
         stdin, stdout = openerp.tools.exec_pg_command_pipe(*cmd)
-        shutil.copyfileobj(stdout, stream)
-
-    _logger.info('DUMP DB successful: %s', db_name)
-
-def dump_db_stream(db_name, backup_format='zip'):
-    t=tempfile.TemporaryFile()
-    dump_db(db_name, t, backup_format)
-    t.seek(0)
-    return t
+        if stream:
+            shutil.copyfileobj(stdout, stream)
+        else:
+            return stdout
 
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)

@@ -733,7 +733,7 @@ class Database(http.Controller):
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = openerp.service.db.dump_db_stream(backup_db, backup_format)
+            dump_stream = openerp.service.db.dump_db(backup_db, None, backup_format)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
             response.set_cookie('fileToken', token)
             return response
