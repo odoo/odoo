@@ -116,7 +116,7 @@
                                 <field name="partner_image_small" widget="image" class="oe_avatar oe_left"/>
                                 <div style="display: inline-block;">
                                     <h2><field name="partner_name"/></h2>
-                                    <field attrs="{'invisible': 'partner_email'}" name="partner_email"/>
+                                    <field attrs="{'invisible': [('partner_email','=',False)]}" name="partner_email"/>
                                     <div attrs="{'invisible': [('opportunity_name', '=', 'No opportunity linked')]}">
                                         <field name="opportunity_name"/>
                                         <span><field name="opportunity_planned_revenue" class="oe_inline"/> at <field name="opportunity_probability" class="oe_inline"/>%</span>
@@ -131,6 +131,8 @@
                                 <field name="new_date_action" nolabel="1"/>
                                 <field name="new_title_action" placeholder="e.g. Call for proposal" nolabel="1"/>
                             </div>
+                        </group>
+                        <group>
                             <label for="reschedule_option"/>
                             <div>
                                 <field name="reschedule_option" widget="radio" nolabel="1"/>
