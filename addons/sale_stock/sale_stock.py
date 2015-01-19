@@ -457,3 +457,14 @@ class stock_picking(osv.osv):
                 'name': sale.client_order_ref or '',
                 })
         return inv_vals
+
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Need to pass procurement reference when an extra move is created
+        in order to link to same invoice while invoicing from picking
+        """
+        if context is None: context = {}
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        if op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.procurement_id:
+            res.update({'procurement_id': op.linked_move_operation_ids[-1].move_id.procurement_id.id})
+        return res

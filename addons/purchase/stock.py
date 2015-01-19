@@ -171,6 +171,17 @@ class stock_picking(osv.osv):
                 })
         return inv_vals
 
+    def _prepare_values_extra_move(self, cr, uid, op, product, remaining_qty, context=None):
+        """
+        Need to pass purchase line reference when an extra move is created
+        in order to link to same invoice while invoicing from picking
+        """
+        if context is None: context = {}
+        res = super(stock_picking, self)._prepare_values_extra_move(cr, uid, op, product, remaining_qty, context=context)
+        if op.linked_move_operation_ids and op.linked_move_operation_ids[-1].move_id.purchase_line_id:
+            res.update({'purchase_line_id': op.linked_move_operation_ids[-1].move_id.purchase_line_id.id})
+        return res
+
 
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
