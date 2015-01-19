@@ -241,7 +241,7 @@ class account_bank_statement_import(osv.TransientModel):
                         'partner_name': line['counterpartyName'],
                         'ref': line['ref'],
                         'sequence': line['sequence'],
-                        'unique_import_id': line['transactionRef'],
+                        'unique_import_id': line['ref'] + line['transactionRef'],
                     }
                     statement_line.append(line_data)
             if statement['coda_note'] != '':
