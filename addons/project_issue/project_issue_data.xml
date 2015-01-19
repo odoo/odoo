@@ -18,7 +18,7 @@
 
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.group</field>
+            <field name="model_id" ref="mail.model_mail_group"/>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="type">notification</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
