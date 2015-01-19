@@ -1675,6 +1675,7 @@ class mail_thread(osv.AbstractModel):
                 parent_id = message.id
 
         values = kwargs
+
         values.update({
             'author_id': author_id,
             'model': model,
@@ -1688,6 +1689,7 @@ class mail_thread(osv.AbstractModel):
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
             'tracking_value_ids': [(4, tvid) for tvid in tracking_values],
+            'has_attachment': (len(attachment_ids) > 0),
         })
 
         # Avoid warnings about non-existing fields

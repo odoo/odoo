@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-
-import pdb
 import logging
 from operator import methodcaller
 
@@ -169,6 +167,7 @@ class mail_message(osv.Model):
             help='Users that voted for this message'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
         'tracking_value_ids': fields.one2many('mail.tracking.value', 'mail_message_id' , string='Tracking values'),
+        'has_attachment': fields.boolean(string='Has Attachment', help='Thread has one or more attached files'),
     }
 
 
@@ -477,7 +476,7 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                #'author_avatar': message.author_avatar,
+                'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
@@ -485,6 +484,7 @@ class mail_message(osv.Model):
                 'is_favorite': message.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
+                'has_attachment': message.has_attachment,
                }
 
     def _message_read_add_expandables(self, cr, uid, messages, message_tree, parent_tree,
@@ -582,8 +582,6 @@ class mail_message(osv.Model):
     @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
                         thread_level=0, context=None, parent_id=False, limit=None):
-        
-    
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
@@ -690,6 +688,7 @@ class mail_message(osv.Model):
                 'model': message['model'],
                 'model_desc': message['model_desc'],
                 'body': message['body'],
+                'has_attachment': message['has_attachment'],
                 'type': 'parent',
             }
 
@@ -1000,6 +999,16 @@ class mail_message(osv.Model):
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
+    def _get_has_attachment(self, cr, uid, values, context=None):
+        if 'attachment_ids' in values: 
+            return len(values['attachment_ids']) > 0
+        return False
+
+    def _update_parent_message(self, cr, uid, parent_id, context=None):
+        mail_message_obj = self.pool.get('mail.message')
+        parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
+        parent_message.write({'has_attachment': True})
+
     def create(self, cr, uid, values, context=None):
         context = dict(context or {})
         default_starred = context.pop('default_starred', False)
@@ -1012,12 +1021,14 @@ class mail_message(osv.Model):
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
         if 'record_name' not in values and 'default_record_name' not in context:
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
+        if 'has_attachment' not in values:
+            values['has_attachment'] = self._get_has_attachment(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
 
-        print "Values : ", values
-
-        #pdb.set_trace()
+        if values['has_attachment'] and 'parent_id' in values:
+            if values['parent_id']:
+                self._update_parent_message(cr, uid, values['parent_id'], context=context)
 
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),

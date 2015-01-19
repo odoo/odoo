@@ -6,15 +6,6 @@
     <div class="oe_timeline-placeholder"> </div>
 </div>
 
-<t t-name="MailRoot">
-    <div class="oe_timeline container-fluid">
-    </div>
-</t>
-
-<t t-name="MailThread">
-    <div class="oe_thread"/>
-</t>
-
 <t t-name="ComposeMessage">
     <div t-if="widget.show_composer and !widget.options.readonly" 
          class="oe_tl_msg oe_tl_msg_composer">
@@ -204,6 +195,10 @@
         </t>
     </div>
 </div>
+
+<t t-name="ThreadExpendable">
+    <div class="oe_tl_thread_expendable"> More Messages : <t t-esc="widget.nb_messages"/> </div>
+</t>
 
 <t t-name="MessageContent">
     <t t-raw="content"/>

@@ -1,0 +1,56 @@
+@font-face {
+  src: url("/fonts/garamond-pro.ttf?424242");
+  src: local(Futura-Medium), url(fonts.svg?424242#MyGeometricModern) format("svg");
+}
+#shorthands {
+  background: url("http://www.lesscss.org/spec.html?424242") no-repeat 0 4px;
+  background: url("img.jpg?424242") center / 100px;
+  background: #ffffff url(image.png?424242) center / 1px 100px repeat-x scroll content-box padding-box;
+}
+#misc {
+  background-image: url(images/image.jpg?424242);
+}
+#data-uri {
+  background: url(data:image/png;charset=utf-8;base64,
+    kiVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD/
+    k//+l2Z/dAAAAM0lEQVR4nGP4/5/h/1+G/58ZDrAz3D/McH8yw83NDDeNGe4U
+    kg9C9zwz3gVLMDA/A6P9/AFGGFyjOXZtQAAAAAElFTkSuQmCC);
+  background-image: url(data:image/x-png,f9difSSFIIGFIFJD1f982FSDKAA9==);
+  background-image: url(http://fonts.googleapis.com/css?family=\"Rokkitt\":\(400\),700&424242);
+  background-image: url("http://fonts.googleapis.com/css?family=\"Rokkitt\":\(400\),700&424242");
+}
+#svg-data-uri {
+  background: transparent url('data:image/svg+xml, <svg version="1.1"><g></g></svg>');
+}
+.comma-delimited {
+  background: url(bg.jpg?424242) no-repeat, url(bg.png?424242) repeat-x top left, url(bg?424242);
+}
+.values {
+  url: url('Trebuchet?424242');
+}
+@font-face {
+  font-family: xecret;
+  src: url('../assets/xecret.ttf?424242');
+}
+#secret {
+  font-family: xecret, sans-serif;
+}
+#data-uri {
+  uri: url("data:image/jpeg;base64,bm90IGFjdHVhbGx5IGEganBlZyBmaWxlCg==");
+}
+#data-uri-guess {
+  uri: url("data:image/jpeg;base64,bm90IGFjdHVhbGx5IGEganBlZyBmaWxlCg==");
+}
+#data-uri-ascii {
+  uri-1: url("data:text/html,%3Ch1%3EThis%20page%20is%20100%25%20Awesome.%3C%2Fh1%3E%0A");
+  uri-2: url("data:text/html,%3Ch1%3EThis%20page%20is%20100%25%20Awesome.%3C%2Fh1%3E%0A");
+}
+#svg-functions {
+  background-image: url('data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%201%201%22%20preserveAspectRatio%3D%22none%22%3E%3ClinearGradient%20id%3D%22gradient%22%20gradientUnits%3D%22userSpaceOnUse%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%220%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23000000%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%2F%3E%3C%2FlinearGradient%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22url(%23gradient)%22%20%2F%3E%3C%2Fsvg%3E');
+  background-image: url('data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%201%201%22%20preserveAspectRatio%3D%22none%22%3E%3ClinearGradient%20id%3D%22gradient%22%20gradientUnits%3D%22userSpaceOnUse%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%220%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23000000%22%2F%3E%3Cstop%20offset%3D%223%25%22%20stop-color%3D%22%23ffa500%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23ffffff%22%2F%3E%3C%2FlinearGradient%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22url(%23gradient)%22%20%2F%3E%3C%2Fsvg%3E');
+  background-image: url('data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20viewBox%3D%220%200%201%201%22%20preserveAspectRatio%3D%22none%22%3E%3ClinearGradient%20id%3D%22gradient%22%20gradientUnits%3D%22userSpaceOnUse%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%220%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%221%25%22%20stop-color%3D%22%23c4c4c4%22%2F%3E%3Cstop%20offset%3D%223%25%22%20stop-color%3D%22%23ffa500%22%2F%3E%3Cstop%20offset%3D%225%25%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%2295%25%22%20stop-color%3D%22%23ffffff%22%2F%3E%3C%2FlinearGradient%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22url(%23gradient)%22%20%2F%3E%3C%2Fsvg%3E');
+}
+#data-uri-with-spaces {
+  background-image: url(data:image/x-png,f9difSSFIIGFIFJD1f982FSDKAA9==);
+  background-image: url(' data:image/x-png,f9difSSFIIGFIFJD1f982FSDKAA9==');
+}
