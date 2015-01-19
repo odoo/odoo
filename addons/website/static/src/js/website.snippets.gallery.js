@@ -205,6 +205,16 @@
                 $(this).attr('data-index', index).data('index', index);
             });
             this.$target.css("height", Math.round(window.innerHeight*0.7));
+
+            // apply layout animation
+            this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
+            this.$target.find('li.fa').off('click');
+            if (this.$target.data("snippet-view", view)) {
+                var view = new website.snippet.animationRegistry.gallery_slider(this.$target, true);
+                this.$target.data("snippet-view", view);
+            } else {
+                this.$target.data("snippet-view").start(true);
+            }
         },
         columns : function(type, value) {
             this.$target.attr("data-columns", value);

@@ -280,7 +280,7 @@
             var $prev = $indicator.find('li.fa:first');
             var $next = $indicator.find('li.fa:last');
             var index = ($lis.filter('.active').index() || 1) -1;
-            var page = Math.floor((index-1) / 10);
+            var page = Math.floor(index / 10);
             var nb = Math.ceil($lis.length / 10);
 
              // fix bootstrap use index insead of data-slide-to
@@ -296,7 +296,7 @@
 
             function hide () {
                 $lis.addClass('hidden').each(function (i) {
-                    if (i > page*10 && i < (page+1)*10+1) {
+                    if (i >= page*10 && i < (page+1)*10) {
                         $(this).removeClass('hidden');
                     }
                 });
@@ -306,14 +306,14 @@
 
             $indicator.find('li.fa').on('click', function () {
                 page = (page + ($(this).hasClass('o_indicators_left')?-1:1)) % nb;
-                $carousel.carousel(page*10+1);
+                $carousel.carousel(page*10);
                 hide();
             });
             hide();
 
             $carousel.on('slid.bs.carousel', function() {
                 var index = ($lis.filter('.active').index() || 1) -1;
-                page = Math.floor((index-1) / 10);
+                page = Math.floor(index / 10);
                 hide();
             });
         }
