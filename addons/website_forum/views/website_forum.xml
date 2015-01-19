@@ -1109,10 +1109,10 @@
 
         <ul class="nav nav-tabs">
             <li class="active">
-                <a href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+                <a href="#questions" data-toggle="tab"><t t-esc="len(questions)"/> Questions</a>
             </li>
             <li>
-                <a href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+                <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
             </li>
             <li t-if="uid == user.id">
                 <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
