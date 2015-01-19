@@ -45,7 +45,7 @@
             return def;
         },
         on_menu_clicked: function(id, $clicked_menu) {
-            var menu_id = $clicked_menu.parents('.oe_secondary_menu').data('menu-parent'); // find top menu id
+            var menu_id = $clicked_menu.parents('.oe_secondary_menu').data('menu-parent') || 0; // find top menu id
             if (_.contains(_.keys(this.planner_apps), menu_id.toString())) {
                 this.$el.show();
                 this.setup(this.planner_apps[menu_id]);

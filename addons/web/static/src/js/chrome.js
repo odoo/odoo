@@ -913,7 +913,6 @@ instance.web.Menu =  instance.web.Widget.extend({
      * If not set, only the overflowing items are hidden.
      */
     reflow: function(behavior) {
-        console.log('reflow');
         var self = this;
         var $more_container = this.$('#menu_more_container').hide();
         var $more = this.$('#menu_more');
