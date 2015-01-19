@@ -1445,8 +1445,8 @@ openerp.account = function (instance) {
                     deferred_tax = $.when(self.model_tax
                         .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount]))
                         .then(function(data){
-                            line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
-                            line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
+                            line_created_being_edited[0].amount_before_tax = (data.total.toFixed(3) === amount.toFixed(3) ? data.total : data.total_included);
+                            line_created_being_edited[0].amount = data.total
                             var current_line_cursor = 1;
                             $.each(data.taxes, function(index, tax){
                                 if (tax.amount !== 0.0) {
@@ -1481,8 +1481,8 @@ openerp.account = function (instance) {
                         line_created_being_edited[index].amount = Math.round(val.amount*rounding)/rounding;
                         line_created_being_edited[index].amount_str = self.formatCurrency(Math.abs(val.amount), val.currency_id);
                     }
-                    if (val.amount_with_tax)
-                        line_created_being_edited[index].amount_with_tax = Math.round(val.amount_with_tax*rounding)/rounding;
+                    if (val.amount_before_tax)
+                        line_created_being_edited[index].amount_before_tax = Math.round(val.amount_before_tax*rounding)/rounding;
                 });
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
@@ -1654,7 +1654,7 @@ openerp.account = function (instance) {
             if (dict['account_id'] === undefined)
                 dict['account_id'] = line.account_id;
             dict['name'] = line.label;
-            var amount = line.tax_id ? line.amount_with_tax: line.amount;
+            var amount = line.tax_id ? line.amount_before_tax: line.amount;
             if (amount > 0) dict['credit'] = amount;
             if (amount < 0) dict['debit'] = -1 * amount;
             if (line.tax_id) dict['account_tax_id'] = line.tax_id;
@@ -1681,7 +1681,7 @@ openerp.account = function (instance) {
             var mv_line_dicts = [];
             _.each(self.get("mv_lines_selected"), function(l) { mv_line_dicts.push(self.prepareSelectedMoveLineForPersisting(l)) });
             created_lines = _.filter(self.getCreatedLines(), function(l) { return ! l.is_tax_line; }); // Tax lines are created via account_tax_id
-            _.each(self.getCreatedLines(), function(l) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(l)) });
+            _.each(created_lines, function(l) { mv_line_dicts.push(self.prepareCreatedMoveLineForPersisting(l)) });
             if (Math.abs(self.get("balance")).toFixed(3) !== "0.000") mv_line_dicts.push(self.prepareOpenBalanceForPersisting());
             return mv_line_dicts;
         },
