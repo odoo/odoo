@@ -640,6 +640,7 @@ class account_bank_statement_line(osv.osv):
                 '|', ('move_id.name', 'ilike', str),
                 '|', ('move_id.ref', 'ilike', str),
                 '|', ('date_maturity', 'like', str),
+                '|', ('account_id.code', '=ilike', str + '%'),
                 '&', ('name', '!=', '/'), ('name', 'ilike', str)
             ]
             if not st_line.partner_id.id:
