@@ -23,7 +23,7 @@
                     </group>
                     <group>
                         <field name="payment_difference"/>
-                        <field name="writeoff_account" attrs="{'required': [('payment_difference', '!', 'reconcile')], 'invisible': [('payment_difference', '=', 'open')]}"/>
+                        <field name="writeoff_account" attrs="{'required': [('payment_difference', '=', 'reconcile')], 'invisible': [('payment_difference', '!=', 'reconcile')]}"/>
                     </group>
                     <footer>
                         <button string='Pay' name="pay" type="object" class="oe_highlight"/>
