@@ -1427,8 +1427,9 @@ class product_template(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        if self.search(cr, uid, [('id', 'in', ids), ('available_in_pos', '=', True)], context=context):
-            if self.pool['pos.session'].search(cr, uid, [('state', '!=', 'closed')], context=context):
+        product_ctx = dict(context or {}, active_test=False)
+        if self.search_count(cr, uid, [('id', 'in', ids), ('available_in_pos', '=', True)], context=product_ctx):
+            if self.pool['pos.session'].search_count(cr, uid, [('state', '!=', 'closed')], context=context):
                 raise osv.except_osv(_('Error!'),
                     _('You cannot delete a product saleable in point of sale while a session is still opened.'))
         return super(product_template, self).unlink(cr, uid, ids, context=context)
