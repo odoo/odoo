@@ -159,32 +159,38 @@ class project_project(osv.osv):
         result['help'] = help
         return result
 
+class hr_analytic_timesheet(osv.Model):
+    _inherit = 'hr.analytic.timesheet'
+    _description = 'hr analytic timesheet'
+    _columns = {
+        'task_id' : fields.many2one('project.task', 'Task'),
+    }
+
 class task(osv.osv):
     _inherit = "project.task"
     _description = 'project task'
 
     # Compute: effective_hours, total_hours, progress
-    #TODO Check method, it seems conceptually wrong. total hours seems useless : it is always equal to task.planned hours
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        cr.execute("SELECT l.task_id, SUM(l.unit_amount) FROM account_analytic_line l \
-                WHERE l.task_id IN %s GROUP BY l.task_id", (tuple(ids),))
+        cr.execute("SELECT t.task_id, SUM(l.unit_amount) FROM hr_analytic_timesheet t, account_analytic_line l \
+                WHERE l.id = t.line_id AND t.task_id IN %s GROUP BY t.task_id", (tuple(ids),))
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'remaining_hours': task.planned_hours - hours.get(task.id, 0.0)}
             res[task.id]['total_hours'] = res[task.id]['remaining_hours'] + hours.get(task.id, 0.0)
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
             res[task.id]['progress'] = 0.0
-            if (task.planned_hours > 0.0 and hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / task.planned_hours, 99.99),2)
+            if (task.remaining_hours + hours.get(task.id, 0.0)):
+                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
             # TDE CHECK: if task.state in ('done','cancelled'):
             if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
         return res
 
-    def _get_task(self, cr, uid, id, context=None):
+    def _get_task(self, cr, uid, line_id, context=None):
         result = {}
-        for work in self.pool.get('account.analytic.line').browse(cr, uid, id, context=context):
+        for work in self.pool.get('hr.analytic.timesheet').browse(cr, uid, line_id, context=context):
             if work.task_id: result[work.task_id.id] = True
         return result.keys()
 
@@ -192,29 +198,29 @@ class task(osv.osv):
         'remaining_hours': fields.function(_hours_get, string='Remaining Hours', multi='line_id', help="Total remaining time, can be re-estimated periodically by the assignee of the task.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
-                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+                'hr.analytic.timesheet': (_get_task, ['line_id'], 10),
             }),
         'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='line_id', help="Computed using the sum of the task work done.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
-                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+                'hr.analytic.timesheet': (_get_task, ['line_id'], 10),
             }),
         'total_hours': fields.function(_hours_get, string='Total', multi='line_id', help="Computed as: Time Spent + Remaining Time.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
-                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+                'hr.analytic.timesheet': (_get_task, ['line_id'], 10),
             }),
         'progress': fields.function(_hours_get, string='Working Time Progress (%)', multi='line_id', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours', 'state', 'stage_id'], 10),
-                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+                'hr.analytic.timesheet': (_get_task, ['line_id'], 10),
             }),
         'delay_hours': fields.function(_hours_get, string='Delay Hours', multi='line_id', help="Computed as difference between planned hours by the project manager and the total hours of the task.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['timesheet_ids', 'remaining_hours', 'planned_hours'], 10),
-                'account.analytic.line': (_get_task, ['task_id', 'unit_amount'], 10),
+                'hr.analytic.timesheet': (_get_task, ['line_id'], 10),
             }),
-        'timesheet_ids': fields.one2many('account.analytic.line', 'task_id', 'Timesheets'),
+        'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'task_id', 'Timesheets'),
         'analytic_account_id': fields.related('project_id', 'analytic_account_id',
                     type='many2one', relation='account.analytic.account',string='Analytic Account', store=True),
     }
@@ -238,12 +244,9 @@ class res_partner(osv.osv):
 
 
 class account_analytic_line(osv.osv):
-    _inherit = "account.analytic.line"
-    _columns = {
-        'task_id' : fields.many2one('project.task', 'Task'),
-    }
+   _inherit = "account.analytic.line"
 
-    def get_product(self, cr, uid, context=None):
+   def get_product(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
         emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_ids:
@@ -251,4 +254,19 @@ class account_analytic_line(osv.osv):
             if employee.product_id:return employee.product_id.id
         return False
    
-    _defaults = {'product_id': get_product,}
+   _defaults = {'product_id': get_product,}
+   
+   def on_change_account_id(self, cr, uid, ids, account_id):
+       res = {}
+       if not account_id:
+           return res
+       res.setdefault('value',{})
+       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+       st = acc.to_invoice.id
+       res['value']['to_invoice'] = st or False
+       if acc.state == 'close' or acc.state == 'cancelled':
+           raise osv.except_osv(_('Invalid Analytic Account!'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+       return res
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
