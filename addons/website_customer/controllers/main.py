@@ -88,7 +88,7 @@ class WebsiteCustomer(http.Controller):
 
         tag_obj = request.registry['res.partner.tag']
         tag_ids = tag_obj.search(cr, uid, [('website_published', '=', True), ('partner_ids', 'in', partner_ids)],
-                                 order='name ASC', context=context)
+                                 order='classname, name ASC', context=context)
         tags = tag_obj.browse(cr, uid, tag_ids, context=context)
         tag = tag_id and tag_obj.browse(cr, uid, tag_id, context=context) or False
 

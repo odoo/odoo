@@ -90,6 +90,7 @@
     </xpath>
 </template>
 
+
 <template id="opt_country_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Countries">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
         <h3>References by Country</h3>
@@ -109,7 +110,7 @@
     </xpath>
 </template>
 
-<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags">
+<template id="opt_tag_list" inherit_id="website_customer.index" customize_show="True" name="Filter on Tags" priority="5">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
         <h3 t-if="len(tags)">References by Tag</h3>
