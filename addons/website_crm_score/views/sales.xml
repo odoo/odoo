@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+
+    <data>
+
+        <!-- 
+        LEADS
+         -->
+        <!-- Crm Lead Search Filter - Language added -->
+        <record model="ir.ui.view" id="view_crm_case_leads_filter_inherit">
+            <field name="name">crm.lead.search.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter" />
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="lang_id"/>
+                    <field name="score_ids"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Crm Lead Tree View - Score and Salesman added -->
+        <record model="ir.ui.view" id="lead_tree_view">
+            <field name="name">crm.lead.tree.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
+            <field name="arch" type="xml">
+                <field name="phone" position="after">
+                    <field name="score" />
+                </field>
+                <field name="section_id" position="after">
+                    <field name="user_id" />
+                </field>
+            </field>
+        </record>
+
+        <!-- Crm Lead Form View - PageViews, Score and Language added -->
+        <record model="ir.ui.view" id="lead_score_form">
+            <field name="name">crm.lead.form.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//button[@class='oe_inline oe_stat_button']" position="after"> -->
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" type="action" 
+                        name="%(website_crm_score_pageviews)d" icon="fa-tags"
+                        context="{'search_default_lead_id': active_id, 'default_lead_id': active_id}">
+                        <field string="Page views" name="pageviews_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+                <field name="priority" position="after">
+                    <field name="score" />
+                </field>
+                <xpath expr="//group[@string='Misc']" position="after">
+                    <group string="Scoring">
+                        <field name="score_ids"
+                            widget="many2many_tags"
+                            domain="[('object_id.model','=','crm.lead')]"
+                            context="{'object_name': 'crm.lead'}"
+                            readonly="1"
+                        />
+                        <field name="lang_id" readonly="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="score_opp_tree_view">
+            <field name="name">crm.lead.tree.opp.score.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+            <field name="arch" type="xml">
+                <field name="section_id" position="after">
+                    <field name="score" />
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="score_opp_form_view">
+            <field name="name">crm.lead.form.opp.score.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="score" />
+                </field>
+                <xpath expr="//group[@string='References']" position="after">
+                    <group string="Scoring">
+                        <field name="score_ids"
+                            widget="many2many_tags"
+                            domain="[('object_id.model','=','crm.lead')]"
+                            context="{'object_name': 'crm.lead'}"
+                            readonly="1"
+                        />
+                        <field name="lang_id" readonly="1"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- SALESTEAM -->
+        <!-- SalesTeam Kanban View - Lead information added -->
+        <record id="crm_case_section_salesteams_view_kanban_inherit" model="ir.ui.view">
+            <field name="name">crm.case.section.kanban.inherit</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="member_ids" position="after">
+                        <field name="section_user_ids"/>
+                    </field>
+                    <xpath expr="//div[@class='oe_clear']" position="after">
+                        <div class="oe_items_list">
+                            <div>
+                                Capacity: <b><field name="capacity"/></b>
+                            </div>
+                            <div>
+                                Lead count: <b><field name="leads_count"/></b>
+                            </div>
+                            <div></div>
+                            <div>
+                                Assigned: <b><field name="assigned_leads"/></b>
+                            </div>
+                        </div>
+                    </xpath>
+
+                    <xpath expr="//div[@class='oe_kanban_salesteams_avatars']" position="replace">
+                        <field name="user_ids" invisible="True" />
+                        <t t-foreach="record.user_ids.raw_value" t-as="member">
+                            <img t-att-src="kanban_image('res.users', 'image_small', member)" width="32" height="32" />
+                        </t>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Graph view of leads via SalesTeam -->
+        <record model="ir.ui.view" id="crm_case_graph_view_leads_sales">
+            <field name="name">Unassigned leads</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" type="line">
+                    <field name="create_date" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_score_views_action_graph">
+            <field name="name">Unassigned leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="crm_case_graph_view_leads_sales"/>
+        </record>
+
+        <record model="ir.ui.view" id="crm_case_table_view_leads_sales">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" type="pivot">
+                    <field name="stage_id" type="col"/>
+                    <field name="user_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_score_views_action_table">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="crm_case_table_view_leads_sales"/>
+        </record>
+
+        <!-- SalesTeam Form View - Lead information and page Assignation added -->
+        <record model="ir.ui.view" id="sales_team_form_view_assign">
+            <field name="name">crm.case.section.form.inherit</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']" position="before">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button class="oe_inline oe_stat_button" type="action" 
+                            name="%(crm_score_views_action_graph)d" icon="fa-tags"
+                            context="{'search_default_section_id': active_id, 'search_default_unassigned': 1 }" 
+                            >
+                            <field string="Unassigned leads" name="unassigned_leads" widget="statinfo"/>
+                        </button>
+                        <button class="oe_inline oe_stat_button" type="action" 
+                            name="%(crm_score_views_action_table)d" icon="fa-tags"
+                            context="{'search_default_section_id': active_id}" 
+                            >
+                            <field string="Opportunities" name="leads_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//group[@name='left']" position="after">
+                    <group name="right">
+                        <field name="score_section_domain"  options="{'model': 'crm.lead'}"/>
+                        <label for="assigned_leads"/>
+                        <div>
+                            <field name="assigned_leads" class="oe_inline"/> /
+                            <field name="capacity" class="oe_inline"/>                            
+                        </div>
+                        <field name="min_for_assign" class="oe_inline"/>
+                        <div>
+                            <br/>
+                            <button name="direct_assign_leads" type="object" string="Assign Now" class="oe_link"/>
+                            <span groups="base.group_no_one">
+                                 <br/>
+                                 <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
+                            </span>
+                        </div>
+                        
+                    </group>
+                </xpath>
+                <xpath expr="//page[@string='Team Members']" position="replace">
+                    <page string="Assignation">
+                        <field name="section_user_ids" widget="many2many_kanban"  context="{'default_section_id':active_id, 'ro_section':True}">
+                            <kanban quick_create="true" create="true" delete="true">
+                                <field name="user_id"/>
+                                <field name="running"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            <a type="open">
+                                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" class="oe_kanban_image"/>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <div style='text-align: center; padding: 4px;'>
+                                                                <t t-if="record.running.raw_value === true">
+                                                                    <button name="toggle_active" type="object" style="
+                                                                        color: #eeeeee;
+                                                                        background-image: -webkit-gradient(linear, left top, left bottom, from(#3faf3f), to(#1a721a));">
+                                                                        <span class="fa fa-check"/>
+                                                                    </button>
+                                                                </t> 
+                                                                <t t-if="record.running.raw_value === false">
+                                                                    <button name="toggle_active" type="object" style="
+                                                                        color: #eeeeee;
+                                                                        background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));">
+                                                                        <span class="fa fa-times"/>
+                                                                    </button>
+                                                                </t>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                <td> 
+                                                    <div class="oe_kanban_details">
+                                                        <table>
+                                                            <tr>
+                                                                <td style='width: 240px'>
+                                                                    <ul>
+                                                                        <li><a type="open">
+                                                                            <b><field name="name"/></b>
+                                                                        </a></li>
+                                                                        <!-- <li><field name="section_user_domain" widget="smart_filters"/></li> -->
+                                                                        <li><field name="section_user_domain" widget='filters'/></li>
+                                                                    </ul>
+                                                                </td> 
+                                                                <td>
+                                                                    <field name="maximum_user_leads" invisible="1"/>
+                                                                    <field name="leads_count" widget="gauge" 
+                                                                        style="width:108px; height: 81px; cursor: pointer;"
+                                                                        options="{'max_field': 'maximum_user_leads'}"/> 
+                                                                </td> 
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </td> 
+                                            </tr>
+                                        </table>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </page>
+               </xpath>
+            </field>
+        </record>
+
+
+
+        <!-- 
+        IR FILTER - NOT IN USE RIGHT NOW
+         -->
+        <!-- Ir Filters Search Filter - action_id added -->
+        <record model="ir.ui.view" id="ir_filters_view_search_inherit">
+            <field name="name">ir.filters.inherit</field>
+            <field name="model">ir.filters</field>
+            <field name="inherit_id" ref="base.ir_filters_view_search" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="action_id"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Ir Filters Tree View -->
+        <record model="ir.ui.view" id="view_ir_filters_tree">
+            <field name="name">Spam ir Filters Tree</field>
+            <field name="model">ir.filters</field>
+            <field name="arch" type="xml">
+                <tree string="Spam Ir Filters">
+                    <field name="name"/>
+                    <field name="domain"/>
+                    <field name="model_id"/>
+                    <field name="action_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Ir Filters Action - form - tree -->
+        <record model="ir.actions.act_window" id="spam_ir_filters_action">
+            <field name="name">SpamIrFilter</field>
+            <field name="res_model">ir.filters</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_ir_filters_tree"/>
+            <field name="search_view_id" ref="ir_filters_view_search_inherit"/>
+        </record>
+        <record model="ir.actions.act_window" id="spam_ir_filters_action">
+            <field name="context" eval="{'search_default_action_id': ref('spam_ir_filters_action')}"/>
+        </record>
+
+        <!-- Ir Filters Menu Item -->
+        <!-- This menu item allows to see SpamIrFilters, /!\ the parent must be changed -->
+        <!-- <menuitem id="spam_ir_filters" name="SpamIrFilters" parent="leads_menu" action="spam_ir_filters_action" /> -->
+        
+        <!-- The following enables the more action that creates the filter on the email address of the lead -->
+        <record id="action_mark_as_spam" model="ir.actions.server">
+            <field name="name">Mark As Spam</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+    ir_action_id = self.pool['ir.actions.act_window'].search(cr, uid, [('name', '=', 'SpamIrFilter')], context=context)[0]
+    values = {'model_id': 'crm.lead', 'action_id': ir_action_id}
+    for lead_id in context['active_ids']:
+        mail = self.read(cr, uid, lead_id, fields=['email_from'], context=context)['email_from']
+        vals = values.copy()
+        # str() below changes the encoding of mail from unicode 
+        vals['domain'] = [('email_from', '=', str(mail))]
+        vals['name'] = 'spam-' + mail
+        self.pool['ir.filters'].create_or_replace(cr, uid, vals, context=context)
+            </field>
+        </record>
+
+        <!-- This record add the possibility to mark as spam in the more action of leads -->
+<!--         <record id="ir_mark_as_spam" model="ir.values">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="'crm.lead'" name="model"/>
+            <field name="name">Mark As Spam</field>
+            <field eval="'ir.actions.server,%d'%action_mark_as_spam" name="value"/>
+        </record> -->
+
+    </data>
+</openerp>
