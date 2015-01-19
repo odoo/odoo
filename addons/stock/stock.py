@@ -1589,7 +1589,7 @@ class stock_production_lot(osv.osv):
 class stock_move(osv.osv):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'date_expected desc, id'
+    _order = 'sequence, date_expected desc, id'
     _log_create = False
 
     def get_price_unit(self, cr, uid, move, context=None):
@@ -1710,6 +1710,7 @@ class stock_move(osv.osv):
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
     _columns = {
+        'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection(procurement.PROCUREMENT_PRIORITIES, 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
@@ -1822,6 +1823,7 @@ class stock_move(osv.osv):
         'state': 'draft',
         'priority': '1',
         'product_uom_qty': 1.0,
+        'sequence': 10,
         'scrapped': False,
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),

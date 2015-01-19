@@ -491,3 +491,14 @@ class sale_advance_payment_inv(osv.TransientModel):
             elem[1]['incoterms_id'] = sale.incoterm.id or False
             res.append(elem)
         return res
+
+
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        vals = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        #copy the sequence from the sale order line on the stock move
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
+        return vals
