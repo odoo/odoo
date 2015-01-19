@@ -1210,7 +1210,7 @@ class view(osv.osv):
         if self.pool._init:
             # only validate the views that are still existing...
             xmlid_filter = "AND md.name IN %s"
-            names = tuple(name for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items() if xmod == module and model == self._name)
+            names = tuple(name for (xmod, name), (model, res_id) in self.pool._model_data_reference_ids.items() if xmod == module and model == self._name)
             if not names:
                 # no views for this module, nothing to validate
                 return

@@ -52,6 +52,7 @@ class Registry(Mapping):
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+        self._model_data_reference_ids = {}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
