@@ -43,7 +43,6 @@ up a management by affair.
     'depends': ['account', 'hr', 'base', 'hr_attendance'],
     'data': [
         'security/ir.model.access.csv',
-        'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
         'report/hr_timesheet_report_view.xml',
         'hr_timesheet_installer.xml',

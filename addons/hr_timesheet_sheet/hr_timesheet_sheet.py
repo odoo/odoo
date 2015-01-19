@@ -358,13 +358,12 @@ class account_analytic_line(osv.osv):
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
-        print "checking contraints"
-        if context is None:
-            context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
+        if context and "hr_timesheet" in context:
+            for timesheet_line in self.browse(cr, uid, ids, context=context):
+                if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
+                    return False
         return True
+
 
     _constraints = [
         (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state','unit_amount', 'user_id','account_id']),
