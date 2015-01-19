@@ -705,10 +705,9 @@ class groups_view(osv.osv):
     def update_user_groups_view(self, cr, uid, context=None):
         # the view with id 'base.user_groups_view' inherits the user form view,
         # and introduces the reified group fields
-        if context is None:
-            context = {}
         if not context or context.get('install_mode'):
-            context = dict(context)
+            # use installation/admin language for translatable names in the view
+            context = dict(context or {})
             context.update(self.pool['res.users'].context_get(cr, uid))
         view = self.get_user_groups_view(cr, uid, context)
         if view:
