@@ -122,7 +122,7 @@ class account_bank_statement_import(osv.TransientModel):
                         else:
                             statementLine['type'] = 'globalisation'
                             statement['globalisation_stack'].append(statementLine['globalisation'])
-                        globalisation_comm[statementLine['ref_move']] = statementLine['communication']
+                            globalisation_comm[statementLine['ref_move']] = statementLine['communication']
                     if not statementLine.get('communication'):
                         statementLine['communication'] = globalisation_comm.get(statementLine['ref_move'], '')
                     statement['lines'].append(statementLine)
