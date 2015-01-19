@@ -227,7 +227,7 @@ openerp.web_timeline = function (session) {
         do_search: function (dom, cxt, group_by) {
             var self = this;
 
-            var domain = (this.domain).concat(dom || []);
+            var domain = dom || [];
             var context = _.clone(this.context);
                 context = _.extend(context, (cxt || {}));
             var ds = {
@@ -532,10 +532,10 @@ openerp.web_timeline = function (session) {
 
             // check if the message is already created, then delete, except if parent
             for (var i in this.messages) {
-                if (this.messages[i].type != "parent"
-                    && message.id 
+                if (message.id  
                     && this.messages[i] 
-                    && this.messages[i].id == message.id) {
+                    && this.messages[i].id == message.id 
+                    && this.messages[i].type != "parent") {
                     this.messages[i].destroy();
                 }
             }
@@ -613,7 +613,7 @@ openerp.web_timeline = function (session) {
             this.options = options || {};
 
             // record domain and context
-            this.domain = parent.domain || [];
+            this.domain = dataset.domain || parent.domain || [];
 
             this.context = _.extend({
                 default_model: false,
@@ -806,13 +806,12 @@ openerp.web_timeline = function (session) {
 
         init: function (parent, dataset, options) {
             this._super(parent, dataset, options);
-            
+
             this.nb_messages = dataset.nb_messages;
         },
 
         on_expendable_message: function (event) {
             event.stopPropagation();
-            console.log("on_expendable_message");
 
             var self = this;
             this.parent_thread.message_fetch(this.domain, this.context, false, 'default', function (arg, data) {
