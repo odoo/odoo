@@ -1391,7 +1391,6 @@ class account_move_line(osv.osv):
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }
-                import pprint; pp = pprint.PrettyPrinter(indent=4); pp.pprint(tax['amount'])
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
 

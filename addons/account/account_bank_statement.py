@@ -770,15 +770,7 @@ class account_bank_statement_line(osv.osv):
             move_id = am_obj.create(cr, uid, move_vals, context=context)
 
             # Create the move line for the statement line
-            if st_line.statement_id.currency.id != company_currency.id:
-                if st_line.currency_id == company_currency:
-                    st_line_amount = st_line.amount_currency
-                else:
-                    ctx = context.copy()
-                    ctx['date'] = st_line.date
-                    st_line_amount = currency_obj.compute(cr, uid, st_line.statement_id.currency.id, company_currency.id, st_line.amount, context=ctx)
-            else:
-                st_line_amount = st_line.amount
+            st_line_amount = st_line.currency_id and st_line.amount_currency or st_line.amount
             if to_reconcile_mv_line_ids:
                 already_reconciled_amount = reduce(add, [x['credit'] - x['debit'] for x in mv_line_dicts if x.get('already_paid', False)])
                 st_line_amount -= already_reconciled_amount
