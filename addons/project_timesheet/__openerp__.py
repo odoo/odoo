@@ -34,7 +34,7 @@ with the effect of creating, editing and deleting either ways.
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
-    'depends': ['resource', 'project', 'hr_timesheet_invoice', 'procurement'],
+    'depends': ['resource', 'project', 'account_analytic_analysis', 'procurement'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
