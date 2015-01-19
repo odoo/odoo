@@ -121,7 +121,7 @@ class template(object):
                 os.makedirs(destdir)
 
             with open(dest, 'wb') as f:
-                if ext not in ('.py', '.xml', '.csv', '.js'):
+                if ext not in ('.py', '.xml', '.csv', '.js', '.rst', '.html'):
                     f.write(content)
                 else:
                     env.from_string(content)\
