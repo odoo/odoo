@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
                 <tree position="attributes">
-                    <attribute name="colors">{'red':virtual_available&lt;0, 'blue':virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')}</attribute>
+                    <attribute name="colors">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
                 </tree>
                 <field name="uom_id" position="after">
                     <field name="qty_available"/>

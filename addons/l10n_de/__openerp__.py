@@ -148,5 +148,4 @@ German accounting chart and localization.
         'l10n_de_wizard.xml',
     ],
     'installable': True,
-    'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
 }

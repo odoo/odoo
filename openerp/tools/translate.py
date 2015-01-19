@@ -358,6 +358,7 @@ class TinyPoFile(object):
             source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
+                self.first = False
                 # if the source is "" and it's the first msgid, it's the special
                 # msgstr with the informations about the traduction and the
                 # traductor; we skip it
@@ -386,8 +387,6 @@ class TinyPoFile(object):
                 for t, n, r in targets:
                     if t == trans_type == 'code': continue
                     self.extra_lines.append((t, n, r, source, trad, comments))
-
-        self.first = False
 
         if name is None:
             if not fuzzy:

@@ -7,7 +7,6 @@ import logging
 import os
 import os.path
 import platform
-import psutil
 import random
 import select
 import signal
@@ -25,6 +24,7 @@ if os.name == 'posix':
     # Unix only for workers
     import fcntl
     import resource
+    import psutil
 else:
     # Windows shim
     signal.SIGHUP = -1

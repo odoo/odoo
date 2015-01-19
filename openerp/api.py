@@ -73,7 +73,6 @@ from openerp.tools import frozendict
 _logger = logging.getLogger(__name__)
 
 # The following attributes are used, and reflected on wrapping methods:
-#  - method._api: decorator function, used for re-applying decorator
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
 #  - method._returns: set by @returns, specifies return model
@@ -81,10 +80,11 @@ _logger = logging.getLogger(__name__)
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #
 # On wrapping method only:
+#  - method._api: decorator function, used for re-applying decorator
 #  - method._orig: original method
 #
 
-WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_api', '_constrains',
+WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
                  '_depends', '_onchange', '_returns', 'clear_cache')
 
 INHERITED_ATTRS = ('_returns',)
@@ -121,10 +121,14 @@ identity = lambda x: x
 
 def decorate(method, attr, value):
     """ Decorate `method` or its original method. """
-    # decorate the original method, and re-apply the api decorator, if any
-    orig = getattr(method, '_orig', method)
-    setattr(orig, attr, value)
-    return getattr(method, '_api', identity)(orig)
+    if getattr(method, '_api', False):
+        # decorate the original method, and re-apply the api decorator
+        setattr(method._orig, attr, value)
+        return method._api(method._orig)
+    else:
+        # simply decorate the method itself
+        setattr(method, attr, value)
+        return method
 
 def propagate(from_method, to_method):
     """ Propagate decorators from `from_method` to `to_method`, and return the
@@ -227,7 +231,7 @@ def returns(model, downgrade=None):
     return lambda method: decorate(method, '_returns', (model, downgrade))
 
 
-def make_wrapper(method, old_api, new_api):
+def make_wrapper(decorator, method, old_api, new_api):
     """ Return a wrapper method for `method`. """
     def wrapper(self, *args, **kwargs):
         # avoid hasattr(self, '_ids') because __getattr__() is overridden
@@ -240,6 +244,7 @@ def make_wrapper(method, old_api, new_api):
     for attr in WRAPPED_ATTRS:
         if hasattr(method, attr):
             setattr(wrapper, attr, getattr(method, attr))
+    wrapper._api = decorator
     wrapper._orig = method
 
     return wrapper
@@ -322,7 +327,6 @@ def model(method):
 
         Notice that no `ids` are passed to the method in the traditional style.
     """
-    method._api = model
     split = get_context_split(method)
     downgrade = get_downgrade(method)
 
@@ -332,7 +336,7 @@ def model(method):
         result = method(recs, *args, **kwargs)
         return downgrade(result)
 
-    return make_wrapper(method, old_api, method)
+    return make_wrapper(model, method, old_api, method)
 
 
 def multi(method):
@@ -350,7 +354,6 @@ def multi(method):
 
             model.method(cr, uid, ids, args, context=context)
     """
-    method._api = multi
     split = get_context_split(method)
     downgrade = get_downgrade(method)
 
@@ -360,7 +363,7 @@ def multi(method):
         result = method(recs, *args, **kwargs)
         return downgrade(result)
 
-    return make_wrapper(method, old_api, method)
+    return make_wrapper(multi, method, old_api, method)
 
 
 def one(method):
@@ -380,7 +383,6 @@ def one(method):
 
             names = model.method(cr, uid, ids, args, context=context)
     """
-    method._api = one
     split = get_context_split(method)
     downgrade = get_downgrade(method)
     aggregate = get_aggregate(method)
@@ -395,7 +397,7 @@ def one(method):
         result = [method(rec, *args, **kwargs) for rec in self]
         return aggregate(self, result)
 
-    return make_wrapper(method, old_api, new_api)
+    return make_wrapper(one, method, old_api, new_api)
 
 
 def cr(method):
@@ -407,7 +409,6 @@ def cr(method):
 
             model.method(cr, args)
     """
-    method._api = cr
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -415,12 +416,11 @@ def cr(method):
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr, method, method, new_api)
 
 
 def cr_context(method):
     """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
-    method._api = cr_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -429,12 +429,11 @@ def cr_context(method):
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_context, method, method, new_api)
 
 
 def cr_uid(method):
     """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
-    method._api = cr_uid
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -442,7 +441,7 @@ def cr_uid(method):
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid, method, method, new_api)
 
 
 def cr_uid_context(method):
@@ -455,7 +454,6 @@ def cr_uid_context(method):
 
             model.method(cr, uid, args, context=context)
     """
-    method._api = cr_uid_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -464,7 +462,7 @@ def cr_uid_context(method):
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_context, method, method, new_api)
 
 
 def cr_uid_id(method):
@@ -472,7 +470,6 @@ def cr_uid_id(method):
         parameters. Such a method may be called in both record and traditional
         styles. In the record style, the method automatically loops on records.
     """
-    method._api = cr_uid_id
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -480,7 +477,7 @@ def cr_uid_id(method):
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_id, method, method, new_api)
 
 
 def cr_uid_id_context(method):
@@ -498,7 +495,6 @@ def cr_uid_id_context(method):
 
             model.method(cr, uid, id, args, context=context)
     """
-    method._api = cr_uid_id_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -507,7 +503,7 @@ def cr_uid_id_context(method):
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_id_context, method, method, new_api)
 
 
 def cr_uid_ids(method):
@@ -515,7 +511,6 @@ def cr_uid_ids(method):
         parameters. Such a method may be called in both record and traditional
         styles.
     """
-    method._api = cr_uid_ids
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -523,7 +518,7 @@ def cr_uid_ids(method):
         result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_ids, method, method, new_api)
 
 
 def cr_uid_ids_context(method):
@@ -543,7 +538,6 @@ def cr_uid_ids_context(method):
 
         It is generally not necessary, see :func:`guess`.
     """
-    method._api = cr_uid_ids_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -552,7 +546,7 @@ def cr_uid_ids_context(method):
         result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_ids_context, method, method, new_api)
 
 
 def v7(method_v7):
@@ -575,7 +569,7 @@ def v7(method_v7):
     method = frame.f_locals.get(method_v7.__name__)
     method_v8 = getattr(method, '_v8', method)
 
-    wrapper = make_wrapper(method_v7, method_v7, method_v8)
+    wrapper = make_wrapper(v7, method_v7, method_v7, method_v8)
     wrapper._v7 = method_v7
     wrapper._v8 = method_v8
     return wrapper
@@ -601,7 +595,7 @@ def v8(method_v8):
     method = frame.f_locals.get(method_v8.__name__)
     method_v7 = getattr(method, '_v7', method)
 
-    wrapper = make_wrapper(method_v8, method_v7, method_v8)
+    wrapper = make_wrapper(v8, method_v8, method_v7, method_v8)
     wrapper._v7 = method_v7
     wrapper._v8 = method_v8
     return wrapper
@@ -664,7 +658,7 @@ def guess(method):
 
 def expected(decorator, func):
     """ Decorate `func` with `decorator` if `func` is not wrapped yet. """
-    return decorator(func) if not hasattr(func, '_orig') else func
+    return decorator(func) if not hasattr(func, '_api') else func
 
 
 

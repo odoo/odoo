@@ -98,5 +98,4 @@ TODO:
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }

@@ -286,7 +286,7 @@ class mail_compose_message(osv.TransientModel):
                         batch_mail_mail_ids.append(mail_mail_id)
                     else:
                         subtype = 'mail.mt_comment'
-                        if context.get('mail_compose_log') or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+                        if wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
                             subtype = False
                         if wizard.composition_mode == 'mass_post':
                             context = dict(context,

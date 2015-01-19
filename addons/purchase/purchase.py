@@ -61,15 +61,14 @@ class purchase_order(osv.osv):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
+        pol_obj = self.pool.get('purchase.order.line')
         for po in self.browse(cr, uid, ids, context=context):
             if po.order_line:
-                cr.execute("""update purchase_order_line set
-                        date_planned=%s
-                    where
-                        order_id=%s and
-                        (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
-            cr.execute("""update purchase_order set
-                    minimum_planned_date=%s where id=%s""", (value, po.id))
+                pol_ids = pol_obj.search(cr, uid, [
+                    ('order_id', '=', po.id), '|', ('date_planned', '=', po.minimum_planned_date), ('date_planned', '<', value)
+                ], context=context)
+                pol_obj.write(cr, uid, pol_ids, {'date_planned': value}, context=context)
+                self.pool.get('purchase.order').write(cr, uid, po.id, {'minimum_planned_date': value}, context=context)
         self.invalidate_cache(cr, uid, context=context)
         return True
 
@@ -715,7 +714,7 @@ class purchase_order(osv.osv):
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
-            'partner_id': order.dest_address_id.id or order.partner_id.id,
+            'partner_id': order.dest_address_id.id,
             'move_dest_id': False,
             'state': 'draft',
             'purchase_line_id': order_line.id,
@@ -823,7 +822,7 @@ class purchase_order(osv.osv):
         for order in self.browse(cr, uid, ids):
             picking_vals = {
                 'picking_type_id': order.picking_type_id.id,
-                'partner_id': order.dest_address_id.id or order.partner_id.id,
+                'partner_id': order.partner_id.id,
                 'date': max([l.date_planned for l in order.order_line]),
                 'origin': order.name
             }

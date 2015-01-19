@@ -45,5 +45,4 @@
     ],
     'demo': [],
     'installable': True,
-    'images': [],
 }

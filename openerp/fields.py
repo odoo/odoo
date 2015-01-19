@@ -460,7 +460,8 @@ class Field(object):
         # determine dependencies, compute, inverse, and search
         self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
-        self.inverse = self._inverse_related
+        if not (self.readonly or field.readonly):
+            self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
@@ -1751,6 +1752,14 @@ class Many2many(_RelationalMulti):
     _column_limit = property(attrgetter('limit'))
 
 
+class Serialized(Field):
+    """ Minimal support for existing sparse and serialized fields. """
+    type = 'serialized'
+
+    def convert_to_cache(self, value, record, validate=True):
+        return value or {}
+
+
 class Id(Field):
     """ Special case for field 'id'. """
     store = True
@@ -1773,7 +1782,6 @@ class Id(Field):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
-
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID

@@ -203,7 +203,7 @@ class configmanager(object):
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
                          choices=levels, my_default='info',
-                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
+                         help='specify the level of the logging. Accepted values: %s.' % (levels,))
 
         parser.add_option_group(group)
 

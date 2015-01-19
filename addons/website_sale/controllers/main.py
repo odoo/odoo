@@ -144,8 +144,9 @@ class website_sale(http.Controller):
 
         domain = request.website.sale_product_domain()
         if search:
-            domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
-                ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
+            for srch in search.split(" "):
+                domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
+                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
         if category:
             domain += [('public_categ_ids', 'child_of', int(category))]
 

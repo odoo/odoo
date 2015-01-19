@@ -873,7 +873,7 @@ class account_bank_statement_line(osv.osv):
     # Unfortunately, that spawns a "no access rights" error ; it shouldn't.
     def _needaction_domain_get(self, cr, uid, context=None):
         user = self.pool.get("res.users").browse(cr, uid, uid)
-        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_ids', '=', False)]
+        return ['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]), ('journal_entry_ids', '=', False), ('account_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"

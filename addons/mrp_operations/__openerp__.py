@@ -54,7 +54,6 @@ So, that we can compare the theoretic delay and real delay.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'images': ['images/work_order_analysis.jpeg','images/work_order_planning.jpeg','images/work_order.jpeg'],
     'depends': ['mrp'],
     'data': [
         'security/ir.model.access.csv',

@@ -20,14 +20,3 @@
 ##############################################################################
 
 from . import test_mail_group, test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite, test_mail, test_ir_actions
-
-checks = [
-    test_mail_group,
-    test_mail_message,
-    test_mail_features,
-    test_mail_gateway,
-    test_message_read,
-    test_invite,
-    test_mail,
-    test_ir_actions,
-]

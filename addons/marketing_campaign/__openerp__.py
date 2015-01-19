@@ -67,5 +67,4 @@ input segments, workflow.
     'test': ['test/marketing_campaign.yml'],
     'installable': True,
     'auto_install': False,
-    'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }

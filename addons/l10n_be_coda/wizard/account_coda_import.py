@@ -57,6 +57,7 @@ class account_bank_statement_import(osv.TransientModel):
                 statement['version'] = line[127]
                 if statement['version'] not in ['1', '2']:
                     raise UserError(_('Error') + ' R001: ' + _('CODA V%s statements are not supported, please contact your bank') % statement['version'])
+                statement['globalisation_stack'] = []
                 statement['lines'] = []
                 statement['date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[5:11]), '%d%m%y'))
                 statement['separateApplication'] = rmspaces(line[83:88])
@@ -116,7 +117,11 @@ class account_bank_statement_import(osv.TransientModel):
                     statementLine['type'] = 'normal'
                     statementLine['globalisation'] = int(line[124])
                     if statementLine['globalisation'] > 0:
-                        statementLine['type'] = 'globalisation'
+                        if statementLine['globalisation'] in statement['globalisation_stack']:
+                            statement['globalisation_stack'].remove(statementLine['globalisation'])
+                        else:
+                            statementLine['type'] = 'globalisation'
+                            statement['globalisation_stack'].append(statementLine['globalisation'])
                         globalisation_comm[statementLine['ref_move']] = statementLine['communication']
                     if not statementLine.get('communication'):
                         statementLine['communication'] = globalisation_comm.get(statementLine['ref_move'], '')

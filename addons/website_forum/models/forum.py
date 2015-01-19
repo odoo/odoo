@@ -48,6 +48,7 @@ class Forum(models.Model):
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
     description = fields.Html(
         'Description',
+        translate=True,
         default='<p> This community is for professionals and enthusiasts of our products and services.'
                 'Share and discuss the best content and new marketing ideas,'
                 'build your professional profile and become a better marketer together.</p>')
@@ -263,6 +264,15 @@ class Post(models.Model):
     @api.one
     def _get_post_karma_rights(self):
         user = self.env.user
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
 
         self.karma_accept = self.parent_id and self.parent_id.create_uid.id == self._uid and self.forum_id.karma_answer_accept_own or self.forum_id.karma_answer_accept_all
         self.karma_edit = self.create_uid.id == self._uid and self.forum_id.karma_edit_own or self.forum_id.karma_edit_all

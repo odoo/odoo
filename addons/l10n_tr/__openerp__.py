@@ -48,5 +48,4 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/chart_l10n_tr_1.jpg','images/chart_l10n_tr_2.jpg','images/chart_l10n_tr_3.jpg'],
 }

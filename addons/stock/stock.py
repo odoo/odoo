@@ -1061,6 +1061,7 @@ class stock_picking(osv.osv):
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
                     'location_dest_id': quants_suggested_locations[pack_quants[0]],
+                    'owner_id': picking.owner_id.id,
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
@@ -1079,7 +1080,7 @@ class stock_picking(osv.osv):
             if qty <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
-            key = (product.id, False, False, False, picking.location_id.id, suggested_location_id)
+            key = (product.id, False, False, picking.owner_id.id, picking.location_id.id, suggested_location_id)
             if qtys_grouped.get(key):
                 qtys_grouped[key] += qty
             else:
@@ -1735,6 +1736,7 @@ class stock_move(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]}),
         'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
 
         'product_packaging': fields.many2one('product.packaging', 'Prefered Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
@@ -1813,8 +1815,7 @@ class stock_move(osv.osv):
         return False
 
     def _default_destination_address(self, cr, uid, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id.partner_id.id
+        return False
 
     _defaults = {
         'location_id': _default_location_source,
@@ -2975,7 +2976,7 @@ class stock_warehouse(osv.osv):
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
                 values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
-                pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
+                pull_rules_list = self._get_supply_pull_rules(cr, uid, wh.id, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
                 #if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
@@ -3036,7 +3037,7 @@ class stock_warehouse(osv.osv):
             'sequence': 10,
         }
 
-    def _get_supply_pull_rules(self, cr, uid, supplied_warehouse, values, new_route_id, context=None):
+    def _get_supply_pull_rules(self, cr, uid, supply_warehouse, values, new_route_id, context=None):
         pull_rules_list = []
         for from_loc, dest_loc, pick_type_id, warehouse in values:
             pull_rules_list.append({
@@ -3047,8 +3048,8 @@ class stock_warehouse(osv.osv):
                 'action': 'move',
                 'picking_type_id': pick_type_id,
                 'procure_method': warehouse.lot_stock_id.id != from_loc.id and 'make_to_order' or 'make_to_stock', # first part of the resuply route is MTS
-                'warehouse_id': supplied_warehouse.id,
-                'propagate_warehouse_id': warehouse.id,
+                'warehouse_id': warehouse.id,
+                'propagate_warehouse_id': supply_warehouse,
             })
         return pull_rules_list
 

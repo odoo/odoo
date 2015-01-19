@@ -44,7 +44,6 @@ You can choose flexible invoicing methods:
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/warehouse',
-    'images': ['images/deliveries_to_invoice.jpeg'],
     'depends': ['sale', 'stock_account'],
     'data': [
         'security/sale_stock_security.xml',

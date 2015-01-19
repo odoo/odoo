@@ -52,5 +52,4 @@ synchronization with other companies.
     'auto_install': True,
     'web': True,
     'qweb' : ['static/src/xml/*.xml'],
-    'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }

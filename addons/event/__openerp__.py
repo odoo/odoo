@@ -37,5 +37,4 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/1_event_type_list.jpeg', 'images/2_events.jpeg', 'images/3_registrations.jpeg', 'images/events_kanban.jpeg'],
 }
