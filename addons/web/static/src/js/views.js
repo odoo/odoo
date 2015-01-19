@@ -730,7 +730,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 });
             }
             return $bc;
-ç        }
+        }
     },
     create_view: function(view) {
         var self = this,
