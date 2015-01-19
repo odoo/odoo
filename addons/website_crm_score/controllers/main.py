@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from openerp import addons, http, SUPERUSER_ID, fields
 from openerp.http import request
 
@@ -9,24 +10,23 @@ class PageController(addons.website.controllers.main.Website):
         response = super(PageController, self).page(page, **opt)
         # duplication of ir_http.py
 
-        if hasattr(response, 'status_code') and response.status_code == 200:
+        if getattr(response, 'status_code', 0) == 200:
             try:
                 view = request.website.get_template(page)
+            except:
+                pass  # view not found
+            else:
                 if view.track:  # avoid tracking redirected page
                     cr, uid, context = request.cr, request.uid, request.context
-                    lead_id = request.registry["crm.lead"].decode(request)
+                    lead_id = request.env["crm.lead"].decode(request)
                     url = request.httprequest.url
-                    vals = {'lead_id': lead_id, 'partner_id': request.session.get('uid', None), 'url': url}
+                    vals = {'lead_id': lead_id, 'user_id': request.session.get('uid'), 'url': url}
 
-                    if lead_id and request.registry['website.crm.pageview'].create_pageview(cr, uid, vals, context=context):
-                        # create_pageview was successful
-                        pass
-                    else:
+                    if not lead_id or request.registry['website.crm.pageview'].create_pageview(cr, uid, vals, context=context):
+                        # create_pageview failed
                         response.delete_cookie('lead_id')
                         request.session.setdefault('pages_viewed', {})[url] = fields.Datetime.now()
                         request.session.modified = True
-            except:
-                pass  # view not found
 
         return response
 
@@ -45,8 +45,6 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 # sign the lead_id
                 sign = lead_model.encode(lead_id)
                 response.set_cookie('lead_id', sign, domain=lead_model.get_score_domain_cookies())
-            else:
-                pass  # lead_id == None because no lead was created
         return response
 
     def create_real_lead(self, request, values, kwargs):
@@ -54,7 +52,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
         return super(ContactController, self).create_lead(request, values, kwargs)
 
     def create_lead(self, request, values, kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, context = request.cr, request.context
 
         lead_model = request.registry["crm.lead"]
         lead_id = lead_model.decode(request)
@@ -62,10 +60,15 @@ class ContactController(addons.website_crm.controllers.main.contactus):
         # domain: leads that are still open:
         # NOT [ on_change AND (proba = 0 OR proba = 100) ]
         # the condition on the lead_id is prepended
-        domain = [('id', '=', lead_id),
-                  '!', '&', ('stage_id.on_change', '!=', True),
-                       '|', ('stage_id.probability', '!=', 0.0), ('stage_id.probability', '!=', 100.0)
-                  ]
+        domain = [
+            ('id', '=', lead_id),
+            '|',
+            ('stage_id.on_change', '=', False),
+            '&',
+            ('stage_id.probability', '!=', 0),
+            ('stage_id.probability', '!=', 100)
+        ]
+        domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
         lead_instance = lead_model.search(cr, SUPERUSER_ID, domain, context=context)
 
         if lead_instance:
@@ -75,7 +78,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             # NOTE: the following should be changed when dynamic forms exist
             changed_values = {}
             for fieldname, fieldvalue in values.items():
-                if fieldname in lead._all_columns and fieldvalue:  # and not lead[fieldname]:  # rem : why this last condition ?
+                if fieldname in lead._all_columns and fieldvalue:
                     if lead[fieldname] and lead[fieldname] != fieldvalue:
                         changed_values[fieldname] = fieldvalue
                     else:
@@ -89,7 +92,6 @@ class ContactController(addons.website_crm.controllers.main.contactus):
 
         else:
             # either no lead_id cookie OR the lead_id doesn't exist in db OR the current one is closed -> a lead is created
-
             lang = context.get('lang', False)
             lang_id = request.registry["res.lang"].search(cr, SUPERUSER_ID, [('code', '=', lang)], context=context)
             lang_id = lang_id and lang_id[0] or False
@@ -101,7 +103,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 url_list = []
                 pages_viewed = request.session['pages_viewed']
                 for url, date in pages_viewed.iteritems():
-                    vals = {'partner_id': request.session.get('uid', None), 'url': url, 'view_date': date}
+                    vals = {'user_id': request.session.get('uid'), 'url': url, 'view_date': date}
                     score_pageview_ids.append((0, 0, vals))
                     url_list.append(url)
                 del request.session['pages_viewed']
@@ -117,5 +119,4 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             if body:
                 request.registry['crm.lead'].message_post(cr, SUPERUSER_ID, [new_lead_id], body=body, subject="Pages visited", context=context)
 
-            # TODO : try to write the cookies here, after retreiving a response ?
             return new_lead_id

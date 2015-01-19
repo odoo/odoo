@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from openerp.http import request
 from openerp import api, fields, models, SUPERUSER_ID
 import md5
@@ -34,17 +35,17 @@ class Lead(models.Model):
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when lead has been created")
 
     def encode(self, lead_id):
-        encrypted_lead_id = md5.new("%s%s" % (lead_id, self.get_key())).hexdigest()
-        return "%s-%s" % (str(lead_id), encrypted_lead_id)
+        md5_lead_id = md5.new("%s%s" % (lead_id, self.get_key())).hexdigest()
+        return "%s-%s" % (str(lead_id), md5_lead_id)
 
     def decode(self, request):
         # opens the cookie, verifies the signature of the lead_id
         # returns lead_id if the verification passes and None otherwise
         cookie_content = request.httprequest.cookies.get('lead_id')
         if cookie_content:
-            lead_id, encrypted_lead_id = cookie_content.split('-', 1)
+            lead_id, md5_lead_id = cookie_content.split('-', 1)
             expected_encryped_lead_id = md5.new("%s%s" % (lead_id, self.get_key())).hexdigest()
-            if encrypted_lead_id == expected_encryped_lead_id:
+            if md5_lead_id == expected_encryped_lead_id:
                 return int(lead_id)
             else:
                 return None
@@ -53,38 +54,37 @@ class Lead(models.Model):
         return self.pool['ir.config_parameter'].get_param(request.cr, SUPERUSER_ID, 'database.uuid')
 
     def get_score_domain_cookies(self):
-        # TODO should be return request.httprequest.host in master
-        # return request.httprequest.host
-        dom = "." + ".".join(request.httprequest.host.rsplit(".", 2)[1:])
-        if ':' in dom:  # Hack if in local mode with port
-            dom = request.httprequest.host
-        return dom
+        return request.httprequest.host
 
-    def _merge_pageviews(self, cr, uid, opportunity_id, opportunities, context=None):
+    @api.model
+    def _merge_pageviews(self, opportunity_id, opportunities):
+        crmpv = self.env['website.crm.pageview']
         lead_ids = [opp.id for opp in opportunities if opp.id != opportunity_id]
-        pv_ids = self.pool.get('website.crm.pageview').search(cr, uid, [('lead_id', 'in', lead_ids)], context=context)
-        self.pool.get('website.crm.pageview').write(cr, SUPERUSER_ID, pv_ids, {'lead_id': opportunity_id}, context=context)
-        return True
+        pv_ids = crmpv.sudo().search([('lead_id', 'in', lead_ids)])
+        pv_ids.write({'lead_id': opportunity_id})
 
-    def _merge_scores(self, cr, uid, opportunity_id, opportunities, context=None):
+    @api.model
+    def _merge_scores(self, opportunity_id, opportunities):
         # We needs to delete score from opportunity_id, to be sure that all rules will be re-evaluated.
-        self.write(cr, SUPERUSER_ID, [opportunity_id], {'score_ids': [(6, 0, [])]}, context=context)
-        return True
+        self.sudo().browse(opportunity_id).write({'score_ids': [(6, 0, [])]})
 
-    def merge_dependences(self, cr, uid, highest, opportunities, context=None):
-        self._merge_pageviews(cr, uid, highest, opportunities, context=context)
-        self._merge_scores(cr, uid, highest, opportunities, context=context)
+    @api.model
+    def merge_dependences(self, highest, opportunities):
+        self._merge_pageviews(highest, opportunities)
+        self._merge_scores(highest, opportunities)
 
         # Call default merge function
-        super(Lead, self).merge_dependences(cr, uid, highest, opportunities, context=context)
+        super(Lead, self).merge_dependences(highest, opportunities)
 
     # Overwritte ORM to add or remove the assign date
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         if vals.get('user_id'):
             vals['assign_date'] = fields.datetime.now()
-        return super(Lead, self).create(cr, uid, vals, context=context)
+        return super(Lead, self).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         if 'user_id' in vals:
             vals['assign_date'] = vals.get('user_id') and fields.datetime.now() or False
-        return super(Lead, self).write(cr, uid, ids, vals, context=context)
+        return super(Lead, self).write(vals)

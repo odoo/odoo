@@ -1,26 +1,28 @@
+# -*- coding: utf-8 -*-
 from openerp.tests import common
+
+from mock import Mock
 
 
 class TestScoring(common.TransactionCase):
 
-    def _init_(self):
-        pass
-        # self._build_email_args_list = []
-        # self._build_email_kwargs_list = []
-
     def setUp(self):
+
+
         super(TestScoring, self).setUp()
         cr, uid = self.cr, self.uid
 
+        cr.commit = Mock(return_value=None)
+        
         # empty tables before testing to only use test records
         cr.execute("""
-                UPDATE res_partner SET section_id=NULL;
+                UPDATE res_partner SET team_id=NULL;
         """)
         cr.execute("""
-                TRUNCATE TABLE section_user;
+                TRUNCATE TABLE team_user;
         """)
         cr.execute("""
-                DELETE FROM crm_case_section;
+                DELETE FROM crm_team;
         """)
         cr.execute("""
                 DELETE FROM crm_lead;
@@ -37,16 +39,16 @@ class TestScoring(common.TransactionCase):
         self.leads_dry_run = self.registry('leads.dry.run')
         self.pageview = self.registry('website.crm.pageview')
         self.website_crm_score = self.registry('website.crm.score')
-        self.section = self.registry('crm.case.section')
+        self.team = self.registry('crm.team')
         self.res_users = self.registry('res.users')
-        self.section_user = self.registry('section.user')
+        self.team_user = self.registry('team.user')
         self.country = self.registry('res.country')
-        self.crm_case_stage = self.registry('crm.case.stage')
+        self.crm_stage = self.registry('crm.stage')
 
         self.belgium = self.country.search(cr, uid, [('name', '=', 'Belgium')])[0]
         self.france = self.country.search(cr, uid, [('name', '=', 'France')])[0]
 
-        self.stage = self.crm_case_stage.create(cr, uid, {
+        self.stage = self.crm_stage.create(cr, uid, {
             'name': 'testing',
             'probability': '50',
             'on_change': False,
@@ -86,15 +88,15 @@ class TestScoring(common.TransactionCase):
         })
 
         # Salesteam
-        self.section0 = self.section.create(cr, uid, {
-            'name': 'section0',
+        self.team0 = self.team.create(cr, uid, {
+            'name': 'team0',
             'code': 'S0',
-            'score_section_domain': [('country_id', '=', 'Belgium')],
+            'score_team_domain': [('country_id', '=', 'Belgium')],
         })
-        self.section1 = self.section.create(cr, uid, {
-            'name': 'section1',
+        self.team1 = self.team.create(cr, uid, {
+            'name': 'team1',
             'code': 'S1',
-            'score_section_domain': [('country_id', '=', 'France')],
+            'score_team_domain': [('country_id', '=', 'France')],
         })
 
         # Salesmen
@@ -113,22 +115,22 @@ class TestScoring(common.TransactionCase):
             # 'groups_id': [(6, 0, [self.group_employee_id])]
         }, {'no_reset_password': True})
 
-        # Section_user
-        self.section_user0 = self.section_user.create(cr, uid, {
+        # team_user
+        self.team_user0 = self.team_user.create(cr, uid, {
             'user_id': self.salesmen0,
-            'section_id': self.section0,
+            'team_id': self.team0,
             'maximum_user_leads': 1,
-            'section_user_domain': [('country_id', '=', 'Belgium')],
+            'team_user_domain': [('country_id', '=', 'Belgium')],
         })
-        self.section_user1 = self.section_user.create(cr, uid, {
+        self.team_user1 = self.team_user.create(cr, uid, {
             'user_id': self.salesmen1,
-            'section_id': self.section0,
+            'team_id': self.team0,
             'maximum_user_leads': 0,
-            'section_user_domain': [('country_id', '=', 'France')],
+            'team_user_domain': [('country_id', '=', 'France')],
         })
-        self.section_user2 = self.section_user.create(cr, uid, {
+        self.team_user2 = self.team_user.create(cr, uid, {
             'user_id': self.salesmen1,
-            'section_id': self.section1,
+            'team_id': self.team1,
             'maximum_user_leads': 1,
         })
 
