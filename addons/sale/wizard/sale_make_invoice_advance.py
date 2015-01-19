@@ -146,7 +146,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'comment': '',
                 'payment_term': sale.payment_term.id,
                 'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id,
-                'section_id': sale.section_id.id,
+                'team_id': sale.team_id.id,
             }
             result.append((sale.id, inv_values))
         return result

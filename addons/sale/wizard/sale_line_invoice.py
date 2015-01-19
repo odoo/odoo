@@ -49,7 +49,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'user_id': order.user_id and order.user_id.id or False,
             'company_id': order.company_id and order.company_id.id or False,
             'date_invoice': fields.date.today(),
-            'section_id': order.section_id.id,
+            'team_id': order.team_id.id,
         }
 
     
