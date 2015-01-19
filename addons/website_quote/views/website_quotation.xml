@@ -120,7 +120,9 @@
   </template>
 
   <template id="chatter">
-      <h1 class="page-header hidden-print">History</h1>
+      <section>
+          <h1 class="page-header hidden-print">History</h1>
+      </section>
       <ul class="media-list hidden-print" id="comments-list">
           <t t-foreach="quotation.message_ids" t-as="message">
               <li class="media" t-if="message.type &lt;&gt; 'comment' or message.subtype_id">
