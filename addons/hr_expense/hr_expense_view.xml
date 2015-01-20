@@ -46,7 +46,7 @@
                 <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="name" string="Expense Sheet"/>
                     <field name="amount"/>
                     <field name="state"/>
@@ -76,7 +76,7 @@
                         <group>
                             <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                             <field name="date"/>
-                            <field name="department_id"/>
+                            <field name="department_id" groups="hr.group_multi_departments"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -107,7 +107,7 @@
                                             <field name="unit_amount"/>
                                             <label for="unit_quantity"/>
                                             <div>
-                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="unit_quantity" class="oe_inline"/>
                                                 <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
                                             </div>
                                             <field name="date_value" />
@@ -156,7 +156,7 @@
                     <field name="name" string="Expenses"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="department_id" string="Department" context="{'invisible_department': False}"/>
+                    <field name="department_id" groups="hr.group_multi_departments" string="Department" context="{'invisible_department': False}"/>
                     <filter domain="[('state','=','draft')]" string="New" help="New Expense"/>
                     <filter domain="[('state','=','confirm')]" string="To Approve" name="confirm" help="Confirmed Expenses"/>
                     <filter domain="[('state','=','accepted')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
@@ -166,7 +166,7 @@
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by':'date'}" help="Expenses by Month"/>
                     </group>
                 </search>
@@ -181,7 +181,7 @@
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register new expenses. 
+                Click to register new expenses.
               </p><p>
                 Odoo will ensure the whole process is followed; the expense
                 sheet is validated by manager(s), the employee is reimbursed
@@ -215,7 +215,7 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new expense category. 
+                Click to create a new expense category.
              </p>
             </field>
         </record>
@@ -226,9 +226,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_expenses_tree"/>
-            <field name="domain">[('state','=','accepted')]</field> 
+            <field name="domain">[('state','=','accepted')]</field>
         </record>
-        
+
         <record id="action_request_approve_expense" model="ir.actions.act_window">
             <field name="name">Expenses to Approve</field>
             <field name="res_model">hr.expense.expense</field>
@@ -238,7 +238,7 @@
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register new expenses. 
+                Click to register new expenses.
               </p><p>
                 OpenERP will ensure the whole process is followed; the expense
                 sheet is validated by manager(s), the employee is reimbursed
@@ -247,12 +247,47 @@
               </p>
             </field>
         </record>
-        
-        <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" action="action_approved_expense" sequence="8"/> 
+
+        <menuitem id="menu_expense_approved" parent="account.menu_finance_payables" action="action_approved_expense" sequence="8"/>
         <menuitem id="menu_hr_product" name="Expense Products" parent="hr.menu_hr_configuration_expenses" action="hr_expense_product" groups="base.group_hr_manager"/>
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
         <menuitem action="action_request_approve_expense" id="menu_expense_to_approve" name="Expenses to Approve" parent="next_id_49" groups="base.group_hr_user"/>
-        
+
+        <record id="hr_expense_action_from_department" model="ir.actions.act_window">
+            <field name="name">Expenses To Approve</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
+            <field name="context">{
+                'search_default_confirm': 1,
+                'search_default_department_id': [active_id],
+                'default_department_id': active_id}
+            </field>
+        </record>
+
+        <!--Hr Department Inherit Kanban view-->
+        <record id="hr_department_view_kanban" model="ir.ui.view">
+            <field name="name">hr.department.kanban.inherit</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//templates" position="before">
+                        <field name="expense_to_approve_count"/>
+                    </xpath>
+                    <xpath expr="//div[@name='to_approve']" position="attributes">
+                        <attribute name="class">col-md-6 col-xs-6</attribute>
+                    </xpath>
+                    <xpath expr="//div[@name='to_approve']" position="inside">
+                        <div>
+                            <a name="%(hr_expense_action_from_department)d" type="action"><t t-esc="record.expense_to_approve_count.raw_value or 0"/> Expenses</a>
+                        </div>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
     </data>
 </openerp>

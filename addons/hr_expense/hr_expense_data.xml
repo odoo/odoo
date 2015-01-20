@@ -41,7 +41,7 @@
         <record id="mt_department_expense_confirmed" model="mail.message.subtype">
             <field name="name">Expenses To Approve</field>
             <field name="res_model">hr.department</field>
-            <field name="default" eval="False"/>
+            <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('mt_expense_confirmed')"/>
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="10"/>

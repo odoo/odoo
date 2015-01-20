@@ -45,14 +45,14 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)" 
-                                            context="{'show_address': 1}" 
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                            context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                     </group>
                                     <group string="Position">
-                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="department_id" groups="hr.group_multi_departments" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
@@ -75,8 +75,8 @@
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id" 
-                                            context="{'show_address': 1}" 
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                     <group string="Status">
@@ -114,7 +114,7 @@
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
                     <field name="coach_id" invisible="1"/>
@@ -129,14 +129,14 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="department_id" />
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <field name="job_id" />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
@@ -181,7 +181,7 @@
                                     <t t-raw="record.message_summary.raw_value"/>
                                     <span title='Messages'><i class='fa fa-comments'/><t t-esc="record.message_ids.raw_value.length"/></span>
                                     <span title='Followers'><i class='fa fa-users'/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
-                                    
+
                                 </div>
                                 <div class="oe_followers" groups="base.group_user">
                                     <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_follower oe_following">
@@ -251,7 +251,7 @@
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="job_id"/>
                     <field name="coach_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
@@ -358,9 +358,8 @@
                         </div>
                         <div class="oe_right" name="buttons"/>
                         <group name="employee_data">
-                            <field name="department_id" class="oe_inline"/>
+                            <field name="department_id" groups="hr.group_multi_departments" class="oe_inline"/>
                             <field name="no_of_recruitment" class="oe_inline" />
-                            
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>
@@ -385,7 +384,7 @@
             <field name="arch" type="xml">
                 <tree string="Job" fonts="bold:message_unread==True">
                     <field name="name"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
                     <field name="expected_employees"/>
@@ -404,11 +403,11 @@
                     <field name="name" string="Job"/>
                     <filter domain="[('state','=','open')]" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="hr.group_multi_departments"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}" groups="hr.group_multi_departments"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
@@ -440,6 +439,18 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
+
+        <record model="ir.actions.act_window" id="act_employee_from_department">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form,tree</field>
+            <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="context">{
+                "search_default_department_id": [active_id],
+                "default_department_id": active_id}
+            </field>
+        </record>
 
         <!-- hr.department -->
         <record id="view_department_form" model="ir.ui.view">
@@ -474,6 +485,57 @@
                 </tree>
             </field>
         </record>
+
+        <record id="hr_department_view_kanban" model="ir.ui.view" >
+            <field name="name">hr.department.kanban</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey">
+                    <field name="name"/>
+                    <field name="manager_id"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_department">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <i class="fa fa-bars fa-lg"/>
+                                    <ul class="oe_dropdown_menu">
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Department Settings</a></li>
+                                        <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content container">
+                                    <div class="row">
+                                        <a type="action" name="%(act_employee_from_department)d"/>
+                                        <t t-if="record.manager_id.raw_value">
+                                            <img t-att-src="kanban_image('hr.employee', 'image_small', record.manager_id.raw_value[0])" t-att-title="record.manager_id.value" class="oe_avatar oe_kanban_avatar_smallbox pull-right"/>
+                                        </t>
+                                        <t t-if="record.manager_id.raw_value === false">
+                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' title="No manager" class="oe_avatar oe_kanban_avatar_smallbox pull-right"/>
+                                        </t>
+                                        <h3 class="text-center oe_kanban_ellipsis"><field name="name"/></h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-xs-6 oe_form_invisible" name="to_approve">
+                                            <strong>To Approve</strong>
+                                        </div>
+                                        <div class="col-md-6 col-xs-6 oe_form_invisible" name="to_do">
+                                            <strong>To Do</strong>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div name="gauge_to_approve" class="col-md-6 col-xs-6 oe_form_invisible"/>
+                                        <div name="gauge_to_do" class="col-md-6 col-xs-6 oe_form_invisible"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_department_filter" model="ir.ui.view">
             <field name="name">Departments</field>
             <field name="model">hr.department</field>
@@ -489,6 +551,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -500,7 +563,13 @@
               </p>
             </field>
         </record>
-        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration_employees" sequence="2" groups="base.group_hr_manager,base.group_hr_user"/>
+
+        <menuitem
+            action="open_module_tree_department"
+            id="menu_hr_department_tree"
+            parent="menu_hr_main"
+            sequence="1"
+            groups="group_multi_departments"/>
 
     </data>
 </openerp>

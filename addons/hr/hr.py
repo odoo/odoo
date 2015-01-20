@@ -391,6 +391,7 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
         'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
         'note': fields.text('Note'),
+        'color': fields.integer('Color Index'),
     }
 
     _defaults = {
@@ -414,10 +415,12 @@ class hr_department(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not ids:
             return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if context is None:
+            context = {}
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
