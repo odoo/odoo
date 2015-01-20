@@ -1117,7 +1117,7 @@
         <t t-foreach="widget.priorities" t-as="rec" >
             <li t-att-data-value="rec.click_value" style="display: inline-block;">
                 <a href="#" t-att-title="rec.name">
-                    <span t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
+                    <i t-att-class="widget.get('value') gte rec.value and 'fa fa-star oe_star_on' or 'fa fa-star oe_star_off'"/>
                 </a>
             </li>
         </t>
@@ -1253,8 +1253,8 @@
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a t-if="! widget.options.no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e" draggable="false">/</a>
+            <i t-if="! widget.options.no_open" href="#" tabindex="-1"
+                class="oe_m2o_cm_button fa fa-external-link" draggable="false"/>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1463,7 +1463,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </a>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="#{file.id}">[</a>
+                        <i class="oe_right oe_delete fa fa-times-circle" title="Delete this file" t-attf-data-id="#{file.id}"/>
                     </t>
                 </div>
             </t>
@@ -1485,7 +1485,7 @@
         <div class="oe_placeholder_files"/>
         <div class="oe_add" t-if="!widget.get('effective_readonly')">
             <!-- uploader of file -->
-            <button class="oe_attach"><span class="oe_e">'</span></button> 
+            <button class="oe_attach"><i class="fa fa-paperclip"/></button> 
             <span class='oe_attach_label'><t t-esc="widget.string"/></span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>

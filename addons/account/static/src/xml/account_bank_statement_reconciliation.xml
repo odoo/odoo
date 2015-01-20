@@ -65,10 +65,10 @@
             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span><span class="sr-only">Close</span></button>
             <t t-esc="message" />
             <t t-if="details !== undefined">
-                <a class="oe_e" style="line-height: 14px; position: relative; top: 3px" rel="do_action" href="javascript:void(0)"
+                <i class="fa fa-external-link" rel="do_action" href="javascript:void(0)"
                     t-att-data-action_nam="details.name"
                     t-att-data-model="details.model"
-                    t-att-data-ids="details.ids">/</a>
+                    t-att-data-ids="details.ids"/>
             </t>
         </div>
     </t>

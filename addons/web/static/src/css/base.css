@@ -1,20 +1,10 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
   src: url("/web/static/src/font/mnmliconsv21-webfont.woff") format("woff");
   src: url("/web/static/src/font/mnmliconsv21-webfont.ttf") format("truetype");
   src: url("/web/static/src/font/mnmliconsv21-webfont.svg") format("svg") active;
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "EntypoRegular";
-  src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
-  src: url("/web/static/src/font/entypo-webfont.eot?#iefix") format("embedded-opentype");
-  src: url("/web/static/src/font/entypo-webfont.woff") format("woff");
-  src: url("/web/static/src/font/entypo-webfont.ttf") format("truetype");
-  src: url("/web/static/src/font/entypo-webfont.svg") format("svg") active;
   font-weight: normal;
   font-style: normal;
 }
@@ -282,12 +272,6 @@
   font-size: 21px;
   font-weight: 300 !important;
 }
-.openerp .oe_e {
-  font-family: "entypoRegular" !important;
-  font-size: 34px;
-  font-weight: 300 !important;
-  line-height: 100%;
-}
 .openerp .oe_left {
   float: left;
   margin-right: 8px;
@@ -508,7 +492,8 @@
   text-shadow: 0 0 2px black;
   vertical-align: top;
   position: relative;
-  top: -8px;
+  top: 4px;
+  font-size: 22px;
 }
 .openerp .oe_star_on:hover, .openerp .oe_star_off:hover {
   text-decoration: none;
@@ -2100,10 +2085,9 @@
   border: none;
   text-shadow: none;
 }
-.openerp .oe_fileupload .oe_add button.oe_attach .oe_e {
+.openerp .oe_fileupload .oe_add button.oe_attach .fa {
   position: relative;
-  top: -10px;
-  left: -9px;
+  font-size: 18px;
 }
 .openerp .oe_fileupload .oe_add input.oe_form_binary_file {
   display: inline-block;
@@ -2129,11 +2113,11 @@
   padding-left: 4px;
   padding-right: 4px;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e {
+.openerp .oe_fileupload .oe_attachments .oe_attachment .fa {
   font-size: 23px;
   margin-top: -5px;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e:hover {
+.openerp .oe_fileupload .oe_attachments .oe_attachment .fa:hover {
   text-decoration: none;
 }
 .openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(odd) {
@@ -2154,9 +2138,12 @@
   right: 0px;
 }
 .openerp .oe_form_field_many2one .oe_m2o_cm_button {
-  line-height: 14px;
+  line-height: 27px;
   float: right;
   padding-left: 2px;
+  font-size: 19px;
+  color: #7C7BAD;
+  cursor: pointer;
 }
 .openerp .oe_form_field_many2one input {
   padding-right: 13px;
@@ -2613,17 +2600,9 @@
   cursor: ns-resize;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
-  font-size: 1px;
-  letter-spacing: -1px;
-  color: transparent;
-  text-shadow: none;
-  font-weight: normal;
-  margin-right: 7px;
-}
-.openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
-  font: 18px "entypoRegular";
-  content: "}";
+  font-size: 18px;
   color: #E0E0E0;
+  margin-right: 7px;
 }
 .openerp .oe_list_content .oe_list_field_progressbar progress {
   width: 100%;
@@ -3072,7 +3051,7 @@ body.oe_single_form .oe_single_form_container {
   .openerp .tree_header button, .openerp .oe_mail .oe_mail_thread_msg .oe_mail_unread, .openerp .oe_mail_fetch_more, .openerp .oe_m2o_drop_down_button img, .openerp .oe_form_field_one2many_list_row_add {
     visibility: hidden;
   }
-  .openerp a.oe_m2o_cm_button, .openerp a.oe_e {
+  .openerp a.oe_m2o_cm_button, .openerp a.fa {
     visibility: hidden;
   }
   .openerp .oe_form .oe_form_field_date img, .openerp .oe_form .oe_form_field_datetime img {

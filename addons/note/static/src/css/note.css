@@ -2,14 +2,15 @@
 .oe_kanban_column .note_text_line_through {
   text-decoration: line-through;
 }
+
+.openerp .oe_form .oe_pad.oe_memo {
+  width: auto;
+}
 .openerp .oe_form .oe_form_field.oe_memo {
   margin: 0;
   padding: 0px;
   width: 100%;
   min-height: 200px;
-}
-.openerp .oe_form .oe_pad.oe_memo {
-  width: auto;
 }
 .openerp .oe_form .oe_form_field.oe_memo .cleditorMain {
   border: none;
@@ -60,6 +61,10 @@
   -moz-transition: all 300ms cubic-bezier(0.5, 0, 0.5, 1);
   -ms-transition: all 300ms cubic-bezier(0.5, 0, 0.5, 1);
   transition: all 300ms cubic-bezier(0.5, 0, 0.5, 1);
+}
+.openerp .oe_kanban_record .oe_kanban_card_fancy .fa {
+  margin-top: 8px;
+  margin-right: 6px;
 }
 .openerp .oe_kanban_record:nth-of-type(even) .oe_kanban_card_fancy {
   -webkit-transform: rotate(1deg);

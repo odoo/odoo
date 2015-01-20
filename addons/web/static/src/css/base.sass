@@ -23,16 +23,6 @@ $sheet-padding: 16px
     font-weight: normal
     font-style: normal
 
-@font-face
-    font-family: 'EntypoRegular'
-    src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
-    src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
-    src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
-    src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
-    src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
-    font-weight: normal
-    font-style: normal
-
 @mixin reset()
     border: none
     padding: 0
@@ -127,17 +117,6 @@ $sheet-padding: 16px
     font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
-        content: $icon-name
-        color: $color
-
-@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
-    font-size: 1px
-    letter-spacing: -1px
-    color: transparent
-    text-shadow: none
-    font-weight: normal
-    &:before
-        font: $size "entypoRegular"
         content: $icon-name
         color: $color
 
@@ -336,11 +315,6 @@ $sheet-padding: 16px
         font-family: "mnmliconsRegular" !important
         font-size: 21px
         font-weight: 300 !important
-    .oe_e
-        font-family: "entypoRegular" !important
-        font-size: 34px
-        font-weight: 300 !important
-        line-height: 100%
     .oe_left
         float: left
         margin-right: 8px
@@ -475,7 +449,8 @@ $sheet-padding: 16px
         text-shadow: 0 0 2px black
         vertical-align: top
         position: relative
-        top: -8px
+        top: 4px
+        font-size: 22px
     .oe_star_on:hover, .oe_star_off:hover
         text-decoration: none
     .oe_star_on
@@ -1763,10 +1738,9 @@ $sheet-padding: 16px
                 box-shadow: none
                 border: none
                 text-shadow: none
-                .oe_e
+                .fa
                     position: relative
-                    top: -10px
-                    left: -9px                    
+                    font-size: 18px
             input.oe_form_binary_file
                 display: inline-block
                 margin-left: -85px
@@ -1787,10 +1761,10 @@ $sheet-padding: 16px
                 padding: 2px
                 padding-left: 4px
                 padding-right: 4px
-                .oe_e
+                .fa
                     font-size: 23px
                     margin-top: -5px
-                .oe_e:hover
+                .fa:hover
                     text-decoration: none
             .oe_attachment:nth-child(odd)
                 background: white
@@ -1807,9 +1781,12 @@ $sheet-padding: 16px
             top: 2px
             right: 0px
         .oe_m2o_cm_button
-            line-height: 14px
+            line-height: 27px
             float: right
             padding-left: 2px
+            font-size: 19px
+            color: #7C7BAD
+            cursor: pointer
         input
             padding-right: 13px
     &.ui-autocomplete
@@ -2147,7 +2124,8 @@ $sheet-padding: 16px
             padding: 0 !important
             cursor: ns-resize
             .oe_list_handle
-                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                font-size: 18px
+                color: #E0E0E0
                 margin-right: 7px
         .oe_list_field_progressbar progress
             width: 100%
@@ -2533,7 +2511,7 @@ body.oe_single_form
         .tree_header button, .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more, .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add
             visibility: hidden
         a
-            &.oe_m2o_cm_button, &.oe_e
+            &.oe_m2o_cm_button, &.fa
                 visibility: hidden
         .oe_form
             .oe_form_field_date img, .oe_form_field_datetime img

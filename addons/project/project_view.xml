@@ -263,7 +263,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_project_task_spark">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                    <span class="oe_e">i</span>
+                                    <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Project</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -294,11 +294,11 @@
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_footer_left">
                                         <span groups="project.group_time_work_estimation_tasks">
-                                            <span class="oe_e">R</span>
+                                            <i class="fa fa-clock-o"/>
                                             <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
                                         </span>
                                         <span t-if="record.date.raw_value">
-                                            <span class="oe_e">N</span>
+                                            <i class="fa fa-calendar"/>
                                             <field name="date"/>
                                         </span>
                                     </div>
@@ -516,7 +516,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
-                                <span class="oe_e">i</span>
+                                <i class="fa fa-bars fa-lg"/>
                                 <ul class="oe_dropdown_menu">
                                     <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Task</a></li></t>
                                     <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -542,7 +542,7 @@
                                 </div>
                                 <div class="oe_kanban_footer_left">
                                     <span groups="project.group_time_work_estimation_tasks" title="Remaining hours">
-                                        <span class="oe_e">N</span>
+                                        <i class="fa fa-clock-o"/>
                                         <t t-esc="Math.round(record.remaining_hours.raw_value)"/>
                                     </span>
                                 </div>

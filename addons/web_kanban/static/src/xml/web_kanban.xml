@@ -33,7 +33,7 @@
             <t t-set="parent" t-value="(widget.getParent())"/>
             <div class="oe_kanban_header oe_semantic_html_override">
                 <t t-if="widget.view._is_quick_create_enabled()">
-                    <div class="oe_kanban_add oe_e" title="Quick create">]</div>
+                    <div><i class="oe_kanban_add fa fa-plus" title="Quick create"/></div>
                 </t>
                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                     <div class="oe_kanban_group_length">
@@ -41,7 +41,7 @@
                             <t t-if="widget.group.get('length') &gt; 99"> 99+ </t><t t-if="widget.group.get('length') &lt;= 99"> <t t-esc="widget.group.get('length')"/> </t>
                         </span>
                     </div>
-                    <span class="oe_e">i</span>
+                    <i class="fa fa-bars fa-lg"/>
                     <ul class="oe_dropdown_menu oe_kanban_group_dropdown">
                         <li><a data-action="toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.view.grouped_by_m2o and widget.value">
