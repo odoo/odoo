@@ -243,13 +243,3 @@ class account_analytic_line(osv.osv):
     _columns = {
         'task_id' : fields.many2one('project.task', 'Task'),
     }
-
-    def get_product(self, cr, uid, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if emp_ids:
-            employee = emp_obj.browse(cr, uid, emp_ids, context=context)[0]
-            if employee.product_id:return employee.product_id.id
-        return False
-   
-    _defaults = {'product_id': get_product,}
