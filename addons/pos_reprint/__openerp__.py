@@ -21,16 +21,16 @@
 
 
 {
-    'name': 'Point of Sale Reprint',
+    'name': 'Point of Sale Receipt Reprinting',
     'version': '1.0',
     'category': 'Point of Sale',
     'sequence': 6,
-    'summary': 'Allow cashier to reprint tickets',
+    'summary': 'Allow cashier to reprint receipts',
     'description': """
 
 =======================
 
-Allow cashier to reprint tickets
+Allow cashier to reprint receipts
 
 """,
     'author': 'Odoo SA',
@@ -38,6 +38,9 @@ Allow cashier to reprint tickets
     'data': [
         'views/templates.xml',
         'views/views.xml',
+    ],
+    'qweb': [
+        'static/src/xml/reprint.xml',
     ],
     'installable': True,
     'website': 'https://www.odoo.com/page/point-of-sale',
