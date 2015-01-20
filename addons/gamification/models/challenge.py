@@ -316,7 +316,7 @@ class gamification_challenge(osv.Model):
                               OR (gg.state = 'reached'
                                   AND (gg.end_date >= %s OR gg.end_date IS NULL)))
         """, (tuple(ids), yesterday.strftime(DF)))
-        goal_ids = cr.fetchall()
+        goal_ids = [res[0] for res in cr.fetchall()]
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
