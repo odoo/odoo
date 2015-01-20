@@ -145,6 +145,9 @@ define(['summernote/summernote'], function () {
 
         $linkPopover.find('.popover-content').append($airPopover.find(".note-history").clone());
 
+        $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fa fa-link");
+        $linkPopover.find('button[data-event="unlink"]').before($airPopover.find('button[data-event="showImageDialog"]').clone());
+
         //////////////// text/air popover
 
         //// highlight the text format
@@ -482,6 +485,13 @@ define(['summernote/summernote'], function () {
         if ($(event.target).closest("#website-top-navbar, .note-popover").length) {
             return;
         }
+        if ($(event.target).is(":o_editable")) {
+            var a = summernote_ie_fix(event, function (node) { return node.tagName === "A"; });
+            if (a) {
+                range.create().select();
+            }
+        }
+
         // don't rerange if simple click
         if (initial_data.event) {
             var dx = event.clientX - (event.shiftKey ? initial_data.rect.left : initial_data.event.clientX);
@@ -494,13 +504,21 @@ define(['summernote/summernote'], function () {
     var remember_selection;
     function summernote_mousedown (event) {
         history.splitNext();
+        
         if (!!document.documentMode) {
-            summernote_ie_fix(event);
+            summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
+        } else if (last_div && event.target !== last_div && last_div.tagName === "A") {
+            summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
         }
+
         var r = range.create();
         if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#website-top-navbar, #oe_main_menu_navbar, .note-popover, .modal').length) {
             if (remember_selection && !$(event.target).is('input, select, label, button, a')) {
-                remember_selection.select();
+                try {
+                    remember_selection.select();
+                } catch (e) {
+                    console.warn(e);
+                }
             }
         } else if (r && $(dom.node(r.sc)).closest('.o_editable, .note-editable').length) {
             remember_selection = r;
@@ -510,12 +528,12 @@ define(['summernote/summernote'], function () {
     var last_div;
     var last_div_change;
     var last_editable;
-    function summernote_ie_fix (event) {
+    function summernote_ie_fix (event, pred) {
         var editable;
         var div;
         var node = event.target;
         while(node.parentNode) {
-            if (!div && (node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel))) {
+            if (!div && pred(node)) {
                 div = node;
             }
             if(last_div !== node && (node.getAttribute('contentEditable')==='false' || node.className && (node.className.indexOf('o_not_editable') !== -1))) {
@@ -561,6 +579,7 @@ define(['summernote/summernote'], function () {
         } else {
             last_div_change = null;
         }
+        return editable !== div ? div : null;
     }
 
     var fn_attach = eventHandler.attach;
@@ -621,7 +640,7 @@ define(['summernote/summernote'], function () {
         $(document).off('mousedown', summernote_mousedown);
         $(document).off('mouseup', summernote_mouseup);
         oLayoutInfo.editor.off("dblclick");
-        $(document).off("keydown keyup", reRangeSelectKey);
+        $(document).off("keyup", reRangeSelectKey);
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -874,6 +893,19 @@ define(['summernote/summernote'], function () {
             return this;
         }
     });
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function change_default_bootstrap_animation_to_edit() {
+        var fn_carousel = $.fn.carousel;
+        $.fn.carousel = function () {
+            var res = fn_carousel.apply(this, arguments);
+            // off bootstrap keydown event to remove event.preventDefault()
+            // and allow to change cursor position
+            $(this).off('keydown.bs.carousel');
+            return res;
+        };
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1207,6 +1239,8 @@ define(['summernote/summernote'], function () {
          */
         start_edition: function (restart) {
             var self = this;
+
+            change_default_bootstrap_animation_to_edit();
 
             this.history = history;
 
