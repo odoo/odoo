@@ -555,12 +555,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.do_notify(_t("Backed"), _t("Database backed up successfully"));
             },
             error: function(error){
-               if(error){
-                  self.display_error({
-                        title: _t("Backup Database"),
-                        error: 'AccessDenied'
-                  });
-               }
+                if (error && error[1]) {
+                    self.display_error(error[1][0]);
+                }
             },
             complete: function() {
                 self.unblockUI();
