@@ -99,7 +99,7 @@
                             <field groups="base.group_multi_currency" name="currency_id"/>
                         </group>
                         <group>
-                            <field name="tax_ids" domain="[('type_tax_use','!=','as_child')]" widget="many2many_tags"/>
+                            <field name="tax_ids" domain="[('type_tax_use','!=','none')]" widget="many2many_tags"/>
                             <field name="child_consol_ids" widget="many2many_tags"/>
                             <field name="reconcile"/>
                             <field name="internal_type" invisible="1"/>
@@ -784,6 +784,7 @@
         </record>
 
         <!-- Tax -->
+
         <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="4"/>
         
         <record id="view_tax_tree" model="ir.ui.view">
@@ -845,14 +846,62 @@
                                 </group>
                             </group>
                             <field name="children_tax_ids"
-                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','as_child')]}"
-                                domain="[('type_tax_use','in',('as_child',type_tax_use)), ('amount_type','!=','group')]">
+                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">
                                     <field name="sequence" widget="handle" />
                                     <field name="name"/>
                                     <field name="amount_type" />
                                     <field name="amount" />
                                 </tree>
+                                <!-- TODO : define a record account.tax.form.child.form inheriting account.view_tax_form and just call it here ? -->
+                                <form string="Account Tax">
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                        </group>
+                                        <group>
+                                            <!-- TODO : A tax used as child can't be of amount_type group and of
+                                                type_tax_use other than its parent's or none. With a little extra
+                                                work in the web client we could enforce it by passing to the widget
+                                                context="{'type_tax_use': [parent.get('type_tax_use'), 'none']}"
+                                            -->
+                                            <field name="type_tax_use"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page string="Definition">
+                                            <group>
+                                                <group>
+                                                    <field name="amount_type" />
+                                                    <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                                                    <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                                        <field name="amount" class="oe_inline" />
+                                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                                    </div>
+                                                </group>
+                                                <group attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                                    <field name="account_id"/>
+                                                    <field name="refund_account_id"/>
+                                                </group>
+                                            </group>
+                                        </page>
+                                        <page string="Advanced Options">
+                                            <group>
+                                                <group>
+                                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                                    <field name="active" groups="base.group_no_one"/>
+                                                </group>
+                                                <group>
+                                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                                </group>
+                                            </group>
+                                        </page>
+                                    </notebook>
+                                </form>
                             </field>
                         </page>
                         <page string="Advanced Options">
@@ -860,9 +909,8 @@
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
-                                    <br/><br/>
-                                    <field name="active" groups="base.group_no_one"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="active" groups="base.group_no_one"/>
                                 </group>
                                 <group>
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
@@ -1535,8 +1583,8 @@
                                 </group>
                             </group>
                             <field name="children_tax_ids"
-                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','as_child')]}"
-                                domain="[('type_tax_use','in',('as_child',type_tax_use)), ('amount_type','!=','group')]">
+                                attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">
                                     <field name="sequence" widget="handle" />
                                     <field name="name"/>

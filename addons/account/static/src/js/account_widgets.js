@@ -977,7 +977,7 @@ openerp.account = function (instance) {
                 var tax_id = self.tax_id_field.get("value");
                 if (amount && tax_id) {
                     deferred_tax = self.model_tax
-                        .call("compute_all", [tax_id, amount, self.get("currency_id")])
+                        .call("compute_all", [[tax_id], amount, self.get("currency_id")])
                         .then(function(data){
                             line_created_being_edited.length = 1; // remove tax lines
                             line_created_being_edited[0].amount_before_tax = amount;

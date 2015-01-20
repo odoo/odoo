@@ -13,14 +13,14 @@ class account_tax_python(models.Model):
             type_selection.append(option)
 
     python_compute = fields.Text(string='Python Code', default="result = price_unit * 0.10",
-        help="Compute the amount of the tax by setting the variable 'result'."
+        help="Compute the amount of the tax by setting the variable 'result'.\n\n"
             ":param base_amount: float, actual amount on which the tax is applied\n"
             ":param price_unit: float\n"
             ":param quantity: float\n"
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
     python_applicable = fields.Text(string='Applicable Code', default="result = True",
-        help="Determine if the tax will be applied by setting the variable 'result' to True or False."
+        help="Determine if the tax will be applied by setting the variable 'result' to True or False.\n\n"
             ":param price_unit: float\n"
             ":param quantity: float\n"
             ":param product: product.product recordset singleton or None\n"

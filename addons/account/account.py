@@ -523,8 +523,8 @@ class account_tax(models.Model):
     _order = 'sequence'
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -551,27 +551,26 @@ class account_tax(models.Model):
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
-        if not all(child.type_tax_use in ('as_child', self.type_tax_use) for child in self.children_tax_ids):
-            raise Warning(_('The application scope of taxes in a group must be either the same as the group or "Only in Tax Group".'))
+        if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
+            raise Warning(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(account_tax, self).copy(default=default)
 
-    #@api.model
-    #def name_search(self, name, args=None, operator='ilike', limit=80):
-    #    """
-    #    Returns a list of tupples containing id, name, as internally it is called {def name_get}
-    #    result format: {[(id, name), (id, name), ...]}
-    #    """
-    #    args = args or []
-    #    if operator in expression.NEGATIVE_TERM_OPERATORS:
-    #        domain = [('description', operator, name), ('name', operator, name)]
-    #    else:
-    #        domain = ['|', ('description', operator, name), ('name', operator, name)]
-    #    taxes = self.search(expression.AND([domain, args]), limit=limit)
-    #    return taxes.name_get()
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=80):
+        """ Returns a list of tupples containing id, name, as internally it is called {def name_get}
+            result format: {[(id, name), (id, name), ...]}
+        """
+        args = args or []
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('description', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('description', operator, name), ('name', operator, name)]
+        taxes = self.search(expression.AND([domain, args]), limit=limit)
+        return taxes.name_get()
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -590,19 +589,19 @@ class account_tax(models.Model):
 
         return super(account_tax, self).search(args, offset, limit, order, count=count)
 
-    #@api.multi
-    #@api.depends('name', 'description')
-    #def name_get(self):
-    #    res = []
-    #    for record in self:
-    #        name = record.description and record.description or record.name
-    #        res.append((record.id, name))
-    #    return res
+    @api.multi
+    @api.depends('name', 'description')
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.description and record.description or record.name
+            res.append((record.id, name))
+        return res
 
     @api.onchange('amount')
     def onchange_amount(self):
-        if not self.description and self.amount_type in ('percent', 'division') and self.amount != 0.0:
-            self.description = "{0:.4g} %".format(self.amount)
+        if self.amount_type in ('percent', 'division') and self.amount != 0.0:
+            self.description = "{0:.4g}%".format(self.amount)
 
     @api.onchange('account_id')
     def onchange_account_id(self):
@@ -616,7 +615,9 @@ class account_tax(models.Model):
     @api.multi
     def normalized_set(self):
         """ Returns a recordset where groups are replaced by their children and each tax appears only once sorted by default sort order (sequence).
-            NB : It might make more sense to first filter out first-level taxes that appear in groups. """
+            Warning : It might make more sense to first filter out first-level taxes that appear in groups.
+            Eg. considering letters as taxes and alphabetic order as sequence :
+            [G, B([A, D, F]), E, C] sould become [A, C, D, E, F, G] or [A, D, F, C, E, G] ? """
         return self.mapped(lambda r: r.amount_type == 'group' and r.children_tax_ids or r).sorted()
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
@@ -867,7 +868,7 @@ class account_tax_template(models.Model):
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
