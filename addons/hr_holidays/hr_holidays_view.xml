@@ -104,7 +104,7 @@
                             <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user" context="{'employee_id':employee_id}" />
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="department_id" groups="base.group_hr_user" attrs="{'readonly':['|','|' ,('type','=','add'),('holiday_type','=','category'),('state','=', 'validate')],'invisible':[('holiday_type','=','category')]}"/>
                             <field name="payslip_status" groups="base.group_hr_manager" attrs="{'invisible':[('type','=','add')]}" widget="toggle_button"/>
                         </group>
                         <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
@@ -442,24 +442,18 @@
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
                 <form string="Leave Type">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="categ_id"/>
+                    <group>
+                        <group name="selection">
+                            <field name="name"/>
+                            <field name="double_validation"/>
+                            <field name="limit"/>
+                        </group>
+                        <group name="second">
+                            <field name="categ_id"/>
+                            <field name="color_name"/>
+                            <field name="active"/>
+                        </group>
                     </group>
-                    <notebook>
-                        <page string="Details">
-                            <group>
-                                <group name="selection" string="Validation">
-                                    <field name="double_validation"/>
-                                    <field name="limit"/>
-                                </group>
-                                <group name="second" string="Misc">
-                                    <field name="color_name"/>
-                                    <field name="active"/>
-                                </group>
-                            </group>
-                        </page>
-                    </notebook>
                 </form>
             </field>
         </record>
@@ -585,7 +579,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='active_group']" position="before">
-                    <group string="Leaves">
+                    <group string="Leaves" groups="base.group_no_one">
                         <label for="remaining_leaves"/>
                         <div>
                             <field name="remaining_leaves" class="oe_inline"/> days

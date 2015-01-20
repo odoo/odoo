@@ -202,8 +202,8 @@ class hr_holidays(osv.osv):
             \nThe status is \'To Approve\', when holiday request is confirmed by user.\
             \nThe status is \'Refused\', when holiday request is refused by manager.\
             \nThe status is \'Approved\', when holiday request is approved by manager.'),
-        'payslip_status': fields.boolean(string='Payslip Status',
-            help='Check this field when the leave has been taken into account in the payslip.'),
+        'payslip_status': fields.boolean(string='Reported in last payslips',
+            help='Green this button when the leave has been taken into account in the payslip.'),
         'report_note': fields.text('HR Comments'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True, copy=False),
@@ -238,10 +238,11 @@ class hr_holidays(osv.osv):
         'payslip_status': False,
     }
     _constraints = [
-        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from','date_to']),
-        (_check_holidays, 'The number of remaining leaves is not sufficient for this leave type', ['state','number_of_days_temp'])
-    ] 
-    
+        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from', 'date_to']),
+        (_check_holidays, 'The number of remaining leaves is not sufficient for this leave type.\n'
+                          'Please verify also the leaves waiting for validation.', ['state', 'number_of_days_temp'])
+    ]
+
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", 
          "The employee or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
@@ -479,9 +480,7 @@ class hr_holidays(osv.osv):
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
             if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
-                # Raising a warning gives a more user-friendly feedback than the default constraint error
-                raise UserError(_('The number of remaining leaves is not sufficient for this leave type.\n'
-                                'Please verify also the leaves waiting for validation.'))
+                return False
         return True
 
     def toggle_payslip_status(self, cr, uid, ids, context=None):
