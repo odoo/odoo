@@ -236,8 +236,8 @@
                 <div class="modal-body">
                     <t t-if="list.length != 0"> 
                         <ul>
-                            <t t-foreach="list" t-as="item">      
-                                <li><t t-esc="item"></t> </li>            
+                            <t t-foreach="list" t-as="item">
+                                <li><a t-att-href="item.url"> <b><t t-esc="item.name"></t></b> </a></li>
                             </t>
                         </ul>
                     </t>
