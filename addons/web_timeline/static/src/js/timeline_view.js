@@ -387,10 +387,6 @@ openerp.web_timeline = function (session) {
             this.render_mutex = new $.Mutex();
         },
 
-        start: function () {
-            return this._super.apply(this, arguments);
-        },
-
         /**
          * instantiate the compose message object and insert this on the DOM.
          * The compose message is display in compact form.
@@ -577,6 +573,72 @@ openerp.web_timeline = function (session) {
             return message
         },
 
+        message_to_expendable: function (message) {
+            var prev_msg = message.$el.prev();
+            var next_msg = message.$el.next();
+
+            if (prev_msg.hasClass('oe_tl_thread_message') && next_msg.hasClass('oe_tl_thread_message')) {
+                this.create_new_expandable(message);
+            }
+            else if (prev_msg.hasClass('oe_tl_thread_expendable') && next_msg.hasClass('oe_tl_thread_expendable')) {
+                this.concat_two_expandables(message, prev_msg, next_msg);
+            }
+            else if (prev_msg.hasClass('oe_tl_thread_expendable')) {
+                this.concat_one_expandable(message, prev_msg);
+            }
+            else if (next_msg.hasClass('oe_tl_thread_expendable')) {
+                this.concat_one_expandable(message, next_msg);
+            }
+
+            message.destroy();
+            return true;
+        },
+
+        create_new_expandable: function (message) {
+            var exp = new openerp.web_timeline.ThreadExpendable(this, {
+                'model': message.model,
+                'parent_id': message.parent_id,
+                'nb_messages': 1,
+                'domain': [['id', '=', message.id]],
+                'type': 'expandable',
+                'context': {
+                    'default_model': message.model || this.context.default_model,
+                    'defauft_res_id': message.res_id || this.context.default_res_id,
+                    'default_parent_id': message.parent_id || this.context.default_parent_id,
+                },
+            }, message.options);
+
+            this.messages.push(exp);
+            exp.insertAfter(message.$el);
+        },
+
+        concat_two_expandables: function (message, prev_msg, next_msg) {
+            prev_msg = _.find(this.messages, function (val) {return val.$el[0] == prev_msg[0];});
+            next_msg = _.find(this.messages, function (val) {return val.$el[0] == next_msg[0];});
+
+            prev_msg.domain = openerp.web_timeline.ChatterUtils.expand_domain(prev_msg.domain);
+            next_msg.domain = openerp.web_timeline.ChatterUtils.expand_domain(next_msg.domain);
+            next_msg.domain = ['|','|'].concat(prev_msg.domain).concat([['id', '=', message.id]]).concat(next_msg.domain);
+
+            next_msg.nb_messages += (1 + prev_msg.nb_messages);
+
+            prev_msg.$el.remove();
+            prev_msg.destroy();
+
+            next_msg.reinit();
+        },
+
+        concat_one_expandable: function (message, exp_msg) {
+            exp_msg = _.find(this.messages, function (val) {return val.$el[0] == exp_msg[0];});
+
+            exp_msg.domain = openerp.web_timeline.ChatterUtils.expand_domain(exp_msg.domain);
+            exp_msg.domain = ['|'].concat(exp_msg.domain).concat([['id', '=', message.id]]);
+
+            exp_msg.nb_messages += 1;
+
+            exp_msg.reinit();
+        },
+
         /**
          * display the message "there are no message" on the thread
          */
@@ -644,7 +706,7 @@ openerp.web_timeline = function (session) {
             this.attachment_ids = dataset.attachment_ids ||  [],
             this.tracking_value_ids = dataset.tracking_value_ids || [],
             this.partner_ids = dataset.partner_ids || [],
-            this.date = dataset.date,
+            this.date = dataset.date || '',
             this.user_pid = dataset.user_pid || false;
 
             this.format_data();
@@ -810,6 +872,12 @@ openerp.web_timeline = function (session) {
             this.nb_messages = dataset.nb_messages;
         },
 
+        reinit: function () {
+            var $render = $(session.web.qweb.render('ThreadExpendable', {'widget': this}));
+            this.$el.html($render);
+            this.$el = $render;
+        },
+
         on_expendable_message: function (event) {
             event.stopPropagation();
 
@@ -871,7 +939,7 @@ openerp.web_timeline = function (session) {
             return this._super.apply(this, arguments);
         },
 
-         /** 
+        /** 
          * Get all child message linked.
          * @return array of message object
          */
@@ -995,25 +1063,26 @@ openerp.web_timeline = function (session) {
          * @param {callback} apply function
          */
         check_for_rerender: function () {
-            console.log("check for rerender");
             var self = this;
 
             var messages = [this].concat(this.get_childs());
-            console.log("messages", messages);
-            var message_ids = _.map(messages, function (msg) { return msg.id;});
-            console.log("message_ids", message_ids);
-            console.log("domain 1", this.options.root_thread.domain);
+            var message_ids = _.map(messages, function (msg) {return msg.id;});
             var domain = openerp.web_timeline.ChatterUtils.expand_domain(this.options.root_thread.domain)
                 .concat([["id", "in", message_ids ]]);
-            console.log("domain", domain);
                 
             return this.parent_thread.ds_message.call('message_read', 
                 [undefined, domain, [], 0, this.context, this.parent_thread.id])
                 .then( function (records) {
+                    console.log("after to read", records);
                     // remove message not loaded
                     _.map(messages, function (msg) {
-                        msg.renderElement();
-                        msg.start();
+                        if(!_.find(records, function (record) {return record.id == msg.id;})) {
+                            msg.destroy_message();
+                        } 
+                        else {
+                            msg.renderElement();
+                            msg.start();
+                        }
                         self.options.root_thread.MailRoot.do_reload_menu_emails();
                     });
                 });
@@ -1115,6 +1184,17 @@ openerp.web_timeline = function (session) {
                .html(session.web.qweb.render('ThreadMessage.PartnersList', 
                                             {'widget': this}));
         },
+
+        destroy_message: function (fadeTime) {
+            var self = this;
+
+            //this.$el.fadeOut(fadeTime, function () {
+                self.parent_thread.message_to_expendable(self);
+            //});
+            if (this.thread) {
+
+            }
+        }
     });
  
     openerp.web_timeline.ThreadComposeMessage = openerp.web_timeline.MessageCommon.extend({
