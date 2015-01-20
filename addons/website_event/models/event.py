@@ -14,7 +14,7 @@ from openerp.addons.website.models.website import slug
 
 class event(models.Model):
     _name = 'event.event'
-    _inherit = ['event.event', 'website.seo.metadata']
+    _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
     _track = {
         'website_published': {
             'website_event.mt_event_published': lambda self, cr, uid, obj, ctx=None: obj.website_published,
@@ -23,7 +23,6 @@ class event(models.Model):
     }
 
     twitter_hashtag = fields.Char('Twitter Hashtag', default=lambda self: self._default_hashtag())
-    website_published = fields.Boolean('Visible in Website', copy=False)
     # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
@@ -33,15 +32,13 @@ class event(models.Model):
         string='Website Messages',
         help="Website communication history",
     )
-    website_url = fields.Char('Website url', compute='_website_url')
 
-    @api.one
+    @api.multi
     @api.depends('name')
-    def _website_url(self):
-        if isinstance(self.id, NewId):
-            self.website_url = ''
-        else:
-            self.website_url = "/event/" + slug(self)
+    def _website_url(self, name, arg):
+        res = super(event, self)._website_url(name, arg)
+        res.update({(e.id, '/event/%s' % slug(e)) for e in self})
+        return res
 
     def _default_hashtag(self):
         return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()

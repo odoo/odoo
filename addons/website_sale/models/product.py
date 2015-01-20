@@ -102,13 +102,13 @@ class product_public_category(osv.osv):
     }
 
 class product_template(osv.Model):
-    _inherit = ["product.template", "website.seo.metadata"]
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin']
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, '')
+        res = super(product_template, self)._website_url(cr, uid, ids, field_name, arg, context=context)
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = "/shop/product/%s" % (product.id,)
         return res
@@ -122,7 +122,6 @@ class product_template(osv.Model):
             ],
             string='Website Comments',
         ),
-        'website_published': fields.boolean('Available in the website', copy=False),
         'website_description': fields.html('Description for the website', translate=True),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
@@ -130,7 +129,6 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('product.style', string='Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'website_url': fields.function(_website_url, string="Website url", type="char"),
         'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
     }
 
@@ -143,7 +141,6 @@ class product_template(osv.Model):
         'website_size_x': 1,
         'website_size_y': 1,
         'website_sequence': _defaults_website_sequence,
-        'website_published': False,
     }
 
     def set_sequence_top(self, cr, uid, ids, context=None):
@@ -178,18 +175,15 @@ class product_template(osv.Model):
         else:
             return self.set_sequence_bottom(cr, uid, ids, context=context)
 
+
 class product_product(osv.Model):
     _inherit = "product.product"
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = "/shop/product/%s" % (product.product_tmpl_id.id,)
-        return res
+    # Wrapper for call_kw with inherits
+    def open_website_url(self, cr, uid, ids, context=None):
+        template_ids = list(set(self.browse(cr, uid, ids, context=context).product_tmpl_id.id))
+        return self.pool['product.template'].open_website_url(cr, uid, template_ids, context=context)
 
-    _columns = {
-        'website_url': fields.function(_website_url, string="Website url", type="char"),
-    }
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
@@ -199,6 +193,7 @@ class product_attribute(osv.Model):
     _defaults = {
         'type': lambda *a: 'radio',
     }
+
 
 class product_attribute_value(osv.Model):
     _inherit = "product.attribute.value"

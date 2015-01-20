@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-import difflib
 import lxml
 import random
 
@@ -65,11 +64,15 @@ class BlogTag(osv.Model):
 class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _order = 'id DESC'
-
     _mail_post_access = 'read'
 
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = super(BlogPost, self)._website_url(cr, uid, ids, field_name, arg, context=context)
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            res[blog_post.id] = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
+        return res
 
     def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -91,10 +94,6 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True, sanitize=False),
-        # website control
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False,
-        ),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
