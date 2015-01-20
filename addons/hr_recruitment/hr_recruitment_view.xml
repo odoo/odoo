@@ -8,14 +8,6 @@
         groups="base.group_hr_manager"
         sequence="2"/>
 
-    <act_window
-        id="act_hr_applicant_to_meeting"
-        name="Meetings"
-        res_model="calendar.event"
-        src_model="hr.applicant"
-        view_mode="calendar,tree,form,graph"
-        view_type="form"/>
-
     <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
@@ -77,7 +69,7 @@
                 <div class="oe_right oe_button_box">
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          help="Schedule interview with this applicant">
-                         <div>Schedule<br/>Meeting</div>
+                         <div>Meetings</div>
                     </button>
                     <button name="action_start_survey" 
                         class="oe_stat_button"
@@ -114,7 +106,7 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2 style="display: inline-block;">
+                    <h2>
                         <field name="partner_name" class="oe_inline"/>
                         <button string="Create Employee" name="create_employee_from_applicant" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
@@ -200,8 +192,7 @@
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <graph string="Cases By Stage and Estimates" stacked="True">
-                <field name="create_date" interval="week"/>
+              <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical" stacked="True">
                 <field name="stage_id" type="col"/>
             </graph>
         </field>
@@ -398,8 +389,7 @@
                 </div>
                 <label for="address_id"/>
                 <div>
-                    <field name="address_id" context="{'show_address': 1}"/>
-                    <span class="oe_grey">(empty = remote work)</span>
+                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]"/>
                 </div>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
