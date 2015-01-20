@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import osv, fields
+from openerp.addons.website.models.website import slug
 
 
 class WebsiteResPartner(osv.Model):
     _name = 'res.partner'
-    _inherit = ['res.partner', 'website.seo.metadata']
+    _inherit = ['res.partner', 'website.seo.metadata', 'website.published.mixin']
 
     def _get_ids(self, cr, uid, ids, flds, args, context=None):
         return {i: i for i in ids}
@@ -20,8 +21,6 @@ class WebsiteResPartner(osv.Model):
         return [('website_published', '=', not args[0][2])]
 
     _columns = {
-        'website_published': fields.boolean(
-            'Publish', help="Publish on the website", copy=False),
         'website_private': fields.function(
             _get_private, fnct_inv=_set_private, fnct_search=_search_private,
             type='boolean', string='Private Profile'),
@@ -34,6 +33,12 @@ class WebsiteResPartner(osv.Model):
         # hack to allow using plain browse record in qweb views
         'self': fields.function(_get_ids, type='many2one', relation=_name),
     }
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = super(WebsiteResPartner, self)._website_url(cr, uid, ids, field_name, arg, context=context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = "/partners/%s" % slug(partner)
+        return res
 
     _defaults = {
         'website_published': True
