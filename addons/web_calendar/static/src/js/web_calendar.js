@@ -22,6 +22,14 @@ openerp.web_calendar = function(instance) {
     function get_fc_defaultOptions() {
         shortTimeformat = moment._locale._longDateFormat.LT;
         var dateFormat = instance.web.normalize_format(_t.database.parameters.date_format);
+
+        // adapt format for fullcalendar v1.
+        // see http://fullcalendar.io/docs1/utilities/formatDate/
+        var conversions = [['YYYY', 'yyyy'], ['YY', 'y'], ['DDDD', 'dddd'], ['DD', 'dd']];
+        _.each(conversions, function(conv) {
+            dateFormat = dateFormat.replace(conv[0], conv[1]);
+        });
+
         return {
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
