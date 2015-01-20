@@ -82,7 +82,7 @@ class Versioning_Controller(Website):
         version = mod_version.browse(version_id)
         name_list = []
         for view in version.view_ids:
-            name_list.append(view.name)
+            name_list.append({'name': view.name, 'url': '/page/' + view.name.replace(' ', '').lower()})
         return name_list
 
     @http.route('/website_version/google_access', type='json', auth="user")
