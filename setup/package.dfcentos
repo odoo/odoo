@@ -17,9 +17,11 @@ RUN rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noar
 	yum clean all && \
 	pip install xlwt http://download.gna.org/pychart/PyChart-1.39.tar.gz
 
-# Manual start of postgres
+# Postgres configuration
 RUN mkdir -p /var/lib/postgres/data
 RUN chown -R postgres:postgres /var/lib/postgres/data
 RUN chmod 0700 /var/lib/postgres/data
 RUN su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"
 RUN cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

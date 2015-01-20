@@ -64,3 +64,5 @@ RUN apt-get update -qq &&  \
 		python-xlwt \
 		python-yaml -y && \
 	rm -rf /var/lib/apt/lists/*
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
