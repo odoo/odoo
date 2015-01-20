@@ -316,7 +316,7 @@ class gamification_goal(osv.Model):
                         if result != goal.current:
                             goals_to_write[goal.id]['current'] = result
                     else:
-                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s' % definition.name))
+                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s') % definition.name)
 
             else:  # count or sum
 
