@@ -265,15 +265,6 @@ class Post(models.Model):
     def _get_post_karma_rights(self):
         user = self.env.user
 
-    def name_get(self, cr, uid, ids, context=None):
-        result = []
-        for post in self.browse(cr, uid, ids, context=context):
-            if post.parent_id and not post.name:
-                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
-            else:
-                result.append((post.id, '%s' % (post.name)))
-        return result
-
         self.karma_accept = self.parent_id and self.parent_id.create_uid.id == self._uid and self.forum_id.karma_answer_accept_own or self.forum_id.karma_answer_accept_all
         self.karma_edit = self.create_uid.id == self._uid and self.forum_id.karma_edit_own or self.forum_id.karma_edit_all
         self.karma_close = self.create_uid.id == self._uid and self.forum_id.karma_close_own or self.forum_id.karma_close_all
@@ -291,6 +282,15 @@ class Post(models.Model):
         self.can_downvote = user.karma >= self.forum_id.karma_downvote
         self.can_comment = user.karma >= self.karma_comment
         self.can_comment_convert = user.karma >= self.karma_comment_convert
+
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+        for post in self.browse(cr, uid, ids, context=context):
+            if post.parent_id and not post.name:
+                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
+            else:
+                result.append((post.id, '%s' % (post.name)))
+        return result
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
