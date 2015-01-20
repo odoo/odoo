@@ -58,6 +58,37 @@ class StockMove(osv.osv):
             ('company_id', '=', user_company)]
         return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, domain, context=context)
 
+    def _action_explode_update_move_line_data(self, cr, uid, orig_valdef, context=None, **data):
+        """Update the move line data.
+
+        You should return a modified copy of orig_valdef.
+
+        Default implementation is to return a copy of orig_valdef unmodified.
+
+        orig_valdef: The original data for new stock.move being created.
+        data['move']: The stock.move that _action_explode is currently exploding
+        data['product']: The product that _action_explode is currently exploding
+
+        Sample override:
+            def _action_explode_update_move_line_data(self, cr, uid, orig_valdef, context=None, **data):
+                new_valdef = super(YourSubclass, self)._action_explode_update_move_line_data(cr, uid,
+                    orig_valdef, context=context, **data
+                )
+                prod_obj = self.pool['product.product']
+
+                product = data['product']
+                move = data['move']
+
+                if (
+                    product.type != 'service'
+                    or prod_obj.need_procurement(cr, uid, [product.id], context=context)
+                ):
+                    return dict(new_valdef, phantom_product_id=move.product_id.id)
+                else:
+                    return new_valdef
+        """
+        return orig_valdef.copy()
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -91,7 +122,13 @@ class StockMove(osv.osv):
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
                     }
-                    mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
+                    updated_valdef = self._action_explode_update_move_line_data(cr, uid,
+                        orig_valdef=valdef,
+                        move=move,
+                        product=product,
+                        context=context
+                    )
+                    mid = move_obj.copy(cr, uid, move.id, default=updated_valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
                     if prod_obj.need_procurement(cr, uid, [product.id], context=context):
@@ -109,10 +146,16 @@ class StockMove(osv.osv):
                             'priority': move.priority,
                             'partner_dest_id': move.partner_id.id,
                             }
+                        updated_valdef = self._action_explode_update_move_line_data(cr, uid,
+                            orig_valdef=valdef,
+                            move=move,
+                            product=product,
+                            context=context
+                        )
                         if move.procurement_id:
-                            proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
+                            proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=updated_valdef, context=context)
                         else:
-                            proc = proc_obj.create(cr, uid, valdef, context=context)
+                            proc = proc_obj.create(cr, uid, updated_valdef, context=context)
                         proc_obj.run(cr, uid, [proc], context=context) #could be omitted
 
             
