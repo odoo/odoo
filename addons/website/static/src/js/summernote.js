@@ -344,7 +344,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                 temp.tagName === node.tagName &&
                 !dom.isText(node) &&
                 dom.isMergable(node) &&
-                !dom.isNotBreakable(node) && !dom.isNotBreakable(dom.nextElementSibling(node))) {
+                !dom.isNotBreakable(node) && !dom.isNotBreakable(previous ? dom.previousElementSibling(node) : dom.nextElementSibling(node))) {
 
                 if (previous) {
                     dom.doMerge(temp, node);
