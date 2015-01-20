@@ -1707,7 +1707,7 @@ class BaseModel(object):
             return False
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', args=None, operator=None, limit=100):
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
         Search for records that have a display name matching the given
@@ -1733,7 +1733,7 @@ class BaseModel(object):
         """
         return self._name_search(name, args, operator, limit=limit)
 
-    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+    def _name_search(self, cr, user, name='', args=None, operator=None, context=None, limit=100, name_get_uid=None):
         # private implementation of name_search, allows passing a dedicated user
         # for the name_get part to solve some access rights issues
         args = list(args or [])
@@ -1741,6 +1741,9 @@ class BaseModel(object):
         if not self._rec_name:
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
+            if operator is None:
+                field = self._fields[self._rec_name]
+                operator = ('=' if field.type == 'integer' else 'ilike')
             args += [(self._rec_name, operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)

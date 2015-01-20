@@ -120,7 +120,7 @@ class OdooDocker(object):
     def __init__(self):
         self.log_file = NamedTemporaryFile(mode='w+b', prefix="bash", suffix=".txt", delete=False)
         self.port = 8069  # TODO sle: reliable way to get a free port?
-        self.prompt_re = '(\r\nroot@|bash-).*# '
+        self.prompt_re = '\[root@nightly-tests\] #'
         self.timeout = 600
 
     def system(self, command):
