@@ -575,9 +575,12 @@ openerp.web_timeline = function (session) {
             var prev_msg = message.$el.prev();
             var next_msg = message.$el.next();
 
+            console.log("next_msg", next_msg);
+            console.log("prev_msg", prev_msg);
+
             if ((prev_msg.hasClass('oe_tl_thread_message') && next_msg.hasClass('oe_tl_thread_message'))
                  || (prev_msg.hasClass('oe_tl_parent_message') && next_msg.hasClass('oe_tl_thread_message'))) {
-                console.log("create new expandable");
+                console.log("creta exp");
                 this._create_new_expandable(message);
             }
             else if (prev_msg.hasClass('oe_tl_thread_expendable') && next_msg.hasClass('oe_tl_thread_expendable')) {
@@ -613,18 +616,8 @@ openerp.web_timeline = function (session) {
         },
 
         _concat_two_expandables: function (message, prev_msg, next_msg) {
-            console.log("prev_msg", prev_msg[0]);
-            console.log("next_msg", next_msg[0]);
-            console.log("this.messages");
-            _.each(this.messages, function(val){
-                console.log(val.$el[0]);
-            });
-
             prev_msg = _.find(this.messages, function (val) {return val.$el[0] == prev_msg[0];});
             next_msg = _.find(this.messages, function (val) {return val.$el[0] == next_msg[0];});
-
-            console.log("prev_msg", prev_msg);
-            console.log("next_msg", next_msg);
 
             prev_msg.domain = openerp.web_timeline.ChatterUtils.expand_domain(prev_msg.domain);
             next_msg.domain = openerp.web_timeline.ChatterUtils.expand_domain(next_msg.domain);
