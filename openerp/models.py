@@ -706,15 +706,10 @@ class BaseModel(object):
 
     @classmethod
     def _init_manual_fields(cls, cr, partial=False):
-        # Check whether the query is already done
-        if cls.pool.fields_by_model is not None:
-            manual_fields = cls.pool.fields_by_model.get(cls._name, [])
-        else:
-            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (cls._name, 'manual'))
-            manual_fields = cr.dictfetchall()
+        manual_fields = cls.pool.get_manual_fields(cr, cls._name)
 
-        for field in manual_fields:
-            if field['name'] in cls._fields:
+        for name, field in manual_fields.iteritems():
+            if name in cls._fields:
                 continue
             attrs = {
                 'manual': True,
@@ -735,7 +730,11 @@ class BaseModel(object):
                 attrs['ondelete'] = field['on_delete']
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'one2many':
-                if partial and field['relation'] not in cls.pool:
+                if partial and not (
+                    field['relation'] in cls.pool and (
+                        field['relation_field'] in cls.pool[field['relation']]._fields or
+                        field['relation_field'] in cls.pool.get_manual_fields(cr, field['relation'])
+                )):
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['inverse_name'] = field['relation_field']
@@ -746,11 +745,11 @@ class BaseModel(object):
                 attrs['comodel_name'] = field['relation']
                 _rel1 = field['relation'].replace('.', '_')
                 _rel2 = field['model'].replace('.', '_')
-                attrs['relation'] = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                attrs['relation'] = 'x_%s_%s_%s_rel' % (_rel1, _rel2, name)
                 attrs['column1'] = 'id1'
                 attrs['column2'] = 'id2'
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
-            cls._add_field(field['name'], Field.by_type[field['ttype']](**attrs))
+            cls._add_field(name, Field.by_type[field['ttype']](**attrs))
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -2948,11 +2947,8 @@ class BaseModel(object):
                 field.reset()
 
     @api.model
-    def _setup_fields(self, partial=False):
-        """ Setup the fields (dependency triggers, etc).
-
-            :param partial: ``True`` if all models have not been loaded yet.
-        """
+    def _setup_fields(self):
+        """ Setup the fields (dependency triggers, etc). """
         cls = type(self)
         if cls._setup_done:
             return
@@ -2963,6 +2959,7 @@ class BaseModel(object):
             self.env[parent]._setup_fields()
 
         # retrieve custom fields
+        partial = self._context.get('_setup_fields_partial')
         cls._init_manual_fields(self._cr, partial=partial)
 
         # retrieve inherited fields
