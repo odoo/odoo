@@ -10,7 +10,7 @@ openerp.pos_reprint = function(instance){
             var self = this;
             this._super();
             this.pos.old_receipt = null;
-            
+
             if(!this.pos.config.reprint) return;
 
             var reprint = $(QWeb.render('ReprintButton'));
@@ -34,7 +34,7 @@ openerp.pos_reprint = function(instance){
 
     module.ProxyDevice.include({
         print_receipt: function(receipt) {
-            this.pos.old_receipt = this.pos.old_receipt || receipt;
+            this.pos.old_receipt = receipt || this.pos.old_receipt;
             this._super(receipt);
         }
     });
