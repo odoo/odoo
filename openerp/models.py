@@ -2929,13 +2929,8 @@ class BaseModel(object):
 
     @api.model
     def _prepare_setup(self):
-        """ Prepare the setup of the model and its fields. """
+        """ Prepare the setup of the model. """
         type(self)._setup_done = False
-        for name, field in self._fields.items():
-            if field.inherited:
-                del self._fields[name]
-            else:
-                field.reset()
 
     @api.model
     def _setup_base(self, partial):
@@ -2949,11 +2944,20 @@ class BaseModel(object):
         for parent in cls._inherits:
             self.env[parent]._setup_base(partial)
 
+        # remove inherited fields from cls._fields
+        for name, field in cls._fields.items():
+            if field.inherited:
+                del cls._fields[name]
+
         # retrieve custom fields
         cls._init_manual_fields(self._cr, partial)
 
         # retrieve inherited fields
         cls._init_inherited_fields()
+
+        # prepare the setup of fields
+        for field in cls._fields.itervalues():
+            field.reset()
 
         cls._setup_done = True
 

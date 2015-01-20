@@ -336,8 +336,6 @@ class Field(object):
         # determine self.default and cls._defaults in a consistent way
         self._determine_default(cls, name)
 
-        self.reset()
-
     def _determine_default(self, cls, name):
         """ Retrieve the default value for `self` in the hierarchy of `cls`, and
             determine `self.default` and `cls._defaults` accordingly.
