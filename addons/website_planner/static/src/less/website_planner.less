@@ -1,0 +1,104 @@
+
+#PlannerModal {
+
+    font-family: "LatoLatin", serif;
+
+    #planner_page1 {
+        h1 {margin-bottom: 20px;}
+        p.last{
+            margin-bottom: 50px;
+        }
+        .fabien {
+            margin-bottom: 30px;
+            pointer-events: none;
+            .item{
+                float: left;
+                display: inline;
+                &:last-child{
+                    margin-left:10px; 
+                }
+            }
+        }
+        img.signature{
+            margin-top: 3em;
+        }
+        address {
+            margin-bottom: 0px;
+            font-style: normal;
+            line-height: 1.42857143;
+            font-size: 12px;
+            text-align: left;
+        }
+    }
+    #planner_page2{
+        textarea{
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+    #planner_page3 {
+        textarea {
+            width: 58%;
+            max-width: 58%;
+        }
+    }
+    #planner_page15 {
+        ul {
+            list-style-type: upper-roman;
+        }
+    }
+
+    #planner_page19 {
+        .trophy{
+            font-size: 11em;
+            color: #A24689;
+            margin-top: .5em;
+            -webkit-animation-name: bounceIn;
+            animation-name: bounceIn;
+            -webkit-animation-duration: 1.75s;
+            animation-duration: 1.75s;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+    }
+}
+
+// XS size
+@media screen and (max-width: 768px) {
+    #PlannerModal .pages {
+        margin-top: 0px;
+    }
+    #PlannerModal .counter {
+        padding: 6px 0 0 5px;
+    }
+}
+
+// SM size
+@media screen and (min-width: 769px) {
+    #PlannerModal .paragraphs {
+        div.col-md-10 {
+            margin-top:1em;
+        }
+        .icon {
+            margin: 1em auto .5em;
+        }
+        span {
+            transform: translateX(-8px);
+            position: relative;
+            display: block;
+        }
+    }
+}
+
+// MD size
+@media screen and (min-width: 992px) {
+    #PlannerModal .paragraphs .icon {
+        font-size: 4em;
+        margin: 0.3em auto .5em;
+        span{
+            transform: translateX(0px);
+            position: relative;
+            display: block;
+        }
+    }
+}
