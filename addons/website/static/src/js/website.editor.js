@@ -1856,6 +1856,7 @@ define(['summernote/summernote'], function () {
                 this.rte = this.$editable.rte || this.$editable.data('rte');
             }
             this.options = options || {};
+            this.old_media = media;
             this.media = media;
             this.isNewMedia = !media;
             this.range = range.create();
@@ -1940,7 +1941,8 @@ define(['summernote/summernote'], function () {
                 $(this.media).addClass(this.active.add_class);
             }
 
-            self.trigger("saved", self.active.media, self.media);
+            $(document.body).trigger("media-saved", [self.active.media, self.old_media]);
+            self.trigger("saved", [self.active.media, self.old_media]);
             setTimeout(function () {
                 range.createFromNode(self.active.media).select();
                 click_event(self.active.media, "mousedown");
