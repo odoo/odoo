@@ -4,14 +4,14 @@
         <!--
         Resource: account.tax.template
         Account tax templates for Costa Rica
-        -->
-        <record id="account_tax_template_IV_0" model="account.tax.template">
-            <field name="name">0 Sales Tax</field>
-            <field name="description">IV</field>
+        -->	
+        <record id="account_tax_template_IV_Ventas13%_GEN_" model="account.tax.template">
+            <field name="name">IV - Ventas 13%</field>
+            <field name="description">IV - Ventas 13%</field>
             <field name="sequence">10</field>
-            <field name="amount">13</field>
+            <field name="amount">0.13</field>
             <field name="type">percent</field>
-            <field name="type_tax_use">all</field>
+            <field name="type_tax_use">sale</field>
             <field name="applicable_type">true</field>
             <field name="child_depend" eval="False"/>
             <field name="include_base_amount" eval="False"/>
@@ -19,21 +19,22 @@
             <field name="ref_base_sign" eval="-1"/>
             <field name="tax_sign" eval="1"/>
             <field name="ref_tax_sign" eval="-1"/>
-            <field name="chart_template_id" ref="account_chart_template_0"/>
-            <field name="account_collected_id" ref="account_account_template_0_212101"/>
-            <field name="account_paid_id" ref="account_account_template_0_212101"/>
-            <field name="base_code_id" ref="account_tax_code_template_IVPrin"/>
-            <field name="ref_base_code_id" ref="account_tax_code_template_IVPrin"/>
-            <field name="tax_code_id" ref="account_tax_code_template_IVTax"/>
-            <field name="ref_tax_code_id" ref="account_tax_code_template_IVTax"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_V_G_13"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_V_G_13"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_V_G_13"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_V_G_13"/>
         </record>
-        <record id="account_tax_template_IV_x" model="account.tax.template">
-            <field name="name">x Sales Tax</field>
-            <field name="description">IV</field>
+
+        <record id="account_tax_template_IV_Ventas10%_GEN_" model="account.tax.template">
+            <field name="name">IV - Ventas 10%</field>
+            <field name="description">IV - Ventas 10%</field>
             <field name="sequence">10</field>
-            <field name="amount">13</field>
+            <field name="amount">0.1</field>
             <field name="type">percent</field>
-            <field name="type_tax_use">all</field>
+            <field name="type_tax_use">sale</field>
             <field name="applicable_type">true</field>
             <field name="child_depend" eval="False"/>
             <field name="include_base_amount" eval="False"/>
@@ -41,25 +42,393 @@
             <field name="ref_base_sign" eval="-1"/>
             <field name="tax_sign" eval="1"/>
             <field name="ref_tax_sign" eval="-1"/>
-            <field name="chart_template_id" ref="account_chart_template_x"/>
-            <field name="account_collected_id" ref="account_account_template_x212101"/>
-            <field name="account_paid_id" ref="account_account_template_x212101"/>
-            <field name="base_code_id" ref="account_tax_code_template_IVPrin"/>
-            <field name="ref_base_code_id" ref="account_tax_code_template_IVPrin"/>
-            <field name="tax_code_id" ref="account_tax_code_template_IVTax"/>
-            <field name="ref_tax_code_id" ref="account_tax_code_template_IVTax"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_V_G_10"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_V_G_10"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_V_G_10"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_V_G_10"/>
         </record>
 
+        <record id="account_tax_template_IV_VentasNacExe_GEN_" model="account.tax.template">
+            <field name="name">IV - Ventas Nac Exe</field>
+            <field name="description">IV - Ventas Nac Exe</field>
+            <field name="sequence">15</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="1"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="tax_sign" eval="1"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_V_Exe_Nac"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_V_Exe_Nac"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_V_Exe_Nac"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_V_Exe_Nac"/>
+        </record>
 
-        <!--
-        Resource: account.account.template
-        Adds taxes to account templates
-        -->
-        <record id="account_account_template_0_410001" model="account.account.template">
-            <field name="tax_ids" eval="[(6,0,[ref('account_tax_template_IV_0')])]"/>
+        <record id="account_tax_template_IV_VentaExpExe_GEN_" model="account.tax.template">
+            <field name="name">IV - Venta Exp Exe</field>
+            <field name="description">IV - Venta Exp Exe</field>
+            <field name="sequence">20</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="1"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="tax_sign" eval="1"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_V_Exe_Exp"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_V_Exe_Exp"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_V_Exe_Exp"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_V_Exe_Exp"/>
         </record>
-        <record id="account_account_template_x410001" model="account.account.template">
-            <field name="tax_ids" eval="[(6,0,[ref('account_tax_template_IV_x')])]"/>
+
+        <record id="account_tax_template_IV_VentaNacEsp5%_GEN_" model="account.tax.template">
+            <field name="name">IV - Venta Nac Esp 5%</field>
+            <field name="description">IV - Venta Nac Esp 5%</field>
+            <field name="sequence">20</field>
+            <field name="amount">0.05</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="1"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="tax_sign" eval="1"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_V_Esp"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_V_Esp"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_V_Esp"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_V_Esp"/>
         </record>
+
+        <record id="account_tax_template_IV_CompraNac13%_GEN_" model="account.tax.template">
+            <field name="name">IV - Compra Nac 13%</field>
+            <field name="description">IV - Compra Nac 13%</field>
+            <field name="sequence">40</field>
+            <field name="amount">0.13</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_C_Nac_G"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_C_Nac_G"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_G"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_G"/>
+        </record>
+
+        <record id="account_tax_template_IV_CompraNacExe_GEN_" model="account.tax.template">
+            <field name="name">IV - Compra Nac Exe</field>
+            <field name="description">IV - Compra Nac Exe</field>
+            <field name="sequence">40</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_C_Nac_Exe"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_C_Nac_Exe"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_Exe"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_Exe"/>
+        </record>
+
+        <record id="account_tax_template_IV_CompraNacEsp5%_GEN_" model="account.tax.template">
+            <field name="name">IV - Compra Nac Esp 5%</field>
+            <field name="description">IV - Compra Nac Esp 5%</field>
+            <field name="sequence">40</field>
+            <field name="amount">0.05</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2131_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2131_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_IV_C_Nac_Esp"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_IV_C_Nac_Esp"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_Esp"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_IV_C_Nac_Esp"/>
+        </record>
+
+        <record id="account_tax_template_IV_Gasto13%_GEN_" model="account.tax.template">
+            <field name="name">IV - Gasto 13%</field>
+            <field name="description">IV - Gasto 13%</field>
+            <field name="sequence">60</field>
+            <field name="amount">0.13</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+        </record>
+
+        <record id="account_tax_template_IV_Gasto10%_GEN_" model="account.tax.template">
+            <field name="name">IV - Gasto 10%</field>
+            <field name="description">IV - Gasto 10%</field>
+            <field name="sequence">60</field>
+            <field name="amount">0.1</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+        </record>
+
+        <record id="account_tax_template_IV_GastoExe_GEN_" model="account.tax.template">
+            <field name="name">IV - Gasto Exe</field>
+            <field name="description">IV - Gasto Exe</field>
+            <field name="sequence">60</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="tax_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+        </record>
+
+        <record id="account_tax_template_ISC_Sel_deConsumo10%_GEN_" model="account.tax.template">
+            <field name="name">ISC - Sel. de Consumo 10%</field>
+            <field name="description">ISC - Sel. de Consumo 10%</field>
+            <field name="sequence">80</field>
+            <field name="amount">0.1</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="1"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="tax_sign" eval="1"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2132_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2132_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_ISC_G"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_ISC_G"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_ISC_G"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_ISC_G"/>
+        </record>
+
+        <record id="account_tax_template_IS_Sel_deConsumoExe_GEN_" model="account.tax.template">
+            <field name="name">IS - Sel. de Consumo Exe</field>
+            <field name="description">IS - Sel. de Consumo Exe</field>
+            <field name="sequence">80</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="applicable_type">true</field>
+            <field name="child_depend" eval="False"/>
+            <field name="include_base_amount" eval="False"/>
+            <field name="base_sign" eval="1"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="tax_sign" eval="1"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="chart_template_id" ref="account_chart_template_GEN"/>
+            <field name="account_collected_id" ref="account_account_template_GEN_2132_0001"/>
+            <field name="account_paid_id" ref="account_account_template_GEN_2132_0002"/>
+            <field name="base_code_id" ref="account_tax_code_template_B_ISC_Exe"/>
+            <field name="ref_base_code_id" ref="account_tax_code_template_B_ISC_Exe"/>
+            <field name="tax_code_id" ref="account_tax_code_template_I_ISC_Exe"/>
+            <field name="ref_tax_code_id" ref="account_tax_code_template_I_ISC_Exe"/>
+        </record>	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
     </data>
 </openerp>
