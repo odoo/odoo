@@ -2536,6 +2536,9 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
             // As in GTK client, floats default to 0
             value_ = 0;
         }
+        if (this.digits !== undefined && this.digits.length === 2) {
+            value_ = instance.web.round_decimals(value_, this.digits[1]);
+        }
         this._super.apply(this, [value_]);
     },
     focus: function () {

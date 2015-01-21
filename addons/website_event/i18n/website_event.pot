@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-09-23 16:28+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-21 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -155,7 +155,7 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
-msgid "Email Thread"
+msgid "Event"
 msgstr ""
 
 #. module: website_event
@@ -178,6 +178,18 @@ msgstr ""
 #. module: website_event
 #: view:website:website_event.404
 msgid "Event not found!"
+msgstr ""
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_published
+#: model:mail.message.subtype,name:website_event.mt_event_published
+msgid "Event published"
+msgstr ""
+
+#. module: website_event
+#: model:mail.message.subtype,description:website_event.mt_event_unpublished
+#: model:mail.message.subtype,name:website_event.mt_event_unpublished
+msgid "Event unpublished"
 msgstr ""
 
 #. module: website_event
@@ -227,7 +239,7 @@ msgid "Insert blocks to layout the body of your event."
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:38
+#: code:addons/website_event/models/event.py:44
 #, python-format
 msgid "Introduction"
 msgstr ""
@@ -253,7 +265,7 @@ msgid "Local Events"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:39
+#: code:addons/website_event/models/event.py:45
 #, python-format
 msgid "Location"
 msgstr ""
@@ -359,7 +371,7 @@ msgid "Publish your event"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:61
+#: code:addons/website_event/models/event.py:67
 #, python-format
 msgid "Register"
 msgstr ""
@@ -532,6 +544,12 @@ msgstr ""
 #. module: website_event
 #: view:website:website_event.index
 msgid "pull-right"
+msgstr ""
+
+#. module: website_event
+#: view:website:website_event.event_details
+#: view:website:website_event.index
+msgid "to"
 msgstr ""
 
 #. module: website_event

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-11-26 16:55+0000\n"
+"Last-Translator: IRNPS <koljenovic@gmail.com>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:36+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-27 07:58+0000\n"
+"X-Generator: Launchpad (build 17261)\n"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -42,6 +42,27 @@ msgid ""
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"\n"
+"                * Skica naloga: nalog još nije potvrđen i neće biti "
+"raspoređen\n"
+"\n"
+"                * Čeka drugu operaciju: čeka završetak nekog drugog "
+"transfera prije nego postane automatski dostupan\n"
+"\n"
+"                * Čeka dostupnost: još uvijek čeka da proizvod postane "
+"dostupan\n"
+"\n"
+"                * Djelimično dostupan: određena količina proizvoda je "
+"dostupna i rezervirana\n"
+"\n"
+"                * Spreman za transfer: proizvodi rezervirani, čekaju "
+"potvrdu\n"
+"\n"
+"                * Prenesen: procesiran nalog, nije moguće vršiti dodatne "
+"izmjene\n"
+"\n"
+"                * Otkazan: nalog je otkazan, nije ga moguće naknadno "
+"potvrditi"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
@@ -50,18 +71,21 @@ msgid ""
 "Creates the dropship route and add more complex tests-This installs the "
 "module stock_dropshipping."
 msgstr ""
+"\n"
+"Kreira dropship rute i dodaje kompleksnije testove - ova opcija instalira "
+"modul stock_dropshipping."
 
 #. module: stock
 #: code:addons/stock/stock.py:1603
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr " (%s rezerviran)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1606
 #, python-format
 msgid " (reserved)"
-msgstr ""
+msgstr " (rezerviran)"
 
 #. module: stock
 #: code:addons/stock/stock.py:3016
@@ -109,30 +133,30 @@ msgstr ""
 #: code:addons/stock/stock.py:3429
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr " Prikupljanje robe po redoslijedu"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr ""
+msgstr " Postoji prenos robe?"
 
 #. module: stock
 #: code:addons/stock/stock.py:2384
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
-msgstr "%s %s %s je <b>prenesen u</b> otpis."
+msgstr "%s %s %s je <b>prenesen u</b> otpad."
 
 #. module: stock
 #: code:addons/stock/stock.py:2856
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Vrši nabavu od %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
 #, python-format
 msgid "%s: Transit Location"
-msgstr ""
+msgstr "%s: Prenosno mjesto"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -257,6 +281,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za dodavanje skladišnog mjesta.\n"
+"              </p><p>\n"
+"                Unesite skladišna mjesta (lokacije) tako da oslikavaju "
+"strukturu vašeg skladišta\n"
+"                i organizacije. Odoo podržava upravljanje fizičkim "
+"lokacijama\n"
+"                (skladištima, policama, spremnicima, itd), partnerskim "
+"lokacijama (kupci,\n"
+"                dobavljači) i virtuelnim lokacijama koje predstavljaju\n"
+"                skladišne operacije poput naloga za proizvodnju ili\n"
+"                upotrebu, inventura, itd.\n"
+"              </p><p>  \n"
+"                Svaka skladišna operacija u Odoo pomjera proizvode sa "
+"jednog\n"
+"                mjesta na drugo. Na primjer, ukoliko zaprimite proizvode\n"
+"                od vašeg dobavljača, Odoo će ih pomjeriti sa lokacije "
+"\"Dobavljači\"\n"
+"                na lokaciju \"Skladište\". Izvještaji mogu biti napravljeni "
+"na bazi\n"
+"                fizičkih, partnerskih ili virtuelnih lokacija.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form

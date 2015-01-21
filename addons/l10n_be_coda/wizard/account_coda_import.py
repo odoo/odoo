@@ -296,10 +296,19 @@ class account_coda_import(osv.osv_memory):
                     if line['communication_struct'] and 'communication_type' in line and line['communication_type'] == '101':
                         structured_com = line['communication']
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
+                        account = str(line['counterpartyNumber'])
+                        domain = [('acc_number', '=', account)]
+                        iban = account[0:2].isalpha()
+                        if iban:
+                            n = 4
+                            space_separated_account = ' '.join(account[i:i + n] for i in range(0, len(account), n))
+                            domain = ['|', ('acc_number', '=', space_separated_account)] + domain
+                        ids = self.pool.get('res.partner.bank').search(cr, uid, domain)
                         if ids:
                             bank_account_id = ids[0]
-                            partner_id = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context).partner_id.id
+                            bank_account = self.pool.get('res.partner.bank').browse(cr, uid, bank_account_id, context=context)
+                            line['counterpartyNumber'] = bank_account.acc_number
+                            partner_id = bank_account.partner_id.id
                         else:
                             #create the bank account, not linked to any partner. The reconciliation will link the partner manually
                             #chosen at the bank statement final confirmation time.
