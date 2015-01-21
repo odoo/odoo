@@ -4186,21 +4186,21 @@ class BaseModel(object):
             # order, so ``parents_changed`` must be ordered properly.
             query = "SELECT id FROM %s WHERE id IN %%s" % (self._table,)
             query_params = [tuple(ids)]
-            query_clause = ""
-            parent_params = [self._parent_name]
+            query_clause = []
+            field_names = [self._parent_name]
             for param in parent_order.split(','):
-                parent_params.append(param.strip())
-            for parent_param in parent_params:
-                if parent_param in vals:
-                    parents_changed = True
-                    parent_val = vals[parent_param]
-                    if parent_val:
-                        query_clause += (query_clause and ' OR ' or '') + "%s != %%s OR %s IS NULL" % (parent_param,parent_param)
-                        query_params.append(parent_val)
+                field_names.append(param.strip())
+            for field_name in field_names:
+                if field_name in vals:
+                    field_value = vals[field_name]
+                    if field_value:
+                        query_clause.append("%s != %%s OR %s IS NULL" % (field_name, field_name))
+                        query_params.append(field_value)
                     else:
-                        query_clause += (query_clause and ' OR ' or '') + "%s IS NOT NULL" % (parent_param,)
-            if parents_changed:
-                query += (query_clause and (' AND (' + query_clause + ')') or '') + " ORDER BY %s" % (self._parent_order,)
+                        query_clause.append("%s IS NOT NULL" % field_name)
+            if query_clause:
+                query_clause = ' OR '.join(query_clause)
+                query += ' AND (' + query_clause + ')' + " ORDER BY %s" % parent_order
                 cr.execute(query, tuple(query_params))
                 parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
