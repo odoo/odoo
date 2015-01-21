@@ -4,7 +4,7 @@
 
     <data>
 
-        <!-- 
+        <!--
         LEADS
          -->
         <!-- Crm Lead Search Filter - Language added -->
@@ -43,7 +43,7 @@
             <field name="arch" type="xml">
                 <!-- <xpath expr="//button[@class='oe_inline oe_stat_button']" position="after"> -->
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline oe_stat_button" type="action" 
+                    <button class="oe_inline oe_stat_button" type="action"
                         name="%(website_crm_score_pageviews)d" icon="fa-tags"
                         context="{'search_default_lead_id': active_id, 'default_lead_id': active_id}">
                         <field string="Page views" name="pageviews_count" widget="statinfo"/>
@@ -114,23 +114,16 @@
                         <field name="team_user_ids"/>
                     </field>
                     <xpath expr="//div[@class='oe_clear']" position="after">
-                        <div class="oe_items_list">
-                            <div>
-                                Capacity: <b><field name="capacity"/></b>
-                            </div>
-                            <div>
-                                Lead count: <b><field name="leads_count"/></b>
-                            </div>
-                            <div></div>
-                            <div>
-                                Assigned: <b><field name="assigned_leads"/></b>
-                            </div>
+                        <div class="text-center text-muted">
+                            Capacity: <b><field name="capacity"/></b> |
+                            Lead count: <b><field name="leads_count"/></b> |
+                            Assigned: <b><field name="assigned_leads"/></b>
                         </div>
                     </xpath>
 
                     <xpath expr="//div[@class='oe_kanban_salesteams_avatars']" position="replace">
-                        <t t-foreach="record.user_ids.raw_value" t-as="member">
-                            <img t-att-src="kanban_image('res.users', 'image_small', member)" width="32" height="32" />
+                        <t t-foreach="record.user_ids.raw_value.slice(0,10)" t-as="member">
+                            <img t-att-src="kanban_image('res.users', 'image_small', member)" class="img-rounded oe_kanban_avatar_smallbox" />
                         </t>
                     </xpath>
                 </data>
@@ -183,39 +176,36 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_title']" position="before">
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button class="oe_inline oe_stat_button" type="action" 
+                        <button class="oe_inline oe_stat_button" type="action"
                             name="%(crm_score_views_action_graph)d" icon="fa-tags"
-                            context="{'search_default_team_id': active_id, 'search_default_unassigned': 1 }" 
+                            context="{'search_default_team_id': active_id, 'search_default_unassigned': 1 }"
                             >
                             <field string="Unassigned leads" name="unassigned_leads" widget="statinfo"/>
                         </button>
-                        <button class="oe_inline oe_stat_button" type="action" 
+                        <button class="oe_inline oe_stat_button" type="action"
                             name="%(crm_score_views_action_table)d" icon="fa-tags"
-                            context="{'search_default_team_id': active_id}" 
+                            context="{'search_default_team_id': active_id}"
                             >
                             <field string="Opportunities" name="leads_count" widget="statinfo"/>
                         </button>
                     </div>
                 </xpath>
-                <xpath expr="//group[@name='left']" position="after">
-                    <group name="right">
-                        <field name="score_team_domain"  options="{'model': 'crm.lead'}"/>
-                        <label for="assigned_leads"/>
-                        <div>
-                            <field name="assigned_leads" class="oe_inline"/> /
-                            <field name="capacity" class="oe_inline"/>                            
-                        </div>
-                        <field name="min_for_assign" class="oe_inline"/>
-                        <div>
-                            <br/>
-                            <button name="direct_assign_leads" type="object" string="Assign Now" class="oe_link"/>
-                            <span groups="base.group_no_one">
-                                 <br/>
-                                 <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
-                            </span>
-                        </div>
-                        
-                    </group>
+                <xpath expr="//group[@name='right']" position="inside">
+                    <field name="score_team_domain"  options="{'model': 'crm.lead'}"/>
+                    <label for="assigned_leads"/>
+                    <div>
+                        <field name="assigned_leads" class="oe_inline"/> /
+                        <field name="capacity" class="oe_inline"/>
+                    </div>
+                    <field name="min_for_assign" class="oe_inline"/>
+                    <div>
+                        <br/>
+                        <button name="direct_assign_leads" type="object" string="Assign Now" class="oe_link"/>
+                        <span groups="base.group_no_one">
+                             <br/>
+                             <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
+                        </span>
+                    </div>
                 </xpath>
                 <xpath expr="//page[@string='Team Members']" position="replace">
                     <page string="Assignation">
@@ -242,7 +232,7 @@
                                                                         background-image: -webkit-gradient(linear, left top, left bottom, from(#3faf3f), to(#1a721a));">
                                                                         <span class="fa fa-check"/>
                                                                     </button>
-                                                                </t> 
+                                                                </t>
                                                                 <t t-if="record.running.raw_value === false">
                                                                     <button name="toggle_active" type="object" style="
                                                                         color: #eeeeee;
@@ -254,7 +244,7 @@
                                                         </li>
                                                     </ul>
                                                 </td>
-                                                <td> 
+                                                <td>
                                                     <div class="oe_kanban_details">
                                                         <table>
                                                             <tr>
@@ -266,17 +256,17 @@
                                                                         <!-- <li><field name="team_user_domain" widget="smart_filters"/></li> -->
                                                                         <li><field name="team_user_domain" widget='filters'/></li>
                                                                     </ul>
-                                                                </td> 
+                                                                </td>
                                                                 <td>
                                                                     <field name="maximum_user_leads" invisible="1"/>
-                                                                    <field name="leads_count" widget="gauge" 
+                                                                    <field name="leads_count" widget="gauge"
                                                                         style="width:108px; height: 81px; cursor: pointer;"
-                                                                        options="{'max_field': 'maximum_user_leads'}"/> 
-                                                                </td> 
+                                                                        options="{'max_field': 'maximum_user_leads'}"/>
+                                                                </td>
                                                             </tr>
                                                         </table>
                                                     </div>
-                                                </td> 
+                                                </td>
                                             </tr>
                                         </table>
                                     </t>
@@ -290,7 +280,7 @@
 
 
 
-        <!-- 
+        <!--
         IR FILTER - NOT IN USE RIGHT NOW
          -->
         <!-- Ir Filters Search Filter - action_id added -->
@@ -335,7 +325,7 @@
         <!-- Ir Filters Menu Item -->
         <!-- This menu item allows to see SpamIrFilters, /!\ the parent must be changed -->
         <!-- <menuitem id="spam_ir_filters" name="SpamIrFilters" parent="leads_menu" action="spam_ir_filters_action" /> -->
-        
+
         <!-- The following enables the more action that creates the filter on the email address of the lead -->
         <record id="action_mark_as_spam" model="ir.actions.server">
             <field name="name">Mark As Spam</field>
@@ -347,7 +337,7 @@
     for lead_id in context['active_ids']:
         mail = self.read(cr, uid, lead_id, fields=['email_from'], context=context)['email_from']
         vals = values.copy()
-        # str() below changes the encoding of mail from unicode 
+        # str() below changes the encoding of mail from unicode
         vals['domain'] = [('email_from', '=', str(mail))]
         vals['name'] = 'spam-' + mail
         self.pool['ir.filters'].create_or_replace(cr, uid, vals, context=context)

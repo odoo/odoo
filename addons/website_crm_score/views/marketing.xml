@@ -66,7 +66,7 @@
                 <form string="Scores">
                     <sheet>
                         <div class="oe_right oe_button_box" name="buttons">
-                            <button class="oe_inline oe_stat_button" type="action" 
+                            <button class="oe_inline oe_stat_button" type="action"
                                 name="%(score_leads)d" icon="fa-tags"
                                 >
                                 <field string="Leads" name="leads_count" widget="statinfo"/>
@@ -114,7 +114,7 @@
         <!-- Score Menu Item -->
         <menuitem id="scores_menu" name="Scoring Rules" parent="leads_menu" action="score_action" />
 
-        <!-- 
+        <!--
         TEAM USER
          -->
         <!-- Team User From View -->
@@ -182,7 +182,7 @@
                                                             background-image: -webkit-gradient(linear, left top, left bottom, from(#3faf3f), to(#1a721a));">
                                                             <span class="fa fa-check"/>
                                                         </button>
-                                                    </t> 
+                                                    </t>
                                                     <t t-if="record.running.raw_value === false">
                                                         <button name="toggle_active" type="object" style="
                                                             color: #eeeeee;
@@ -194,7 +194,7 @@
                                             </li>
                                         </ul>
                                     </td>
-                                    <td> 
+                                    <td>
                                         <div class="oe_kanban_details">
                                             <table>
                                                 <tr>
@@ -206,19 +206,18 @@
                                                             <li><a type="open">
                                                                 <field name="team_id"/>
                                                             </a></li>
-                                                            <li><field name="team_user_domain" widget='filters'/></li>
                                                         </ul>
-                                                    </td> 
+                                                    </td>
                                                     <td>
                                                         <field name="maximum_user_leads" invisible="1"/>
-                                                        <field name="leads_count" widget="gauge" 
+                                                        <field name="leads_count" widget="gauge"
                                                             style="width:108px; height: 81px; cursor: pointer;"
-                                                            options="{'max_field': 'maximum_user_leads'}"/> 
-                                                    </td> 
+                                                            options="{'max_field': 'maximum_user_leads'}"/>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
-                                    </td> 
+                                    </td>
                                 </tr>
                             </table>
                         </t>
@@ -238,7 +237,7 @@
                     Click to create a salesmen.
                 </p>
                 <p>
-                    Link users to salesteam, set a per 30 days lead capacity for each of them and set filters to auto assign your leads. 
+                    Link users to salesteam, set a per 30 days lead capacity for each of them and set filters to auto assign your leads.
                 </p>
             </field>
         </record>
@@ -256,7 +255,7 @@
         </record>
 
         <!-- Team User Menu Item -->
-        <menuitem id="team" name="Teams Assignation" parent="leads_menu" action="team_action" /> 
+        <menuitem id="team" name="Teams Assignation" parent="leads_menu" action="team_action" />
 
 
         <!-- LEAD DRY RUN -->
@@ -302,7 +301,7 @@
         </record>
 
         <!-- Team User Menu Item -->
-        <menuitem id="leads_dry_run" name="Assignation dry run" parent="leads_menu" action="lead_dry_run_action" groups="base.group_no_one"/> 
+        <menuitem id="leads_dry_run" name="Assignation dry run" parent="leads_menu" action="lead_dry_run_action" groups="base.group_no_one"/>
 
     </data>
 </openerp>

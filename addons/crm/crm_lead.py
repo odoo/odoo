@@ -202,6 +202,15 @@ class crm_lead(format_address, osv.osv):
             opp_id: Event.search_count(cr,uid, [('opportunity_id', '=', opp_id)], context=context)
             for opp_id in ids
         }
+
+    def _calls_count(self, cr, uid, ids, field_name, args, context=None):
+        res = dict.fromkeys(ids, 0)
+        phonecall_data = self.pool['crm.phonecall'].read_group(
+            cr, uid, [('opportunity_id', 'in', ids)], ['opportunity_id'], ['opportunity_id'], context=context)
+        for data in phonecall_data:
+            res[data['opportunity_id'][0]] = data['opportunity_id_count']
+        return res
+
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
@@ -242,7 +251,7 @@ class crm_lead(format_address, osv.osv):
         'date_conversion': fields.datetime('Conversion Date', readonly=1),
 
         # Messaging and marketing
-        'message_bounce': fields.integer('Bounce'),
+        'message_bounce': fields.integer('Bounce', help="Counter of the number of bounced emails for this contact"),
         # Only used for type opportunity
         'probability': fields.float('Probability', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
@@ -274,7 +283,8 @@ class crm_lead(format_address, osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
-        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange')
+        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange'),
+        'calls_count': fields.function(_calls_count, string='# Phonecalls', type='integer'),
     }
 
     _defaults = {

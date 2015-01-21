@@ -276,6 +276,7 @@ class crm_phonecall(osv.osv):
             'default_user_id': uid,
             'default_email_from': phonecall.email_from,
             'default_name': phonecall.name,
+            'default_opportunity_id': phonecall.opportunity_id.id,
         }
         return res
 
