@@ -438,7 +438,7 @@ class marketing_campaign_activity(osv.osv):
 
     #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
-        report_data, format = render_report(cr, uid, [], activity.report_id.report_name, {}, context=context)
+        report_data, format = render_report(cr, uid, [workitem.res_id], activity.report_id.report_name, {}, context=context)
         attach_vals = {
             'name': '%s_%s_%s'%(activity.report_id.report_name,
                                 activity.name,workitem.partner_id.name),
