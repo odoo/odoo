@@ -5479,6 +5479,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         }
         if (this.view_list) {
             this.view_list.do_hide();
+            this.view_list.$el.parent().hide();
         }
         this.setup_form_view();
     },
