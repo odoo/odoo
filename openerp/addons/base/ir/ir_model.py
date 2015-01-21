@@ -388,9 +388,7 @@ class ir_model_fields(osv.osv):
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
 
-                if self.pool.fields_by_model is not None:
-                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
-                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
+                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
