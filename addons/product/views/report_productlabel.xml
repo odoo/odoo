@@ -21,7 +21,7 @@
                         <tbody>
                             <tr height="40">
                                 <td>
-                                    <img t-if="product.ean13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', product.ean13, 600, 100)" style="width:100%;height:20%;"/>
+                                    <img t-if="product.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', product.barcode, 600, 100)" style="width:100%;height:20%;"/>
                                 </td>
                                 <td>
                                     <strong t-esc="', '.join(map(lambda x: x.name, product.attribute_value_ids))"/>
