@@ -67,7 +67,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
             tomerge = list(set(tomerge))
 
-            if 'action' in fields:
+            if 'action' in fields and not res.get('action'):
                 res.update({'action' : partner_id and 'exist' or 'create'})
             if 'partner_id' in fields:
                 res.update({'partner_id' : partner_id})
