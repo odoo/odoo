@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_level_forecast_graph" model="ir.ui.view">
+         <field name="name">Stock.forecast.graph</field>
+         <field name="model">report.stock.forecast</field>
+         <field name="arch" type="xml">
+             <graph string="Stock Level forecast" type="pivot">
+                <field name="product_id" type="col"/>
+                <field name="cumulative_quantity" type="measure"/>
+                <field name="quantity" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_stock_level_forecast_filter" model="ir.ui.view">
+        <field name="name">view.stock.level.forecast.filter</field>
+        <field name="model">report.stock.forecast</field>
+        <field name="arch" type="xml">
+            <search string="Stock Level forecast">
+                <field name="product_id"/>
+                <field name="date"/>
+                <group expand="1" string="Group By">
+                    <filter string="By Dates" name="date_day" context="{'group_by':'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_stock_level_forecast_report" model="ir.actions.act_window">
+        <field name="name">Stock Level Forecast</field>
+        <field name="res_model">report.stock.forecast</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
+        <field name="context">{'search_default_product':1, 'search_default_date_day':1}</field>
+        <field name="view_id" ref="view_stock_level_forecast_graph"/>
+    </record>
+
+    <menuitem action="action_stock_level_forecast_report" id="menu_report_product_forecast" parent="next_id_61" sequence="3" />
+</odoo>
