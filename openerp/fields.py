@@ -563,6 +563,8 @@ class Field(object):
             # special case: add triggers on all fields of model (except self)
             fields = set(model._fields.itervalues()) - set([self])
         else:
+            if head not in model._fields:
+                model._inherits_reload()
             fields = [model._fields[head]]
 
         for field in fields:
@@ -1665,6 +1667,8 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = env[self.comodel_name]
             comodel._setup_fields()
+            if self.inverse_name not in comodel._fields:
+                comodel._inherits_reload()
             invf = comodel._fields[self.inverse_name]
             # In some rare cases, a `One2many` field can link to `Int` field
             # (res_model/res_id pattern). Only inverse the field if this is
