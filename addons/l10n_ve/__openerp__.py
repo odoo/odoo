@@ -59,8 +59,7 @@ If you install this module, and select Custom chart a basic chart will be propos
 but you will need set manually account defaults for taxes.
 """,
     'depends': ['account',
-                'base_vat', 
-                'account_chart'
+                'base_vat',
     ],
     'demo': [],
     'data': [

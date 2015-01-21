@@ -36,7 +36,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'depends': [
         'account',
         'base_vat',
-        'account_chart',
     ],
     'data': [
         'account_code_template.xml',

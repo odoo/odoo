@@ -45,7 +45,7 @@ la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes
 taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',
-    'depends': ['base', 'account', 'account_chart'],
+    'depends': ['base', 'account'],
     'data': [
         'account_types.xml',
         'account_chart.xml',

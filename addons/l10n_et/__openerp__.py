@@ -37,7 +37,6 @@ This is the latest Ethiopian OpenERP localization and consists of:
     'website':'http://miketelahun.wordpress.com',
     'depends': [
         'base_vat',
-        'account_chart',
     ],
     'init_xml': [
         'data/account.account.type.csv',

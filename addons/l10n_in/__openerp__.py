@@ -38,7 +38,6 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
     'category': 'Localization/Account Charts',
     'depends': [
         'account',
-        'account_chart'
     ],
     'demo': [],
     'data': [

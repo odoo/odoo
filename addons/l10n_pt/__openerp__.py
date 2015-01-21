@@ -31,7 +31,6 @@
     'depends': ['base',
                 'base_vat',
                 'account',
-                'account_chart',
                 ],
     'data': [
                    'account_types.xml',

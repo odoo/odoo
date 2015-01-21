@@ -25,7 +25,7 @@
     "author" : "ERPsystems Solutions",
     "website": "http://www.erpsystems.ro",
     "category" : "Localization/Account Charts",
-    "depends" : ['account','account_chart','base_vat'],
+    "depends" : ['account','base_vat'],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
 It also adds the Registration Number for Romania in OpenERP.

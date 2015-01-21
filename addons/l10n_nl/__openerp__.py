@@ -120,7 +120,6 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
     'depends' : ['account',
                  'base_vat',
                  'base_iban',
-                 'account_chart'
     ],
     'data' : ['account_chart_netherlands.xml',
               "account_fiscal_position_template.xml",

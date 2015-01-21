@@ -33,7 +33,6 @@
     'depends': [
         'account',
         'base_vat',
-        'account_chart',
     ],
     'data': [
         'data/account.account.type.csv',

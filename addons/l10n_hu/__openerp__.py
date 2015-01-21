@@ -38,7 +38,7 @@ This module consists :
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',
     'license': 'AGPL-3',
-    'depends': ['account','account_chart'],
+    'depends': ['account'],
     'data': [
         'data/account.account.template.csv',
         'data/account.chart.template.csv',

@@ -61,7 +61,6 @@ Izvori podataka:
 
     'depends': [
                 'account',
-                'account_chart',
                 ],
     'data': [
                 'data/account.account.type.csv',

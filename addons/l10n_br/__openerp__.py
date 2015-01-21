@@ -62,7 +62,7 @@ come with any additional paid permission for online use of 'private modules'.
     'author': 'Akretion, OpenERP Brasil',
     'website': 'http://openerpbrasil.org',
     'version': '0.6',
-    'depends': ['account','account_chart'],
+    'depends': ['account'],
     'data': [
                 'data/account.account.type.csv',
                 'data/account.account.template.csv',

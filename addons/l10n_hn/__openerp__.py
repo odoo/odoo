@@ -45,7 +45,7 @@ moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trigluu.com',
-    'depends': ['base', 'account', 'account_chart'],
+    'depends': ['base', 'account'],
     'data': [
         'account_types.xml',
         'account_chart.xml',

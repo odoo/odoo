@@ -42,7 +42,7 @@ After installing this module, the Configuration wizard for accounting is launche
       submission of GST Tax Report.
 
     """,
-    'depends': ['base', 'account', 'account_chart'],
+    'depends': ['base', 'account'],
     'demo': [ ],
     'data': [
              'l10n_sg_chart.xml',
