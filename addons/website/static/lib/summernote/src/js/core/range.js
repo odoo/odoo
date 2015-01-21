@@ -417,12 +417,18 @@ define([
         var endPoint = {node: ec.childNodes.length && ec.childNodes[eo] || ec};
         endPoint.offset = endPoint.node === ec ? eo : 0;
 
+        if (dom.isImg(startPoint.node)) {
+          nb ++;
+          image = startPoint.node;
+        }
         dom.walkPoint(startPoint, endPoint, function (point) {
+          if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
+            return;
+          }
           var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
           var offset = node === point.node ? point.offset : 0;
           var isImg = dom.ancestor(node, dom.isImg);
-
-          if (!isImg && (node.nodeType !== 3 || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
+          if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
             nb++;
           }
           if (isImg && image !== isImg) {
