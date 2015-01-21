@@ -19,6 +19,5 @@
 #
 ##############################################################################
 
-import product_stock
 import report_stock
 import report_stock_forecast
