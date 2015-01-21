@@ -109,6 +109,7 @@ class account_analytic_line(models.Model):
                 raise exceptions.ValidationError("This user or employee is not associated to a valid Journal ID")
     
     def _get_is_timesheet(self):
+        print 'ctx = ' , self.env.context
         return ("hr_timesheet" in self.env.context)
 
     # Fields declaration and additions

@@ -174,7 +174,6 @@
 
         <record model="ir.ui.view" id="view_task_form2_inherited">
             <field name="name">project.task.form.inherited</field>
-            <field name="context">{'hr_timesheet':1}</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="arch" type="xml">
@@ -252,6 +251,13 @@
                 </field>
             </field>
         </record>
-
+        <!-- Time tracking quickly -->
+        <record model="ir.actions.act_url" id="action_project_timesheet_ui">
+            <field name="name">Project Time Tacking</field>
+            <field name="url">/project_timesheet/project_timesheet_ui</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_project_timesheet" parent="base.menu_main_pm" name="Timesheet"/>
+        <menuitem id="menu_project_time_tracking" name="Project Time Tracking" parent="menu_project_timesheet" action="action_project_timesheet_ui"/>>
     </data>
 </openerp>
