@@ -12,7 +12,7 @@ class account_invoice_confirm(models.TransientModel):
 
     @api.multi
     def invoice_confirm(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         active_ids = context.get('active_ids', []) or []
 
         for record in self.env['account.invoice'].browse(active_ids):
@@ -34,7 +34,7 @@ class account_invoice_cancel(models.TransientModel):
 
     @api.multi
     def invoice_cancel(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         active_ids = context.get('active_ids', []) or []
 
         for record in self.env['account.invoice'].browse(active_ids):

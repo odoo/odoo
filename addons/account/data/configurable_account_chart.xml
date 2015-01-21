@@ -134,8 +134,8 @@
         <record id="otaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX S</field>
-            <field eval="0.15" name="amount"/>
-            <field name="type">percent</field>
+            <field eval="15" name="amount"/>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_ova"/>
             <field name="account_id" ref="conf_ova"/>
             <field name="type_tax_use">purchase</field>
@@ -144,8 +144,8 @@
         <record id="otaxr" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX R</field>
-            <field eval="0.05" name="amount"/>
-            <field name="type">percent</field>
+            <field eval="5" name="amount"/>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_ova"/>
             <field name="account_id" ref="conf_ova"/>
             <field name="type_tax_use">purchase</field>
@@ -155,7 +155,7 @@
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX X</field>
             <field eval="0.0" name="amount"/>
-            <field name="type">percent</field>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_ova"/>
             <field name="account_id" ref="conf_ova"/>
             <field name="type_tax_use">purchase</field>
@@ -165,7 +165,7 @@
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">OTAX O</field>
             <field eval="0.0" name="amount"/>
-            <field name="type">percent</field>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_ova"/>
             <field name="account_id" ref="conf_ova"/>
             <field name="type_tax_use">purchase</field>
@@ -176,8 +176,8 @@
         <record id="itaxs" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">ITAX S</field>
-            <field eval="0.15" name="amount"/>
-            <field name="type">percent</field>
+            <field eval="15" name="amount"/>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_iva"/>
             <field name="account_id" ref="conf_iva"/>
             <field name="type_tax_use">sale</field>
@@ -186,8 +186,8 @@
         <record id="itaxr" model="account.tax.template">
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">ITAX R</field>
-            <field eval="0.05" name="amount"/>
-            <field name="type">percent</field>
+            <field eval="5" name="amount"/>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_iva"/>
             <field name="account_id" ref="conf_iva"/>
             <field name="type_tax_use">sale</field>
@@ -197,7 +197,7 @@
             <field name="chart_template_id" ref="configurable_chart_template"/>
             <field name="name">ITAX X</field>
             <field eval="0.0" name="amount"/>
-            <field name="type">percent</field>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_iva"/>
             <field name="account_id" ref="conf_iva"/>
             <field name="type_tax_use">sale</field>
@@ -208,7 +208,7 @@
 
             <field name="name">ITAX O</field>
             <field eval="0.0" name="amount"/>
-            <field name="type">percent</field>
+            <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="conf_iva"/>
             <field name="account_id" ref="conf_iva"/>
             <field name="type_tax_use">sale</field>

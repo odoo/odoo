@@ -37,14 +37,16 @@ class TestAccountCustomerInvoive(AccountTestUsers):
                 {
                     'product_id': self.env.ref('product.product_product_5').id,
                     'quantity': 10.0,
-                    'account_id': self.env.ref('account.a_sale').id,
+                    #'account_id': self.env.ref('account.a_sale').id,
                     'name': 'product test 5',
                     'price_unit': 100.00,
                 }
              )
         ]
 
+
         self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
+        #Do product_id_change
             name="Test Customer Invoice",
             reference_type="none",
             # partner_bank_id=self.res_partner_bank_0.id,

@@ -43,6 +43,9 @@ class TestTax(AccountTestUsers):
                 (4, self.percent_tax.id, 0)
             ]
         })
+        self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.user.company_id.id)])
+        self.bank_account = self.bank_journal.default_debit_account_id.id
+        self.expense_account = self.env['account.account'].search([('user_type.type','=','expense')])[0]
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
@@ -95,19 +98,18 @@ class TestTax(AccountTestUsers):
 
         self.fixed_tax.price_include = True
         self.fixed_tax.include_base_amount = True
-        
         move = self.env['account.move'].create({
             'date': time.strftime('%Y-01-01'),
-            'journal_id': self.env.ref('account.bank_journal').id,
+            'journal_id': self.bank_journal.id,
             'name': 'Hi I\'m a move !',
             'line_id': [(0, 0, {
-                    'account_id': self.env.ref('account.bnk').id,
+                    'account_id': self.bank_account.id,
                     'debit': 235,
                     'credit': 0,
                     'name': 'Bank Fees',
                     'partner_id': False,
                 }), (0, 0, {
-                    'account_id': self.env.ref('account.a_expense').id,
+                    'account_id': self.expense_account.id,
                     'debit': 0,
                     'credit': 200,
                     'date': time.strftime('%Y-01-01'),
@@ -116,7 +118,8 @@ class TestTax(AccountTestUsers):
                     'tax_ids': [(4, self.group_tax.id, None), (4, self.fixed_tax_bis.id, None)]
                 })]
         })
-        
+
+
         aml_fixed_tax = move.line_id.filtered(lambda l: l.tax_line_id.id == self.fixed_tax.id)
         aml_percent_tax = move.line_id.filtered(lambda l: l.tax_line_id.id == self.percent_tax.id)
         aml_fixed_tax_bis = move.line_id.filtered(lambda l: l.tax_line_id.id == self.fixed_tax_bis.id)

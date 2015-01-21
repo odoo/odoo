@@ -78,8 +78,11 @@ Wizards provided by this module:
         'views/report_vatintraprint.xml',
         'views/report_vatpartnerlisting.xml',
     ],
-    'demo': ['../account/demo/account_invoice_demo.yml'],
-    'test': ['../account/test/account_invoice_state.yml'],
+    'demo': ['../account/demo/account_invoice_demo.yml',
+             'account_demo.xml',],
+    'test': ['../account/test/account_invoice_state.yml',
+             '../account/test/account_bank_statement.yml',
+    ],
     'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
 }

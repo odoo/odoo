@@ -136,7 +136,7 @@ class account_account(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        context = dict(self._context or {})
+        context = self._context or {}
         if context.get('journal_id', False):
             jour = self.env['account.journal'].browse(context['journal_id'])
             if jour.account_control_ids:
@@ -611,7 +611,7 @@ class account_tax(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        context = dict(self._context or {})
+        context = self._context or {}
 
         if context.get('type'):
             if context.get('type') in ('out_invoice', 'out_refund'):
@@ -723,7 +723,7 @@ class account_tax(models.Model):
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
-                'analytic': tax.analytic,
+                'analytic_cost': tax.analytic_cost,
             })
 
         return {
@@ -785,7 +785,7 @@ class account_add_tmpl_wizard(models.TransientModel):
 
     @api.model
     def _get_def_cparent(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         tmpl_obj = self.env['account.account.template']
 
         tids = tmpl_obj.read([context['tmpl_ids']], ['parent_id'])
@@ -803,7 +803,7 @@ class account_add_tmpl_wizard(models.TransientModel):
 
     @api.multi
     def action_create(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         AccountObj = self.env['account.account']
         data = self.read()[0]
         company_id = AccountObj.read([data['cparent_id'][0]], ['company_id'])[0]['company_id'][0]
@@ -1090,7 +1090,7 @@ class account_chart_template(models.Model):
 
         :param self: the chart template chosen
         :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-        :paramacc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+        :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
         :param code_digits: number of digits got from wizard.multi.charts.accounts, this is use for account code.
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: return acc_template_ref for reference purpose.
@@ -1110,7 +1110,7 @@ class account_chart_template(models.Model):
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals={
-                'name': company_name or account_template.name,
+                'name': account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
@@ -1353,7 +1353,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        context = dict(self._context or {})
+        context = self._context or {}
         res = super(wizard_multi_charts_accounts, self).default_get(fields)
         tax_templ_obj = self.env['account.tax.template']
         account_chart_template = self.env['account.chart.template']
@@ -1398,7 +1398,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        context = dict(self._context or {})
+        context = self._context or {}
         res = super(wizard_multi_charts_accounts, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         cmp_select = []
         CompanyObj = self.env['res.company']

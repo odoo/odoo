@@ -3,7 +3,6 @@
 -
  !record {model: account.bank.statement, id: account_bank_statement_1}:
     date: !eval time.strftime('%Y-%m-%d')
-    journal_id: account.cash_journal
     name: /
     user_id: base.user_root
     starting_details_ids:
@@ -38,8 +37,7 @@
 -
   !record {model: account.bank.statement, id: account_bank_statement_1}:
     line_ids:
-      - account_id: account.a_recv
-        amount: 1000.0
+      - amount: 1000.0
         date: !eval time.strftime('%Y-%m-%d')
         name: test
         partner_id: base.res_partner_4

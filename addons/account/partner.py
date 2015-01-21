@@ -174,7 +174,7 @@ class res_partner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        ctx = dict(self._context or {})
+        ctx = self._context or {}
         ctx['all_fiscalyear'] = True
         query = self.env['account.move.line'].with_context(ctx)._query_get()
         if not self.ids:

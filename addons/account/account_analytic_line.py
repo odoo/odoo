@@ -134,7 +134,7 @@ class account_analytic_line(models.Model):
         else:
             pricetype = product_price_type_obj.search([('field','=','standard_price')], limit=1)
 
-        ctx = dict(self._context or {})
+        ctx = self._context or {}
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units

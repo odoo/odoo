@@ -19,7 +19,7 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        context = dict(self._context or {})
+        context = self._context or {}
         res = super(account_move_line_reconcile, self).default_get(fields)
         data = self.trans_rec_get()
         if 'trans_nbr' in fields:
@@ -34,7 +34,7 @@ class account_move_line_reconcile(models.TransientModel):
 
     @api.multi
     def trans_rec_get(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         credit = debit = 0
         lines = self.env['account.move.line'].browse(context.get('active_ids', []))
         for line in lines:
@@ -91,7 +91,7 @@ class account_move_line_reconcile_writeoff(models.TransientModel):
 
     @api.multi
     def trans_rec_reconcile_partial(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         self.env['account.move.line'].browse(context.get('active_ids', [])).reconcile()
         return {'type': 'ir.actions.act_window_close'}
 

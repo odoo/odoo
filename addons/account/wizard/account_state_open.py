@@ -7,7 +7,7 @@ class account_state_open(models.TransientModel):
 
     @api.multi
     def change_inv_state(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         active_ids = context.get('active_ids', [])
         if active_ids:
             invoice = self.env['account.invoice'].browse(active_ids[0])

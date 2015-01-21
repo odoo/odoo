@@ -11,7 +11,7 @@ class CashBox(models.TransientModel):
 
     @api.multi
     def run(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         active_model = context.get('active_model', False)
         active_ids = context.get('active_ids', [])
 

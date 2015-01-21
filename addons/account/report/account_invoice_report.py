@@ -15,7 +15,7 @@ class account_invoice_report(models.Model):
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        context = dict(self._context or {})
+        context = self._context or {}
         user_currency_id = self.env.user.company_id.currency_id
         currency_rate_id = self.env['res.currency.rate'].search([('rate', '=', 1)], limit=1)
         base_currency_id = currency_rate_id.currency_id

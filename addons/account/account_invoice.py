@@ -427,7 +427,6 @@ class account_invoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
-
         if partner_id:
             p = self.env['res.partner'].browse(partner_id)
             rec_account = p.property_account_receivable

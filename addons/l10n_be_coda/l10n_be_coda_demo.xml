@@ -1,22 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    	<record id="demo_bank_account" model="res.partner.bank">
-            <field name="state">bank</field>
-            <field name="acc_number">BE33737018595246</field>
-            <field name="bank_bic">KREDBEBB</field>
-            <field name="partner_id" ref="base.main_partner"/>
-        </record>
-        <!--
-        Fiscal year
-        -->    
-        
-        <record id="data_fiscalyear_2011" model="account.fiscalyear">
-            <field eval="'Fiscal Year X 2011'" name="name"/>
-            <field eval="'2011-01-01'" name="date_start"/>
-            <field eval="'2011-12-31'" name="date_stop"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
+
         
         <!-- invoice with BBA -->
         <!-- TODO: Put in YML for onchange to work?-->

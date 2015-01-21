@@ -18,7 +18,7 @@ class account_invoice_refund(models.TransientModel):
 
     @api.model
     def _get_reason(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         active_id = context.get('active_id', False)
         if active_id:
             inv = self.env['account.invoice'].browse(active_id)
@@ -33,7 +33,7 @@ class account_invoice_refund(models.TransientModel):
         act_obj = self.env['ir.actions.act_window']
         inv_tax_obj = self.env['account.invoice.tax']
         inv_line_obj = self.env['account.invoice.line']
-        context = dict(self._context or {})
+        context = self._context or {}
         cr = self._cr
         xml_id = False
 

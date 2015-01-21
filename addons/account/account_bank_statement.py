@@ -28,6 +28,17 @@ class account_bank_statement(models.Model):
     def _check_lines_reconciled(self):
         self.all_lines_reconciled = all([line.journal_entry_ids.ids or line.account_id.id for line in self.line_ids])
 
+    @api.model
+    def _default_journal(self):
+        journal_type = self.env.context.get('journal_type', False)
+        company_id = self.env['res.company']._company_default_get('account.bank.statement')
+        if journal_type:
+            journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
+            if journals:
+                return journals[0]
+        return False
+
+    _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _order = "date desc, id desc"
@@ -37,11 +48,12 @@ class account_bank_statement(models.Model):
     # Name is readonly by default because it's the expected behaviour in cash statements, which uses inheritance by delegation
     date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]}, select=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]})
     balance_start = fields.Float(string='Starting Balance', digits=0, states={'confirm': [('readonly', True)]})
     balance_end_real = fields.Float('Ending Balance', digits=0, states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Closed')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency = fields.Many2one('res.currency', compute='_currency', string='Currency')
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True,
+                                 states={'confirm':[('readonly',True)]}, default=_default_journal)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
 
@@ -115,7 +127,7 @@ class account_bank_statement(models.Model):
 
     @api.multi
     def button_journal_entries(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Items'),
@@ -373,7 +385,7 @@ class account_bank_statement_line(models.Model):
             domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
 
         # Domain factorized for all reconciliation use cases
-        ctx = dict(self._context or {})
+        ctx = self._context or {}
         ctx['bank_statement_line'] = self
         generic_domain = self.env['account.move.line'].with_context(ctx).domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
         domain = expression.AND([domain, generic_domain])

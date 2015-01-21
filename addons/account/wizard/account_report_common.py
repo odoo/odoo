@@ -52,7 +52,7 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        context = dict(self._context or {})
+        context = self._context or {}
         res = super(account_common_report, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account':
             doc = etree.XML(res['arch'])
@@ -79,7 +79,7 @@ class account_common_report(models.TransientModel):
 
     @api.model
     def _get_fiscalyear(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         now = time.strftime('%Y-%m-%d')
         company_id = False
         ids = context.get('active_ids', [])
@@ -118,7 +118,7 @@ class account_common_report(models.TransientModel):
 
     @api.multi
     def check_report(self):
-        context = dict(self._context or {})
+        context = self._context or {}
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
