@@ -18,7 +18,7 @@ class account_move_line(models.Model):
     _order = "date desc, id desc"
 
     @api.depends('debit', 'credit', 'amount_currency', 'currency_id',
-        'reconcile_partial_ids.amount', 'reconcile_partial_with_ids.amount')
+        'matched_debit_ids.amount', 'matched_credit_ids.amount')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
@@ -32,7 +32,7 @@ class account_move_line(models.Model):
             amount_residual_currency = abs(line.amount_currency) or 0.0
             digits_rounding_precision = line.currency_id.rounding if line.currency_id else line.company_id.currency_id.rounding
 
-            for partial_line in (line.reconcile_partial_ids + line.reconcile_partial_with_ids):
+            for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                 date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                 amount -= partial_line.amount
                 if line.currency_id:
@@ -84,7 +84,7 @@ class account_move_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
-    amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=0,
+    amount_currency = fields.Float(string='Amount Currency', default=0.0, digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
         help="The optional other currency if it is a multi-currency entry.")
@@ -101,15 +101,15 @@ class account_move_line(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    reconcile_partial_with_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Partially Reconciled with',
-        help='Moves in which this move is involved for partial reconciliation')
-    reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Partial Reconciliation',
-        help='Moves involved in this move partial reconciliation')
+    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
+        help='Debit journal items that are matched with this journal item.')
+    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
+        help='Credit journal items that are matched with this journal item.')
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
         default=_get_journal, required=True, index=True, store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True ,
+    date_maturity = fields.Date(string='Due date', index=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
@@ -364,7 +364,8 @@ class account_move_line(models.Model):
                 'journal_name': line.journal_id.name,
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
-                'is_partially_reconciled': bool(line.reconcile_partial_ids),
+                #'is_partially_reconciled': bool(line.reconcile_partial_ids),
+                #TODO: use 'reconciled_percentage' field
                 'currency_id': line.currency_id.id or False,
             }
 
@@ -603,8 +604,8 @@ class account_move_line(models.Model):
             return True
         rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
-            rec_move_ids += account_move_line.reconcile_partial_ids
-            rec_move_ids += account_move_line.reconcile_partial_with_ids
+            rec_move_ids += account_move_line.matched_debit_ids
+            rec_move_ids += account_move_line.matched_credit_ids
         return rec_move_ids.unlink()
 
 
@@ -937,5 +938,5 @@ class account_partial_reconcile(models.Model):
     debit_move_id = fields.Many2one('account.move.line')
     credit_move_id = fields.Many2one('account.move.line')
     amount = fields.Float()
-    amount_currency = fields.Float()
+    amount_currency = fields.Float(string="Amount in Currency")
     currency_id = fields.Many2one('res.currency', string='Currency')

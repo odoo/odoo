@@ -133,11 +133,11 @@ class account_invoice(models.Model):
             info = {'title': 'Less Payment', 'outstanding': False, 'content': []}
             for payment in self.payment_ids:
                 if self.type in ('out_invoice', 'in_refund'):
-                    amount = sum([p.amount for p in payment.reconcile_partial_with_ids if p.debit_move_id in self.move_id.line_id])
-                    amount_currency = sum([p.amount_currency for p in payment.reconcile_partial_with_ids if p.debit_move_id in self.move_id.line_id])
+                    amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_id])
+                    amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_id])
                 elif self.type in ('in_invoice', 'out_refund'):
-                    amount = sum([p.amount for p in payment.reconcile_partial_ids if p.credit_move_id in self.move_id.line_id])
-                    amount_currency = sum([p.amount_currency for p in payment.reconcile_partial_ids if p.credit_move_id in self.move_id.line_id])
+                    amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
+                    amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
                 info['content'].append({
                     'name': payment.name,
                     'ref': payment.journal_id.name,
@@ -153,8 +153,8 @@ class account_invoice(models.Model):
     def _compute_payments(self):
         payment_lines = []
         for line in self.move_id.line_id:
-            payment_lines.extend([rp.credit_move_id.id for rp in line.reconcile_partial_ids])
-            payment_lines.extend([rp.debit_move_id.id for rp in line.reconcile_partial_with_ids])
+            payment_lines.extend([rp.credit_move_id.id for rp in line.matched_credit_ids])
+            payment_lines.extend([rp.debit_move_id.id for rp in line.matched_debit_ids])
         self.payment_ids = self.env['account.move.line'].browse(payment_lines).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
