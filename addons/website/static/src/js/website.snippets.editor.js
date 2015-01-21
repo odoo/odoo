@@ -134,6 +134,12 @@
             $.summernote.core.dom.isNotBreakable = function (node, sc, so, ec, eo) {
                 return _isNotBreakable(node, sc, so, ec, eo) || $(node).is('div') || website.snippet.globalSelector.is($(node));
             };
+
+            $(window).on('resize', function () {
+                if (self.$active_snipped_id) {
+                    self.cover_target(self.$active_snipped_id.data("snippet-editor").$overlay, self.$active_snipped_id);
+                }
+            });
         },
 
         show_blocks: function () {
