@@ -361,7 +361,7 @@ instance.web.search.FavoriteMenu.include({
             this.do_warn(_t("Can't find dashboard action"));
             return;
         }
-        var searchview = view_manager.searchview,
+        var searchview = view_manager.get_searchview(),
             data = searchview.build_search_data(),
             context = new instance.web.CompoundContext(searchview.dataset.get_context() || []),
             domain = new instance.web.CompoundDomain(searchview.dataset.get_domain() || []);
