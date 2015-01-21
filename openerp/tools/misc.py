@@ -90,7 +90,7 @@ def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Command `%s` not found.' % name)
-    _exec_pipe(prog, *args)
+    return _exec_pipe(prog, *args)
 
 #----------------------------------------------------------
 # Postgres subprocesses
