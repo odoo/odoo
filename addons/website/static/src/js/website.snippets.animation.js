@@ -190,14 +190,16 @@
     website.snippet.animationRegistry.ul = website.snippet.Animation.extend({
         selector: "ul.o_ul_folded, ol.o_ul_folded",
         start: function (editable_mode) {
-            this.$('.o_ul_toggle_self').off('click').on('click', function () {
+            this.$('.o_ul_toggle_self').off('click').on('click', function (event) {
                 $(this).toggleClass('o_open');
                 $(this).closest('li').find('ul,ol').toggleClass('o_close');
+                event.preventDefault();
             });
 
-            this.$('.o_ul_toggle_next').off('click').on('click', function () {
+            this.$('.o_ul_toggle_next').off('click').on('click', function (event) {
                 $(this).toggleClass('o_open');
                 $(this).closest('li').next().toggleClass('o_close');
+                event.preventDefault();
             });
         },
     });
