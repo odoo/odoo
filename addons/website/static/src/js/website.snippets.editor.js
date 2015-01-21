@@ -378,7 +378,7 @@
             var snipped_event_flag;
             $(document).on('click', '*', function (event) {
                 var srcElement = event.srcElement || (event.originalEvent && (event.originalEvent.originalTarget || event.originalEvent.target) || event.target);
-                if (snipped_event_flag===srcElement || !srcElement) {
+                if (self.editor_busy || snipped_event_flag===srcElement || !srcElement) {
                     return;
                 }
                 snipped_event_flag = srcElement;
@@ -1396,7 +1396,9 @@
                     $body.unbind('mousemove', body_mousemove);
                     $body.unbind('mouseup', body_mouseup);
                     $body.removeClass(cursor);
-                    self.BuildingBlock.editor_busy = false;
+                    setTimeout(function () {
+                        self.BuildingBlock.editor_busy = false;
+                    },0);
                     self.$target.removeClass("resize_editor_busy");
                 };
                 $body.mousemove(body_mousemove);
