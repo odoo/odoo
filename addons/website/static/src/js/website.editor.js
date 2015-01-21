@@ -2307,20 +2307,13 @@ define(['summernote/summernote'], function () {
     website.editor.FontIconsDialog = openerp.Widget.extend({
         template: 'website.editor.dialog.font-icons',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
-            change: 'update_preview',
             'click .font-icons-icon': function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 this.$('#fa-icon').val(e.target.getAttribute('data-id'));
-                this.update_preview();
-            },
-            'click #fa-preview span': function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.$('#fa-size').val(e.target.getAttribute('data-size'));
-                this.update_preview();
+                $(".font-icons-icon").removeClass("font-icons-selected");
+                $(event.target).addClass("font-icons-selected");
             },
         }),
 
@@ -2339,7 +2332,6 @@ define(['summernote/summernote'], function () {
             this.media = media;
         },
         start: function () {
-            this.$preview = this.$('.preview-container').detach();
             return this._super().then(this.proxy('load_data'));
         },
         search: function (needle) {
@@ -2383,6 +2375,7 @@ define(['summernote/summernote'], function () {
                 var media = document.createElement('span');
                 $(this.media).replaceWith(media);
                 this.media = media;
+                style = style.replace(/\s*width:[^;]+/, '');
             }
             $(this.media).attr("class", _.compact(final_classes).join(' ')).attr("style", style);
         },
@@ -2437,7 +2430,9 @@ define(['summernote/summernote'], function () {
                     case 'fa-border':
                         this.$('#fa-border').prop('checked', true);
                         continue;
+                    case '': continue;
                     default:
+                        $(".font-icons-icon").removeClass("font-icons-selected").filter("."+cls).addClass("font-icons-selected");
                         for (var k=0; k<this.icons.length; k++) {
                             if (this.icons.indexOf(cls) !== -1) {
                                 this.$('#fa-icon').val(cls);
@@ -2446,7 +2441,6 @@ define(['summernote/summernote'], function () {
                         }
                 }
             }
-            this.update_preview();
         },
         /**
          * Serializes the dialog to an array of FontAwesome classes. Includes
@@ -2461,31 +2455,6 @@ define(['summernote/summernote'], function () {
                 this.$('#fa-rotation').val(),
                 this.$('#fa-border').prop('checked') ? 'fa-border' : ''
             ];
-        },
-        update_preview: function () {
-            this.$preview.empty();
-            var $preview = this.$('#fa-preview').empty();
-
-            var sizes = ['fa-1x', 'fa-2x', 'fa-3x', 'fa-4x', 'fa-5x'];
-            var classes = this.get_fa_classes();
-            var no_sizes = _.difference(classes, sizes).join(' ');
-            var selected = false;
-            for (var i = sizes.length - 1; i >= 0; i--) {
-                var size = sizes[i];
-
-                var $p = $('<span>')
-                        .attr('data-size', size)
-                        .addClass(size)
-                        .addClass(no_sizes);
-
-                if ((size && _.contains(classes, size)) || (size === "" && !selected)) {
-                    this.$preview.append($p.clone());
-                    this.$('#fa-size').val(size);
-                    $p.addClass('font-icons-selected');
-                    selected = true;
-                }
-                $preview.prepend($p);
-            }
         },
         clear: function () {
             this.media.className = this.media.className.replace(/(^|\s)(fa(\s|$)|fa-[^\s]*)/g, ' ');
