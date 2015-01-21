@@ -38,7 +38,7 @@
 				<drawString x="1.5cm">
 					<xsl:attribute name="y">
 						<xsl:value-of select="/report/config/pageHeight - 56.69"/>
-					</xsl:attribute><xsl:text>OpenERP</xsl:text>
+					</xsl:attribute><xsl:text>Odoo</xsl:text>
 				</drawString>
 
 				<fill color="(0.2,0.2,0.2)"/>

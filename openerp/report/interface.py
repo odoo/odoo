@@ -104,7 +104,7 @@ class report_rml(report_int):
         rml = self.create_rml(cr, xml, uid, context)
         ir_actions_report_xml_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
-        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
+        self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'Odoo Report'
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
         return pdf, report_type
