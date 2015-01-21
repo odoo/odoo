@@ -7,7 +7,6 @@ var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
-
 var QWeb = core.qweb;
 var bus = core.bus;
 
@@ -319,4 +318,3 @@ return {
 };
 
 });
-
