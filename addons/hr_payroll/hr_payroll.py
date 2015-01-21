@@ -671,7 +671,7 @@ class hr_payslip(osv.osv):
         if (not employee_id) or (not date_from) or (not date_to):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
+        employee_id = employee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
                     'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
                     'company_id': employee_id.company_id.id
