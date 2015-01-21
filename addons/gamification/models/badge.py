@@ -61,9 +61,10 @@ class gamification_badge_user(osv.Model):
         res = True
         temp_obj = self.pool.get('mail.template')
         user_obj = self.pool.get('res.users')
-        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
+        template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_badge_received')[1]
         for badge_user in self.browse(cr, uid, ids, context=context):
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
+            template = temp_obj.get_email_template(cr, uid, template_id, badge_user.id, context=context)
+            body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.badge.user', badge_user.id, context=template._context)
             res = user_obj.message_post(
                 cr, uid, badge_user.user_id.id,
                 body=body_html,

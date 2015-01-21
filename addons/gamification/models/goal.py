@@ -257,14 +257,16 @@ class gamification_goal(osv.Model):
 
         :return: data to write on the goal object
         """
+        temp_obj = self.pool['mail.template']
         if goal.remind_update_delay and goal.last_update:
             delta_max = timedelta(days=goal.remind_update_delay)
             last_update = datetime.strptime(goal.last_update, DF).date()
             if date.today() - last_update > delta_max:
                 # generate a remind report
                 temp_obj = self.pool.get('mail.template')
-                template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_reminder', context)
-                body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal', goal.id, context=context)
+                template_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'gamification', 'email_template_goal_reminder')[0]
+                template = temp_obj.get_email_template(cr, uid, template_id, goal.id, context=context)
+                body_html = temp_obj.render_template(cr, uid, template.body_html, 'gamification.goal', goal.id, context=template._context)
                 self.pool['mail.thread'].message_post(cr, uid, 0, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
                 return {'to_update': True}
         return {}
