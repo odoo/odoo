@@ -218,9 +218,13 @@ define(['summernote/summernote'], function () {
 
                 $container.find('.hidden:not(.only_fa)').removeClass("hidden");
                 $container.find('.only_fa').addClass("hidden");
-                $container.find('button[data-event="resize"][data-value="1"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive"));
-                $container.find('button[data-event="resize"][data-value="0.5"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive-50"));
-                $container.find('button[data-event="resize"][data-value="0.25"]').toggleClass("active", $(oStyle.image).hasClass("img-responsive-25"));
+                var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
+                if (width) {
+                    width = width[2];
+                }
+                $container.find('button[data-event="resize"][data-value="1"]').toggleClass("active", width === "100%");
+                $container.find('button[data-event="resize"][data-value="0.5"]').toggleClass("active", width === "50%");
+                $container.find('button[data-event="resize"][data-value="0.25"]').toggleClass("active", width === "25%");
 
                 $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
                 
@@ -330,11 +334,11 @@ define(['summernote/summernote'], function () {
     eventHandler.editor.resize = function ($editable, sValue) {
         var $target = $(getImgTarget());
         $editable.data('NoteHistory').recordUndo();
-        switch (+sValue) {
-            case 1: $target.toggleClass('img-responsive').removeClass('img-responsive-50 img-responsive-25'); break;
-            case 0.5: $target.toggleClass('img-responsive-50').removeClass('img-responsive img-responsive-25'); break;
-            case 0.25: $target.toggleClass('img-responsive-25').removeClass('img-responsive img-responsive-50'); break;
+        var width = ($target.attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+)%/);
+        if (width) {
+            width = width[2]/100;
         }
+        $(getImgTarget()).css('width', width != sValue ? (sValue * 100) + '%' : '');
     };
     eventHandler.editor.resizefa = function ($editable, sValue) {
         var $target = $(getImgTarget());
@@ -1932,6 +1936,10 @@ define(['summernote/summernote'], function () {
             }
             this.active.save();
 
+            if (this.active.add_class) {
+                $(this.media).addClass(this.active.add_class);
+            }
+
             self.trigger("saved", self.active.media, self.media);
             setTimeout(function () {
                 range.createFromNode(self.active.media).select();
@@ -2009,9 +2017,10 @@ define(['summernote/summernote'], function () {
             // avoid typos, prevent addition of new properties to the object
             Object.preventExtensions(o);
 
-            if (!this.media) { this.media = document.getElementsByClassName('insert-media')[0]; }
-            if (this.media) {
+            if ($(this.media).is("img")) {
                 o.url = this.media.getAttribute('src');
+            } else {
+                this.add_class = "img-responsive pull-left";
             }
             this.parent.$(".pager > li").click(function (e) {
                 e.preventDefault();
@@ -2057,29 +2066,10 @@ define(['summernote/summernote'], function () {
             }
 
             $(this.media).attr('src', img.url).attr('alt', img.alt);
-            
-            var element = document.getElementsByClassName('insert-media')[0];
-            $('p').removeClass('insert-media');
-
-
-            if (!(element = this.media)) {
-                element = document.createElement('img');
-                element.addClass('img');
-                element.addClass('img-responsive');
-                setTimeout(function () {
-                    editor.insertElement(element);
-                }, 0);
-                this.media = element;
-            }
-
-            // not air mode
-            if (!$(this.media).closest(".o_editable").length) {
-                $(this.media).addClass("img-responsive");
-            }
 
             var style = this.style;
-            element.setAttribute('src', img.url);
-            if (style) { element.addClass(style); }
+            this.media.setAttribute('src', img.url);
+            if (style) { this.media.addClass(style); }
 
             return this.media;
         },
@@ -2549,6 +2539,8 @@ define(['summernote/summernote'], function () {
                 this.$("input#urlvideo").val(src);
                 this.$("#autoplay").attr("checked", src.indexOf('autoplay=1') != -1);
                 this.get_video();
+            } else {
+                this.add_class = "pull-left";
             }
             return this._super();
         },
@@ -2591,7 +2583,6 @@ define(['summernote/summernote'], function () {
                     '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
                     '<iframe src="'+this.$iframe.attr("src")+'" frameborder="0" allowfullscreen="allowfullscreen" contentEditable="false"></iframe>'+
                 '</div>');
-            $('.insert-media').replaceWith($iframe);
             $(this.media).replaceWith($iframe);
             this.media = $iframe[0];
         },
