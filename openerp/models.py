@@ -5762,6 +5762,10 @@ class BaseModel(object):
             # attach `self` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
+        # force evaluation of function fields on secondary records, to have them in the cache
+        for field_seq in secondary:
+            record.mapped(field_seq)
+
         # determine which field should be triggered an onchange
         todo = set([field_name]) if field_name else set(values)
         done = set()
