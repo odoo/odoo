@@ -304,6 +304,7 @@ openerp.web_timeline = function (session) {
             this.options = options;
             this.domain = this.dataset.domain || this.options.domain || [];
             this.context = this.dataset.context || this.options.context || {}; 
+
             this.view = parent;
         },
 
@@ -373,6 +374,7 @@ openerp.web_timeline = function (session) {
             this.options.root_thread = (this.options.root_thread != undefined ? this.options.root_thread : this);
 
             this.messages = [];
+            this.head_message = false;
             this.compose_message = false;
             this.parent_message = parent.thread != undefined ? parent : false ;
             this.view = parent.view;
@@ -431,15 +433,16 @@ openerp.web_timeline = function (session) {
          * Each message is send to his parent object for creating the object message.
          * @param : {Array} datas from calling RPC to "message_read"
          */
-        switch_new_message: function (records, dom_insert_after, dom_insert_before) {
+        switch_new_message: function (records, dom_insert_after, dom_insert_before, parent_message) {
             console.log("Records", records);
             var self = this;
             var insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
             var insert_before = typeof dom_insert_before == 'object' ? dom_insert_before : false;
+            var parent_msg = parent_message || false;
 
             _(records).each(function (record) {
                  // create object and attach to the thread object
-                 var message = self.create_message_object(record);
+                 var message = self.create_message_object(record, parent_msg);
                  // insert the message on dom
                  self.insert_message(message, insert_after, insert_before);
             });
@@ -498,10 +501,7 @@ openerp.web_timeline = function (session) {
          * displaying this message on the DOM.
          * @param : {object} data from calling RPC to "message_read"
          */
-        create_message_object: function (data) {
-            data.record_name = (data.record_name != '' && data.record_name) || 
-                               (this.parent_message && this.parent_message.record_name);
-
+        create_message_object: function (data, parent_message) {
             if (data.type === 'parent') {
                 var message = new openerp.web_timeline.ThreadParent(this, _.extend(data, {'context': {
                     'default_model': data.model,
@@ -514,14 +514,17 @@ openerp.web_timeline = function (session) {
                     'default_model': data.model || this.context.default_model,
                     'default_res_id': data.res_id || this.context.default_res_id,
                     'default_parent_id': this.id,
-                }}), this.options);
+                }}), _.extend(this.options, {'parent_message': parent_message}));
+                console.log("message", message);
             }
             else {
+                data.record_name = (data.record_name != '' && data.record_name) 
+                                || (this.parent_message && this.parent_message.record_name);
                 var message = new openerp.web_timeline.ThreadMessage(this, _.extend(data, {'context': {
                     'default_model': data.model,
                     'default_res_id': data.res_id,
                     'default_parent_id': data.id,
-                }}), this.options);
+                }}), _.extend(this.options, {'parent_message': parent_message}));
             }
 
             // check if the message is already created, then delete, except if parent
@@ -729,10 +732,12 @@ openerp.web_timeline = function (session) {
             this.options.show_unread = false;
 
             if (this.options.show_read_unread_button) {
-                if (this.options.read_action == 'read')
+                if (this.options.read_action == 'read') {
                     this.options.show_read = true;
-                else if (this.options.read_action == 'unread') 
+                }
+                else if (this.options.read_action == 'unread') {
                     this.options.show_unread = true;
+                }
                 else {
                     this.options.show_read = this.to_read;
                     this.options.show_unread = !this.to_read;
@@ -832,7 +837,29 @@ openerp.web_timeline = function (session) {
         events: {
              'click .oe_tl_parent_message.default':'on_parent_message',
              'click .oe_tl_parent_message.disp':'on_parent_message_hide',
-             'click .oe_tl_parent_message.undisp':'on_parent_message_show',
+             // 'click .oe_tl_parent_message.undisp':'on_parent_message_show',
+        },
+
+        start: function () {
+            this.create_thread();
+            return this._super.apply(this, arguments);
+        },
+
+        create_thread: function () {
+            if (this.thread) {
+                return false;
+            }
+            /*create thread*/
+            this.thread = new openerp.web_timeline.MailThread(this, _.extend({
+                    'domain': this.domain,
+                    'context': {
+                        'default_model': this.model,
+                        'default_res_id': this.res_id,
+                        'default_parent_id': this.id
+                    }},
+                this), this.options);
+            /*insert thread in parent message*/
+            this.thread.insertAfter(this.$el);
         },
 
         on_parent_message: function (event) {
@@ -841,7 +868,7 @@ openerp.web_timeline = function (session) {
             var self = this;
             this.parent_thread.message_fetch(this.domain.concat(['|', ["parent_id", "=", this.id], ["id", "=", this.id]]), 
                                              this.context, false, 'child', function (arg, data) {
-                self.parent_thread.switch_new_message(data, self.$('.oe_tl_parent_message'), false);
+                self.parent_thread.switch_new_message(data, self.$('.oe_tl_parent_message'), false, self);
             }).then(function () {
                 self.$('.oe_tl_parent_message').removeClass('default').addClass('disp');
             });
@@ -856,12 +883,12 @@ openerp.web_timeline = function (session) {
             // this.$('.oe_tl_parent_message').removeClass('disp').addClass('undisp');
         },
 
-        on_parent_message_show: function (event) {
+        /*on_parent_message_show: function (event) {
             event.stopPropagation();
 
             this.$('.oe_tl_thread_message').show();
             this.$('.oe_tl_parent_message').removeClass('undisp').addClass('disp');
-        },
+        },*/
     });
 
     openerp.web_timeline.ThreadExpendable = openerp.web_timeline.MessageCommon.extend({
@@ -875,6 +902,7 @@ openerp.web_timeline = function (session) {
             this._super(parent, dataset, options);
 
             this.nb_messages = dataset.nb_messages;
+            this.parent_message = options.parent_message;
         },
 
         reinit: function () {
@@ -890,7 +918,7 @@ openerp.web_timeline = function (session) {
                 self.id = false;
 
                 // insert messages on dom and destroy expandable
-                self.parent_thread.switch_new_message(data, false, self.$el);
+                self.parent_thread.switch_new_message(data, false, self.$el, self.parent_message);
                 self.destroy();
             });
         },
@@ -915,6 +943,8 @@ openerp.web_timeline = function (session) {
             this.tracking_values = false;
             this.partners = false;
             this.attachments = false;
+
+            this.parent_message = options.parent_message;
         },
 
         start: function () {
@@ -1077,7 +1107,6 @@ openerp.web_timeline = function (session) {
             return this.parent_thread.ds_message.call('message_read', 
                 [undefined, domain, [], 0, this.context, this.parent_thread.id])
                 .then( function (records) {
-                    console.log("after to read", records);
                     // remove message not loaded
                     _.map(messages, function (msg) {
                         if(!_.find(records, function (record) {return record.id == msg.id;})) {
@@ -1128,7 +1157,6 @@ openerp.web_timeline = function (session) {
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
-                        console.log("msg : ", msg, "-", !read_value);
                         msg.to_read = !read_value;
                         console.log("msg.to_read : ", msg.to_read);
                         if (msg.options.toggle_read) {
@@ -1191,16 +1219,16 @@ openerp.web_timeline = function (session) {
 
         destroy_message: function (fadeTime) {
             var self = this;
+            var new_msg = false;
 
             this.$el.fadeOut(fadeTime, function () {
-                var new_msg = self.parent_thread.message_to_expendable(self);
+                new_msg = self.parent_thread.message_to_expendable(self);
                 if (new_msg && new_msg.$el.prev().hasClass('oe_tl_parent_message') && !new_msg.$el.next()[0]) {
-                    console.log("supprimer thread");
+                    new_msg.destroy();
+                    self.parent_message.thread.$el.fadeOut(fadeTime);
+                    self.parent_message.destroy();
                 }
-            });
-            if (this.thread) {
-
-            }
+            });   
         }
     });
  
@@ -1637,7 +1665,7 @@ openerp.web_timeline = function (session) {
             });
         },
 
-       compute_emails_from: function () {
+        compute_emails_from: function () {
             var self = this;
             var messages = [];
 
