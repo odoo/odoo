@@ -642,11 +642,12 @@ class test_m2o(ImporterCase):
     @mute_logger('openerp.sql_db')
     def test_fail_id_mistype(self):
         result = self.import_(['value/.id'], [["foo"]])
-        try:
-            int("foo")
-        except ValueError, exc:
-            expected_message = unicode(exc)
-        self.assertEqual(result['messages'], [message(expected_message)])
+
+        self.assertEqual(result['messages'], [
+            message(u"Invalid database id 'foo' for the field 'unknown'",
+                    moreinfo=moreaction(res_model='ir.model.data',
+                                        domain=[('model','=','export.integer')]))
+        ])
         self.assertIs(result['ids'], False)
 
     def test_sub_field(self):
