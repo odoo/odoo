@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import fields, models, SUPERUSER_ID, tools, api
 from psycopg2 import IntegrityError
+from openerp.tools import html_escape
 
 
 class pageview(models.Model):
@@ -14,9 +15,9 @@ class pageview(models.Model):
     @api.model
     def create_pageview(self, vals, test=False):
         # returns True if the operation in the db was successful, False otherwise
-        lead_id = vals.get('lead_id')
-        user_id = vals.get('user_id')
-        url = vals.get('url')
+        lead_id = vals.get('lead_id', 0)
+        user_id = vals.get('user_id', 0)
+        url = vals.get('url', '')
         view_date = fields.Datetime.now()
 
         with self.pool.cursor() as pv_cr:
@@ -40,7 +41,8 @@ class pageview(models.Model):
                     fetch = pv_cr.fetchone()
                     if fetch:
                         # a new pageview has been created, a message is posted
-                        body = '<a href="' + url + '" target="_blank"><b>' + url + '</b></a>'
+                        url = html_escape(url)
+                        body = '<a href="%s" target="_blank"><b>%s</b></a>' % (url, url)
                         ctx = dict(self._context, mail_notify_noemail=True)
                         self.pool['crm.lead'].message_post(self._cr, SUPERUSER_ID, [lead_id], body=body, subject="Page visited", context=ctx)
                         return True

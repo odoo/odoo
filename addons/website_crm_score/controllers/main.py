@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import addons, http, SUPERUSER_ID, fields
 from openerp.http import request
+from openerp.tools import html_escape
 
 
 class PageController(addons.website.controllers.main.Website):
@@ -68,7 +69,6 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             ('stage_id.probability', '!=', 0),
             ('stage_id.probability', '!=', 100)
         ]
-        domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
         lead_instance = lead_model.search(cr, SUPERUSER_ID, domain, context=context)
 
         if lead_instance:
@@ -87,7 +87,7 @@ class ContactController(addons.website_crm.controllers.main.contactus):
             if changed_values:
                 body = 'Other value given for field '
                 for fieldname in changed_values.keys():
-                    body += '<br/><b>' + fieldname + '</b>: <b>' + changed_values[fieldname] + '</b>'
+                    body += '<br/><b>%s</b>: <b>%s</b>' % (fieldname, html_escape(changed_values[fieldname]))
                 request.registry['crm.lead'].message_post(cr, SUPERUSER_ID, [lead_id], body=body, subject="Field value changed", context=context)
 
         else:
@@ -110,7 +110,8 @@ class ContactController(addons.website_crm.controllers.main.contactus):
                 values['score_pageview_ids'] = score_pageview_ids
                 urls = []
                 for url in url_list:
-                    urls.append('<a href="' + url + '" target="_blank"><b>' + url + '</b></a>')
+                    url_encoded = html_escape(url)
+                    urls.append('<a href="%s" target="_blank"><b>%s</b></a>' % (url_encoded, url_encoded))
                 body = '<br/>'.join(urls)
 
             new_lead_id = self.create_real_lead(request, values, kwargs)
