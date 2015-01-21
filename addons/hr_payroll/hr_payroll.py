@@ -484,6 +484,7 @@ class hr_payslip(osv.osv):
                         inputs = {
                              'name': input.name,
                              'code': input.code,
+                             'amount': input.amount,
                              'contract_id': contract.id,
                         }
                         res += [inputs]
