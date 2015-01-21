@@ -72,7 +72,7 @@ wkhtmltopdf.org</a>'), true);
                             instance.web.unblockUI();
                             return;
                         } else if (presence === 'workers') {
-                            self.do_notify(_t('Report'), _t('You need to start OpenERP with at least two \
+                            self.do_notify(_t('Report'), _t('You need to start Odoo with at least two \
 workers to print a pdf version of the reports.'), true);
                             report_url = report_url.substring(12)
                             window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
