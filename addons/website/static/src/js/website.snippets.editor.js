@@ -140,6 +140,17 @@
                     self.cover_target(self.$active_snipped_id.data("snippet-editor").$overlay, self.$active_snipped_id);
                 }
             });
+
+            $(document).on('keydown', function () {
+                if (self.$active_snipped_id && self.$active_snipped_id.data("snippet-editor")) {
+                    self.$active_snipped_id.data("snippet-editor").$overlay.addClass('o_keypress');
+                }
+            });
+            $(document).on('mousemove', function () {
+                if (self.$active_snipped_id && self.$active_snipped_id.data("snippet-editor")) {
+                    self.$active_snipped_id.data("snippet-editor").$overlay.removeClass('o_keypress');
+                }
+            });
         },
 
         show_blocks: function () {
