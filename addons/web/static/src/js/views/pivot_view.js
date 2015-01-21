@@ -85,20 +85,23 @@ var PivotView = View.extend({
     },
     render_buttons: function () {
         var self = this;
-        var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
-        this.$buttons.html(QWeb.render('PivotView.buttons', context));
-        this.$buttons.click(this.on_button_click.bind(this));
-        this.active_measures.forEach(function (measure) {
-            self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
-        });
 
+        // Render buttons only in non-headless mode as buttons are in the header
+        if (!this.options.headless) {
+            var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
+            this.$buttons.html(QWeb.render('PivotView.buttons', context));
+            this.$buttons.click(this.on_button_click.bind(this));
+            this.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
+            this.$buttons.find('button').tooltip();
+        }
         var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
         this.$field_selection = this.$('.o-field-selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
         core.bus.on('click', self, function () {
             self.$field_selection.find('ul').first().hide();
         });
-        this.$buttons.find('button').tooltip();
     },
     view_loading: function (fvg) {
         var self = this;

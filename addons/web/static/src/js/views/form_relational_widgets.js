@@ -1078,9 +1078,10 @@ var One2ManyFormView = FormView.extend({
 });
 
 var One2ManyViewManager = ViewManager.extend({
-    template: 'One2Many.viewmanager',
     init: function(parent, dataset, views, flags) {
-        this._super(parent, dataset, views, _.extend({}, flags, {$sidebar: false}));
+        // Only display the ControlPanel when there are several views to display
+        var flags = _.extend({}, flags, {$sidebar: false, headless: (views.length <= 1)});
+        this._super(parent, dataset, views, flags);
         this.registry = core.view_registry.extend({
             list: One2ManyListView,
             form: One2ManyFormView,

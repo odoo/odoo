@@ -369,10 +369,10 @@ FavoriteMenu.include({
             this.do_warn(_t("Can't find dashboard action"));
             return;
         }
-        var searchview = view_manager.searchview,
-            search_data = searchview.build_search_data(),
-            context = new data.CompoundContext(searchview.dataset.get_context() || []),
-            domain = new data.CompoundDomain(searchview.dataset.get_domain() || []);
+        var searchview = view_manager.get_searchview();
+        var search_data = searchview.build_search_data();
+        var context = new data.CompoundContext(searchview.dataset.get_context() || []);
+        var domain = new data.CompoundDomain(searchview.dataset.get_domain() || []);
         _.each(search_data.contexts, context.add, context);
         _.each(search_data.domains, domain.add, domain);
 

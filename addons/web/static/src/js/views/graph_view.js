@@ -34,12 +34,15 @@ var GraphView = View.extend({
         return $.when(this._super(), load_fields).then(this.render_buttons.bind(this));
     },
     render_buttons: function () {
-        var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
-        this.$buttons.html(QWeb.render('GraphView.buttons', context));
-        this.$measure_list = this.$buttons.find('.oe-measure-list');
-        this.update_measure();
-        this.$buttons.find('button').tooltip();
-        this.$buttons.click(this.on_button_click.bind(this));
+        // Render buttons only in non-headless mode as buttons are in the header
+        if (!this.options.headless) {
+            var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
+            this.$buttons.html(QWeb.render('GraphView.buttons', context));
+            this.$measure_list = this.$buttons.find('.oe-measure-list');
+            this.update_measure();
+            this.$buttons.find('button').tooltip();
+            this.$buttons.click(this.on_button_click.bind(this));
+        }
     },
     update_measure: function () {
         var self = this;

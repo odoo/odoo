@@ -2,6 +2,7 @@ odoo.define('web_view_editor.view_editor', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
@@ -9,13 +10,12 @@ var formats = require('web.formats');
 var Registry = require('web.Registry');
 var session = require('web.session');
 var utils = require('web.utils');
-var ViewManager = require('web.ViewManager');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-ViewManager.include({
+ControlPanel.include({
     on_debug_changed:function(evt){
         var val = $(evt.target).data('action'),
             current_view = this.active_view.controller;
