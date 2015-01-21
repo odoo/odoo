@@ -5016,7 +5016,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             // LINK_TO and REPLACE_WITH in this context
             var val = [];
             _.each(value_, function (command) {
-                if (command[0] === commands.LINK_TO) {
+                if (command[0] === commands.UPDATE) {
+                    val.push(command[1]);                   // (1, id, values)
+                } else if (command[0] === commands.LINK_TO) {
                     val.push(command[1]);                   // (4, id[, _])
                 } else if (command[0] === commands.REPLACE_WITH) {
                     val = command[2];                       // (6, _, ids)

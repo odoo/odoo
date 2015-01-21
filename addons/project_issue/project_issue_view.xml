@@ -309,7 +309,7 @@
                     <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}</attribute>
                 </xpath>
                 <xpath expr='//field[@name="use_tasks"]' position="attributes">
-                    <attribute name="attrs">{'on_change': 'on_change_use_tasks_or_issues(use_tasks, use_issues)'}</attribute>
+                    <attribute name='on_change'> on_change_use_tasks_or_issues(use_tasks, use_issues) </attribute>
                 </xpath>
                 <field name="sequence" position="before">
                     <field name="project_escalation_id"/>
