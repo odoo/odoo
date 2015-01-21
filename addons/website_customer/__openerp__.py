@@ -26,8 +26,8 @@
     'summary': 'Publish Your Customer References',
     'version': '1.0',
     'description': """
-OpenERP Customer References
-===========================
+Customer References publication
+===============================
 """,
     'author': 'OpenERP SA',
     'depends': [

@@ -26,8 +26,8 @@
     'website': 'http://gscom.vn',
     "category" : "Localization/Account Charts",
     "description": """
-This is the module to manage the accounting chart for Vietnam in OpenERP.
-=========================================================================
+This is the module to manage the accounting chart for Vietnam
+=============================================================
 
 This module applies to companies based in Vietnamese Accounting Standard (VAS).
 

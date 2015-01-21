@@ -23,8 +23,8 @@
     'version': '1.beta',
     'category': 'Localization/Account Charts',
     'description': """
-Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.
-==========================================================
+Türkiye için Tek düzen hesap planı şablonu Odoo Modülü
+======================================================
 
 Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap

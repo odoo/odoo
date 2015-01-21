@@ -5,8 +5,8 @@
     'summary': 'Publish Your Public Projects',
     'version': '1.0',
     'description': """
-OpenERP Projects
-================
+Projects website publication
+============================
 
         """,
     'author': 'OpenERP SA',

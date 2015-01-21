@@ -1,10 +1,10 @@
 {
     'name': 'Base import',
     'description': """
-New extensible file import for OpenERP
-======================================
+New extensible file import
+==========================
 
-Re-implement openerp's file import system:
+New file import system:
 
 * Server side, the previous system forces most of the logic into the
   client which duplicates the effort (between clients), makes the
@@ -18,8 +18,8 @@ Re-implement openerp's file import system:
   files) which may be simpler to handle in their work flow or from
   their data production sources.
 
-* In a module, so that administrators and users of OpenERP who do not
-  need or want an online import can avoid it being available to users.
+* In a module, so that administrators and users who do not need or want an
+  online import can avoid it being available to users.
 """,
     'category': 'Uncategorized',
     'website': 'https://www.odoo.com',

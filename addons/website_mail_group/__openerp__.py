@@ -4,8 +4,8 @@
     'summary': '',
     'version': '1.0',
     'description': """
-OpenERP Mail Group : Mailing List Archives
-==========================================
+Mailing List Archives
+=====================
 
         """,
     'author': 'OpenERP SA',

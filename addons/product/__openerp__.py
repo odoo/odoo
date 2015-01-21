@@ -32,8 +32,8 @@
     ],
     'website': 'https://www.odoo.com',
     'description': """
-This is the base module for managing products and pricelists in OpenERP.
-========================================================================
+This is the base module for managing products and pricelists
+============================================================
 
 Products support variants, different pricing methods, suppliers information,
 make to stock/order, different unit of measures, packaging and properties.

@@ -2,8 +2,8 @@
     'name': 'Web Gantt',
     'category': 'Hidden',
     'description': """
-OpenERP Web Gantt chart view.
-=============================
+Gantt chart client
+==================
 
 """,
     'version': '2.0',

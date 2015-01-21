@@ -60,7 +60,7 @@ associated objects. The removal of a CODA File containing multiple Bank
 Statements will also remove those associated statements.
 
 Instead of a manual adjustment of the generated Bank Statements, you can also
-re-import the CODA after updating the OpenERP database with the information that
+re-import the CODA after updating the database with the information that
 was missing to allow automatic reconciliation.
 
 Remark on CODA V1 support:

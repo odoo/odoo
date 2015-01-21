@@ -4,8 +4,8 @@
     'summary': '',
     'version': '1.0',
     'description': """
-OpenERP Website Google Map
-==========================
+Google Map integration
+======================
 
         """,
     'author': 'OpenERP SA',

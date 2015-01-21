@@ -35,7 +35,7 @@ It enables the users to read and send messages as well as emails. It also provid
 
 Main Features
 -------------
-* Clean and renewed communication history for any OpenERP document that can act as a discussion topic
+* Clean and renewed communication history for any document that can act as a discussion topic
 * Subscription mechanism to be updated about new messages on interesting documents
 * Unified feeds page to see recent messages and activity on followed documents
 * User communication through the feeds page

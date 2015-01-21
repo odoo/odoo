@@ -1,9 +1,9 @@
 {
-    'name': 'OpenERP Web API',
+    'name': 'Web API',
     'category': 'Hidden',
     'description': """
-Openerp Web API.
-================
+Web API
+=======
 
 """,
     'version': '2.0',

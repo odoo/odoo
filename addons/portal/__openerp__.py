@@ -30,8 +30,8 @@
     'author': 'OpenERP SA',
     'category': 'Portal',
     'description': """
-Customize access to your OpenERP database to external users by creating portals.
-================================================================================
+Customize access to external users by creating portals
+======================================================
 A portal defines a specific user menu and access rights for its members.  This
 menu can be seen by portal members, public users and any other user that
 have the access to technical features (e.g. the administrator).

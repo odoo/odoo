@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-This module allows users to create their own notes inside OpenERP
-=================================================================
+This module allows users to create their own notes
+==================================================
 
 Use notes to write meeting minutes, organize ideas, organize personal todo
 lists, etc. Each user manages his own personal Notes. Notes are available to

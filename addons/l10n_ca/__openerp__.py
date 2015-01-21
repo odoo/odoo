@@ -25,8 +25,8 @@
     'website': 'http://www.savoirfairelinux.com',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the English and French - Canadian accounting chart in OpenERP.
-===========================================================================================
+English and French - Canadian accounting charts
+===============================================
 
 Canadian accounting charts and localizations.
 

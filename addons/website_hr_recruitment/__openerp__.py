@@ -4,8 +4,8 @@
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',
     'description': """
-OpenERP Contact Form
-====================
+Jobs descriptions and application forms
+=======================================
 
         """,
     'author': 'OpenERP SA',

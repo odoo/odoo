@@ -5,8 +5,8 @@
     'website': 'https://www.odoo.com/page/quote-builder',
     'version': '1.0',
     'description': """
-OpenERP Sale Quote Roller
-=========================
+Sale Quote Roller
+=================
 
         """,
     'author': 'OpenERP SA',

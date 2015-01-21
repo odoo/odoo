@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This is the module used by OpenERP SA to redirect customers to its partners, based on geolocation.
-======================================================================================================
+Redirects customers to partners based on geolocation
+====================================================
 
 This modules lets you geolocate Leads, Opportunities and Partners based on their address.
 

@@ -2,8 +2,8 @@
     'name': 'Base Kanban',
     'category': 'Hidden',
     'description': """
-OpenERP Web kanban view.
-========================
+kanban view client
+==================
 
 """,
     'version': '2.0',

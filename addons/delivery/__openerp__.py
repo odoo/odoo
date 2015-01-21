@@ -29,7 +29,7 @@ Allows you to add delivery methods in sale orders and picking.
 ==============================================================
 
 You can define your own carrier and delivery grids for prices. When creating 
-invoices from picking, OpenERP is able to add and compute the shipping line.
+invoices from picking, the system is able to add and compute the shipping line.
 """,
     'author': 'OpenERP SA',
     'depends': ['sale_stock'],

@@ -4,8 +4,8 @@
     'version': '1.0',
     'website': 'https://www.odoo.com/page/e-commerce',
     'description': """
-OpenERP E-Commerce
-==================
+E-Commerce
+==========
 
         """,
     'author': 'OpenERP SA',

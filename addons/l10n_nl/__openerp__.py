@@ -90,12 +90,12 @@
     'version' : '1.5',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the accounting chart for Netherlands in OpenERP.
-=============================================================================
+This is the module to manage the accounting chart for Netherlands
+=================================================================
 
 Read changelog in file __openerp__.py for version information.
 Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor
-Nederlandse bedrijven te installeren in OpenERP versie 7.0.
+Nederlandse bedrijven te installeren in versie 7.0.
 
 De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te genereren,
 denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet opvoeren,

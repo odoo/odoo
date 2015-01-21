@@ -2,8 +2,8 @@
     'name': "Demonstration of web/javascript tests",
     'category': 'Hidden',
     'description': """
-OpenERP Web demo of a test suite
-================================
+Demo of a web test suite
+========================
 
 Test suite example, same code as that used in the testing documentation.
     """,

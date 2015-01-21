@@ -5,8 +5,8 @@
     'summary': 'Create Leads From Contact Form',
     'version': '1.0',
     'description': """
-OpenERP Contact Form
-====================
+Contact Form
+============
 
         """,
     'author': 'OpenERP SA',

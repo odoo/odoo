@@ -4,10 +4,10 @@
     'version': '1.0',
     'description':
         """
-OpenERP Web core module.
-========================
+Core web module.
+================
 
-This module provides the core of the OpenERP Web Client.
+This module provides the core of the Web Client.
         """,
     'depends': ['base'],
     'auto_install': True,

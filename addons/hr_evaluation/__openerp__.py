@@ -44,7 +44,7 @@ Key Features
 * An evaluation can be created by an employee for subordinates, juniors as well as his manager.
 * The evaluation is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and evaluation is done by the manager.
 * Every evaluation filled by employees can be viewed in a PDF form.
-* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
+* Interview Requests are generated automatically according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
 """,
     "data": [
         'security/ir.model.access.csv',

@@ -28,11 +28,11 @@
     'author' : 'OpenERP SA',
     'category': 'Tools',
     'description': """
-This module adds generic sharing tools to your current OpenERP database.
-========================================================================
+generic sharing tools
+=====================
 
 It specifically adds a 'share' button that is available in the Web client to
-share any kind of OpenERP data with colleagues, customers, friends.
+share any kind of data with colleagues, customers, friends.
 
 The system will work by creating new users and groups on the fly, and by
 combining the appropriate access rights and ir.rules to ensure that the shared

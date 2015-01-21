@@ -2,8 +2,8 @@
     'name': 'Web Calendar',
     'category': 'Hidden',
     'description':"""
-OpenERP Web Calendar view.
-==========================
+Calendar view client
+====================
 
 """,
     'author': 'OpenERP SA, Valentino Lab (Kalysto)',

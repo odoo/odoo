@@ -27,7 +27,7 @@
 Base Module for Ethiopian Localization
 ======================================
 
-This is the latest Ethiopian OpenERP localization and consists of:
+This is the latest Ethiopian localization and consists of:
     - Chart of Accounts
     - VAT tax structure
     - Withholding tax structure

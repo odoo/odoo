@@ -26,8 +26,8 @@
     'version': '1.3',
     'category': 'Hidden',
     'description': """
-The kernel of OpenERP, needed for all installation.
-===================================================
+System kernel, needed for all installation
+==========================================
 """,
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',

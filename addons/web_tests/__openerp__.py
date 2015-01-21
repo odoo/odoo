@@ -2,8 +2,8 @@
     'name': 'Tests',
     'category': 'Hidden',
     'description': """
-OpenERP Web test suite.
-=======================
+Web client test suite
+=====================
 
 """,
     'version': '2.0',

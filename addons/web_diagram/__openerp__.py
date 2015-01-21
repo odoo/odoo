@@ -1,9 +1,9 @@
 {
-    'name': 'OpenERP Web Diagram',
+    'name': 'Web Diagram',
     'category': 'Hidden',
     'description': """
-Openerp Web Diagram view.
-=========================
+Diagram view client
+===================
 
 """,
     'version': '2.0',

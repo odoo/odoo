@@ -31,7 +31,7 @@
 Email Templating (simplified version of the original Power Email by Openlabs).
 ==============================================================================
 
-Lets you design complete email templates related to any OpenERP document (Sale
+Lets you design complete email templates related to any document (Sale
 Orders, Invoices and so on), including sender, recipient, subject, body (HTML and
 Text). You may also automatically attach files to your templates, or print and
 attach a report.
@@ -43,7 +43,7 @@ not defined. Each template contains a built-in assistant to help with the
 inclusion of these dynamic values.
 
 If you enable the option, a composition assistant will also appear in the sidebar
-of the OpenERP documents to which the template applies (e.g. Invoices).
+of the documents to which the template applies (e.g. Invoices).
 This serves as a quick way to send a new email based on the template, after
 reviewing and adapting the contents, if needed.
 This composition assistant will also turn into a mass mailing system when called
@@ -51,7 +51,7 @@ for multiple documents at once.
 
 These email templates are also at the heart of the marketing campaign system
 (see the ``marketing_campaign`` application), if you need to automate larger
-campaigns on any OpenERP document.
+campaigns on any document.
 
     **Technical note:** only the templating system of the original Power Email by Openlabs was kept.
     """,

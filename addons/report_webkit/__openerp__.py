@@ -62,7 +62,7 @@ This module requires the ``wkthtmltopdf`` library to render HTML documents as
 PDF. Version 0.9.9 or later is necessary, and can be found at
 http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and Windows (32bits).
 
-After installing the library on the OpenERP Server machine, you may need to set
+After installing the library on the server machine, you may need to set
 the path to the ``wkthtmltopdf`` executable file in a system parameter named
 ``webkit_path`` in Settings -> Customization -> Parameters -> System Parameters
 

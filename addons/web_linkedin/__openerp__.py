@@ -5,9 +5,10 @@
     'complexity': 'easy',
     'description':
         """
-OpenERP Web LinkedIn module.
-============================
-This module provides the Integration of the LinkedIn with OpenERP.
+LinkedIn module
+===============
+
+Privides LinkedIn web integration.
         """,
     'data': [
         'web_linkedin_view.xml',

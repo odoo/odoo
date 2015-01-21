@@ -32,8 +32,8 @@
     'website': 'http://www.openerp.com',
     'category': 'Localization/Account Charts',
     'description': """
-This is the module to manage the accounting chart for France in OpenERP.
-========================================================================
+This is the module to manage the accounting chart for France
+============================================================
 
 This module applies to companies based in France mainland. It doesn't apply to
 companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).

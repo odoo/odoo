@@ -33,7 +33,7 @@ PosBox Software Upgrader
 
 This module allows to remotely upgrade the PosBox software to a
 new version. This module is specific to the PosBox setup and environment
-and should not be installed on regular openerp servers.
+and should not be installed on regular servers.
 
 """,
     'author': 'OpenERP SA',

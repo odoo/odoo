@@ -2,8 +2,8 @@
     'name': 'View Editor',
     'category': 'Hidden',
     'description': """
-OpenERP Web to edit views.
-==========================
+Web view editor
+===============
 
         """,
     'version': '2.0',
