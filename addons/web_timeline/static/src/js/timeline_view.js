@@ -574,27 +574,23 @@ openerp.web_timeline = function (session) {
         message_to_expendable: function (message) {
             var prev_msg = message.$el.prev();
             var next_msg = message.$el.next();
+            var new_msg =  false;
 
-            console.log("next_msg", next_msg);
-            console.log("prev_msg", prev_msg);
-
-            if ((prev_msg.hasClass('oe_tl_thread_message') && next_msg.hasClass('oe_tl_thread_message'))
-                 || (prev_msg.hasClass('oe_tl_parent_message') && next_msg.hasClass('oe_tl_thread_message'))) {
-                console.log("creta exp");
-                this._create_new_expandable(message);
+            if (!prev_msg.hasClass('oe_tl_thread_expendable') && !next_msg.hasClass('oe_tl_thread_expendable')) {
+                new_msg = this._create_new_expandable(message);
             }
             else if (prev_msg.hasClass('oe_tl_thread_expendable') && next_msg.hasClass('oe_tl_thread_expendable')) {
-                this._concat_two_expandables(message, prev_msg, next_msg);
+                new_msg = this._concat_two_expandables(message, prev_msg, next_msg);
             }
             else if (prev_msg.hasClass('oe_tl_thread_expendable')) {
-                this._concat_one_expandable(message, prev_msg);
+                new_msg = this._concat_one_expandable(message, prev_msg);
             }
             else if (next_msg.hasClass('oe_tl_thread_expendable')) {
-                this._concat_one_expandable(message, next_msg);
+                new_msg = this._concat_one_expandable(message, next_msg);
             }
 
             message.destroy();
-            return true;
+            return new_msg;
         },
 
         _create_new_expandable: function (message) {
@@ -613,6 +609,8 @@ openerp.web_timeline = function (session) {
 
             this.messages.push(exp);
             exp.insertAfter(message.$el);
+
+            return exp;
         },
 
         _concat_two_expandables: function (message, prev_msg, next_msg) {
@@ -629,6 +627,8 @@ openerp.web_timeline = function (session) {
             prev_msg.destroy();
 
             next_msg.reinit();
+
+            return next_msg;
         },
 
         _concat_one_expandable: function (message, exp_msg) {
@@ -640,6 +640,8 @@ openerp.web_timeline = function (session) {
             exp_msg.nb_messages += 1;
 
             exp_msg.reinit();
+
+            return exp_msg;
         },
 
         /**
@@ -1191,7 +1193,10 @@ openerp.web_timeline = function (session) {
             var self = this;
 
             this.$el.fadeOut(fadeTime, function () {
-                self.parent_thread.message_to_expendable(self);
+                var new_msg = self.parent_thread.message_to_expendable(self);
+                if (new_msg && new_msg.$el.prev().hasClass('oe_tl_parent_message') && !new_msg.$el.next()[0]) {
+                    console.log("supprimer thread");
+                }
             });
             if (this.thread) {
 
