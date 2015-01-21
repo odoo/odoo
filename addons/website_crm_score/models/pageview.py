@@ -16,7 +16,7 @@ class pageview(models.Model):
     def create_pageview(self, vals, test=False):
         # returns True if the operation in the db was successful, False otherwise
         lead_id = vals.get('lead_id', 0)
-        user_id = vals.get('user_id', 0)
+        user_id = vals.get('user_id')
         url = vals.get('url', '')
         view_date = fields.Datetime.now()
 
