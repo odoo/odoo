@@ -231,7 +231,7 @@ class ir_mail_server(osv.osv):
             if not 'SMTP_SSL' in smtplib.__all__:
                 raise osv.except_osv(
                              _("SMTP-over-SSL mode unavailable"),
-                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                             _("Your Server does not support SMTP-over-SSL. You could use STARTTLS instead."
                                "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
             connection = smtplib.SMTP_SSL(host, port)
         else:
