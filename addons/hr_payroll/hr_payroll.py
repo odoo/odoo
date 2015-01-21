@@ -639,7 +639,7 @@ class hr_payslip(osv.osv):
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
-        empolyee_obj = self.pool.get('hr.employee')
+        employee_obj = self.pool.get('hr.employee')
         contract_obj = self.pool.get('hr.contract')
         worked_days_obj = self.pool.get('hr.payslip.worked_days')
         input_obj = self.pool.get('hr.payslip.input')
