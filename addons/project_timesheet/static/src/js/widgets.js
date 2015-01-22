@@ -7,34 +7,37 @@ function odoo_project_timesheet_widgets(project_timesheet) {
         template: "ProjectTimesheet",
         init: function() {
             this._super.apply(this, arguments);
-            //project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model({project_timesheet_widget: this}); //May be store in this, we'll not have session initially, need to discuss how to manage session
+            project_timesheet.project_timesheet_model = new project_timesheet.project_timesheet_model({project_timesheet_widget: this}); //May be store in this, we'll not have session initially, need to discuss how to manage session
         },
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            //$.when(project_timesheet.project_timesheet_model.ready).always(function() {
-            self.build_widgets();
-            self.screen_selector.set_default_screen();
-            //});
+            $.when(project_timesheet.project_timesheet_model.ready).always(function() {
+                self.build_widgets();
+                self.screen_selector.set_default_screen();
+            });
         },
         build_widgets: function() {
             //Creates all widgets instances and add into this object
             /*----------------Screen------------------*/
 
             //Append all screen widget in screen element of this.$el, by default all will be hidden and then current screen will be visible
-            this.welcome_screen = new project_timesheet.Welcome_screen(this);//, {project_timesheet_model: project_timesheet.project_timesheet_model});
+            this.welcome_screen = new project_timesheet.Welcome_screen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.welcome_screen.appendTo(this.$('.screens'));
 
-            this.day_planner_screen = new project_timesheet.Day_planner_screen(this);//, {project_timesheet_model: project_timesheet.project_timesheet_model});
+            this.day_planner_screen = new project_timesheet.Day_planner_screen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.day_planner_screen.appendTo(this.$('.screens'));
 
+            this.settings_screen = new project_timesheet.Settings_screen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
+            this.settings_screen.appendTo(this.$('.screens'));
 
             /*----------------Screen Selector------------------*/
             this.screen_selector = new project_timesheet.ScreenSelector({
                 project_timesheet_model: project_timesheet.project_timesheet_model,
                 screen_set:{
                     'welcome_screen': this.welcome_screen,
-                    'day_planner_screen' : this.day_planner_screen
+                    'day_planner_screen' : this.day_planner_screen,
+                    'settings_screen' : this.settings_screen
                 },
                 default_screen: 'welcome_screen',
             });

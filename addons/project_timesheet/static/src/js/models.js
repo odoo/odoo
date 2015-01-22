@@ -97,11 +97,17 @@ function odoo_project_timesheet_models(project_timesheet) {
 
 
     //tac additions here
-    // project_timesheet.project_timesheet_model = Backbone.Model.extend({
-    //     var self = this;
-    //     Backbone.Model.prototype.initialize.call(this, attributes);
-    //     this.screen_data = {};
-    // });
+    project_timesheet.project_timesheet_model = Backbone.Model.extend({
+        initialize: function(attributes) {
+            var self = this;
+            Backbone.Model.prototype.initialize.call(this, attributes);
+            this.project_timesheet_widget = attributes.project_timesheet_widget;
+            this.selected_screen = "no screen yet !";
+            console.log("Initialized !");
+            this.ready = $.Deferred();
+            this.ready.resolve();
+        }
+    });
 
 
     // project_timesheet.project_timesheet_model = Backbone.Model.extend({

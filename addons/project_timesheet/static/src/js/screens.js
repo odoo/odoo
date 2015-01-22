@@ -268,33 +268,34 @@ function odoo_project_timesheet_screens(project_timesheet) {
             return this;
         },
         set_current_screen: function(screen_name, screen_data_set, params, refresh, re_render) {
+        
             var screen = this.screen_set[screen_name];
-            // if(re_render) {
-            //     screen.renderElement();
-            // }
+            
             if(!screen){
                 console.error("ERROR: set_current_screen("+screen_name+") : screen not found");
             }
 
-            // var old_screen_name = this.project_timesheet_model.get_screen_data('screen');
+            var previous_screen_name = this.project_timesheet_model.selected_screen;
+            
+            if (previous_screen_name in this.screen_set){
+                this.previous_screen = this.screen_set[previous_screen_name];
+            }
 
-            // this.project_timesheet_model.set_screen_data('screen', screen_name);
-
-            // if(params){
-            //     this.project_timesheet_model.set_screen_data('params', params);
-            // }
-
-            // if( screen_name !== old_screen_name ){
-            //     this.project_timesheet_model.set_screen_data('previous-screen',old_screen_name);
-            // }
+            if( screen_name !== previous_screen_name ){
+                this.project_timesheet_model.selected_screen = screen_name;
+                this.current_screen = screen;
+                if (this.previous_screen != undefined){
+                  this.previous_screen.hide();
+                }
+              this.current_screen.show();
+            }
 
             // if ( refresh || screen !== this.current_screen){
             //     if(this.current_screen){
             //         this.current_screen.close();
             //         this.current_screen.hide();
             //     }
-            this.current_screen = screen;
-            this.current_screen.show();
+            
             //     if(screen_data_set && this.current_screen.set_screen_values) {
             //         this.current_screen.set_screen_values(screen_data_set);
             //     }
@@ -322,35 +323,23 @@ function odoo_project_timesheet_screens(project_timesheet) {
     });
 
     project_timesheet.ScreenWidget = openerp.Widget.extend({ //Make sure we need to extend project_timesheet_widget or openerp.widget
+        events:{
+            "click .pt_day_planner_link" : "goto_day_planner",
+            "click .pt_settings_link" : "goto_settings",
+            "click .pt_activities_link" : "goto_welcome_screen",
+            "click .pt_validate_btn" : "goto_welcome_screen"
+        },
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
             //this.project_timesheet_model = project_timesheet.project_timesheet_model;
             //this.project_timesheet_db = this.project_timesheet_model.project_timesheet_db;
         },
-        // this method shows the screen and sets up all the widget related to this screen. Extend this method
-        // if you want to alter the behavior of the screen.
         show: function(){
-            var self = this;
-
-            this.hidden = false;
-            if(this.$el){
-                this.$el.removeClass('o_hidden');
-            }
+            this.$el.show();
         },
-
-        // this method is called when the screen is closed to make place for a new screen. this is a good place
-        // to put your cleanup stuff as it is guaranteed that for each show() there is one and only one close()
-        close: function(){
-            //TO Implement
-        },
-
-        hide: function() {
-            //this methods hides the screen.
-            this.hidden = true;
-            if(this.$el){
-                this.$el.addClass('o_hidden');
-            }
+        hide: function(){
+            this.$el.hide();
         },
 
         // we need this because some screens re-render themselves when they are hidden
@@ -396,6 +385,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 buttons: buttons
             }, QWeb.render('ProjectTimesheet.error', {widget: this, error: error})).open();
         },
+        goto_day_planner: function(){
+            this.project_timesheet_widget.screen_selector.set_current_screen("day_planner_screen");
+        },
+        goto_settings: function(){
+            this.project_timesheet_widget.screen_selector.set_current_screen("settings_screen");
+        },
+        goto_welcome_screen: function(){
+            this.project_timesheet_widget.screen_selector.set_current_screen("welcome_screen");
+        }
     });
 
     project_timesheet.ActivityScreen = project_timesheet.ScreenWidget.extend({
@@ -1212,9 +1210,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Activities";
         },
-        show: function(){
-
-        }
     });
 
     project_timesheet.Day_planner_screen = project_timesheet.ScreenWidget.extend({
@@ -1224,8 +1219,14 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Day Planner";
         },
-        show: function(){
-
-        }
     });
+
+    project_timesheet.Settings_screen = project_timesheet.ScreenWidget.extend({
+        template: "settings_screen",
+        init: function(project_timesheet_widget, options) {
+            this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
+            this.screen_name = "Settings";
+        },
+    }); 
 }

@@ -10,7 +10,13 @@
     	<t t-call="header">
     	</t>
     	<div class="pt_welcome_screen">
-    		
+    		<div class="col-xs-6">
+	    		<!--Put time here-->
+	    	</div>
+	    	<div class="col-xs-3">
+	    		<!--Start button / stop button-->
+	    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-teal pt_btn_start_activity">Start</a>
+			</div>
     	</div>
     </t>
 
@@ -22,20 +28,42 @@
     	</div>
     </t>
 
+	<t t-name="settings_screen">
+    	<t t-call="header">
+    	</t>
+    	<div class="pt_settings_screen">
+    		
+    	</div>
+    </t>
+
     <t t-name="header">
-    	<div class="navbar">
-    			<ul class="nav navbar-nav navbar-left">
-	    			<li>
-	    				<a href="javascript:void(0)">Menu</a>
-	    			</li>
-	    			<li>
-						<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>	
-					</li>
-				</ul>
+    	<div class="navbar navbar-material-purple">
+    		<ul class="nav navbar-nav navbar-left">
+    			<li class="dropdown">
+    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+    				<ul class="dropdown-menu">
+    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
+    				</ul>
+    			</li>
+    			<li>
+    				<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
+    			</li>
+    		</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<a href="javascript:void(0)">New</a>
-					</li>
+					<t t-if="widget.screen_name == 'Activities'">
+						<li>
+							<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+						</li>
+					</t>
+					<t t-if="widget.screen_name != 'Activities'">
+						<li>
+							<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+						</li>
+					</t>
+
+					
 					<!--To remove, it is used at the moment to remove the -15px from navbar-right last child-->
 					<li>
 						<a href="javascript:void(0)"></a> 
