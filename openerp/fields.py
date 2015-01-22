@@ -1526,6 +1526,9 @@ class _RelationalMulti(_Relational):
             result = record[self.name]
             # modify result with the commands;
             # beware to not introduce duplicates in result
+            if all(isinstance(command, int) for command in value):
+                return result.browse(set(value))
+
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
