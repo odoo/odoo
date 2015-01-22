@@ -2616,7 +2616,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
             value_ = 0;
         }
         if (this.digits !== undefined && this.digits.length === 2) {
-            value_ = instance.web.round_precision(value_, this.digits[1]);
+            value_ = instance.web.round_decimals(value_, this.digits[1]);
         }
         this._super.apply(this, [value_]);
     },

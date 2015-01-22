@@ -638,7 +638,7 @@ class Field(object):
         assert self.store or self.column
 
         # determine column parameters
-        _logger.debug("Create fields._column for Field %s", self)
+        #_logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
