@@ -69,6 +69,14 @@ class Forum(models.Model):
     allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
     allow_discussion = fields.Boolean('Discussions', default=True)
     allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
+    allow_bump = fields.Boolean('Allow Bump', default=True,
+                                help='Posts without answers older than 10 days will display a popup'
+                                     'when displayed on the website to propose users to share them '
+                                     'on social networks, bumping the question at top of the thread.')
+    allow_share = fields.Boolean('Sharing Options', default=True,
+                                 help='After posting the user will be proposed to share its question'
+                                      'or answer on social networks, enabling social network propagation'
+                                      'of the forum content.')
     # karma generation
     karma_gen_question_new = fields.Integer(string='Asking a question', default=2)
     karma_gen_question_upvote = fields.Integer(string='Question upvoted', default=5)
@@ -139,6 +147,13 @@ class Post(models.Model):
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content')
+    plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
+
+    @api.one
+    @api.depends('content')
+    def _get_plain_content(self):
+        self.plain_content = tools.html2plaintext(self.content)[0:500]
+
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
@@ -158,6 +173,10 @@ class Post(models.Model):
     create_date = fields.Datetime('Asked on', select=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
     write_date = fields.Datetime('Update on', select=True, readonly=True)
+    bump_date = fields.Datetime('Bumped on', readonly=True,
+                                help="Technical field allowing to bump a question. Writing on this field will trigger"
+                                     "a write on write_date and therefore bump the post. Directly writing on write_date"
+                                     "is currently not supported and this field is a workaround.")
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
     relevancy = fields.Float('Relevancy', compute="_compute_relevancy", store=True)
 
@@ -424,6 +443,16 @@ class Post(models.Model):
                 post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
                 self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * -1)
         return super(Post, self).unlink()
+
+    @api.multi
+    def bump(self):
+        """ Bump a question: trigger a write_date by writing on a dummy bump_date
+        field. One cannot bump a question more than once every 10 days. """
+        self.ensure_one()
+        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - datetime.strptime(self.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9:
+            # write through super to bypass karma; sudo to allow public user to bump any post
+            return self.sudo().write({'bump_date': fields.Datetime.now()})
+        return False
 
     @api.multi
     def vote(self, upvote=True):
