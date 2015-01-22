@@ -51,7 +51,7 @@ var LinkedinTester = core.Class.extend({
     },
     show_error: function(error) {
         var self = this;
-        var dialog = new instance.web.Dialog(self, {
+        var dialog = new Dialog(self, {
             title: _t("LinkedIn is not enabled"),
             buttons: [
                 {text: _t("Ok"), click: function() { dialog.$dialog_box.modal('hide'); }}
@@ -140,7 +140,7 @@ var Linkedin = form_widgets.FieldChar.extend({
         var context = pyeval.eval('context');
         //Here limit will be 25 because count range can between 0 to 25
        //https://developer.linkedin.com/documents/people-search-api
-        res = new Model("linkedin").call("get_people_from_company", [entity.universalName, 25, window.location.href, context]).done(function(result) {
+        new Model("linkedin").call("get_people_from_company", [entity.universalName, 25, window.location.href, context]).done(function(result) {
             if (result.people) {
                 console.debug("Linkedin pepople in this company found :", result.numResults, "=>", result.people._count, result.people.values);
                 var result = _.reject(result.people.values || [], function(el) {
@@ -261,11 +261,6 @@ var Linkedin_url = form_widgets.FieldChar.extend({
     },
 });
 core.form_widget_registry.add('linkedin_url', Linkedin_url);
-
-
-var commonPeopleFields = ["id", "picture-url", "public-profile-url", "first-name", "last-name",
-                        "formatted-name", "location", "phone-numbers", "im-accounts",
-                        "main-address", "headline", "positions", "summary", "specialties"];
 
 var LinkedinSearchPopup = Dialog.extend({
     template: "Linkedin.popup",
@@ -393,8 +388,7 @@ var LinkedinSearchPopup = Dialog.extend({
             el.__type = "people";
             return el;
         });
-        console.debug("Linkedin people found:", people.numResults, '=>', plst.length, plst);
-        return this.display_result(plst, this.$(".oe_linkedin_pop_p"));
+        return this.display_result(plst, this.$(".oe_linkedin_pop_p .oe_linkedin_people_entities"));
     },
     display_result: function(result, $elem) {
         var self = this;
@@ -481,37 +475,52 @@ var EntityWidget = Widget.extend({
     */
     KanbanView.include({
         init: function() {
-            this.display_dm = new utils.DropMisordered(true);
             return this._super.apply(this, arguments);
         },
         import_linkedin_contact: function() {
             var self = this;
-            var super_res = this._super.apply(this, arguments);
-            if(this.dataset.model == 'res.partner') {
-                this.display_dm.add(tester.test_linkedin(false)).done(function() {
-                    var $linkedin_button = $(QWeb.render("KanbanView.linkedinButton", {'widget': self}));
-                    $linkedin_button.appendTo(self.$buttons);
+            tester.test_linkedin(false).done(function(result) {
+                var $linkedin_button = $(QWeb.render("KanbanView.linkedinButton", {'widget': self, 'result': result}));
+                $linkedin_button.appendTo(self.$buttons);
+                if (!result.redirect_url) {
                     $linkedin_button.click(function() {
-                        var context = pyeval.eval('context');
+                        if (result.show_warning) {
+                            var dialog = new Dialog(self, {
+                                title: _t("LinkedIn is not configured"),
+                                buttons: [
+                                    {text: _t("Ok"), click: function() { dialog.$dialog_box.modal('hide'); }}
+                                ]
+                            }, $("<p />").text(_t("Sorry, your Odoo is not configured to get access to LinkedIn. Please ask your administrator to configure it in the Sales Settings."))).open();
+                            return true;
+                        }
+                        var context = _.extend(pyeval.eval('context'), {'from_url': window.location.href, 'scope': true});
                         var res = self.rpc("/linkedin/sync_linkedin_contacts", {
                             from_url: window.location.href,
                             local_context: context
                         }).done(function(result) {
                             if (result instanceof Object && result.status && result.status == 'need_auth') {
-                                if (confirm(_t("You will be redirected to LinkedIn authentication page, once authenticated after that you use this widget."))) {
-                                    framework.redirect(result.url);
+                                framework.redirect(result.url);
+                            } else {
+                                if (result.status && result.status == "AccessError") {
+                                    var message = _.str.sprintf("Total %s records retrieved from Linkedin\n\n", result._total);
+                                    _(result.fail_warnings).each(function(msg) {
+                                        message += _.str.sprintf("%s      %s\n\n", msg[0], msg[1]);
+                                    });
+                                    alert(message);
                                 }
-                            }).fail(function (error, event) {
-                                if (error.data.arguments[0] == 401) {
-                                    var url = error.data.arguments[2].url || "";
-                                    instance.web.redirect(url);
-                                    //prevent crashmanager to diplay error
-                                    event.preventDefault();
-                                }
-                            });
+                                self.do_reload();
+                            }
+                        }).fail(function (error, event) {
+                            if (error.data.arguments[0] == 401) {
+                                var url = error.data.arguments[2].url || "";
+                                instance.web.redirect(url);
+                                //prevent crashmanager to diplay error
+                                event.preventDefault();
+                            }
                         });
-                    }
-                });
+                    });
+                }
+            });
         },
         load_kanban: function() {
             var self = this;
