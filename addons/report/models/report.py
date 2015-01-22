@@ -503,12 +503,30 @@ class Report(osv.Model):
         return report_obj.browse(cr, uid, idreport)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
-        """Build arguments understandable by wkhtmltopdf from a report.paperformat record.
+        """Create the list of arguments to pass to Wkhtmltopdf from a report.paperformat record. It
+        also adapts these arguments in order to have a similar result between different versions of
+        Wkhtmltopdf.
 
         :paperformat: report.paperformat record
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
         :returns: list of string representing the wkhtmltopdf arguments
         """
+        def _get_dpi_args(paperformat_dpi):
+            if isinstance(paperformat_dpi, basestring):
+                paperformat_dpi = int(paperformat_dpi)
+
+            # workaround crash on windows when DPI is < 96 on 0.12.0 and 0.12.1
+            if version in ['0.12.0', '0.12.1'] and os.name == 'nt' and paperformat_dpi <= 95:
+                _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
+                return ['--dpi', '96']
+            # workaround broken `--dpi` argument on 0.12.2 and 0.12.2.1 (using `--zoom` instead)
+            elif version in ['0.12.2', '0.12.2.1']:
+                if os.name == 'nt':
+                    return ['--zoom', str(round(96.0/paperformat_dpi, 2))]
+                return ['--zoom', str(round(75.0/paperformat_dpi, 2))]
+            else:
+                return ['--dpi', str(paperformat_dpi)]
+
         command_args = []
         if paperformat.format and paperformat.format != 'custom':
             command_args.extend(['--page-size', paperformat.format])
@@ -523,13 +541,9 @@ class Report(osv.Model):
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-            command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+            command_args.extend(_get_dpi_args(specific_paperformat_args['data-report-dpi']))
         elif paperformat.dpi:
-            if os.name == 'nt' and int(paperformat.dpi) <= 95:
-                _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                command_args.extend(['--dpi', '96'])
-            else:
-                command_args.extend(['--dpi', str(paperformat.dpi)])
+            command_args.extend(_get_dpi_args(paperformat.dpi))
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
             command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
