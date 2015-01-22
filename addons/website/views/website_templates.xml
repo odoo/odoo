@@ -10,6 +10,7 @@
     <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
     <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
@@ -77,6 +78,17 @@
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
+
+            <!-- OpenGraph tags for Facebook sharing -->
+            <meta property="og:title" t-att-content="additional_title" />
+            <meta property="og:site_name" t-att-content="res_company.name" />
+            <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
+                <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
+                <meta property="og:description" t-att-content="og_description" />
+                <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
+                <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
+            </t>
+
             <title><t t-esc="title"/></title>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
