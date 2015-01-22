@@ -678,7 +678,7 @@ class module(osv.osv):
                     raise openerp.exceptions.AccessDenied()
 
                 try:
-                    _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
+                    _logger.info('Downloading module `%s` from Apps', module_name)
                     content = urllib2.urlopen(url).read()
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)

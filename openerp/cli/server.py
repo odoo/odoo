@@ -72,7 +72,7 @@ def report_configuration():
     This function assumes the configuration has been initialized.
     """
     config = openerp.tools.config
-    _logger.info("OpenERP version %s", __version__)
+    _logger.info("Odoo version %s", __version__)
     for name, value in [('addons paths', openerp.modules.module.ad_paths),
                         ('database hostname', config['db_host'] or 'localhost'),
                         ('database port', config['db_port'] or '5432'),
