@@ -1725,6 +1725,9 @@ class BaseModel(object):
         if not self._rec_name:
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
+            if operator == 'ilike' and self._fields[self._rec_name].type == 'integer':
+                # integer fields use an exact match instead
+                operator = '='
             args += [(self._rec_name, operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
