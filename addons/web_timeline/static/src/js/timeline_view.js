@@ -186,6 +186,7 @@ openerp.web_timeline = function (session) {
 
             this.options = options || {};
             this.options = _.extend({
+                'show_reply_button': true,
                 'show_read_unread_button': true,
                 'show_link': true,
                 'fetch_limit': 1000,
@@ -374,7 +375,6 @@ openerp.web_timeline = function (session) {
             this.options.root_thread = (this.options.root_thread != undefined ? this.options.root_thread : this);
 
             this.messages = [];
-            this.head_message = false;
             this.compose_message = false;
             this.parent_message = parent.thread != undefined ? parent : false ;
             this.view = parent.view;
@@ -399,6 +399,12 @@ openerp.web_timeline = function (session) {
 
                 this.compose_message.insertBefore(this.$el);
             }
+        },
+        
+        on_compose_message: function (event) {
+            this.instantiate_compose_message();
+            this.compose_message.on_toggle_quick_composer(event);
+            return false;
         },
 
         /**
@@ -796,6 +802,23 @@ openerp.web_timeline = function (session) {
             }
         },
 
+        create_thread: function () {
+            if (this.thread) {
+                return false;
+            }
+            /*create thread*/
+            this.thread = new openerp.web_timeline.MailThread(this, _.extend({
+                    'domain': this.domain,
+                    'context': {
+                        'default_model': this.model,
+                        'default_res_id': this.res_id,
+                        'default_parent_id': this.id
+                    }},
+                this), this.options);
+            /*insert thread in parent message*/
+            this.thread.insertAfter(this.$el);
+        },
+
         /** 
          * Upload the file on the server, add in the attachments list and reload display
          */
@@ -843,23 +866,6 @@ openerp.web_timeline = function (session) {
         start: function () {
             this.create_thread();
             return this._super.apply(this, arguments);
-        },
-
-        create_thread: function () {
-            if (this.thread) {
-                return false;
-            }
-            /*create thread*/
-            this.thread = new openerp.web_timeline.MailThread(this, _.extend({
-                    'domain': this.domain,
-                    'context': {
-                        'default_model': this.model,
-                        'default_res_id': this.res_id,
-                        'default_parent_id': this.id
-                    }},
-                this), this.options);
-            /*insert thread in parent message*/
-            this.thread.insertAfter(this.$el);
         },
 
         on_parent_message: function (event) {
@@ -930,6 +936,7 @@ openerp.web_timeline = function (session) {
         events: {
             'click .oe_read':'on_message_read',
             'click .oe_unread':'on_message_unread',
+            'click .oe_reply':'on_message_reply',
             'click .oe_star':'on_star',
             'click .oe_tl_msg_vote':'on_vote',
             'mouseenter .oe_timeline_vote_count':'on_hover',
@@ -1063,6 +1070,13 @@ openerp.web_timeline = function (session) {
                 res_id: partner_id,
             }
             this.do_action(action);
+        },
+
+        on_message_reply:function (event) {
+            event.stopPropagation();
+            this.create_thread();
+            this.thread.on_compose_message(event);
+            return false;
         },
 
         /**
@@ -1219,10 +1233,9 @@ openerp.web_timeline = function (session) {
 
         destroy_message: function (fadeTime) {
             var self = this;
-            var new_msg = false;
 
             this.$el.fadeOut(fadeTime, function () {
-                new_msg = self.parent_thread.message_to_expendable(self);
+                var new_msg = self.parent_thread.message_to_expendable(self);
                 if (new_msg && new_msg.$el.prev().hasClass('oe_tl_parent_message') && !new_msg.$el.next()[0]) {
                     new_msg.destroy();
                     self.parent_message.thread.$el.fadeOut(fadeTime);
