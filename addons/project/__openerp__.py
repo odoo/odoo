@@ -36,6 +36,7 @@
         'resource',
         'web_kanban',
         'web_tip',
+        'web_planner',
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks
@@ -65,6 +66,7 @@ Dashboard / Reports for Project Management will include:
         'views/project.xml',
         'project_tip_data.xml',
         'project_dashboard.xml',
+        'web_planner_data.xml',
     ],
     'demo': ['project_demo.xml'],
     'test': [

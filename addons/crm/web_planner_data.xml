@@ -5,7 +5,7 @@
     <template id="crm_planner">
 
         <!--CRM Planner Page-->
-        <div class="row o_planner">
+        <div class="row o_planner o_planner_crm">
 
             <!--Mobile Planner Menu-->
             <div class="visible-xs-block col-xs-4">
@@ -809,19 +809,19 @@
                 <div id="planner_page11" class="o_planner_page">
                     <h1>Your users</h1>
                     <h4 class="text-muted text-center">You're almost finished !</h4>
-                    <section class="container-fluid">
-                        <div class="col-md-4 col-md-offset-2 col-xs-12 text-center">
+                    <section>
+                        <div class="col-md-4 col-md-offset-2 col-xs-12 text-center o_planner_white_box">
                             <div class="panel">
-                                <div class="panel-heading">
-                                    <a t-att-href="prepare_backend_url('base.action_res_users')"><i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here</a>
-                                </div>
+                                <a t-att-href="prepare_backend_url('base.action_res_users')">
+                                    <i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here
+                                </a>
                             </div>
                         </div>
-                        <div class="col-md-4 col-xs-12 text-center">
+                        <div class="col-md-4 col-xs-12 text-center o_planner_white_box">
                             <div class="panel">
-                                <div class="panel-heading">
-                                    <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
-                                </div>
+                                <a t-att-href="prepare_backend_url('mail.action_mail_inbox_feeds')"><i class="fa-2x" data-icon="&#xe090;">
+                                    </i><br/> Follow the day-to-day activites to be sure that everyone is using it
+                                </a>
                             </div>
                         </div>
                     </section>
