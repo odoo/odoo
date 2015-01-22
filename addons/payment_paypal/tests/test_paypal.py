@@ -89,7 +89,7 @@ class PaypalForm(PaypalCommon):
 
         form_values = {
             'cmd': '_xclick',
-            'business': 'tde+paypal-facilitator@openerp.com',
+            'business': 'tde+paypal-facilitator@odoo.com',
             'item_name': 'test_ref0',
             'item_number': 'test_ref0',
             'first_name': 'Buyer',
@@ -163,7 +163,7 @@ class PaypalForm(PaypalCommon):
             'protection_eligibility': u'Ineligible',
             'last_name': u'Poilu',
             'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'tde+paypal-facilitator@openerp.com',
+            'receiver_email': u'tde+paypal-facilitator@odoo.com',
             'payment_status': u'Pending',
             'payment_gross': u'',
             'tax': u'0.00',
@@ -195,7 +195,7 @@ class PaypalForm(PaypalCommon):
             'address_status': u'unconfirmed',
             'mc_currency': u'EUR',
             'shipping': u'0.00',
-            'payer_email': u'tde+buyer@openerp.com',
+            'payer_email': u'tde+buyer@odoo.com',
             'payment_type': u'instant',
             'mc_gross': u'1.95',
             'ipn_track_id': u'866df2ccd444b',

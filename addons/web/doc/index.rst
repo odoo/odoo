@@ -8,7 +8,7 @@ OpenERP Web Reference Documentation
 
 See also the `OpenERP Web Training`_.
 
-.. _OpenERP Web Training: https://doc.openerp.com/trunk/training/
+.. _OpenERP Web Training: https://doc.odoo.com/trunk/training/
 
 Basics
 ------

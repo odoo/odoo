@@ -95,7 +95,7 @@ class Contact
                                 "model_id" => new xmlrpcval(276, "int"),
                                 "res_id" => new xmlrpcval($readVal,"int"),
                                 "email_from" => new xmlrpcval($post['email'], "string"),
-                                "email_to" => new xmlrpcval("sales@openerp.com", "string")
+                                "email_to" => new xmlrpcval("sales@odoo.com", "string")
                                 );
 
                         
@@ -137,7 +137,7 @@ class Contact
         $arrData = array();
         $arrData = array_merge($arrData, (array)$_POST);
         
-        $cnt = new Contact('sales5@openerp.com', 'Country: '.$arrData['country']. ' About: ' .$arrData['about']);
+        $cnt = new Contact('sales5@odoo.com', 'Country: '.$arrData['country']. ' About: ' .$arrData['about']);
         
         /* This function use for sending mail on perticular mail account */
         /*$cnt->mailTo($arrData); */

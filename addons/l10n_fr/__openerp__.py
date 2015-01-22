@@ -29,7 +29,7 @@
     'name': 'France - Accounting',
     'version': '1.1',
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart for France in OpenERP.

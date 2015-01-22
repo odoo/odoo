@@ -742,7 +742,7 @@ class module(osv.osv):
             shutil.rmtree(tmp)
 
     def get_apps_server(self, cr, uid, context=None):
-        return tools.config.get('apps_server', 'https://apps.openerp.com/apps')
+        return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
     def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:

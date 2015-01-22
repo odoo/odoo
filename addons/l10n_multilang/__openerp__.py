@@ -31,7 +31,7 @@
         - Copy translations for COA, Tax, Tax Code and Fiscal Position from
           templates to target objects.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends' : ['account'],
     'data': [],
     'demo': [],
