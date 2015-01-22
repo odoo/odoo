@@ -1026,7 +1026,7 @@ class purchase_order_line(osv.osv):
         context = dict(context, purchase_uom_check=True)
         return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
-            name=name, price_unit=price_unit, state=state, context=context)
+            name=name, price_unit=price_unit, state=state, replace=False, context=context)
 
     def _get_date_planned(self, cr, uid, supplier_info, date_order_str, context=None):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
@@ -1058,7 +1058,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft', replace=True, context=None):
         """
         onchange handler of product_id.
         """
@@ -1088,11 +1088,12 @@ class purchase_order_line(osv.osv):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
-        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-        res['value'].update({'name': name})
+        if replace:
+            #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+            dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
+            if product.description_purchase:
+                name += '\n' + product.description_purchase
+            res['value'].update({'name': name})
 
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
