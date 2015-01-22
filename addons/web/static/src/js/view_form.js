@@ -2626,25 +2626,9 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     }
 });
 
+
 instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
-    init: function(field_manager, node) {
-        this._super.apply(this, arguments);
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        this.on("change:effective_readonly", this, function () {
-            this.display_field();
-        });
-        this.display_field();
-        return this._super();
-    },
-    set_value: function(value_) {
-        var self = this;
-        this.set('value', value_ || false);
-        this.display_field();
-     },
-    display_field: function() {
+    render_value: function() {
         var self = this;
         this.$el.html(instance.web.qweb.render("FieldCharDomain", {widget: this}));
         if (this.get('value')) {
@@ -2671,36 +2655,23 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
 
-        this.pop = new instance.web.form.SelectCreatePopup(this);
-        this.pop.select_element(
-            model, {
+        var options = {
                 title: this.get('effective_readonly') ? 'Selected records' : 'Select records...',
                 readonly: this.get('effective_readonly'),
                 disable_multiple_selection: this.get('effective_readonly'),
                 no_create: this.get('effective_readonly'),
-            }, [], this.build_context());
-        this.pop.on("elements_selected", self, function(element_ids) {
-            if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
-                var search_data = this.pop.searchview.build_search_data();
-                var domain_done = instance.web.pyeval.eval_domains_and_contexts({
-                    domains: search_data.domains,
-                    contexts: search_data.contexts,
-                    group_by_seq: search_data.groupbys || []
-                }).then(function (results) {
-                    return results.domain;
-                });
+            };
+        var domain = this.get('value');
+        popup = new instance.web.form.DomainEditorPopup(this);
+        popup.select_element(model, options, domain, {});
+        popup.on("elements_selected", self, function(selected_ids) {
+            if (!self.get('effective_readonly')) {
+                self.set_value(popup.get_domain(selected_ids));
             }
-            else {
-                var domain = [["id", "in", element_ids]];
-                var domain_done = $.Deferred().resolve(domain);
-            }
-            $.when(domain_done).then(function (domain) {
-                var domain = self.pop.dataset.domain.concat(domain || []);
-                self.set_value(domain);
-            });
         });
     },
 });
+
 
 instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
@@ -5437,6 +5408,11 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.view_list.appendTo(self.$(".oe_popup_list").show()).then(function() {
                 self.view_list.do_show();
             }).then(function() {
+                if (self.options.initial_facet) {
+                    self.searchview.query.reset([self.options.initial_facet], {
+                        preventSearch: true,
+                    });
+                }
                 self.searchview.do_search();
             });
             self.view_list.on("list_view_loaded", self, function() {
@@ -5458,14 +5434,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         });        
     },
     do_search: function(domains, contexts, groupbys) {
-        var self = this;
-        instance.web.pyeval.eval_domains_and_contexts({
+        var results = instance.web.pyeval.sync_eval_domains_and_contexts({
             domains: domains || [],
             contexts: contexts || [],
             group_by_seq: groupbys || []
-        }).done(function (results) {
-            self.view_list.do_search(results.domain, results.context, results.group_by);
         });
+        this.view_list.do_search(results.domain, results.context, results.group_by);
     },
     on_click_element: function(ids) {
         var self = this;
@@ -5485,6 +5459,49 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.view_list.$el.parent().hide();
         }
         this.setup_form_view();
+    },
+});
+
+instance.web.form.DomainEditorPopup = instance.web.form.SelectCreatePopup.extend({
+    select_element: function (model, options, domain, context) {
+        if (options.readonly) {
+            return this._super(model, options, domain, context);
+        }
+        options.initial_facet = {
+            category: _t("Custom Filter"),
+            icon: 'fa-star',
+            field: {
+                get_context: function () { return context; },
+                get_groupby: function () { return []; },
+                get_domain: function () { return domain; },
+            },
+            values: [{label: _t("Selected domain"), value: null}],            
+        };
+        this._super(model, options, [], context);
+    },
+    get_domain: function (selected_ids) {
+        var group_domain = [],
+            domain;
+        if (this.$('input.oe_list_record_selector').prop('checked')) {
+            if (this.view_list.grouped) {
+                var group_domain = _.chain(_.values(this.view_list.groups.children))
+                                        .filter(function (child) { return child.records.length; })
+                                        .map(function (c) { return c.datagroup.domain;})
+                                        .value();
+                group_domain = _.flatten(group_domain, true);
+                group_domain = _.times(group_domain.length - 1, _.constant('|')).concat(group_domain);
+            }
+            var search_data = this.searchview.build_search_data();
+            domain = instance.web.pyeval.sync_eval_domains_and_contexts({
+                domains: search_data.domains,
+                contexts: search_data.contexts,
+                group_by_seq: search_data.groupbys || []
+            }).domain;
+        }
+        else {
+            domain = [["id", "in", selected_ids]];
+        }
+        return this.dataset.domain.concat(group_domain).concat(domain || []);
     },
 });
 
