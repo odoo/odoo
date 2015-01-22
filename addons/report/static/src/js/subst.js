@@ -10,5 +10,19 @@ function subst() {
         var y = document.getElementsByClassName(x[i]);
         for (var j=0; j<y.length; ++j)
             y[j].textContent = vars[x[i]];
-    }   
+    }
+
+    if (vars['page'] == 1){
+        hidden_nodes = document.getElementsByClassName("hide_firstpage");
+        for (i = 0; i < hidden_nodes.length; i++) {
+            hidden_nodes[i].style.visibility = "hidden";
+        }
+    }
+
+    if (vars['page'] != vars['topage']){
+        hidden_nodes = document.getElementsByClassName("show_lastpage");
+        for (i = 0; i < hidden_nodes.length; i++) {
+            hidden_nodes[i].style.visibility = "hidden";
+        }
+    }
 }
