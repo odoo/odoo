@@ -269,9 +269,9 @@ LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 class BaseModel(object):
-    """ Base class for OpenERP models.
+    """ Base class for models.
 
-    OpenERP models are created by inheriting from this class' subclasses:
+    Models are created by inheriting from this class' subclasses:
 
     *   :class:`Model` for regular database-persisted models
 
@@ -4384,7 +4384,7 @@ class BaseModel(object):
 
     # TODO: ameliorer avec NULL
     def _where_calc(self, cr, user, domain, active_test=True, context=None):
-        """Computes the WHERE clause needed to implement an OpenERP domain.
+        """Computes the WHERE clause needed to implement a domain.
         :param domain: the domain to compute
         :type domain: list
         :param active_test: whether the default filtering of records with ``active``
@@ -5891,9 +5891,9 @@ class RecordCache(MutableMapping):
         return sum(1 for name in self)
 
 class Model(BaseModel):
-    """Main super-class for regular database-persisted OpenERP models.
+    """Main super-class for regular database-persisted models.
 
-    OpenERP models are created by inheriting from this class::
+    Persisted models are created by inheriting from this class::
 
         class user(Model):
             ...

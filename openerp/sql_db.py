@@ -93,7 +93,7 @@ class Cursor(object):
         terms of the phenomena that must not occur between concurrent
         transactions, such as *dirty read*, etc.
         In the context of a generic business data management software
-        such as OpenERP, we need the best guarantees that no data
+        such as Odoo, we need the best guarantees that no data
         corruption can ever be cause by simply running multiple
         transactions in parallel. Therefore, the preferred level would
         be the *serializable* level, which ensures that a set of
@@ -114,7 +114,7 @@ class Cursor(object):
         detect a concurrent update by parallel transactions, and forcing
         one of them to rollback.
 
-        OpenERP implements its own level of locking protection
+        Odoo implements its own level of locking protection
         for transactions that are highly likely to provoke concurrent
         updates, such as stock reservations or document sequences updates.
         Therefore we mostly care about the properties of snapshot isolation,
@@ -124,7 +124,7 @@ class Cursor(object):
         hit of these heuristics).
 
         As a result of the above, we have selected ``REPEATABLE READ`` as
-        the default transaction isolation level for OpenERP cursors, as
+        the default transaction isolation level for Odoo cursors, as
         it will be mapped to the desired ``snapshot isolation`` level for
         all supported PostgreSQL version (8.3 - 9.x).
 

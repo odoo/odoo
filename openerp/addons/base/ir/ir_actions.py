@@ -426,7 +426,7 @@ class ir_actions_server(osv.osv):
     action rules, of manually, by adding the action in the 'More' contextual
     menu.
 
-    Since OpenERP 8.0 a button 'Create Menu Action' button is available on the
+    Since version 8.0 a button 'Create Menu Action' button is available on the
     action form view. It creates an entry in the More menu of the base model.
     This allows to create server actions and run them in mass mode easily through
     the interface.

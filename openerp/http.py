@@ -1250,7 +1250,7 @@ class DisableCacheMiddleware(object):
         return self.app(environ, start_wrapped)
 
 class Root(object):
-    """Root WSGI application for the OpenERP Web Client.
+    """Root WSGI application for the Web Client.
     """
     def __init__(self):
         self._loaded = False
