@@ -594,6 +594,30 @@ class account_invoice(models.Model):
 
         return {'value': values, 'domain': domain}
 
+    @api.onchange('fiscal_position')
+    def fiscal_position_change(self):
+        """Updates taxes and accounts on all invoice lines"""
+        for line in self.invoice_line:
+            if line.product_id:
+                product = line.product_id
+                if self.type in ('out_invoice', 'out_refund'):
+                    account = (
+                        product.property_account_income or
+                        product.categ_id.property_account_income_categ)
+                    taxes = product.taxes_id
+                else:
+                    account = (
+                        product.property_account_expense or
+                        product.categ_id.property_account_expense_categ)
+                    taxes = product.supplier_taxes_id
+                taxes = taxes or account.tax_ids
+                if self.fiscal_position:
+                    account = self.fiscal_position.map_account(account)
+                    taxes = self.fiscal_position.map_tax(taxes)
+
+                line.invoice_line_tax_id = taxes
+                line.account_id = account
+
     @api.multi
     def action_cancel_draft(self):
         # go from canceled state to draft state
