@@ -1038,10 +1038,22 @@ class expression(object):
 
             else:
                 if column._type == 'datetime' and right and len(right) == 10:
+                    import datetime
+                    from openerp.tools.misc import (
+                        DEFAULT_SERVER_DATE_FORMAT,
+                        DEFAULT_SERVER_DATETIME_FORMAT
+                    )
+                    date = fields.datetime.context_timestamp(
+                        cr, uid, datetime.datetime.strptime(
+                            right, DEFAULT_SERVER_DATE_FORMAT)
+                    )
                     if operator in ('>', '<='):
-                        right += ' 23:59:59'
+                        right = (date + datetime.timedelta(
+                            hours=23, minutes=59, seconds=59)).strftime(
+                                DEFAULT_SERVER_DATETIME_FORMAT)
                     else:
-                        right += ' 00:00:00'
+                        right = date.strftime(
+                            DEFAULT_SERVER_DATETIME_FORMAT)
                     push(create_substitution_leaf(leaf, (left, operator, right), model))
 
                 elif column.translate and right:
