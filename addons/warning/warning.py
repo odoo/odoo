@@ -255,7 +255,8 @@ class purchase_order_line(osv.osv):
                 return {'value': {'product_id': False}, 'warning': warning}
 
         result =  super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned, name=name, price_unit=price_unit, state=state, context=context)
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
+            name=name, price_unit=price_unit, state=state, replace=replace, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
