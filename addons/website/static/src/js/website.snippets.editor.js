@@ -1779,11 +1779,13 @@
             if (!this.$target.hasClass('o_ul_folded')) {
                 this.$target.find(".o_close").removeClass("o_close");
             }
+            this.$target.find("li:not(:has(>ul))").css('list-style', '');
         },
         toggle_class: function (type, value, $li) {
             this._super(type, value, $li);
             this.$target.data("snippet-view").stop();
             this.reset_ul();
+            this.$target.find("li:not(:has(>ul))").css('list-style', '');
             this.$target.data("snippet-view", new website.snippet.animationRegistry.ul(this.$target, true));
         }
     });
