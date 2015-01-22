@@ -327,6 +327,21 @@
                             $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
                         });
 
+                    // select all default text to edit (if snippet default text)
+                    self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
+                        .contents()
+                        .filter(function() {
+                            return this.nodeType === 3 && this.textContent.match(/\S/);
+                        }).parent().addClass("o_default_snippet_text");
+                    $(document).on("mouseup", ".o_default_snippet_text", function (event) {
+                        $(event.target).selectContent();
+                    });
+                    $(document).on("keyup", function (event) {
+                        var r = $.summernote.core.range.create();
+                        $(r && r.sc).closest(".o_default_snippet_text").removeClass("o_default_snippet_text");
+                    });
+                    // end
+
                     // clean t-oe
                     $html.find('[data-oe-model]').each(function () {
                         for (var k=0; k<this.attributes.length; k++) {
