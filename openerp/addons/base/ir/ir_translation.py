@@ -283,7 +283,7 @@ class ir_translation(osv.osv):
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
         self._get_ids.clear_cache(self)
         self._get_source.clear_cache(self)
-
+        original_module = self.pool[name.split(',')[0]]._original_module
         cr.execute('update ir_translation '
                   'set value=%s '
                   '  , src=%s '
@@ -291,24 +291,20 @@ class ir_translation(osv.osv):
                 'where lang=%s '
                     'and type=%s '
                     'and name=%s '
-                    'and res_id IN %s',
-                (value,src,'translated',lang,tt,name,tuple(ids),))
+                    'and module=%s '
+                    'and res_id IN %s '
+                'returning res_id',
+                (value,src,'translated',lang,tt,name,original_module,tuple(ids),))
 
-        cr.execute('select res_id '
-                'from ir_translation '
-                'where lang=%s '
-                    'and type=%s '
-                    'and name=%s '
-                    'and res_id IN %s',
-                (lang,tt,name,tuple(ids)))
         existing_ids = [x[0] for x in cr.fetchall()]
 
-        for id in list(set(existing_ids) - set(ids)):
+        for id in list(set(ids) - set(existing_ids)):
             self.create(cr, uid, {
                 'lang':lang,
                 'type':tt,
                 'name':name,
                 'res_id':id,
+                'module':original_module,
                 'value':value,
                 'src':src,
                 'state':'translated'
