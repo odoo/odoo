@@ -75,6 +75,7 @@
         },
 
         delete_version: function(event) {
+            console.log(event);
             var version_id = parseInt($(event.currentTarget).parent().data("version_id"));
             var name = $(event.currentTarget).parent().children(':last-child').text();
             openerp.jsonRpc( '/website_version/check_version', 'call', { 'version_id':version_id }).then(function (result) {

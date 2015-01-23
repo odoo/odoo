@@ -78,13 +78,6 @@
             },
             {
                 waitNot:   '.modal-content:visible',
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Describe the Product"),
-                content:   _t("Insert blocks like text-image, or gallery to fully describe the product."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:eq(7)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a block"),

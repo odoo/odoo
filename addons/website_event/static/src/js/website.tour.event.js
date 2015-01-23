@@ -47,25 +47,10 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Layout your event"),
-                content:   _t("Insert blocks to layout the body of your event."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:eq(2)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a block"),
                 content:   _t("Drag the 'Image-Text' block and drop it in your page."),
-                popover:   { fixed: true },
-            },
-            {
-                
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Layout your event"),
-                content:   _t("Insert another block to your event."),
                 popover:   { fixed: true },
             },
             {

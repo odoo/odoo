@@ -6,25 +6,39 @@
 /* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
-    position: fixed
-    top: 34px
-    left: 0px
-    right: 0px
-    padding-top: 6px
-    // top property is set programmatically
-    background: rgb(40,40,40)
-    +box-shadow(0px 10px 10px -10px black inset)
-    z-index: 1010
-    overflow: hidden
-    &:hover
-        height: auto
+    .scroll, .o_arrow
+        position: fixed
+        top: 34px
+        left: 0px
+        bottom: 0
+        padding-top: 10px
+        background: rgb(40,40,40)
+        +box-shadow(0px 10px 10px -10px black inset)
+    .o_arrow
+        z-index: 1009
+        width: 24px
+        opacity: 0.75
+        > *
+            position: absolute
+            color: white
+        div
+            @include transform( translateX(-36%) rotate(-90deg) )
+            top: 50%
+            white-space: nowrap
+        .fa
+            width: 100%
+            left: 40%
     .scroll
-        white-space: nowrap
+        left:  -220px
+        z-index: 1010
+        width: 200px
+        @include transition(all 500ms ease)
+    &.o_open .scroll
+        left: 0
     .nav
-        display: inline-block
+        float: none
         border-bottom: none !important
-        vertical-align: middle
-        min-width: 120px
+        margin-bottom: 6px
         > li
             display: block
             float: none
@@ -34,16 +48,16 @@
                 padding: 2px 10px !important
                 width: 100%
                 display: block
+                border-radius: 4px
                 border: 0
-        z-index: 1
+            span
+                font-size: 0.8em
     .pill-content
         border: 0
     .tab-content
-        margin-right: 120px
-        display: inline-block
         white-space: normal
         background: black
-        margin-right: 60px
+        margin-left: 3px
         > div
             background: rgb(0,0,0)
             label

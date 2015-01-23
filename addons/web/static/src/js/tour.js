@@ -110,9 +110,8 @@ var Tour = {
         }
         tour.register = true;
 
-        for (var index=0, len=tour.steps.length; index<len; index++) {
+        for (var index=0; index<tour.steps.length; index++) {
             var step = tour.steps[index];
-            step.id = index;
 
             if (!step.waitNot && index > 0 && tour.steps[index-1] &&
                 tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
@@ -121,14 +120,29 @@ var Tour = {
             if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
             }
-
-
+            
             var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
             if (snippet) {
                 step.snippet = snippet[1];
             } else if (step.snippet) {
                 step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
+                tour.steps.splice(index, 0, {
+                    id: index,
+                    waitNot: step.waitNot,
+                    waitFor: step.waitFor,
+                    title: openerp._t("Move your mouse"),
+                    content: openerp._t("Move your mouse here to open the insert block"),
+                    element: '#oe_snippets',
+                    onend: function () {
+                        $("#oe_snippets").addClass("o_open");
+                    }
+                });
+                step.waitNot = null;
+                step.waitFor = null;
+                index++;
             }
+
+            step.id = index;
 
             if (!step.element) {
                 step.element = "body";

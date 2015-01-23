@@ -21,10 +21,6 @@
                 wait:      250
             },
             {
-                element:   'button[data-action=snippet]',
-                title:     "Insert building blocks",
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet.o_block_text_image',
                 title:     "Drag & Drop a Text-Image Block",
             },
