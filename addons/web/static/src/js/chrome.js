@@ -1310,7 +1310,7 @@ instance.web.WebClient = instance.web.Client.extend({
         $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
         if ($.blockUI) {
             var imgkit = Math.floor(Math.random() * 2 + 1);
-            $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
+            $.blockUI.defaults.message = '<img src="/web/static/src/img/k-waiting' + imgkit + '.gif" class="loading-kitten">';
         }
     },
     /**
