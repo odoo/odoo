@@ -135,6 +135,9 @@ class account_move_line(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True,
         default=lambda self: self.env['res.company']._company_default_get('account.move.line'))
+    expected_pay_date = fields.Date('Expected Payment Date')
+    internal_note = fields.Text('Internal Note')
+    next_action_date = fields.Date('Next Action Date')
 
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
@@ -795,6 +798,9 @@ class account_move_line(models.Model):
             raise UserError(_('You cannot use deprecated account.'))
         if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             self._update_check()
+        if vals.get('expected_pay_date'):
+            msg = 'New expected payment date : ' + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
+            self.invoice.message_post(body=msg)
 
         # Check for centralisation
         # TODO : what happened with journal.centralisation ?

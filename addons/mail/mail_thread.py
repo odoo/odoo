@@ -1570,6 +1570,9 @@ class mail_thread(osv.AbstractModel):
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
 
+        if isinstance(thread_id, (list, tuple)) and len(thread_id) == 0:  # For new api compatibility
+            thread_id = False
+
         assert (not thread_id) or \
                 isinstance(thread_id, (int, long)) or \
                 (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \

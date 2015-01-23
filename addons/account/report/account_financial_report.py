@@ -97,7 +97,6 @@ class report_account_financial_report(models.Model):
                                    string='Not a date range report', default=False, required=True,
                                    help='For report like the balance sheet that do not work with date ranges')
 
-
     @api.multi
     def get_lines(self, context_id, line_id=None):
         if isinstance(context_id, int):
@@ -122,6 +121,9 @@ class report_account_financial_report(models.Model):
 
     def get_report_type(self):
         return self.report_type
+
+    def get_template(self):
+        return 'account.report_financial'
 
 
 class account_financial_report_line(models.Model):

@@ -3,6 +3,12 @@
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
+        <record forcecreate="True" id="default_followup_trust" model="ir.property">
+            <field name="name">Followup Trust Property</field>
+            <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'trust')]"/>
+            <field name="value">normal</field>
+            <field name="type">selection</field>
+        </record>
         <!--Mail template level 0-->
         <record id="email_template_account_followup_level0" model="mail.template">
             <field name="name">First polite payment follow-up reminder email</field>

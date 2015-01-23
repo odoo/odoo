@@ -58,6 +58,11 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_url" id="action_account_report_followup_partner">
+            <field name="name">Partner followup</field>
+            <field name="url" eval="'/account/followup_report/all'"/>
+            <field name="target">self</field>
+        </record>
         <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="name">Contracts/Analytic Accounts</field>
@@ -81,8 +86,8 @@
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
                         <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
                     </button>
-                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-list">
-                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                    <button type="action" class="oe_stat_button" name="%(account.action_account_report_followup_partner)d" groups="account.group_account_user" icon="fa-list">
+                        <field string="Issued" name="issued_total" widget="statinfo"/>
                     </button>
                     <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
                         icon="fa-book" groups="analytic.group_analytic_accounting">
