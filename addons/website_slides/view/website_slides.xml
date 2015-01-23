@@ -111,12 +111,7 @@
                         <t t-if="category">
                             / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
                         </t>
-                        <!-- TDE: CLEAN THAT BROL -->
-                        <t t-if="channel.can_upload and is_public_user">
-                            <a t-attf-href="/web?redirect=#{request.httprequest.url}" title="Upload Presentation" class="btn btn-primary">
-                                <i class="fa fa-cloud-upload"></i> Upload
-                            </a>
-                        </t>
+                        <!-- Public user has not right to create/write on slide -->
                         <t t-if="channel.can_upload and not is_public_user">
                             <a class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}">
                                 <i class="fa fa-cloud-upload"></i> Upload
@@ -265,9 +260,7 @@
                                     </span>
                                 </p>
                                 <p>
-                                    <a t-if="can_upload and is_public_user" t-attf-href="/web?redirect=#{request.httprequest.url}" class="btn btn-primary">
-                                        <i class="fa fa-cloud-upload"></i> Upload
-                                    </a>
+                                    <!-- Public user has not right to create/write on slide-->
                                     <a t-if="can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}">
                                         <i class="fa fa-cloud-upload"></i> Upload
                                     </a>
@@ -346,6 +339,7 @@
             </a>
             <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Not Published</span>
             <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
+                groups="base.group_user"
                 t-attf-href="/slides/slide/#{slide.id}/promote"
                 style="position: absolute;right: 20px;top: 7px;"
                 t-attf-title="Promote this #{slide.slide_type}">
@@ -475,6 +469,7 @@
                                             t-att-data-user-id="user.id"
                                             t-att-data-public-user="is_public_user"
                                             t-att-data-slide-id="slide.id"
+                                            tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-up fa-1x">
                                                 <t t-esc="slide.likes"/>
@@ -486,6 +481,7 @@
                                             t-att-data-user-id="user.id"
                                             t-att-data-public-user="is_public_user"
                                             t-att-data-slide-id="slide.id"
+                                            tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-down fa-1x">
                                                 <t t-esc="slide.dislikes"/>
@@ -524,7 +520,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content" style="padding: 20px 5px 5px 5px; word-wrap: break-word;">
-                                <div t-att-class="not comments and 'tab-pane fade active' or 'tab-pane fade'" id="about">
+                                <div t-att-class="not comments and 'tab-pane fade active in' or 'tab-pane fade'" id="about">
                                     <div t-field="slide.description"/>
                                 </div>
                                 <div class="tab-pane fade" t-if="slide.website_published" id="share">
@@ -545,7 +541,7 @@
                                         Publish a presentation to enable social sharing feature
                                     </h4>
                                 </div>
-                                <div t-att-class="comments and 'tab-pane fade active' or 'tab-pane fade'" id="discuss">
+                                <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
                                     <form id="comment" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
                                         <div class="media">
                                             <span class="pull-left">
