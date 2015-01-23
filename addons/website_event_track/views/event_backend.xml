@@ -11,12 +11,13 @@
                     <templates>
                         <field name="color"/>
                         <field name="speaker_ids"/>
+                        <field name="website_url"/>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <i class="fa fa-bars fa-lg"/>
                                     <ul class="oe_dropdown_menu">
-                                        <li><a href="/event/1/track/2">View Track</a></li>
+                                        <li><a t-att-href="record.website_url.value" type="url">View Track</a></li>
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Track</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -69,6 +70,7 @@
                     <field name="event_id"/>
                     <field name="state"/>
                     <field name="speaker_ids"/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
@@ -118,7 +120,6 @@
                                     <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags"/>
-                                <field name="color"/>
                             </group>
                         </group>
                     </sheet>
@@ -178,7 +179,7 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
 </p></field>
         </record>
 
-        <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_main_menu" groups="event.group_event_user"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
@@ -217,8 +218,12 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="model">event.sponsor.type</field>
             <field name="arch" type="xml">
                 <form string="Event Sponsor Types">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
+                    <sheet>
+                        <group>
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -275,7 +280,11 @@ Tracks define the agenda of your event. These can be a talk, a round table, a me
             <field name="model">event.track.tag</field>
             <field name="arch" type="xml">
                 <form string="Event Track Tag">
-                    <field name="name"/>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
