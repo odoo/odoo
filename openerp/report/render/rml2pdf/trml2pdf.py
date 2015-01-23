@@ -768,15 +768,10 @@ class _rml_flowable(object):
             style = self.styles.para_style_get(node)
             if extra_style:
                 style.__dict__.update(extra_style)
-            result = []
-            tag_text = ''
-            plain_text = ''
-            for i in self._textual(node).split('\n'):
-                instance = platypus.Paragraph(i, style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-                plain_text += instance.getPlainText().strip()
-                tag_text += instance.text.strip()
-                result.append(instance)
-            if LooseVersion(reportlab.Version) > LooseVersion('3.0') and not plain_text and tag_text:
+            text_node = self._textual(node).strip().replace('\n\n', '\n').replace('\n', '<br/>')
+            instance = platypus.Paragraph(text_node, style, **(utils.attr_get(node, [], {'bulletText':'str'})))
+            result = [instance]
+            if LooseVersion(reportlab.Version) > LooseVersion('3.0') and not instance.getPlainText().strip() and instance.text.strip():
                 result.append(platypus.Paragraph('&nbsp;<br/>', style, **(utils.attr_get(node, [], {'bulletText': 'str'}))))
             return result
         elif node.tag=='barCode':
