@@ -833,6 +833,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
         },
         button_click: function(){},
+        highlight: function(highlight){
+            this.$el.toggleClass('highlight',!!highlight);
+        },
     });
 
     /* -------- The Product Screen -------- */
