@@ -72,7 +72,7 @@ class event_track(models.Model):
     @api.depends('name')
     def _website_url(self, field_name, arg):
         res = super(event_track, self)._website_url(field_name, arg)
-        res.update({(track.id, '/event/%strack/%s' % (slug(track.event_id), slug(track))) for track in self})
+        res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
         return res
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
@@ -128,8 +128,7 @@ class event_event(models.Model):
     @api.one
     @api.depends('track_ids.tag_ids')
     def _get_tracks_tag_ids(self):
-        track_tags = set(tag for track in self.track_ids for tag in track.tag_ids)
-        self.tracks_tag_ids = track_tags and list(track_tags) or False
+        self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks', copy=True)
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsorships', copy=True)
