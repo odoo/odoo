@@ -20,49 +20,42 @@
                 title:      _t("Click on Version"),
                 content:   _t("You can create a version for every page of your website."),
                 popover:   { fixed: true },
-                element:   'a[id="version-menu-button"]:contains("Version"):first',
+                element:   'a#version-menu-button',
             },
             {
                 title:     _t("Click on New version"),
                 popover:   { fixed: true },
-                element:   'a[data-action="duplicate_version"]:contains("New Version"):first',
+                element:   'a[data-action="duplicate_version"]:first',
             },
             {
                 title:     _t("Give a version name"),
                 content:   _t("Give a clever name to retrieve it easily."),
                 popover:   { fixed: true },
-                waitFor:   '.modal button[type="button"]:contains("Continue")',
+                waitFor:   '.modal button.btn-primary',
                 element:   '.modal input[type="text"]',
                 sampleText: 'Test',
             },
             {
                 title:     _t("Validate the version name"),
                 popover:   { fixed: true },
-                element:   '.modal button[type="button"]:contains("Continue")',
+                element:   '.modal button.btn-primary',
             },
             {
                 title:     _t("Confirm"),
                 popover:   { fixed: true },
-                waitNot:   '.modal button[type="button"]:contains("Continue")',
-                element:   '.modal button[type="button"]:contains("Ok")',
+                waitNot:   '.modal input',
+                element:   '.modal button.o_confirm',
             },
             {
                 title:     _t("You are on your new version"),
                 content:   _t("All the modifications you will do, will be saved in this version."),
-                waitNot:   '.modal button[type="button"]:contains("Ok")',
+                waitNot:   '.modal button.o_confirm',
             },
             {
                 title:     _t("Click on Edit"),
                 content:   _t("Every page of your website can be modified through the <i>Edit</i> button."),
-                waitFor:   'button[data-action="edit"]:contains("Edit")',
-                element:   'button[data-action="edit"]:contains("Edit")',
-            },
-            {
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Insert building blocks"),
-                content:   _t("Click here to insert blocks of content in the page."),
-                popover:   { fixed: true },
+                waitFor:   'button[data-action="edit"]',
+                element:   'button[data-action="edit"]',
             },
             {
                 snippet:   '#snippet_structure .oe_snippet:first',
@@ -98,14 +91,6 @@
                 popover:   { next: _t("Continue") },
             },
             {
-                waitNot:   '.popover.tour',
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Add Another Block"),
-                content:   _t("Let's add another building block to your page."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:eq(6)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop This Block"),
@@ -137,27 +122,25 @@
 
             {
                 title:     _t("Click on Version"),
-                element:   'a[id="version-menu-button"]:contains("Version"):first',
+                element:   'a#version-menu-button',
                 popover:   { fixed: true },
             },
 
             {
                 title:     _t("Click on Publish Version"),
-                element:   'a[data-action="publish_version"]:contains("Publish Version"):first',
+                element:   'a[data-action="publish_version"]:first',
                 popover:   { fixed: true },
             },
 
             {
                 title:     _t("Click on Publish button"),
-                //waitFor:   '.modal button[type="button"]:contains("Publish")',
-                element:   '.modal button[type="button"]:contains("Publish")',
+                element:   '.modal button.o_confirm',
                 placement: 'left',
             },
 
             {
                 title:     _t("Confirm"),
-                waitFor:   '.modal button[type="button"]:contains("Ok")',
-                element:   '.modal button[type="button"]:contains("Ok")',
+                element:   '.modal button.o_confirm[data-dismiss]',
                 popover:   { fixed: true },
             },
 
@@ -166,13 +149,13 @@
             {
                 title:     _t("Delete the version"),
                 content:   _t("Now we will delete the version you have just published."),
-                waitNot:   '.modal button[type="button"]:contains("Ok")',
+                waitNot:   '.modal button.o_confirm[data-dismiss]',
                 popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
 
             {
                 title:     _t("Click on Version"),
-                element:   'a[id="version-menu-button"]:contains("Version"):first',
+                element:   'a#version-menu-button',
                 popover:   { fixed: true },
             },
 
@@ -184,22 +167,20 @@
 
             {
                 title:     _t("Click on delete version button"),
-                waitFor:   '.modal button[type="button"]:contains("Delete Version")',
-                element:   '.modal button[type="button"]:contains("Delete Version")',
+                element:   '.modal:has(.cancel) button.o_confirm',
                 popover:   { fixed: true },
             },
 
             {
                 title:     _t("Confirm"),
-                waitFor:   '.modal button[type="button"]:contains("Ok")',
-                element:   '.modal button[type="button"]:contains("Ok")',
+                element:   '.modal:not(:has(.cancel)) button.o_confirm[data-dismiss]',
                 popover:   { fixed: true },
             },
 
             {
                 title:     _t("Finish"),
                 content:   _t("Felicitation, now you are able to edit and manage your versions."),
-                waitNot:   '.modal button[type="button"]:contains("Ok")',
+                waitNot:   '.modal button.o_confirm[data-dismiss]',
             },
 
         ]
