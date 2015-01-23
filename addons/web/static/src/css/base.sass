@@ -2326,15 +2326,15 @@ div.ui-widget-overlay
         padding: 0
         a
             padding: 1px 16px
-            color: #404040
+            color: #000000 !important
         a.ui-corner-all
             @include radius(0)
-        a.ui-state-active
-            background: #f0f0fa
-    .ui-menu-item a.ui-state-hover, .ui-menu-item a.ui-state-active
-        background: $tag-bg-dark
-        //color: #4c4c4c
-        //@include vertical-gradient(#f0f0fa, #eeeef6)
+    .ui-state-focus, .ui-state-active
+        background: #7c7bad !important
+        border: 0 !important
+        a
+            color: #ffffff !important
+            font-weight: normal !important
 
 .ui-corner-all
     @include radius(3px)
