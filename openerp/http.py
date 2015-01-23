@@ -270,7 +270,8 @@ class WebRequest(object):
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
         self._failed = exception # prevent tx commit
-        if not isinstance(exception, NO_POSTMORTEM):
+        if not isinstance(exception, NO_POSTMORTEM) \
+                and not isinstance(exception, werkzeug.exceptions.HTTPException):
             openerp.tools.debugger.post_mortem(
                 openerp.tools.config, sys.exc_info())
         raise
