@@ -69,6 +69,7 @@
                 <script>
                     // Use Odoo PDFJS Loader, to avoid dynamic assets loading
                     PDFJS.workerSrc = '/website_slides/static/lib/pdfjs/worker_loader_by_odoo.js';
+                    PDFJS.disableWorker = true;
                 </script>
             </t>
             <t t-if="debug">
