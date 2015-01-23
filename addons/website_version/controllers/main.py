@@ -156,3 +156,20 @@ class Versioning_Controller(Website):
                 check.append(data['name'])
                 res.append(data)
         return res
+
+    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
+    def get_view_translations(self, xml_id, lang=None):
+        lang = lang or request.context.get('lang')
+        view = request.registry.get('ir.ui.view').browse(request.cr, request.uid, xml_id)
+        view_list = request.registry.get('ir.ui.view').search(request.cr, request.uid, [('key', '=', view.key), '|', ('website_id', '=', view.website_id.id), ('website_id', '=', False)])
+        views_ids = []
+        for v in view_list:
+            views = self.customize_template_get(v, full=True)
+            views_ids += [view.get('id') for view in views if view.get('active')]
+        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        irt = request.registry.get('ir.translation')
+        element_list = irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value', 'state', 'gengo_translation'], context=request.context)
+        for element in element_list:
+            if element['res_id'] in view_list:
+                element['res_id'] = xml_id
+        return element_list

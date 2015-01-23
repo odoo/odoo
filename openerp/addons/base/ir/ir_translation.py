@@ -314,8 +314,12 @@ class ir_translation(osv.osv):
             source = tools.ustr(source)
             params = (lang or '', types, source, source)
             if res_id:
-                query += " AND res_id=%s"
-                params += (res_id,)
+                if type(res_id) == list:
+                    query += " AND res_id in %s"
+                    params += (tuple(res_id),)
+                else:
+                    query += " AND res_id =%s"
+                    params += (res_id,)
             if name:
                 query += " AND name=%s"
                 params += (tools.ustr(name),)
@@ -327,7 +331,6 @@ class ir_translation(osv.osv):
                         AND name=%s"""
 
             params = (lang or '', types, tools.ustr(name))
-        
         return (query, params)
 
     @tools.ormcache(skiparg=3)

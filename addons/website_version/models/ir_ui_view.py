@@ -126,3 +126,22 @@ class view(models.Model):
             all_id = self.search(cr, uid, [('key', '=', view.key)], context=dict(context or {}, active_test=False))
             for v in self.browse(cr, uid, all_id, context=dict(context or {}, active_test=False)):
                 v.write({'active': not v.active})
+
+    def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+        view = self.browse(cr, uid, id_, context=context)
+        view_ids = self.search(cr, uid, [('key', '=', view.key), '|', ('website_id', '=', context.get('website_id')), ('website_id', '=', False)], context=context)
+        fallback_view_id = None
+        if view.mode == 'primary' and view.inherit_id.mode == 'primary':
+            # template is `cloned` from parent view
+            fallback_view_id = view.inherit_id.id
+        Translations = self.pool['ir.translation']
+        def translate_func(term):
+            trans = Translations._get_source(cr, uid, 'website', 'view', lang, term, view_ids)
+            if trans == term and fallback_view_id:
+                # term does not seem translated in current primary template,
+                # look for translation in parent template (which was cloned)
+                trans = Translations._get_source(cr, uid, 'website', 'view', lang,
+                                                 term, fallback_view_id)
+            return trans
+        self._translate_qweb(cr, uid, arch, translate_func, context=context)
+        return arch
