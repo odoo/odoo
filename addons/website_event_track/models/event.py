@@ -29,7 +29,7 @@ class event_track(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
 
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
     speaker_ids = fields.Many2many('res.partner', string='Speakers')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     state = fields.Selection([
@@ -54,6 +54,19 @@ class event_track(models.Model):
             self.image = self.speaker_ids[0].image
         else:
             self.image = False
+
+    @api.model
+    def create(self, vals):
+        res = super(event_track, self).create(vals)
+        res.message_subscribe(res.speaker_ids.ids)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(event_track, self).write(vals)
+        if vals.get('speaker_ids'):
+            self.message_subscribe([speaker['id'] for speaker in self.resolve_2many_commands('speaker_ids', vals['speaker_ids'], ['id'])])
+        return res
 
     @api.multi
     @api.depends('name')
