@@ -115,8 +115,7 @@ class event_event(models.Model):
     @api.one
     @api.depends('track_ids.tag_ids')
     def _get_tracks_tag_ids(self):
-        track_tags = set(tag for track in self.track_ids for tag in track.tag_ids)
-        self.tracks_tag_ids = track_tags and list(track_tags) or False
+        self.tracks_tag_ids = self.mapped('track_ids.tag_ids')
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks', copy=True)
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsorships', copy=True)
