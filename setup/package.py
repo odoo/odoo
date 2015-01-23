@@ -50,6 +50,9 @@ PUBLISH_DIRS = {
     'tarball': 'src',
     'windows': 'exe',
 }
+ADDONS_NOT_TO_PUBLISH = [
+    'web_analytics'
+]
 
 def mkdir(d):
     if not os.path.isdir(d):
@@ -238,11 +241,14 @@ class KVMWinTestExe(KVM):
 #----------------------------------------------------------
 # Stage: building
 #----------------------------------------------------------
-def _prepare_build_dir(o):
+def _prepare_build_dir(o, win32=False):
     cmd = ['rsync', '-a', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
+    if not win32:
+        cmd += ['--exclude', 'setup/win32']
     system(cmd + ['%s/' % o.odoo_dir, o.build_dir])
     for i in glob(join(o.build_dir, 'addons/*')):
-        shutil.move(i, join(o.build_dir, 'openerp/addons'))
+        if i.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
+            shutil.move(i, join(o.build_dir, 'openerp/addons'))
 
 def build_tgz(o):
     system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
@@ -454,6 +460,7 @@ def main():
             except Exception, e:
                 print("Won't publish the rpm release.\n Exception: %s" % str(e))
         if not o.no_windows:
+            _prepare_build_dir(o, win32=True)
             build_exe(o)
             try:
                 if not o.no_testing:
