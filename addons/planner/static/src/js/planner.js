@@ -186,8 +186,8 @@
         _switch_page: function(page_id) {
             this.$(".oe_planner li a[href^='#planner_page']").parent().removeClass('active');
             this.$(".oe_planner li a[href=#"+page_id+"]").parent().addClass('active');
-            this.$(".oe_planner div[id^='planner_page']").removeClass('visible');
-            this.$(".oe_planner div[id="+page_id+"]").addClass('visible');
+            this.$(".oe_planner div[id^='planner_page']").removeClass('show');
+            this.$(".oe_planner div[id="+page_id+"]").addClass('show');
             this.planner.data['last_open_page'] = page_id;
             openerp.session.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
         },
