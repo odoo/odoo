@@ -318,7 +318,7 @@ following steps:
    add an entry for your printer.
 -  Restart the PosBox.
 -  If everything works properly you can send your printer's name and
-   vendor ID to ``support@openerp.com`` and we'll add it to the list of
+   vendor ID to ``support@odoo.com`` and we'll add it to the list of
    supported devices.
 
 Updating The PosBox Software
@@ -329,7 +329,7 @@ of the image and flash the SD-Card with it. This operation is described
 in details on the following tutorial
 ``http://elinux.org/RPi_Easy_SD_Card_Setup``, just replace the standard
 raspberry pi image to the latest one found at
-``http://nightly.openerp.com/trunk/posbox/``
+``http://nightly.odoo.com/trunk/posbox/``
 
 Troubleshoot
 ============

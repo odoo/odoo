@@ -6,7 +6,7 @@
     'description': """A module to play with workflows.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends': ['base'],
     'data': ['data.xml', 'ir.model.access.csv'],
     'installable': True,

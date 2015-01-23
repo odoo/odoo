@@ -29,7 +29,7 @@ openerp.web_analytics = function(instance) {
             var self = this;
             self.initialized = $.Deferred();
             _gaq.push(['_setAccount', 'UA-7333765-1']);
-            _gaq.push(['_setDomainName', '.openerp.com']);  // Allow multi-domain
+            _gaq.push(['_setDomainName', '.odoo.com']);  // Allow multi-domain
             self.initialize_custom(webclient).then(function() {
                 webclient.on('state_pushed', self, self.on_state_pushed);
                 self.include_tracker();

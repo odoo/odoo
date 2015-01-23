@@ -4,7 +4,7 @@
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        subtitle on modules listing or apps.odoo.com""",
 
     'description': """
         Long description of module's purpose

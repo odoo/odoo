@@ -25,7 +25,7 @@ import socket
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: {email_from}
 Subject: {subject}
@@ -66,7 +66,7 @@ Content-Transfer-Encoding: quoted-printable
 
 MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 From: Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>
 Subject: {subject}

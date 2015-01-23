@@ -52,8 +52,8 @@ class test_challenge(common.TransactionCase):
 
         self.user_obj.create(cr, uid, {
             'name': 'R2D2',
-            'login': 'r2d2@openerp.com',
-            'email': 'r2d2@openerp.com',
+            'login': 'r2d2@odoo.com',
+            'email': 'r2d2@odoo.com',
             'groups_id': [(6, 0, [self.group_user_id])]
         }, {'no_reset_password': True})
 

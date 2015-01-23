@@ -335,7 +335,7 @@ HTML_4 = """
     <br>
     <span id="OLK_SRC_BODY_SECTION">
         <div style="font-family:Calibri; font-size:11pt; text-align:left; color:black; BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; BORDER-TOP: #b5c4df 1pt solid; BORDER-RIGHT: medium none; PADDING-TOP: 3pt">
-            <span style="font-weight:bold">From: </span>OpenERP Enterprise &lt;<a href="mailto:sales@openerp.com">sales@openerp.com</a>&gt;<br><span style="font-weight:bold">Reply-To: </span>&lt;<a href="mailto:sales@openerp.com">sales@openerp.com</a>&gt;<br><span style="font-weight:bold">Date: </span>Wed, 17 Apr 2013 13:30:47 +0000<br><span style="font-weight:bold">To: </span>Microsoft Office User &lt;<a href="mailto:n.saxlund@babydino.com">n.saxlund@babydino.com</a>&gt;<br><span style="font-weight:bold">Subject: </span>Re: your OpenERP.com registration<br>
+            <span style="font-weight:bold">From: </span>OpenERP Enterprise &lt;<a href="mailto:sales@odoo.com">sales@odoo.com</a>&gt;<br><span style="font-weight:bold">Reply-To: </span>&lt;<a href="mailto:sales@odoo.com">sales@odoo.com</a>&gt;<br><span style="font-weight:bold">Date: </span>Wed, 17 Apr 2013 13:30:47 +0000<br><span style="font-weight:bold">To: </span>Microsoft Office User &lt;<a href="mailto:n.saxlund@babydino.com">n.saxlund@babydino.com</a>&gt;<br><span style="font-weight:bold">Subject: </span>Re: your OpenERP.com registration<br>
         </div>
         <br>
         <div>
@@ -344,7 +344,7 @@ HTML_4 = """
             <p>You indicated that you wish to use OpenERP in your own company. We would like to know more about your your business needs and requirements, and see how we can help you. When would you be available to discuss your project ?
             </p>
             <p>Best regards, </p>
-            <pre><a href="http://openerp.com">http://openerp.com</a>
+            <pre><a href="http://odoo.com">http://odoo.com</a>
 Belgium: +32.81.81.37.00
 U.S.: +1 (650) 307-6736
 India: +91 (79) 40 500 100
@@ -365,7 +365,7 @@ Goh Sin Yih
 
 
 ________________________________
- From: OpenERP Enterprise &lt;sales@openerp.com&gt;
+ From: OpenERP Enterprise &lt;sales@odoo.com&gt;
 To: sinyih_goh@yahoo.com 
 Sent: Friday, February 8, 2013 12:46 AM
 Subject: Feedback From Your OpenERP Trial
@@ -439,7 +439,7 @@ HOTMAIL_1 = """<div>
             we can help you. When would you be available to discuss your project ?<br>
             Best regards,<br>
             <pre>
-                <a href="http://openerp.com" target="_blank">http://openerp.com</a>
+                <a href="http://odoo.com" target="_blank">http://odoo.com</a>
                 Belgium: +32.81.81.37.00
                 U.S.: +1 (650) 307-6736
                 India: +91 (79) 40 500 100
@@ -518,7 +518,7 @@ MSOFFICE_1 = """
                         From:
                     </span></b>
                     <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">
-                        OpenERP Enterprise [mailto:sales@openerp.com]
+                        OpenERP Enterprise [mailto:sales@odoo.com]
                         <br><b>Sent:</b> Monday, 11 March, 2013 14:47<br><b>To:</b> Alan Widmer<br><b>Subject:</b> Re: your OpenERP.com registration
                     </span>
                 </p>
@@ -546,7 +546,7 @@ MSOFFICE_1 = """
         <pre><p>&nbsp;</p></pre>
         <pre>--<p></p></pre>
         <pre>Nicolas<p></p></pre>
-        <pre><a href="http://openerp.com">http://openerp.com</a><p></p></pre>
+        <pre><a href="http://odoo.com">http://odoo.com</a><p></p></pre>
         <pre>Belgium: +32.81.81.37.00<p></p></pre>
         <pre>U.S.: +1 (650) 307-6736<p></p></pre>
         <pre>India: +91 (79) 40 500 100<p></p></pre>
@@ -631,7 +631,7 @@ MSOFFICE_2 = """
           <b>
             <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">From:</span>
           </b>
-          <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Sent:</b> Wednesday, April 17, 2013 1:31 PM<br><b>To:</b> Matt Witters<br><b>Subject:</b> Re: your OpenERP.com registration</span></p><p></p>
+          <span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@odoo.com] <br><b>Sent:</b> Wednesday, April 17, 2013 1:31 PM<br><b>To:</b> Matt Witters<br><b>Subject:</b> Re: your OpenERP.com registration</span></p><p></p>
         <p></p>
       </div>
     </div>
@@ -649,7 +649,7 @@ MSOFFICE_2 = """
     </pre>
     <pre>--<p></p></pre>
     <pre>Nicolas<p></p></pre>
-    <pre>      <a href="http://openerp.com">http://openerp.com</a>
+    <pre>      <a href="http://odoo.com">http://odoo.com</a>
       <p></p>
     </pre>
     <pre>Belgium: +32.81.81.37.00<p></p></pre>
@@ -755,7 +755,7 @@ MSOFFICE_3 = """<div>
           <b>
             <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span>
           </b>
-          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@openerp.com] <br><b>Envoyé&nbsp;:</b> jeudi 18 avril 2013 11:31<br><b>À&nbsp;:</b> Paul Richard<br><b>Objet&nbsp;:</b> Re: your OpenERP.com registration</span></p><p></p>
+          <span lang="FR" style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> OpenERP Enterprise [mailto:sales@odoo.com] <br><b>Envoyé&nbsp;:</b> jeudi 18 avril 2013 11:31<br><b>À&nbsp;:</b> Paul Richard<br><b>Objet&nbsp;:</b> Re: your OpenERP.com registration</span></p><p></p>
         <p></p>
       </div>
     </div>
@@ -773,7 +773,7 @@ MSOFFICE_3 = """<div>
     </pre>
     <pre>--<p></p></pre>
     <pre>Nicolas<p></p></pre>
-    <pre>      <a href="http://openerp.com">http://openerp.com</a>
+    <pre>      <a href="http://odoo.com">http://odoo.com</a>
       <p></p>
     </pre>
     <pre>Belgium: +32.81.81.37.00<p></p></pre>
@@ -829,7 +829,7 @@ OpenERP SA
 Chaussée de Namur, 40
 B-1367 Gérompont
 Tel: +32.81.81.37.00
-Web: http://www.openerp.com</pre>"""
+Web: http://www.odoo.com</pre>"""
 
 BUG_1_IN = [
     'Hi Migration Team',
@@ -839,7 +839,7 @@ BUG_1_OUT = [
     'Olivier Laurent',
     'Chaussée de Namur',
     '81.81.37.00',
-    'openerp.com',
+    'odoo.com',
 ]
 
 
@@ -862,11 +862,11 @@ BUG2 = """
           </tr>
           <tr>
             <th nowrap="" valign="BASELINE" align="RIGHT">From: </th>
-            <td>Christine Herrmann <a class="moz-txt-link-rfc2396E" href="mailto:che@openerp.com">&lt;che@openerp.com&gt;</a></td>
+            <td>Christine Herrmann <a class="moz-txt-link-rfc2396E" href="mailto:che@odoo.com">&lt;che@odoo.com&gt;</a></td>
           </tr>
           <tr>
             <th nowrap="" valign="BASELINE" align="RIGHT">To: </th>
-            <td><a class="moz-txt-link-abbreviated" href="mailto:online@openerp.com">online@openerp.com</a></td>
+            <td><a class="moz-txt-link-abbreviated" href="mailto:online@odoo.com">online@odoo.com</a></td>
           </tr>
         </tbody>
       </table>
@@ -902,7 +902,7 @@ BUG2 = """
             <tr>
               <th nowrap="" valign="BASELINE" align="RIGHT">Pour&nbsp;:
               </th>
-              <td>Christine Herrmann (che) <a class="moz-txt-link-rfc2396E" href="mailto:che@openerp.com">&lt;che@openerp.com&gt;</a></td>
+              <td>Christine Herrmann (che) <a class="moz-txt-link-rfc2396E" href="mailto:che@odoo.com">&lt;che@odoo.com&gt;</a></td>
             </tr>
           </tbody>
         </table>
@@ -970,8 +970,8 @@ BUG2 = """
             <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
             <p>&nbsp;</p>
             <p class="MsoNormal"><b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span></b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">
-                <a href="mailto:che@openerp.com">che@openerp.com</a>
-                [<a href="mailto:che@openerp.com">mailto:che@openerp.com</a>]
+                <a href="mailto:che@odoo.com">che@odoo.com</a>
+                [<a href="mailto:che@odoo.com">mailto:che@odoo.com</a>]
                 <br>
                 <b>Envoyé&nbsp;:</b> vendredi 4 octobre 2013 17:41<br>
                 <b>À&nbsp;:</b> <a href="mailto:infos@inzoservices.com">infos@inzoservices.com</a><br>
@@ -1067,15 +1067,15 @@ BUG2 = """
                   Chaussée de Namur, 40 <br>
                   B-1367 Grand Rosières <br>
                   Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01 <br>
-                  E-mail : <a href="mailto:ale@openerp.com">ale@openerp.com</a> <br>
-                  Web: <a href="http://www.openerp.com">http://www.openerp.com</a></span></p>
+                  E-mail : <a href="mailto:ale@odoo.com">ale@odoo.com</a> <br>
+                  Web: <a href="http://www.odoo.com">http://www.odoo.com</a></span></p>
             </div>
           </div>
         </div>
         --<br>
-        INZO services <small>Sent by <a style="color:inherit" href="http://www.openerp.com">OpenERP
-            S.A.</a> using <a style="color:inherit" href="https://www.openerp.com/">OpenERP</a>.</small>
-        <small>Access your messages and documents <a style="color:inherit" href="https://accounts.openerp.com?db=openerp#action=mail.action_mail_redirect&amp;login=che&amp;message_id=5750830">in
+        INZO services <small>Sent by <a style="color:inherit" href="http://www.odoo.com">OpenERP
+            S.A.</a> using <a style="color:inherit" href="https://www.odoo.com/">OpenERP</a>.</small>
+        <small>Access your messages and documents <a style="color:inherit" href="https://accounts.odoo.com?db=openerp#action=mail.action_mail_redirect&amp;login=che&amp;message_id=5750830">in
 
             OpenERP</a></small> <br>
         <pre class="moz-signature" cols="72">-- 
@@ -1086,7 +1086,7 @@ Chaussée de Namur, 40
 B-1367 Grand Rosières 
 Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01 
 
-Web: <a class="moz-txt-link-freetext" href="http://www.openerp.com">http://www.openerp.com</a> </pre>
+Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo.com</a> </pre>
         <br>
       </div>
       <br>

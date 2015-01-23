@@ -85,7 +85,7 @@ class configmanager(object):
         self.options = {
             'admin_passwd': 'admin',
             'csv_internal_sep': ',',
-            'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
+            'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
             'root_path': None,
         }

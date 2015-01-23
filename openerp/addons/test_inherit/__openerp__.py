@@ -6,7 +6,7 @@
     'description': """A module to verify the inheritance.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends': ['base'],
     'data': [
         'ir.model.access.csv',

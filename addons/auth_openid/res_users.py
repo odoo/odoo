@@ -27,7 +27,7 @@ import utils
 class res_users(osv.osv):
     _inherit = 'res.users'
 
-    # TODO create helper fields for autofill openid_url and openid_email -> http://pad.openerp.com/web-openid
+    # TODO create helper fields for autofill openid_url and openid_email -> http://pad.odoo.com/web-openid
 
     _columns = {
         'openid_url': fields.char('OpenID URL', size=1024, copy=False),

@@ -6,7 +6,7 @@
     'description': """A module to test the new API.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends': ['base'],
     'installable': True,
     'auto_install': False,

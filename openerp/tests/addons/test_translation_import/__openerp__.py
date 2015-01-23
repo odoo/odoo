@@ -6,7 +6,7 @@
     'description': """A module to test translation import.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends': ['base'],
     'data': ['view.xml'],
     'test': ['tests.yml'],

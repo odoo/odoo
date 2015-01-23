@@ -169,7 +169,7 @@ class google_service(osv.osv_memory):
         return (status, response, ask_time)
 
     def get_base_url(self, cr, uid, context=None):
-        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://www.openerp.com?NoBaseUrl', context=context)
+        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://www.odoo.com?NoBaseUrl', context=context)
 
     def get_client_id(self, cr, uid, service, context=None):
         return self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % (service,), default=False, context=context)

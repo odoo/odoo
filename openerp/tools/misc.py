@@ -1012,25 +1012,6 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
-class upload_data_thread(threading.Thread):
-    def __init__(self, email, data, type):
-        self.args = [('email',email),('type',type),('data',data)]
-        super(upload_data_thread,self).__init__()
-    def run(self):
-        try:
-            import urllib
-            args = urllib.urlencode(self.args)
-            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
-            fp.read()
-            fp.close()
-        except Exception:
-            pass
-
-def upload_data(email, data, type='SURVEY'):
-    a = upload_data_thread(email, data, type)
-    a.start()
-    return True
-
 def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
     """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
 

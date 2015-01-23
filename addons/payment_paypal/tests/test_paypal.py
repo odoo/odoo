@@ -18,7 +18,7 @@ class PaypalCommon(PaymentAcquirerCommon):
 
         # get the paypal account
         model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_paypal', 'payment_acquirer_paypal')
-        # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
+        # tde+seller@odoo.com - tde+buyer@odoo.com - tde+buyer-it@odoo.com
 
         # some CC
         self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
@@ -89,7 +89,7 @@ class PaypalForm(PaypalCommon):
 
         form_values = {
             'cmd': '_xclick',
-            'business': 'tde+paypal-facilitator@openerp.com',
+            'business': 'tde+paypal-facilitator@odoo.com',
             'item_name': 'test_ref0',
             'item_number': 'test_ref0',
             'first_name': 'Buyer',
@@ -163,7 +163,7 @@ class PaypalForm(PaypalCommon):
             'protection_eligibility': u'Ineligible',
             'last_name': u'Poilu',
             'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'tde+paypal-facilitator@openerp.com',
+            'receiver_email': u'tde+paypal-facilitator@odoo.com',
             'payment_status': u'Pending',
             'payment_gross': u'',
             'tax': u'0.00',
@@ -185,7 +185,7 @@ class PaypalForm(PaypalCommon):
             'item_number': u'test_ref_2',
             'receiver_id': u'DEG7Z7MYGT6QA',
             'transaction_subject': u'',
-            'business': u'tde+paypal-facilitator@openerp.com',
+            'business': u'tde+paypal-facilitator@odoo.com',
             'test_ipn': u'1',
             'payer_id': u'VTDKRZQSAHYPS',
             'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
@@ -195,7 +195,7 @@ class PaypalForm(PaypalCommon):
             'address_status': u'unconfirmed',
             'mc_currency': u'EUR',
             'shipping': u'0.00',
-            'payer_email': u'tde+buyer@openerp.com',
+            'payer_email': u'tde+buyer@odoo.com',
             'payment_type': u'instant',
             'mc_gross': u'1.95',
             'ipn_track_id': u'866df2ccd444b',

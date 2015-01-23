@@ -47,7 +47,7 @@ You can set or change your password via the following url:
 
 --
 Odoo - Open Source Business Applications
-http://www.openerp.com
+http://www.odoo.com
 """)
 
 
