@@ -481,7 +481,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             }
 
             var popup = $(QWeb.render('ErrorTracebackPopupWidget',{
-                widget: { title: title , body: body },
+                widget: { options: {title: title , body: body }},
             }));
 
             popup.find('.button').click(function(){
