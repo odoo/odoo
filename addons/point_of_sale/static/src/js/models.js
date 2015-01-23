@@ -284,7 +284,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             },
         },{
             model:  'pos.category',
-            fields: ['id','name','parent_id','child_id','image'],
+            fields: ['id','name','parent_id','child_id'],
             domain: null,
             loaded: function(self, categories){
                 self.db.add_categories(categories);
