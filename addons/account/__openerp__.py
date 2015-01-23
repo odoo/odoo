@@ -89,6 +89,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_financial.xml',
         'views/report_generalledger.xml',
         'views/report_configurator.xml',
+        'views/report_followup.xml',
         'views/account.xml',
     ],
     'qweb' : [

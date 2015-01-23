@@ -16,11 +16,15 @@
                     <field name="user_id" invisible="1"/>
                     <field name="country_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
+                    <field name="trust" invisible="1"/>
                     <field name="payment_responsible_id"/>
                     <field name="payment_earliest_due_date"/>
                     <field name="latest_followup_level_id"/>
                     <field name="payment_amount_overdue"/>
                     <field name="payment_amount_due" />
+                    <button string="Good Debtor" type="object" icon="gtk-yes" readonly='1' attrs="{'invisible': [('trust','!=','good')]}"/>
+                    <button string="Normal Debtor" type="object" icon="gtk-normal" readonly='1' attrs="{'invisible': [('trust','!=','normal')]}"/>
+                    <button string="Bad Debtor" type="object" icon="gtk-no" readonly='1' attrs="{'invisible': [('trust','!=','bad')]}"/>
                 </tree>
             </field>
         </record>

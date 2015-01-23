@@ -22,9 +22,14 @@
     <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_executivesummary0'))"/>
     <field name="target">self</field>
 </record>
+<record model="ir.actions.act_url" id="action_account_report_ar">
+    <field name="name">Aged Receivable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedreceivable0'))"/>
+    <field name="target">self</field>
+</record>
 <record model="ir.actions.act_url" id="action_account_report_ap">
-    <field name="name">Aged Partner Balance</field>
-    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedpartner0'))"/>
+    <field name="name">Aged Payable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedpayable0'))"/>
     <field name="target">self</field>
 </record>
 <record model="ir.actions.act_url" id="action_account_report_gt">
@@ -36,7 +41,8 @@
 <menuitem id="menu_action_account_report_bs" name="Balance Sheet" action="action_account_report_bs" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_cs" name="Cash Summary" action="action_account_report_cs" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_es" name="Executive Summary" action="action_account_report_es" parent="account.menu_finance_legal_statement"/>
-<menuitem id="menu_action_account_report_ap" name="Aged Partner Balance" action="action_account_report_ap" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ar" name="Aged Receivable" action="action_account_report_ar" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ap" name="Aged Payable" action="action_account_report_ap" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_gt" name="Generic Tax Report" action="action_account_report_gt" parent="account.menu_finance_legal_statement"/>
 
 <template id="report_financial_footnote_sup">
@@ -74,14 +80,14 @@
         <td t-att-class="tdclass">
             <t t-if="mode != 'print'">
                 <t t-if="a.get('unfoldable') and a.get('unfolded')">
-                    <span style="position: absolute;" t-att-class="' '.join(['foldable', str(a.get('id'))])"><i class="fa fa-caret-down"></i></span>
+                    <span style="position: absolute;" t-att-class="' '.join(['foldable', str(a.get('id'))])"><i class="fa fa-fw fa-caret-down"></i></span>
                 </t>
                 <t t-if="a.get('unfoldable') and not a.get('unfolded')">
-                    <span style="position: absolute;" t-att-class="' '.join(['unfoldable', str(a.get('id'))])"><i class="fa fa-caret-right"></i></span>
+                    <span style="position: absolute;" t-att-class="' '.join(['unfoldable', str(a.get('id'))])"><i class="fa fa-fw fa-caret-right"></i></span>
                 </t>
             </t>
             <t t-if="mode == 'print' and a['type'] != 'line'"><span style="font-style: italic; margin-left: 70px" t-att-class="a.get('type') + ' ' + str(a.get('id'))"><t t-esc="a.get('name')"/></span><t t-call="account.report_financial_footnote_sup" /></t>
-            <a t-if="a['type'] not in ['account_id', 'line', 'tax_id'] and mode != 'print'"><span style="font-style: italic; margin-left: 70px" t-att-class="a.get('type') + ' ' + str(a.get('id'))"><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></a>
+            <a t-if="a['type'] not in ['account_id', 'line', 'tax_id', 'unreconciled_aml'] and mode != 'print'"><span style="font-style: italic; margin-left: 70px" t-att-class="a.get('type') + ' ' + str(a.get('id'))"><span style="color: black;"><i class="fa fa-fw fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></a>
             <div class="dropdown" t-if="(a['type'] == 'account_id' or a['type'] == 'tax_id') and mode != 'print'">
                 <a data-toggle="dropdown">
                     <span style="font-style: italic; margin-left: 70px" t-att-class="' '.join([a['type'], str(a['id'])])">
@@ -90,7 +96,7 @@
                     <span class="caret"></span>
                 </a>
                 <t t-call="account.report_financial_footnote_sup" />
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="margin-left: 70px">
+                <ul class="dropdown-menu" role="menu" style="margin-left: 70px">
                     <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="to_graph">Graph</a></li>
                     <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="to_amls">Account Move Lines</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" class="add_footnote">Add Footnote</a></li>
@@ -98,15 +104,15 @@
                     <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="to_tax">See tax move lines</a></li>
                 </ul>
             </div>
-            <t t-if="a['type'] == 'line'"><span t-att-style="style" ><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></t>
+            <t t-if="a['type'] == 'line'"><span t-att-style="style" ><span style="color: black;"><i class="fa fa-fw fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></t>
         </td>
         <t t-set="base_style" t-value="style" />
         <t t-foreach="a['columns']" t-as="c">
+            <t t-set="column" t-value="column + 1" />
             <td class="text-right" style="white-space: nowrap;">
-                <t t-set="column" t-value="column + 1" />
                 <t t-if="isinstance(c, tuple)"><t t-set="style" t-value="c[1] + base_style" /><t t-set="c" t-value="c[0]" /></t>
                 <span class="annotable" t-att-style="style">
-                    <span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                    <span style="color: black;" t-if="c and c != ''"><i class="fa fa-fw fa-pencil-square"></i></span>
                     <t t-raw="c" /><t t-call="account.report_financial_footnote_sup" />
                 </span>
                 <t t-if="style != base_style"><t t-set="style" t-value="base_style" /></t>
@@ -114,57 +120,76 @@
         </t>
     </tr>
 </template>
+<template id="report_financial_body">
+    <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(report.get_name()), str(context.id)])">
+        <h2 t-esc="report.get_title()"/>
+        <div t-if="mode != 'print' and context.summary == ''" class="summary">
+            <div class="addSummary" role="alert">
+                <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
+            </div>
+        </div>
+        <div t-if="mode != 'print' and context.summary != ''" class="summary mt32">
+            <i style="font-size: 16px; margin-left: -19px; position: absolute;" class="fa fa-fw fa-pencil"></i> 
+            <div class="savedSummary" role="alert">
+                <span><t t-raw="context.summary" /></span>
+            </div>
+        </div>
+        <div t-if="mode == 'print' and context.summary != ''" class="savedSummary" role="alert">
+            <span><t t-raw="context.summary" /></span>
+        </div>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <t t-foreach="context.get_columns_names()" t-as="column_name">
+                        <th class="text-center" t-raw="column_name" />
+                    </t>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="lines" t-as="a">
+                    <t t-call="account.report_financial_line" />
+                </t>
+            </tbody>
+        </table>
+        <t t-foreach="context.footnotes" t-as="footnote">
+            <p class="footnote" t-att-id="'footnote' + str(footnote.number)">
+                <span class='text'><t t-raw="str(footnote.number) + '. ' + footnote.text"/></span>
+                <span style="position: absolute; margin-left: 3px;"><i class="fa fa-fw fa-pencil-square"></i><i class="fa fa-fw fa-trash-o"></i></span>
+            </p>
+        </t>
+    </div>
+</template>
 <template id="report_financial">
     <t t-if="mode == 'print'"><t t-raw="'&lt;base href=%s&gt;' % base_url"/></t>
     <t t-call="report.html_container">
         <span class="oe_account_report_widgets">
-            <h2 t-esc="o.get_title()"/>
-            <t t-if="mode != 'print' and o.get_report_type() != 'date_range_extended'"><t t-call="account.report_configurator"/></t>
+            <t t-if="mode != 'print' and report.get_report_type() != 'date_range_extended'"><t t-call="account.report_configurator"/></t>
             <t t-call-assets="web.assets_common" t-css="false" />
             <t t-call-assets="web.assets_backend" t-css="false" />
             <script type="text/javascript" src="/account/static/src/js/account_report_widgets.js"></script>
+            <script type="text/javascript" id='oe-account-inline-script'>
+                (function () {
+                    'use strict';
+
+                    $(document).ready(function() {
+                        var _t = openerp._t;
+                        var reportWidgets = new openerp.account.ReportWidgets();
+                        reportWidgets.setElement($('.oe_account_report_widgets'));
+                        reportWidgets.start();
+                    });
+
+                })();
+            </script>
             <link rel="stylesheet" href="/account/static/src/css/account_financial_report.css" />
             <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
             <link href="/website/static/src/css/website.css" rel="stylesheet"/>
             <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-            <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(o.get_name()), str(context.id)])">
-                <div t-if="mode != 'print' and context.summary == ''" class="summary">
-                    <div class="alert alert-info alert-dismissible addSummary" role="alert">
-                        <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
-                    </div>
-                </div>
-                <div t-if="mode != 'print' and context.summary != ''" class="summary">
-                    <div class="alert alert-info alert-dismissible savedSummary" role="alert">
-                        <button type="button" class="close closeSummary"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
-                        <button type="button" class="close"><i style="font-size: 16px;" class="fa fa-pencil"></i> </button>
-                        <span><t t-raw="context.summary" /></span>
-                    </div>
-                </div>
-                <div t-if="mode == 'print' and context.summary != ''" class="alert alert-info alert-dismissible savedSummary" role="alert">
-                    <span><t t-raw="context.summary" /></span>
-                </div>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <t t-foreach="context.get_columns_names()" t-as="column_name">
-                                <th class="text-right" t-raw="column_name" />
-                            </t>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="lines" t-as="a">
-                            <t t-call="account.report_financial_line" />
-                        </t>
-                    </tbody>
-                </table>
-                <t t-foreach="context.footnotes" t-as="footnote">
-                    <p class="footnote" t-att-id="'footnote' + str(footnote.number)">
-                        <span class='text'><t t-raw="str(footnote.number) + '. ' + footnote.text"/></span>
-                        <span style="position: absolute; margin-left: 3px;"><i class="fa fa-pencil-square"></i><i class="fa fa-trash-o"></i></span>
-                    </p>
-                </t>
-            </div>
+
+
+            <t t-call='account.report_financial_body' />
+
+
             <div t-if="mode != 'print'" class="dropdown" style="float: right; margin-bottom: 250px;">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                     Export
@@ -185,7 +210,6 @@
                         </div>
                         <div class="modal-body">
                             <form role="form">
-                                <label for="note">Add a footnote</label>
                                 <textarea name="note" id="note" rows='4' class="form-control" placeholder="Insert foot note here"></textarea>
                                 <input type='hidden' id='type' />
                                 <input type='hidden' id='target_id' />

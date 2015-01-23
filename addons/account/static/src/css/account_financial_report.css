@@ -5,13 +5,28 @@
 .ui-dialog-titlebar {
     display:none
 }
-input#summary, div.dropdown, i.fa, div.savedSummary span, td.unfoldable, td.foldable {
-    cursor: pointer; cursor: hand;
-}
-td i.fa{
+div.summary i.fa {
     visibility: hidden;
 }
-td:hover i.fa{
+div.summary:hover i.fa {
+    visibility: visible;
+}
+div.oe-account-next-action i.fa {
+    visibility: hidden;
+}
+div.oe-account-next-action:hover i.fa {
+    visibility: visible;
+}
+div.savedSummary:hover {
+    border-left: thin groove;
+}
+input#summary, div.dropdown, span.dropdown, i.fa, div.savedSummary span, td.unfoldable, td.foldable, span#public-link, input[type=checkbox], div.oe-account-next-action {
+    cursor: pointer; cursor: hand;
+}
+td i.fa-pencil-square{
+    visibility: hidden;
+}
+td:hover i.fa-pencil-square{
     visibility: visible;
 }
 p.footnote i.fa{
@@ -19,4 +34,13 @@ p.footnote i.fa{
 }
 p.footnote:hover i.fa{
     visibility: visible;
+}
+.progress {
+  position: relative;
+}
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
 }

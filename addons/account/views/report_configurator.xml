@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-sm-3">
                     <label for="date_filter">Date Filter :</label>
-                    <select name="date_filter" t-if="o.get_report_type() == 'no_date_range'" class="form-control">
+                    <select name="date_filter" t-if="report.get_report_type() == 'no_date_range'" class="form-control">
                         <option selected="selected" t-if="context.date_filter == 'today'" value='today'>Today</option>
                         <option selected="selected" t-if="context.date_filter == 'last_month'" value='last_month'>End of Last Month</option>
                         <option selected="selected" t-if="context.date_filter == 'last_quarter'" value='last_quarter'>End of Last Quarter</option>
@@ -44,7 +44,7 @@
                         <option t-if="context.date_filter != 'last_year'" value='last_year'>End of Last Financial Year</option>
                         <option t-if="context.date_filter != 'custom'" value='custom'>Custom</option>
                     </select>
-                    <select name="date_filter" t-if="o.get_report_type() != 'no_date_range'" class="form-control">
+                    <select name="date_filter" t-if="report.get_report_type() != 'no_date_range'" class="form-control">
                         <option selected="selected" t-if="context.date_filter == 'this_month'" value='this_month'>This Month</option>
                         <option t-if="context.date_filter != 'this_month'" value='this_month'>This Month</option>
                         <option selected="selected" t-if="context.date_filter == 'this_year'" value='this_year'>This Financial Year</option>
@@ -86,11 +86,11 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-3" t-if="o.get_report_type() != 'no_date_range'">
-                    <label class="custom-date" t-if="o.get_report_type() != 'no_date_range'" for="date_from">Start Date :</label>
-                    <input t-if="o.get_report_type() != 'no_date_range'" type="date" class="form-control custom-date" name="date_from" t-att-value="context.date_from"></input>
-                    <label class="custom-cmp" t-if="o.get_report_type() != 'no_date_range'" for="date_from_cmp">Comparison Start Date :</label>
-                    <input t-if="o.get_report_type() != 'no_date_range'" type="date" class="form-control custom-cmp" name="date_from_cmp" t-att-value="context.date_from_cmp"></input>
+                <div class="col-sm-3" t-if="report.get_report_type() != 'no_date_range'">
+                    <label class="custom-date" t-if="report.get_report_type() != 'no_date_range'" for="date_from">Start Date :</label>
+                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-date" name="date_from" t-att-value="context.date_from"></input>
+                    <label class="custom-cmp" t-if="report.get_report_type() != 'no_date_range'" for="date_from_cmp">Comparison Start Date :</label>
+                    <input t-if="report.get_report_type() != 'no_date_range'" type="date" class="form-control custom-cmp" name="date_from_cmp" t-att-value="context.date_from_cmp"></input>
                     <t t-set="style" value="''" />
                     <t t-if="context.date_filter_cmp == 'custom'"><t t-set="style" t-value="'display: none'" /></t>
                     <span t-att-style="style">
@@ -99,13 +99,13 @@
                     </span>
                 </div>
                 <div class="col-sm-3">
-                    <label class="custom-date" for="date_to" t-if="o.get_report_type() != 'no_date_range'">End Date :</label>
-                    <label class="custom-date" for="date_to" t-if="o.get_report_type() == 'no_date_range'">Date :</label>
+                    <label class="custom-date" for="date_to" t-if="report.get_report_type() != 'no_date_range'">End Date :</label>
+                    <label class="custom-date" for="date_to" t-if="report.get_report_type() == 'no_date_range'">Date :</label>
                     <input type="date" class="form-control custom-date" name="date_to" t-att-value="context.date_to"></input>
-                    <label class="custom-cmp" for="date_to_cmp" t-if="o.get_report_type() != 'no_date_range'">Comparison End Date :</label>
-                    <label class="custom-cmp" for="date_to_cmp" t-if="o.get_report_type() == 'no_date_range'">Comparison Date :</label>
+                    <label class="custom-cmp" for="date_to_cmp" t-if="report.get_report_type() != 'no_date_range'">Comparison End Date :</label>
+                    <label class="custom-cmp" for="date_to_cmp" t-if="report.get_report_type() == 'no_date_range'">Comparison Date :</label>
                     <input type="date" class="form-control custom-cmp" name="date_to_cmp" t-att-value="context.date_to_cmp"></input>
-                    <span t-if="o.get_report_type() == 'no_date_range'" t-att-style="style">
+                    <span t-if="report.get_report_type() == 'no_date_range'" t-att-style="style">
                         <label for="periods_number">Number of periods :</label>
                         <input type="number" name="periods_number" t-att-value="context.periods_number"/>
                     </span>

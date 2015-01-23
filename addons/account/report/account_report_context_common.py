@@ -40,6 +40,8 @@ class account_report_context_common(models.TransientModel):
             return 'account.financial.report.context'
         if name == 'generic_tax_report':
             return 'account.report.context.tax'
+        if name == 'followup_report':
+            return 'account.report.context.followup'
 
     @api.model
     def get_full_report_name_by_report_name(self, name):
@@ -47,6 +49,8 @@ class account_report_context_common(models.TransientModel):
             return 'account.financial.report'
         if name == 'generic_tax_report':
             return 'account.generic.tax.report'
+        if name == 'followup_report':
+            return 'account.followup.report'
 
     def get_report_obj(self):
         raise Warning(_('get_report_obj not implemented'))
@@ -76,7 +80,7 @@ class account_report_context_common(models.TransientModel):
     company_id = fields.Many2one('res.company', 'Company', default=lambda s: s.env.user.company_id)
     date_filter = fields.Char('Date filter used', default=None)
     next_footnote_number = fields.Integer(default=1, required=True)
-    summary = fields.Char('Summary', default='')
+    summary = fields.Char(default='')
     comparison = fields.Boolean(compute='_get_comparison', string='Enable comparison', default=False)
     date_from_cmp = fields.Date("Start date for comparison",
                                 default=lambda s: datetime.today() + timedelta(days=-395))
@@ -329,7 +333,7 @@ class account_report_context_common(models.TransientModel):
             'base_url': base_url,
             'css': '',
         }
-        html = self.pool['ir.ui.view'].render(self._cr, self._uid, "account.report_financial", rcontext, context=self.env.context)
+        html = self.pool['ir.ui.view'].render(self._cr, self._uid, report_obj.get_template(), rcontext, context=self.env.context)
 
         landscape = False
         if len(self.get_columns_names()) > 4:

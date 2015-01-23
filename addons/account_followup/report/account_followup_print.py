@@ -21,7 +21,7 @@
 
 import time
 from collections import defaultdict
-from openerp.osv import osv
+from openerp import models
 from openerp.report import report_sxw
 from openerp.exceptions import UserError
 
@@ -90,7 +90,7 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         a = {}
         #look into the lines of the partner that already have a followup level, and take the description of the higher level for which it is available
-        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconciled','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('state','!=','draft'),('debit','!=',False),('account_id.internal_type','=','receivable'),('followup_line_id','!=',False)])
+        partner_line_ids = self.pool['account.move.line'].search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconciled','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('move_id.state','!=','draft'),('debit','!=',False),('account_id.internal_type','=','receivable'),('followup_line_id','!=',False)])
         partner_max_delay = 0
         partner_max_text = ''
         for i in self.pool['account.move.line'].browse(self.cr, self.uid, partner_line_ids, context=context):
@@ -108,7 +108,7 @@ class report_rappel(report_sxw.rml_parse):
         return text
 
 
-class report_followup(osv.AbstractModel):
+class report_followup(models.AbstractModel):
     _name = 'report.account_followup.report_followup'
     _inherit = 'report.abstract_report'
     _template = 'account_followup.report_followup'
