@@ -305,7 +305,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             }
 
             this.show_warning(error);
-        //InternalError    
+        //InternalError
 
         } else {
             this.show_error(error);
@@ -805,7 +805,6 @@ instance.web.SystrayMenu = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
         this.items = [];
-        this.widgets = [];
         this.load = $.Deferred();
     },
     start: function() {
@@ -820,19 +819,9 @@ instance.web.SystrayMenu = instance.web.Widget.extend({
         var self = this;
         _.each(instance.web.SystrayItems, function(widgetCls) {
             var cur_systray_item = new widgetCls(self);
-            self.widgets.push(cur_systray_item);
             self.items.push(cur_systray_item.appendTo(self.$el));
         });
     },
-    get_widget: function(searched_class){
-        for (i = 0; i < this.widgets.length; i++) {
-            var current = this.widgets[i];
-            if(current instanceof searched_class){
-                return current;
-            }
-        }
-        return undefined;
-    }
 });
 
 instance.web.Menu =  instance.web.Widget.extend({
