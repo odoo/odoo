@@ -1575,6 +1575,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 self.click_invoice();
             });
 
+            this.$('.js_cashdrawer').click(function(){
+                self.pos.proxy.open_cashbox();
+            });
+
         },
         show: function(){
             this.pos.get_order().clean_empty_paymentlines();
