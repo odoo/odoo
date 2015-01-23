@@ -455,6 +455,17 @@ class product_template(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
+    def _set_product_template_price(self, cr, uid, id, name, value, args, context=None):
+        product_uom_obj = self.pool.get('product.uom')
+
+        product = self.browse(cr, uid, id, context=context)
+        if 'uom' in context:
+            uom = product.uos_id or product.uom_id
+            value = product_uom_obj._compute_price(cr, uid,
+                    context['uom'], value, uom.id)
+
+        return product.write({'list_price': value})
+
     def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
         if context is None:
             context = {}
@@ -500,7 +511,7 @@ class product_template(osv.osv):
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
@@ -925,7 +936,7 @@ class product_product(osv.osv):
         return result
 
     _columns = {
-        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
         'lst_price': fields.function(_product_lst_price, fnct_inv=_set_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
