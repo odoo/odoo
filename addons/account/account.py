@@ -196,7 +196,7 @@ class account_account_type(osv.osv):
     _columns = {
         'name': fields.char('Account Type', required=True, translate=True),
         'code': fields.char('Code', size=32, required=True, select=True),
-        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
+        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Carry Forward Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
  'None' means that nothing will be done.
  'Balance' will generally be used for cash accounts.
@@ -566,7 +566,7 @@ class account_account(osv.osv):
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
-        (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
+        (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a `carry forward` method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
         (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
     ]
     _sql_constraints = [
