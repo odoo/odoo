@@ -138,7 +138,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         show: function(options){
             options = options || {};
             var self = this;
-            this._super();
+            this._super(options);
 
             this.list    = options.list    || [];
             this.renderElement();
@@ -167,7 +167,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         show: function(options){
             options = options || {};
             var self = this;
-            this._super();
+            this._super(options);
 
             this.renderElement();
             this.$('input,textarea').focus();
@@ -176,10 +176,10 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
             });
         },
         click_confirm: function(){
-            var value = self.$('input,textarea').val();
-            self.gui.close_popup();
+            var value = this.$('input,textarea').val();
+            this.gui.close_popup();
             if( this.options.confirm ){
-                this.options.confirm.call(self,value);
+                this.options.confirm.call(this,value);
             }
         },
     });
@@ -197,7 +197,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         show: function(options){
             options = options || {};
             var self = this;
-            this._super();
+            this._super(options);
 
             this.inputbuffer = options.value   || '';
             this.renderElement();
