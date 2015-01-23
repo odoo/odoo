@@ -570,6 +570,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.many2manys.forEach(function(name) {
                     var field = record.record[name];
                     var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']').empty();
+                    // fields declared in the kanban view may not be used directly
+                    // in the template declaration, for example fields for which the
+                    // raw value is used -> $el[0] is undefined, leading to errors
+                    // in the following process. Preventing to add push the id here
+                    // prevents to make unnecessary calls to name_get
+                    if (! $el[0]) {
+                        return;
+                    }
                     if (!relations[field.relation]) {
                         relations[field.relation] = { ids: [], elements: {}};
                     }
