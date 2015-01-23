@@ -32,6 +32,7 @@ import os
 import logging
 from lxml import etree
 import base64
+from distutils.version import LooseVersion
 from reportlab.platypus.doctemplate import ActionFlowable
 from openerp.tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
@@ -175,6 +176,7 @@ class _rml_styles(object,):
                 'justify':reportlab.lib.enums.TA_JUSTIFY
             }
             data['alignment'] = align.get(node.get('alignment').lower(), reportlab.lib.enums.TA_LEFT)
+        data['splitLongWords'] = 0
         return data
 
     def _table_style_get(self, style_node):
@@ -767,17 +769,15 @@ class _rml_flowable(object):
             if extra_style:
                 style.__dict__.update(extra_style)
             result = []
-            textuals = self._textual(node).split('\n')
-            keep_empty_lines = (len(textuals) > 1) and len(node.text.strip())
-            for i in textuals:
-                if keep_empty_lines and len(i.strip()) == 0:
-                    i = '<font color="white">&nbsp;</font>'
-                result.append(
-                    platypus.Paragraph(
-                        i, style, **(
-                            utils.attr_get(node, [], {'bulletText':'str'}))
-                    )
-                )
+            tag_text = ''
+            plain_text = ''
+            for i in self._textual(node).split('\n'):
+                instance = platypus.Paragraph(i, style, **(utils.attr_get(node, [], {'bulletText':'str'})))
+                plain_text += instance.getPlainText().strip()
+                tag_text += instance.text.strip()
+                result.append(instance)
+            if LooseVersion(reportlab.Version) > LooseVersion('3.0') and not plain_text and tag_text:
+                result.append(platypus.Paragraph('&nbsp;<br/>', style, **(utils.attr_get(node, [], {'bulletText': 'str'}))))
             return result
         elif node.tag=='barCode':
             try:
