@@ -186,33 +186,38 @@
             <!--Planner Pages-->
             <div class="pages col-sm-8 col-md-9 col-xs-12">
 
-                <div id="planner_page1" class="planner-page show">
-                    <h1>Welcome!</h1>
-
-                    <p><i>Congratulations on taking the leap to boost your sales activities!</i></p>
-
-                    <p><i>Odoo's CRM and Sales app will help you handle your sales funnel, bringing your sales vision to life in a simple and seamless way.</i></p>
-
-                    <p><i>The whole process may take a few hours, some talking with your colleagues and several cups of coffee, but don't worry, you can take a break and come back to this tool any time you like.</i></p>
-
-                    <p><i>We are here to help you. If you get stuck, do not hesitate to get in touch with our CRM experts.</i></p>
-
-                    <p><i>With Odoo, it's not hard boosting your sales strategy.</i></p>
-                    <p class="last"><i>We wish you a fun time!</i></p>
-
-                    <div class="row fabien">
-                        <div class="col-xs-12">
-                            <img class="item" src="/planner/static/src/img/fabien_pinckaers.jpg" />
-                            <div class="item">
-                                <img class="signature" src="/planner/static/src/img/fabien_signature.png" />
-                                <address>
-                                    For the Odoo Team,<br/>
-                                    Fabien Pinckaers, Founder
-                                </address>
-                            </div>
-                        </div>
-                    </div>
+              <div id="planner_page1" class="planner-page show">
+                <h1>Welcome.</h1>
+                <i><p>
+                  Congratulations on taking the leap to boost your sales
+                  activities!
+                </p><p>
+                  Odoo CRM will help you handle your sales funnel, bringing
+                  your sales vision to life in a simple and seamless way.
+                </p><p>
+                  Configuring Odoo CRM is easy. But you'll have bigger
+                  challenges like; structuring your sales process, building
+                  sales tools and training your teams.  That's why we developed
+                  this tool. We want you to succeed boosting your sales
+                  performance.
+                </p><p>
+                  If you get stuck, get in touch with our CRM experts, using
+                  the "Help" button on the top menu.  Every Odoo Enterprise
+                  customer benefit from an unlimited support, don't hesitate
+                  to abuse it. We are here to help you.
+                </p>
+                <p class="mb32">
+                  We wish you a fun time,
+                </p></i>
+                <img src="/planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
+                <div class="pull-left" style="margin-left: 10px">
+                    <img class="signature mb8" src="/planner/static/src/img/fabien_signature.png"/>
+                    <address>
+                        For the Odoo Team,<br/>
+                        Fabien Pinckaers, Founder
+                    </address>
                 </div>
+              </div>
 
                 <div id="planner_page2" class="planner-page">
                     <h1>Your expectations</h1>
@@ -365,7 +370,7 @@
                         <span class="fa fa-lightbulb-o fa-lg"/>
                         <li>A good pipeline should have between 5 and 7 stages</li>
                         <li>The first stage is usually "New" and the last one is "Won"</li>
-                        <li>Don't use stages to qualify opportunities, instead use tags</li>
+                        <li>Don't use stages to qualify opportunities, use tags instead</li>
                         <li>Every stage should be a step forward in the buyer's decision-making, not a task to carry out</li>
                     </div>
                     <strong>Great pipelines have stages aligned with the buyer's buying process, not your selling process:</strong>
@@ -373,19 +378,19 @@
                     <table class="table">
                         <thead>
                             <th></th>
-                            <th><h3><span class="fa fa-thumbs-o-up"/> <strong> Good</strong> Requirement</h3></th>
-                            <th><h3><span class="fa fa-thumbs-o-down"/> <strong> Bad</strong> Requirement</h3></th>
+                            <th><span class="fa fa-thumbs-o-down"/> <strong> Bad</strong> Requirement</th>
+                            <th><span class="fa fa-thumbs-o-up"/> <strong> Good</strong> Requirement</th>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="info"><strong>Stage:<br/>Qualified</strong></td>
-                                <td><strong>The customer</strong> understands their pain points,<br/>however they are still willing to continue in the buying process</td>
                                 <td><strong>You</strong>  understand the customer's needs, budget and pain points</td>
+                                <td><strong>The customer</strong> understands their pain points,<br/>however they are still willing to continue in the buying process</td>
                             </tr>
                             <tr>
                                 <td class="info"><strong>Stage:<br/>Negociation</strong></td>
-                                <td><strong>The prospect</strong> starts to discuss your offer</td>
                                 <td><strong>You</strong> call the prospect for a follow up on your offer</td>
+                                <td><strong>The prospect</strong> starts to discuss your offer</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1107,7 +1112,7 @@
         <field name="name">Sales strategy planner</field>
         <field name="view_id" ref="crm_planner"/>
         <field name="menu_id" ref="base.menu_base_partner"/>
-        <field name="progress">0</field>
+        <field name="progress">5</field>
         <field name="planner_application">planner_crm</field>
         <field name="tooltip_planner"><![CDATA[
             Plan your sales strategy: objectives, leads, KPIs, and much more !

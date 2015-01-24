@@ -102,7 +102,7 @@
             this.planner_launcher = parent;
             this.planner = planner;
             this.cookie_name = this.planner['planner_application'] + '_last_page';
-            this.set('progress', 0);
+            this.set('progress', 5);
         },
         start: function() {
             var self = this;
@@ -252,7 +252,7 @@
             // re compute the progress percentage
             var mark_btn = this.$(".oe_planner button[id^='mark_button']");
             var marked_btn = this.$(".oe_planner button[id^='mark_button'].fa-check-square-o");
-            var percent = parseInt((marked_btn.length / mark_btn.length * 100));
+            var percent = parseInt((marked_btn.length+1) / (mark_btn.length+1) * 100);
             this.set('progress', percent);
             this.planner.progress = percent;
             // save data and progress in database
