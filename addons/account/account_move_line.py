@@ -337,13 +337,6 @@ class account_move_line(osv.osv):
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
-            invoice_ids.append(invoice_id)
-        invoice_names = {}
-        for invoice_id, name in invoice_obj.name_get(cursor, user, invoice_ids, context=context):
-            invoice_names[invoice_id] = name
-        for line_id in res.keys():
-            invoice_id = res[line_id]
-            res[line_id] = invoice_id and (invoice_id, invoice_names[invoice_id]) or False
         return res
 
     def name_get(self, cr, uid, ids, context=None):
@@ -370,50 +363,13 @@ class account_move_line(osv.osv):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
-    def _invoice_search(self, cursor, user, obj, name, args, context=None):
-        if not args:
-            return []
-        invoice_obj = self.pool.get('account.invoice')
-        i = 0
-        while i < len(args):
-            fargs = args[i][0].split('.', 1)
-            if len(fargs) > 1:
-                args[i] = (fargs[0], 'in', invoice_obj.search(cursor, user,
-                    [(fargs[1], args[i][1], args[i][2])]))
-                i += 1
-                continue
-            if isinstance(args[i][2], basestring):
-                res_ids = invoice_obj.name_search(cursor, user, args[i][2], [],
-                        args[i][1])
-                args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
-            i += 1
-        qu1, qu2 = [], []
-        for x in args:
-            if x[1] != 'in':
-                if (x[2] is False) and (x[1] == '='):
-                    qu1.append('(i.id IS NULL)')
-                elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
-                    qu1.append('(i.id IS NOT NULL)')
-                else:
-                    qu1.append('(i.id %s %s)' % (x[1], '%s'))
-                    qu2.append(x[2])
-            elif x[1] == 'in':
-                if len(x[2]) > 0:
-                    qu1.append('(i.id IN (%s))' % (','.join(['%s'] * len(x[2]))))
-                    qu2 += x[2]
-                else:
-                    qu1.append(' (False)')
-        if qu1:
-            qu1 = ' AND' + ' AND'.join(qu1)
-        else:
-            qu1 = ''
-        cursor.execute('SELECT l.id ' \
-                'FROM account_move_line l, account_invoice i ' \
-                'WHERE l.move_id = i.move_id ' + qu1, qu2)
-        res = cursor.fetchall()
-        if not res:
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+    def _get_move_line_from_invoice(self, cr, uid, ids, context=None):
+        res = []
+        for invoice in self.browse(cr, uid, ids, context=context):
+            if invoice.move_id:
+                for line in invoice.move_id.line_id:
+                    res.append(line.id)
+        return res
 
     def _get_move_lines(self, cr, uid, ids, context=None):
         result = []
@@ -488,7 +444,9 @@ class account_move_line(osv.osv):
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
                     "this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, string='Invoice',
-            type='many2one', relation='account.invoice', fnct_search=_invoice_search),
+            type='many2one', relation='account.invoice', store={
+                'account.invoice': (_get_move_line_from_invoice, ['move_id'], 10)
+                }),
         'account_tax_id':fields.many2one('account.tax', 'Tax', copy=False),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company',
