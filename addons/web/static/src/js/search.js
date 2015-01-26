@@ -509,6 +509,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     toggle_visibility: function (is_visible) {
         this.$el.toggle(!this.headless && is_visible);
         this.$buttons && this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
+        if (!this.headless && is_visible) {
+            this.$('div.oe_searchview_input').last().focus();
+        }
     },
     toggle_buttons: function (is_visible) {
         this.visible_filters = is_visible || !this.visible_filters;
