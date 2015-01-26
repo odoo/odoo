@@ -87,9 +87,7 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
         template:'ErrorPopupWidget',
         show: function(options){
             this._super(options);
-
-            $('body').append('<audio src="/point_of_sale/static/src/sounds/error.wav" autoplay="true"></audio>');
-
+            this.gui.play_sound('error');
         },
     });
     module.Gui.define_popup({name:'error', widget:module.ErrorPopupWidget});
@@ -171,9 +169,6 @@ openerp.point_of_sale.load_popups = function load_popups(instance, module) {
 
             this.renderElement();
             this.$('input,textarea').focus();
-            
-            this.$('.button.confirm').click(function(){
-            });
         },
         click_confirm: function(){
             var value = this.$('input,textarea').val();

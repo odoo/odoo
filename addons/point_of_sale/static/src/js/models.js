@@ -912,6 +912,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         // product's unity of measure properties. Quantities greater than zero will not get 
         // rounded to zero
         set_quantity: function(quantity){
+            this.order.assert_editable();
             if(quantity === 'remove'){
                 this.order.remove_orderline(this);
                 return;
@@ -991,6 +992,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             }
         },
         merge: function(orderline){
+            this.order.assert_editable();
             this.set_quantity(this.get_quantity() + orderline.get_quantity());
         },
         export_as_JSON: function() {
@@ -1020,6 +1022,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
+            this.order.assert_editable();
             this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
             this.trigger('change',this);
         },
@@ -1148,6 +1151,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
     module.Paymentline = Backbone.Model.extend({
         initialize: function(attributes, options) {
             this.pos = options.pos;
+            this.order = options.order;
             this.amount = 0;
             this.selected = false;
             if (options.json) {
@@ -1164,6 +1168,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
+            this.order.assert_editable();
             this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
             this.trigger('change',this);
         },
@@ -1228,6 +1233,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.orderlines     = new module.OrderlineCollection();
             this.paymentlines   = new module.PaymentlineCollection(); 
             this.pos_session_id = this.pos.pos_session.id;
+            this.finalized      = false; // if true, cannot be modified.
 
             this.set({ client: null });
 
@@ -1285,7 +1291,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var paymentlines = json.statement_ids;
             for (var i = 0; i < paymentlines.length; i++) {
                 var paymentline = paymentlines[i][2];
-                var newpaymentline = new module.Paymentline({},{pos: this.pos, json: paymentline});
+                var newpaymentline = new module.Paymentline({},{pos: this.pos, order: this, json: paymentline});
                 this.paymentlines.add(newpaymentline);
 
                 if (i === paymentlines.length - 1) {
@@ -1434,8 +1440,14 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         get_name: function() {
             return this.name;
         },
+        assert_editable: function() {
+            if (this.finalized) {
+                throw new Error('Finalized Order cannot be modified');
+            }
+        },
         /* ---- Order Lines --- */
         add_orderline: function(line){
+            this.assert_editable();
             if(line.order){
                 line.order.remove_orderline(line);
             }
@@ -1459,10 +1471,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return this.orderlines.at(this.orderlines.length -1);
         },
         remove_orderline: function( line ){
+            this.assert_editable();
             this.orderlines.remove(line);
             this.select_orderline(this.get_last_orderline());
         },
         add_product: function(product, options){
+            this.assert_editable();
             options = options || {};
             var attr = JSON.parse(JSON.stringify(product));
             attr.pos = this.pos;
@@ -1517,7 +1531,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         /* ---- Payment Lines --- */
         add_paymentline: function(cashregister) {
-            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos: this.pos});
+            this.assert_editable();
+            var newPaymentline = new module.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
             if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
                 newPaymentline.set_amount( Math.max(this.get_due(),0) );
             }
@@ -1529,6 +1544,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return this.paymentlines.models;
         },
         remove_paymentline: function(line){
+            this.assert_editable();
             if(this.selected_paymentline === line){
                 this.select_paymentline(undefined);
             }
@@ -1704,6 +1720,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         /* ---- Invoice --- */
         set_to_invoice: function(to_invoice) {
+            this.assert_editable();
             this.to_invoice = to_invoice;
         },
         is_to_invoice: function(){
@@ -1712,6 +1729,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         /* ---- Client / Customer --- */
         // the client related to the current order.
         set_client: function(client){
+            this.assert_editable();
             this.set('client',client);
         },
         get_client: function(){
