@@ -145,31 +145,3 @@ class Versioning_Controller(Website):
             exp_obj = request.env['website_version.experiment']
             exp_obj.create(vals)
         return existing_experiment
-
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False, **kw):
-        result = Website.customize_template_get(self, key, full=full, bundles=bundles, **kw)
-        check = []
-        res = []
-        for data in result:
-            if data['name'] not in check:
-                check.append(data['name'])
-                res.append(data)
-        return res
-
-    @http.route('/website/get_view_translations', type='json', auth='public', website=True)
-    def get_view_translations(self, xml_id, lang=None):
-        lang = lang or request.context.get('lang')
-        view = request.env['ir.ui.view'].browse(xml_id)
-        view_list = request.env['ir.ui.view'].search([('key', '=', view.key), '|', ('website_id', '=', view.website_id.id), ('website_id', '=', False)])
-        views_ids = []
-        for v in view_list:
-            views = self.customize_template_get(v.id, full=True)
-            views_ids += [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        irt = request.env['ir.translation']
-        element_list = irt.search_read(domain, ['id', 'res_id', 'value', 'state', 'gengo_translation'])
-        for element in element_list:
-            if element['res_id'] in view_list:
-                element['res_id'] = xml_id
-        return element_list

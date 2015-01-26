@@ -1049,14 +1049,17 @@ class view(osv.osv):
                 self._translate_qweb(cr, uid, node, translate_func, context)
 
     def translate_qweb(self, cr, uid, id_, arch, lang, context=None):
+        view_ids = []
         view = self.browse(cr, uid, id_, context=context)
-        fallback_view_id = None
+        if view:
+            view_ids.append(view.id)
         if view.mode == 'primary' and view.inherit_id.mode == 'primary':
             # template is `cloned` from parent view
-            fallback_view_id = view.inherit_id.id
+            if view.inherit_id.id:
+                view_ids.append(view.inherit_id.id)
         Translations = self.pool['ir.translation']
         def translate_func(term):
-            trans = Translations._get_source(cr, uid, 'website', 'view', lang, term, (view.id, fallback_view_id))
+            trans = Translations._get_source(cr, uid, 'website', 'view', lang, term, view_ids)
             return trans
         self._translate_qweb(cr, uid, arch, translate_func, context=context)
         return arch
