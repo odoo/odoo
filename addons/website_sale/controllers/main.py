@@ -3,6 +3,7 @@ import werkzeug
 
 from openerp import SUPERUSER_ID
 from openerp import http
+from openerp import tools
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
@@ -509,12 +510,20 @@ class website_sale(http.Controller):
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        # Validation
         error = dict()
+        error_message = []
+
+        # Validation
         for field_name in self.mandatory_billing_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
+        # email validation
+        if data.get('email') and not tools.single_email_re.match(data.get('email')):
+            error["email"] = 'error'
+            error_message.append(_('Invalid Email! Please enter a valid email address.'))
+
+        # vat validation
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
             if request.website.company_id.vat_check_vies:
                 # force full VIES online check
@@ -532,7 +541,11 @@ class website_sale(http.Controller):
                 if not data.get(field_name):
                     error[field_name] = 'missing'
 
-        return error
+        # error message for empty required fields
+        if [err for err in error.values() if err == 'missing']:
+            error_message.append(_('Some required fields are empty.'))
+
+        return error, error_message
 
     def checkout_form_save(self, checkout):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -624,7 +637,7 @@ class website_sale(http.Controller):
 
         values = self.checkout_values(post)
 
-        values["error"] = self.checkout_form_validate(values["checkout"])
+        values["error"], values["error_message"] = self.checkout_form_validate(values["checkout"])
         if values["error"]:
             return request.website.render("website_sale.checkout", values)
 
