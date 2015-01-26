@@ -874,6 +874,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.price = json.price_unit;
             this.set_discount(json.discount);
             this.set_quantity(json.qty);
+            this.id    = json.id;
+            orderline_id = Math.max(this.id+1,orderline_id)
         },
         clone: function(){
             var orderline = new module.Orderline({},{
@@ -997,6 +999,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().id,
+                id: this.id,
             };
         },
         //used to create a json of the ticket, to be sent to the printer
