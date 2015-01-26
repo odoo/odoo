@@ -287,7 +287,7 @@
           <div class="row">
             <div class="col-sm-4">
                 <ol class="breadcrumb">
-                    <li><a t-att-href="keep(category=0)" onclick="history.go(-1); return false;">Products</a></li>
+                    <li><a t-att-href="keep(category=0)">Products</a></li>
                     <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
@@ -351,17 +351,13 @@
 <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
   <xpath expr="//a[@id='add_to_cart']" position="before">
     <div class="css_quantity input-group oe_website_spinner">
-        <span class="input-group-addon">
-            <a t-attf-href="#" class="mb8 js_add_cart_json">
-                <i class="fa fa-minus"></i>
-            </a>
-        </span>
-        <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
-        <span class="input-group-addon">
-            <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
-                <i class="fa fa-plus"></i>
-            </a>
-        </span>
+        <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+            <i class="fa fa-minus"></i>
+        </a>
+        <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+        <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+            <i class="fa fa-plus"></i>
+        </a>
     </div>
   </xpath>
 </template>
@@ -638,20 +634,16 @@
                               </td>
                               <td class="text-center">
                                   <div class="input-group oe_website_spinner">
-                                      <span class="input-group-addon">
-                                          <a t-attf-href="#" class="mb8 js_add_cart_json" data-no-instant="">
-                                              <i class="fa fa-minus"></i>
-                                          </a>
-                                      </span>
+                                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
+                                          <i class="fa fa-minus"></i>
+                                      </a>
                                       <input type="text" class="js_quantity form-control"
-                                          t-att-data-line-id="line.id" 
+                                          t-att-data-line-id="line.id"
                                           t-att-data-product-id="line.product_id.id"
                                           t-att-value="int(line.product_uom_qty)"/>
-                                      <span class="input-group-addon">
-                                          <a t-attf-href="#" class="mb8 float_left js_add_cart_json" data-no-instant="">
-                                              <i class="fa fa-plus"></i>
-                                          </a>
-                                      </span>
+                                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" data-no-instant="">
+                                          <i class="fa fa-plus"></i>
+                                      </a>
                                   </div>
                               </td>
                           </tr>
@@ -1083,61 +1075,69 @@
           </ul>
           <h1 class="mb32">Order <em t-field="order.name"/> Confirmed</h1>
           <div class="row">
-              <div class="col-md-8 oe_cart">
-                  <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
-                  </div>
-                  <h3 class="mt32"><strong>Order Details:</strong></h3>
-                  <table class="table">
-                      <thead>
-                          <tr>
-                              <th>Products</th>
-                              <th>Quantity</th>
-                              <th class="text-right" width="100">Unit Price</th>
-                              <th class="text-right" width="100">Subtotal</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr t-foreach="order.order_line" t-as="line">
-                              <td>
-                                  <div>
-                                      <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                          <strong t-esc="line.product_id.name_get()[0][1]"/>
-                                      </a>
-                                  </div>
-                                  <div class="text-muted" t-field="line.name"/>
-                              </td>
-                              <td>
-                                  <div id="quote_qty">
-                                      <span t-field="line.product_uom_qty"/>
-                                      <span t-field="line.product_uom"/>
-                                  </div>
-                              </td>
-                              <td>
-                                  <strong class="text-right">
-                                      <div t-field="line.price_unit"
-                                          t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
-                                  </strong>
-                              </td>
-                              <td>
-                                  <div class="text-right"
-                                      t-field="line.price_subtotal"
-                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td></td><td></td>
-                              <td class="text-right"><strong>Total:</strong></td>
-                              <td class="text-right">
-                                  <strong t-field="order.amount_total"
-                                      t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-                  <div class="clearfix"/>
-                  <div class="oe_structure"/>
+              <div class="col-md-8">
+                <div class="thanks_msg">
+                  <h2>Thank you for your order.
+                    <a class="btn btn-primary pull-right" href="/shop/print" target="_blank">
+                      <i class="fa fa-print"></i> Print
+                    </a>
+                  </h2>
+                  <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id"></div>
+                </div>
+                <div class="oe_cart">
+                    <h3 class="mt32 text-left"><strong>Order Details:</strong></h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Products</th>
+                                <th>Quantity</th>
+                                <th class="text-right" width="100">Unit Price</th>
+                                <th class="text-right" width="100">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="order.order_line" t-as="line">
+                                <td>
+                                    <div>
+                                        <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                            <strong t-esc="line.product_id.name_get()[0][1]"/>
+                                        </a>
+                                    </div>
+                                    <div class="text-muted" t-field="line.name"/>
+                                </td>
+                                <td>
+                                    <div id="quote_qty">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span t-field="line.product_uom"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong class="text-right">
+                                        <div t-field="line.price_unit"
+                                            t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                    </strong>
+                                </td>
+                                <td>
+                                    <div class="text-right"
+                                        t-field="line.price_subtotal"
+                                        t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td>
+                                <td class="text-right"><strong>Total:</strong></td>
+                                <td class="text-right">
+                                    <strong t-field="order.amount_total"
+                                        t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="clearfix"/>
+                    <div class="oe_structure"/>
+                </div>
               </div>
-              <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
+              <div class="col-md-3 col-md-offset-1 text-muted">
                 <h4>Bill To:</h4>
                 <div t-field="order.partner_invoice_id" t-field-options='{
                     "widget": "contact",
@@ -1163,8 +1163,31 @@
   </t>
 </template>
 
-<!-- Page Shop my cart and payment total -->
+<template id="order_state_message" name="Order State Message">
+    <t t-if="(not_order and state == 'error') or (not tx_ids and state == 'error')">
+      <p>There seems to be an error with your request.</p>
+    </t>
+    <t t-if="not tx_ids and state == 'done'">
+      <p>Your order has been confirmed, thank you for your loyalty.</p>
+    </t>
+    <t t-if="tx_ids and state == 'done'">
+      <p>Your payment has been received.</p>
+    </t>
+    <t t-if="tx_ids and state == 'cancel'">
+      <p>The payment seems to have been canceled.</p>
+    </t>
+    <t t-if="tx_ids and state == 'pending' and validation == 'manual'">
+      <p>Your transaction is waiting confirmation.</p><br />
+      <t t-if="tx_post_msg">
+        <div class="hidden-print"><t t-raw="tx_post_msg"/></div>
+      </t>
+    </t>
+    <t t-if="tx_ids and state not in ['done', 'cancel', 'pending']">
+      <p>Your transaction is waiting confirmation.</p>
+    </t>
+</template>
 
+<!-- Page Shop my cart and payment total -->
 <template id="total">
     <table class='pull-right mb16' id="cart_total" t-if="website_sale_order">
         <thead>
@@ -1356,7 +1379,7 @@
 <template id="sales_backend_access" inherit_id='website_sale.orders_followup' customize_show="True" name="Backend Access">
   <xpath expr="//div[@class='container oe_website_sale']" position="before">
     <h4 class="text-muted text-center mt64 mb64">
-      If you wish to access the complete application to manage your orders, you can follow 
+      If you wish to access the complete application to manage your orders, you can follow
       <a href="/web#action=portal_sale.action_orders_portal">this link</a>.
     </h4>
   </xpath>

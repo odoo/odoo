@@ -413,7 +413,7 @@ class website_sale(http.Controller):
                         checkout.update( self.checkout_parse("billing", order.partner_id) )
         else:
             checkout = self.checkout_parse('billing', data)
-            try: 
+            try:
                 shipping_id = int(shipping_id)
             except (ValueError, TypeError):
                 pass
@@ -757,48 +757,33 @@ class website_sale(http.Controller):
         order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         assert order.id == request.session.get('sale_last_order_id')
 
+        values = {}
+        flag = False
         if not order:
-            return {
-                'state': 'error',
-                'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
-            }
-
-        tx_ids = request.registry['payment.transaction'].search(
-            cr, SUPERUSER_ID, [
-                '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
-            ], context=context)
-
-        if not tx_ids:
-            if order.amount_total:
-                return {
-                    'state': 'error',
-                    'message': '<p>%s</p>' % _('There seems to be an error with your request.'),
-                }
-            else:
-                state = 'done'
-                message = '<h2>%s</h2>' % _('Your order has been confirmed, thank you for your loyalty.')
-                validation = None
+            values.update({'not_order': True, 'state': 'error'})
         else:
-            tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
-            state = tx.state
-            message = '<h2>%s</h2>' % _('Thank you for your order.')
-            if state == 'done':
-                message += '<p>%s</p>' % _('Your payment has been received.')
-            elif state == 'cancel':
-                message += '<p>%s</p>' % _('The payment seems to have been canceled.')
-            elif state == 'pending' and tx.acquirer_id.validation == 'manual':
-                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
-                if tx.acquirer_id.post_msg:
-                    message += tx.acquirer_id.post_msg
-            else:
-                message += '<p>%s</p>' % _('Your transaction is waiting confirmation.')
-            validation = tx.acquirer_id.validation
+            tx_ids = request.registry['payment.transaction'].search(
+                cr, SUPERUSER_ID, [
+                    '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
+                ], context=context)
 
-        return {
-            'state': state,
-            'message': message,
-            'validation': validation
-        }
+            if not tx_ids:
+                if order.amount_total:
+                    values.update({'tx_ids': False, 'state': 'error'})
+                else:
+                    values.update({'tx_ids': False, 'state': 'done', 'validation': None})
+            else:
+                tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
+                state = tx.state
+                flag = True if state == 'pending' and tx.acquirer_id.validation == 'automatic' else False
+                values.update({
+                    'tx_ids': True,
+                    'state': state,
+                    'validation' : tx.acquirer_id.validation,
+                    'tx_post_msg': tx.acquirer_id.post_msg or None
+                })
+
+        return {'recall': flag, 'message': request.website._render("website_sale.order_state_message", values)}
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
@@ -869,6 +854,17 @@ class website_sale(http.Controller):
             return request.redirect('/shop')
 
         return request.website.render("website_sale.confirmation", {'order': order})
+
+    @http.route(['/shop/print'], type='http', auth="public", website=True)
+    def print_saleorder(self):
+        cr, uid, context = request.cr, SUPERUSER_ID, request.context
+        sale_order_id = request.session.get('sale_last_order_id')
+        if sale_order_id:
+            pdf = request.registry['report'].get_pdf(cr, uid, [sale_order_id], 'sale.report_saleorder', data=None, context=context)
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        else:
+            return request.redirect('/shop')
 
     #------------------------------------------------------
     # Edit

@@ -63,7 +63,7 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var $input = $link.parent().parent().find("input");
+        var $input = $link.parent().find("input");
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
