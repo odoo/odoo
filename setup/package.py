@@ -246,9 +246,14 @@ def _prepare_build_dir(o, win32=False):
     if not win32:
         cmd += ['--exclude', 'setup/win32']
     system(cmd + ['%s/' % o.odoo_dir, o.build_dir])
-    for i in glob(join(o.build_dir, 'addons/*')):
-        if i.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
-            shutil.move(i, join(o.build_dir, 'openerp/addons'))
+    try:
+        for addon_path in glob(join(o.build_dir, 'addons/*')):
+            if addon_path.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
+                shutil.move(addon_path, join(o.build_dir, 'openerp/addons'))
+    except shutil.Error:
+        # Thrown when the add-on is already in openerp/addons (if _prepare_build_dir
+        # has already been called once)
+        pass
 
 def build_tgz(o):
     system(['python2', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
