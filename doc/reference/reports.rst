@@ -1,3 +1,5 @@
+.. highlight:: xml
+
 ============
 QWeb Reports
 ============
@@ -5,14 +7,14 @@ QWeb Reports
 
 Reports are written in HTML/QWeb, like all regular views in Odoo. You can use the usual QWeb control flow tools like t-if, t-foreach, etc. The PDF rendering is done by a tool outside the Odoo framework, **Wkhtmltopdf**.
 
-If you wish to create a report on a certain model, you will need to define this :ref:`report` and the :ref:`templates` it will use. If you wish, you can also specify a specific :ref:`paper_formats` for this report. Finally, if you wish to access more than your model, you can define a :ref:`custom_reports` class that gives you access to more models and records in the template.
+If you want to create a report on a certain model, you will need to define this :ref:`reference/reports/report` and the :ref:`reference/reports/templates` it will use. If you wish, you can also specify a specific :ref:`reference/reports/paper_formats` for this report. Finally, if you need access to more than your model, you can define a :ref:`reference/reports/custom_reports` class that gives you access to more models and records in the template.
 
-.. _report:
+.. _reference/reports/report:
 
 Report 
 ======
 
-Every report must be declared by an ir.actions.report.xml record. Once declared, the report will be automatically included in the "Print" menu in the form view of the relevent object, or when you select elements in a list view. In this record, you can specify:
+Every report must be declared by a :ref:`reference/actions/report` record. Once declared, the report will be automatically included in the "Print" menu in the form view of the relevent object, or when you select elements in a list view. In this record, you can specify:
 
 ``name`` (mandatory)
     only useful as a mnemonic/description of the report when looking for one in a list of some sort
@@ -22,14 +24,14 @@ Every report must be declared by an ir.actions.report.xml record. Once declared,
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
 ``report_name``
     the name of your report (which will be the name of the PDF output)
-``groups_id``
+``groups``
     :class:`~openerp.fields.Many2many` field to the groups allowed to view/use the current report
-``paperformat_id``
-    :class:`~openerp.fields.Many2many` field to the paperformat you wish to use for this report (if not specified, the company format will be used)
+``paperformat``
+    :class:`~openerp.fields.One2many` field to the paperformat you wish to use for this report (if not specified, the company format will be used)
 
-    .. warning:: The paperformat_id attribute cannot currently be declared in the report definition but must be added as a separate record:
-        
-        .. code-block:: xml
+    .. warning:: The paperformat attribute cannot currently be declared in the report definition but must be added as a separate record:
+
+         .. code-block :: xml  
 
             <record id="<report_id>" model="ir.actions.report.xml">
                 <field name="paperformat_id" ref="<paperformat>"/>
@@ -42,9 +44,7 @@ Every report must be declared by an ir.actions.report.xml record. Once declared,
     python expression that defines the name of the report; the record is acessible as the variable ``object``
 
 
-Example:
-
-.. code-block:: xml
+Example::
 
     <report 
         id="account_invoices"
@@ -58,7 +58,7 @@ Example:
             ('INV'+(object.number or '').replace('/','')+'.pdf')"
     />
 
-.. _templates:
+.. _reference/reports/templates:
 
 Report template
 ===============
@@ -67,7 +67,7 @@ Report template
 Minimal viable template
 -----------------------
 
-.. code-block:: xml
+A minimal template would look like::
 
     <template id="report_invoice">
         <t t-call="report.html_container">
@@ -84,7 +84,7 @@ Minimal viable template
 
 Calling **external_layout** will add the default header and footer on your report. The PDF body 
 will be the content inside the ``<div class="page">``. The template's ``id``  must be the name 
-specified in the report declaration; for example **account.report_invoice** for the above 
+specified in the report declaration; for example ``account.report_invoice`` for the above 
 report. Since this is a QWeb template, you can access all the fields of the ``docs`` objects 
 received by the template.
 
@@ -120,11 +120,9 @@ If you wish to translate reports (to the language of a partner, for example), yo
 * The main report template
 * The translatable document
 
-You can then call translate_doc from your main template to obtain the translated document. If you wish to see the details of the translation in the backend, you can go to Settings > Reports > Report > <report_name> > Search associated QWeb views > <translatable_document> > Associated translations.
+You can then call translate_doc from your main template to obtain the translated document. If you wish to see the details of the translation in the backend, you can go to :menuselection:`Settings --> Reports --> Report --> <report_name> --> Search associated QWeb views --> <translatable_document> --> Associated translations`.
 
-For example, let's look at the Sale Order report from the Sale module:
-
-.. code-block:: xml
+For example, let's look at the Sale Order report from the Sale module::
 
     <!-- Main template -->
     <template id="sale.report_saleorder">
@@ -152,7 +150,7 @@ For example, let's look at the Sale Order report from the Sale module:
     </template>
 
 
-The main template calls translate_doc with ``partner_id.lang`` as a parameter, which means it uses a custom report model (see :ref:`custom_reports` ) to access a res_partner record.
+The main template calls translate_doc with ``partner_id.lang`` as a parameter, which means it uses a custom report model (see :ref:`reference/reports/custom_reports` ) to access a res_partner record.
 
 Barcodes
 --------
@@ -174,9 +172,20 @@ Useful Remarks
 --------------
 * Twitter Bootstrap and FontAwesome classes can be used in your report template
 * Local CSS can be put directly in the template
-* Global CSS can be put in the report.style template (by defining a template with ``inherit_id`` set to *report.style*)
+* Global CSS can be inserted in the main report layout by inheriting its template and inserting your CSS
+    Example::
 
-.. _paper_formats:
+        <template id="report_saleorder_style" inherit_id="report.layout">
+            <xpath expr="//style" position="after">
+                <style type="text/css">
+                    .example-css-class {
+                        background-color: red;
+                    }
+                </style>
+            </xpath>
+        </template>
+
+.. _reference/reports/paper_formats:
 
 Paper Format
 ============
@@ -202,10 +211,7 @@ Paperformats are records of report.paperformat and can contain the following att
 ``header_spacing`` 
     header spacing in mm
 
-Example:
-
-
-.. code-block:: xml
+Example::
 
     <record id="paperformat_frenchcheck" model="report.paperformat">
         <field name="name">French Bank Check</field>
@@ -223,13 +229,13 @@ Example:
         <field name="dpi">80</field>
     </record>
 
-.. _custom_reports:
+.. _reference/reports/custom_reports:
 
 Custom Reports
 ==============
 
 The report model has a default ``get_html`` function that looks for a model 
-named **report.<<module.report_name>>**. If it exists, it will use it to call the QWeb engine; otherwise 
+named :samp:`report.{module.report_name}`. If it exists, it will use it to call the QWeb engine; otherwise 
 a generic function will be used. If you wish to customize your reports by including more 
 things in the template (like records of others models, for example), you can define this 
 model, overwrite the function ``render_html`` and pass objects in the ``docargs`` dictionnary:
@@ -240,33 +246,25 @@ model, overwrite the function ``render_html`` and pass objects in the ``docargs`
 
 
     class ParticularReport(models.AbstractModel):
-        _name = 'report.<<module.reportname>>'
+        _name = 'report.module.report_name'
         @api.multi
         def render_html(self, data=None):
             report_obj = self.env['report']
-            report = report_obj._get_report_from_name('<<module.reportname>>')
+            report = report_obj._get_report_from_name('module.report_name')
             docargs = {
                 'doc_ids': self._ids,
                 'doc_model': report.model,
                 'docs': self,
             }
-            return report_obj.render('<<module.reportname>>', docargs)
+            return report_obj.render('module.report_name', docargs)
 
 
 Reports are web pages
 =====================
 Reports are dynamically generated by the report module and can be accessed directly via URL:
 
-For example, you can access a Sale Order report in html mode:
+For example, you can access a Sale Order report in html mode by going to \http://<server-address>/report/html/sale.report_saleorder/38
 
-.. code-block:: html
-
-    [...]/report/html/sale.report_saleorder/38
-
-Or in pdf:
-
-.. code-block:: html
-
-    [...]/report/pdf/sale.report_saleorder/38
+Or you can access the pdf version at \http://<server-address>/report/pdf/sale.report_saleorder/38
 
 .. _time: https://docs.python.org/2/library/time.html
