@@ -44,7 +44,6 @@ openerp.account = function (instance) {
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
             this.map_currency_id_rounding = {};
-            this.map_tax_id_amount = {};
             this.presets = {};
             // We'll need to get the code of an account selected in a many2one (whose value is the id)
             this.map_account_id_code = {};
@@ -210,13 +209,6 @@ openerp.account = function (instance) {
                         _.each(data, function(o) { self.map_currency_id_rounding[o.id] = o.rounding });
                     });
 
-                // Create a dict tax id -> amount
-                new instance.web.Model("account.tax")
-                    .query(['id', 'amount'])
-                    .all().then(function(data) {
-                        _.each(data, function(o) { self.map_tax_id_amount[o.id] = o.amount });
-                    });
-            
                 new instance.web.Model("ir.model.data")
                     .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
                     .then(function(data) {
@@ -689,7 +681,6 @@ openerp.account = function (instance) {
             this.model_tax = new instance.web.Model("account.tax");
             this.map_currency_id_rounding = this.getParent().map_currency_id_rounding;
             this.map_account_id_code = this.getParent().map_account_id_code;
-            this.map_tax_id_amount = this.getParent().map_tax_id_amount;
             this.presets = this.getParent().presets;
             this.is_valid = true;
             this.is_consistent = true; // Used to prevent bad server requests
@@ -1438,10 +1429,10 @@ openerp.account = function (instance) {
             var deferred_tax = new $.Deferred();
             if (elt === self.tax_id_field || elt === self.amount_field) {
                 var amount = self.amount_field.get("value");
-                var tax = self.map_tax_id_amount[self.tax_id_field.get("value")];
-                if (amount && tax) {
+                var tax_id = self.tax_id_field.get("value");
+                if (amount && tax_id) {
                     deferred_tax = $.when(self.model_tax
-                        .call("compute_for_bank_reconciliation", [self.tax_id_field.get("value"), amount]))
+                        .call("compute_for_bank_reconciliation", [tax_id, amount]))
                         .then(function(data){
                             line_created_being_edited[0].amount_with_tax = line_created_being_edited[0].amount;
                             line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);

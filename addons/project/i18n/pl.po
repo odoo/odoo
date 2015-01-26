@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
 "PO-Revision-Date: 2014-09-01 11:27+0000\n"
 "Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
 "<monika.grzelak@openglobe.pl>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:29+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:11+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -449,6 +449,7 @@ msgid "Cumulative Flow"
 msgstr "Przepływ kumulacyjny"
 
 #. module: project
+#: view:project.project:project.edit_project
 #: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Klient"
@@ -867,6 +868,12 @@ msgstr ""
 "jest zainstalowany)"
 
 #. module: project
+#: code:addons/project/project.py:201
+#, python-format
+msgid "Internal project: all employees can access"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
@@ -1196,6 +1203,12 @@ msgid "Privacy / Visibility"
 msgstr "Prywatność / Widoczność"
 
 #. module: project
+#: code:addons/project/project.py:202
+#, python-format
+msgid "Private project: followers Only"
+msgstr ""
+
+#. module: project
 #: field:project.project,progress_rate:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
@@ -1325,6 +1338,12 @@ msgstr ""
 "-Instaluje moduł project_issue_sheet."
 
 #. module: project
+#: code:addons/project/project.py:200
+#, python-format
+msgid "Public project"
+msgstr ""
+
+#. module: project
 #: view:project.project:project.edit_project
 msgid "Re-open project"
 msgstr "Ponownie otwórz projekt"
@@ -1451,6 +1470,11 @@ msgstr "Etapy"
 #: view:project.task.type:project.task_type_search
 msgid "Stages common to all projects"
 msgstr "Etapy wspólne dla wsystkich projektów"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Start Date"
+msgstr "Data Rozpoczęcia"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1845,6 +1869,11 @@ msgid "Usability"
 msgstr "Użyteczność"
 
 #. module: project
+#: view:project.project:project.edit_project
+msgid "Use Tasks"
+msgstr ""
+
+#. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr "Stosuj w zadaniu współdzielony notatnik"
@@ -1950,6 +1979,12 @@ msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
 
 #. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "or"
+msgstr "lub"
+
+#. module: project
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
@@ -1966,9 +2001,3 @@ msgstr "nieznane"
 
 #~ msgid "Users"
 #~ msgstr "Użytkownicy"
-
-#~ msgid "Assignation date"
-#~ msgstr "Data przypisania"
-
-#~ msgid "Reviewers"
-#~ msgstr "Nadzorujący"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-16 19:27+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2014-11-19 21:59+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-17 06:26+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:14+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -365,7 +365,7 @@ msgstr ""
 "visszavonta azt."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:185
+#: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
 msgstr " Vétel"
@@ -374,7 +374,7 @@ msgstr " Vétel"
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr "# Vásárlások"
+msgstr "# Beszerzések"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
@@ -548,7 +548,7 @@ msgid ""
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
 "                The quotation contains the history of the "
-"discussion/negociation\n"
+"discussion/negotiation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
@@ -558,21 +558,6 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson árajánlat kérés létrehozásához.\n"
-"              </p><p>\n"
-"                Az árajánlat kérés magában foglalja a beszállítóval "
-"folytatott \n"
-"                megbeszélés/ártárgyalás előzményt. Ha egyszer "
-"visszaigazolt,\n"
-"                akkor az árajánlat kérés át lesz alakítva beszerzési "
-"megrendeléssé.\n"
-"              </p><p>\n"
-"                A legtöbb beszerzési megrendelés árajánlatkérése az Odoo "
-"rendszer\n"
-"                által automatikusan létrehozott a készlet igények alapján.\n"
-"              </p>\n"
-"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -842,8 +827,8 @@ msgid "Bid Valid Until"
 msgstr "Árajánlat licit érvényes eddig"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1160
-#: code:addons/purchase/stock.py:179
+#: code:addons/purchase/purchase.py:1171
+#: code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
 msgstr "Vásárlás"
@@ -876,7 +861,15 @@ msgid "Can be Purchased"
 msgstr "Beszerezhető"
 
 #. module: purchase
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:1189
+#, python-format
+msgid ""
+"Can not cancel this procurement as the related purchase order has been "
+"confirmed already.  Please cancel the purchase order first. "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Nem talál általános beszerzési útvonalat."
@@ -897,7 +890,7 @@ msgid "Cancelled"
 msgstr "Visszavont"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -933,7 +926,7 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:506
+#: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Compose Email"
 msgstr "Email írás"
@@ -944,7 +937,7 @@ msgid "Configuration"
 msgstr "Beállítás"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid "Configuration Error!"
 msgstr "Beállítási hiba!"
@@ -1014,7 +1007,7 @@ msgid "Date Approved"
 msgstr "Dátum jóváhagyása"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Date Req."
 msgstr "Kérés dátuma"
 
@@ -1069,7 +1062,7 @@ msgid "Default invoicing control method"
 msgstr "alapértelmezett számlázási mód"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:546
+#: code:addons/purchase/purchase.py:555
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -1077,7 +1070,7 @@ msgstr ""
 "\"%s\" (id:%d)."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:590
+#: code:addons/purchase/purchase.py:599
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr "Beszerzési napló meghatározása ehhez a vállalathoz: \"%s\" (id:%d)."
@@ -1104,8 +1097,8 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,name:0
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Description"
 msgstr "Leírás"
 
@@ -1147,7 +1140,7 @@ msgid "Draft PO"
 msgstr "Tervezet beszerzési megrendelés"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1366
+#: code:addons/purchase/purchase.py:1384
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Beszerzési megrendelés tervezet létrehozva"
@@ -1169,11 +1162,13 @@ msgid "Email composition wizard"
 msgstr "Email összeállító varázsló"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
-#: code:addons/purchase/purchase.py:529
-#: code:addons/purchase/purchase.py:546
-#: code:addons/purchase/purchase.py:589
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:159
+#: code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:538
+#: code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:598
+#: code:addons/purchase/purchase.py:1188
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -1188,7 +1183,7 @@ msgstr "Hiba"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,minimum_planned_date:0
 #: field:purchase.report,expected_date:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Expected Date"
 msgstr "Elvárt dátum"
 
@@ -1260,7 +1255,7 @@ msgid "In Shipments"
 msgstr "Szállítmányokban"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
+#: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr "A megrendelés törléséhez először vissza kell vonnia azt."
@@ -1312,8 +1307,8 @@ msgstr ""
 "melyeket nemzetközi ügyleteknél használnak."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Invalid Action!"
 msgstr "Érvénytelen lépés!"
@@ -1350,13 +1345,13 @@ msgid "Invoice Received"
 msgstr "Beérkezett számla"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1482
+#: code:addons/purchase/purchase.py:1500
 #, python-format
 msgid "Invoice paid"
 msgstr "Kifizetett számla"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1462
+#: code:addons/purchase/purchase.py:1480
 #, python-format
 msgid "Invoice received"
 msgstr "Beérkezett számla"
@@ -1453,6 +1448,12 @@ msgid "Location & Warehouse"
 msgstr "Termék hely & Raktárépület"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:159
+#, python-format
+msgid "Make sure you have at least an incoming picking type defined"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
 msgstr "Licitre felhívás kezelése"
@@ -1524,7 +1525,7 @@ msgid "Monthly Purchases"
 msgstr "Havi beszerzések"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Net Price"
 msgstr "Nettó ár"
 
@@ -1534,19 +1535,19 @@ msgid "New Mail"
 msgstr "Új e-mail"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1205
+#: code:addons/purchase/purchase.py:1222
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Nincs cím megadva a szállítóhoz"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1203
+#: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Nincs alapértelmezett beszállító meghatározva ehhez a termékhez"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1201
+#: code:addons/purchase/purchase.py:1218
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Nincs szállító meghatározva ehhez a termékhez !"
@@ -1594,7 +1595,7 @@ msgid "Order Date"
 msgstr "Megrendelés dátuma"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
 msgstr "Megrendelés dátuma:"
 
@@ -1637,7 +1638,7 @@ msgid "Orders"
 msgstr "Megrendelések"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
 msgstr "Mi megrendelés hivatkozási referenciánk:"
 
@@ -1647,7 +1648,7 @@ msgid "Outgoing Mails"
 msgstr "Kimenő levelek"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1346
+#: code:addons/purchase/purchase.py:1363
 #, python-format
 msgid "PO: %s"
 msgstr "Beszerzési megrendelés: %s"
@@ -1680,7 +1681,7 @@ msgid "Picking List"
 msgstr "Kiválogatási lista"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
+#: code:addons/purchase/purchase.py:413
 #, python-format
 msgid "Please create Invoices."
 msgstr "Kérem hozzon létre számlákat."
@@ -1809,7 +1810,7 @@ msgid "Products by Category"
 msgstr "Termékek kategóriánként"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:842
+#: code:addons/purchase/purchase.py:851
 #, python-format
 msgid "Products received"
 msgstr "Beérkezett termékek"
@@ -1871,7 +1872,7 @@ msgid "Purchase Order"
 msgstr "Szállítói megrendelés"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation N°"
 msgstr "Beszerzési megrendelés jóváhagyásának száma"
 
@@ -1923,7 +1924,7 @@ msgid "Purchase Pricelist"
 msgstr "Beszerzési árlista"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1368
+#: code:addons/purchase/purchase.py:1386
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
 msgstr "Beszerzési sor létrehozva és egy meglévő beszerzéshez hozáfűzve"
@@ -1956,7 +1957,7 @@ msgstr "Beszerzések"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "Szállítói megrendelések"
+msgstr "Megrendelések beszállítóktól"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -1969,8 +1970,8 @@ msgstr ""
 "szállíttatni."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Qty"
 msgstr "Mennyiség"
 
@@ -1980,7 +1981,7 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1370
+#: code:addons/purchase/purchase.py:1388
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
 msgstr "Mennyiség hozzáadva a meglévő beszerzési megrendeléshez"
@@ -2018,8 +2019,8 @@ msgid "RFQ Done"
 msgstr "Árajánlat kérés elvégezve"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:318
-#: code:addons/purchase/purchase.py:936
+#: code:addons/purchase/purchase.py:327
+#: code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
 msgstr "Árajánlat kérés létrehozva"
@@ -2098,7 +2099,7 @@ msgstr ""
 "által kitöltött és az áruhoz kapcsolt szállító levelekre."
 
 #. module: purchase
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Regards,"
 msgstr "Üdvözlettel:"
 
@@ -2111,12 +2112,12 @@ msgstr "Kapcsolódó helyszín"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.report,state:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
 msgstr "Ajánlatkérés"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Request for Quotation N°"
 msgstr "Ajánlatkérés száma"
 
@@ -2161,7 +2162,7 @@ msgid "Select an Open Sales Order"
 msgstr "Válasszon egy nyitott vevői megrendelést"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1114
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -2192,10 +2193,10 @@ msgid "Shipping Exception"
 msgstr "Szállítási hiba"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
-msgid "Shipping address :"
-msgstr "Szállítási cím:"
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Shipping address:"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -2258,7 +2259,7 @@ msgid "Supplier Inv."
 msgstr "Beszállítói szla."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:435
+#: code:addons/purchase/purchase.py:444
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -2274,7 +2275,7 @@ msgstr "Szállítói hivatkozás"
 #. module: purchase
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Taxes"
 msgstr "Adók"
 
@@ -2304,7 +2305,7 @@ msgstr ""
 "árát."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -2314,7 +2315,7 @@ msgstr ""
 "beállítási hibának tűnik!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1134
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2324,7 +2325,7 @@ msgstr ""
 "ne vásároljon ennél kevesebbet."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1130
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "A kiválasztott beszállító feltétele a termék eladására: %s"
@@ -2359,7 +2360,7 @@ msgid "The total amount"
 msgstr "A végösszeg"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1318
+#: code:addons/purchase/purchase.py:1335
 #, python-format
 msgid "There is no supplier associated to product %s"
 msgstr "Nincs beszállító ehhez a termékhez %s"
@@ -2397,13 +2398,8 @@ msgid "This will determine picking type of incoming shipment"
 msgstr "Ez határozza meg a kiválogatás típusát a bejövő szállítmányhoz"
 
 #. module: purchase
-#: view:product.template:purchase.product_template_search_view_purchase
-msgid "To Purchase"
-msgstr "Beszerezni"
-
-#. module: purchase
 #: field:purchase.order,amount_total:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total"
 msgstr "Összesen"
 
@@ -2418,7 +2414,7 @@ msgid "Total Untaxed amount"
 msgstr "Teljes nettó összeg"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total Without Taxes"
 msgstr "Összesen áfa nélkül"
 
@@ -2428,13 +2424,13 @@ msgid "Total amount"
 msgstr "Teljes összeg"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:694
 #, python-format
 msgid "Unable to cancel the purchase order %s."
 msgstr "Nem tudja törölni ezt a beszerzési megrendelést %s."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:691
+#: code:addons/purchase/purchase.py:700
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Nem lehet visszavonni ezt a beszerzési megrendelést."
@@ -2450,7 +2446,7 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Unit Price"
 msgstr "Egységár"
 
@@ -2506,8 +2502,8 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "VAT:"
 msgstr "ÁFA:"
 
@@ -2517,7 +2513,7 @@ msgid "Validated By"
 msgstr "Jóváhagyó"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Validated By:"
 msgstr "Jóváhagyva általa:"
 
@@ -2543,9 +2539,9 @@ msgid "Warehouse"
 msgstr "Raktárépület"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
-#: code:addons/purchase/purchase.py:1119
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1114
+#: code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1134
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2567,7 +2563,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Ha beszerezte a terméket, ehhez a raktárépülethez szállíthatja"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:538
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr ""
@@ -2575,13 +2571,13 @@ msgstr ""
 "tételei."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:686
+#: code:addons/purchase/purchase.py:695
 #, python-format
 msgid "You have already received some goods for it.  "
 msgstr "Már beérkezett egy pár termék ebből.  "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:692
+#: code:addons/purchase/purchase.py:701
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
@@ -2589,9 +2585,27 @@ msgstr ""
 "megrendeléshez tartozik."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Your Order Reference"
 msgstr "Szállítói megrendelés hivatkozása"
 
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order.group:purchase.view_purchase_order_group
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "or"
+msgstr "vagy"
+
+#. module: purchase
+#: field:purchase.order,related_usage:0
+msgid "unknown"
+msgstr ""
+
+#~ msgid "Shipping address :"
+#~ msgstr "Szállítási cím:"
+
 #~ msgid "Reference UOM"
 #~ msgstr "Hivatkozási ME"
+
+#~ msgid "To Purchase"
+#~ msgstr "Beszerezni"
