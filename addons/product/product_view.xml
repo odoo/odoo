@@ -218,6 +218,7 @@
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
@@ -290,6 +291,9 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
+                                             <span t-if="record.default_code.value">
+                                                 [<field name="default_code"/>]
+                                              </span>
                                              <field name="name"/> 
                                         </a>
                                     </h4>
