@@ -31,7 +31,6 @@
         'views/snippets.xml',
         'views/website_mail.xml',
         'views/website_email_designer.xml',
-        'views/email_template_view.xml',
         'data/mail_groups.xml',
     ],
     'qweb': [

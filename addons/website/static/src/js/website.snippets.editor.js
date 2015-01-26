@@ -122,7 +122,7 @@
             };
 
             $(window).on('resize', function () {
-                if (self.$active_snipped_id) {
+                if (self.$active_snipped_id && self.$active_snipped_id.data("snippet-editor")) {
                     self.cover_target(self.$active_snipped_id.data("snippet-editor").$overlay, self.$active_snipped_id);
                 }
                 var $scroll = self.$snippet.find('.scroll:first').css("overflow", "");
@@ -196,7 +196,12 @@
         },
         fetch_snippet_templates: function () {
             var self = this;
-            openerp.jsonRpc(this._get_snippet_url(), 'call', {})
+            var url = this._get_snippet_url();
+            if (!url || !url.length) {
+                this.$snippet.hide();
+                return;
+            }
+            openerp.jsonRpc(url, 'call', {})
                 .then(function (html) {
                     var $html = $(html);
 

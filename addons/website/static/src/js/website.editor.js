@@ -51,6 +51,10 @@ define(['summernote/summernote'], function () {
         var $linkPopover = $popover.find('.note-link-popover');
         var $airPopover = $popover.find('.note-air-popover');
 
+        if (window === window.top) {
+            $popover.children().addClass("hidden-xs");
+        }
+
         //////////////// image popover
 
         // add center button for images
@@ -934,20 +938,7 @@ define(['summernote/summernote'], function () {
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
-        var is_smartphone = $(document.body)[0].clientWidth < 767;
-
-        if (!is_smartphone) {
-            website.ready().then(website.init_editor);
-        } else {
-            var resize_smartphone = function () {
-                is_smartphone = $(document.body)[0].clientWidth < 767;
-                if (!is_smartphone) {
-                    $(window).off("resize", resize_smartphone);
-                    website.init_editor();
-                }
-            };
-            $(window).on("resize", resize_smartphone);
-        }
+        website.ready().then(website.init_editor);
 
         $(document).on('click', 'a.js_link2post', function (ev) {
             ev.preventDefault();
@@ -1318,6 +1309,7 @@ define(['summernote/summernote'], function () {
                     }
 
                     $target.trigger('mousedown'); // for activate selection on picture
+                    self.historyRecordUndo($editable);
                 }
             });
 
@@ -1347,6 +1339,8 @@ define(['summernote/summernote'], function () {
                 observer.observe(node, OBSERVER_CONFIG);
                 $(node).one('content_changed', function () {
                     $node.addClass('o_dirty');
+                });
+                $(node).on('content_changed', function () {
                     self.trigger('change');
                 });
             });

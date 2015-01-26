@@ -9,17 +9,8 @@
     </t>
 
     <t t-name="FieldTextHtml">
-        <div t-att-class="'oe_form_field oe_form_field_html' + (widget.get('effective_readonly') ? ' oe_form_embedded_html' : '')"
-                t-att-style="widget.node.attrs.style">
-            <t t-if="! widget.get('effective_readonly')">
-                <iframe src="/?debug&amp;enable_editor=1" style="
-display: block;
-width: 100%;
-border: 1px solid #ccc;
-padding: 0;
-margin: 0;
-min-height: 300px;"/>
-            </t>
+        <div class="oe_form_field oe_form_field_html oe_form_embedded_html" t-att-style="widget.node.attrs.style">
+            <iframe/>
         </div>
     </t>
 

@@ -9,6 +9,45 @@
     </xpath>
 </template>
 
+<template id="assets_backend_editor" name="assets for backend editor">
+    <t t-call="web.assets_common"/>
+    <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+    <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+    <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+    <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
+    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+    <t t-call="website.summernote"/>
+    <t t-call="website.editor"/>
+    <script>
+        openerp.website.EditorBar.include({
+            start: function () {
+                var res = this._super.apply(this, arguments);
+                var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
+                if (location.search.indexOf("enable_editor") !== -1) {
+                    this.on('rte:ready', this, function () {
+                        $("#website-top-edit").hide();
+                        window.top.openerp[callback] &amp;&amp; window.top.openerp[callback](this);
+                        var $editable = $("#wrapwrap .o_editable:first");
+                        $($editable.find("*").filter(function () {return !this.children.length;}).first()[0] || $editable)
+                            .focusIn().trigger("mousedown").trigger("keyup");
+                    });
+                    var style = document.createElement("style");
+                    style.textContent = "#wrapwrap > main > * { margin-top: 50px; }";
+                    $("head").append(style);
+                } else {
+                    window.top.openerp[callback] &amp;&amp; window.top.openerp[callback](this);
+                }
+                return res;
+            }
+        });
+    </script>
+    <style>.note-popover .popover { left: 5px !important; }</style>
+</template>
+
 <template id="editor_layout" name="Editor layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-website-id="website.id if editable and website else None"
@@ -26,14 +65,15 @@
                     <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
                 </t>
             </t>
-            <t t-call-assets="web.assets_common"/>
-            <t t-set="no_assets_editor" t-value="1"/>
-            <t t-call-assets="website.assets_frontend"/>
-            <t t-call-assets="website.assets_editor"/>
-            <style>
-                .note-popover .popover { left: 100px !important; }
-                body { margin-top: 34px; }
-            </style>
+            <t t-call-assets="website.assets_backend_editor"/>
+            <script>
+                openerp.website.snippet.BuildingBlock.include({
+                    _get_snippet_url: function () {
+                        return '<t t-esc="snippets or ''"/>';
+                    }
+                });
+            </script>
+            <t t-raw="head or ''"/>
         </head>
         <body>
             <div id="wrapwrap">
@@ -41,24 +81,14 @@
                     <t t-raw="0"/>
                 </main>
             </div>
+            <t t-raw="add_html or ''"/>
         </body>
-        <script>
-            openerp.website.EditorBar.include({
-                start: function () {
-                    this.on('rte:ready', this, function () {
-                        var callback = '<t t-esc="callback or 'FieldTextHtml_null'"/>';
-                        window.top[callback] &amp;&amp; window.top[callback](this);
-                    });
-                    return this._super.apply(this, arguments);
-                },
-            });
-        </script>
     </html>
 </template>
 
 <template id="FieldTextHtml" name="Editor layout">
     <t t-call="website.editor_layout">
-        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="id" data-oe-type="html"><t t-raw="content"/></div>
+        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
     </t>
 </template>
 

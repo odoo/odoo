@@ -2,6 +2,7 @@
 
 from urllib import urlencode
 
+from openerp import addons
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.mail import html_sanitize
@@ -9,66 +10,26 @@ from openerp.tools.mail import html_sanitize
 
 class WebsiteEmailDesigner(http.Controller):
 
-    @http.route('/website_mail/email_designer', type='http', auth="user", website=True)
-    def index(self, model, res_id, template_model=None, **kw):
-        if not model or not model in request.registry or not res_id:
-            return request.redirect('/')
-        model_fields = request.registry[model]._fields
-        if 'body' not in model_fields and 'body_html' not in model_fields or \
-           'email' not in model_fields and 'email_from' not in model_fields or \
-           'name' not in model_fields and 'subject' not in model_fields:
-            return request.redirect('/')
-        res_id = int(res_id)
-        obj_ids = request.registry[model].exists(request.cr, request.uid, [res_id], context=request.context)
-        if not obj_ids:
-            return request.redirect('/')
-        # try to find fields to display / edit -> as t-field is static, we have to limit
-        # the available fields to a given subset
-        email_from_field = 'email'
-        if 'email_from' in model_fields:
-            email_from_field = 'email_from'
-        subject_field = 'name'
-        if 'subject' in model_fields:
-            subject_field = 'subject'
-        body_field = 'body'
-        if 'body_html' in model_fields:
-            body_field = 'body_html'
-
-        cr, uid, context = request.cr, request.uid, request.context
-        record = request.registry[model].browse(cr, uid, res_id, context=context)
-
-        values = {
-            'record': record,
-            'templates': None,
-            'model': model,
-            'res_id': res_id,
-            'email_from_field': email_from_field,
-            'subject_field': subject_field,
-            'body_field': body_field,
-        }
-
-        if getattr(record, body_field):
-            values['mode'] = 'email_designer'
-        else:
-            if kw.get('enable_editor'):
-                kw.pop('enable_editor')
-                fragments = dict(model=model, res_id=res_id, **kw)
-                if template_model:
-                    fragments['template_model'] = template_model
-                return request.redirect('/website_mail/email_designer?%s' % urlencode(fragments))
-            values['mode'] = 'email_template'
-
-        tmpl_obj = request.registry['mail.template']
-        if template_model:
-            tids = tmpl_obj.search(cr, uid, [('model', '=', template_model)], context=context)
-        else:
-            tids = tmpl_obj.search(cr, uid, [], context=context)
-        templates = tmpl_obj.browse(cr, uid, tids, context=context)
-        values['templates'] = templates
-        values['html_sanitize'] = html_sanitize
-
-        return request.website.render("website_mail.email_designer", values)
-
     @http.route(['/website_mail/snippets'], type='json', auth="user", website=True)
     def snippets(self):
         return request.website._render('website_mail.email_designer_snippets')
+
+
+class Website(addons.website.controllers.main.Website):
+
+    #------------------------------------------------------
+    # Backend email template field
+    #------------------------------------------------------
+    @http.route('/website_mail/field/email', type='http', auth="public", website=True)
+    def FieldTextHtmlEmail(self, model=None, res_id=None, field=None, callback=None, **kwargs):
+        kwargs['template'] = "website_mail.FieldTextHtmlEmail"
+        return self.FieldTextHtml(model, res_id, field, callback, **kwargs)
+
+    @http.route('/website_mail/field/email_template', type='http', auth="public", website=True)
+    def FieldTextHtmlEmailTemplate(self, model=None, res_id=None, field=None, callback=None, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        tmpl_obj = request.registry['mail.template']
+        tids = tmpl_obj.search(cr, uid, kwargs.get('template_model') and [('model', '=', kwargs.get('template_model'))] or [], context=context)
+        kwargs['templates'] = tmpl_obj.browse(cr, uid, tids, context=context)
+        kwargs['snippets'] = 'snippets' not in kwargs and '/website_mail/snippets' or kwargs['snippets']
+        return self.FieldTextHtmlEmail(model, res_id, field, callback, **kwargs)

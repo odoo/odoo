@@ -187,103 +187,105 @@
     </xpath>
 </template>
 
-<template id="assets_common" inherit_id="web.assets_common" name="Website common assets">
-    <xpath expr='.' position="inside">
-        <script type="text/javascript" src="/website/static/src/js/openerp.define.js"></script>
-        <script>openerp.define.active();</script>
-        <script>openerp.define.next = 'summernote/core/async';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/async.js"></script>
-        <script>openerp.define.next = 'summernote/core/func';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/func.js"></script>
-        <script>openerp.define.next = 'summernote/core/agent';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/agent.js"></script>
-        <script>openerp.define.next = 'summernote/core/list';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/list.js"></script>
-        <script>openerp.define.next = 'summernote/core/dom';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/dom.js"></script>
-        <script>openerp.define.next = 'summernote/core/key';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/key.js"></script>
-        <script>openerp.define.next = 'summernote/core/range';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/range.js"></script>
+<template id="summernote" name="Summernote">
+    <script type="text/javascript" src="/website/static/src/js/openerp.define.js"></script>
+    <script>openerp.define.active();</script>
+    <script>openerp.define.next = 'summernote/core/async';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/async.js"></script>
+    <script>openerp.define.next = 'summernote/core/func';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/func.js"></script>
+    <script>openerp.define.next = 'summernote/core/agent';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/agent.js"></script>
+    <script>openerp.define.next = 'summernote/core/list';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/list.js"></script>
+    <script>openerp.define.next = 'summernote/core/dom';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/dom.js"></script>
+    <script>openerp.define.next = 'summernote/core/key';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/key.js"></script>
+    <script>openerp.define.next = 'summernote/core/range';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/range.js"></script>
 
-        <script>openerp.define.next = 'summernote/editing/Bullet';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Bullet.js"></script>
-        <script>openerp.define.next = 'summernote/editing/History';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/History.js"></script>
-        <script>openerp.define.next = 'summernote/editing/Style';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Style.js"></script>
-        <script>openerp.define.next = 'summernote/editing/Table';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Table.js"></script>
-        <script>openerp.define.next = 'summernote/editing/Typing';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Typing.js"></script>
-        <script>openerp.define.next = 'summernote/editing/Editor';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Editor.js"></script>
+    <script>openerp.define.next = 'summernote/editing/Bullet';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Bullet.js"></script>
+    <script>openerp.define.next = 'summernote/editing/History';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/History.js"></script>
+    <script>openerp.define.next = 'summernote/editing/Style';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Style.js"></script>
+    <script>openerp.define.next = 'summernote/editing/Table';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Table.js"></script>
+    <script>openerp.define.next = 'summernote/editing/Typing';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Typing.js"></script>
+    <script>openerp.define.next = 'summernote/editing/Editor';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Editor.js"></script>
 
-        <script>openerp.define.next = 'summernote/module/Button';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Button.js"></script>
-        <script>openerp.define.next = 'summernote/module/Dialog';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Dialog.js"></script>
-        <script>openerp.define.next = 'summernote/module/Handle';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Handle.js"></script>
-        <script>openerp.define.next = 'summernote/module/Popover';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Popover.js"></script>
-        <script>openerp.define.next = 'summernote/module/Toolbar';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Toolbar.js"></script>
+    <script>openerp.define.next = 'summernote/module/Button';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Button.js"></script>
+    <script>openerp.define.next = 'summernote/module/Dialog';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Dialog.js"></script>
+    <script>openerp.define.next = 'summernote/module/Handle';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Handle.js"></script>
+    <script>openerp.define.next = 'summernote/module/Popover';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Popover.js"></script>
+    <script>openerp.define.next = 'summernote/module/Toolbar';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Toolbar.js"></script>
 
-        <script>openerp.define.next = 'summernote/Renderer';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/Renderer.js"></script>
-        <script>openerp.define.next = 'summernote/EventHandler';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/EventHandler.js"></script>
+    <script>openerp.define.next = 'summernote/Renderer';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/Renderer.js"></script>
+    <script>openerp.define.next = 'summernote/EventHandler';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/EventHandler.js"></script>
 
-        <script>openerp.define.next = 'summernote/settings';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/settings.js"></script>
+    <script>openerp.define.next = 'summernote/settings';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/settings.js"></script>
 
-        <script>openerp.define.next = 'summernote/summernote';</script>
-        <script type="text/javascript" src="/website/static/lib/summernote/src/js/summernote.js"></script>
-        <script>openerp.define.next = 'summernote/openerp';</script>
-        <script type="text/javascript" src="/website/static/src/js/summernote.js"></script>
-        <script>openerp.define.desactive();</script>
+    <script>openerp.define.next = 'summernote/summernote';</script>
+    <script type="text/javascript" src="/website/static/lib/summernote/src/js/summernote.js"></script>
+    <script>openerp.define.next = 'summernote/openerp';</script>
+    <script type="text/javascript" src="/website/static/src/js/summernote.js"></script>
+    <script>openerp.define.desactive();</script>
 
-        <!--link rel="stylesheet" href="/website/static/lib/summernote/src/less/summernote.less"/-->
-        <link rel="stylesheet" href="/website/static/lib/summernote/summernote.css"/>
-    </xpath>
+    <!--link rel="stylesheet" href="/website/static/lib/summernote/src/less/summernote.less"/-->
+    <link rel="stylesheet" href="/website/static/lib/summernote/summernote.css"/>
 </template>
-
-<template id="assets_editor" name="Editor assets">
+<template id="editor" name="Editor">
     <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
     <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
     <link rel='stylesheet' href="/web/static/lib/jquery.ui/jquery-ui.css"/>
-    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-    <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
-    <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-    <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
-    <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
-    <script type="text/javascript" src="/website/static/lib/ace/mode-xml.js"></script>
-    <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
     <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
     <t t-call="web.jqueryui_conflict">
         <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
     </t>
+    <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
 
     <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-    <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
     <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-    <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
     <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-
     <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js" />
+</template>
+
+<template id="assets_common" inherit_id="web.assets_common" name="Website common assets">
+    <xpath expr='.' position="inside">
+        <t t-call="website.summernote"/>
+    </xpath>
+</template>
+
+<template id="assets_editor" name="Editor assets">
+    <t t-call="website.editor"/>
+    <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+    <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
+    <script type="text/javascript" src="/website/static/lib/ace/mode-xml.js"></script>
+    <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+    <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js" />
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
-
 </template>
 
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">

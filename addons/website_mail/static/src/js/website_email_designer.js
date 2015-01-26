@@ -1,36 +1,32 @@
 (function () {
     'use strict';
-    var website = openerp.website;
+    openerp.website.EditorBar.include({
+        start: function () {
+            if (location.search.indexOf("enable_editor") !== -1) {
+                this.on('rte:ready', this, function () {
+                    $("#choose_template").show();
 
-    website.if_dom_contains('#email_designer', function () {
-        website.snippet.BuildingBlock.include({
-            _get_snippet_url: function () {
-                return '/website_mail/snippets';
+                    var $editable = $("#wrapwrap .o_editable:first");
+
+                    $("#choose_template").off("click").on("click", function (event) {
+                        $editable.parent().add("#oe_snippets, #templates").toggleClass("hidden");
+                        $(this).first().toggleClass("hidden");
+                        $(this).last().toggleClass("hidden");
+                        var $iframe = $("iframe", window.top.document).filter(function () {
+                            return $(this).contents()[0] === document;
+                        });
+                        $iframe.css("height", Math.max(300,$("body")[0].scrollHeight+20)+"px");
+                        event.preventDefault();
+                    });
+                    $(".js_template_set").off("click").on("click", function (event) {
+                        openerp.website.editor_bar.rte.historyRecordUndo($editable);
+                        $editable.html( $(this).parent().find(".js_content").html() );
+                        $editable.parent().add("#oe_snippets, #templates").toggleClass("hidden");
+                        event.preventDefault();
+                    });
+                });
             }
-        });
-
-        $('.js_template_set').off('click').click(function(ev) {
-            // Copy the template to the body of the email
-            $('#email_designer').show();
-            $('#email_template').hide();
-            $(".js_content", $(this).parent()).children().clone().appendTo('#email_body');
-            $(".js_content", $(this).parent()).children().clone().appendTo('#email_body_html');
-            $('#email_body').addClass('oe_dirty');
-            $('#email_body_html').addClass('oe_dirty');
-
-            openerp.website.editor_bar.edit();
-            ev.preventDefault();
-        });
-    });
-
-    website.EditorBar.include({
-        edit: function () {
-            this._super();
-            $('body').on('click','#save_and_continue',_.bind(this.save_and_continue));
-        },
-        save_and_continue: function() {
-            openerp.website.editor_bar.save();
-            window.location = $("#save_and_continue").attr("href");
+            return this._super.apply(this, arguments);
         }
     });
 })();

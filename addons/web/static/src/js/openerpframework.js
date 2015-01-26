@@ -413,7 +413,7 @@ openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     },
     on: function(events, dest, func) {
         var self = this;
-        if (!(func instanceof Function)) {
+        if (typeof func !== "function") {
             throw new Error("Event handler must be a function.");
         }
         events = events.split(/\s+/);
