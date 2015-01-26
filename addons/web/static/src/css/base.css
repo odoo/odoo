@@ -2836,18 +2836,20 @@ div.ui-widget-overlay {
 }
 .ui-menu .ui-menu-item a {
   padding: 1px 16px;
-  color: #404040;
+  color: #000000 !important;
 }
 .ui-menu .ui-menu-item a.ui-corner-all {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
 }
-.ui-menu .ui-menu-item a.ui-state-active {
-  background: #f0f0fa;
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+  background: #7c7bad !important;
+  border: 0 !important;
 }
-.ui-menu .ui-menu-item a.ui-state-hover, .ui-menu .ui-menu-item a.ui-state-active {
-  background: #7C7BAD;
+.ui-menu .ui-state-focus a, .ui-menu .ui-state-active a {
+  color: #ffffff !important;
+  font-weight: normal !important;
 }
 
 .ui-corner-all {
