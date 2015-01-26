@@ -323,6 +323,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
     });
 
     project_timesheet.ScreenWidget = openerp.Widget.extend({ //Make sure we need to extend project_timesheet_widget or openerp.widget
+        
+        // Events used in several screens
         events:{
             "click .pt_day_planner_link" : "goto_day_planner",
             "click .pt_settings_link" : "goto_settings",
@@ -1209,7 +1211,43 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Activities";
+
+            // Events specific to this screen
+            _.extend(this.events,
+                {
+                    "click .pt_btn_start_activity":"start_activity"
+                }
+            );
+            //to remove :
+            // dummy values used for testing:
+            
+            // options1 = {
+            //     "id":1,
+            //     "task_id":"task nb 1",
+            //     "project_id":"project nb 1",
+            //     "unit_amount": "00:10"
+            // };
+            // this.acti1 = new project_timesheet.account_analytic_line_model(null, options1);
+
+            // options2 = {
+            //     "id":2,
+            //     "unit_amount" : "00:26"
+            // };
+            // this.acti2 = new project_timesheet.account_analytic_line_model(null, options2);
+
+            // options3 = {
+            //     "id":3,
+            //     "unit_amount" : "00:46",
+            //     "project_id":"project nb 3"
+            // };
+            // this.acti3 = new project_timesheet.account_analytic_line_model(null, options3);
+
+
+            // this.account_analytic_lines = [this.acti1, this.acti2, this.acti3];
         },
+         start_activity: function(){
+            console.log("Activity started ! ");
+        }
     });
 
     project_timesheet.Day_planner_screen = project_timesheet.ScreenWidget.extend({

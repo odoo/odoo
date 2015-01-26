@@ -8,6 +8,19 @@ function odoo_project_timesheet_db(project_timesheet) {
             this.virtual_id_regex = /^virtual_id_.*$/;
             this.unique_id_counter = 0;
         },
+        //tac
+        load_data: function(){
+            stored_data = JSON.parse(localStorage.getItem("pt_data"));
+
+            var data = _.filter(stored_data, function(entry){
+                if(entry.session_user === project_timesheet.session.username){
+                    console.log(entry);
+                    return entry;
+                }
+            });
+
+            return data;
+        },
         load: function(name, def) {
             //To load data from localstorage
             var data = localStorage[name];

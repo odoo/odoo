@@ -1,6 +1,6 @@
 function odoo_project_timesheet_models(project_timesheet) {
 
-    project_timesheet.task_activity_model = Backbone.Model.extend({
+    project_timesheet.account_analytic_line_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.id = options.id || null;
@@ -10,8 +10,6 @@ function odoo_project_timesheet_models(project_timesheet) {
             this.name = options.name || null; //Actually description field
             this.unit_amount = options.unit_amount || null;
             this.reference_id = options.reference_id || null;
-            this.command = options.command;
-            this.__last_update = options.__last_update || false;
         },
         export_as_JSON: function() {
             return {
@@ -19,12 +17,10 @@ function odoo_project_timesheet_models(project_timesheet) {
                 date: this.date || project_timesheet.datetime_to_str(new moment()._d),
                 name: this.name || '/',
                 unit_amount: this.unit_amount,
-                command: this.command,
                 task_id: this.task_id,
                 project_id: this.project_id,
                 reference_id: this.reference_id,
                 user_id: project_timesheet.session.uid,
-                __last_update: this.__last_update,
                 
             };
         },
@@ -34,23 +30,22 @@ function odoo_project_timesheet_models(project_timesheet) {
         model: project_timesheet.task_activity_model,
     });
 
-    project_timesheet.task_model = Backbone.Model.extend({
+    project_timesheet.Task_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
-            Backbone.Model.prototype.initialize.call(this, attributes);
-            this.project_timesheet_widget = attributes.project_timesheet_widget;
-            this.project_timesheet_db = attributes.project_timesheet_db;
-            this.id = options.id || null;
-            this.name = options.name || null;
-            this.project_id = options.project_id || null;
-            this.priority = options.priority || 0;
+
         },
+        load_tasks: function(sessions_username, session_server){
+            var stored_data = JSON.parse(localStorage.getItem("pt_data"));
+
+            debugger
+        }
     });
 
     project_timesheet.TaskCollection = Backbone.Collection.extend({
         model: project_timesheet.task_model,
     });
 
-    project_timesheet.project_model = Backbone.Model.extend({
+    project_timesheet.Project_model = Backbone.Model.extend({
         initialize: function(attributes, options) {
             Backbone.Model.prototype.initialize.call(this, attributes);
             this.project_timesheet_model = attributes.project_timesheet_model;
@@ -97,13 +92,22 @@ function odoo_project_timesheet_models(project_timesheet) {
 
 
     //tac additions here
+    // Main model, used to hold info such as the current screen or user.
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
         initialize: function(attributes) {
+            
             var self = this;
-            Backbone.Model.prototype.initialize.call(this, attributes);
             this.project_timesheet_widget = attributes.project_timesheet_widget;
+            this.db = new project_timesheet.project_timesheet_db();
             this.selected_screen = "no screen yet !";
-            console.log("Initialized !");
+
+            // Session management
+            project_timesheet.session = new project_timesheet.Session();
+            project_timesheet.session.session_reload();
+
+            var data = this.db.load_data();
+            console.log(data);
+
             this.ready = $.Deferred();
             this.ready.resolve();
         }
