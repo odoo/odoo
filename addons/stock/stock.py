@@ -578,7 +578,7 @@ class stock_quant(osv.osv):
                 if remaining_to_solve_quant_ids:
                     self.write(cr, SUPERUSER_ID, remaining_to_solve_quant_ids, {'propagated_from_id': remaining_neg_quant.id}, context=context)
             if solving_quant.propagated_from_id and solved_quant_ids:
-                self.write(cr, uid, solved_quant_ids, {'propagated_from_id': solving_quant.propagated_from_id.id}, context=context)
+                self.write(cr, SUPERUSER_ID, solved_quant_ids, {'propagated_from_id': solving_quant.propagated_from_id.id}, context=context)
             #delete the reconciled quants, as it is replaced by the solved quants
             self.unlink(cr, SUPERUSER_ID, [quant_neg.id], context=context)
             if solved_quant_ids:
