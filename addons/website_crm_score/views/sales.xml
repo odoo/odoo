@@ -198,19 +198,11 @@
                         <field name="capacity" class="oe_inline"/>
                     </div>
                     <field name="min_for_assign" class="oe_inline"/>
-                    <div>
-                        <br/>
-                        <button name="direct_assign_leads" type="object" string="Assign Now" class="oe_link"/>
-                        <span groups="base.group_no_one">
-                             <br/>
-                             <button name="dry_assign_leads" type="object" string="Dry Assign" class="oe_link"/>
-                        </span>
-                    </div>
                 </xpath>
                 <xpath expr="//page[@string='Team Members']" position="replace">
                     <page string="Assignation">
-                        <field name="team_user_ids" widget="many2many_kanban"  context="{'default_team_id':active_id, 'ro_team':True}">
-                            <kanban quick_create="true" create="true" delete="true">
+                        <field name="team_user_ids" widget="one2many" mode="kanban" context="{'default_team_id':active_id, 'ro_team':True}">
+                            <kanban>
                                 <field name="user_id"/>
                                 <field name="running"/>
                                 <templates>
@@ -253,7 +245,6 @@
                                                                         <li><a type="open">
                                                                             <b><field name="name"/></b>
                                                                         </a></li>
-                                                                        <!-- <li><field name="team_user_domain" widget="smart_filters"/></li> -->
                                                                         <li><field name="team_user_domain" widget='filters'/></li>
                                                                     </ul>
                                                                 </td>
@@ -278,79 +269,21 @@
             </field>
         </record>
 
-
-
-        <!--
-        IR FILTER - NOT IN USE RIGHT NOW
-         -->
-        <!-- Ir Filters Search Filter - action_id added -->
-        <record model="ir.ui.view" id="ir_filters_view_search_inherit">
-            <field name="name">ir.filters.inherit</field>
-            <field name="model">ir.filters</field>
-            <field name="inherit_id" ref="base.ir_filters_view_search" />
-            <field name="arch" type="xml">
-                <field name="user_id" position="after">
-                    <field name="action_id"/>
-                </field>
-            </field>
-        </record>
-
-        <!-- Ir Filters Tree View -->
-        <record model="ir.ui.view" id="view_ir_filters_tree">
-            <field name="name">Spam ir Filters Tree</field>
-            <field name="model">ir.filters</field>
-            <field name="arch" type="xml">
-                <tree string="Spam Ir Filters">
-                    <field name="name"/>
-                    <field name="domain"/>
-                    <field name="model_id"/>
-                    <field name="action_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Ir Filters Action - form - tree -->
-        <record model="ir.actions.act_window" id="spam_ir_filters_action">
-            <field name="name">SpamIrFilter</field>
-            <field name="res_model">ir.filters</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_ir_filters_tree"/>
-            <field name="search_view_id" ref="ir_filters_view_search_inherit"/>
-        </record>
-        <record model="ir.actions.act_window" id="spam_ir_filters_action">
-            <field name="context" eval="{'search_default_action_id': ref('spam_ir_filters_action')}"/>
-        </record>
-
-        <!-- Ir Filters Menu Item -->
-        <!-- This menu item allows to see SpamIrFilters, /!\ the parent must be changed -->
-        <!-- <menuitem id="spam_ir_filters" name="SpamIrFilters" parent="leads_menu" action="spam_ir_filters_action" /> -->
-
-        <!-- The following enables the more action that creates the filter on the email address of the lead -->
-        <record id="action_mark_as_spam" model="ir.actions.server">
-            <field name="name">Mark As Spam</field>
-            <field name="model_id" ref="model_crm_lead"/>
+        <record id="action_lead_dry_run" model="ir.actions.server">
+            <field name="name">Lead Dry Run</field>
+            <field name="model_id" ref="model_team_user"/>
             <field name="state">code</field>
             <field name="code">
-    ir_action_id = self.pool['ir.actions.act_window'].search(cr, uid, [('name', '=', 'SpamIrFilter')], context=context)[0]
-    values = {'model_id': 'crm.lead', 'action_id': ir_action_id}
-    for lead_id in context['active_ids']:
-        mail = self.read(cr, uid, lead_id, fields=['email_from'], context=context)['email_from']
-        vals = values.copy()
-        # str() below changes the encoding of mail from unicode
-        vals['domain'] = [('email_from', '=', str(mail))]
-        vals['name'] = 'spam-' + mail
-        self.pool['ir.filters'].create_or_replace(cr, uid, vals, context=context)
+                self.pool['crm.leads.dry.run'].assign_leads(cr, uid, None, context=context)
             </field>
         </record>
 
-        <!-- This record add the possibility to mark as spam in the more action of leads -->
-<!--         <record id="ir_mark_as_spam" model="ir.values">
+        <record id="ir_lead_dry_run" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'crm.lead'" name="model"/>
-            <field name="name">Mark As Spam</field>
-            <field eval="'ir.actions.server,%d'%action_mark_as_spam" name="value"/>
-        </record> -->
+            <field eval="'team.user'" name="model"/>
+            <field name="name">Launch Lead Dry Run</field>
+            <field eval="'ir.actions.server,%d'%action_lead_dry_run" name="value"/>
+        </record>
 
     </data>
 </openerp>

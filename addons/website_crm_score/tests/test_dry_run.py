@@ -25,13 +25,13 @@ class test_dry_run(TestScoring):
 
         fields = ['team_id', 'user_id', 'lead_id']
 
-        dr0_sect = self.leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead0), ('user_id', '=', False)], fields)[0]
-        dr0_user = self.leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead0), ('user_id', '!=', False)], fields)[0]
+        dr0_sect = self.crm_leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead0), ('user_id', '=', False)], fields)[0]
+        dr0_user = self.crm_leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead0), ('user_id', '!=', False)], fields)[0]
 
-        dr1_sect = self.leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead1), ('user_id', '=', False)], fields)[0]
-        dr1_user = self.leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead1), ('user_id', '!=', False)], fields)[0]
+        dr1_sect = self.crm_leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead1), ('user_id', '=', False)], fields)[0]
+        dr1_user = self.crm_leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead1), ('user_id', '!=', False)], fields)[0]
 
-        dr2 = self.leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead2)], fields)
+        dr2 = self.crm_leads_dry_run.search_read(cr, uid, [('lead_id', '=', self.lead2)], fields)
 
         self.assertEqual(dr0_sect['team_id'][0], self.team0, 'dry run failed')
         self.assertEqual(dr0_user['team_id'][0], self.team0, 'dry run failed')
@@ -43,11 +43,11 @@ class test_dry_run(TestScoring):
 
         self.assertEqual(dr2, [], 'dry run failed')
 
-        ldr = self.leads_dry_run.search_count(cr, uid, [], None)
+        ldr = self.crm_leads_dry_run.search_count(cr, uid, [], None)
         self.assertEqual(ldr, 4, 'wrong number of dry run created')
 
         # assignement after dry run
-        self.leads_dry_run.assign_leads(cr, uid, None)
+        self.crm_leads_dry_run.assign_leads(cr, uid, None)
 
         l0 = self.crm_lead.read(cr, uid, self.lead0, ['team_id', 'user_id'], None)
         l1 = self.crm_lead.read(cr, uid, self.lead1, ['team_id', 'user_id'], None)
@@ -61,6 +61,6 @@ class test_dry_run(TestScoring):
         self.assertEqual(l1['user_id'][0], self.salesmen1, 'assignation failed')
         self.assertEqual(l2['user_id'], False, 'assignation failed')
 
-        ldr = self.leads_dry_run.search_count(cr, uid, [], None)
+        ldr = self.crm_leads_dry_run.search_count(cr, uid, [], None)
 
         self.assertEqual(ldr, 0, 'dry run not removed correctly')

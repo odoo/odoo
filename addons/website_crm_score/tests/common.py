@@ -36,7 +36,7 @@ class TestScoring(common.TransactionCase):
 
         # Usefull models
         self.crm_lead = self.registry('crm.lead')
-        self.leads_dry_run = self.registry('leads.dry.run')
+        self.crm_leads_dry_run = self.registry('crm.leads.dry.run')
         self.pageview = self.registry('website.crm.pageview')
         self.website_crm_score = self.registry('website.crm.score')
         self.team = self.registry('crm.team')

@@ -2,8 +2,8 @@
 from openerp import fields, models, api
 
 
-class leads_dry_run(models.TransientModel):
-    _name = "leads.dry.run"
+class crm_leads_dry_run(models.TransientModel):
+    _name = "crm.leads.dry.run"
 
     lead_id = fields.Many2one('crm.lead', string='Lead', required=True)
     team_id = fields.Many2one('crm.team', string='SaleTeam', required=True, oldname='section_id')
@@ -28,5 +28,5 @@ class leads_dry_run(models.TransientModel):
 
         # Avoid to re-assign the same leads for nothing
         self._cr.execute("""
-                TRUNCATE TABLE leads_dry_run;
+                TRUNCATE TABLE crm_leads_dry_run;
         """)

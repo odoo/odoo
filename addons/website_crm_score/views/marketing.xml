@@ -262,7 +262,7 @@
         <!-- Lead dry run From View -->
         <record model="ir.ui.view" id="view_crm_lead_dry_run_form">
             <field name="name">Assignation Dry Run Form</field>
-            <field name="model">leads.dry.run</field>
+            <field name="model">crm.leads.dry.run</field>
             <field name="arch" type="xml">
                 <form string="Assignation Dry Run">
                     <sheet>
@@ -272,7 +272,6 @@
                         <group>
                             <field name="team_id"/>
                             <field name="user_id"/>
-                            <button name="assign_leads" type="object" string="Assign Now" class="oe_link"/>
                         </group>
                     </sheet>
                 </form>
@@ -282,7 +281,7 @@
         <!-- Lead dry run Tree View -->
         <record model="ir.ui.view" id="view_lead_dry_run_tree">
             <field name="name">Assignation Dry Run tree</field>
-            <field name="model">leads.dry.run</field>
+            <field name="model">crm.leads.dry.run</field>
             <field name="arch" type="xml">
                 <tree string="Assignation Dry Run">
                     <field name="lead_id"/>
@@ -295,7 +294,7 @@
         <!-- Lead dry run Action - form - tree -->
         <record model="ir.actions.act_window" id="lead_dry_run_action">
             <field name="name">Assignation dry run</field>
-            <field name="res_model">leads.dry.run</field>
+            <field name="res_model">crm.leads.dry.run</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
