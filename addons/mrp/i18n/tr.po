@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
 "PO-Revision-Date: 2014-11-22 08:20+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:38+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:57+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:260
+#: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
 msgstr " Üretim"
@@ -35,13 +35,13 @@ msgid "# Manufacturing Orders"
 msgstr "# Üretim Emirleri"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:356
+#: code:addons/mrp/mrp.py:323
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:958
+#: code:addons/mrp/mrp.py:977
 #, python-format
 msgid "%s produced"
 msgstr "%s üretildi"
@@ -404,6 +404,11 @@ msgid "BOM Structure"
 msgstr "BOM Yapısı"
 
 #. module: mrp
+#: field:mrp.bom.line,child_line_ids:0
+msgid "BOM lines of the referred bom"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/stock.py:44
 #, python-format
 msgid ""
@@ -437,7 +442,7 @@ msgstr "Ürün Ağacı Bileşenleri"
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
-#: view:mrp.bom:mrp.mrp_bom_tree_view
+#: view:mrp.bom.line:mrp.mrp_bom_tree_view
 #: view:product.product:mrp.product_product_form_view_bom_button
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
@@ -464,24 +469,19 @@ msgid "BoM"
 msgstr "BoM"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:322
+#: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
 "Ürün Ağacı \"%s\" yinelen ürünlü bir Ürün Ağacı kalemi içeriyor: \"%s\"."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:348
+#: code:addons/mrp/mrp.py:315
 #, python-format
 msgid ""
-"BoM \"%s\" contains a phantom BoM line but the product \"%s\" don't have any "
-"BoM defined."
+"BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
+"any BoM defined."
 msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,child_complete_ids:0
-msgid "BoM Hierarchy"
-msgstr "BoM Sıradüzeni"
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
@@ -499,7 +499,7 @@ msgid "BoM Type"
 msgstr "BoM Türü"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:257
+#: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
 msgstr "Hiçbir genel Üretim rotası bulunamadı."
@@ -525,19 +525,19 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: mrp
-#: code:addons/mrp/stock.py:182
+#: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Eksi ya da sıfır miktarlı bir hareket kullanılamıyor."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:617
+#: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "'%s' durumundaki bir üretim emri silinemez."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:704
+#: code:addons/mrp/mrp.py:679
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Bu ürün için ürün ağacı bulunamıyor."
@@ -831,9 +831,9 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:704
-#: code:addons/mrp/stock.py:182
-#: code:addons/mrp/stock.py:257
+#: code:addons/mrp/mrp.py:679
+#: code:addons/mrp/stock.py:183
+#: code:addons/mrp/stock.py:259
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1034,9 +1034,9 @@ msgid "Internal Reference"
 msgstr "İç Referans"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:322
-#: code:addons/mrp/mrp.py:348
-#: code:addons/mrp/mrp.py:617
+#: code:addons/mrp/mrp.py:289
+#: code:addons/mrp/mrp.py:315
+#: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz İşlem!"
@@ -1156,8 +1156,8 @@ msgid "Manager"
 msgstr "Yönetici"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:32
-#: code:addons/mrp/stock.py:254
+#: code:addons/mrp/procurement.py:33
+#: code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
 msgstr "Üretim"
@@ -1202,7 +1202,7 @@ msgid "Manufacturing Order"
 msgstr "Üretim Emri"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:124
+#: code:addons/mrp/procurement.py:131
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Üretim Emri <em>%s</em> oluşturuldu."
@@ -1305,7 +1305,7 @@ msgid "New"
 msgstr "Yeni"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:120
+#: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
 msgstr "Bu ürün için hiç Ürün Ağacı yoktur!"
@@ -1528,11 +1528,6 @@ msgstr "Ürün Maliyet Yapısı"
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
 msgstr "Ürün Hareketi"
-
-#. module: mrp
-#: view:website:mrp.report_mrpbomstructure
-msgid "Product Name"
-msgstr "Ürün Adı"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
@@ -2079,8 +2074,8 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr "Üretilen ürünlerin izlenebilir olması için kullanılan teknik alan"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:366
-#: code:addons/mrp/mrp.py:433
+#: code:addons/mrp/mrp.py:333
+#: code:addons/mrp/mrp.py:421
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2335,13 +2330,14 @@ msgid "Warehouse"
 msgstr "Depo"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:366
-#: code:addons/mrp/mrp.py:433
+#: code:addons/mrp/mrp.py:333
+#: code:addons/mrp/mrp.py:421
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:339
 #: code:addons/mrp/stock.py:42
 #: code:addons/mrp/stock.py:44
 #: code:addons/mrp/stock.py:169
@@ -2534,6 +2530,14 @@ msgstr ""
 "-mrp_byproduct Modülünü kurar."
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:339
+#, python-format
+msgid ""
+"You can not delete a Bill of Material with running manufacturing orders.\n"
+"Please close or cancel it first."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
@@ -2555,6 +2559,16 @@ msgid "min"
 msgstr "enaz"
 
 #. module: mrp
+#: view:change.production.qty:mrp.view_change_production_qty_wizard
+#: view:mrp.config.settings:mrp.view_mrp_config
+#: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
+#: view:mrp.product_price:mrp.view_mrp_product_price_wizard
+#: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
+#: view:stock.move.consume:mrp.view_stock_move_consume_wizard
+msgid "or"
+msgstr "veya"
+
+#. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
 msgstr "artı"
@@ -2574,3 +2588,9 @@ msgstr "bilinmeyen"
 #~ msgstr ""
 #~ "%s te  toplam \"%s\" kadar tüketeceksiniz.\n"
 #~ "Ama ençok %s kadar üretebilirsiniz."
+
+#~ msgid "Product Name"
+#~ msgstr "Ürün Adı"
+
+#~ msgid "BoM Hierarchy"
+#~ msgstr "BoM Sıradüzeni"
