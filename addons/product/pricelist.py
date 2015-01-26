@@ -195,10 +195,21 @@ class product_pricelist(osv.osv):
     def _price_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         return dict((key, price[0]) for key, price in self._price_rule_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context).items())
 
-    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
+    def _get_pricelist_current_version(self, cr, uid, pricelist, context=None):
         context = context or {}
         date = context.get('date') or time.strftime('%Y-%m-%d')
         date = date[0:10]
+        version = False
+        for v in pricelist.version_id:
+            if ((v.date_start is False) or (v.date_start <= date)) and ((v.date_end is False) or (v.date_end >= date)):
+                version = v
+                break
+        if not version:
+            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+        return version
+
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, version=False, context=None):
+        context = context or {}
 
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
@@ -209,13 +220,9 @@ class product_pricelist(osv.osv):
         if not products:
             return {}
 
-        version = False
-        for v in pricelist.version_id:
-            if ((v.date_start is False) or (v.date_start <= date)) and ((v.date_end is False) or (v.date_end >= date)):
-                version = v
-                break
         if not version:
-            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            version = self._get_pricelist_current_version(cr, uid, pricelist, context=context)
+
         categ_ids = {}
         for p in products:
             categ = p.categ_id
