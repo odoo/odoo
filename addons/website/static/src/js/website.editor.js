@@ -402,6 +402,9 @@ define(['summernote/summernote'], function () {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    dom.isVoid = function (node) {
+        return node && /^BR|^IMG|^HR/.test(node.nodeName.toUpperCase()) || dom.isImg(node);
+    };
     dom.isImg = function (node) {
         return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) ));
     };

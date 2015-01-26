@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/website/static/src/css/website.backend.css"/>
+        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
+    </xpath>
+</template>
+
+<template id="editor_layout" name="Editor layout">&lt;!DOCTYPE html&gt;
+    <html t-att-lang="lang and lang.replace('_', '-')"
+          t-att-data-website-id="website.id if editable and website else None"
+          t-att-data-editable="1"
+          t-att-data-translatable="'1' if translatable else None"
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-oe-company-name="res_company.name">
+        <head>
+            <meta charset="utf-8" />
+            <title>Odoo Editor layout</title>
+            <meta name="viewport" content="initial-scale=1"/>
+            <t t-set="languages" t-value="website.get_languages() if website else None"/>
+            <t t-if="request and request.website_multilang and website">
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
+                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                </t>
+            </t>
+            <t t-call-assets="web.assets_common"/>
+            <t t-set="no_assets_editor" t-value="1"/>
+            <t t-call-assets="website.assets_frontend"/>
+            <t t-call-assets="website.assets_editor"/>
+            <style>
+                .note-popover .popover { left: 100px !important; }
+                body { margin-top: 34px; }
+            </style>
+        </head>
+        <body>
+            <div id="wrapwrap">
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </div>
+        </body>
+        <script>
+            openerp.website.EditorBar.include({
+                start: function () {
+                    this.on('rte:ready', this, function () {
+                        var callback = '<t t-esc="callback or 'FieldTextHtml_null'"/>';
+                        window.top[callback] &amp;&amp; window.top[callback](this);
+                    });
+                    return this._super.apply(this, arguments);
+                },
+            });
+        </script>
+    </html>
+</template>
+
+<template id="FieldTextHtml" name="Editor layout">
+    <t t-call="website.editor_layout">
+        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="id" data-oe-type="html"><t t-raw="content"/></div>
+    </t>
+</template>
+
+    </data>
+</openerp>
