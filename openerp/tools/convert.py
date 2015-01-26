@@ -342,6 +342,10 @@ form: module.record_id""" % (xml_id,)
                     group_id = self.id_get(cr, group)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
+        if rec.get('paperformat'):
+            pf_name = rec.get('paperformat')
+            pf_id = self.id_get(cr,pf_name)
+            res['paperformat_id'] = pf_id
 
         id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
