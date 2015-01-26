@@ -42,7 +42,7 @@ You can manage:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['base_setup','mail', 'resource', 'board'],
+    'depends': ['base_setup', 'mail', 'resource', 'board', 'web_tip'],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',

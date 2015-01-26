@@ -45,7 +45,7 @@ Dashboard / Reports for Purchase Management will include:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
-    'depends': ['stock_account', 'report'],
+    'depends': ['stock_account', 'report', 'web_tip'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
