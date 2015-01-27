@@ -343,12 +343,12 @@ $sheet-padding: 16px
         color: white
         background: #DC5F59
     button.oe_highlight
-        @include vertical-gradient(#df3f3f, #a21a1a)
+        @include vertical-gradient(#729fcf, #3465a4)
         @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
     button.oe_highlight:hover
-        @include vertical-gradient(lighten(#e04f4f, 2%), lighten(#a21a1a, 2%))
+        @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
     button.oe_highlight:active
-        @include vertical-gradient(lighten(#a21a1a, 8%), darken(#df3f3f, 8%))
+        @include vertical-gradient(lighten(#729fcf, 4%), lighten(#3465a4, 4%))
     .oe_background_grey
         background: #eee !important
 
