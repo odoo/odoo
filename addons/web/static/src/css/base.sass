@@ -2295,8 +2295,17 @@ $sheet-padding: 16px
             .oe_list_handle
                 @include text-to-entypo-icon("}",#E0E0E0,18px)
                 margin-right: 7px
-        .oe_list_field_progressbar progress
-            width: 100%
+        .oe_list_field_progressbar div
+            position: relative
+            progress
+                position: absolute
+                left: 0px
+                top: 0px
+                width: 100%
+            span
+                position: absolute
+                left: 0px
+                top: 0px
     // }}}
     // Tree view {{{
     .tree_header

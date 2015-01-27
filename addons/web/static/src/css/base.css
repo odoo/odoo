@@ -2835,8 +2835,19 @@
   content: "}";
   color: #E0E0E0;
 }
-.openerp .oe_list_content .oe_list_field_progressbar progress {
+.openerp .oe_list_content .oe_list_field_progressbar div {
+  position: relative;
+}
+.openerp .oe_list_content .oe_list_field_progressbar div progress {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   width: 100%;
+}
+.openerp .oe_list_content .oe_list_field_progressbar div span {
+  position: absolute;
+  left: 0px;
+  top: 0px;
 }
 .openerp .tree_header {
   background-color: #f0f0f0;

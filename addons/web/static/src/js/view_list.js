@@ -2346,8 +2346,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
      */
     _format: function (row_data, options) {
         return _.template(
-            '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
-                value: _.str.sprintf("%.0f", row_data[this.id].value || 0)
+            '<div>' +
+            '   <progress value="<%-value%>" max="100"><%-value%>%</progress>' +
+            '   <span><%-value%>%</span>' +
+            '</div>', {
+                value: _.str.sprintf("%.2f", row_data[this.id].value || 0)
             });
     }
 });
