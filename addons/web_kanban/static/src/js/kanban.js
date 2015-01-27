@@ -518,16 +518,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
 
     do_show: function() {
-        if (this.options.$buttons) {
-            this.$buttons.show();
-        }
         this.do_push_state({});
-        return this._super();
-    },
-    do_hide: function () {
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         return this._super();
     },
     open_record: function(id, editable) {

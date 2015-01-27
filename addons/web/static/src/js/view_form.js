@@ -309,9 +309,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.sidebar) {
             this.sidebar.$el.hide();
         }
-        if (this.$buttons) {
-            this.$buttons.hide();
-        }
         if (this.$pager) {
             this.$pager.hide();
         }

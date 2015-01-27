@@ -472,9 +472,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     do_show: function () {
         this._super();
-        if (this.$buttons) {
-            this.$buttons.show();
-        }
         if (this.$pager) {
             this.$pager.show();
         }
@@ -482,9 +479,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     do_hide: function () {
         if (this.sidebar) {
             this.sidebar.$el.hide();
-        }
-        if (this.$buttons) {
-            this.$buttons.hide();
         }
         if (this.$pager) {
             this.$pager.hide();

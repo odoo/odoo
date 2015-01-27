@@ -880,17 +880,8 @@ openerp.web_calendar = function(instance) {
         },
 
         do_show: function() {            
-            if (this.$buttons) {
-                this.$buttons.show();
-            }
             this.do_push_state({});
             this.shown.resolve();
-            return this._super();
-        },
-        do_hide: function () {
-            if (this.$buttons) {
-                this.$buttons.hide();
-            }
             return this._super();
         },
         is_action_enabled: function(action) {

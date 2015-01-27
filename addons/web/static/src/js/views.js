@@ -630,6 +630,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 action : self.action,
                 action_views_ids : views_ids,
             }, self.flags, self.flags[view.type], view.options);
+            // show options.$buttons as views will put their $buttons inside it
+            // and call show/hide on them
+            view.options.$buttons.show();
             self.$('.oe-vm-switch-' + view.type).tooltip();
         });
         this.$('.oe_debug_view').click(this.on_debug_changed);
@@ -652,7 +655,15 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         } 
 
         this.view_stack.push(view);
+
+        // Hide active view (at first rendering, there is no view to hide)
+        if (this.active_view &&
+                this.active_view != view &&
+                this.active_view.controller) {
+            this.active_view.controller.do_hide();
+        }
         this.active_view = view;
+
         if (!view.created) {
             view.created = this.create_view.bind(this)(view);
         }
@@ -669,7 +680,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         self.update_header();
         return $.when(view.created, this.active_search).done(function () {
             self.active_view = view;
-            self._display_view(view.type, view_options);
+            self._display_view(view_options);
             self.trigger('switch_mode', view_type, no_store, view_options);
             if (self.session.debug) {
                 self.$('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
@@ -683,20 +694,10 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$switch_buttons.removeClass('active');
         this.$('.oe-vm-switch-' + this.active_view.type).addClass('active');
     },
-    _display_view: function (view_type, view_options) {
+    _display_view: function (view_options) {
         var self = this;
         this.active_view.$container.show();
-        $.when(this.active_view.controller.do_show(view_options)).done(function () { 
-            _.each(self.views, function (view) {
-                if (view.type !== view_type) {
-                    if (view.controller) view.controller.do_hide();
-                    if (view.$container) view.$container.hide();
-                    if (view.options.$buttons) view.options.$buttons.hide();
-                }
-            });
-            if (self.active_view.options.$buttons) {
-                self.active_view.options.$buttons.show();
-            }
+        $.when(this.active_view.controller.do_show(view_options)).done(function () {
             if (self.searchview) {
                 var is_hidden = self.active_view.controller.searchable === false;
                 self.searchview.toggle_visibility(!is_hidden);
@@ -1220,6 +1221,7 @@ instance.web.View = instance.web.Widget.extend({
         this.ViewManager = parent;
         this.dataset = dataset;
         this.view_id = view_id;
+        this.$buttons = options && options.$buttons;
         this.set_default_options(options);
     },
     start: function () {
@@ -1362,6 +1364,9 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_show: function () {
         var self = this;
+        if (this.$buttons) {
+            this.$buttons.show();
+        }
         this.$el.show();
         setTimeout(function () {
             self.$el.parent().addClass('in');
@@ -1370,6 +1375,9 @@ instance.web.View = instance.web.Widget.extend({
         instance.web.bus.trigger('view_shown', this);
     },
     do_hide: function () {
+        if (this.$buttons) {
+            this.$buttons.hide();
+        }
         this.$el.parent().removeClass('in');
         this.$el.hide();
     },

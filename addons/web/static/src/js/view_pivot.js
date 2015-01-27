@@ -30,7 +30,6 @@ instance.web.PivotView = instance.web.View.extend({
         this._super(parent, dataset, view_id, options);
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
 
-        this.$buttons = options.$buttons;
         this.$sidebar = options.$sidebar;
         this.fields = {};
         this.measures = {};
@@ -165,12 +164,21 @@ instance.web.PivotView = instance.web.View.extend({
     },
     do_show: function () {
         var self = this;
+        if (this.sidebar) {
+            this.sidebar.$el.show();
+        }
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
             self.$el.show();
         });
         return this._super();
+    },
+    do_hide: function () {
+        if (this.sidebar) {
+            this.sidebar.$el.hide();
+        }
+        this._super();
     },
     get_context: function () {
         return !this.ready ? {} : {
