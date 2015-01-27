@@ -91,8 +91,6 @@
                         <field name="alias_domain"/>
                         <field name="use_leads"/>
                         <field name="use_opportunities"/>
-                        <field name="monthly_open_leads"/>
-                        <field name="monthly_planned_revenue"/>
                     </xpath>
                     <xpath expr="//h4[@name='name']" position="after">
                         <div class="oe_kanban_alias text-center" t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
@@ -103,19 +101,13 @@
                         <div class="col-md-6 oe_margin_top_4" t-if="record.use_leads.raw_value">
                             <div class="row">
                                 <a class="col-md-9" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                <a class="col-md-3" name="%(action_report_crm_lead_salesteam)d" type="action">
-                                    <field name="monthly_open_leads" widget="sparkline_bar"
-                                        options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
-                                </a>
+                                <a class="col-md-3" name="%(action_report_crm_lead_salesteam)d" type="action"><i class="fa fa-tags fa-fw"/></a>
                             </div>
                         </div>
                         <div class="col-md-6 oe_margin_top_4" t-if="record.use_opportunities.raw_value">
                             <div class="row">
                                 <a class="col-md-9" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                <a class="col-md-3" name="%(action_report_crm_opportunity_salesteam)d" type="action">
-                                    <field name="monthly_planned_revenue" widget="sparkline_bar"
-                                        options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': ' (Planned Revenue)'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
-                                </a>
+                                <a class="col-md-3" name="%(action_report_crm_opportunity_salesteam)d" type="action"><i class="fa fa-star fa-fw"/></a>
                             </div>
                         </div>
                     </xpath>

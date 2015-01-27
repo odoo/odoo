@@ -100,35 +100,6 @@
         </record>
 
         <!-- SALESTEAM -->
-        <!-- SalesTeam Kanban View - Lead information added -->
-        <record id="crm_team_salesteams_view_kanban_inherit" model="ir.ui.view">
-            <field name="name">crm.team.kanban.inherit</field>
-            <field name="model">crm.team</field>
-            <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//templates" position="before">
-                        <field name="user_ids"/>
-                    </xpath>
-                    <field name="member_ids" position="after">
-                        <field name="team_user_ids"/>
-                    </field>
-                    <xpath expr="//div[@class='oe_clear']" position="after">
-                        <div class="text-center text-muted">
-                            Capacity: <b><field name="capacity"/></b> |
-                            Lead count: <b><field name="leads_count"/></b> |
-                            Assigned: <b><field name="assigned_leads"/></b>
-                        </div>
-                    </xpath>
-
-                    <xpath expr="//div[@class='oe_kanban_salesteams_avatars']" position="replace">
-                        <t t-foreach="record.user_ids.raw_value.slice(0,10)" t-as="member">
-                            <img t-att-src="kanban_image('res.users', 'image_small', member)" class="img-rounded oe_kanban_avatar_smallbox" />
-                        </t>
-                    </xpath>
-                </data>
-            </field>
-        </record>
 
         <!-- Graph view of leads via SalesTeam -->
         <record model="ir.ui.view" id="crm_case_graph_view_leads_sales">
