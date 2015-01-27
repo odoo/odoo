@@ -51,7 +51,7 @@ class Lead(models.Model):
                 return None
 
     def get_key(self):
-        return self.pool['ir.config_parameter'].get_param(request.cr, SUPERUSER_ID, 'database.uuid.private')
+        return self.pool['ir.config_parameter'].get_param(request.cr, SUPERUSER_ID, 'database.secret')
 
     def get_score_domain_cookies(self):
         return request.httprequest.host
