@@ -521,7 +521,6 @@ openerp.web_timeline = function (session) {
                     'default_res_id': data.res_id || this.context.default_res_id,
                     'default_parent_id': this.id,
                 }}), _.extend(this.options, {'parent_message': parent_message}));
-                console.log("message", message);
             }
             else {
                 data.record_name = (data.record_name != '' && data.record_name) 
@@ -565,7 +564,9 @@ openerp.web_timeline = function (session) {
             this.$('.oe_view_nocontent').remove();
 
             if (dom_insert_after) {
-                message.insertAfter(dom_insert_after);
+                // message.insertAfter(dom_insert_after);
+                
+                message.prependTo(dom_insert_after);
             } 
             else if (dom_insert_before) {
                 message.insertBefore(dom_insert_before);
@@ -732,28 +733,12 @@ openerp.web_timeline = function (session) {
             else if (this.model == 'hr.employee') {
                 this.record_name = 'News from ' + this.record_name;
             }
-
-            // record options and data
-            this.options.show_read = false;
-            this.options.show_unread = false;
-
-            if (this.options.show_read_unread_button) {
-                if (this.options.read_action == 'read') {
-                    this.options.show_read = true;
-                }
-                else if (this.options.read_action == 'unread') {
-                    this.options.show_unread = true;
-                }
-                else {
-                    this.options.show_read = this.to_read;
-                    this.options.show_unread = !this.to_read;
-                }
-                this.options.rerender = true;
-                this.options.toggle_read = true;
-            }
-
+            
             this.parent_thread = parent;
             this.thread = false;
+
+            this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+            this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
         },
 
         /** 
@@ -800,24 +785,7 @@ openerp.web_timeline = function (session) {
                     this.extra_partners_str += extra_partners[key][1];
                 }
             }
-        },
-
-        create_thread: function () {
-            if (this.thread) {
-                return false;
-            }
-            /*create thread*/
-            this.thread = new openerp.web_timeline.MailThread(this, _.extend({
-                    'domain': this.domain,
-                    'context': {
-                        'default_model': this.model,
-                        'default_res_id': this.res_id,
-                        'default_parent_id': this.id
-                    }},
-                this), this.options);
-            /*insert thread in parent message*/
-            this.thread.insertAfter(this.$el);
-        },
+        },               
 
         /** 
          * Upload the file on the server, add in the attachments list and reload display
@@ -854,397 +822,6 @@ openerp.web_timeline = function (session) {
         },
     });
 
-    openerp.web_timeline.ThreadParent = openerp.web_timeline.MessageCommon.extend({
-        template: 'ThreadParent',
-
-        events: {
-             'click .oe_tl_parent_message.default':'on_parent_message',
-             'click .oe_tl_parent_message.disp':'on_parent_message_hide',
-             // 'click .oe_tl_parent_message.undisp':'on_parent_message_show',
-        },
-
-        start: function () {
-            this.create_thread();
-            return this._super.apply(this, arguments);
-        },
-
-        on_parent_message: function (event) {
-            event.stopPropagation();
-            
-            var self = this;
-            this.parent_thread.message_fetch(this.domain.concat(['|', ["parent_id", "=", this.id], ["id", "=", this.id]]), 
-                                             this.context, false, 'child', function (arg, data) {
-                self.parent_thread.switch_new_message(data, self.$('.oe_tl_parent_message'), false, self);
-            }).then(function () {
-                self.$('.oe_tl_parent_message').removeClass('default').addClass('disp');
-            });
-        },
-
-        on_parent_message_hide: function (event) {
-            event.stopPropagation();
-        
-            this.$('.oe_tl_thread_message').hide();
-            this.$('.oe_tl_thread_expendable').hide();
-            this.$('.oe_tl_parent_message').removeClass('disp').addClass('default');
-            // this.$('.oe_tl_parent_message').removeClass('disp').addClass('undisp');
-        },
-
-        /*on_parent_message_show: function (event) {
-            event.stopPropagation();
-
-            this.$('.oe_tl_thread_message').show();
-            this.$('.oe_tl_parent_message').removeClass('undisp').addClass('disp');
-        },*/
-    });
-
-    openerp.web_timeline.ThreadExpendable = openerp.web_timeline.MessageCommon.extend({
-        template: "ThreadExpendable",
-
-        events : {
-            'click':'on_expendable_message',
-        },
-
-        init: function (parent, dataset, options) {
-            this._super(parent, dataset, options);
-
-            this.nb_messages = dataset.nb_messages;
-            this.parent_message = options.parent_message;
-        },
-
-        reinit: function () {
-            var $el = $(session.web.qweb.render('ThreadExpendable', {'widget': this}));
-            this.replaceElement($el);
-        },
-
-        on_expendable_message: function (event) {
-            event.stopPropagation();
-
-            var self = this;
-            this.parent_thread.message_fetch(this.domain, this.context, false, 'default', function (arg, data) {
-                self.id = false;
-
-                // insert messages on dom and destroy expandable
-                self.parent_thread.switch_new_message(data, false, self.$el, self.parent_message);
-                self.destroy();
-            });
-        },
-    });
-
-    openerp.web_timeline.ThreadMessage = openerp.web_timeline.MessageCommon.extend({
-        className: 'oe_tl_thread_message',
-
-        events: {
-            'click .oe_read':'on_message_read',
-            'click .oe_unread':'on_message_unread',
-            'click .oe_reply':'on_message_reply',
-            'click .oe_star':'on_star',
-            'click .oe_tl_msg_vote':'on_vote',
-            'mouseenter .oe_timeline_vote_count':'on_hover',
-            'click .oe_timeline_action_author':'on_record_author_clicked',
-        },
-
-        init: function (parent, dataset, options) {
-            this._super(parent, dataset, options);
-
-            this.view = parent.view;
-            this.tracking_values = false;
-            this.partners = false;
-            this.attachments = false;
-
-            this.parent_message = options.parent_message;
-        },
-
-        start: function () {
-            this.tracking_values = (this.tracking_value_ids.length > 0);
-            this.partners = (this.partner_ids.length > 0);
-            this.attachments = (this.attachment_ids.length > 0);
-
-            var qweb_context = {
-                session: session,
-                widget: this,
-                options: this.options,
-            };
-            
-            this.$el.html(QWeb.render('MessageContent', {
-                'widget': this, 
-                'content' : this.view.qweb.render("message_content", qweb_context)
-            }));
-
-            this.display_tracking_values();
-            this.display_votes();
-            this.display_attachments();
-            this.display_partners_recipients();
-
-            this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
-
-            return this._super.apply(this, arguments);
-        },
-
-        /** 
-         * Get all child message linked.
-         * @return array of message object
-         */
-        get_childs: function (nb_thread_level) {
-            var res = [];
-            if (arguments[1] && this.id) res.push(this);
-            if ((isNaN(nb_thread_level) || nb_thread_level > 0) && this.thread) {
-                _(this.thread.messages).each(function (val, key) {
-                    res = res.concat( val.get_childs((isNaN(nb_thread_level) ? undefined : nb_thread_level-1), true) );
-                });
-            }
-            return res;
-        },
-
-        on_hover : function (event) {
-            var self = this;
-            var voter = "";
-            var limit = 10;
-            event.stopPropagation();
-
-            var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
-            // Note: We can set data-content attr on target element once we fetch data so that 
-            // next time when one moves mouse on element it saves call
-            // But if there is new like comes then we'll not have new likes in popover in that case
-            if ($target.data('liker-list'))
-            {
-                voter = $target.data('liker-list');
-                self.bindTooltipTo($target, voter);
-                $target.tooltip('hide').tooltip('show');
-                $(".tooltip").on("mouseleave", function () {
-                    $(this).remove();
-                });
-            }
-            else {
-                this.ds_message.call('get_likers_list', [this.id, limit])
-                .done(function (data) {
-                    _.each(data, function(people, index) {
-                        voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
-                        if (index != data.length-1) {
-                            voter = voter + "<br/>";
-                        }
-                    });
-                    $target.data('liker-list', voter);
-                    self.bindTooltipTo($target, voter);
-                    $target.tooltip('hide').tooltip('show');
-                    $(".tooltip").on("mouseleave", function () {
-                        $(this).remove();
-                    });
-                });
-            }
-            return true;
-        },
-
-        bindTooltipTo: function ($el, value) {
-            $el.tooltip({
-                'title': value,
-                'placement': 'top',
-                'container': this.el,
-                'html': true,
-                'trigger': 'manual',
-                'animation': false
-            }).on("mouseleave", function () {
-                setTimeout(function () {
-                    if (!$(".tooltip:hover").length) {
-                        $el.tooltip("hide");
-                    }
-                }, 100);
-            });
-        },
-
-        on_record_author_clicked: function (event) {
-            event.preventDefault();
-            var partner_id = $(event.target).data('partner');
-            var state = {
-                'model': 'res.partner',
-                'id': partner_id,
-                'title': this.record_name
-            };
-
-            session.webclient.action_manager.do_push_state(state);
-            var action = {
-                type:'ir.actions.act_window',
-                view_type: 'form',
-                view_mode: 'form',
-                res_model: 'res.partner',
-                views: [[false, 'form']],
-                res_id: partner_id,
-            }
-            this.do_action(action);
-        },
-
-        on_message_reply:function (event) {
-            event.stopPropagation();
-            this.create_thread();
-            this.thread.on_compose_message(event);
-            return false;
-        },
-
-        /**
-         * Add or remove a vote for a message and display the result
-         */
-        on_vote: function (event) {
-            event.stopPropagation();
-            this.ds_message.call('vote_toggle', [[this.id]])
-                .then(
-                    _.bind(function (vote) {
-                        this.has_voted = vote;
-                        this.vote_nb += this.has_voted ? 1 : -1;
-                        this.display_vote();
-                    }, this));
-            return false;
-        },
-
-        /**
-         * Display the render of this message's vote
-         */
-        display_vote: function () {
-            var vote_element = session.web.qweb.render('ThreadMessage.Vote', {'widget': this});
-
-            this.$(".oe_tl_header:first .oe_timeline_vote_count").remove();
-            this.$(".oe_tl_header:first .oe_tl_msg_vote").replaceWith(vote_element);
-            this.$('.oe_tl_msg_vote').on('click', this.on_vote);
-            this.$('.oe_timeline_vote_count').on('mouseenter', this.on_hover);
-        },
-
-        /**
-         * Check if the message must be destroy and detroy it or check for re render widget
-         * @param {callback} apply function
-         */
-        check_for_rerender: function () {
-            var self = this;
-
-            var messages = [this].concat(this.get_childs());
-            var message_ids = _.map(messages, function (msg) {return msg.id;});
-            var domain = openerp.web_timeline.ChatterUtils.expand_domain(this.options.root_thread.domain)
-                .concat([["id", "in", message_ids ]]);
-                
-            return this.parent_thread.ds_message.call('message_read', 
-                [undefined, domain, [], 0, this.context, this.parent_thread.id])
-                .then( function (records) {
-                    // remove message not loaded
-                    _.map(messages, function (msg) {
-                        if(!_.find(records, function (record) {return record.id == msg.id;})) {
-                            msg.destroy_message(150);
-                        } 
-                        else {
-                            msg.renderElement();
-                            msg.start();
-                        }
-                        self.options.root_thread.MailRoot.do_reload_menu_emails();
-                    });
-                });
-        },
-
-        on_message_read: function (event) {
-            event.stopPropagation();
-            this.on_message_read_unread(true);
-            return false;
-        },
-
-        on_message_unread: function (event) {
-            event.stopPropagation();
-            this.on_message_read_unread(false);
-            return false;
-        },
-
-        /** 
-         * Set the selected thread and all childs as read or unread, based on
-         * read parameter.
-         * @param {boolean} read_value
-         */
-        on_message_read_unread: function (read_value) {
-            var self = this;
-            var messages = [this].concat(this.get_childs());
-
-            // inside the inbox, when the user mark a message as read/done, don't apply this value
-            // for the stared/favorite message
-            if (this.view.view_name === 'inbox' && read_value) {
-                var messages = _.filter(messages, function (val) { return !val.is_favorite && val.id; });
-                if (!messages.length) {
-                    this.check_for_rerender();
-                    return false;
-                }
-            }
-            var message_ids = _.map(messages, function (val) { return val.id; });
-
-            this.ds_message.call('set_message_read', [message_ids, read_value, true, this.context])
-                .then(function () {
-                    // apply modification
-                    _.each(messages, function (msg) {
-                        msg.to_read = !read_value;
-                        console.log("msg.to_read : ", msg.to_read);
-                        if (msg.options.toggle_read) {
-                            msg.options.show_read = msg.to_read;
-                            msg.options.show_unread = !msg.to_read;
-                        }
-                    });
-                    // check if the message must be display, destroy or rerender
-                    self.check_for_rerender();
-                });
-
-            return false;
-        },
-
-        /**
-         * add or remove a favorite (or starred) for a message and change class on the DOM
-         */
-        on_star: function (event) {
-            event.stopPropagation();
-            var self = this;
-            var button = self.$('.oe_star:first');
-
-            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite, true])
-                .then(function (star) {
-                    self.is_favorite = star;
-                    if (self.is_favorite) {
-                        button.addClass('oe_starred');
-                    } 
-                    else {
-                        button.removeClass('oe_starred');
-                    }
-
-                    if (self.options.view_inbox && self.is_favorite) {
-                        self.on_message_read_unread(true);
-                    } 
-                    else {
-                        self.check_for_rerender();
-                    }
-                });
-            return false;
-        },
-
-        display_votes: function () {
-           this.$(".oe_tl_vote")
-               .replaceWith(session.web.qweb.render('ThreadMessage.Vote', 
-                                            {'widget': this}));
-        },
-        
-        display_tracking_values: function () {
-           this.$(".oe_timeline_tracking_value_list")
-               .html(session.web.qweb.render('ThreadMessage.TrackingValues', 
-                                            {'widget': this}));
-        },
-
-        display_partners_recipients: function () {
-           this.$(".oe_tl_partners_list")
-               .html(session.web.qweb.render('ThreadMessage.PartnersList', 
-                                            {'widget': this}));
-        },
-
-        destroy_message: function (fadeTime) {
-            var self = this;
-
-            this.$el.fadeOut(fadeTime, function () {
-                var new_msg = self.parent_thread.message_to_expendable(self);
-                if (new_msg && new_msg.$el.prev().hasClass('oe_tl_parent_message') && !new_msg.$el.next()[0]) {
-                    new_msg.destroy();
-                    self.parent_message.thread.$el.fadeOut(fadeTime);
-                    self.parent_message.destroy();
-                }
-            });   
-        }
-    });
- 
     openerp.web_timeline.ThreadComposeMessage = openerp.web_timeline.MessageCommon.extend({
         template: 'ComposeMessage',
 
@@ -1256,6 +833,17 @@ openerp.web_timeline = function (session) {
             this.is_log = false;
             this.recipients = [];
             this.recipient_ids = [];
+
+            session.web.bus.on('clear_uncommitted_changes', this, function(e) {
+                if (this.show_composer && !e.isDefaultPrevented()) {
+                    if (!confirm(_t("You are currently composing a message, your message will be discarded.\n\nAre you sure you want to leave this page ?"))) {
+                        e.preventDefault();
+                    }
+                    else {
+                        this.on_cancel();
+                    }
+                }
+            });
         },
 
         start: function () {
@@ -1468,8 +1056,7 @@ openerp.web_timeline = function (session) {
         on_message_post: function (event) {
             var self = this;
 
-            if (self.flag_post) 
-                return;
+            if (self.flag_post) return;
             
             self.flag_post = true;
             if (this.do_check_attachment_upload() && 
@@ -1668,7 +1255,7 @@ openerp.web_timeline = function (session) {
 
                     // create object and attach to the thread object
                     thread.message_fetch([["id", "=", message_id]], false, [message_id], 'default', function (arg, data) {
-                        var message = thread.create_message_object( data.slice(-1)[0] );
+                        var message = thread.create_message_object(data.slice(-1)[0]);
                         // insert the message on dom
                         thread.insert_message(message, root ? undefined : self.$el, false, root);
                     });
@@ -1718,7 +1305,459 @@ openerp.web_timeline = function (session) {
                 this.reinit();
             }
         },      
-    }); 
+    });
+
+    openerp.web_timeline.ThreadMessageCommon = openerp.web_timeline.MessageCommon.extend({
+        init: function (parent, dataset, options) {
+            this._super(parent, dataset, options);
+
+            this.options.show_read = false;
+            this.options.show_unread = false;
+
+            if (this.options.show_read_unread_button) {
+                if (this.options.read_action == 'read') {
+                    this.options.show_read = true;
+                }
+                else if (this.options.read_action == 'unread') {
+                    this.options.show_unread = true;
+                }
+                else {
+                    this.options.show_read = this.to_read;
+                    this.options.show_unread = !this.to_read;
+                }
+                this.options.rerender = true;
+                this.options.toggle_read = true;
+            }
+
+            this.view = parent.view;
+        },
+
+        create_thread: function () {
+            if (this.thread) {
+                return false;
+            }
+            
+            this.thread = new openerp.web_timeline.MailThread(this, _.extend({
+                    'domain': this.domain,
+                    'context': {
+                        'default_model': this.model,
+                        'default_res_id': this.res_id,
+                        'default_parent_id': this.id
+                    }},
+                this), this.options);
+
+            this.thread.appendTo(this.$el);
+        },
+
+        on_message_read: function (event) {
+            event.stopPropagation();
+            this.on_message_read_unread(true);
+            return false;
+        },
+
+        on_message_unread: function (event) {
+            event.stopPropagation();
+            this.on_message_read_unread(false);
+            return false;
+        },
+
+        /** 
+         * Set the selected thread and all childs as read or unread, based on
+         * read parameter.
+         * @param {boolean} read_value
+         */
+        on_message_read_unread: function (read_value) {
+            var self = this;
+            var messages = [];
+            var get_childs = false;
+
+            if (this.thread) {
+                if (this.thread.messages.length > 0) {
+                    _.each(this.thread.messages, function (msg) {
+                        messages.push(msg);
+                    });
+                }
+                else {
+                    messages = [this];
+                    get_childs = true;
+                }
+            }
+            else {
+                messages = [this];
+            } 
+
+            // inside the inbox, when the user mark a message as read/done, don't apply this value
+            // for the stared/favorite message
+            if (this.view.view_name === 'inbox' && read_value) {
+                messages = _.filter(messages, function (val) {return !val.is_favorite && val.id;});
+                if (!messages.length) {
+                    this.check_for_rerender();
+                    return false;
+                }
+            }
+            var message_ids = _.map(messages, function (val) { return val.id; });
+
+            console.log("message_ids", message_ids);
+
+            this.ds_message.call('set_message_read', [message_ids, read_value, true, get_childs, this.context])
+                .then(function () {
+                    // apply modification
+                    _.each(messages, function (msg) {
+                        msg.to_read = !read_value;
+                        if (msg.options.toggle_read) {
+                            msg.options.show_read = msg.to_read;
+                            msg.options.show_unread = !msg.to_read;
+                        }
+                    });
+                    // check if the message must be display, destroy or rerender
+                    self.check_for_rerender();
+                });
+
+            console.log("messages", this.parent_thread.messages);
+
+            return false;
+        },
+
+        /**
+         * Check if the message must be destroy and detroy it or check for re render widget
+         */
+        check_for_rerender: function () {
+            var self = this;
+            var messages = [];
+
+            if (this.thread) {
+                _.each(this.thread.messages, function (msg) {
+                    messages.push(msg);
+                });
+            }
+            else {
+                messages = [this];
+            } 
+
+            var message_ids = _.map(messages, function (msg) {return msg.id;});
+            var domain = openerp.web_timeline.ChatterUtils.expand_domain(this.options.root_thread.domain)
+                .concat([["id", "in", message_ids]]);
+                
+            return this.parent_thread.ds_message.call('message_read', 
+                [undefined, domain, [], 0, this.context, this.parent_thread.id])
+                .then( function (records) {
+                    // remove message not loaded
+                    _.map(messages, function (msg) {
+                        if(!_.find(records, function (record) {return record.id == msg.id;})) {
+                            msg.destroy_message(150);
+                        } 
+                        else {
+                            msg.renderElement();
+                            msg.start();
+                        }
+                        self.options.root_thread.MailRoot.do_reload_menu_emails();
+                    });
+                });
+        },
+
+        destroy_message: function (fadeTime) {
+            var self = this;
+
+            this.$el.fadeOut(fadeTime, function () {
+                var new_msg = self.parent_thread.message_to_expendable(self);
+                if (new_msg && !new_msg.$el.prev()[0] && !new_msg.$el.next()[0]) {
+                    new_msg.destroy();
+                    self.parent_message.thread.$el.fadeOut(fadeTime);
+                    self.parent_message.destroy();
+                }
+            });   
+        }
+    });
+
+    openerp.web_timeline.ThreadParent = openerp.web_timeline.ThreadMessageCommon.extend({
+        template: 'ThreadParent',
+
+        events: {
+             'click .oe_tl_parent_message.default':'on_parent_message',
+             'click .oe_tl_parent_message.disp':'on_parent_message_hide',
+             'click .oe_read':'on_message_read',
+        },
+
+        start: function () {
+            this.create_thread();
+            return this._super.apply(this, arguments);
+        },
+
+        on_parent_message: function (event) {
+            event.stopPropagation();
+            
+            var self = this;
+            this.thread.message_fetch(this.domain.concat(['|', ["parent_id", "=", this.id], ["id", "=", this.id]]), 
+                                             this.context, false, 'child', function (arg, data) {
+                // self.parent_thread.switch_new_message(data, self.$('.oe_tl_parent_message'), false, self);
+                self.thread.switch_new_message(data, self.$('.oe_thread'), false, self);
+            }).then(function () {
+                self.$('.oe_tl_parent_message').removeClass('default').addClass('disp');
+            });
+        },
+
+        on_parent_message_hide: function (event) {
+            event.stopPropagation();
+        
+            this.$('.oe_thread').empty(); 
+            this.$('.oe_tl_parent_message').removeClass('disp').addClass('default');
+        },
+    });
+
+    openerp.web_timeline.ThreadExpendable = openerp.web_timeline.ThreadMessageCommon.extend({
+        template: "ThreadExpendable",
+
+        events : {
+            'click':'on_expendable_message',
+        },
+
+        init: function (parent, dataset, options) {
+            this._super(parent, dataset, options);
+
+            this.nb_messages = dataset.nb_messages;
+            this.parent_message = options.parent_message;
+        },
+
+        reinit: function () {
+            var $el = $(session.web.qweb.render('ThreadExpendable', {'widget': this}));
+            this.replaceElement($el);
+        },
+
+        on_expendable_message: function (event) {
+            event.stopPropagation();
+
+            var self = this;
+            this.parent_message.thread.message_fetch(this.domain, this.context, false, 'default', function (arg, data) {
+                self.id = false;
+
+                // insert messages on dom and destroy expandable
+                self.parent_message.thread.switch_new_message(data, false, self.$el, self.parent_message);
+                self.destroy();
+            });
+        },
+    });
+
+    openerp.web_timeline.ThreadMessage = openerp.web_timeline.ThreadMessageCommon.extend({
+        className: 'oe_tl_thread_message',
+
+        events: {
+            'click .oe_read':'on_message_read',
+            'click .oe_unread':'on_message_unread',
+            'click .oe_reply':'on_message_reply',
+            'click .oe_star':'on_star',
+            'click .oe_tl_msg_vote':'on_vote',
+            'mouseenter .oe_timeline_vote_count':'on_hover',
+            'click .oe_timeline_action_author':'on_record_author_clicked',
+        },
+
+        init: function (parent, dataset, options) {
+            this._super(parent, dataset, options);
+
+            this.tracking_values = false;
+            this.partners = false;
+            this.attachments = false;
+
+            this.parent_message = options.parent_message;
+        },
+
+        start: function () {
+            this.tracking_values = (this.tracking_value_ids.length > 0);
+            this.partners = (this.partner_ids.length > 0);
+            this.attachments = (this.attachment_ids.length > 0);
+
+            var qweb_context = {
+                session: session,
+                widget: this,
+                options: this.options,
+            };
+            
+            this.$el.html(QWeb.render('MessageContent', {
+                'widget': this, 
+                'content' : this.view.qweb.render("message_content", qweb_context)
+            }));
+
+            this.display_tracking_values();
+            this.display_votes();
+            this.display_attachments();
+            this.display_partners_recipients();
+
+            this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+
+            return this._super.apply(this, arguments);
+        },
+
+        /** 
+         * Get all child message linked.
+         * @return array of message object
+         */
+        get_childs: function (nb_thread_level) {
+            var res = [];
+            if (arguments[1] && this.id) res.push(this);
+            if ((isNaN(nb_thread_level) || nb_thread_level > 0) && this.thread) {
+                _(this.thread.messages).each(function (val, key) {
+                    res = res.concat( val.get_childs((isNaN(nb_thread_level) ? undefined : nb_thread_level-1), true) );
+                });
+            }
+            return res;
+        },
+
+        on_hover : function (event) {
+            var self = this;
+            var voter = "";
+            var limit = 10;
+            event.stopPropagation();
+
+            var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
+            // Note: We can set data-content attr on target element once we fetch data so that 
+            // next time when one moves mouse on element it saves call
+            // But if there is new like comes then we'll not have new likes in popover in that case
+            if ($target.data('liker-list'))
+            {
+                voter = $target.data('liker-list');
+                self.bindTooltipTo($target, voter);
+                $target.tooltip('hide').tooltip('show');
+                $(".tooltip").on("mouseleave", function () {
+                    $(this).remove();
+                });
+            }
+            else {
+                this.ds_message.call('get_likers_list', [this.id, limit])
+                .done(function (data) {
+                    _.each(data, function(people, index) {
+                        voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
+                        if (index != data.length-1) {
+                            voter = voter + "<br/>";
+                        }
+                    });
+                    $target.data('liker-list', voter);
+                    self.bindTooltipTo($target, voter);
+                    $target.tooltip('hide').tooltip('show');
+                    $(".tooltip").on("mouseleave", function () {
+                        $(this).remove();
+                    });
+                });
+            }
+            return true;
+        },
+
+        bindTooltipTo: function ($el, value) {
+            $el.tooltip({
+                'title': value,
+                'placement': 'top',
+                'container': this.el,
+                'html': true,
+                'trigger': 'manual',
+                'animation': false
+            }).on("mouseleave", function () {
+                setTimeout(function () {
+                    if (!$(".tooltip:hover").length) {
+                        $el.tooltip("hide");
+                    }
+                }, 100);
+            });
+        },
+
+        on_record_author_clicked: function (event) {
+            event.preventDefault();
+            var partner_id = $(event.target).data('partner');
+            var state = {
+                'model': 'res.partner',
+                'id': partner_id,
+                'title': this.record_name
+            };
+
+            session.webclient.action_manager.do_push_state(state);
+            var action = {
+                type:'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+                res_model: 'res.partner',
+                views: [[false, 'form']],
+                res_id: partner_id,
+            }
+            this.do_action(action);
+        },
+
+        on_message_reply:function (event) {
+            event.stopPropagation();
+            this.create_thread();
+            this.thread.on_compose_message(event);
+            return false;
+        },
+
+        /**
+         * Add or remove a vote for a message and display the result
+         */
+        on_vote: function (event) {
+            event.stopPropagation();
+            this.ds_message.call('vote_toggle', [[this.id]])
+                .then(
+                    _.bind(function (vote) {
+                        this.has_voted = vote;
+                        this.vote_nb += this.has_voted ? 1 : -1;
+                        this.display_vote();
+                    }, this));
+            return false;
+        },
+
+        /**
+         * Display the render of this message's vote
+         */
+        display_vote: function () {
+            var vote_element = session.web.qweb.render('ThreadMessage.Vote', {'widget': this});
+
+            this.$(".oe_tl_header:first .oe_timeline_vote_count").remove();
+            this.$(".oe_tl_header:first .oe_tl_msg_vote").replaceWith(vote_element);
+            this.$('.oe_tl_msg_vote').on('click', this.on_vote);
+            this.$('.oe_timeline_vote_count').on('mouseenter', this.on_hover);
+        },
+
+        /**
+         * add or remove a favorite (or starred) for a message and change class on the DOM
+         */
+        on_star: function (event) {
+            event.stopPropagation();
+            var self = this;
+            var button = self.$('.oe_star:first');
+
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite, true])
+                .then(function (star) {
+                    self.is_favorite = star;
+                    if (self.is_favorite) {
+                        button.addClass('oe_starred');
+                    } 
+                    else {
+                        button.removeClass('oe_starred');
+                    }
+
+                    if (self.options.view_inbox && self.is_favorite) {
+                        self.on_message_read_unread(true);
+                    } 
+                    else {
+                        self.check_for_rerender();
+                    }
+                });
+            return false;
+        },
+
+        display_votes: function () {
+           this.$(".oe_tl_vote")
+               .replaceWith(session.web.qweb.render('ThreadMessage.Vote', 
+                                            {'widget': this}));
+        },
+        
+        display_tracking_values: function () {
+           this.$(".oe_timeline_tracking_value_list")
+               .html(session.web.qweb.render('ThreadMessage.TrackingValues', 
+                                            {'widget': this}));
+        },
+
+        display_partners_recipients: function () {
+           this.$(".oe_tl_partners_list")
+               .html(session.web.qweb.render('ThreadMessage.PartnersList', 
+                                            {'widget': this}));
+        },
+    });  
 
     session.web.views.add('timeline', 'session.web_timeline.TimelineView');
     session.web.form.widgets.add('mail_thread', 'openerp.web_timeline.TimelineRecordThread');

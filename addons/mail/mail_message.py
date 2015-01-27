@@ -230,7 +230,7 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     @api.cr_uid_ids_context
-    def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
+    def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, get_childs=False, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
             notifications (i.e. due to load more or thread parent fetching),
@@ -244,14 +244,21 @@ class mail_message(osv.Model):
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
+        domain = [('message_id', 'in', msg_ids), ('partner_id', '=', user_pid),]
         if not create_missing:
-            domain += [('is_read', '=', not read)]
+            domain += [('is_read', '=', not read),]
+        if get_childs:
+            domain.insert(0, ('id', 'child_of', msg_ids))
+            domain.insert(0, '|')
+            
+        print "domain to read : ", domain
+
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
             notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
+            print "number of messages read", len(notif_ids)
             return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
@@ -260,6 +267,9 @@ class mail_message(osv.Model):
         for msg_id in to_create_msg_ids:
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'is_read': read, 'message_id': msg_id}, context=context)
         notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
+
+        print "number of messages read", len(notif_ids)
+
         return len(notif_ids)
 
     @api.cr_uid_ids_context
@@ -476,11 +486,11 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                'author_avatar': message.author_avatar,
+                #'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
-                'has_voted': has_voted,
+                #'has_voted': has_voted,
                 'is_favorite': message.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
@@ -566,7 +576,6 @@ class mail_message(osv.Model):
                 elif nb > 0:
                     exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
                     idx = [msg.get('id') for msg in messages].index(child_id) + 1
-                    # messages.append(_get_expandable(exp_domain, nb, message_id, False))
                     messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
                     id_min, id_max, nb = max(child_ids), 0, 0
                 else:
@@ -574,7 +583,6 @@ class mail_message(osv.Model):
             if nb > 0:
                 exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
                 idx = [msg.get('id') for msg in messages].index(message_id) + 1
-                # messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
                 messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
 
         return True
@@ -585,8 +593,7 @@ class mail_message(osv.Model):
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
-        print "message_unload_ids : ", message_unload_ids
-        print "thread_level : ", thread_level
+        
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
         limit = limit or self._message_read_limit
@@ -596,10 +603,7 @@ class mail_message(osv.Model):
 
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
-            print "domain : ", domain
             ids = self.search(cr, uid, domain, context=context, limit=limit)
-        print "message read ids : ", ids
-        print ""
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
@@ -746,18 +750,22 @@ class mail_message(osv.Model):
         if mode == 'parent':
             message_list = [msg_list[0] for (key, msg_list) in parent_list]
             message_list = map(_get_parent, message_list)
-        else:
-            message_list = [message for (key, msg_list) in parent_list for message in msg_list]
-            self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
 
-        if mode == 'parent':
+            msg_to_read = [max([msg['to_read'] for msg in msg_list]) for (key, msg_list) in parent_list]
+
+            for i in range (0, len(message_list)):
+                message_list[i]['to_read'] = msg_to_read[i]
+
             return message_list
         
+        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
+            
         if mode == 'child':                                                                 
             # get the child expandable messages for the tree
             self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
                 thread_level=1, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
-        
+
         return message_list
 
 
