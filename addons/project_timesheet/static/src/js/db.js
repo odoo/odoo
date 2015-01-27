@@ -9,16 +9,78 @@ function odoo_project_timesheet_db(project_timesheet) {
             this.unique_id_counter = 0;
         },
         //tac
-        load_data: function(){
-            stored_data = JSON.parse(localStorage.getItem("pt_data"));
+        load_data: function(session_user, session_server){
+            // test values here :
+            var test_data = [
+                {
+                    "session_user":"admin",
+                    "session_server":"http://localhost:8069",
+                    "data":{
+                        "settings":{
+                        "default_project_id":1,
+                        "minimal_duration":15,
+                        "time_unit":15
+                    },
+                        "projects":[
+                            {
+                                "id":1,
+                                "name":"Implementation"
+                            },
+                            {
+                                "id":1,
+                                "name":"Testing"
+                            }
+                        ],
+                        "tasks": [
+                            {
+                                "id":1,
+                                "name":"C#",
+                                "project_id" : 1
 
-            var data = _.filter(stored_data, function(entry){
-                if(entry.session_user === project_timesheet.session.username){
-                    console.log(entry);
-                    return entry;
+                            },
+                            {
+                                "id":2,
+                                "name":"Python",
+                                "project_id":1
+                            }                       
+                        ],
+                        "account_analytic_lines":[
+                            {
+                                "project_id":1,
+                                "task_id":1,
+                                "id":1,
+                                "name":"/",
+                                "unit_amount":10
+                            },
+                            {
+                                "project_id":1,
+                                "task_id":2,
+                                "id":2,
+                                "name":"/",
+                                "unit_amount":50  
+                            },
+                            {
+                                "id":3,
+                                "name":"/"
+                            }
+                        ],
+                        "day_plan":[
+                            {"project_id":1, "task_id" : 1},
+                            {"project_id":1, "task_id" : 2}
+                        ]
+                    }
+                },
+                {
+                   "session_user":"demoUser",
+                    "session_server":"http://localhost:8069",
+                    "data":{} 
                 }
-            });
+            ];
 
+            localStorage.setItem("pt_data", JSON.stringify(test_data));
+
+            var stored_data = JSON.parse(localStorage.getItem("pt_data"));
+            var data = _.findWhere(stored_data, {session_user : session_user, session_server : session_server});
             return data;
         },
         load: function(name, def) {

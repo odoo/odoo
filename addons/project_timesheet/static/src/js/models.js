@@ -95,21 +95,69 @@ function odoo_project_timesheet_models(project_timesheet) {
     // Main model, used to hold info such as the current screen or user.
     project_timesheet.project_timesheet_model = Backbone.Model.extend({
         initialize: function(attributes) {
-            
+
             var self = this;
+            self.ready = $.Deferred();
+
+            self.projects;
+            self.tasks;
+            self.day_plan;
+            self.account_analytic_lines;
+            
+
             this.project_timesheet_widget = attributes.project_timesheet_widget;
-            this.db = new project_timesheet.project_timesheet_db();
+            self.db = new project_timesheet.project_timesheet_db();
             this.selected_screen = "no screen yet !";
 
             // Session management
             project_timesheet.session = new project_timesheet.Session();
-            project_timesheet.session.session_reload();
+            this.session_reloading = project_timesheet.session.session_reload();
 
-            var data = this.db.load_data();
-            console.log(data);
+            this.session_reloading.done(function(){
+                var user_data = self.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
+                var data = user_data.data;
+                self.projects = data.projects;
+                self.tasks = data.tasks;
+                self.account_analytic_lines = data.account_analytic_lines;
+                self.day_plan = data.day_plan;
+                self.settings = data.settings;                
 
-            this.ready = $.Deferred();
-            this.ready.resolve();
+                _.each(self.account_analytic_lines, function(account_analytic_line){
+
+                    var this_task = _.findWhere(self.tasks, {id:account_analytic_line.task_id});
+                    if(! _.isUndefined(this_task)){
+                       account_analytic_line.task_name = this_task.name;
+                    }
+
+                    var this_project = _.findWhere(self.projects, {id:account_analytic_line.project_id});
+                    if(! _.isUndefined(this_project)){
+                        account_analytic_line.project_name = this_project.name;
+                    }
+                });
+
+                _.each(self.tasks, function(task){
+                    var this_project = _.findWhere(self.projects, {id:task.project_id});
+                    if(! _.isUndefined(this_project)){
+                        task.project_name = this_project.name;
+                    }
+                });
+
+                _.each(self.day_plan, function(day_activity){
+                    
+                    var this_task = _.findWhere(self.tasks, {id:day_activity.task_id});
+                    if(! _.isUndefined(this_task)){
+                       day_activity.task_name = this_task.name;
+                    }
+
+                    var this_project = _.findWhere(self.projects, {id:day_activity.project_id});
+                    if(! _.isUndefined(this_project)){
+                        day_activity.project_name = this_project.name;
+                    }
+                });
+
+                self.ready.resolve();
+            });
+            
         }
     });
 

@@ -31,33 +31,41 @@
 						<div class="panel-body">
 					<div class="row">
 							<div class="col-xs-7">
-								<t t-if="account_analytic_line.project_id">
-									<t t-esc="account_analytic_line.project_id"/><br/>
-									<t t-if="account_analytic_line.task_id">
-							    		<t t-esc="account_analytic_line.task_id"/>
+								<t t-if="account_analytic_line.project_name">
+									<t t-esc="account_analytic_line.project_name"/><br/>
+									<t t-if="account_analytic_line.task_name">
+							    		<t t-esc="account_analytic_line.task_name"/>
 							    	</t>
-							    	<t t-if="!account_analytic_line.task_id">
+							    	<t t-if="!account_analytic_line.task_name">
 							    		<a class="dropdown">
-								        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-								            Select a task <span class="caret"></span>
-								        </a>
-								        <ul class="dropdown-menu">
-								            <li><a href="javascript:void(0)">A task</a></li>
-								            <li><a href="javascript:void(0)">Another task</a></li>
-								        </ul>
-							    	</a>
+							    			<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+							    				Select a task <span class="caret"></span>
+							    			</a>
+							    			<ul class="dropdown-menu">
+							    				<li><a href="javascript:void(0)">Create task</a></li>
+							    				<t t-if="widget.tasks">
+							    					<t t-foreach="widget.tasks" t-as="task">
+							    						<li><a href="javascript:void(0)"><t t-esc="task.name"/></a></li>
+							    					</t>
+							    				</t>
+							    			</ul>
+							    		</a>
 							    	</t>
 								</t>
-								<t t-if="!account_analytic_line.project_id">
+								<t t-if="!account_analytic_line.project_name">
 									<a class="dropdown">
-								        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-								            Select a project <span class="caret"></span>
-								        </a>
-								        <ul class="dropdown-menu">
-								            <li><a href="javascript:void(0)">A project</a></li>
-								            <li><a href="javascript:void(0)">Another project</a></li>
-								        </ul>
-							    	</a>
+										<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+											Select a project <span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu">
+											<li><a href="javascript:void(0)">Create project</a></li>
+											<t t-if="widget.projects">
+												<t t-foreach="widget.projects" t-as="project">
+													<li><a href="javascript:void(0)"><t t-esc="project.name"/></a></li>
+												</t>
+											</t>
+										</ul>
+									</a>
 								</t>
 
 							</div>
@@ -84,51 +92,142 @@
     	<t t-call="header">
     	</t>
     	<div class="pt_day_planner_screen">
-    		
+    		<div class="well">
+    			What will you be working on today?
+    		</div>
+    		<div class="container-fluid">
+	    		<t t-foreach="widget.tasks" t-as="task">
+    				<div class="row panel">
+    					<div class="panel-body">
+	    					<div class="col-xs-3 pt_day_plan_selected">
+	    						<!-- Hidden at the moment, should appear dynamically when selected.
+	    						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+	    						-->
+	    					</div>
+	    				
+	    					<div class="col-xs-9">
+	    						<div class="row">
+	    							<t t-esc="task.project_name"/>
+	    						</div>
+	    						<div class="row">
+	    							<t t-esc="task.name"/>
+	    						</div>
+	    					</div>
+	    				</div>
+    				</div>
+	    		</t>
+    		</div>
     	</div>
     </t>
 
 	<t t-name="settings_screen">
     	<t t-call="header">
     	</t>
-    	<div class="pt_settings_screen">
-    		
+    	<div class="pt_settings_screen container-fluid">
+    		<div class="panel">
+    			<div class="panel-heading">
+	    			<p>Default project</p>
+	    		</div>
+	    		<div class="panel-body">
+	    			<!--For some reason, the dropdown does not work without the following div-->
+	    			<div class="col-xs-12">
+						<a class="dropdown">
+					        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+					            Select a project <span class="caret"></span>
+					        </a>
+					        <ul class="dropdown-menu">
+					        	<li><a href="javascript:void(0)">Create project</a></li>
+				            	<t t-if="widget.projects">
+				            		<t t-foreach="widget.projects" t-as="project">
+				            			<li><a href="javascript:void(0)"><t t-esc="project.name"/></a></li>
+				            		</t>
+				            	</t>
+					        </ul>
+				    	</a>
+			    	</div>
+		    	</div>
+	    	</div>
+	    	<div class="col-xs-12">
+	    		<div class="row">
+    				<p><small>The default project when starting a new timer or adding a new task.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+    			<div class="row">
+    				<p>Minimal duration</p>
+    				<div class="input-group">
+    					<input type="text" class="form-control" aria-describedby="minutes" t-att-placeholder="widget.settings.minimal_duration"></input>
+    					<span class="input-group-addon" id="minutes">minutes</span>
+					</div>
+    				<p><small>When synchronizing, all durations below the minimal duration will be changed to this value.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+    			<div class="row">
+    				<p>Time unit</p>
+    				<div class="input-group">
+    					<input type="text" class="form-control" aria-describedby="minutes"></input>
+    					<span class="input-group-addon" id="minutes">minutes</span>
+					</div>
+    				<p><small>When synchronizing, all durations will be rounded up to the higher multiple of this value.</small></p>
+    				<div class="progress" style="width: 100%"></div>
+    			</div>
+	    	</div>
     	</div>
     </t>
 
     <t t-name="header">
-    	<div class="navbar navbar-material-purple">
-    		<ul class="nav navbar-nav navbar-left">
-    			<li class="dropdown">
-    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
-    				<ul class="dropdown-menu">
-    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
-    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
-    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
-    				</ul>
-    			</li>
-    			<li>
-    				<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
-    			</li>
-    		</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<t t-if="widget.screen_name == 'Activities'">
-						<li>
-							<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-						</li>
+    	<!-- <div class="panel-material-grey"> -->
+    		<div class="well">
+	    	<div class="row">
+	    		<div class="col-xs-2">
+	    			<div class="dropdown">
+	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+	    				<ul class="dropdown-menu">
+	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
+	    				</ul>
+
+	    			</div>
+
+	    		</div>
+	    		<div class="col-xs-8">
+	    			<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
+	    		</div>
+	    		<div class="col-xs-2">
+	    			<t t-if="widget.screen_name == 'Activities'">
+						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 					</t>
 					<t t-if="widget.screen_name != 'Activities'">
-						<li>
-							<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
-						</li>
+						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
 					</t>
-
-					
-					<!--To remove, it is used at the moment to remove the -15px from navbar-right last child-->
-					<li>
-						<a href="javascript:void(0)"></a> 
-					</li>
+	    		</div>
+			<!-- </div> -->
+		</div>
+<!-- 
+			<div class="dropdown">
+				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+				<ul class="dropdown-menu">
+					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
 				</ul>
+			</div>
+			<li>
+				<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
+			</li>
+		</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<t t-if="widget.screen_name == 'Activities'">
+					<li>
+						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+					</li>
+				</t>
+				<t t-if="widget.screen_name != 'Activities'">
+					<li>
+						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+					</li>
+				</t>
+			</ul> -->
     	</div>    		
     </t>
 

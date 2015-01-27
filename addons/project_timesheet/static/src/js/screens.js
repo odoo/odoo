@@ -1208,42 +1208,23 @@ function odoo_project_timesheet_screens(project_timesheet) {
     project_timesheet.Welcome_screen = project_timesheet.ScreenWidget.extend({
         template: "welcome_screen",
         init: function(project_timesheet_widget, options) {
-            this._super.apply(this, arguments);
-            this.project_timesheet_widget = project_timesheet_widget;
-            this.screen_name = "Activities";
+            self = this;
+            self._super.apply(this, arguments);
+            self.project_timesheet_widget = project_timesheet_widget;
+            self.screen_name = "Activities";
 
             // Events specific to this screen
-            _.extend(this.events,
+            _.extend(self.events,
                 {
                     "click .pt_btn_start_activity":"start_activity"
                 }
             );
-            //to remove :
-            // dummy values used for testing:
-            
-            // options1 = {
-            //     "id":1,
-            //     "task_id":"task nb 1",
-            //     "project_id":"project nb 1",
-            //     "unit_amount": "00:10"
-            // };
-            // this.acti1 = new project_timesheet.account_analytic_line_model(null, options1);
 
-            // options2 = {
-            //     "id":2,
-            //     "unit_amount" : "00:26"
-            // };
-            // this.acti2 = new project_timesheet.account_analytic_line_model(null, options2);
-
-            // options3 = {
-            //     "id":3,
-            //     "unit_amount" : "00:46",
-            //     "project_id":"project nb 3"
-            // };
-            // this.acti3 = new project_timesheet.account_analytic_line_model(null, options3);
+            self.projects = options.project_timesheet_model.projects;
+            self.tasks = options.project_timesheet_model.tasks;
+            self.account_analytic_lines = options.project_timesheet_model.account_analytic_lines;
 
 
-            // this.account_analytic_lines = [this.acti1, this.acti2, this.acti3];
         },
          start_activity: function(){
             console.log("Activity started ! ");
@@ -1256,6 +1237,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Day Planner";
+
+            //this.day_plan = options.project_timesheet_model.day_plan;
+            this.tasks = options.project_timesheet_model.tasks;
         },
     });
 
@@ -1265,6 +1249,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Settings";
+
+            this.projects = options.project_timesheet_model.projects;
+            this.settings = options.project_timesheet_model.settings;
         },
     }); 
 }
