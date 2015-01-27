@@ -47,7 +47,7 @@ openerp.pos_restaurant.load_notes = function(instance,module){
             var line = this.pos.get_order().get_selected_orderline();
             if (line) {
                 this.gui.show_popup('textarea',{
-                    message: _t('Orderline Note'),
+                    title: _t('Add Note'),
                     value:   line.get_note(),
                     confirm: function(note) {
                         line.set_note(note);

@@ -833,6 +833,9 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             });
         },
         button_click: function(){},
+        highlight: function(highlight){
+            this.$el.toggleClass('highlight',!!highlight);
+        },
     });
 
     /* -------- The Product Screen -------- */
@@ -1439,6 +1442,11 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             var newbuf = this.gui.numpad_input(this.inputbuffer, input, {'firstinput': this.firstinput});
 
             this.firstinput = (newbuf.length === 0);
+
+            // popup block inputs to prevent sneak editing. 
+            if (this.gui.has_popup()) {
+                return;
+            }
             
             if (newbuf !== this.inputbuffer) {
                 this.inputbuffer = newbuf;
@@ -1572,6 +1580,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 self.click_invoice();
             });
 
+            this.$('.js_cashdrawer').click(function(){
+                self.pos.proxy.open_cashbox();
+            });
+
         },
         show: function(){
             this.pos.get_order().clean_empty_paymentlines();
@@ -1626,7 +1638,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
         // Check if the order is paid, then sends it to the backend,
         // and complete the sale process
-        validate_order: function() {
+        validate_order: function(force_validation) {
             var self = this;
 
             var order = this.pos.get_order();
@@ -1669,6 +1681,26 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     });
                     return;
                 }
+            }
+
+            // if the change is too large, it's probably an input error, make the user confirm.
+            if (!force_validation && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+                this.gui.show_popup('confirm',{
+                    title: _t('Please Confirm Large Amount'),
+                    body:  _t('Are you sure that the customer wants to  pay') + 
+                           ' ' + 
+                           this.format_currency(order.get_total_paid()) +
+                           ' ' +
+                           _t('for an order of') +
+                           ' ' +
+                           this.format_currency(order.get_total_with_tax()) +
+                           ' ' +
+                           _t('? Clicking "Confirm" will validate the payment.'),
+                    confirm: function() {
+                        self.validate_order('confirm');
+                    },
+                });
+                return;
             }
 
             if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
