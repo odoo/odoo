@@ -513,7 +513,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             eo = ec.textContent.length;
         }
 
-        var ancestor = dom.commonAncestor(sc.tagName ? sc.parentNode : sc, ec.tagName ? ec.parentNode : ec);
+        var ancestor = dom.commonAncestor(sc.tagName ? sc.parentNode : sc, ec.tagName ? ec.parentNode : ec) || $(sc).closest(".o_editable")[0];
 
         if (!dom.isContentEditable(ancestor)) {
             return {
