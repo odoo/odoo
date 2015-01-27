@@ -579,7 +579,7 @@
 <div t-name="Sidebar" class="oe_sidebar btn-group">
     <t t-foreach="widget.sections" t-as="section">
         <div class="oe_form_dropdown_section btn-group btn-group-sm">
-            <button class="btn btn-default dropdown-toggle"
+            <button type="button" class="btn btn-default dropdown-toggle"
                     t-if="section.name != 'buttons'"
                     data-toggle="dropdown">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
@@ -587,7 +587,7 @@
                 <span class="caret"></span>
             </button>
             <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
+                <button type="button" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
                     target="_blank" class="oe_sidebar_button oe_highlight">
                     <t t-raw="item.label"/>
                 </button>
@@ -1692,17 +1692,17 @@
     </div>
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group btn-group-sm">
-    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <span class="fa fa-filter"/> Filters <span class="caret"/>
     </button>
     <ul class="dropdown-menu filters-menu" role="menu">
         <li class="oe-add-filter closed-menu"><a>Add Custom Filter</a></li>
-        <li class="oe-add-filter-menu"><button class="btn btn-default oe-apply-filter">Apply</button><a class="oe-add-condition"><span class="fa fa-plus-circle"/> Add a condition</a></li>
+        <li class="oe-add-filter-menu"><button type="button" class="btn btn-default oe-apply-filter">Apply</button><a class="oe-add-condition"><span class="fa fa-plus-circle"/> Add a condition</a></li>
     </ul>
 </div>
 
 <div t-name="SearchView.GroupByMenu" class="btn-group btn-group-sm oe-groupby-menu">
-    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <span class="fa fa-bars"/> Group By <span class="caret"/>
     </button>
     <ul class="dropdown-menu group-by-menu" role="menu">
@@ -1717,10 +1717,10 @@
             <option t-att-data-name="field"><t t-esc="groupable_fields[field].string"/></option>
         </t>
     </select></li>
-    <li><button class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
+    <li><button type="button" class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group btn-group-sm">
-    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <span class="fa fa-star"/> Favorites <span class="caret"/>
     </button>
     <ul class="dropdown-menu favorites-menu" role="menu">
@@ -1733,7 +1733,7 @@
         <li class="oe-save-name">
             <span class="oe-share-filter"><input type="checkbox"/>Share with all users</span>
         </li>
-        <li class="oe-save-name"><button class="btn btn-default">Save</button></li>
+        <li class="oe-save-name"><button type="button" class="btn btn-default">Save</button></li>
     </ul>
 </div>
 <t t-name="SearchView.extended_search.proposition">
