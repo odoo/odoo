@@ -2914,6 +2914,7 @@ class account_tax_template(osv.osv):
 # Fiscal Position Templates
 
 class account_fiscal_position_template(osv.osv):
+
     _name = 'account.fiscal.position.template'
     _description = 'Template for Fiscal Position'
 
@@ -2923,7 +2924,22 @@ class account_fiscal_position_template(osv.osv):
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
         'note': fields.text('Notes'),
+        'sequence': fields.integer(string="Sequence"),
+        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position if the conditions match."),
+        'vat_required': fields.boolean('VAT required', help="Apply only if partner has a VAT number."),
+        'country_id': fields.many2one('res.country', 'Country', help="Apply when the shipping or invoicing country matches. Takes precedence over positions matching on a country group."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply when the shipping or invoicing country is in this country group, and no position matches the country directly."),
     }
+
+    def _check_country(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        if obj.country_id and obj.country_group_id:
+            return False
+        return True
+
+    _constraints = [
+        (_check_country, 'You can not select a country and a group of countries', ['country_id', 'country_group_id']),
+    ]
 
     def generate_fiscal_position(self, cr, uid, chart_temp_id, tax_template_ref, acc_template_ref, company_id, context=None):
         """
