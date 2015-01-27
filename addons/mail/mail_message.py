@@ -244,21 +244,20 @@ class mail_message(osv.Model):
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
-        domain = [('message_id', 'in', msg_ids), ('partner_id', '=', user_pid),]
+
+        if get_childs:
+            message_obj = self.pool.get('mail.message')
+            add_message_ids = message_obj.search(cr, uid, [('parent_id', 'in', msg_ids),('to_read', '=', read)], context=context)
+            msg_ids += add_message_ids
+
         if not create_missing:
             domain += [('is_read', '=', not read),]
-        if get_childs:
-            domain.insert(0, ('id', 'child_of', msg_ids))
-            domain.insert(0, '|')
-            
-        print "domain to read : ", domain
 
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
             notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
-            print "number of messages read", len(notif_ids)
             return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
@@ -267,8 +266,6 @@ class mail_message(osv.Model):
         for msg_id in to_create_msg_ids:
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'is_read': read, 'message_id': msg_id}, context=context)
         notification_obj.write(cr, uid, notif_ids, {'is_read': read}, context=context)
-
-        print "number of messages read", len(notif_ids)
 
         return len(notif_ids)
 

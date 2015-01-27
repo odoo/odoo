@@ -584,7 +584,7 @@ openerp.web_timeline = function (session) {
         message_to_expendable: function (message) {
             var prev_msg = message.$el.prev();
             var next_msg = message.$el.next();
-            var new_msg =  false;
+            var new_msg = false;
 
             if (!prev_msg.hasClass('oe_tl_thread_expendable') && !next_msg.hasClass('oe_tl_thread_expendable')) {
                 new_msg = this._create_new_expandable(message);
@@ -1397,8 +1397,6 @@ openerp.web_timeline = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            console.log("message_ids", message_ids);
-
             this.ds_message.call('set_message_read', [message_ids, read_value, true, get_childs, this.context])
                 .then(function () {
                     // apply modification
@@ -1413,8 +1411,6 @@ openerp.web_timeline = function (session) {
                     self.check_for_rerender();
                 });
 
-            console.log("messages", this.parent_thread.messages);
-
             return false;
         },
 
@@ -1425,7 +1421,7 @@ openerp.web_timeline = function (session) {
             var self = this;
             var messages = [];
 
-            if (this.thread) {
+            if (this.thread && this.thread.messages.length > 0) {
                 _.each(this.thread.messages, function (msg) {
                     messages.push(msg);
                 });
@@ -1460,10 +1456,14 @@ openerp.web_timeline = function (session) {
 
             this.$el.fadeOut(fadeTime, function () {
                 var new_msg = self.parent_thread.message_to_expendable(self);
-                if (new_msg && !new_msg.$el.prev()[0] && !new_msg.$el.next()[0]) {
+                if (new_msg && ((!new_msg.$el.prev()[0] && !new_msg.$el.next()[0])
+                            || new_msg.$el.prev().hasClass('oe_tl_thread_parent')
+                            || new_msg.$el.next().hasClass('oe_tl_thread_parent'))) {
                     new_msg.destroy();
-                    self.parent_message.thread.$el.fadeOut(fadeTime);
-                    self.parent_message.destroy();
+                    if (self.parent_message) {
+                        self.parent_message.thread.$el.fadeOut(fadeTime);
+                        self.parent_message.destroy();
+                    }
                 }
             });   
         }
