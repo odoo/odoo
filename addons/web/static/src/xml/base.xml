@@ -498,17 +498,17 @@
                 <div class="oe-view-manager-sidebar"></div>
             </div>
             <div class="col-md-6">
-                <div class="oe-search-options btn-group"/>
-                <div class="oe-right-toolbar">
-                    <div class="oe-view-manager-pager"></div>
-                    <t t-if="widget.multiple_views">
-                        <div class="oe-view-manager-switch btn-group btn-group-sm">
-                            <t t-foreach="widget.view_order" t-as="view">
-                                <button type="button" t-attf-class="btn btn-default fa oe-vm-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label">
-                                </button>
-                            </t>
-                        </div>
-                    </t>
+                <div class="oe-search-options btn-group pull-left"/>
+                <div class="oe-right-toolbar btn-toolbar">
+                    <div class="oe-view-manager-switch btn-group pull-right">
+                        <t t-if="widget.multiple_views" t-foreach="widget.view_order" t-as="view">
+                            <button type="button"
+                                t-attf-class="btn btn-default btn-sm fa oe-vm-switch-#{view.type}"
+                                t-att-data-view-type="view.type"
+                                t-att-title="view.label"/>
+                        </t>
+                    </div>
+                    <div class="oe-view-manager-pager btn-group pull-right"/>
                 </div>
             </div>
         </div>
@@ -575,15 +575,11 @@
         </table>
     </div>
 </t>
-<span t-name="ViewPager">
-    <div class="oe_pager_value">
-        <t t-raw="0"/>
-    </div>
-    <div class="btn-group btn-group-sm oe-pager-buttons">
-        <a class="fa fa-chevron-left btn btn-default oe-pager-button" type="button" data-pager-action="previous"></a>
-        <a class="fa fa-chevron-right btn btn-default oe-pager-button" type="button" data-pager-action="next"></a>
-    </div>
-</span>
+<t t-name="ViewPager">
+    <t t-raw="0"/>
+    <a class="fa fa-chevron-left btn btn-default btn-sm oe-pager-button" type="button" data-pager-action="previous"></a>
+    <a class="fa fa-chevron-right btn btn-default btn-sm oe-pager-button" type="button" data-pager-action="next"></a>
+</t>
 
 <div t-name="Sidebar" class="oe_sidebar btn-group">
     <t t-foreach="widget.sections" t-as="section">
@@ -730,7 +726,19 @@
     </div>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
-    <span class="oe_list_pager_state"></span>
+    <span class="oe_list_pager_state btn"></span>
+    <div class="oe_list_pager_choice btn-group hidden">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+            Show <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#">80</a></li>
+            <li><a href="#">200</a></li>
+            <li><a href="#">500</a></li>
+            <li><a href="#">2000</a></li>
+            <li><a href="#">Unlimited</a></li>
+        </ul>
+    </div>
 </t>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
@@ -820,7 +828,7 @@
     </t>
 </div>
 <t t-name="FormView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
-    <span class="oe_form_pager_state"></span>
+    <span class="oe_form_pager_state btn btn-sm"></span>
 </t>
 <form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.dialog_options.args"/>

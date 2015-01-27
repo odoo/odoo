@@ -289,27 +289,46 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Pager
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':self})).hide();
+            this.$pager = $(QWeb.render("ListView.pager", {'widget': self}));
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
                 this.$el.find('.oe_list_pager').replaceWith(this.$pager);
             }
-
             this.$pager
-                .on('click', 'a[data-pager-action]', function () {
-                    var $this = $(this);
+                // Counter
+                .siblings('.oe_list_pager_state').on('click', function(e) {
+                    e.preventDefault();
+                    $(this).toggleClass("hidden");
+                    self.$pager.siblings('.oe_list_pager_choice').toggleClass("hidden");
+                })
+                // Records limit
+                .siblings('.oe_list_pager_choice').on('click', 'li', function(e) {
+                    e.preventDefault();
+                    var val = parseInt($(this).text(), 10);
+                    self._limit = (isNaN(val) ? null : val);
+                    self.page = 0;
+                    self.reload_content();
+                    $(this).parents(".oe_list_pager_choice").toggleClass("hidden");
+                    self.$pager.siblings('.oe_list_pager_state').toggleClass("hidden");
+                })
+                // Next / previous
+                .siblings('a[data-pager-action]').on('click', function(e) {
+                    var $this = $(this)
                     var max_page = Math.floor(self.dataset.size() / self.limit());
-                    switch ($this.data('pager-action')) {
+                    switch($this.data('pager-action')) {
                         case 'first':
-                            self.page = 0; break;
+                            self.page = 0;
+                            break;
                         case 'last':
                             self.page = max_page - 1;
                             break;
                         case 'next':
-                            self.page += 1; break;
+                            self.page += 1;
+                            break;
                         case 'previous':
-                            self.page -= 1; break;
+                            self.page -=1;
+                            break;
                     }
                     if (self.page < 0) {
                         self.page = max_page;
@@ -317,29 +336,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                         self.page = 0;
                     }
                     self.reload_content();
-                }).find('.oe_list_pager_state')
-                    .click(function (e) {
-                        e.stopPropagation();
-                        var $this = $(this);
-
-                        var $select = $('<select>')
-                            .appendTo($this.empty())
-                            .click(function (e) {e.stopPropagation();})
-                            .append('<option value="80">80</option>' +
-                                    '<option value="200">200</option>' +
-                                    '<option value="500">500</option>' +
-                                    '<option value="2000">2000</option>' +
-                                    '<option value="NaN">' + _t("Unlimited") + '</option>')
-                            .change(function () {
-                                var val = parseInt($select.val(), 10);
-                                self._limit = (isNaN(val) ? null : val);
-                                self.page = 0;
-                                self.reload_content();
-                            }).blur(function() {
-                                $(this).trigger('change');
-                            })
-                            .val(self._limit || 'NaN');
-                    });
+                });
         }
 
         // Sidebar
@@ -404,8 +401,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        this.$pager.find('.oe-pager-button').toggle(total > limit);
-        this.$pager.find('.oe_pager_value').toggle(total !== 0);
+        this.$pager.siblings('.oe-pager-button').toggle(total > limit);
+        this.$pager.siblings('.oe_list_pager_state').toggleClass('hidden', total === 0);
+        this.$pager.siblings('.oe_list_pager_choice').toggleClass('hidden', true);
         var spager = '-';
         if (total) {
             var range_start = this.page * limit + 1;
@@ -418,8 +416,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             spager = _.str.sprintf(_t("%d-%d of %d"), range_start, range_stop, total);
         }
-
-        this.$pager.find('.oe_list_pager_state').text(spager);
+        this.$pager.siblings('.oe_list_pager_state').text(spager);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -1303,6 +1300,10 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 e.stopPropagation();
                 self.page -= 1;
 
+                var max_page = $(this).parent().find('.oe_list_pager_state').data('page_count');
+                if (self.page < 0) {
+                    self.page = (max_page - 1);
+                }
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
             });
@@ -1310,6 +1311,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             .click(function (e) {
                 e.stopPropagation();
                 self.page += 1;
+
+                var max_page = $(this).parent().find('.oe_list_pager_state').data('page_count');
+                if (self.page > (max_page - 1)) {
+                    self.page = 0;
+                }
 
                 self.$row.closest('tbody').next()
                     .replaceWith(self.render());
@@ -1512,6 +1518,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                     page: page + 1,
                                     page_count: pages
                                 }))
+                                .data('page_count', pages)
                             .end()
                             .find('button[data-pager-action=previous]')
                                 .toggleClass('disabled', page === 0)
@@ -1608,8 +1615,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 .pluck('name').value(),
             function (groups) {
                 // page count is irrelevant on grouped page, replace by limit
-                self.view.$pager.find('.oe_pager_group').hide();
-                self.view.$pager.find('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
+                self.view.$pager.siblings('.oe_pager_group').hide();
+                self.view.$pager.siblings('.oe_list_pager_state').text(self.view._limit ? self.view._limit : '∞');
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }

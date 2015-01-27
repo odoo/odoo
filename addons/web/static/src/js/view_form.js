@@ -409,7 +409,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else {
             this.$el.find('.oe_form_pager').replaceWith(this.$pager);
         }
-        this.$pager.on('click','a[data-pager-action]',function() {
+        this.$pager.siblings('a[data-pager-action]').on('click', function() {
             var $el = $(this);
             if ($el.attr("disabled"))
                 return;
@@ -425,9 +425,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     do_update_pager: function(hide_index) {
         this.$pager.toggle(this.dataset.ids.length > 1);
         if (hide_index) {
-            $(".oe_form_pager_state", this.$pager).html("");
+            this.$pager.siblings(".oe_form_pager_state").html("");
         } else {
-            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+            this.$pager.siblings(".oe_form_pager_state").html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
         }
     },
 
