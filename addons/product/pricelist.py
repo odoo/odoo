@@ -208,20 +208,8 @@ class product_pricelist(osv.osv):
             raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
         return version
 
-    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, version=False, context=None):
+    def _get_pricelist_rules(self, cr, uid, products, is_product_template, version, context=None):
         context = context or {}
-
-        products = map(lambda x: x[0], products_by_qty_by_partner)
-        currency_obj = self.pool.get('res.currency')
-        product_obj = self.pool.get('product.template')
-        product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-
-        if not products:
-            return {}
-
-        if not version:
-            version = self._get_pricelist_current_version(cr, uid, pricelist, context=context)
 
         categ_ids = {}
         for p in products:
@@ -231,7 +219,6 @@ class product_pricelist(osv.osv):
                 categ = categ.parent_id
         categ_ids = categ_ids.keys()
 
-        is_product_template = products[0]._name == "product.template"
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
             # all variants of all products
@@ -251,9 +238,27 @@ class product_pricelist(osv.osv):
                 'AND (price_version_id = %s) '
             'ORDER BY sequence, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, version.id))
-        
+
         item_ids = [x[0] for x in cr.fetchall()]
-        items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
+        return self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
+
+    def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, version=False, context=None):
+        context = context or {}
+
+        products = map(lambda x: x[0], products_by_qty_by_partner)
+        if not products:
+            return {}
+
+        currency_obj = self.pool.get('res.currency')
+        product_obj = self.pool.get('product.template')
+        product_uom_obj = self.pool.get('product.uom')
+        price_type_obj = self.pool.get('product.price.type')
+
+        if not version:
+            version = self._get_pricelist_current_version(cr, uid, pricelist, context=context)
+
+        is_product_template = products[0]._name == "product.template"
+        items = self._get_pricelist_rules(cr, uid, products, is_product_template, version, context=context)
 
         price_types = {}
 
