@@ -648,7 +648,7 @@
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                   <button class="oe_inline oe_stat_button" name="action_view_purchases" type="object"
                        icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
