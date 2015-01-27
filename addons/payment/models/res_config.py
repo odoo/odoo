@@ -22,4 +22,7 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_authorize': fields.boolean(
             'Manage Payments Using Authorize.Net',
             help='-It installs the module payment_authorize.'),
+        'module_payment_payumoney': fields.boolean(
+            'Manage Payments Using PayuMoney',
+            help='-It installs the module payment_payumoney.'),
     }

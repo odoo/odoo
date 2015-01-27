@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_acquirer_payu" model="payment.acquirer">
+        <field name="name">PayuMoney</field>
+        <field name="provider">payumoney</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="payu_acquirer_button"/>
+        <field name="environment">test</field>
+        <field name="pre_msg"><![CDATA[
+            <p>You will be redirected to the PayuMoney website after clicking on the payment button.</p>]]>
+        </field>
+        <field name="merchant_id">JBZaLc</field>
+        <field name="payu_salt">GQs7yium</field>
+    </record>
+</odoo>
