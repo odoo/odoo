@@ -1400,6 +1400,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.inputbuffer = "";
             this.firstinput  = true;
+            
+            // This is a keydown handler that prevents backspace from
+            // doing a back navigation
+            this.keyboard_no_backnav = function(event){
+                if (event.keyCode === 8) {  // Backspace
+                    event.preventDefault();
+                }
+            };
+            
+            // This keyboard handler is on keyup to prevent keypress repeats
+            // but it thus cannot prevent the back navigation
             this.keyboard_handler = function(event){
                 var key = '';
                 if ( event.keyCode === 13 ) {         // Enter
@@ -1410,7 +1421,6 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                     key = 'CLEAR';
                 } else if ( event.keyCode === 8 ) {   // Backspace 
                     key = 'BACKSPACE';
-                    event.preventDefault(); // Prevents history back nav
                 } else if ( event.keyCode >= 48 && event.keyCode <= 57 ){       // Numbers
                     key = '' + (event.keyCode - 48);
                 } else if ( event.keyCode >= 96 && event.keyCode <= 105 ){      // Numpad Numbers
@@ -1422,7 +1432,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 }
 
                 self.payment_input(key);
-
+                event.preventDefault();
             };
         },
         // resets the current input buffer
@@ -1590,11 +1600,13 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.reset_input();
             this.render_paymentlines();
             this.order_changes();
-            window.document.body.addEventListener('keydown',this.keyboard_handler);
+            window.document.body.addEventListener('keyup',this.keyboard_handler);
+            window.document.body.addEventListener('keydown',this.keyboard_no_backnav);
             this._super();
         },
         hide: function(){
-            window.document.body.removeEventListener('keydown',this.keyboard_handler);
+            window.document.body.removeEventListener('keyup',this.keyboard_handler);
+            window.document.body.removeEventListener('keydown',this.keyboard_no_backnav);
             this._super();
         },
         // sets up listeners to watch for order changes
