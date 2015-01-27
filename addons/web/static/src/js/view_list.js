@@ -2364,7 +2364,7 @@ instance.web.list.Handle = instance.web.list.Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return '<div class="oe_list_handle">';
+        return '<i class="oe_list_handle fa fa-circle"/>';
     }
 });
 instance.web.list.Many2OneButton = instance.web.list.Column.extend({
