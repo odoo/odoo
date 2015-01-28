@@ -15,7 +15,7 @@
         <div class="oe_tl_msg_center">
             <div class="oe_tl_msg_content">
                 <button class="oe_full" title="Open the full mail composer">
-                    <span class='oe_e'>&amp;ograve</span>
+                    <i class='fa fa-pencil-square-o'/>
                 </button>
                 <t t-call="ThreadListRecipients"/>
                 <textarea class="field_text"></textarea>
@@ -73,7 +73,7 @@
     <span class="oe_attachment_file">
         <span class="oe_add">
             <!-- uploader of file -->
-            <button class="oe_attach"><span class="oe_e">'</span></button> 
+            <button class="oe_attach"><i class="fa fa-paperclip"/></button> 
             <span class='oe_attach_label'>Attach a file</span>
             <t t-call="HiddenInputFile">    
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
@@ -98,7 +98,9 @@
                     <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
                     <div class='oe_name'><t t-raw='attachment.name' /></div>
                 </a>
-                <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
+                <div class='oe_delete oe_e'>
+                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
+                </div>
                 <div class='oe_progress_bar'>
                     uploading
                 </div>
@@ -194,10 +196,10 @@
         <div t-attf-class="oe_tl_msg_icons" 
          t-if="!widget.options.readonly"> 
             <span class='oe_read' t-if="widget.options.show_read">
-                <a title="Done" class="oe_e">W</a>
+                <i title="Done" class="fa fa-check"/>
             </span>
             <span class='oe_unread' t-if="widget.options.show_unread">
-                <a title="Move to Inbox" class="oe_e">v</a>
+                <i title="Set back to Todo" class="fa fa-inbox"/>
             </span>
         </div>
         <div class="oe_tl_parent_subject default">
@@ -217,7 +219,7 @@
         <div t-attf-class="oe_tl_msg_icons" 
          t-if="!widget.options.readonly"> 
              <span class='oe_reply' t-if="widget.options.show_reply_button">
-                <a title="Reply" class="oe_e">(</a>
+                <i title="Reply" class="fa fa-reply"/>
             </span>
         </div>
     </div>

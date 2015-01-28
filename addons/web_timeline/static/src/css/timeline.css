@@ -130,14 +130,14 @@
     margin-right: 2%;
 }
 
-.openerp .oe_timeline .oe_tl_msg_center button.oe_full .oe_e {
-    
+.openerp .oe_timeline .oe_tl_msg_center button.oe_full .fa {
     position: relative;
-    top: -9px;
+    top: 2px;
     margin-left: -5px;
     vertical-align: top;
     filter: none;
     height: 14px;
+    font-size: 20px;
 }
 
 .openerp .oe_timeline button.oe_full,
@@ -309,10 +309,11 @@
     filter: none;
 }
 
-.openerp .oe_timeline .oe_tl_msg_footer button.oe_attach .oe_e {
+.openerp .oe_timeline .oe_tl_msg_footer button.oe_attach .fa {
     position: relative;
-    top: -4px;
-    margin-left: -9px;
+    top: 2px;
+    margin-left: -10px;
+    font-size: 1.4em;
     vertical-align: middle;
     filter:none;
 }
@@ -325,7 +326,7 @@
     display: inline;
     position: relative;
     margin-left: -100px;
-    height: 22px;
+    height: 30px;
     width: 100px;
     filter: none;
     cursor: pointer;
@@ -334,6 +335,8 @@
 .openerp .oe_timeline .oe_attach_label {
     color: #337ab7;
     margin-left: -3px;
+    height: 30px;
+    vertical-align: middle;
 }
 
 .openerp .oe_timeline .oe_hidden_input_file, 
@@ -342,11 +345,11 @@
     cursor: pointer;
 }
 
-.openerp .oe_timeline .oe_attachment .oe_delete {
+.openerp .oe_timeline .oe_attachment .oe_delete .fa {
     display: none;
 }
 
-.openerp .oe_timeline .oe_tl_msg_composer .oe_attachment .oe_delete {
+.openerp .oe_timeline .oe_tl_msg_composer .oe_attachment .oe_delete .fa {
     display: block;
     position: absolute;
     top: -7px;
@@ -361,7 +364,7 @@
             transition: opacity 0.2s linear; 
 }
 
-.openerp .oe_timeline .oe_tl_msg_composer .oe_attachment:hover .oe_delete {
+.openerp .oe_timeline .oe_tl_msg_composer .oe_attachment:hover .oe_delete .fa {
     opacity: 1;
     -webkit-transition: opacity 0.2s linear; 
        -moz-transition: opacity 0.2s linear; 
@@ -402,13 +405,13 @@
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read,
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread {
-    margin-top: -10px;
+    margin-top: 2px;
     margin-right: 5px;
     float: left;
 }
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply {
-    margin-top: -22px;
+    margin-top: -12px;
     float: right;
 }
 
@@ -419,7 +422,7 @@
     text-align: center;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons a {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons i {
     text-decoration: none;
     color: #FFF;
     text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
@@ -429,7 +432,7 @@
             transition: all 0.2s linear;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent:hover .oe_tl_msg_icons a {
+.openerp .oe_timeline .oe_tl_thread_parent:hover .oe_tl_msg_icons i {
     opacity: 1;
     -webkit-transition: all 0.1s linear;
        -moz-transition: all 0.1s linear;
@@ -437,15 +440,15 @@
             transition: all 0.1s linear;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply:hover a {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply:hover i {
     color: #1fc0ff;
     text-shadow: 0px 1px #184fc5,0px -1px #184fc5, -1px 0px #184fc5, 1px 0px #184fc5, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read:hover a {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read:hover i {
     color: #bbbaff;
     text-shadow: 0px 1px #7c7bad,0px -1px #7c7bad, -1px 0px #7c7bad, 1px 0px #7c7bad, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread:hover a {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread:hover i {
     color: #c2ff00;
     text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.1);
 }
@@ -602,10 +605,10 @@
 
 .openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons {
     float: right;
-    margin-top: -10px;
+    margin-top: 1px;
     margin-right: 8px;
     margin-left: 8px;
-    height: 20px;
+    height: 21px;
     -webkit-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
@@ -614,23 +617,25 @@
 
 .openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons span {
     float:right;
-    width:20px;
-    height:20px;
-    line-height:20px;
+    width:21px;
+    height:21px;
+    line-height:21px;
     text-align: center;
 }
 
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons i {
     text-decoration: none;
     color: #FFF;
     text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
+    font-size: 1.15em;
+    margin-top: 2px;
     -webkit-transition: all 0.2s linear;
        -moz-transition: all 0.2s linear;
          -o-transition: all 0.2s linear;
             transition: all 0.2s linear;
 }
 
-.openerp .oe_timeline .oe_tl_msg:hover .oe_tl_header .oe_tl_msg_icons a{
+.openerp .oe_timeline .oe_tl_msg:hover .oe_tl_header .oe_tl_msg_icons i{
     opacity: 1;
     -webkit-transition: all 0.1s linear;
        -moz-transition: all 0.1s linear;
@@ -645,23 +650,23 @@
     margin-left: 10px;
 }
 
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_star:hover a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_star:hover i {
     color: #FFF670;
     text-shadow: 0px 1px #FFA162,0px -1px #FFA162, -1px 0px #FFA162, 1px 0px #FFA162, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_star.oe_starred a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_star.oe_starred i {
     color: #FFE41F;
     text-shadow: 0px 1px #DF6200,0px -1px #DF6200, -1px 0px #DF6200, 1px 0px #DF6200, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_reply:hover a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_reply:hover i {
     color: #1fc0ff;
     text-shadow: 0px 1px #184fc5,0px -1px #184fc5, -1px 0px #184fc5, 1px 0px #184fc5, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_read:hover a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_read:hover i {
     color: #bbbaff;
     text-shadow: 0px 1px #7c7bad,0px -1px #7c7bad, -1px 0px #7c7bad, 1px 0px #7c7bad, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_unread:hover a {
+.openerp .oe_timeline .oe_tl_msg .oe_tl_header .oe_tl_msg_icons .oe_unread:hover i {
     color: #c2ff00;
     text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.1);
 }
@@ -742,7 +747,7 @@
 
 .openerp .oe_timeline .oe_tl_msg .oe_tl_msg_content .oe_tl_header .oe_tl_msg_icons.oe_tl_msg_icons_track {
     padding-right: 5px;
-    margin-top: -25px;
+    margin-top: -14px;
 }
 
 .openerp .oe_timeline .oe_tl_msg .oe_tl_msg_content .oe_tl_header .oe_tl_tracking_value_header .oe_tl_no_subtype {

@@ -95,19 +95,19 @@
                                                           'oe_tl_msg_icons_track' : ''}" 
                                              t-if="!options.readonly"> <!-- *** icons *** -->
                                             <span class='oe_read' t-if="options.show_read">
-                                                <a title="Done" class="oe_e">W</a>
+                                                <i title="Done" class="fa fa-check"/>
                                             </span>
                                             <span class='oe_unread' t-if="widget.is_favorite and options.show_unread">
-                                                <a title="Set back to Todo" class="oe_e">v</a>
+                                                <i title="Set back to Todo" class="fa fa-inbox"/>
                                             </span>
                                             <span class='oe_unread' t-if="!widget.is_favorite and options.show_unread">
-                                                <a title="Move to Inbox" class="oe_e">v</a>
+                                                <i title="Move to Inbox" class="fa fa-inbox"/>
                                             </span>
                                             <span class='oe_reply' t-if="options.show_reply_button">
-                                                <a title="Reply" class="oe_e">(</a>
+                                                <i title="Reply" class="fa fa-reply"/>
                                             </span>
                                             <span t-attf-class="oe_star #{widget.is_favorite ? 'oe_starred':''}">
-                                                <a title="Mark as Todo" class="oe_e">7</a>
+                                                <i title="Mark as Todo" class="fa fa-star"/>
                                             </span>
                                         </div> <!-- *** icons *** -->
                                     </div> <!-- *** msg_header *** -->
