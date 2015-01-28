@@ -21,10 +21,12 @@
 ##############################################################################
 
 from openerp.osv import orm, fields
+from openerp import models, api, fields as fields_new_api
 
 
 class fields_inherit_test(orm.Model):
-    """ This model use a many2one property field """
+    """ This model use a many2one property field.
+    This model is written on old api """
 
     _name = 'fields.inherit.test'
 
@@ -32,7 +34,11 @@ class fields_inherit_test(orm.Model):
                 'property_to_function_many2one': fields.property(
                 type='many2one',
                 relation='account.account',
-                string='property_to_function_many2one')
+                string='property_to_function_many2one'),
+                'property_to_function_many2one_new_api': fields.property(
+                type='many2one',
+                relation='account.account',
+                string='property_to_function_many2one_new_api')
                 }
 
 
@@ -60,3 +66,25 @@ class fields_inherit_test(orm.Model):
                 .function(_get_value, type='many2one',
                           string='property_to_function_many2one'),
                 }
+
+
+class fields_inherit_test(models.Model):
+    """Here, there is an inheritance from fields.inherit.test model.
+    The goal of this inheritance is to overload (on new API)
+    the many2one property fields previously defined to make a many2one
+    function field"""
+
+    _inherit = 'fields.inherit.test'
+
+    @api.one
+    def _get_value(self):
+        """This method aims to return a default account value at the
+        computation of the inherited field(new type function) with an xml id.
+        if this id doesn't exist an exception is raised"""
+        default_account_id = self.env.ref('account.a_sale')
+        self.property_to_function_many2one_new_api = default_account_id
+
+    property_to_function_many2one_new_api = fields_new_api\
+        .Many2one('account.account', compute='_get_value',
+                  company_dependent=False,
+                  string='property_to_function_many2one')

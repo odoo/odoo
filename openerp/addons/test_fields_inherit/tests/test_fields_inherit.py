@@ -27,20 +27,24 @@ class test_field_inherit(common.TransactionCase):
 
     def setUp(self):
         super(test_field_inherit, self).setUp()
-        self.context = self.registry("res.users").context_get(self.cr,
-                                                              self.uid)
+        self.context = self.env["res.users"].context_get()
 
     def test_field_inherit_property_to_function_many2one(self):
-        default_account_id = self.ref('account.a_sale')
-        test_model = self.registry('fields.inherit.test')
-        res_id = test_model.create(self.cr, self.uid, {'name': 'Test'})
-        res = test_model.browse(self.cr, self.uid, [res_id])[0]
-        # Here, property_to_function_many2one field should be calculated
-        # and it should only have a single value
-        self.assertEqual(len(res.property_to_function_many2one.ids), 1,
-                         "No account defined")
+        default_account_id = self.env.ref('account.a_sale')
+        test_model = self.env['fields.inherit.test']
+        res = test_model.create({'name': 'Test'})
         # Here, we check that the value on property_to_function_many2one field
         # is equal to default_account_id.
-        self.assertEqual(len(res.property_to_function_many2one.ids[0]),
+        self.assertEqual(res.property_to_function_many2one,
+                         default_account_id,
+                         "Account isn't correct")
+
+    def test_field_inherit_property_to_function_many2one_new_api(self):
+        default_account_id = self.env.ref('account.a_sale')
+        test_model = self.env['fields.inherit.test']
+        res = test_model.create({'name': 'Test'})
+        # Here, we check that the value on property_to_function_many2one
+        # new_api field is equal to default_account_id.
+        self.assertEqual(res.property_to_function_many2one_new_api,
                          default_account_id,
                          "Account isn't correct")
