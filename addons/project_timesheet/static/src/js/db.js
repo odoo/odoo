@@ -21,7 +21,7 @@ function odoo_project_timesheet_db(project_timesheet) {
                         "default_project_id":1,
                         "minimal_duration":15,
                         "time_unit":15
-                    },
+                        },
                         "projects":[
                             {
                                 "id":1,

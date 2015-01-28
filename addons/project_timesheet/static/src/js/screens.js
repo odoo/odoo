@@ -1216,7 +1216,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             // Events specific to this screen
             _.extend(self.events,
                 {
-                    "click .pt_btn_start_activity":"start_activity"
+                    "click .pt_button_plus_activity":"goto_edit_activity_screen"
                 }
             );
 
@@ -1228,8 +1228,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 account_analytic_line.hours_minutes = project_timesheet.unit_amount_to_hours_minutes(account_analytic_line.unit_amount);
             });
         },
-         start_activity: function(){
-            console.log("Activity started ! ");
+         goto_edit_activity_screen: function(){
+            this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
         }
     });
 
@@ -1240,9 +1240,17 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Day Planner";
 
-            //this.day_plan = options.project_timesheet_model.day_plan;
+            _.extend(self.events,
+                {
+                    "click .pt_day_plan_select":"add_to_day_plan"
+                }
+            );
+
             this.tasks = options.project_timesheet_model.tasks;
         },
+        add_to_day_plan: function(event){
+            console.log(event.currentTarget.dataset.task_id);
+        }
     });
 
     project_timesheet.Settings_screen = project_timesheet.ScreenWidget.extend({
@@ -1275,5 +1283,33 @@ function odoo_project_timesheet_screens(project_timesheet) {
             $(".pt_selected_default_project").html(this.settings.default_project_name + ' <span class="caret"></span>');
         }
 
-    }); 
+    });
+
+    project_timesheet.Edit_activity_screen = project_timesheet.ScreenWidget.extend({
+        template: "edit_activity_screen",
+        init: function(project_timesheet_widget, options) {
+            this._super.apply(this, arguments);
+            this.project_timesheet_widget = project_timesheet_widget;
+            this.screen_name = "Edit Activity";
+            this.project_timesheet_model = options.project_timesheet_model;
+
+            _.extend(self.events,
+                {
+                    "click .pt_activity_project":"select_project"
+                }
+            );
+
+            this.projects = options.project_timesheet_model.projects
+            this.activity = {
+                "project":{
+                    "name":"Implementation",
+                    "id":1
+                }
+            };
+        },
+        select_project: function(event){
+            this.activity.project = _.findWhere(this.projects, {id : parseInt(event.currentTarget.dataset.project_id)});
+            this.renderElement();
+        }
+    });
 }

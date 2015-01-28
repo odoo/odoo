@@ -31,13 +31,17 @@ function odoo_project_timesheet_widgets(project_timesheet) {
             this.settings_screen = new project_timesheet.Settings_screen(this, {project_timesheet_model: project_timesheet.project_timesheet_model});
             this.settings_screen.appendTo(this.$('.screens'));
 
+            this.edit_activity_screen = new project_timesheet.Edit_activity_screen(this, {project_timesheet_model: project_timesheet.project_timesheet_model})
+            this.edit_activity_screen.appendTo(this.$('.screens'));
+
             /*----------------Screen Selector------------------*/
             this.screen_selector = new project_timesheet.ScreenSelector({
                 project_timesheet_model: project_timesheet.project_timesheet_model,
                 screen_set:{
                     'welcome_screen': this.welcome_screen,
                     'day_planner_screen' : this.day_planner_screen,
-                    'settings_screen' : this.settings_screen
+                    'settings_screen' : this.settings_screen,
+                    'edit_activity_screen' : this.edit_activity_screen
                 },
                 default_screen: 'welcome_screen',
             });

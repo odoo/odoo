@@ -102,7 +102,7 @@
     		</div>
     		<div class="container-fluid">
 	    		<t t-foreach="widget.tasks" t-as="task">
-    				<div class="row panel">
+    				<div class="row panel pt_day_plan_select" t-att-data-task_id="task.id">
     					<div class="panel-body">
 	    					<div class="col-xs-3 pt_day_plan_selected">
 	    						<!-- Hidden at the moment, should appear dynamically when selected.
@@ -185,6 +185,72 @@
     	</div>
     </t>
 
+    <t t-name="edit_activity_screen">
+        <t t-call="header">
+        </t>
+        <div class="pt_edit_activity_screen container-fluid">
+            <div class="panel">
+                <div class="panel-heading">
+                    <p>Project</p>
+                </div>
+                <div class="panel-body">
+                    <!--For some reason, the dropdown does not work without the following div-->
+                    <div class="col-xs-12">
+                        <a class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                <t t-if="widget.activity.project.name">
+                                    <t t-esc="widget.activity.project.name"/>
+                                </t>
+                                <t t-if="!widget.activity.project.name">
+                                    Select a project
+                                </t>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)">Create Project</a></li>
+                                <t t-if="widget.projects">
+                                    <t t-foreach="widget.projects" t-as="project">
+                                        <li><a href="javascript:void(0)" t-att-data-project_id="project.id" class="pt_activity_project"><t t-esc="project.name"/></a></li>
+                                    </t>
+                                </t>
+                            </ul>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <p>Task</p>
+                </div>
+                <div class="panel-body">
+                    <!--For some reason, the dropdown does not work without the following div-->
+                    <div class="col-xs-12">
+                        <a class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                <t t-if="widget.activity.task_name">
+                                    <t t-esc="widget.activity.task_name"/>
+                                </t>
+                                <t t-if="!widget.activity.task_name">
+                                    Select a Task
+                                </t>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)">Create Task</a></li>
+                                <t t-if="widget.tasks">
+                                    <t t-foreach="widget.tasks" t-as="task">
+                                        <li><a href="javascript:void(0)" t-att-data-project_id="task.id" class="pt_activity_task"><t t-esc="task.name"/></a></li>
+                                    </t>
+                                </t>
+                            </ul>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
     <t t-name="header">
     	<!-- <div class="panel-material-grey"> -->
     		<div class="well">
@@ -206,7 +272,7 @@
     	    		</div>
     	    		<div class="col-xs-2">
     	    			<t t-if="widget.screen_name == 'Activities'">
-    						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus pt_button_plus_activity" aria-hidden="true"></span></a>
     					</t>
     					<t t-if="widget.screen_name != 'Activities'">
     						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
