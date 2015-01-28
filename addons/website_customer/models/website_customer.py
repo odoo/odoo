@@ -14,6 +14,7 @@ class res_partner(osv.Model):
 class res_partner_tags(osv.Model):
     _description = 'Partner Tags - These tags can be used on website to find customers by sector, or ... '
     _name = 'res.partner.tag'
+    _inherit = 'website.published.mixin'
 
     def get_selection_class(self, cr, uid, context=None):
         classname = ['default', 'primary', 'success', 'warning', 'danger']
@@ -23,7 +24,6 @@ class res_partner_tags(osv.Model):
         'name': fields.char('Category Name', required=True, translate=True),
         'partner_ids': fields.many2many('res.partner', 'res_partner_res_partner_tag_rel', id1='tag_id', id2='partner_id', string='Partners'),
         'classname': fields.selection(get_selection_class, 'Class', help="Bootstrap class to customize the color of the tag", required=True),
-        'website_published': fields.boolean('Publish', help="The publish field allows you to show the tag on website."),
         'active': fields.boolean('Active'),
     }
     _defaults = {

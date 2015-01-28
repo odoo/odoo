@@ -21,7 +21,7 @@ class Channel(models.Model):
     channels. """
     _name = 'slide.channel'
     _description = 'Channel for Slides'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
         'most_viewed': 'total_views desc',
@@ -30,7 +30,6 @@ class Channel(models.Model):
     }
 
     name = fields.Char('Name', translate=True, required=True)
-    website_published = fields.Boolean('Published', help="Published on the website", copy=False)
     description = fields.Html('Description', translate=True)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
@@ -114,6 +113,14 @@ class Channel(models.Model):
         self.can_see = self.visibility in ['public', 'private'] or bool(self.group_ids & self.env.user.groups_id)
         self.can_see_full = self.visibility == 'public' or bool(self.group_ids & self.env.user.groups_id)
         self.can_upload = self.can_see and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
+
+    @api.multi
+    @api.depends('name')
+    def _website_url(self, name, arg):
+        res = super(Channel, self)._website_url(name, arg)
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        res.update({(channel.id, '%s/slides/%s' % (base_url, slug(channel))) for channel in self})
+        return res
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -202,7 +209,7 @@ class Slide(models.Model):
     Slide has various statistics like view count, embed count, like, dislikes """
 
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
 
     _PROMOTIONAL_FIELDS = [
@@ -267,7 +274,6 @@ class Slide(models.Model):
                 setattr(self, key, value)
 
     # website
-    website_published = fields.Boolean('Published', help="Published on the website", copy=False)
     date_published = fields.Datetime('Publish Date')
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
@@ -286,13 +292,6 @@ class Slide(models.Model):
         for record in self:
             record.total_views = record.slide_views + record.embed_views
 
-    share_url = fields.Char('Share URL', readonly=True, compute='_get_share_url')
-
-    def _get_share_url(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        for record in self:
-            record.share_url = "%s/slides/slide/%s" % (base_url, slug(record))
-
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
 
     def _get_embed_code(self):
@@ -309,6 +308,15 @@ class Slide(models.Model):
                     record.embed_code = '<embed src="https://video.google.com/get_player?ps=docs&partnerid=30&docid=%s" type="application/x-shockwave-flash"></embed>' % (record.document_id)
             else:
                 record.embed_code = False
+
+    @api.multi
+    @api.depends('name')
+    def _website_url(self, name, arg):
+        res = super(Slide, self)._website_url(name, arg)
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
+        return res
+
 
     @api.model
     def create(self, values):

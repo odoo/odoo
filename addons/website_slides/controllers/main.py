@@ -260,7 +260,7 @@ class website_slides(http.Controller):
             return {
                 'img_src': '/website/image/slide.slide/%s/image_thumb' % (slide.id),
                 'caption': slide.name,
-                'url': slide.share_url
+                'url': slide.website_url
             }
         vals = map(slide_mapped_dict, slide.get_related_slides(slides_to_suggest))
         add_more_slide = slides_to_suggest - len(vals)

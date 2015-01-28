@@ -27,16 +27,16 @@
 <!-- Tools template: share on social networkds -->
 <template id='slides_share' name="Slides Media Share">
     <div class="form-group">
-        <a target="_Blank" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.share_url}">
+        <a target="_Blank" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.website_url}">
             <i class="fa fa-facebook-square fa-2x"></i>
         </a>
-        <a target="_Blank" t-attf-href="https://twitter.com/intent/tweet?text=#{slide.name}&amp;url=#{slide.share_url}">
+        <a target="_Blank" t-attf-href="https://twitter.com/intent/tweet?text=#{slide.name}&amp;url=#{slide.website_url}">
             <i class="fa fa-twitter-square fa-2x"></i>
         </a>
-        <a target="_Blank" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{slide.share_url}&amp;title=#{slide.name}&amp;">
+        <a target="_Blank" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{slide.website_url}&amp;title=#{slide.name}&amp;">
             <i class="fa fa-linkedin-square fa-2x"></i>
         </a>
-        <a target="_Blank" t-attf-href="https://plus.google.com/share?url=#{slide.share_url}">
+        <a target="_Blank" t-attf-href="https://plus.google.com/share?url=#{slide.website_url}">
             <i class="fa fa-google-plus-square fa-2x"></i>
         </a>
     </div>
@@ -381,7 +381,7 @@
         <t t-if="not private">
             <meta property="og:title" t-att-content="slide.name" />
             <meta property="og:type" content="website" />
-            <meta property="og:url" t-att-content="slide.share_url" />
+            <meta property="og:url" t-att-content="slide.website_url" />
             <meta property="og:image" t-attf-content="#{request.httprequest.host_url}/website/image/slide.slide/#{slide.id}/image_thumb"/>
             <meta property="og:description" t-att-content="slide.description" />
         </t>
@@ -731,7 +731,7 @@
     <h4 class="mt0">Share on Social Networks</h4>
     <t t-call="website_slides.slides_share"/>
     <h4 class="mt0">Share Link</h4>
-    <input type="text" class="form-control" t-att-value="slide.share_url" readonly="readonly" onClick="this.select();"/>
+    <input type="text" class="form-control" t-att-value="slide.website_url" readonly="readonly" onClick="this.select();"/>
     <span class="help-block">Use permanent link to share in social media</span>
 </template>
 

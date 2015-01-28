@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, _
-
-# from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
-from openerp.models import NewId
-
-# from openerp.tools.translate import _
 import re
 
+from openerp import models, fields, api, _
+from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 
 

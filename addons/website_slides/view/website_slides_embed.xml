@@ -115,7 +115,7 @@
                             <div class="row">
                                 <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4 text-left">
                                     <div class="oe_slides_ellipsis">
-                                        <a target="_new" t-att-href="slide.share_url">
+                                        <a target="_new" t-att-href="slide.website_url">
                                             <span  t-esc="slide.name" t-attf-title="#{slide.name}"/>
                                         </a>
                                     </div>
@@ -152,7 +152,7 @@
                         <div id="slide_suggest" class="oe_slide_embed_option">
                             <t t-foreach="related_slides" t-as="suggest_slide">
                                 <div class="col-md-4 col-sm-4 col-xs-4 oe_slides_suggestion_media">
-                                    <a t-att-href="suggest_slide.share_url" target="_new">
+                                    <a t-att-href="suggest_slide.website_url" target="_new">
                                         <div class="oe_slides_suggestion_caption">
                                             <h4><t t-esc="suggest_slide.name"/></h4>
                                         </div>
