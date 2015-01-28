@@ -244,18 +244,6 @@ class hr_employee(osv.osv):
         super(hr_employee, self).unlink(cr, uid, ids, context=context)
         return self.pool.get('resource.resource').unlink(cr, uid, resource_ids, context=context)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        if context.get('is_my_dept_employee'):
-            employee_id = self.search(cr, uid, [('user_id', '=', uid)], limit=1)
-            if employee_id:
-                department_id = self.browse(cr, uid, employee_id, context=context).department_id
-                args += [('department_id', '=', department_id.id)]
-            else:
-                args += [('id', '=', False)] #display blank result when user is not set.
-        return super(hr_employee, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order, context=context, count=count)
-
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
@@ -292,6 +280,15 @@ class hr_employee(osv.osv):
         """ Wrapper because message_unsubscribe_users take a user_ids=None
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def action_open_employee_kanban(self, cr, uid, context=None):
+        emp_id = self.search(cr, uid, [('user_id', '=', uid)], limit=1, context=context)
+        department_id = emp_id and self.browse(cr, uid, emp_id, context=context).department_id or False
+
+        action = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'hr.open_view_employee_list_my', context=context)
+        result = action.read()[0]
+        result['context'] = {'user_department_id': department_id and department_id.id}
+        return result
 
     def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
         """Show the suggestion of employees if display_employees_suggestions if the
