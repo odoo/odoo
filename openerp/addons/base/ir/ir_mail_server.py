@@ -420,9 +420,6 @@ class ir_mail_server(osv.osv):
             # mails being dropped.  This is not common but there are reports
             # of it happening.
             smtp_from = message['From']
-        if smtp_from != message['From']:
-            del message['Sender']
-            message['Sender'] = smtp_from
         assert smtp_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
