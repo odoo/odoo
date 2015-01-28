@@ -155,10 +155,51 @@ function odoo_project_timesheet_models(project_timesheet) {
                     }
                 });
 
+                var this_default_project = _.findWhere(self.projects, {id:self.settings.default_project_id});
+                if(! _.isUndefined(this_default_project)){
+                    self.settings.default_project_name = this_default_project.name;
+                }
                 self.ready.resolve();
             });
-            
+        },
+        // Method to resolve ids into names for tasks and projects
+        // Where entries is an array of objects containing related ids.
+        // An attribute related_name will be aded to each object of the array, containing the name corresponding to the related_id found in the object.
+
+        // Settings methods
+        set_minimal_duration: function(minimal_duration){
+            var user_data = this.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
+            user_data.data.settings.minimal_duration = minimal_duration;
+            this.db.update_data();
+        },
+        set_time_unit: function(time_unit){
+            var user_data = this.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
+            user_data.data.settings.time_unit = time_unit;
+            this.db.update_data();
+        },
+        set_default_project: function(default_project_id){
+            default_project_id = parseInt(default_project_id);
+            self = this;
+            var user_data = this.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
+            user_data.data.settings.default_project_id = default_project_id;
+
+            var this_default_project = _.findWhere(self.projects, {id:default_project_id});
+                if(! _.isUndefined(this_default_project)){
+                    self.settings.default_project_name = this_default_project.name;
+                }
+
+            this.db.update_data();
         }
+
+    });
+
+    project_timesheet.settings_model = Backbone.Model.extend({
+        initialize: function(attributes) {
+
+        },
+
+
+
     });
 
 

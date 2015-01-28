@@ -1224,7 +1224,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self.tasks = options.project_timesheet_model.tasks;
             self.account_analytic_lines = options.project_timesheet_model.account_analytic_lines;
 
-
+            _.each(self.account_analytic_lines, function(account_analytic_line){
+                account_analytic_line.hours_minutes = project_timesheet.unit_amount_to_hours_minutes(account_analytic_line.unit_amount);
+            });
         },
          start_activity: function(){
             console.log("Activity started ! ");
@@ -1249,9 +1251,29 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this._super.apply(this, arguments);
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Settings";
+            this.project_timesheet_model = options.project_timesheet_model;
 
-            this.projects = options.project_timesheet_model.projects;
-            this.settings = options.project_timesheet_model.settings;
+            _.extend(self.events,
+                {
+                    "change input.pt_minimal_duration":"on_change_minimal_duration",
+                    "change input.pt_time_unit":"on_change_time_unit",
+                    "click .pt_default_project":"on_change_default_project"
+                }
+            );
+
+            this.projects = this.project_timesheet_model.projects;
+            this.settings = this.project_timesheet_model.settings;
         },
+        on_change_minimal_duration: function(){
+            this.project_timesheet_model.set_minimal_duration(this.$("input.pt_minimal_duration").val());
+        },
+        on_change_time_unit: function(){
+            this.project_timesheet_model.set_time_unit(this.$("input.pt_time_unit").val());
+        },
+        on_change_default_project: function(event){
+            this.project_timesheet_model.set_default_project(event.target.dataset.project_id);
+            $(".pt_selected_default_project").html(this.settings.default_project_name + ' <span class="caret"></span>');
+        }
+
     }); 
 }

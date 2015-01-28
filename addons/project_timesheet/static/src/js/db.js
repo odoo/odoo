@@ -7,6 +7,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             this.virtual_id_prefix = "virtual_id_";
             this.virtual_id_regex = /^virtual_id_.*$/;
             this.unique_id_counter = 0;
+            this.stored_data;
         },
         //tac
         load_data: function(session_user, session_server){
@@ -27,7 +28,7 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "name":"Implementation"
                             },
                             {
-                                "id":1,
+                                "id":2,
                                 "name":"Testing"
                             }
                         ],
@@ -50,14 +51,14 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "task_id":1,
                                 "id":1,
                                 "name":"/",
-                                "unit_amount":10
+                                "unit_amount":1
                             },
                             {
                                 "project_id":1,
                                 "task_id":2,
                                 "id":2,
                                 "name":"/",
-                                "unit_amount":50  
+                                "unit_amount":2  
                             },
                             {
                                 "id":3,
@@ -77,11 +78,14 @@ function odoo_project_timesheet_db(project_timesheet) {
                 }
             ];
 
-            localStorage.setItem("pt_data", JSON.stringify(test_data));
+            //localStorage.setItem("pt_data", JSON.stringify(test_data));
 
-            var stored_data = JSON.parse(localStorage.getItem("pt_data"));
-            var data = _.findWhere(stored_data, {session_user : session_user, session_server : session_server});
-            return data;
+            this.stored_data = JSON.parse(localStorage.getItem("pt_data"));
+            var user_data = _.findWhere(this.stored_data, {session_user : session_user, session_server : session_server});
+            return user_data;
+        },
+        update_data : function(){
+            localStorage.setItem("pt_data", JSON.stringify(this.stored_data));
         },
         load: function(name, def) {
             //To load data from localstorage

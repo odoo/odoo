@@ -78,7 +78,12 @@
 								</div>
 							</div>
 							<div class="col-xs-2">
-								<t t-esc="account_analytic_line.unit_amount"/>
+                                <t t-if="account_analytic_line.hours_minutes">
+    								<t t-esc="account_analytic_line.hours_minutes[0]"/>:<t t-esc="account_analytic_line.hours_minutes[1]"/>
+                                </t>
+                                <t t-if="!account_analytic_line.hours_minutes">
+                                    00:00
+                                </t>
 							</div>
 						</div>
 					</div>
@@ -132,14 +137,20 @@
 	    			<!--For some reason, the dropdown does not work without the following div-->
 	    			<div class="col-xs-12">
 						<a class="dropdown">
-					        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-					            Select a project <span class="caret"></span>
+					        <a class="dropdown-toggle pt_selected_default_project" data-toggle="dropdown" href="javascript:void(0)">
+					        	<t t-if="widget.settings.default_project_name">
+					            	<t t-esc="widget.settings.default_project_name"/>
+					            </t>
+					            <t t-if="!widget.settings.default_project_name">
+					            	Select a project
+					            </t>
+					            <span class="caret"></span>
 					        </a>
 					        <ul class="dropdown-menu">
 					        	<li><a href="javascript:void(0)">Create project</a></li>
 				            	<t t-if="widget.projects">
 				            		<t t-foreach="widget.projects" t-as="project">
-				            			<li><a href="javascript:void(0)"><t t-esc="project.name"/></a></li>
+				            			<li><a href="javascript:void(0)" t-att-data-project_id="project.id" class="pt_default_project"><t t-esc="project.name"/></a></li>
 				            		</t>
 				            	</t>
 					        </ul>
@@ -155,7 +166,7 @@
     			<div class="row">
     				<p>Minimal duration</p>
     				<div class="input-group">
-    					<input type="text" class="form-control" aria-describedby="minutes" t-att-placeholder="widget.settings.minimal_duration"></input>
+    					<input type="text" class="pt_minimal_duration" aria-describedby="minutes" t-att-placeholder="widget.settings.minimal_duration"></input>
     					<span class="input-group-addon" id="minutes">minutes</span>
 					</div>
     				<p><small>When synchronizing, all durations below the minimal duration will be changed to this value.</small></p>
@@ -164,7 +175,7 @@
     			<div class="row">
     				<p>Time unit</p>
     				<div class="input-group">
-    					<input type="text" class="form-control" aria-describedby="minutes"></input>
+    					<input type="text" class="pt_time_unit" aria-describedby="minutes" t-att-placeholder="widget.settings.time_unit"></input>
     					<span class="input-group-addon" id="minutes">minutes</span>
 					</div>
     				<p><small>When synchronizing, all durations will be rounded up to the higher multiple of this value.</small></p>
@@ -177,57 +188,31 @@
     <t t-name="header">
     	<!-- <div class="panel-material-grey"> -->
     		<div class="well">
-	    	<div class="row">
-	    		<div class="col-xs-2">
-	    			<div class="dropdown">
-	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
-	    				<ul class="dropdown-menu">
-	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
-	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
-	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
-	    				</ul>
+    	    	<div class="row">
+    	    		<div class="col-xs-2">
+    	    			<div class="dropdown">
+    	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+    	    				<ul class="dropdown-menu">
+    	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+    	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+    	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
+    	    				</ul>
 
-	    			</div>
+    	    			</div>
 
+    	    		</div>
+    	    		<div class="col-xs-8">
+    	    			<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
+    	    		</div>
+    	    		<div class="col-xs-2">
+    	    			<t t-if="widget.screen_name == 'Activities'">
+    						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+    					</t>
+    					<t t-if="widget.screen_name != 'Activities'">
+    						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
+    					</t>
 	    		</div>
-	    		<div class="col-xs-8">
-	    			<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
-	    		</div>
-	    		<div class="col-xs-2">
-	    			<t t-if="widget.screen_name == 'Activities'">
-						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-					</t>
-					<t t-if="widget.screen_name != 'Activities'">
-						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
-					</t>
-	    		</div>
-			<!-- </div> -->
-		</div>
-<!-- 
-			<div class="dropdown">
-				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
-				<ul class="dropdown-menu">
-					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
-					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
-					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
-				</ul>
-			</div>
-			<li>
-				<a href="javascript:void(0)"><t t-esc="widget.screen_name"/></a>
-			</li>
-		</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<t t-if="widget.screen_name == 'Activities'">
-					<li>
-						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-					</li>
-				</t>
-				<t t-if="widget.screen_name != 'Activities'">
-					<li>
-						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
-					</li>
-				</t>
-			</ul> -->
+		    </div>
     	</div>    		
     </t>
 
