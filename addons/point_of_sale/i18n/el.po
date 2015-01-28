@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
 "PO-Revision-Date: 2014-11-12 22:38+0000\n"
 "Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-13 07:23+0000\n"
-"X-Generator: Launchpad (build 17241)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:01+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: el\n"
 
 #. module: point_of_sale
@@ -210,7 +210,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_form
-msgid "A custom receipt header footage"
+msgid "A custom receipt footer message"
 msgstr ""
 
 #. module: point_of_sale
@@ -329,7 +329,7 @@ msgstr "Συνολικό ποσό"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1281
+#: code:addons/point_of_sale/static/src/js/screens.js:1310
 #, python-format
 msgid "An anonymous order cannot be invoiced"
 msgstr ""
@@ -379,7 +379,7 @@ msgstr "Μέση Τιμή"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1052
+#: code:addons/point_of_sale/static/src/js/screens.js:1062
 #: code:addons/point_of_sale/static/src/xml/pos.xml:265
 #, python-format
 msgid "Back"
@@ -499,7 +499,7 @@ msgstr "Ακυρωμένα"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1260
+#: code:addons/point_of_sale/static/src/js/screens.js:1289
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr ""
@@ -511,7 +511,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1081
+#: code:addons/point_of_sale/static/src/js/screens.js:1091
 #, python-format
 msgid "Cash"
 msgstr ""
@@ -667,7 +667,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1287
+#: code:addons/point_of_sale/static/src/js/screens.js:1316
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr ""
@@ -724,8 +724,8 @@ msgstr "Σήμα Πελάτη"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/widgets.js:1122
-#: code:addons/point_of_sale/static/src/js/widgets.js:1130
+#: code:addons/point_of_sale/static/src/js/widgets.js:1121
+#: code:addons/point_of_sale/static/src/js/widgets.js:1129
 #, python-format
 msgid "Close"
 msgstr "Κλείσιμο"
@@ -742,7 +742,7 @@ msgid "Closed"
 msgstr "Κλεισμένα"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:125
+#: code:addons/point_of_sale/point_of_sale.py:136
 #: selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
@@ -755,7 +755,7 @@ msgid "Closing Cash Control"
 msgstr "Έλεγχος Κλεισίματος Ταμείου"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:124
+#: code:addons/point_of_sale/point_of_sale.py:135
 #: selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
@@ -893,14 +893,14 @@ msgid "Configuration"
 msgstr "Διαμόρφωση"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:851
+#: code:addons/point_of_sale/point_of_sale.py:874
 #, python-format
 msgid "Configuration Error!"
 msgstr "Λάθος Διαμόρφωσης!"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/widgets.js:1127
+#: code:addons/point_of_sale/static/src/js/widgets.js:1126
 #: code:addons/point_of_sale/static/src/xml/pos.xml:709
 #, python-format
 msgid "Confirm"
@@ -920,9 +920,16 @@ msgstr "Συνέχεια Πώλησης"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:823
+#: code:addons/point_of_sale/static/src/js/screens.js:829
 #, python-format
 msgid "Could Not Read Image"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/widgets.js:1239
+#, python-format
+msgid "Could not close the point of sale."
 msgstr ""
 
 #. module: point_of_sale
@@ -1013,7 +1020,7 @@ msgid "Customer Barcodes"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:983
+#: code:addons/point_of_sale/point_of_sale.py:1002
 #, python-format
 msgid "Customer Invoice"
 msgstr "Τιμολόγιο Πελάτη"
@@ -1107,7 +1114,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/widgets.js:985
+#: code:addons/point_of_sale/static/src/js/widgets.js:984
 #, python-format
 msgid "Destroy Current Order ?"
 msgstr ""
@@ -1317,6 +1324,13 @@ msgid "Email"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1260
+#, python-format
+msgid "Empty Order"
+msgstr ""
+
+#. module: point_of_sale
 #: help:pos.config,iface_scan_via_proxy:0
 msgid "Enable barcode scanning with a remotely connected barcode scanner"
 msgstr ""
@@ -1385,24 +1399,32 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Λάθος! Δεν μπορείτε να δημιουργήσετε πηγαίες κατηγορίες"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:372
-#: code:addons/point_of_sale/point_of_sale.py:485
-#: code:addons/point_of_sale/point_of_sale.py:488
-#: code:addons/point_of_sale/point_of_sale.py:518
-#: code:addons/point_of_sale/point_of_sale.py:533
-#: code:addons/point_of_sale/point_of_sale.py:625
-#: code:addons/point_of_sale/point_of_sale.py:784
-#: code:addons/point_of_sale/point_of_sale.py:826
-#: code:addons/point_of_sale/point_of_sale.py:868
-#: code:addons/point_of_sale/point_of_sale.py:891
-#: code:addons/point_of_sale/point_of_sale.py:935
-#: code:addons/point_of_sale/point_of_sale.py:1010
-#: code:addons/point_of_sale/point_of_sale.py:1125
+#: code:addons/point_of_sale/point_of_sale.py:383
+#: code:addons/point_of_sale/point_of_sale.py:496
+#: code:addons/point_of_sale/point_of_sale.py:499
+#: code:addons/point_of_sale/point_of_sale.py:529
+#: code:addons/point_of_sale/point_of_sale.py:544
+#: code:addons/point_of_sale/point_of_sale.py:640
+#: code:addons/point_of_sale/point_of_sale.py:799
+#: code:addons/point_of_sale/point_of_sale.py:841
+#: code:addons/point_of_sale/point_of_sale.py:887
+#: code:addons/point_of_sale/point_of_sale.py:910
+#: code:addons/point_of_sale/point_of_sale.py:954
+#: code:addons/point_of_sale/point_of_sale.py:1033
+#: code:addons/point_of_sale/point_of_sale.py:1148
+#: code:addons/point_of_sale/point_of_sale.py:1433
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box.py:22
 #, python-format
 msgid "Error!"
 msgstr "Λάθος!"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:757
+#, python-format
+msgid "Error: Could not Save Changes"
+msgstr ""
 
 #. module: point_of_sale
 #: constraint:res.partner:0
@@ -1412,7 +1434,7 @@ msgstr "Λάθος: Μη Έγκυρος Κωδικός ΕΑΝ"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:219
+#: code:addons/point_of_sale/static/src/js/models.js:234
 #, python-format
 msgid ""
 "Error: The Point of Sale User must belong to the same company as the Point "
@@ -1680,7 +1702,7 @@ msgid "In Cluster Tomatoes"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:123
+#: code:addons/point_of_sale/point_of_sale.py:134
 #: selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
@@ -1688,7 +1710,7 @@ msgid "In Progress"
 msgstr "Σε Εξέλιξη"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:638
+#: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "Για να διαγράψετε μια πώληση πρέπει να είναι νέα ή ακυρωμένη"
@@ -1910,7 +1932,7 @@ msgstr "Λίστα των Ταμειακών Μηχανών"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:120
-#: code:addons/point_of_sale/static/src/js/models.js:363
+#: code:addons/point_of_sale/static/src/js/models.js:385
 #: code:addons/point_of_sale/static/src/xml/pos.xml:79
 #, python-format
 msgid "Loading"
@@ -1964,7 +1986,7 @@ msgstr ""
 "σε φόρμες οθονών ή μερικές kanban οθόνες."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:784
+#: code:addons/point_of_sale/point_of_sale.py:799
 #, python-format
 msgid ""
 "Missing source or destination location for picking type %s. Please configure "
@@ -2024,6 +2046,13 @@ msgid "Nbr Invoice"
 msgstr "Νο Τιμολογίου"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1270
+#, python-format
+msgid "Negative Bank Payment"
+msgstr ""
+
+#. module: point_of_sale
 #: view:website:point_of_sale.report_payment
 msgid "Net Total"
 msgstr "Καθαρό Σύνολο"
@@ -2042,7 +2071,7 @@ msgstr "Νέα Βάρδια"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:936
+#: code:addons/point_of_sale/static/src/js/screens.js:942
 #, python-format
 msgid "Next Order"
 msgstr "Επόμενη Παραγγελία"
@@ -2054,13 +2083,13 @@ msgid "No Cash Register Defined!"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1264
+#: code:addons/point_of_sale/point_of_sale.py:1288
 #, python-format
 msgid "No Pricelist!"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:595
+#: code:addons/point_of_sale/point_of_sale.py:594
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2140,7 +2169,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:809
+#: code:addons/point_of_sale/static/src/js/screens.js:815
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr ""
@@ -2203,7 +2232,7 @@ msgid "Opening Cashbox Lines"
 msgstr "Άνοιγμα Γραμμών Ταμείου"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:122
+#: code:addons/point_of_sale/point_of_sale.py:133
 #: selection:pos.session,state:0
 #: selection:pos.session.opening,pos_state:0
 #, python-format
@@ -2257,7 +2286,7 @@ msgstr "Παραγγελία"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:920
+#: code:addons/point_of_sale/static/src/js/models.js:983
 #, python-format
 msgid "Order "
 msgstr "Παραγγελία "
@@ -2485,7 +2514,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/widgets.js:1245
+#: code:addons/point_of_sale/static/src/js/widgets.js:1251
 #, python-format
 msgid ""
 "Pending orders will be lost.\n"
@@ -2585,21 +2614,21 @@ msgid "Plain Water"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1125
+#: code:addons/point_of_sale/point_of_sale.py:1148
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 "Παρακαλώ καθορίστε λογαριασμό Εσόδων για αυτό το είδος: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:935
+#: code:addons/point_of_sale/point_of_sale.py:954
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Παρακαλώ καθορίστε έναν Συναλλασόμενο για την πώληση."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1282
+#: code:addons/point_of_sale/static/src/js/screens.js:1311
 #, python-format
 msgid ""
 "Please select a client for this order. This can be done by clicking the "
@@ -2718,13 +2747,6 @@ msgid "Pos Product Categories"
 msgstr ""
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:419
-#, python-format
-msgid "PosBox Printing Error"
-msgstr ""
-
-#. module: point_of_sale
 #: view:pos.confirm:point_of_sale.view_pos_confirm
 msgid "Post All Orders"
 msgstr "Καταχώρηση Όλων των Εντολών"
@@ -2776,7 +2798,7 @@ msgstr "Τιμοκατάλογος"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:930
+#: code:addons/point_of_sale/static/src/js/screens.js:936
 #, python-format
 msgid "Print"
 msgstr "Εκτύπωση"
@@ -2815,6 +2837,13 @@ msgstr "Εκτύπωση με Proxy"
 #: code:addons/point_of_sale/static/src/js/widgets.js:888
 #, python-format
 msgid "Printer"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/devices.js:419
+#, python-format
+msgid "Printing Error: "
 msgstr ""
 
 #. module: point_of_sale
@@ -2994,7 +3023,7 @@ msgid "Resume Session"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:907
+#: code:addons/point_of_sale/point_of_sale.py:926
 #: view:pos.order:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3161,7 +3190,7 @@ msgid "Select your Point of Sale"
 msgstr "Διαλέξτε τον Σταθμό Εργασίας σας"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1010
+#: code:addons/point_of_sale/point_of_sale.py:1033
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Οι επιλεγμένες παραγγελίες δεν έχουν την ίδια βάρδια!"
@@ -3247,7 +3276,8 @@ msgid "Set Weight"
 msgstr "Ορισμός Βάρους"
 
 #. module: point_of_sale
-#: view:product.template:point_of_sale.product_template_form_view
+#: view:product.product:point_of_sale.product_normal_form_view_inherit_ean
+#: view:product.template:point_of_sale.product_template_form_view_inherit_ean
 #: view:res.partner:point_of_sale.view_partner_property_form
 #: view:res.users:point_of_sale.res_users_form_view
 msgid "Set a Custom EAN"
@@ -3529,8 +3559,8 @@ msgid "Take Money Out"
 msgstr "Ανάληψη των Μετρητών"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1160
-#: code:addons/point_of_sale/point_of_sale.py:1177
+#: code:addons/point_of_sale/point_of_sale.py:1184
+#: code:addons/point_of_sale/point_of_sale.py:1201
 #: view:website:point_of_sale.report_saleslines
 #, python-format
 msgid "Tax"
@@ -3567,7 +3597,7 @@ msgid "Tel:"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1098
+#: code:addons/point_of_sale/point_of_sale.py:1121
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
@@ -3590,6 +3620,12 @@ msgid ""
 "The Point of Sale is not supported by Microsoft Internet Explorer. Please "
 "use\n"
 "                        a modern browser like"
+msgstr ""
+
+#. module: point_of_sale
+#: constraint:pos.config:0
+msgid ""
+"The company of a payment method is different than the one of point of sale"
 msgstr ""
 
 #. module: point_of_sale
@@ -3618,7 +3654,7 @@ msgstr "Το όνομα της Βάρδιας του Σταθμού πρέπει
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1286
+#: code:addons/point_of_sale/static/src/js/screens.js:1315
 #, python-format
 msgid "The order could not be sent"
 msgstr ""
@@ -3660,19 +3696,9 @@ msgstr "Ο σταθμός εργασίας της εντατικής λιανι�
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:824
+#: code:addons/point_of_sale/static/src/js/screens.js:830
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:420
-#, python-format
-msgid ""
-"The receipt could not be printed. The software installed on the posbox is "
-"probably out of date. Please refer to the software instructions in the "
-"posbox manual or contact the customer support"
 msgstr ""
 
 #. module: point_of_sale
@@ -3692,7 +3718,7 @@ msgstr ""
 "χρησιμοποιώντας την ετικέτα του Ταμείου Μετρητών"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:489
+#: code:addons/point_of_sale/point_of_sale.py:500
 #, python-format
 msgid ""
 "The type of the journal for your payment method should be bank or cash "
@@ -3725,7 +3751,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1261
+#: code:addons/point_of_sale/static/src/js/screens.js:1290
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle "
@@ -3742,7 +3768,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Δεν υπάρχει ταμειακή μηχανή για αυτή την βάρδια Εντατικής Λιανικής"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:850
+#: code:addons/point_of_sale/point_of_sale.py:873
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3752,10 +3778,18 @@ msgstr ""
 "τον συναλλασόμενο : \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:848
+#: code:addons/point_of_sale/point_of_sale.py:871
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "Δεν υπάρχει ορισμένος λογαριασμός εισπρακτέων για να γίνει η πληρωμή"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1261
+#, python-format
+msgid ""
+"There must be at least one product in your order before it can be validated"
+msgstr ""
 
 #. module: point_of_sale
 #: help:account.journal,amount_authorized_diff:0
@@ -3823,7 +3857,7 @@ msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:891
+#: code:addons/point_of_sale/point_of_sale.py:910
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3942,25 +3976,25 @@ msgid "Total:"
 msgstr "Σύνολο:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1190
+#: code:addons/point_of_sale/point_of_sale.py:1214
 #, python-format
 msgid "Trade Receivables"
 msgstr "Εμπορικά Εισπρακτέα"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:638
+#: code:addons/point_of_sale/point_of_sale.py:653
 #, python-format
 msgid "Unable to Delete!"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:826
+#: code:addons/point_of_sale/point_of_sale.py:841
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr "Δεν είναι δυνατή η ακύρωση της συλλογής"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:388
+#: code:addons/point_of_sale/point_of_sale.py:399
 #, python-format
 msgid ""
 "Unable to open the session. You have to assign a sale journal to your point "
@@ -4000,7 +4034,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:808
+#: code:addons/point_of_sale/static/src/js/screens.js:814
 #, python-format
 msgid "Unsupported File Format"
 msgstr ""
@@ -4050,7 +4084,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1060
+#: code:addons/point_of_sale/static/src/js/screens.js:1070
 #, python-format
 msgid "Validate"
 msgstr "Επικύρωση"
@@ -4120,7 +4154,7 @@ msgid "You can define another list of available currencies on the"
 msgstr "Μπορείτε να καθορίσετε μια άλλη λίστα των διαθέσιμων νομισμάτων στο"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:625
+#: code:addons/point_of_sale/point_of_sale.py:640
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4130,7 +4164,7 @@ msgstr ""
 "οποία το τιμολόγιο έχει ήδη εκδοθεί"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:519
+#: code:addons/point_of_sale/point_of_sale.py:530
 #, python-format
 msgid ""
 "You cannot confirm all orders of this session, because they have not the "
@@ -4154,13 +4188,30 @@ msgstr ""
 "Δεν μπορείτε να δημιουργείσετε δύο ενεργές βάρδιες με τον ίδιο υπεύθυνο!"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1434
+#, python-format
+msgid ""
+"You cannot delete a product saleable in point of sale while a session is "
+"still opened."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1271
+#, python-format
+msgid ""
+"You cannot have a negative amount in a Bank payment. Use a cash payment "
+"method to return money to the customer."
+msgstr ""
+
+#. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
 msgstr ""
 "Δεν μπορείτε να έχετε δύο ελέγχους ταμείου σε μια θέση Εντατικής Λιανικής"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:534
+#: code:addons/point_of_sale/point_of_sale.py:545
 #, python-format
 msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
@@ -4179,13 +4230,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:868
+#: code:addons/point_of_sale/point_of_sale.py:887
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "Πρέπει να ανοίξεις τουλάχιστον ένα ταμείο μετρητών"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1265
+#: code:addons/point_of_sale/point_of_sale.py:1289
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4206,16 +4257,23 @@ msgstr ""
 "εργασίας."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:373
+#: code:addons/point_of_sale/point_of_sale.py:384
 #, python-format
 msgid "You should assign a Point of Sale to your session."
 msgstr "Πρέπει να αναθέσετε ένα σταθμό εργασίας στην βάρδια σας"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/widgets.js:986
+#: code:addons/point_of_sale/static/src/js/widgets.js:985
 #, python-format
 msgid "You will lose any data associated with the current order"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:758
+#, python-format
+msgid "Your Internet connection is probably down."
 msgstr ""
 
 #. module: point_of_sale
@@ -4225,12 +4283,19 @@ msgid "Your Session"
 msgstr "Η Βάρδια σας"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:486
+#: code:addons/point_of_sale/point_of_sale.py:497
 #, python-format
 msgid ""
 "Your ending balance is too different from the theoretical cash closing "
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/widgets.js:1240
+#, python-format
+msgid "Your internet connection is probably down."
 msgstr ""
 
 #. module: point_of_sale
@@ -4290,14 +4355,14 @@ msgid "discount"
 msgstr "έκπτωση"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:387
-#: code:addons/point_of_sale/point_of_sale.py:594
+#: code:addons/point_of_sale/point_of_sale.py:398
+#: code:addons/point_of_sale/point_of_sale.py:593
 #, python-format
 msgid "error!"
 msgstr "Λάθος!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:129
+#: code:addons/point_of_sale/point_of_sale.py:140
 #, python-format
 msgid "not used"
 msgstr "Δεν Χρησιμοποιείται"
@@ -4305,6 +4370,12 @@ msgstr "Δεν Χρησιμοποιείται"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:95
+#: view:pos.confirm:point_of_sale.view_pos_confirm
+#: view:pos.details:point_of_sale.view_pos_details
+#: view:pos.discount:point_of_sale.view_pos_discount
+#: view:pos.ean_wizard:point_of_sale.pos_ean13_generator
+#: view:pos.make.payment:point_of_sale.view_pos_payment
+#: view:pos.open.statement:point_of_sale.view_pos_open_statement
 #, python-format
 msgid "or"
 msgstr "ή"
@@ -4316,7 +4387,7 @@ msgstr "μέθοδος πληρωμής"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/point_of_sale.py:600
+#: code:addons/point_of_sale/point_of_sale.py:599
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1090
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1145
 #, python-format

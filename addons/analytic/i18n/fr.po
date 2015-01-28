@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2014-11-27 22:18+0000\n"
+"Last-Translator: Frederic Clementi - Camptocamp "
+"<frederic.clementi@camptocamp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 08:57+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 07:28+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -155,18 +156,18 @@ msgstr "Contrat : "
 #. module: analytic
 #: field:account.analytic.line,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Date de création"
 
 #. module: analytic
 #: field:account.analytic.account,create_uid:0
 #: field:account.analytic.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Créé par"
 
 #. module: analytic
 #: field:account.analytic.account,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Créé le"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -191,7 +192,7 @@ msgstr "Date"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Date du dernier message enregistré sur cet enregistrement"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -223,7 +224,7 @@ msgstr "Erreur ! Impossible de créer des comptes analytiques récursifs."
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Expiration Date"
-msgstr ""
+msgstr "Date d'expiration"
 
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
@@ -248,7 +249,7 @@ msgstr ""
 #: field:account.analytic.account,id:0
 #: field:account.analytic.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
@@ -267,6 +268,14 @@ msgid ""
 "The special type 'Template of Contract' allows you to define a template with "
 "default data that you can reuse easily."
 msgstr ""
+"Si vous sélectionner le type Vue, cela signifie que vous ne permettez pas de "
+"créer une écriture analytique en utilisant ce compte.\n"
+"Le type \"Compte analytique\" signifie qu'il s'agit d'un comptes normal "
+"(ceux que vous utilisez dans les écritures analytiques).\n"
+"Si vous sélectionnez Contrat ou Projet, cela vous offre la possibilité de "
+"gérer la validité et les options de facturation de ce compte.\n"
+"Le type spécial \"Modèle de contrat\" vous permet de définir un modèle avec "
+"des données par défaut que vous pouvez réutilisez facilement."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -278,6 +287,11 @@ msgid ""
 "analytic account of type 'view'. This can be really useful for consolidation "
 "purposes of several companies charts with different currencies, for example."
 msgstr ""
+"Si vous sélectionnez une société, la devise sélectionnée doit être celle de "
+"la société.\n"
+"Vous ne pouvez enlevez la société d'appartenance, et ainsi changer la "
+"devise, que si le compte analytique est de type 'Vue'. Ceci peut être très "
+"utile dans le cadre de consolidation de plusieurs sociétés en multi-devises."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -292,19 +306,19 @@ msgstr "Est abonné"
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Date du dernier message"
 
 #. module: analytic
 #: field:account.analytic.account,write_uid:0
 #: field:account.analytic.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Dernière modification par"
 
 #. module: analytic
 #: field:account.analytic.account,write_date:0
 #: field:account.analytic.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
@@ -334,6 +348,15 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"Lorsque la date de fin du contrat est\n"
+"                                        passée ou le nombre maximum d'unité\n"
+"                                        de service (ex. contrat de support) "
+"est\n"
+"                                        atteint, le responsable du compte "
+"est avisé\n"
+"                                        par courriel pour renouveler le "
+"contrat avec le\n"
+"                                        client."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0

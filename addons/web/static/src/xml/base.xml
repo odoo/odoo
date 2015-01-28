@@ -226,6 +226,15 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><label for="backup_format">Backup format:</label></td>
+                        <td class="oe_form_field oe_form_field_selection">
+                            <select name="backup_format">
+                                <option value="zip">zip (includes filestore)</option>
+                                <option value="dump">pg_dump custom format (without filestore)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td><label for="backup_pwd">Master Password:</label></td>
                         <td><input type="password" name="backup_pwd" class="required" /></td>
                     </tr>

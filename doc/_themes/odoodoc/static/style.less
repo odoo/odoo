@@ -465,50 +465,50 @@ div.section > h2 {
   }
 }
 
-/*
- * Code snippets
- *
- * Generated via Pygments
- */
-.highlight pre {
-  padding: 4px;
-  font-size: 75%;
-  // don't break lines within words
-  word-break: normal;
-  word-wrap: normal;
-}
-.switchable .highlight.with-btn-clipboard pre {
-  // avoid copy button overlapping with even long lines
-  padding-right: 50px;
-}
-
-/*
- * ZeroClipboard styles
- */
 .highlight {
   position: relative;
-}
-.btn-clipboard {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  display: block;
-  padding: 5px 8px;
-  font-size: 12px;
-  color: #777;
-  cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e1e1e8;
-  border-radius: 0 4px 0 4px;
 
-  &:focus {
-    outline: none;
+  // move styling from pre to highlight so can have multiple pre elements in
+  // a single "code block" for ease of adding and removing setup code &al
+  color: @gray-dark;
+  // force override of pygments yellow background background
+  background: @gray-lighter none !important;
+  border: 1px solid @gray-light;
+  border-radius: @border-radius-base 0 @border-radius-base @border-radius-base;
+  margin: 10px 0;
+
+  pre {
+    padding: 0;
+    margin: 10px;
+    font-size: 75%;
+    // don't break lines within words
+    word-break: normal;
+    word-wrap: normal;
+
+    background: none;
+    border: none;
   }
 
-  &.active {
-    background-color: #ffffad;
-    .transition(background-color .5s linear);
+  &:hover .btn-show-setup {
+    display: block;
+  }
+  .btn-show-setup {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    z-index: 3;
+    padding: 5px 8px;
+    font-size: 12px;
+    color: @gray-light;
+    cursor: pointer;
+    border: 1px solid @gray-light;
+    border-radius: @border-radius-base @border-radius-base 0 0;
+    background: inherit;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -638,22 +638,14 @@ td.field-body {
         border-bottom-color: @separator-right;
         border-right-color: @separator-right;
       }
-      pre {
-        // padding leads to overflow scrollbar in safari for no reason I understand,
-        // margin does not have that issue
-        padding: 0;
-        margin: 10px;
-
-        background: none;
-        border: none;
-      }
       .highlight {
         border-color: @gray;
         border-style: solid;
         border-width: 1px 0;
+        border-radius: 0;
         // solarized-ish from https://gist.github.com/qguv/7936275
         color: @color-right-code;
-        background: none;
+        background: none !important;
         .lineno { color: #586e75 } /* Line Numbers */
         .c { color: #586e75 } /* Comment */
         .err { color: @color-right-code } /* Error */
@@ -761,12 +753,10 @@ td.field-body {
       white-space: pre-wrap;
     }
 
-    .btn-clipboard {
+    .btn-show-setup {
       background-color: transparent;
       color: @color-right;
       border-color: @separator-right;
-      border-top: none;
-      border-top-right-radius: 0;
 
       &.active {
         background-color: @gray;

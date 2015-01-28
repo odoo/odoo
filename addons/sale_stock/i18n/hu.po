@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2014-11-19 21:33+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:20+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -35,11 +35,18 @@ msgid ""
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
 msgstr ""
+"Lehetővé teszi szállítási módok hozzáadását a vásárlói megrendelésekben és "
+"szállítási megrendeléseken/szállító leveleken.\n"
+"Meg tudja határozni a saját szállítóját és szállítási láncát kialkudott "
+"áron.\n"
+"-Ez a delivery modult telepít."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
 msgstr ""
+"Lehetővé teszi a vásárlói megrnedelés tétel soraira  egy szállítási útvonal "
+"kiválasztását"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -63,6 +70,8 @@ msgstr "Megrendelést nem tudja törölni!"
 #: field:sale.config.settings,group_route_so_lines:0
 msgid "Choose MTO, drop shipping,... on sales order lines"
 msgstr ""
+"Válassza a Kombinált fuvarozás MTO, gyártótól a végfelhasználóig - drop "
+"shipping,... a vásárlói megrendelés tétel sorain"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -71,7 +80,7 @@ msgstr "Vállalatok"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:351
+#: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
 msgstr "Beállítási hiba!"
@@ -120,7 +129,7 @@ msgstr "Kiszállítási kézbesítési bizonylatok számlázásának bekapcsolá
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Útvonal bekapcsolás a vásárlói megrendelés tétel sorain"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -150,7 +159,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Készletek útvonalai"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -171,6 +180,12 @@ msgid ""
 "creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
 msgstr ""
+"Berögzített tételeket meghatározott feladat alapján mozgathat a Projekt "
+"vezető az időbeosztás tételsoraira, egy meghatározott dátumhoz és "
+"felhasználóhoz a létrehozás, szerkesztés és törlés végeredménnyel mindkét "
+"irányban; az igény tételsoraiból automatikus projekt feladatok "
+"létrehozásával.\n"
+"-Ez a project_timesheet and sale_service modult telepíti."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -184,7 +199,7 @@ msgstr ""
 "előre nem látható késésével számítva."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:346
+#: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Nincs elég raktárkészlet!: "
@@ -198,7 +213,7 @@ msgstr "Csomagok száma"
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Kizárólag rendszergazda tudja megváltoztatni a beállításokat"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -227,7 +242,7 @@ msgstr "Kiválogatási lista"
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "Ezzel az eladással összefüggő kiválogatás"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
@@ -237,12 +252,12 @@ msgstr "Számlák készítése a feladat tevékenységek alapján"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -262,7 +277,7 @@ msgstr "Kiszállítási Kiszolgáltatási jegy létrehozása"
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Útvonal"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -272,12 +287,12 @@ msgstr "Vevői megrendelés"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Vásárlói megrendelés tételsorai"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "Értékesítési szolgáltatás"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -313,7 +328,7 @@ msgstr "Biztonsági napok"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Kiválasztható a vásárlói megrendelési soron"
 
 #. module: sale_stock
 #: field:sale.report,shipped:0
@@ -339,7 +354,7 @@ msgstr "Az alapértelmezett számlázási módszer a következő"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "Számlázandó"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -377,7 +392,7 @@ msgstr ""
 "törölnie kell."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:342
+#: code:addons/sale_stock/sale_stock.py:343
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -413,6 +428,8 @@ msgid ""
 "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
 "ue\"}"
 msgstr ""
+"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
+"ue\"}"
 
 #~ msgid "Picked"
 #~ msgstr "Kiszedve"

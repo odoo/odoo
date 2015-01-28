@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
 "PO-Revision-Date: 2014-11-08 12:31+0000\n"
 "Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-09 07:35+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"X-Launchpad-Export-Date: 2015-01-22 08:16+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -105,8 +105,8 @@ msgstr "Референца на повик за прибирање на пону
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Call for Bids in negociation"
-msgstr "Повици за прибирање понуди кои се во преговори"
+msgid "Call for Bids in negotiation"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -151,7 +151,7 @@ msgid "Cancelled"
 msgstr "Откажано"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:292
+#: code:addons/purchase_requisition/purchase_requisition.py:293
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
@@ -402,6 +402,11 @@ msgid "Order Date"
 msgstr "Датум на налогот"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
+msgid "Ordering Date"
+msgstr ""
+
+#. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "PO Created"
 msgstr "Креиран налог за нарачка"
@@ -496,7 +501,7 @@ msgid "Purchase Requisition Partner"
 msgstr "Партнер за барање за набавка"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:414
+#: code:addons/purchase_requisition/purchase_requisition.py:416
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Креирано барање за нарачка"
@@ -529,7 +534,7 @@ msgid "Quantity Bid"
 msgstr "Количина на понуда"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:191
+#: code:addons/purchase_requisition/purchase_requisition.py:192
 #, python-format
 msgid "RFQ created"
 msgstr "Креирани барања за прибирање понуди"
@@ -644,11 +649,6 @@ msgstr "Извор:"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
-msgid "Start Month"
-msgstr "Почетен месец"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 #: field:purchase.requisition,state:0
 msgid "Status"
 msgstr "Статус"
@@ -720,9 +720,9 @@ msgid "Warehouse"
 msgstr "Магацин"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:188
-#: code:addons/purchase_requisition/purchase_requisition.py:239
-#: code:addons/purchase_requisition/purchase_requisition.py:248
+#: code:addons/purchase_requisition/purchase_requisition.py:189
+#: code:addons/purchase_requisition/purchase_requisition.py:240
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "Warning!"
 msgstr "Внимание!"
@@ -738,13 +738,13 @@ msgid "Website communication history"
 msgstr "Историја на веб комуникација"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:239
+#: code:addons/purchase_requisition/purchase_requisition.py:240
 #, python-format
 msgid "You have already generate the purchase order(s)."
 msgstr "Веќе генериравте налог(и) за нарачка(и)."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:188
+#: code:addons/purchase_requisition/purchase_requisition.py:189
 #, python-format
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
@@ -754,7 +754,7 @@ msgstr ""
 "овој налог за набавка за да креирате понуда."
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:248
+#: code:addons/purchase_requisition/purchase_requisition.py:249
 #, python-format
 msgid "You have no line selected for buying."
 msgstr "Немате изберено ставка за купување"
@@ -768,3 +768,9 @@ msgstr "пр. OP0025"
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "на пр. PO0025"
+
+#. module: purchase_requisition
+#: view:bid.line.qty:purchase_requisition.view_bid_line_qty
+#: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
+msgid "or"
+msgstr "или"

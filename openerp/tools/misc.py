@@ -65,6 +65,10 @@ _logger = logging.getLogger(__name__)
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
+#----------------------------------------------------------
+# Subprocesses
+#----------------------------------------------------------
+
 def find_in_path(name):
     path = os.environ.get('PATH', os.defpath).split(os.pathsep)
     if config.get('bin_path') and config['bin_path'] != 'None':
@@ -74,6 +78,24 @@ def find_in_path(name):
     except IOError:
         return None
 
+def _exec_pipe(prog, args, env=None):
+    cmd = (prog,) + args
+    # on win32, passing close_fds=True is not compatible
+    # with redirecting std[in/err/out]
+    close_fds = os.name=="posix"
+    pop = subprocess.Popen(cmd, bufsize=-1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=close_fds, env=env)
+    return pop.stdin, pop.stdout
+
+def exec_command_pipe(name, *args):
+    prog = find_in_path(name)
+    if not prog:
+        raise Exception('Command `%s` not found.' % name)
+    return _exec_pipe(prog, args)
+
+#----------------------------------------------------------
+# Postgres subprocesses
+#----------------------------------------------------------
+
 def find_pg_tool(name):
     path = None
     if config['pg_path'] and config['pg_path'] != 'None':
@@ -81,38 +103,33 @@ def find_pg_tool(name):
     try:
         return which(name, path=path)
     except IOError:
-        return None
+        raise Exception('Command `%s` not found.' % name)
+
+def exec_pg_environ():
+    """ On systems where pg_restore/pg_dump require an explicit password (i.e.
+    on Windows where TCP sockets are used), it is necessary to pass the
+    postgres user password in the PGPASSWORD environment variable or in a
+    special .pgpass file.
+
+    See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+    """
+    env = os.environ.copy()
+    if not env.get('PGPASSWORD') and openerp.tools.config['db_password']:
+        env['PGPASSWORD'] = openerp.tools.config['db_password']
+    return env
 
 def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
-    if not prog:
-        raise Exception('Couldn\'t find %s' % name)
-    args2 = (prog,) + args
-
+    env = exec_pg_environ()
     with open(os.devnull) as dn:
-        return subprocess.call(args2, stdout=dn, stderr=subprocess.STDOUT)
+        rc = subprocess.call((prog,) + args, env=env, stdout=dn, stderr=subprocess.STDOUT)
+        if rc:
+            raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
-    if not prog:
-        raise Exception('Couldn\'t find %s' % name)
-    # on win32, passing close_fds=True is not compatible
-    # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
-          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-          close_fds=(os.name=="posix"))
-    return pop.stdin, pop.stdout
-
-def exec_command_pipe(name, *args):
-    prog = find_in_path(name)
-    if not prog:
-        raise Exception('Couldn\'t find %s' % name)
-    # on win32, passing close_fds=True is not compatible
-    # with redirecting std[in/err/out]
-    pop = subprocess.Popen((prog,) + args, bufsize= -1,
-          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-          close_fds=(os.name=="posix"))
-    return pop.stdin, pop.stdout
+    env = exec_pg_environ()
+    return _exec_pipe(prog, args, env)
 
 #----------------------------------------------------------
 # File paths

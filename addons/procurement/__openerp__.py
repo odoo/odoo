@@ -60,5 +60,4 @@ Procurements in exception should be checked manually and can be re-run.
     'test': ['test/procurement.yml'],
     'installable': True,
     'auto_install': True,
-    'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }

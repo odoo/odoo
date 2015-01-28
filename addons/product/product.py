@@ -132,7 +132,7 @@ class product_uom(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Unit of Measure', required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Product Category', required=True, ondelete='cascade',
+        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
             help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
             help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
@@ -511,7 +511,8 @@ class product_template(osv.osv):
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
+                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                               "Expressed in the default unit of measure of the product.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
@@ -1040,7 +1041,9 @@ class product_product(osv.osv):
                 sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
             if sellers:
                 for s in sellers:
-                    seller_variant = s.product_name and "%s (%s)" % (s.product_name, variant) or False
+                    seller_variant = s.product_name and (
+                        variant and "%s (%s)" % (s.product_name, variant) or s.product_name
+                        ) or False
                     mydict = {
                               'id': product.id,
                               'name': seller_variant or name,

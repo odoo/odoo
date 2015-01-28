@@ -287,7 +287,7 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="product_packaging" domain="[('product_tmpl_id','=',product_id)]" groups="product.group_stock_packaging"/>
+                    <field name="product_packaging" domain="[('product_tmpl_id','=',product_tmpl_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
@@ -1085,7 +1085,8 @@
                             <field name="product_uos" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
                         </div>
                         <field name="name"/>
-                        <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_tmpl_id','=',product_id)]"/>
+                        <field name="product_tmpl_id" invisible="1"/>
+                        <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_tmpl_id','=',product_tmpl_id)]"/>
                     </group>
                     <group>
                         <field name="create_date" invisible="1"/>

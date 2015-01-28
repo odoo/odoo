@@ -22,7 +22,7 @@
 """ Models registries.
 
 """
-from collections import Mapping
+from collections import Mapping, defaultdict
 import logging
 import os
 import threading
@@ -51,7 +51,7 @@ class Registry(Mapping):
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
-        self.fields_by_model = None
+        self._fields_by_model = None
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -114,6 +114,20 @@ class Registry(Mapping):
                 fields.append(model_fields[fname])
         return fields
 
+    def clear_manual_fields(self):
+        """ Invalidate the cache for manual fields. """
+        self._fields_by_model = None
+
+    def get_manual_fields(self, cr, model_name):
+        """ Return the manual fields (as a dict) for the given model. """
+        if self._fields_by_model is None:
+            # Query manual fields for all models at once
+            self._fields_by_model = dic = defaultdict(dict)
+            cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
+            for field in cr.dictfetchall():
+                dic[field['model']][field['name']] = field
+        return self._fields_by_model[model_name]
+
     def do_parent_store(self, cr):
         for o in self._init_parent:
             self.get(o)._parent_store_compute(cr)
@@ -166,12 +180,18 @@ class Registry(Mapping):
 
         # prepare the setup on all models
         for model in self.models.itervalues():
-            model._prepare_setup_fields(cr, SUPERUSER_ID)
+            model._prepare_setup(cr, SUPERUSER_ID)
 
         # do the actual setup from a clean state
         self._m2m = {}
         for model in self.models.itervalues():
-            model._setup_fields(cr, SUPERUSER_ID, partial=partial)
+            model._setup_base(cr, SUPERUSER_ID, partial)
+
+        for model in self.models.itervalues():
+            model._setup_fields(cr, SUPERUSER_ID)
+
+        for model in self.models.itervalues():
+            model._setup_complete(cr, SUPERUSER_ID)
 
     def clear_caches(self):
         """ Clear the caches
