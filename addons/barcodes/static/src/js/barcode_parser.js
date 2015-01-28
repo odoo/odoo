@@ -61,7 +61,7 @@ openerp.barcodes = function(instance) {
         },
 
         // returns the checksum of the ean8, or -1 if the ean has not the correct length, ean must be a string
-        ean8_checskum: function(ean){
+        ean8_checksum: function(ean){
             var code = ean.split('');
             if (code.length !== 8) {
                 return -1;
