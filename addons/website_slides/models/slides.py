@@ -422,6 +422,8 @@ class Slide(models.Model):
         except urllib2.HTTPError as e:
             result['error'] = e.read()
             e.close()
+        except urllib2.URLError as e:
+            result['error'] = e.reason
         return result
 
     def _find_document_data_from_url(self, url):
