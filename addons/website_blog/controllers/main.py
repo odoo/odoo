@@ -177,11 +177,13 @@ class WebsiteBlog(http.Controller):
         def get_next_post_id(blog_post_ids, current_blog_post_id):
             if not blog_post_ids or not current_blog_post_id:
                 return False
-            return blog_post_ids[0 if blog_post_ids.index(current_blog_post_id) == len(blog_post_ids) - 1 \
-                     else blog_post_ids.index(current_blog_post_id) + 1]
+            current_blog_post_index = blog_post_ids.index(current_blog_post_id)
+            return blog_post_ids[0 if current_blog_post_index == len(blog_post_ids) - 1 \
+                     else current_blog_post_index + 1]
 
         def check_blog_post_status(blog_post_id, visited_ids):
-            #recursive check to see if the blog posts which client earlier visited(stored in 'visited_blogs' cookies) are been 'unpublished' or deleted.
+            # Recursive check to see if the blog posts which client earlier
+            # visited(stored in 'visited_blogs' cookies) are been 'unpublished' or deleted.
             if not blog_post_id:
                 return False
             if blog_post_obj.search(cr, uid, [('id', '=', blog_post_id)], context=context):
@@ -220,13 +222,15 @@ class WebsiteBlog(http.Controller):
         visited_ids = map(lambda x: int(x), visited_ids)
         if blog_post.id not in visited_ids:
             visited_ids.append(blog_post.id)
-        next_post_id = blog_post_obj.search(cr, uid, [
-            ('id', 'not in', visited_ids),
-        ], order='visits desc', limit=1, context=context)
-        if not next_post_id:
-            # Once all blog posts are been visited, it will iterate the blog posts by refering in the 'visited_blogs' cookies
+        all_post_ids = blog_post_obj.search(cr, uid, [], context=context)
+        if sorted(visited_ids, reverse=True) == all_post_ids \
+                or set(all_post_ids).issubset(set(sorted(visited_ids, reverse=True))):
+            # Once all blog posts are been visited, it will iterate
+            # the blog posts by refering in the 'visited_blogs' cookies
             next_post_id = get_next_post_id(visited_ids, blog_post.id)
             next_post_id = check_blog_post_status(next_post_id, visited_ids)
+        else:
+            next_post_id = get_next_post_id(all_post_ids, blog_post.id)
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id, context=context) or False
 
         values = {
