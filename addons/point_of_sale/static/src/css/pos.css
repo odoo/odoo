@@ -528,7 +528,7 @@ td {
 .pos .control-buttons {
     display: flex;
     flex-flow: row wrap;
-    padding: 8px 13px 0px 11px;
+    padding: 8px 16px 0px 11px;
     margin-bottom: -6px;
 }
 .pos .control-button {
@@ -574,27 +574,45 @@ td {
 /*  ********* The actionpad (payment, set customer) ********* */
 
 .pos .actionpad {
-    padding: 8px 3px 8px 19px;
     display: inline-block;
+    float: left;
+    padding: 0;
+    margin: 16px;
+    margin-top: 8px;
+    margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 183px;
-    max-height: 350px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    width: 190px;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: #cacaca;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button {
-    height: 50px;
     display: block;
+    height: 54px;
     width: 100%;
-    margin: 0px -6px 4px -2px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
     font-size: 14px;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #cacaca;
+}
+.pos .actionpad .button:first-child {
+    border-top-left-radius: 4px;
+}
+.pos .actionpad .button:last-child {
+    border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button.pay {
-    height: 158px;
+    height: 162px;
 }
 .pos .actionpad .button.pay .fa {
     display: block;
@@ -612,22 +630,41 @@ td {
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
-    padding: 8px 8px 8px 4px;
     display: inline-block;
+    float: right;
     text-align: center;
+    margin: 16px;
+    margin-top: 8px;
+    margin-left: 0px;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid;
+    border-color: #cacaca;
+    border-top-right-radius: 4px;
 }
 .pos .numpad button {
-    height: 50px;
-    width: 50px;
-    margin: 0px 3px 4px 0px;
+    float: left;
+    height: 54px;
+    width: 54px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #cacaca;
 }
 .pos .numpad button:active {
     background: black;
     color: white;
     border-color: transparent;
+}
+.pos .numpad button:nth-child(4) {
+    border-top-right-radius: 4px;
+}
+.pos .numpad button:last-child {
+    border-bottom-right-radius: 4px;
 }
 .pos .input-button {
     font-size: 24px;
@@ -1077,10 +1114,25 @@ td {
     text-align: center;
     float: left;
 }
+.pos .payment-numpad .numpad {
+    float: none;
+    margin-left: 16px;
+    border-radius: 4px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: #cacaca;
+}
 .pos .payment-numpad .numpad button {
     width: 66px;
     height: 66px;
 }
+.pos .payment-numpad .numpad button:first-child {
+    border-top-left-radius: 4px;
+}
+.pos .payment-numpad .numpad button:nth-child(16) {
+    border-bottom-left-radius: 4px;
+}
+
 .pos .paymentlines-container {
     padding: 16px;
     padding-top: 0;
