@@ -245,10 +245,14 @@ class mail_message(osv.Model):
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
+        print "get childs : ", get_childs
+
         if get_childs:
             message_obj = self.pool.get('mail.message')
             add_message_ids = message_obj.search(cr, uid, [('parent_id', 'in', msg_ids),('to_read', '=', read)], context=context)
             msg_ids += add_message_ids
+
+        domain = [('message_id', 'in', msg_ids), ('partner_id', '=', user_pid),]
 
         if not create_missing:
             domain += [('is_read', '=', not read),]
