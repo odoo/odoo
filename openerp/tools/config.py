@@ -48,16 +48,6 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
-
-def check_ssl():
-    try:
-        from OpenSSL import SSL
-        import socket
-
-        return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
-    except:
-        return False
-
 DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
@@ -101,7 +91,6 @@ class configmanager(object):
 
         self.misc = {}
         self.config_file = fname
-        self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
@@ -146,24 +135,6 @@ class configmanager(object):
                          help="Enable correct behavior when behind a reverse proxy")
         group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
                          help="specify the TCP port for longpolling requests", type="int")
-        parser.add_option_group(group)
-
-        # XML-RPC / HTTPS
-        title = "XML-RPC Secure Configuration"
-        if not self.has_ssl:
-            title += " (disabled as ssl is unavailable)"
-
-        group = optparse.OptionGroup(parser, title)
-        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", my_default='',
-                         help="Specify the TCP IP address for the XML-RPC Secure protocol. The empty string binds to all interfaces.")
-        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", my_default=8071,
-                         help="specify the TCP port for the XML-RPC Secure protocol", type="int")
-        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", my_default=True,
-                         help="disable the XML-RPC Secure protocol")
-        group.add_option("--cert-file", dest="secure_cert_file", my_default='server.cert',
-                         help="specify the certificate file for the SSL connection")
-        group.add_option("--pkey-file", dest="secure_pkey_file", my_default='server.pkey',
-                         help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
         # WEB
@@ -400,8 +371,7 @@ class configmanager(object):
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo', 'timezone',
-                'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
+                'dbfilter', 'log_handler', 'log_level', 'log_db',
                 'geoip_database',
         ]
 
@@ -422,7 +392,7 @@ class configmanager(object):
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs', 'proxy_mode',
+            'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
