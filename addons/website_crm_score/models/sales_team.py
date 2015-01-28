@@ -20,8 +20,7 @@ try:
         return bool(address.validate_address(mail))
 
 except ImportError:
-    _logger.warning('Flanker library not found, Flanker features (check email on lead) disabled. \
-                     If you plan to use it, please install the Flanker library from http://pypi.python.org/pypi/flanker')
+    _logger.warning('flanker not found, email validation disabled.')
 
     def checkmail(mail):
         return True

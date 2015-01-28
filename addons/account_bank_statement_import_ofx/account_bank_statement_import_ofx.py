@@ -12,8 +12,7 @@ _logger = logging.getLogger(__name__)
 try:
     from ofxparse import OfxParser as ofxparser
 except ImportError:
-    _logger.error("OFX parser unavailable because the `ofxparse` Python library cannot be found."
-                    "It can be downloaded and installed from `https://pypi.python.org/pypi/ofxparse`.")
+    _logger.warn("ofxparse not found, OFX parsing disabled.")
     ofxparser = None
 
 class account_bank_statement_import(osv.TransientModel):
