@@ -664,7 +664,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.active_view = view;
 
         if (!view.created) {
-            view.created = this.create_view.bind(this)(view);
+            view.created = this.create_view.bind(this)(view, view_options);
         }
         this.active_search = $.Deferred();
 
@@ -732,13 +732,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             return $bc;
         }
     },
-    create_view: function(view) {
+    create_view: function(view, view_options) {
         var self = this,
             View = this.registry.get_object(view.type),
             options = _.clone(view.options),
             view_loaded = $.Deferred();
 
-        if (view.type === "form" && this.action && (this.action.target === 'new' || this.action.target === 'inline')) {
+        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline'))
+                || (view_options && view_options.mode === 'edit'))) {
             options.initial_mode = 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options),
