@@ -174,7 +174,7 @@
         parent="main_timeline_menu"/>
 
     <record model="ir.actions.act_window" id="test_action_to_read">
-            <field name="name">To read</field>
+            <field name="name">Inbox</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">timeline</field>
@@ -204,11 +204,11 @@
             </field>
         </record>
 
-    <menuitem id="timeline_menu_to_read" name="To read"
+    <menuitem id="timeline_menu_to_read" name="Inbox"
         parent="timeline_menu" action="test_action_to_read"/> 
 
     <record model="ir.actions.act_window" id="test_action_to_me">
-            <field name="name">To me</field>
+            <field name="name">To:me</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">timeline</field>
@@ -237,7 +237,7 @@
             </field>
         </record>
 
-    <menuitem id="timeline_menu_to_me" name="To me"
+    <menuitem id="timeline_menu_to_me" name="To:me"
         parent="timeline_menu" action="test_action_to_me"/>
 
     <record model="ir.actions.act_window" id="test_action_to_do">
