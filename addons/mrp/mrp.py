@@ -252,9 +252,10 @@ class mrp_bom(osv.osv):
         def check_bom(boms):
             res = True
             for bom in boms:
-                if bom.product_id.id in all_prod:
-                    res = res and False
-                all_prod.append(bom.product_id.id)
+                for product in all_prod:
+                    if bom.product_id.id in product and bom.date_start == product[bom.product_id.id][0] and bom.date_stop == product[bom.product_id.id][1]:
+                        res = res and False
+                all_prod.append({bom.product_id.id: [bom.date_start, bom.date_stop]})
                 lines = bom.bom_lines
                 if lines:
                     res = res and check_bom([bom_id for bom_id in lines if bom_id not in boms])
