@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="vat_code_chart_root" model="account.tax.code.template">
+            <field name="name">Plan de Taxes Algérie</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_col_ht">
+            <field name="name">Base H.T. TVA collectée</field>
+            <field name="code">TVA HT</field>
+            <field name="sign">1.00</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_col_170_ht">
+            <field name="name">Base H.T. 17.0%</field>
+            <field name="code">TVA collectée 17.0% (Base H.T.)</field>
+            <field name="parent_id" ref="tax_col_ht"/>
+            <field name="sign">1.00</field>
+        </record>
+        <record model="account.tax.code.template" id="tax_col_070_ht">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="code">TVA collectée 7.0% (Base H.T.)</field>
+            <field name="parent_id" ref="tax_col_ht"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_col">
+            <field name="name">TVA collectée</field>
+            <field name="code">TVA</field>
+            <field name="sign">1.00</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_col_170">
+            <field name="name">TVA 17.0%</field>
+            <field name="code">TVA collectée 17.0%</field>
+            <field name="parent_id" ref="tax_col"/>
+            <field name="sign">1.00</field>
+        </record>
+        <record model="account.tax.code.template" id="tax_col_070">
+            <field name="name">TVA 7.0%</field>
+            <field name="code">TVA collectée 7.0%</field>
+            <field name="parent_id" ref="tax_col"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq_ht">
+            <field name="name">Base H.T. TVA acquittée</field>
+            <field name="code">ACQ TVA HT</field>
+            <field name="sign">1.00</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq_170_ht">
+            <field name="name">Base H.T. 17.0%</field>
+            <field name="code">TVA acquittée 17.0% (Base H.T.)</field>
+            <field name="parent_id" ref="tax_acq_ht"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq_070_ht">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="code">TVA acquittée 7.0% (Base H.T.)</field>
+            <field name="parent_id" ref="tax_acq_ht"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq">
+            <field name="name">TVA acquittée</field>
+            <field name="code">ACQ TVA</field>
+            <field name="sign">1.00</field>
+            <field name="parent_id" ref="vat_code_chart_root"/>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq_170">
+            <field name="name">Base H.T. 17.0%</field>
+            <field name="code">TVA acquittée 17.0%</field>
+            <field name="parent_id" ref="tax_acq"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record model="account.tax.code.template" id="tax_acq_070">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="code">TVA acquittée 7.0%</field>
+            <field name="parent_id" ref="tax_acq"/>
+            <field name="sign">1.00</field>
+        </record>
+
+        <record id="dz_chart_template" model="account.chart.template">
+            <field name="name">Algeria SCF</field>
+            <field name="account_root_id" ref="pcg_0"/>
+            <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+            <field name="bank_account_view_id" ref="pcg_5121"/>
+            <field name="property_account_receivable" ref="pcg_4111"/>
+            <field name="property_account_payable" ref="pcg_380"/>
+            <field name="property_account_expense_categ" ref="pcg_60"/>
+            <field name="property_account_income_categ" ref="pcg_70"/>
+            <field name="currency_id" ref="base.DZD"/>
+        </record>
+    </data>
+</openerp>
+
