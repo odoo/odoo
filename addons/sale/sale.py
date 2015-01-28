@@ -844,7 +844,10 @@ class sale_order_line(osv.osv):
         'product_uos_qty': fields.float('Quantity (UoS)' ,digits_compute= dp.get_precision('Product UoS'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
-        'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'th_weight': fields.float('Gross Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'real_weight': fields.float('Net Weight', readonly=True, states={'draft': [('readonly', False)]}),
+        'th_volume': fields.float('Gross Volume', readonly=True, states={'draft': [('readonly', False)]}),
+
         'state': fields.selection(
                 [('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')],
                 'Status', required=True, readonly=True, copy=False,
@@ -983,7 +986,9 @@ class sale_order_line(osv.osv):
         try:
             value.update({
                 'product_uom_qty': product_uos_qty / product.uos_coeff,
-                'th_weight': product_uos_qty / product.uos_coeff * product.weight
+                'th_weight': product_uos_qty / product.uos_coeff * product.weight,
+                'real_weight': product_uos_qty / product.uos_coeff * product.weight_net,
+                'th_volume': product_uos_qty / product.uos_coeff * product.volume
             })
         except ZeroDivisionError:
             pass
@@ -1027,7 +1032,7 @@ class sale_order_line(osv.osv):
             ctx_product['lang'] = lang
 
         if not product:
-            return {'value': {'th_weight': 0,
+            return {'value': {'th_weight': 0, 'real_weight': 0, 'th_volume': 0,
                     'product_uos_qty': qty}, 'domain': {'product_uom': [],
                     'product_uos': []}}
         if not date_order:
@@ -1073,6 +1078,8 @@ class sale_order_line(osv.osv):
                 result['product_uos_qty'] = qty
                 uos_category_id = False
             result['th_weight'] = qty * product_obj.weight
+            result['real_weight'] = qty * product_obj.weight_net
+            result['th_volume'] = qty * product_obj.volume
             domain = {'product_uom':
                         [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
@@ -1081,6 +1088,8 @@ class sale_order_line(osv.osv):
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
+            result['real_weight'] = result['product_uom_qty'] * product_obj.weight_net
+            result['th_volume'] = result['product_uom_qty'] * product_obj.volume
         elif uom:  # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = ProductUom._compute_qty(cr, uid, uom, qty, default_uom)
@@ -1091,6 +1100,8 @@ class sale_order_line(osv.osv):
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
+            result['real_weight'] = q * product_obj.weight_net        
+            result['th_volume'] = q * product_obj.volume        
 
         if not uom2:
             uom2 = product_obj.uom_id
