@@ -657,10 +657,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.view_stack.push(view);
 
         // Hide active view (at first rendering, there is no view to hide)
-        if (this.active_view &&
-                this.active_view != view &&
-                this.active_view.controller) {
-            this.active_view.controller.do_hide();
+        if (this.active_view && this.active_view !== view) {
+            if (this.active_view.controller) this.active_view.controller.do_hide();
+            if (this.active_view.$container) this.active_view.$container.hide();
         }
         this.active_view = view;
 
