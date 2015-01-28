@@ -13,12 +13,20 @@
     background: #f0eeee;
 }
 
+.oe-view-manager-view-timeline {
+    background-color: #f0eeee;
+}
+
 
 /* ------------------- FORM INTEGRATION ------------------- */
 
 .openerp .oe_timeline_record_thread {
     display: block;
     z-index: 10;
+}
+
+.openerp .oe_timeline_record_thread .oe_timeline {
+    width: 100%;
 }
 
 .oe_timeline_record_thread > .oe_timeline {
@@ -363,8 +371,83 @@
 
 /* -------------- parent message -------------- */
 
-.openerp .oe_timeline .oe_tl_parent_message {
+.openerp .oe_timeline .oe_tl_thread_parent {
     border : solid black 1px;
+    width: 1000px;
+    margin-top: 10px;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message {
+    background-color: white;
+    margin-left: 17%;
+    padding: 3px;
+}
+
+/* date */
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_date {
+    margin-top: 3px;
+}
+
+/* icons */
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons {
+    margin-top: -7px;
+    height: 8px;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read,
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread {
+    margin-top: -10px;
+    margin-right: 5px;
+    float: left;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply {
+    margin-top: -22px;
+    float: right;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons span {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons a {
+    text-decoration: none;
+    color: #FFF;
+    text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
+    -webkit-transition: all 0.2s linear;
+       -moz-transition: all 0.2s linear;
+         -o-transition: all 0.2s linear;
+            transition: all 0.2s linear;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent:hover .oe_tl_msg_icons a {
+    opacity: 1;
+    -webkit-transition: all 0.1s linear;
+       -moz-transition: all 0.1s linear;
+         -o-transition: all 0.1s linear;
+            transition: all 0.1s linear;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply:hover a {
+    color: #1fc0ff;
+    text-shadow: 0px 1px #184fc5,0px -1px #184fc5, -1px 0px #184fc5, 1px 0px #184fc5, 0px 3px 3px rgba(0,0,0,0.1);
+}
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read:hover a {
+    color: #bbbaff;
+    text-shadow: 0px 1px #7c7bad,0px -1px #7c7bad, -1px 0px #7c7bad, 1px 0px #7c7bad, 0px 3px 3px rgba(0,0,0,0.1);
+}
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread:hover a {
+    color: #c2ff00;
+    text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.1);
 }
 
 /* ----------------- message ----------------- */
@@ -375,17 +458,14 @@
 
 /* 1. date */
 
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_notification .oe_tl_msg_date,
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_comment .oe_tl_msg_date,
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_email .oe_tl_msg_date {
+.openerp .oe_timeline .oe_tl_msg_date {
     text-align: center;
     font-size: 0.9em;
 }
 
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_notification .oe_tl_msg_date span,
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_comment .oe_tl_msg_date span,
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_email .oe_tl_msg_date span {
+.openerp .oe_timeline .oe_tl_msg_date span {
     display: block;
+    background-color: white;
     padding: 1px 10px 2px 10px;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
@@ -394,9 +474,8 @@
     border-radius: 12px;
 }
 
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_comment .oe_tl_msg_date span,
-.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_email .oe_tl_msg_date span {
-    background-color: white;
+.openerp .oe_timeline .oe_tl_msg.oe_tl_msg_notification .oe_tl_msg_date span{
+    background-color: #f0eeee;
 }
 
 .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_comment.oe_tl_msg_nobody .oe_tl_msg_date span,
@@ -448,14 +527,14 @@
     border-bottom-right-radius: 4px;
     position: relative;                 
 	background: white;                  
-    margin-left: 65px;                  
+    margin-left: 53px;                  
     padding: 5px 5px 11px 7px;  
     box-shadow: 0px 1px #CACACA;      
 }
 
 .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_comment .oe_tl_msg_center:after,   /*********/
 .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_email .oe_tl_msg_center:after {    /**arrow**/
-	left: 60px;                                                               /*********/
+	left: 48px;                                                               /*********/
 	top: 17px;                                                                /*********/
     border: solid transparent;
 	content: " ";

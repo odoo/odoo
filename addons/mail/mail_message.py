@@ -245,8 +245,6 @@ class mail_message(osv.Model):
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
-        print "get childs : ", get_childs
-
         if get_childs:
             message_obj = self.pool.get('mail.message')
             add_message_ids = message_obj.search(cr, uid, [('parent_id', 'in', msg_ids),('to_read', '=', read)], context=context)
@@ -476,7 +474,6 @@ class mail_message(osv.Model):
                 'type': message.type,
                 'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': message.body,
-                #'body_short': body_short,
                 'model': message.model,
                 'model_desc': message.model_desc,
                 'res_id': message.res_id,
@@ -487,11 +484,11 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                #'author_avatar': message.author_avatar,
+                'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
-                #'has_voted': has_voted,
+                'has_voted': has_voted,
                 'is_favorite': message.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
@@ -692,7 +689,6 @@ class mail_message(osv.Model):
                 'subject': message['subject'],
                 'model': message['model'],
                 'model_desc': message['model_desc'],
-                'body': message['body'],
                 'has_attachment': message['has_attachment'],
                 'type': 'parent',
             }
@@ -748,19 +744,37 @@ class mail_message(osv.Model):
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
 
+        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
+
         if mode == 'parent':
             message_list = [msg_list[0] for (key, msg_list) in parent_list]
             message_list = map(_get_parent, message_list)
 
             msg_to_read = [max([msg['to_read'] for msg in msg_list]) for (key, msg_list) in parent_list]
 
+            msg_last_date = [] 
+            msg_last_author = [] 
+            msg_last_author_avatar = []
+
+            for key, msg_list in parent_list:
+                i = 0
+                m = False
+                for msg in msg_list:
+                    if msg['id'] > i:
+                        i = msg['id']
+                        m = msg
+                msg_last_date.append(msg['date'])
+                msg_last_author.append(msg['author_id'])
+                msg_last_author_avatar.append(msg['author_avatar'])
+
             for i in range (0, len(message_list)):
                 message_list[i]['to_read'] = msg_to_read[i]
+                message_list[i]['last_date'] = msg_last_date[i]
+                message_list[i]['last_author_id'] = msg_last_author[i]
+                message_list[i]['last_author_avatar'] = msg_last_author_avatar[i]
 
             return message_list
-        
-        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
-        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
             
         if mode == 'child':                                                                 
             # get the child expandable messages for the tree
