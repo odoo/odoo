@@ -19,29 +19,19 @@ Modules customize the behavior of an Odoo installation, either by adding new
 behaviors or by altering existing ones (including behaviors added by other
 modules).
 
-First let's create a *module directory* which will contain a single module in
-our case but may store multiple related (a project's) or not really related
-(a company's) modules:
+:ref:`Odoo's scaffolding <reference/cmdline/scaffold>` can setup a basic
+module to quickly get started, simply invoke:
 
 .. code-block:: console
 
-    $ mkdir my-modules
+    $ ./odoo.py scaffold Academy my-modules
 
-then let's create the module's own directory:
-
-.. code-block:: console
-
-    $ mkdir my-modules/academy
-
-An Odoo module is a valid `Python package
-<http://docs.python.org/2/tutorial/modules.html#packages>`_ so it needs an
-empty ``__init__.py`` file.
-
-Finally the mark of an Odoo module is the
-:ref:`manifest file <reference/module/manifest>`, a Python dictionary describing
-various module metadata.
+This will automatically create a ``my-modules`` *module directory* with an
+``academy`` module inside. The directory can be an existing module directory
+if you want, but the module name must be unique for the directory.
 
 .. patch::
+    :hidden:
 
 A demonstration module
 ======================
@@ -52,22 +42,16 @@ Although it does absolutely nothing yet we can install it:
 
 * start the Odoo server
 
-    .. code-block:: console
+  .. code-block:: console
 
-        $ ./odoo.py --addons-path addons,my-modules
+      $ ./odoo.py --addons-path addons,my-modules
 
 * go to http://localhost:8069
 * create a new database including demonstration data
-* to go :menuselection:`Settings --> Modules --> Installed Modules`
+* to go :menuselection:`Settings --> Modules --> Local Modules`
 * in the top-right corner remove the *Installed* filter and search for
   *academy*
 * click the :guilabel:`Install` button for the *Academy* module
-
-.. seealso::
-
-    * In a production development setting, modules should generally be created
-      using :ref:`Odoo's scaffolding <reference/cmdline/scaffold>` rather than by
-      hand
 
 To the browser
 ==============
@@ -75,7 +59,8 @@ To the browser
 :ref:`Controllers <reference/http/controllers>` interpret browser requests and
 send data back.
 
-Add a simple controller and import it (so Odoo can find it):
+Add a simple controller and ensure it is imported by ``__init__.py`` (so
+Odoo can find it):
 
 .. patch::
 
@@ -85,8 +70,8 @@ Shut down your server (:kbd:`^C`) then restart it:
 
     $ ./odoo.py --addons-path addons,my-modules
 
-and open a page to http://localhost:8069/academy/, you should see your "page"
-appear:
+and open a page to http://localhost:8069/academy/academy/, you should see your
+"page" appear:
 
 .. figure:: website/helloworld.png
 
@@ -100,8 +85,8 @@ display logic. Odoo allows any Python templating system, but provides its
 own :ref:`QWeb <reference/qweb>` templating system which integrates with other
 Odoo features.
 
-Let's create an XML file for our first template, register the template in the
-manifest and alter the controller to use our template:
+Create a template and ensure the template file is registered in the
+``__openerp__.py`` manifest, and alter the controller to use our template:
 
 .. patch::
 
@@ -109,7 +94,7 @@ The templates iterates (``t-foreach``) on all the teachers (passed through the
 *template context*), and prints each teacher in its own paragraph.
 
 Finally restart Odoo and update the module's data (to install the template)
-by going to :menuselection:`Settings --> Modules --> Installed Modules -->
+by going to :menuselection:`Settings --> Modules --> Local Modules -->
 Academy` and clicking :guilabel:`Upgrade`.
 
 .. tip::
@@ -121,7 +106,7 @@ Academy` and clicking :guilabel:`Upgrade`.
 
         $ odoo.py --addons-path addons,my-modules -d academy -u academy
 
-Going to http://localhost:8069/academy/ should now result in:
+Going to http://localhost:8069/academy/academy/ should now result in:
 
 .. image:: website/basic-list.png
 
@@ -137,7 +122,8 @@ thereof, so we're now going to move our data to the database.
 Defining the data model
 -----------------------
 
-First define an Odoo model file and import it:
+Define a teacher model, and ensure it is imported from ``__init__.py`` so it
+is correctly loaded:
 
 .. patch::
 
@@ -165,7 +151,7 @@ Demonstration data
 
 The second step is to add some demonstration data to the system so it's
 possible to test it easily. This is done by adding a ``demo``
-:ref:`data file <reference/data>` to the manifest:
+:ref:`data file <reference/data>`, which must be linked from the manifest:
 
 .. patch::
 
@@ -194,8 +180,8 @@ The last step is to alter model and template to use our demonstration data:
 
 Restart the server and update the module (in order to update the manifest
 and templates and load the demo file) then navigate to
-http://localhost:8069/academy/. The page should look little different: names
-should simply be prefixed by a number (the database identifier for the
+http://localhost:8069/academy/academy/. The page should look little different:
+names should simply be prefixed by a number (the database identifier for the
 teacher).
 
 Website support
@@ -216,9 +202,9 @@ integration and a few other services (e.g. default styling, theming) via the
 .. patch::
 
 After restarting the server while updating the module (in order to update the
-manifest and template) access http://localhost:8069/academy/ should yield a
-nicer looking page with branding and a number of built-in page elements
-(top-level menu, footer, …)
+manifest and template) access http://localhost:8069/academy/academy/ should
+yield a nicer looking page with branding and a number of built-in page
+elements (top-level menu, footer, …)
 
 .. image:: website/layout.png
 
@@ -396,7 +382,7 @@ let's also add views so we can see and edit a course's teacher:
 
 It should also be possible to create new courses directly from a teacher's
 page, or to see all the courses a teacher gives, so add
-:class:`the inverse relationship <openerp.fields.One2many` to the *teachers*
+:class:`the inverse relationship <openerp.fields.One2many>` to the *teachers*
 model:
 
 .. patch::
