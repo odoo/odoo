@@ -224,7 +224,7 @@ class WebsiteBlog(http.Controller):
             visited_ids.append(blog_post.id)
         all_post_ids = blog_post_obj.search(cr, uid, [], context=context)
         if sorted(visited_ids, reverse=True) == all_post_ids \
-                or set(all_post_ids).issubset(set(sorted(visited_ids, reverse=True))):
+                or set(all_post_ids).issubset(set(visited_ids)):
             # Once all blog posts are been visited, it will iterate
             # the blog posts by refering in the 'visited_blogs' cookies
             next_post_id = get_next_post_id(visited_ids, blog_post.id)
