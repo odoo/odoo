@@ -47,4 +47,6 @@ import pos_box
 import account_statement_from_invoice
 
 import account_register_payment
+
+import account_move_reversal
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

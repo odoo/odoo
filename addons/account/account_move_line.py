@@ -106,12 +106,12 @@ class account_move_line(models.Model):
     reconcile_partial_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Partial Reconciliation',
         help='Moves involved in this move partial reconciliation')
     journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
-        default=_get_journal, required=True, index=True, store=True)
+        default=_get_journal, required=True, index=True, store=True, copy=False)
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due date', index=True ,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
-    date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True)
+    date = fields.Date(related='move_id.date', string='Effective date', required=True, index=True, default=fields.Date.context_today, store=True, copy=False)
     analytic_lines = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     tax_ids = fields.Many2many('account.tax', string='Taxes', copy=False, readonly=True)
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', copy=False, readonly=True)

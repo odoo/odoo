@@ -53,6 +53,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
+        'wizard/account_move_reversal_view.xml',
         'wizard/account_state_open_view.xml',
         'wizard/account_validate_move_view.xml',
         'wizard/account_report_general_ledger_view.xml',

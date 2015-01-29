@@ -513,6 +513,20 @@ class account_move(models.Model):
         # - return the move (of course)
         # - raise a warning if the centralisation move is posted (and offer to create it ?)
 
+    @api.multi
+    def reverse_moves(self, date, journal_id=None):
+        for ac_move in self:
+            reversed_move = ac_move.copy(default={'date': date, 
+                'journal_id': journal_id.id if journal_id else ac_move.journal_id.id})
+            for acm_line in reversed_move.line_id:
+                acm_line.write({
+                    'debit': acm_line.credit,
+                    'credit': acm_line.debit, 
+                    'amount_currency': -acm_line.amount_currency
+                    }, check=False)
+            reversed_move._post_validate()
+            reversed_move.post()
+        return True
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------
