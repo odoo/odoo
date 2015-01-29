@@ -1097,7 +1097,7 @@ class Binary(http.Controller):
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
         else:
             res = Model.default_get(cr, uid, fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             return request.not_found()
         else:
@@ -1129,7 +1129,7 @@ class Binary(http.Controller):
             res = Model.read([int(id)], fields, context)[0]
         else:
             res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))
