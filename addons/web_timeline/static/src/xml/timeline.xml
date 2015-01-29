@@ -215,6 +215,7 @@
             <t t-if="!widget.record_name and !widget.subject">
                 No subject
             </t>
+            (<span class="oe_tl_nb_unread_msg"><t t-raw="widget.nb_messages"/></span>)
         </span>
         <span class="oe_tl_parent_avatar">
             <a t-if="widget.options.show_link" 
@@ -245,7 +246,15 @@
 </div>
 
 <t t-name="ThreadExpendable">
-    <div class="oe_tl_thread_expendable"> More Messages : <t t-esc="widget.nb_messages"/> </div>
+    <div class="col-md-2"> </div>
+    <div class="oe_tl_thread_expendable"> 
+        <span t-if="widget.nb_messages > 1"> 
+            - - - - - - - - - - See <t t-esc="widget.nb_messages"/> more messages - - - - - - - - - -  
+        </span>
+        <span t-if="widget.nb_messages == 1"> 
+            - - - - - - - - - - See one more message - - - - - - - - - - 
+        </span>
+    </div>
 </t>
 
 <t t-name="MessageContent">

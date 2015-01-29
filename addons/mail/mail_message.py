@@ -752,6 +752,7 @@ class mail_message(osv.Model):
             message_list = map(_get_parent, message_list)
 
             msg_to_read = [max([msg['to_read'] for msg in msg_list]) for (key, msg_list) in parent_list]
+            message_unread_nb = [len(msg_list) for (key, msg_list) in parent_list]
 
             msg_last_date = [] 
             msg_last_author = [] 
@@ -773,6 +774,7 @@ class mail_message(osv.Model):
                 message_list[i]['last_date'] = msg_last_date[i]
                 message_list[i]['last_author_id'] = msg_last_author[i]
                 message_list[i]['last_author_avatar'] = msg_last_author_avatar[i]
+                message_list[i]['nb_messages'] = message_unread_nb[i]
 
             return message_list
             

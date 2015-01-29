@@ -1479,6 +1479,7 @@ openerp.web_timeline = function (session) {
         init: function (parent, dataset, options) {
             this._super(parent, dataset, options);
 
+            this.nb_messages = dataset.nb_messages;
             this.options.hidden_child = true;
         },
 
