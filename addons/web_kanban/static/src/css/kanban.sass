@@ -151,11 +151,12 @@
             text-overflow: ellipsis
     .oe_fold_column
         .oe_kanban_group_length
-            position: absolute
-            top: -1px
-            right: -14px
+            position: relative
+            top: -23px
+            right: 17px
             float: right
             display: block
+            font-weight: bold
     &.oe_kanban_grouped
         .oe_kanban_column, .oe_kanban_group_header
             width: 185px
@@ -186,6 +187,8 @@
         .oe_kanban_column, .oe_kanban_column_cards
             height: 100%
     .oe_kanban_group_folded
+        .oe_kanban_group_length.oe_tag
+            display: none
         .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_add
             display: none
         .oe_kanban_group_title_vertical, .oe_kanban_group_length
