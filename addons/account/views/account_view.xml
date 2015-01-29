@@ -477,10 +477,10 @@
                             <field name="line_ids" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_ids">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <field name="journal_entry_ids" invisible="1"/>
+                                    <!--<field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>-->
                                     <field name="partner_id" domain="[
                                         '&amp;',
                                             '|',('parent_id','=',False),('is_company','=',True),
@@ -897,7 +897,7 @@
                                             <group>
                                                 <group>
                                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                                    <field name="analytic_cost" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                                     <field name="active" groups="base.group_no_one"/>
                                                 </group>
@@ -915,7 +915,7 @@
                             <group>
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="analytic_cost" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="active" groups="base.group_no_one"/>
                                 </group>
@@ -1092,6 +1092,17 @@
                 <graph string="Account Statistics" type="bar">
                     <field name="date"/>
                     <field name="balance" operator="+" widget="monetary"/>
+                </graph>
+            </field>
+        </record>
+        <record id="account_move_line_graph_date" model="ir.ui.view">
+            <field name="name">account.move.line.graph</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="date"/>
+                    <field name="debit" operator="+" widget="monetary"/>
+                    <field name="credit" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -1623,7 +1634,7 @@
                             <group>
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="analytic_cost" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <br/><br/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>

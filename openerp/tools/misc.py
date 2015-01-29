@@ -1137,7 +1137,6 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
-
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
         Assuming 'Account' decimal.precision=3:

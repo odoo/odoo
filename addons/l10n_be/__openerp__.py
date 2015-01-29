@@ -83,6 +83,6 @@ Wizards provided by this module:
     'test': ['../account/test/account_invoice_state.yml',
              '../account/test/account_bank_statement.yml',
     ],
-    'installable': True,
+    'installable': False,
     'website': 'https://www.odoo.com/page/accounting',
 }

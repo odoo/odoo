@@ -579,7 +579,7 @@ class account_tax(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic_cost = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
+    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -723,7 +723,7 @@ class account_tax(models.Model):
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
-                'analytic_cost': tax.analytic_cost,
+                'analytic': tax.analytic,
             })
 
         return {
@@ -1181,7 +1181,7 @@ class account_tax_template(models.Model):
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect subsequent taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic_cost = fields.Boolean(string="Analytic Cost")
+    analytic = fields.Boolean(string="Analytic Cost")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -1213,26 +1213,31 @@ class account_tax_template(models.Model):
         todo_dict = {}
         tax_template_to_tax = {}
         for tax in self:
+            #Compute children tax ids
+            children = []
+            for child_tax in tax.children_tax_ids:
+                if tax_template_to_tax.get(child_tax.id):
+                    children.append(tax_template_to_tax[child_tax.id])
             vals_tax = {
                 'name': tax.name,
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
                 'company_id': company.id,
-                'children_tax_ids': tax.children_tax_ids,
+                'children_tax_ids': children and [(6, 0, children)] or [],
                 'sequence': tax.sequence,
                 'amount': tax.amount,
                 'description': tax.description,
                 'price_include': tax.price_include,
                 'include_base_amount': tax.include_base_amount,
-                'analytic_cost': tax.analytic_cost,
+                'analytic': tax.analytic,
             }
             new_tax = self.env['account.tax'].create(vals_tax)
             tax_template_to_tax[tax.id] = new_tax.id
             # Since the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax.id] = {
-                'account_id': tax.account_id,
-                'refund_account_id': tax.refund_account_id,
+                'account_id': tax.account_id.id,
+                'refund_account_id': tax.refund_account_id.id,
             }
         res.update({'tax_template_to_tax': tax_template_to_tax, 'account_dict': todo_dict})
         return res
@@ -1450,8 +1455,9 @@ class wizard_multi_charts_accounts(models.TransientModel):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
         company = self.company_id
-
-        self.company_id.write({'currency_id': self.currency_id.id, 'accounts_code_digits': self.code_digits})
+        self.company_id.write({'currency_id': self.currency_id.id,
+                               'accounts_code_digits': self.code_digits,
+                               'bank_account_code_char': self.bank_account_code_char})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id==1:
@@ -1494,8 +1500,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            recs = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
-            if not recs:
+            journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
+            if not journal:
                 break
         else:
             raise UserError(_('Cannot generate an unused journal code.'))
@@ -1539,11 +1545,11 @@ class wizard_multi_charts_accounts(models.TransientModel):
             raise UserError(_('Cannot generate an unused account code.'))
 
         liquidity_type = self.env.ref('account.data_account_type_liquidity')
+
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,
                 'code': new_code,
-                'type': 'liquidity',
                 'user_type': liquidity_type and liquidity_type.id or False,
                 'company_id': company.id,
         }

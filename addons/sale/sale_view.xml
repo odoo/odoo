@@ -151,7 +151,6 @@
                                                     name="product_uom_qty" class="oe_inline"
                                                     on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
-
                                                     on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                                             </div>
                                             <label for="product_uos_qty" groups="product.group_uos"/>
@@ -166,7 +165,7 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                             <field name="th_weight"/>
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
@@ -197,7 +196,7 @@
                                     <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
                                     <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>

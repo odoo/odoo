@@ -78,7 +78,7 @@
                                             <field name="price_subtotal" widget="monetary"/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                             <field name="to_invoice"/>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                             <field name="invoiced"/>
                                             <field name="location_id" groups="stock.group_locations"/>
                                             <field name="location_dest_id" groups="stock.group_locations"/>
@@ -148,7 +148,7 @@
                                     </group>
                                     <group>
                                         <field name="price_unit"/>
-                                        <field widget="many2many_tags" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <field widget="many2many_tags" name="tax_id" domain="[('type_tax_use','=','sale')]"/>
                                         <field name="price_subtotal" widget="monetary"/>
                                     </group>
                                 </group>

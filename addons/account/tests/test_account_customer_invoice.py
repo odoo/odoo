@@ -23,7 +23,7 @@ class TestAccountCustomerInvoive(AccountTestUsers):
         self.payment_term = self.env.ref('account.account_payment_term_advance')
         self.journalrec = self.env.ref('account.sales_journal')
         self.partner3 = self.env.ref('base.res_partner_3')
-        account_user_type = self.env.ref('account.data_account_type_receivable')
+        account_user_type = self.env.ref('account.data_account_type_liquidity')
 
         self.account_rec1_id = self.account_model.sudo(self.account_user.id).create(dict(
             code="cust_acc",

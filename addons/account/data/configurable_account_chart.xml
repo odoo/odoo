@@ -10,23 +10,30 @@
         
         <!-- Account Templates-->
 
-           <!-- Balance Sheet -->
+        <!-- Balance Sheet -->
         <record id="conf_xfa" model="account.account.template">
-            <field name="code">100</field>
+            <field name="code">1000</field>
             <field name="name">Fixed Asset Account</field>
-            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="user_type" ref="data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_stk" model="account.account.template">
-            <field name="code">1101</field>
+            <field name="code">1010</field>
+            <field name="name">Current Assets</field>
+            <field name="user_type" ref="data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+
+        <record id="conf_cas" model="account.account.template">
+            <field name="code">1011</field>
             <field name="name">Purchased Stocks</field>
-            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="user_type" ref="data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_a_recv" model="account.account.template">
-            <field name="code">1102</field>
+            <field name="code">1012</field>
             <field name="name">Debtors</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_receivable"/>
@@ -34,29 +41,51 @@
         </record>
 
         <record id="conf_ova" model="account.account.template">
-            <field name="code">1103</field>
+            <field name="code">1013</field>
             <field name="name">Tax Paid</field>
-            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="user_type" ref="data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_bnk" model="account.account.template">
-            <field name="code">1104</field>
+            <field name="code">1014</field>
             <field name="name">Bank Current Account</field>
-            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="user_type" ref="data_account_type_liquidity"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+
+        <record id="conf_cash" model="account.account.template">
+            <field name="code">1015</field>
+            <field name="name">Cash</field>
+            <field name="user_type" ref="data_account_type_liquidity"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_o_income" model="account.account.template">
-            <field name="code">1106</field>
+            <field name="code">1016</field>
             <field name="name">Opening Income Account</field>
-            <field name="user_type" ref="data_account_type_income"/>
+            <field name="user_type" ref="data_account_type_other_income"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+
+        <record id="conf_ncas" model="account.account.template">
+            <field name="code">1020</field>
+            <field name="name">Non-current assets</field>
+            <field name="user_type" ref="data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="configurable_chart_template"/>
+        </record>
+
+        <record id="conf_prepayments" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="name">Prepayments</field>
+            <field name="user_type" ref="data_account_type_prepayments"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
 
+
         <record id="conf_a_pay" model="account.account.template">
-            <field name="code">120</field>
+            <field name="code">1111</field>
             <field name="name">Creditors</field>
             <field eval="True" name="reconcile"/>
             <field name="user_type" ref="data_account_type_payable"/>
@@ -64,24 +93,24 @@
         </record>
 
         <record id="conf_iva" model="account.account.template">
-            <field name="code">121</field>
+            <field name="code">1112</field>
             <field name="name">Tax Received</field>
-            <field name="user_type" ref="data_account_type_liability"/>
+            <field name="user_type" ref="data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_a_reserve_and_surplus" model="account.account.template">
-            <field name="code">122</field>
+            <field name="code">1113</field>
             <field name="name">Reserve and Profit/Loss Account</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="data_account_type_liability"/>
+            <field name="user_type" ref="data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_o_expense" model="account.account.template">
-            <field name="code">123</field>
+            <field name="code">1114</field>
             <field name="name">Opening Expense Account</field>
-            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
@@ -90,31 +119,36 @@
         <record id="conf_a_sale" model="account.account.template">
             <field name="code">200</field>
             <field name="name">Product Sales</field>
-            <field name="user_type" ref="data_account_type_income"/>
+            <field name="user_type" ref="data_account_type_sales"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_cog" model="account.account.template">
             <field name="code">210</field>
             <field name="name">Cost of Goods Sold</field>
-            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_a_expense" model="account.account.template">
             <field name="code">220</field>
             <field name="name">Expenses</field>
-            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
         <record id="conf_a_salary_expense" model="account.account.template">
             <field name="code">221</field>
             <field name="name">Salary Expenses</field>
-            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="user_type" ref="data_account_type_expenses"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
+        <record id="conf_a_current_year_earnings" model="account.account.template">
+            <field name="code">0</field>
+            <field name="name">Unaffected Earnings</field>
+            <field name="user_type" ref="data_unaffected_earnings"/>
+        </record>
         <!-- Taxes -->
 
 

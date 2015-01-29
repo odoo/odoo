@@ -127,7 +127,7 @@ class account_bank_statement(models.Model):
 
     @api.multi
     def button_journal_entries(self):
-        context = self._context or {}
+        context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Items'),
@@ -385,7 +385,7 @@ class account_bank_statement_line(models.Model):
             domain = expression.AND([domain, [('partner_id', '=', self.partner_id.id)]])
 
         # Domain factorized for all reconciliation use cases
-        ctx = self._context or {}
+        ctx = dict(self._context or {})
         ctx['bank_statement_line'] = self
         generic_domain = self.env['account.move.line'].with_context(ctx).domain_move_lines_for_reconciliation(excluded_ids=excluded_ids, str=str)
         domain = expression.AND([domain, generic_domain])

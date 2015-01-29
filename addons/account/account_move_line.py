@@ -62,7 +62,7 @@ class account_move_line(models.Model):
     @api.model
     def _get_journal(self):
         """ Return journal based on the journal type """
-        context = self._context or {}
+        context = dict(self._context or {})
         journal_id = context.get('journal_id', False)
         if journal_id:
             return journal_id
@@ -93,6 +93,8 @@ class account_move_line(models.Model):
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
+    debit_cash_basis = fields.Float('Debit with cash basis method', default=0.0)
+    credit_cash_basis = fields.Float('Credit with cash basis method', default=0.0)
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
     balance = fields.Float(compute='_store_balance', store=True, digits=0, default=0.0, help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
@@ -137,6 +139,7 @@ class account_move_line(models.Model):
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
+    user_type = fields.Many2one('account.account.type', related='account_id.user_type', string='User Type', index=True, store=True)
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -372,7 +375,7 @@ class account_move_line(models.Model):
             :param target_currency: curreny you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
         """
-        context = self._context or {}
+        context = dict(self._context or {})
         company_currency = self.env.user.company_id.currency_id
         rml_parser = report_sxw.rml_parse(self._cr, self._uid, 'reconciliation_widget_aml', context=self._context)
         ret = []
@@ -774,7 +777,7 @@ class account_move_line(models.Model):
         self._update_check()
         result = False
         moves = self.env['account.move']
-        context = self._context or {}
+        context = dict(self._context or {})
         for line in self:
             moves += line.move_id
             context['journal_id'] = line.journal_id.id

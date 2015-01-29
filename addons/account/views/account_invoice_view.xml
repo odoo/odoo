@@ -213,6 +213,7 @@
                                     <field name="discount" groups="sale.group_discount_per_so_line" widget="monetary"/>
                                     <field name="invoice_line_tax_id" widget="many2many_tags" context="{'type':parent.type}"
                                         domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]"/>
+                                    <!-- ??? type_tax_use should not be purchase? -->
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                             </field>
