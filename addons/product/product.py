@@ -948,7 +948,10 @@ class product_product(osv.osv):
                 vals.update({'product_tmpl_id': product_tmpl_id, 'product_id': id})
                 Supplierinfo.create(cr, uid, vals, context=context)
             elif supplierinfo_id and code == 1:
-                Supplierinfo.write(cr, uid, supplierinfo_id, vals, context=context)
+                if self.pool['product.supplierinfo'].browse(cr, uid, supplierinfo_id, context=context).product_id:
+                    Supplierinfo.write(cr, uid, supplierinfo_id, vals, context=context)
+                else:
+                    raise UserError(_('You are not allowed to modify Supplier reference added on Product Template.'))
 
     def _get_suppliers(self, cr, uid, ids, name, args, context=None):
         res = dict.fromkeys(ids, False)
