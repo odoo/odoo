@@ -348,14 +348,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
         // (due to some events, or magic, or both...)  we must make sure they remain hidden.
         // the good solution would probably be to make them not re-render themselves when they
         // are hidden. 
-        renderElement: function(){
-            this._super();
-            if(this.hidden){
-                if(this.$el){
-                    this.$el.addClass('o_hidden');
-                }
-            }
-        },
         rpc_error: function(error) {
             if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning" || error.data.exception_type === "access_error") {
                 this.show_warning(error);
@@ -1216,7 +1208,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             // Events specific to this screen
             _.extend(self.events,
                 {
-                    "click .pt_button_plus_activity":"goto_edit_activity_screen"
+                    "click .pt_button_plus_activity":"goto_edit_activity_screen",
+                    "click .pt_activity":"edit_activity"
                 }
             );
 
@@ -1228,7 +1221,15 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 account_analytic_line.hours_minutes = project_timesheet.unit_amount_to_hours_minutes(account_analytic_line.unit_amount);
             });
         },
-         goto_edit_activity_screen: function(){
+        //Go to the create / edit activity
+        goto_edit_activity_screen: function(){
+            // => chemin d'accès à l'activité du widget d'édition. à modifier avec les infos récupérées lors du click sur une acti
+            // this.project_timesheet_widget.edit_activity_screen.activity;
+            this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
+        },
+        // Go to the edit screen to edit a specific activity
+        edit_activity: function(event){
+            this.project_timesheet_widget.edit_activity_screen.re_render(event.currentTarget.dataset.activity_id);
             this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
         }
     });
@@ -1295,21 +1296,52 @@ function odoo_project_timesheet_screens(project_timesheet) {
 
             _.extend(self.events,
                 {
-                    "click .pt_activity_project":"select_project"
+                    "click .pt_activity_project":"select_project",
+                    "click .pt_activity_task":"select_task",
+                    "change input.pt_activity_duration":"on_change_duration"
                 }
             );
 
-            this.projects = options.project_timesheet_model.projects
+            this.projects = options.project_timesheet_model.projects;
+            this.all_tasks = options.project_timesheet_model.tasks;
+            this.tasks = {};
             this.activity = {
-                "project":{
-                    "name":"Implementation",
-                    "id":1
-                }
+                project: undefined,
+                task: undefined,
+                desc:"/",
+                unit_amount: undefined
             };
         },
         select_project: function(event){
-            this.activity.project = _.findWhere(this.projects, {id : parseInt(event.currentTarget.dataset.project_id)});
+            var project_id = parseInt(event.currentTarget.dataset.project_id);
+            this.activity.project = _.findWhere(this.projects, {id : project_id});
+            this.activity.task = undefined;
+            this.tasks = _.where(this.all_tasks, {project_id : project_id});
             this.renderElement();
+        },
+        select_task: function(event){
+            var task_id = parseInt(event.currentTarget.dataset.task_id);
+            this.activity.task = _.findWhere(this.tasks, {id : task_id});
+            this.renderElement();
+        },
+        on_change_duration: function(event){
+            var duration = project_timesheet.validate_duration(this.$("input.pt_activity_duration").val());
+            if(_.isUndefined(duration)){
+                this.$("input.pt_activity_duration").val("00:00");
+                this.$("input.pt_activity_duration + p").text("Please entre a valid duration in the hh:mm format, such as 01:30");
+            }
+            else{
+                this.$("input.pt_activity_duration").val(duration);
+                this.$("input.pt_activity_duration + p").text("");
+                
+                this.activity.unit_amount = project_timesheet.hh_mm_to_unit_amount(duration);
+            }
+        },
+        // Function to re-render the screen with a new activity
+        re_render: function(activity_id){
+            this.activity = _.findWhere(project_timesheet.project_timesheet_model.account_analytic_lines,  {id:parseInt(activity_id)});
+            debugger
+            console.log(activity_id);
         }
     });
 }

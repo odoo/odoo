@@ -50,19 +50,19 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "project_id":1,
                                 "task_id":1,
                                 "id":1,
-                                "name":"/",
+                                "desc":"/",
                                 "unit_amount":1
                             },
                             {
                                 "project_id":1,
                                 "task_id":2,
                                 "id":2,
-                                "name":"/",
+                                "desc":"/",
                                 "unit_amount":2  
                             },
                             {
                                 "id":3,
-                                "name":"/"
+                                "desc":"/"
                             }
                         ],
                         "day_plan":[
@@ -78,10 +78,10 @@ function odoo_project_timesheet_db(project_timesheet) {
                 }
             ];
 
-            //localStorage.setItem("pt_data", JSON.stringify(test_data));
+            localStorage.setItem("pt_data", JSON.stringify(test_data));
 
             this.stored_data = JSON.parse(localStorage.getItem("pt_data"));
-            var user_data = _.findWhere(this.stored_data, {session_user : session_user, session_server : session_server});
+            var user_data = _.findWhere(this.stored_data, {session_user : session_user});//To reactivate later, commented now to test on runbot , session_server : session_server});
             return user_data;
         },
         update_data : function(){

@@ -30,43 +30,16 @@
 					<div class="panel">
 						<div class="panel-body">
 					<div class="row">
-							<div class="col-xs-7">
+							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
 								<t t-if="account_analytic_line.project_name">
 									<t t-esc="account_analytic_line.project_name"/><br/>
 									<t t-if="account_analytic_line.task_name">
 							    		<t t-esc="account_analytic_line.task_name"/>
 							    	</t>
-							    	<t t-if="!account_analytic_line.task_name">
-							    		<a class="dropdown">
-							    			<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-							    				Select a task <span class="caret"></span>
-							    			</a>
-							    			<ul class="dropdown-menu">
-							    				<li><a href="javascript:void(0)">Create task</a></li>
-							    				<t t-if="widget.tasks">
-							    					<t t-foreach="widget.tasks" t-as="task">
-							    						<li><a href="javascript:void(0)"><t t-esc="task.name"/></a></li>
-							    					</t>
-							    				</t>
-							    			</ul>
-							    		</a>
-							    	</t>
 								</t>
-								<t t-if="!account_analytic_line.project_name">
-									<a class="dropdown">
-										<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-											Select a project <span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu">
-											<li><a href="javascript:void(0)">Create project</a></li>
-											<t t-if="widget.projects">
-												<t t-foreach="widget.projects" t-as="project">
-													<li><a href="javascript:void(0)"><t t-esc="project.name"/></a></li>
-												</t>
-											</t>
-										</ul>
-									</a>
-								</t>
+                                <t t-if="!account_analytic_line.project_name">
+                                    <p><small>Select a project</small></p>
+                                </t>
 
 							</div>
 							<div class="col-xs-1">
@@ -80,9 +53,6 @@
 							<div class="col-xs-2">
                                 <t t-if="account_analytic_line.hours_minutes">
     								<t t-esc="account_analytic_line.hours_minutes[0]"/>:<t t-esc="account_analytic_line.hours_minutes[1]"/>
-                                </t>
-                                <t t-if="!account_analytic_line.hours_minutes">
-                                    00:00
                                 </t>
 							</div>
 						</div>
@@ -198,10 +168,10 @@
                     <div class="col-xs-12">
                         <a class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-                                <t t-if="widget.activity.project.name">
+                                <t t-if="widget.activity.project">
                                     <t t-esc="widget.activity.project.name"/>
                                 </t>
-                                <t t-if="!widget.activity.project.name">
+                                <t t-if="!widget.activity.project">
                                     Select a project
                                 </t>
                                 <span class="caret"></span>
@@ -223,29 +193,40 @@
                     <p>Task</p>
                 </div>
                 <div class="panel-body">
-                    <!--For some reason, the dropdown does not work without the following div-->
-                    <div class="col-xs-12">
-                        <a class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-                                <t t-if="widget.activity.task_name">
-                                    <t t-esc="widget.activity.task_name"/>
-                                </t>
-                                <t t-if="!widget.activity.task_name">
-                                    Select a Task
-                                </t>
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Create Task</a></li>
-                                <t t-if="widget.tasks">
-                                    <t t-foreach="widget.tasks" t-as="task">
-                                        <li><a href="javascript:void(0)" t-att-data-project_id="task.id" class="pt_activity_task"><t t-esc="task.name"/></a></li>
+                    <t t-if="widget.activity.project">
+                        <!--For some reason, the dropdown does not work without the following div-->
+                        <div class="col-xs-12">
+                            <a class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                    <t t-if="!widget.activity.task">
+                                        Select a Task
                                     </t>
-                                </t>
-                            </ul>
-                        </a>
-                    </div>
+                                    <t t-if="widget.activity.task">
+                                        <t t-esc="widget.activity.task.name"/>
+                                    </t>
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0)">Create Task</a></li>
+                                    <t t-if="widget.tasks">
+                                        <t t-foreach="widget.tasks" t-as="task">
+                                            <li><a href="javascript:void(0)" t-att-data-task_id="task.id" class="pt_activity_task"><t t-esc="task.name"/></a></li>
+                                        </t>
+                                    </t>
+                                </ul>
+                            </a>
+                        </div>
+                    </t>
+                    <t t-if="!widget.activity.project">
+                        <p><small>Please select a project first</small></p>
+                    </t>
                 </div>
+            </div>
+            <div>
+                <p>Time spent (hh:mm)</p>
+                <input type="text" class="pt_activity_duration" aria-describedby="Time Spent"></input>
+                <!--Empty p for alert in case of wrong input -->
+                <p></p>
             </div>
 
         </div>
