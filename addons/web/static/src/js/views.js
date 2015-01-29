@@ -315,7 +315,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         // Ensure context & domain are evaluated and can be manipulated/used
         var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
         action.context = instance.web.pyeval.eval('context', ncontext);
-        if (action.context.active_id || action.context.active_ids) {
+        // if the variable 'search_disable_custom_filters' is already in the context,
+        // do nothing
+        if (!('search_disable_custom_filters' in action.context) && (action.context.active_id || action.context.active_ids)
+           ) {
             // Here we assume that when an `active_id` or `active_ids` is used
             // in the context, we are in a `related` action, so we disable the
             // searchview's default custom filters.
