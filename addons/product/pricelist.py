@@ -262,7 +262,7 @@ class product_pricelist(osv.osv):
                 try:
                     qty_in_product_uom = product_uom_obj._compute_qty(
                         cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
-                except except_orm:
+                except UserError:
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass
 
