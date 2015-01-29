@@ -1341,10 +1341,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         # writing account values on tax after creation of accounts
         for key, value in generated_tax_res['account_dict'].items():
-            if value['account_collected_id'] or value['account_paid_id']:
+            if value['account_id'] or value['refund_account_id']:
                 AccountTaxObj.browse(key).write({
-                    'account_collected_id': account_ref.get(value['account_collected_id'], False),
-                    'account_paid_id': account_ref.get(value['account_paid_id'], False),
+                    'account_id': account_ref.get(value['account_id'], False),
+                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
                 })
 
         # Create Journals
