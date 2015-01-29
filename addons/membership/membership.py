@@ -336,7 +336,7 @@ class Partner(osv.osv):
                             '-Invoiced Member: A member whose invoice has been created.\n'
                             '-Paying member: A member who has paid the membership fee.'),
         'membership_start': fields.function(
-                    _membership_date, multi = 'membeship_start',
+                    _membership_date, multi = 'membership_start',
                     string = 'Membership Start Date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
