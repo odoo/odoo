@@ -926,7 +926,7 @@ class account_tax_template(models.Model):
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
-                'company_id': tax.company_id,
+                'company_id': tax.company_id.id,
                 'children_tax_ids': tax.children_tax_ids,
                 'sequence': tax.sequence,
                 'amount': tax.amount,
