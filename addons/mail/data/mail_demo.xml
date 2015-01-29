@@ -76,6 +76,30 @@
             <field name="notify_email">none</field>
         </record>
 
+        <!-- Thread: 1 incoming email -->
+        <record id="msg_discus5" model="mail.message">
+            <field name="subject">Plan to install backup servers</field>
+            <field name="body"><![CDATA[<p>Hello,</p>
+<p>We need to deploy new backup servers, with the following requirements:</p>
+<ul>
+    <li>daily incremental backups, with an history of 15 days,</li>
+    <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
+    <li>two redundant servers,</li>
+    <li>total capacity of 200Gb.</li>
+</ul>
+<p>
+    Do you have a simple solution with servers running on Redhat Linux?
+</p>
+<p>Best regards,</p>
+            ]]></field>
+            <field name="type">email</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="author_id" eval="False"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
         <!-- Discussion: attachments and spec [DEMO: search on has_attachments -->
         <record id="msg_discus6_attach1" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
@@ -118,30 +142,6 @@
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus6_attach2')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-
-        <!-- Thread: 1 incoming email -->
-        <record id="msg_discus5" model="mail.message">
-            <field name="subject">Plan to install backup servers</field>
-            <field name="body"><![CDATA[<p>Hello,</p>
-<p>We need to deploy new backup servers, with the following requirements:</p>
-<ul>
-    <li>daily incremental backups, with an history of 15 days,</li>
-    <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
-    <li>two redundant servers,</li>
-    <li>total capacity of 200Gb.</li>
-</ul>
-<p>
-    Do you have a simple solution with servers running on Redhat Linux?
-</p>
-<p>Best regards,</p>
-            ]]></field>
-            <field name="type">email</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="email_from">virginie@agrolait.fr</field>
-            <field name="author_id" eval="False"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <!-- Admin and Demo with attachments -->

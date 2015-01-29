@@ -13,10 +13,7 @@ openerp.web_timeline = function (session) {
     openerp.web_timeline.followers(session, mail);          // import timeline_followers.js
 
     /**
-     * ------------------------------------------------------------
      * ChatterUtils
-     * ------------------------------------------------------------
-     * 
      * This class holds a few tools method for Chatter.
      * Some regular expressions not used anymore, kept because I want to
      * - (^|\s)@((\w|@|\.)*): @login@log.log
@@ -466,7 +463,7 @@ openerp.web_timeline = function (session) {
             var self = this;
             this.render_mutex.exec(function() {
                 var msg_ids = _.pluck(message_list, 'id');
-                return self.ds_message.call('set_message_read', [msg_ids, true, false, self.context])
+                return self.ds_message.call('set_message_read', [msg_ids, true, false, false, self.context])
                     .then(function (nb_read) {
                         if (nb_read) {
                             self.options.root_thread.MailRoot.do_reload_menu_emails();
@@ -1499,6 +1496,7 @@ openerp.web_timeline = function (session) {
                 self.thread.switch_new_message(data, self.$('.oe_thread'), false, self);
             }).then(function () {
                 self.$('.oe_tl_parent_subject').removeClass('default').addClass('disp');
+                self.$('.oe_tl_msg_date.default').hide();
                 self.options.hidden_child = false;
             });
         },
@@ -1509,6 +1507,7 @@ openerp.web_timeline = function (session) {
             this.options.hidden_child = true;
             this.$('.oe_thread').empty(); 
             this.$('.oe_tl_parent_subject').removeClass('disp').addClass('default');
+            this.$('.oe_tl_msg_date.default').show();
         },
     });
 
@@ -1767,6 +1766,33 @@ openerp.web_timeline = function (session) {
         },
     });  
 
+    /**
+     * UserMenu
+     * Add a link on the top user bar for write a full mail
+     */
+    session.web.ComposeMessageTopButton = session.web.Widget.extend({
+        template:'ComposeMessageTopButton',
+
+        events: {
+            "click": "on_compose_message",
+        },
+
+        on_compose_message: function (ev) {
+            ev.preventDefault();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {},
+            };
+            session.client.action_manager.do_action(action);
+        },
+    });
+
+    session.web.SystrayItems.push(session.web.ComposeMessageTopButton);
     session.web.views.add('timeline', 'session.web_timeline.TimelineView');
     session.web.form.widgets.add('mail_thread', 'openerp.web_timeline.TimelineRecordThread');
-}
+};

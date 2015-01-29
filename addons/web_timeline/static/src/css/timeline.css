@@ -49,6 +49,10 @@
     padding-left: 5px;
 }
 
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg {
+    padding-left : 15px;
+}
+
 .openerp .oe_timeline .oe_view_nocontent {
     float: right;
     width: 84.2%;
@@ -375,26 +379,51 @@
 /* -------------- parent message -------------- */
 
 .openerp .oe_timeline .oe_tl_thread_parent {
-    border : solid black 1px;
     width: 1000px;
     margin-top: 10px;
 }
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message {
     background-color: white;
+    border: solid 1px #CACACA;
     margin-left: 17%;
     padding: 3px;
+    margin-bottom: 10px; 
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject {
+    display: inline-block;
+    width: 550px;  
 }
 
 /* date */
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_date {
-    margin-top: 3px;
+    margin-top: 7px;
+}
+
+/* avatar */
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar {                           
+    left:0; 
+    top: 0; 
+    bottom: 0; 
+    width: 30px;
+    overflow: hidden;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar img {
+    border: solid 1px #CACACA;;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar .oe_tl_msg_icon {
+    width: 25px;
+    border-radius: 2px;
 }
 
 /* icons */
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons {
     margin-top: -7px;
     height: 8px;
     -webkit-user-select: none;
@@ -403,26 +432,26 @@
             user-select: none;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read,
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread {
-    margin-top: 2px;
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_read,
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_unread {
+    margin-top: 7px;
     margin-right: 5px;
     float: left;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply {
-    margin-top: -12px;
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_reply {
+    margin-top: -14px;
     float: right;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons span {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons span {
     width: 20px;
     height: 20px;
     line-height: 20px;
     text-align: center;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons i {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons i {
     text-decoration: none;
     color: #FFF;
     text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
@@ -432,7 +461,7 @@
             transition: all 0.2s linear;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent:hover .oe_tl_msg_icons i {
+.openerp .oe_timeline .oe_tl_thread_parent:hover .oe_tl_parent_message .oe_tl_msg_icons i {
     opacity: 1;
     -webkit-transition: all 0.1s linear;
        -moz-transition: all 0.1s linear;
@@ -440,15 +469,15 @@
             transition: all 0.1s linear;
 }
 
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_reply:hover i {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_reply:hover i {
     color: #1fc0ff;
     text-shadow: 0px 1px #184fc5,0px -1px #184fc5, -1px 0px #184fc5, 1px 0px #184fc5, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_read:hover i {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_read:hover i {
     color: #bbbaff;
     text-shadow: 0px 1px #7c7bad,0px -1px #7c7bad, -1px 0px #7c7bad, 1px 0px #7c7bad, 0px 3px 3px rgba(0,0,0,0.1);
 }
-.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_icons .oe_unread:hover i {
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_unread:hover i {
     color: #c2ff00;
     text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.1);
 }
@@ -475,6 +504,10 @@
     -ms-border-radius: 12px;
     -o-border-radius: 12px;
     border-radius: 12px;
+}
+
+.openerp .oe_timeline .oe_tl_msg .oe_tl_msg_date {
+    margin-top: 0px;
 }
 
 .openerp .oe_timeline .oe_tl_msg.oe_tl_msg_notification .oe_tl_msg_date span{

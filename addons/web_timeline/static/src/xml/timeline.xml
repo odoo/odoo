@@ -184,7 +184,7 @@
 <div t-name="ThreadParent" class="oe_tl_thread_parent">
 
     <div class="col-md-2"> <!-- *** date *** -->
-        <div class="oe_tl_msg_date" t-if="widget.options.hidden_child">
+        <div class="oe_tl_msg_date default" t-if="widget.options.hidden_child">
             <span> 
                 <t t-if="widget.timerelative" t-esc="widget.timerelative"/>
                 <t t-if="!widget.timerelative" t-raw="widget.display_date"/>
@@ -202,7 +202,7 @@
                 <i title="Set back to Todo" class="fa fa-inbox"/>
             </span>
         </div>
-        <div class="oe_tl_parent_subject default">
+        <span class="oe_tl_parent_subject default">
             <t t-if="widget.record_name and widget.subject">
                 <t t-raw="widget.record_name"/> : <t t-raw="widget.subject"/>
             </t>
@@ -215,7 +215,26 @@
             <t t-if="!widget.record_name and !widget.subject">
                 No subject
             </t>
-        </div>
+        </span>
+        <span class="oe_tl_parent_avatar">
+            <a t-if="widget.options.show_link" 
+               t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+               t-att-title="widget.author_id[1]">
+                   <img class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+            </a>
+            <img t-if="!widget.options.show_link" class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+        </span>
+        <span class="oe_tl_parent_author">
+            <a t-if="widget.options.show_link and widget.author_id[0]"
+               t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
+               t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author">
+                 <t t-raw="widget.author_id[2]"/>
+            </a>
+            <a t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"
+               class="oe_timeline_action_author">
+                 <t t-raw="widget.author_id[2]"/>
+            </a>
+        </span>
         <div t-attf-class="oe_tl_msg_icons" 
          t-if="!widget.options.readonly"> 
              <span class='oe_reply' t-if="widget.options.show_reply_button">
@@ -253,7 +272,7 @@
 
 <!-- ThreadMessage.Vote
      Template used to display Like/Unlike in a mail.message
--->
+    -->
 <t t-name="ThreadMessage.Vote">
     <span class="oe_timeline_vote_count" t-if='widget.vote_nb > 0'>
         <t t-esc='widget.vote_nb' />
@@ -284,6 +303,17 @@
         </span>
     </t>
 </t>
+
+<!--
+    ComposeMessage.ButtonTopBar
+    render of the button on the user bar for open wizard compose message
+    -->
+<t t-name="ComposeMessageTopButton">
+    <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
+        <a href="#">
+            <i class="fa fa-envelope-o fa-fw"></i>
+        </a>
+    </li>
+</t>
  
 </templates>
-
