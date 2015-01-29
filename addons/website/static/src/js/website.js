@@ -56,7 +56,7 @@
        Widgets
        ---------------------------------------------------- */ 
 
-    website.prompt = function (options) {
+    website.prompt = function (options, qweb) {
         /**
          * A bootstrapped version of prompt() albeit asynchronous
          * This was built to quickly prompt the user with a single field.
@@ -90,11 +90,14 @@
                 text: options
             };
         }
+        if (_.isUndefined(qweb)) {
+            qweb = 'website.prompt';
+        }
         options = _.extend({
             window_title: '',
             field_name: '',
             'default': '', // dict notation for IE<9
-            init: function() {}
+            init: function() {},
         }, options || {});
 
         var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
@@ -103,7 +106,7 @@
         options.field_name = options.field_name || options[type];
 
         var def = $.Deferred();
-        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        var dialog = $(openerp.qweb.render(qweb, options)).appendTo("body");
         options.$dialog = dialog;
         var field = dialog.find(options.field_type).first();
         field.val(options['default']); // dict notation for IE<9

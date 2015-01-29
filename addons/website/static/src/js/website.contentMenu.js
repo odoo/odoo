@@ -57,6 +57,51 @@
                     document.location = url;
                 }
             });
+        },
+        delete_page: function() {
+            var self = this;
+            var context = website.get_context();
+            self.mo_id = self.getMainObject().id;
+
+            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'website',
+                method: 'page_search_dependencies',
+                args: [self.mo_id],
+                kwargs: {
+                    context: context
+                },
+            }).then(function (deps) {
+                website.prompt({
+                    id: "editor_delete_page",
+                    window_title: _t("Delete Page"),
+                    dependencies: deps,
+                }, 'website.delete_page').then(function (val, field, $dialog) {
+                    if ($dialog.find('input[type="checkbox"]').is(':checked')){
+                        openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                            model: 'website',
+                            method: 'delete_page',
+                            args: [self.mo_id],
+                            kwargs: {
+                                context: context
+                            },
+                        }).then(function () {
+                            window.location = "/";
+                        });
+                    }
+                });
+            });
+        },
+        getMainObject: function () {
+            var repr = $('html').data('main-object');
+            var m = repr.match(/(.+)\((\d+),(.*)\)/);
+            if (!m) {
+                return null;
+            } else {
+                return {
+                    model: m[1],
+                    id: m[2]|0
+                };
+            }
         }
     });
 

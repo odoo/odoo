@@ -64,6 +64,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def page(self, page, **opt):
         values = {
             'path': page,
+            'deletable': True, # used to add 'delete this page' in content menu
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):

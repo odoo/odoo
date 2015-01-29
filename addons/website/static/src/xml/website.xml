@@ -75,4 +75,59 @@
             </div>
         </div>
     </t>
+
+    <t t-name="website.delete_page">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" t-if="window_title">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title"><t t-esc="window_title"/></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning alert-dismissible fade in mt16" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                          <strong>Be careful !</strong> Some dependencies could existed ...
+                        </div>
+                        <t t-if="dependencies">
+                            <t t-set='tid' t-value='0'/>
+                            <t t-foreach="_.keys(dependencies)" t-as="type">
+                                <div class="panel-group" role="tablist">
+                                    <div class="panel panel-default">
+                                      <div class="panel-heading" role="tab" >
+                                        <h4 class="panel-title">
+                                          <a class="collapsed" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
+                                            <t t-esc="type"/>
+                                          </a>
+                                        </h4>
+                                      </div>
+                                      <div t-att-id="'collapseDependencies'+tid" class="panel-collapse collapse in" role="tabpanel" aria-expanded="false" >
+                                        <ul class="list-group">
+                                            <t t-foreach="dependencies[type]" t-as="error">
+                                              <li class="list-group-item"><a t-att-href="error.link"><i class='fa fa-share fa-flip-vertical'/> <t t-raw="error.text"/></a></li>
+                                            </t>
+                                        </ul>
+                                        <div class="panel-footer"><t t-esc="dependencies[type].length"/> dependencies found</div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <t t-set='tid' t-value='tid+1'/>
+                            </t>
+                        </t>
+                        <form class="form-horizontal" role="form" t-att-id="id">
+                            <div class="form-group">
+                                <label class="col-sm-offset-2 col-sm-8 text-left alert alert-danger">
+                                    <input type="checkbox"/> I'm sure, I want to delete this page definitively
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>
