@@ -32,27 +32,19 @@
                         <field name="description"/>
                         <notebook>
                             <page string="Options">
-                                <group>
-                                    <group string="Post">
-                                        <field name="allow_question"/>
-                                        <field name="allow_link"/>
-                                        <field name="allow_discussion"/>
-                                        <field name="default_post_type"/>
-                                    </group>
-                                    <div>
-                                        <group string="Social">
-                                            <field name="allow_bump"/>
-                                            <field name="allow_share"/>
-                                        </group>
-                                        <group string="Orders">
-                                            <field name="default_order"/>
-                                            <label for="relevancy_post_vote" string="Relevancy Computation"/>
-                                            <div>
-                                                (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
-                                            </div>
-                                        </group>
-                                    </div>
-                                </group>
+                              <group string="Post Types">
+                                <field name="allow_question"/>
+                                <field name="allow_link"/>
+                                <field name="allow_discussion"/>
+                                <field name="default_post_type"/>
+                              </group>
+                              <group string="Orders">
+                                <field name="default_order"/>
+                                <label for="relevancy_post_vote" string="Relevancy Computation" groups="base.group_no_one"/>
+                                <div groups="base.group_no_one">
+                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
+                                </div>
+                              </group>
                             </page>
                             <page string='Karma Gains'>
                                 <group>
@@ -158,6 +150,16 @@
                                 <field name="relevancy"/>
                             </group>
                         </group>
+                        <group string="Answers" attrs="{'invisible':[('parent_id','!=',False)]}">
+                            <field name="child_ids" nolabel="1">
+                                <tree>
+                                    <field name="create_uid" string="Answered by"/>
+                                    <field name="vote_count"/>
+                                    <field name="state"/>
+                                    <field name="is_correct"/>
+                                </tree>
+                            </field>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -176,13 +178,14 @@
                     <field name="create_uid"/>
                     <field name="forum_id"/>
                     <field name="tag_ids" string="Tag"/>
-                    <filter string="Question" domain="[('parent_id', '=', False)]" />
+                    <filter string="Questions" name="questions" domain="[('parent_id', '=', False)]" />
                     <filter string="Answers" domain="[('parent_id', '!=', False)]" />
                     <filter string="Accepted Answer" domain="[('is_correct' , '!=', False), ('parent_id', '!=', False)]" />
                     <filter string="Answered Questions" domain="[('child_count', '!=', 0), ('parent_id', '=', False)]" />
                     <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Post" domain="[]" context="{'group_by': 'parent_id'}"/>
                     </group>
                 </search>
             </field>
@@ -206,6 +209,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_forum_post_list"/>
             <field name="search_view_id" ref="view_forum_post_search"/>
+            <field name="context">{'search_default_questions':1}</field>
         </record>
 
         <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>

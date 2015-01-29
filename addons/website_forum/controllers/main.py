@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
 import werkzeug.exceptions
 import werkzeug.urls
@@ -8,14 +7,11 @@ import simplejson
 import lxml
 from urllib2 import urlopen, URLError
 
-from openerp import tools
+from openerp import tools, _
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
-
-controllers = controllers()
 
 
 class WebsiteForum(http.Controller):
@@ -37,7 +33,7 @@ class WebsiteForum(http.Controller):
             'notifications': self._get_notifications(),
             'header': kwargs.get('header', dict()),
             'searches': kwargs.get('searches', dict()),
-            'no_introduction_message': request.httprequest.cookies.get('no_introduction_message', False),
+            'forum_welcome_message': request.httprequest.cookies.get('forum_welcome_message', False),
             'validation_email_sent': request.session.get('validation_email_sent', False),
             'validation_email_done': request.session.get('validation_email_done', False),
         }
@@ -86,8 +82,15 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.forum_all", {'forums': forums})
 
     @http.route('/forum/new', type='http', auth="user", methods=['POST'], website=True)
-    def forum_create(self, forum_name="New Forum", **kwargs):
+    def forum_create(self, forum_name="New Forum", add_menu=False):
         forum_id = request.env['forum.forum'].create({'name': forum_name})
+        if add_menu:
+            request.env['website.menu'].create({
+                'name': forum_name,
+                'url': "/forum/%s" % slug(forum_id),
+                'parent_id': request.website.menu_id.id,
+                'website_id': request.website.id,
+            })
         return request.redirect("/forum/%s" % slug(forum_id))
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
@@ -166,15 +169,36 @@ class WebsiteForum(http.Controller):
         )
         return simplejson.dumps(data)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
-    def tags(self, forum, page=1, **post):
-        tags = request.env['forum.tag'].search([('forum_id', '=', forum.id), ('posts_count', '>', 0)], limit=None, order='posts_count DESC')
+    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True)
+    def tags(self, forum, tag_char=None, **post):
+        # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
+        first_char_tag = forum.get_tags_first_char()
+        first_char_list = [(t, t.lower()) for t in first_char_tag]
+        first_char_list.insert(0, (_('All'), 'all'))
+        # get active first char tag
+        active_char_tag = first_char_list[1][1] if len(first_char_list) > 1 else 'all'
+        if tag_char:
+            active_char_tag = tag_char.lower()
+        # generate domain for searched tags
+        domain = [('forum_id', '=', forum.id), ('posts_count', '>', 0)]
+        order_by = 'name'
+        if active_char_tag and active_char_tag != 'all':
+            domain.append(('name', '=ilike', active_char_tag+'%'))
+            order_by = 'posts_count DESC'
+        tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
+        # prepare values and render template
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
         values.update({
             'tags': tags,
-            'main_object': forum,
+            'pager_tag_chars': first_char_list,
+            'active_char_tag': active_char_tag,
         })
         return request.website.render("website_forum.tag", values)
+
+
+    @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
+    def edit_welcome_message(self, forum, **kw):
+        return request.website.render("website_forum.edit_welcome_message", {'forum': forum})
 
     # Questions
     # --------------------------------------------------
@@ -339,17 +363,21 @@ class WebsiteForum(http.Controller):
             'tags': tags,
             'post': post,
             'is_answer': bool(post.parent_id),
-            'searches': kwargs
+            'searches': kwargs,
+            'post_name': post.content_link,
+            'content': post.name,
         })
-        return request.website.render("website_forum.edit_post", values)
+        template = "website_forum.new_link" if post.post_type == 'link' and not post.parent_id else "website_forum.edit_post"
+        return request.website.render(template, values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
-        post_tags = forum._tag_to_write_vals(kwargs.get('post_tag', ''))
+        post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
             'name': kwargs.get('post_name'),
             'content': kwargs.get('content'),
+            'content_link': kwargs.get('content_link'),
         }
         post.write(vals)
         question = post.parent_id if post.parent_id else post

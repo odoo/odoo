@@ -46,12 +46,25 @@ class Forum(models.Model):
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
-    description = fields.Html(
+    description = fields.Text(
         'Description',
         translate=True,
-        default='<p> This community is for professionals and enthusiasts of our products and services.'
+        default='This community is for professionals and enthusiasts of our products and services.'
                 'Share and discuss the best content and new marketing ideas,'
-                'build your professional profile and become a better marketer together.</p>')
+                'build your professional profile and become a better marketer together.')
+    welcome_message = fields.Html(
+        'Welcome Message',
+        default = """<section class="bg-info" style="height: 168px;"><div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="text-center" style="text-align: left;">Welcome!</h1>
+                                <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
+                            </div>
+                            <div class="col-md-12">
+                                <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
+                            </div>
+                        </div>
+                    </section>""")
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
         ('write_date desc', 'Last Updated'),
@@ -59,7 +72,7 @@ class Forum(models.Model):
         ('relevancy desc', 'Relevancy'),
         ('child_count desc', 'Answered')],
         string='Default Order', required=True, default='write_date desc')
-    relevancy_post_vote = fields.Float('First Relevancy Parameter', default=0.8)
+    relevancy_post_vote = fields.Float('First Relevancy Parameter', default=0.8, help="This formula is used in order to sort by relevancy. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevancy Parameter', default=1.8)
     default_post_type = fields.Selection([
         ('question', 'Question'),
@@ -119,6 +132,13 @@ class Forum(models.Model):
                 or (self.default_post_type == 'link' and not self.allow_link):
             raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
 
+    @api.one
+    @api.constrains('allow_link', 'allow_question', 'allow_discussion', 'default_post_type')
+    def _check_default_post_type(self):
+        if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
+            raise Warning(_('Post type in "Default post" must be activated'))
+
+
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
@@ -145,8 +165,14 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
+    def get_tags_first_char(self):
+        """ get set of first letter of forum tags """
+        tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
+        return sorted(set([tag.name[0].upper() for tag in tags]))
+
 
 class Post(models.Model):
+
     _name = 'forum.post'
     _description = 'Forum Post'
     _inherit = ['mail.thread', 'website.seo.metadata']
@@ -210,7 +236,7 @@ class Post(models.Model):
             vote.user_vote = mapped_vote.get(vote.id, 0)
 
     @api.multi
-    @api.depends('vote_ids')
+    @api.depends('vote_ids.vote')
     def _get_vote_count(self):
         read_group_res = self.env['forum.post.vote'].read_group([('post_id', 'in', self._ids)], ['post_id', 'vote'], ['post_id', 'vote'], lazy=False)
         result = dict.fromkeys(self._ids, 0)
