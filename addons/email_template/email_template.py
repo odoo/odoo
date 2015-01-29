@@ -60,7 +60,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
 
         fdate = ts.strftime(format_date)
         ftime = ts.strftime(format_time)
-        return "%s %s (%s)" % (fdate, ftime, tz)
+        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
