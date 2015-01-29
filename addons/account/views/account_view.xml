@@ -86,31 +86,6 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <form string="Account">
-                    <label for="code" class="oe_edit_only" string="Account Code and Name"/>
-                    <h1>
-                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> -
-                        <field name="name" class="oe_inline" placeholder="Account name"/>
-                    </h1>
-                    <group>
-                        <group>
-                            <field name="user_type"/>
-                            <field name="deprecated"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                            <field groups="base.group_multi_currency" name="currency_id"/>
-                        </group>
-                        <group>
-                            <field name="tax_ids" domain="[('type_tax_use','!=','none')]" widget="many2many_tags"/>
-                            <field name="child_consol_ids" widget="many2many_tags"/>
-                            <field name="reconcile"/>
-                            <field name="internal_type" invisible="1"/>
-                            <field name="last_time_entries_checked" readonly="1"
-                                attrs="{'invisible':['|','|',('reconcile','=',False),('internal_type','in',('payable', 'receivable')),('last_time_entries_checked','=',False)]}"/>
-                            <button colspan="2" string="Invoices &amp; payments matching" type="action" class="oe_highlight" name="%(action_reconcile_account)d"
-                                attrs="{'invisible':['|',('reconcile','=',False),('internal_type','in',('payable', 'receivable'))]}" />
-                        </group>
-                    </group>
-                    <label for="note"/>
-                    <field name="note"/>
                     <div class="row">
                         <div class="col-md-4">
                             <group>
@@ -121,6 +96,11 @@
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
+                                    <field name="child_consol_ids" widget="many2many_tags"/>
+                                    <field name="internal_type" invisible="1"/>
+                                    <field name="last_time_entries_checked" readonly="1" attrs="{'invisible':['|','|',('reconcile','=',False),('internal_type','in',('payable', 'receivable')),('last_time_entries_checked','=',False)]}"/>
+                                    <button colspan="2" string="Invoices &amp; payments matching" type="action" class="oe_highlight" name="%(action_reconcile_account)d" attrs="{'invisible':['|',('reconcile','=',False),('internal_type','in',('payable', 'receivable'))]}" />
+                                    <field name="reconcile"/>
                                     <field name="deprecated"/>
                                 </group>
                                
