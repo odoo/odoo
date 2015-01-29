@@ -268,16 +268,12 @@ class purchase_order(osv.osv):
 
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')
-        order_line_ids = []
-        move_ids = []
         proc_obj = self.pool.get('procurement.order')
-        for order in self.browse(cr, uid, ids, context=context):
-            order_line_ids += [po_line.id for po_line in order.order_line]
-            move_ids += [po_line.move_dest_id.id for po_line in order.order_line if po_line.move_dest_id]
+        order_line_ids = line.search(cr, uid, [('order_id', 'in', ids)], context=context)
         if order_line_ids:
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
-        if order_line_ids and status == 'cancel':
-            procs = proc_obj.search(cr, uid, [('move_id', 'in', move_ids)], context=context)
+        if status == 'cancel':
+            procs = proc_obj.search(cr, uid, [('purchase_id', 'in', ids)], context=context)
             if procs:
                 proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
@@ -842,6 +838,7 @@ class purchase_order(osv.osv):
 
         allorders = []
         orders_info = {}
+        proc_obj = self.pool.get('procurement.order')
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:
@@ -858,6 +855,10 @@ class purchase_order(osv.osv):
             neworder_id = self.create(cr, uid, order_data)
             orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
+
+            proc_ids = proc_obj.search(cr, uid, [('purchase_id', 'in', old_ids)], context=context)
+            if proc_ids:
+                proc_obj.write(cr, uid, proc_ids, {'purchase_id': neworder_id}, context)
 
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
