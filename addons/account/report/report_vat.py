@@ -91,18 +91,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         i = 0
         top_result = []
         while i < len(res):
-            res_dict = { 'code': res[i][1].code,
-                'name': res[i][1].name,
+            res_dict = { 'code': res[i][1]['code'],
+                'name': res[i][1]['name'],
                 'debit': 0,
                 'credit': 0,
-                'tax_amount': res[i][1].sum_period,
+                'tax_amount': res[i][1]['sum_period'],
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
+            res_general = self._get_general(res[i][1]['id'], period_list, company_id, based_on, context=context)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -198,8 +198,8 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 for code in obj_tc.browse(self.cr, self.uid, ids, context=context2):
                     sum_tax_add = sum_tax_add + code.sum_period
 
-            code.sum_period = sum_tax_add
-            res.append((account[0], code))
+            #code.sum_period = sum_tax_add
+            res.append((account[0], {'id':code.id,'code':code.code,'sum_period':sum_tax_add,'name':code.name}))
         return res
 
     def _get_currency(self, form, context=None):
