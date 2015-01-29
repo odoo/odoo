@@ -58,8 +58,6 @@ class account_installer(models.TransientModel):
              "country.")
     date_start = fields.Date(string='Start Date', required=True, default=lambda *a: time.strftime('%Y-01-01'))
     date_stop = fields.Date(string='End Date', required=True, default=lambda *a: time.strftime('%Y-12-31'))
-    period = fields.Selection([('month', 'Monthly'), ('3months', '3 Monthly')], 
-        string='Periods', required=True, default='month')
     company_id = fields.Many2one('res.company', string='Company', required=True, 
         default=lambda self: self.env.user.company_id or False)
     has_default_company = fields.Boolean(string='Has Default Company',
