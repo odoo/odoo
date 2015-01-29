@@ -652,7 +652,7 @@ class account_tax(models.Model):
             }]
         } """
         if not currency:
-            currency = self[0].company_id.currency_id
+            currency = self.company_id.currency_id
         taxes = []
         prec = currency.decimal_places
         total_excluded = total_included = base = round(price_unit * quantity, prec)
