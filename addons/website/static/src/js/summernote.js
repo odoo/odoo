@@ -2051,9 +2051,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         });
 
         var $table = $(table);
-        $dels.on('mousedown', function (event) {
+        $dels.data('table', table).on('mousedown', function (event) {
             var td = $(this).data('td');
-            $(td).closest('.note-editable').data('NoteHistory').recordUndo($editable);
+            $editable.data('NoteHistory').recordUndo($editable);
 
             var newTd;
             if ($(td).siblings().length) {
@@ -2076,9 +2076,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             range.create(newTd[0], 0, newTd[0], 0).select();
             newTd.trigger('mouseup');
         });
-        $adds.on('mousedown', function (event) {
+        $adds.data('table', table).on('mousedown', function (event) {
             var td = $(this).data('td');
-            $(td).closest('.note-editable').data('NoteHistory').recordUndo($editable);
+            $editable.data('NoteHistory').recordUndo($editable);
 
             var newTd;
             if (td) {
