@@ -424,7 +424,7 @@ td {
     display: -webkit-flex;
     display: flex;
     vertical-align: top;
-    margin-left: -1px;
+    margin-left: 0px;
     overflow: hidden;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -518,23 +518,29 @@ td {
     top:0px;
     bottom:0;
     border-right: solid 1px #CECBCB;
+    border-right: solid 3px #787878;
+    background: #e2e2e2;
 }
+
 .pos .leftpane .pads {
-    background: #F0EEEE;
-    white-space: nowrap;
+    border-top: solid 3px rgb(110, 200, 155);
 }
+
 /*  ********* The control buttons ********* */
 
 .pos .control-buttons {
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
     padding: 8px 16px 0px 11px;
     margin-bottom: -6px;
 }
 .pos .control-button {
-    flex: 1;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
     background: #e2e2e2;
-    border: solid 1px #cacaca;
+    border: solid 1px #bfbfbf;
     display: inline-block;
     line-height: 38px;
     min-width: 80px;
@@ -546,6 +552,15 @@ td {
     margin-bottom: 6px;
     cursor: pointer;
     overflow: hidden;
+    transition: all linear 150ms;
+}
+.pos .control-button:hover {
+    background: #efefef;
+}
+.pos .control-button:active {
+    background: black;
+    color: white;
+    border-color: black;
 }
 .pos .control-button .fa{
     margin-right: 4px;
@@ -554,13 +569,9 @@ td {
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    border: solid 1px #6EC89B !important;
+    /* border: solid 1px #6EC89B !important; */
+    border: solid 1px #64AF8A !important; 
     color: white !important;
-}
-.pos .control-button:active {
-    background: #7F82AC;
-    border: solid 1px #7F82AC;
-    color: white;
 }
 .pos .control-button.disabled,
 .pos .control-button.disabled:active{
@@ -582,12 +593,12 @@ td {
     margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 190px;
+    width: 188px;
     border: none;
     border-radius: 0;
     border-top: 1px solid;
     border-left: 1px solid;
-    border-color: #cacaca;
+    border-color: #bfbfbf;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
@@ -603,7 +614,16 @@ td {
     border: none;
     border-right: 1px solid;
     border-bottom: 1px solid;
-    border-color: #cacaca;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+.pos .actionpad .button:hover {
+    background: #efefef;
+}
+.pos .actionpad .button:active {
+    background: black;
+    border-color: black;
+    color: white;
 }
 .pos .actionpad .button:first-child {
     border-top-left-radius: 4px;
@@ -639,7 +659,7 @@ td {
     border: none;
     border-radius: 0;
     border-top: 1px solid;
-    border-color: #cacaca;
+    border-color: #bfbfbf;
     border-top-right-radius: 4px;
 }
 .pos .numpad button {
@@ -653,7 +673,11 @@ td {
     border: none;
     border-right: 1px solid;
     border-bottom: 1px solid;
-    border-color: #cacaca;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+.pos .numpad button:hover {
+    background: #efefef;
 }
 .pos .numpad button:active {
     background: black;
@@ -797,6 +821,7 @@ td {
 
 .pos .categories {
     position: relative;
+    border-bottom: solid 3px rgb(110, 200, 155);
 }
 .pos .categories h4 {
     display: inline-block;
@@ -852,7 +877,7 @@ td {
 }
 .pos .category-simple-button:active{
     color: white;
-    background: #7f82ac;
+    background: black;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
@@ -1022,11 +1047,23 @@ td {
     border-radius: 3px;
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
+    transition: all 150ms linear;
 }
-.screen .top-content .button.highlight{
+.screen .top-content .button:hover {
+    background: #efefef;
+}
+.screen .top-content .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.screen .top-content .button.highlight {
     background: rgb(110,200,155);
     color: white;
     border: solid 1px rgb(110,200,155);
+}
+.screen .top-content .button.highlight:hover {
+    background: rgb(120,210,165);
 }
 .screen .top-content .button.back {
     left: 0px;
@@ -1110,21 +1147,21 @@ td {
     display: inline-block;
     width: 50%;
     box-sizing: border-box;
-    padding: 8px;
+    padding: 16px;
     text-align: center;
     float: left;
 }
 .pos .payment-numpad .numpad {
     float: none;
-    margin-left: 16px;
     border-radius: 4px;
     border-top: 1px solid;
     border-left: 1px solid;
     border-color: #cacaca;
+    margin: 0;
 }
 .pos .payment-numpad .numpad button {
-    width: 66px;
-    height: 66px;
+    width: 74px;
+    height: 74px;
 }
 .pos .payment-numpad .numpad button:first-child {
     border-top-left-radius: 4px;
@@ -1193,18 +1230,62 @@ td {
     width: 50%;
     box-sizing: border-box;
     padding: 16px;
+    padding-left: 0;
     float: right;
 }
 .payment-screen .payment-buttons .button {
-    background: rgb(220,220,220);
-    line-height: 48px;
-    margin-bottom: 4px;
-    border-radius: 3px;
+    background: #e2e2e2;
+    line-height: 73px;
     font-size: 16px;
     padding: 0px 8px;
     border: solid 1px rgb(200,200,200);
+    border-top-width: 0;
     cursor: pointer;
     text-align: center;
+    position: relative;
+    transition: background-color, border-color, color 150ms linear;
+}
+.payment-screen .payment-buttons .button:first-child {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-top-width: 1px;
+}
+.payment-screen .payment-buttons .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.payment-screen .payment-buttons .button.highlight:not(:first-child) {
+    margin-top: -1px;
+    border-top: solid 1px;
+}
+.payment-screen .payment-buttons .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.payment-screen .payment-buttons .button.highlight .fa {
+    border-color: rgba(0, 0, 0, 0.109804);
+    background: rgba(0, 0, 0, 0.0980392);
+}
+.payment-screen .payment-buttons .button .fa {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    margin-top: -25px;
+    vertical-align: middle;
+    border-radius: 26px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    background: rgba(255,255,255,0.4);
+    font-size: 20px;
+    transition: all 150ms linear;
 }
 .payment-screen .paymentlines-empty .total {
     text-align: center;
@@ -1543,7 +1624,7 @@ td {
     top: 0px;
     width:100%;
     height: 100%;
-    background: #F0EEEE;
+    background: white;
 }
 
 .pos .order-scroller{
@@ -1562,15 +1643,9 @@ td {
 
 .pos .order{
     background: white;
-    padding-bottom:15px;
-    padding-top:15px;
-    margin-left:16px;
-    margin-right:16px;
-    margin-top:16px;
-    margin-bottom:16px;
-    font-size:16px;
-    border-radius: 3px;
-    border: solid 1px rgb(220,220,220);
+    padding-bottom: 8px;
+    padding-top: 8px;
+    font-size: 16px;
     text-align: left;
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
@@ -1599,8 +1674,11 @@ td {
     border-top: solid 2px;
     border-color:#777;
 }
+.pos .order .summary .total {
+    font-size: 22px;
+}
 .pos .order .summary .line .subentry{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     text-align: center;
 }
@@ -1699,6 +1777,21 @@ td {
     text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
     border-bottom: dashed 1px rgb(215,215,215);
 }
+.pos .splitbill-screen .order {
+    background: white;
+    padding-bottom:15px;
+    padding-top:15px;
+    margin-left:16px;
+    margin-right:16px;
+    margin-top:16px;
+    margin-bottom:16px;
+    font-size:16px;
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
+    text-align: left;
+    max-width: 500px;
+    -webkit-transform: translate3d(0,0,0);
+}
 .splitbill-screen .order .orderline.selected{
     background: rgb(110,200,155);
     color: white;
@@ -1718,23 +1811,33 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
-.splitbill-screen .paymentmethods,
-.payment-screen .paymentmethods {
+.paymentmethods {
     margin: 16px;
 }
-.splitbill-screen .paymentmethods .button,
-.payment-screen .paymentmethods .button {
-    background: rgb(221, 221, 221);
-    line-height: 40px;
-    margin-bottom: 4px;
-    border-radius: 3px;
+.paymentmethods .button {
+    background: #e2e2e2;
+    line-height: 49px;
     font-size: 16px;
     border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
     cursor: pointer;
     text-align: center;
 }
-.splitbill-screen .paymentmethod.active,
-.payment-screen .paymentmethod.active {
+.paymentmethods .button:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.paymentmethods .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.paymentmethods .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.paymentmethod .button.active {
     background: #6EC89B;
     color: white;
     border-color: #6EC89B;
@@ -1964,8 +2067,8 @@ td {
 }
 .pos .popup .button:active{
     color: white;
-    background: #7f82ac;
-    border: 1px solid #7f82ac;
+    background: black;
+    border: 1px solid black;
 
     -webkit-transition-property: background, border;
     -webkit-transition-duration: 0.2s;
