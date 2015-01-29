@@ -9,6 +9,7 @@
                     var $editable = $("#wrapwrap .o_editable:first");
 
                     $("#choose_template").off("click").on("click", function (event) {
+                        $(".o_table_handler").remove();
                         $editable.parent().add("#oe_snippets, #templates").toggleClass("hidden");
                         $(this).first().toggleClass("hidden");
                         $(this).last().toggleClass("hidden");

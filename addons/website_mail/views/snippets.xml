@@ -2,16 +2,15 @@
 <openerp>
 <data>
 <template id="email_designer_snippets">
+<ul>
+  <li class="active"><a href="#snippet_email_structure" class="scroll-link fa fa-newspaper-o fa-2x"></a></li>
+  <li><a href="#snippet_email_feature" class="scroll-link fa fa-align-justify fa-2x"></a></li>
+</ul>
 
-    <div class="scroll" t-ignore="1">
-        <ul class="nav navbar-nav nav-tabs">
-          <li class="active"><a href="#snippet_email_structure" data-toggle="tab">Email Design</a></li>
-          <li><a href="#snippet_email_feature" data-toggle="tab">Advanced Email Features</a></li>
-        </ul>
-        <div class="tab-content">
-
-<div id="snippet_email_structure" class="tab-pane in active">
-
+<div id="o_scroll">
+<div id="snippet_email_structure" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-newspaper-o"></i> Email Design</div>
+  <div class="o_panel_body">
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -62,7 +61,6 @@
         </div>
     </div>
 
-
     <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
@@ -102,7 +100,6 @@
             </table>
         </div>
     </div>
-
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -144,7 +141,6 @@
         </div>
     </div>
 
-
     <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website_mail/static/src/img/blocks/block_two_columns.png"/>
@@ -183,7 +179,6 @@
             </table>
         </div>
     </div>
-
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -235,7 +230,6 @@
         </div>
     </div>
 
-
     <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_separator.png"/>
@@ -256,11 +250,13 @@
         </div>
     </div>
 
+  </div>
 </div>
 
 
-<div id="snippet_email_feature" class="tab-pane">
-
+<div id="snippet_email_feature" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-align-justify"></i> Advanced Features</div>
+  <div class="o_panel_body">
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -296,7 +292,6 @@
             </table>
         </div>
     </div>
-
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -388,7 +383,6 @@
         </div>
     </div>
 
-
     <div>
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_jumbotron.png"/>
@@ -411,7 +405,6 @@
             </table>
         </div>
     </div>
-
 
     <div>
         <div class="oe_snippet_thumbnail">
@@ -478,6 +471,9 @@
             </table>
         </div>
     </div>
+
+  </div>
+</div>
 </div>
 
 <div id="snippet_options" class="hidden">
@@ -487,10 +483,6 @@
         data-drop-in="[data-oe-model^='mail.']">
     </div>
 </div>
-
-        </div>
-    </div>
-
 </template>
 
 </data>

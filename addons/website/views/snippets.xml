@@ -2,16 +2,17 @@
 <openerp>
 <data>
 <template id="snippets">
-<div class="scroll" t-ignore="1">
-    <ul class="nav navbar-nav nav-tabs">
-      <li class="active"><a href="#snippet_structure" data-toggle="tab">Structure</a></li>
-      <li><a href="#snippet_content" data-toggle="tab">Content</a></li>
-      <li><a href="#snippet_feature" data-toggle="tab">Features</a></li>
-      <li><a href="#snippet_effect" data-toggle="tab">Effects</a></li>
-    </ul>
-    <div class="tab-content">
+<ul>
+  <li class="active"><a href="#snippet_structure" class="scroll-link fa fa-th-large fa-2x"></a></li>
+  <li><a href="#snippet_content" class="scroll-link fa fa-align-justify fa-2x"></a></li>
+  <li><a href="#snippet_feature" class="scroll-link fa fa-pie-chart fa-2x"></a></li>
+  <li><a href="#snippet_effect" class="scroll-link fa fa-paper-plane fa-2x"></a></li>
+</ul>
 
-<div id="snippet_structure" class="tab-pane active">
+<div id="o_scroll">
+<div id="snippet_structure" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-th-large"></i> Structure</div>
+  <div class="o_panel_body">
 
     <div name="Banner" class="o_block_banner">
         <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 320px;">
@@ -148,7 +149,6 @@
         </section>
     </div>
 
-
     <div name="Text Block" class="o_block_text_block">
         <section class="s_text_block">
             <div class="container">
@@ -181,7 +181,6 @@
             </div>
         </section>
     </div>
-
 
     <div name="Title" class="o_block_title">
         <section class="s_title">
@@ -285,9 +284,12 @@
         </section>
     </div>
 
+  </div>
 </div>
 
-<div id="snippet_content" class="tab-pane">
+<div id="snippet_content" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-align-justify"></i> Content</div>
+  <div class="o_panel_body">
 
     <div name="Well" class="o_block_well">
         <div class="well s_well">
@@ -297,7 +299,6 @@
             </p>
         </div>
     </div>
-
 
     <div name="Quote" class="o_block_quote">
         <blockquote class="s_quote">
@@ -309,9 +310,8 @@
         </blockquote>
     </div>
 
-
     <div name="Panel" class="o_block_panel">
-        <div class="panel panel-default s_panel">
+        <div class="o_panel s_panel">
             <div class="panel-heading">
                 <h3 class="panel-title">Feature Title</h3>
             </div>
@@ -353,20 +353,20 @@
         </div>
     </div>
 
+  </div>
 </div>
 
-<div id="snippet_feature" class="tab-pane">
+<div id="snippet_feature" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-pie-chart"></i> Feature</div>
+  <div class="o_panel_body">
 
     <div name="Image Gallery" class="o_block_image_gallery">
-
         <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
             <div class="container">
                 <div class="alert alert-info css_editable_mode_display">Add Images from the 'Customize' menu</div>
             </div>
         </section>
-
     </div>
-
 
     <div name="Comparisons" class="o_block_comparison">
         <section class="s_comparisons">
@@ -687,9 +687,12 @@
         </section>
     </div>
 
+  </div>
 </div>
 
-<div id="snippet_effect" class="tab-pane">
+<div id="snippet_effect" class="o_panel">
+  <div class="o_panel_header"><i class="fa fa-paper-plane"></i> Effect</div>
+  <div class="o_panel_body">
 
     <div name="Parallax" class="o_block_parallax">
         <section class="parallax s_parallax"
@@ -754,15 +757,14 @@
         </section>
     </div>
 
+  </div>
+</div>
 </div>
 
 <div id="snippet_options" class="hidden">
 
     <t t-call="website.snippet_options"/>
 
-</div>
-
-    </div>
 </div>
 </template>
 
