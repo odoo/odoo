@@ -43,49 +43,31 @@
             </field>
         </record>
         
-        <record id="view_event_form" model="ir.ui.view">
-            <field name="name">view_event_form</field>
+        <record model="ir.ui.view" id="view_event_form_inherit_ticket">
+            <field name="name">view_event_form_inherit_tichet</field>
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Registrations']" position="after">
-                        <page string="Ticket Types">
+                    <xpath expr="//page[@string='Registrations']" position="replace">
+                        <page string="Tickets">
+                            <group>
+                                <group>
+                                    <field name="auto_confirm" invisible="1"/>
+                                    <field name="seats_min" attrs="{'invisible':[('auto_confirm','=', True)]}"/>
+                                    <field name="seats_availability" widget='radio'/>
+                                    <field name="seats_max" attrs="{'invisible':[('seats_availability','=','unlimited')]}"/>
+                                </group>
+                            </group>
                             <field name="event_ticket_ids" context="{'default_name': name}">
-                                <tree string="Payments" editable="bottom">
+                                <tree string="Tickets" editable="bottom">
                                     <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="deadline"/>
                                     <field name="price"/>
                                     <field name="seats_max"/>
-                                    <field name="seats_reserved"/>
-                                    <field name="seats_unconfirmed"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </xpath>
-               </data>
-            </field>
-        </record>
-
-        <!-- Edit badge report form -->
-        <record id="view_event_form" model="ir.ui.view">
-            <field name="name">view_event_form</field>
-            <field name="model">event.event</field>
-            <field name="inherit_id" ref="event.view_event_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//notebook" position="inside">
-                        <page string="Ticket Types">
-                            <field name="event_ticket_ids" context="{'default_name': name}">
-                                <tree string="Payments" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="product_id"/>
-                                    <field name="deadline"/>
-                                    <field name="price"/>
-                                    <field name="seats_max"/>
-                                    <field name="seats_reserved"/>
-                                    <field name="seats_unconfirmed"/>
+                                    <field name="seats_reserved" readonly="1"/>
+                                    <field name="seats_unconfirmed" readonly="1"/>
                                 </tree>
                             </field>
                         </page>

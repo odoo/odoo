@@ -26,6 +26,7 @@ Key Features
         'report/report_event_registration_view.xml',
         'event_view.xml',
         'event_data.xml',
+        'event_tip_data.xml',
         'res_config_view.xml',
         'email_template.xml',
         'views/event.xml',

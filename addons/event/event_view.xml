@@ -102,11 +102,14 @@
                                 </group>
                             </page>
                             <page string="Email Schedule">
-                                <field name="reply_to"/>
+                                <group>
+                                    <field name="reply_to"/>
+                                </group>
                                 <field name="event_mail_ids">
                                     <tree string="Email Schedule" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
                                         <field name="template_id" />
-                                        <field name="interval_nbr"/>
+                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
                                         <field name="done"/>
@@ -312,7 +315,7 @@
                                 <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             </group>
                             <group string="Event Information" name="event">
-                                <field name="event_id" readonly="1"/>
+                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
@@ -407,7 +410,7 @@
                         <field name="mail_sent"/>
                     </group>
                     <group>
-                        <field name="interval_nbr"/>
+                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
                         <field name="interval_unit"/>
                         <field name="interval_type"/>
                         <field name="scheduled_date"/>
