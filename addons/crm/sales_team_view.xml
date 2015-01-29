@@ -72,7 +72,7 @@
 
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Opportunities Analysis</field>
-            <field name="res_model">crm.lead.report</field>
+            <field name="res_model">crm.opportunity.report</field>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm.view_report_crm_opportunity_graph"/>
             <field name="domain">[('type','=', 'opportunity'), ('team_id', '=', active_id)]</field>
@@ -101,13 +101,13 @@
                         <div class="col-md-6 oe_margin_top_4" t-if="record.use_leads.raw_value">
                             <div class="row">
                                 <a class="col-md-9" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                <a class="col-md-3" name="%(action_report_crm_lead_salesteam)d" type="action"><i class="fa fa-tags fa-fw"/></a>
+                                <a class="col-md-3" name="%(action_report_crm_lead_salesteam)d" type="action"><i class="fa fa-bar-chart fa-fw"/></a>
                             </div>
                         </div>
                         <div class="col-md-6 oe_margin_top_4" t-if="record.use_opportunities.raw_value">
                             <div class="row">
                                 <a class="col-md-9" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                <a class="col-md-3" name="%(action_report_crm_opportunity_salesteam)d" type="action"><i class="fa fa-star fa-fw"/></a>
+                                <a class="col-md-3" name="%(action_report_crm_opportunity_salesteam)d" type="action"><i class="fa fa-bar-chart fa-fw"/></a>
                             </div>
                         </div>
                     </xpath>

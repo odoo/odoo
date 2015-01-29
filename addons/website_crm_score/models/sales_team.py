@@ -117,7 +117,6 @@ class crm_team(osv.osv):
     unassigned_leads = fields.Integer(compute='_unassigned_leads')
     capacity = fields.Integer(compute='_capacity')
     team_user_ids = fields.One2many('team.user', 'team_id', string='Salesman')
-    user_ids = fields.Many2many('res.users', 'team_user', 'team_id', 'user_id', readonly=True)  # Use for display in Kanban
     min_for_assign = fields.Integer("Minimum score", help="Minimum score to be automatically assign (>=)", default=0, required=True)
 
     @api.model
