@@ -58,21 +58,22 @@ class account_move_line_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         credit = debit = 0
-        account_id = False
+        account = False
         count = 0
         for line in account_move_line_obj.browse(cr, uid, context['active_ids'], context=context):
             if not line.reconcile_id and not line.reconcile_id.id:
                 count += 1
                 credit += line.credit
                 debit += line.debit
-                account_id = line.account_id.id
+                account = line.account_id
         # If the write-off is lower than the account precision,
         # set it to 0.
+        currency = account.currency_id and \
+            account.currency_id or account.company_id.currency_id
         writeoff = debit - credit
-        if float_is_zero(writeoff,
-                         precision_rounding=dp.get_precision('Account')):
+        if self.pool['res.currency'].is_zero(cr, uid, currency, writeoff):
             writeoff = 0.0
-        return {'trans_nbr': count, 'account_id': account_id,
+        return {'trans_nbr': count, 'account_id': account.id,
                 'credit': credit, 'debit': debit, 'writeoff': writeoff}
 
     def trans_rec_addendum_writeoff(self, cr, uid, ids, context=None):
