@@ -53,9 +53,6 @@ def exp_about(extended=False):
         return info, openerp.release.version
     return info
 
-def exp_timezone_get(db, login, password):
-    return openerp.tools.misc.get_server_timezone()
-
 def exp_set_loglevel(loglevel, logger=None):
     # TODO Previously, the level was set on the now deprecated
     # `openerp.netsvc.Logger` class.

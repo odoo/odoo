@@ -740,13 +740,6 @@ def detect_ip_addr():
         ip_addr = 'localhost'
     return ip_addr
 
-def get_server_timezone():
-    _logger.warn("Getting the server timezone is deprecated and useless: the "
-                 "server always works in UTC and ignores the system's own "
-                 "timezone")
-    return "UTC"
-
-
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
 DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
