@@ -27,7 +27,7 @@ class account_move_line(models.Model):
         for line in self:
 
             amount = abs(line.debit - line.credit)
-            sign = line.amount_currency < 0 and -1 or 1
+            sign = 1 if (line.debit - line.credit) > 0 else -1
 
             amount_residual_currency = abs(line.amount_currency) or 0.0
             digits_rounding_precision = line.currency_id.rounding if line.currency_id else line.company_id.currency_id.rounding
