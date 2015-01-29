@@ -5882,10 +5882,17 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
             if (self.data[0] && self.data[0].upload ) {
                 return false;
             }
-            for (var id in this.get('value')) {
+            var files = this.get('value');
+            for (var x in files) {
+                var id = files[x]
                 // if the files exits, delete the file before upload (if it's a new file)
-                if (self.data[id] && (self.data[id].filename || self.data[id].name) == filename && !self.data[id].no_unlink ) {
-                    self.ds_file.unlink([id]);
+                if (self.data[id] && (self.data[id].filename || self.data[id].name) == filename && self.data[id].no_unlink ) {
+                    if (confirm(_.str.sprintf(_t('File "%s" already exists, upload again?'), filename))) {
+                        self.ds_file.unlink([id]);
+                        delete files[x];
+                    }else{
+                        return false;
+                    }
                 }
             }
 
@@ -5927,14 +5934,16 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
                     'id': result.id,
                     'name': result.name,
                     'filename': result.filename,
-                    'url': this.get_file_url(result)
+                    'url': this.get_file_url(result),
+                    'no_unlink': true
                 };
             } else {
                 this.data[result.id] = {
                     'id': result.id,
                     'name': result.name,
                     'filename': result.filename,
-                    'url': this.get_file_url(result)
+                    'url': this.get_file_url(result),
+                    'no_unlink': true
                 };
             }
             var values = _.clone(this.get('value'));
@@ -5948,7 +5957,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         var file_id=$(event.target).data("id");
         if (file_id) {
             var files = _.filter(this.get('value'), function (id) {return id != file_id;});
-            if(!this.data[file_id].no_unlink) {
+            if(this.data[file_id].no_unlink) {
                 this.ds_file.unlink([file_id]);
             }
             this.set({'value': files});
