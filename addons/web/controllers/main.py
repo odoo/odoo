@@ -18,8 +18,9 @@ import sys
 import time
 import urllib2
 import zlib
-from xml.etree import ElementTree
 from cStringIO import StringIO
+from lxml import etree
+from collections import defaultdict
 
 import babel.messages.pofile
 import werkzeug.utils
@@ -217,16 +218,16 @@ def concat_xml(file_list):
             contents = fp.read()
             checksum.update(contents)
             fp.seek(0)
-            xml = ElementTree.parse(fp).getroot()
+            xml = etree.parse(fp).getroot()
 
         if root is None:
-            root = ElementTree.Element(xml.tag)
+            root = etree.Element(xml.tag)
         #elif root.tag != xml.tag:
         #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
 
         for child in xml.getchildren():
             root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
+    return etree.tostring(root, encoding='utf-8'), checksum.hexdigest()
 
 def fs2web(path):
     """convert FS path into web path"""
@@ -1275,6 +1276,7 @@ class Export(http.Controller):
         return [
             {'tag': 'csv', 'label': 'CSV'},
             {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
+            {'tag': 'xml', 'label': 'XML'},
         ]
 
     def fields_get(self, model):
@@ -1537,6 +1539,132 @@ class ExcelExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
+
+
+class XMLExport(ExportFormat, http.Controller):
+    """Export records to XML
+
+    Export records in Odoo XML data files format. The exported fields of a model
+    are the union of all selected fields of that model.
+    """
+
+    @http.route('/web/export/xml', type='http', auth="user")
+    @serialize_exception
+    def index(self, data, token):
+        return self.base(data, token)
+
+    @property
+    def content_type(self):
+        return 'text/xml; charset=utf-8'
+
+    def filename(self, base):
+        return base + '.xml'
+
+    def extract_types(self, field_names, model):
+        """Extract models data for given fields
+
+        Update object types and comodels corresponding to a list of fields.
+
+        Args:
+            field_names: A list of fields.
+        """
+
+        models_types = defaultdict(dict)
+        models_comodels = defaultdict(dict)
+
+        for tokens in (field_name.split('/') for field_name in field_names):
+            cur_model = model
+            for tok in tokens:
+                if tok in ("id", ".id"):
+                    continue
+                if tok not in models_types[cur_model]:
+                    attrs = request.env[cur_model].fields_get([tok], attributes=['type', 'relation'])[tok]
+                    if attrs['type'] in ("one2many", "many2many", "many2one"):
+                        models_types[cur_model][tok] = attrs['type']
+                        models_comodels[cur_model][tok] = attrs['relation']
+                    else:
+                        models_types[cur_model][tok] = attrs['type']
+                if tok in models_comodels[cur_model]:
+                    cur_model = models_comodels[cur_model][tok]
+
+        self.models_types = models_types
+        self.models_comodels = models_comodels
+
+    def export_record(self, record, model):
+        """Add a record to the root element
+
+        Add a record as an xml element to the xml root element. Can call
+        itself to add related records. If a record as already been
+        exported, the function only return the xml_id.
+
+        Args:
+            record: A recordset containing one record.
+            model: The model of the record to add.
+
+        Returns:
+            The xml_id of the added or existing record.
+        """
+
+
+        if record.id in self.seen_ids[model]:
+            return self.seen_ids[model][record.id]
+
+        xml_id = record._BaseModel__export_xml_id()
+        start_no_xml_id = '__export__.'
+        if xml_id.startswith(start_no_xml_id):
+            name = record.name_get()
+            if name:
+                xml_id = xml_id[len(start_no_xml_id):]+'_'+re.sub('[^a-zA-Z0-9-]', '_', name[0][1])
+            else:
+                xml_id = xml_id[len(start_no_xml_id):]
+        self.seen_ids[model][record.id] = xml_id
+
+        record_element = etree.Element('record', model=model, id=xml_id)
+
+        types = self.models_types[model]
+        comodels = self.models_comodels[model]
+
+        for field_name in types.keys():
+            field = etree.SubElement(record_element, 'field', name=field_name)
+
+            if types[field_name] in ("one2many", "many2many", "many2one") and len(getattr(record, field_name)):
+                if types[field_name] == 'many2one':
+                    field.set('ref', self.export_record(getattr(record, field_name), comodels[field_name]))
+                else:
+                    field.set('eval', '['+', '.join(
+                        '(4,ref(\''+self.export_record(sub_record, comodels[field_name])+'\'))'
+                        for sub_record in getattr(record, field_name)
+                    )+']')
+            else:
+                field.text = unicode(getattr(record, field_name))
+
+        self.root.append(record_element)
+
+        return xml_id
+
+    def base(self, data, token):
+        params = simplejson.loads(data)
+        model, fields, ids, domain = operator.itemgetter('model', 'fields', 'ids', 'domain')(params)
+
+        if ids:
+            records = request.env[model].browse(ids)
+        else:
+            records = request.env[model].search(domain)
+
+        self.extract_types(map(operator.itemgetter('name'), fields), model)
+
+        self.seen_ids = defaultdict(dict)
+        self.root = etree.Element('odoo')
+
+        for record in records:
+            self.export_record(record, model)
+
+        data_output = etree.tostring(self.root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+
+        return request.make_response(data_output, headers=[
+            ('Content-Disposition', content_disposition(self.filename(model))),
+            ('Content-Type', self.content_type)], cookies={'fileToken': token})
+
 
 class Reports(http.Controller):
     POLLING_DELAY = 0.25
