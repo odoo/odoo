@@ -23,7 +23,7 @@ class event_track_location(models.Model):
 
 class event_track(models.Model):
     _name = "event.track"
-    _description = 'Event Tracks'
+    _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
 
@@ -38,7 +38,7 @@ class event_track(models.Model):
     description = fields.Html('Track Description', translate=True)
     date = fields.Datetime('Track Date')
     duration = fields.Float('Duration', digits=(16, 2), default=1.5)
-    location_id = fields.Many2one('event.track.location', 'Location')
+    location_id = fields.Many2one('event.track.location', 'Room')
     event_id = fields.Many2one('event.event', 'Event', required=True)
     color = fields.Integer('Color Index')
     priority = fields.Selection([

@@ -133,7 +133,7 @@
                         <li t-if="track.speaker_ids" class="text-muted fa fa-user">
                             <t t-esc="', '.join([speaker.name for speaker in track.speaker_ids])"></t>
                         </li>
-                        <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
+                        <li t-if="track.date" class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
@@ -145,7 +145,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/>...</p>
+                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/><t t-if="track.description">...</t></p>
                 </div>
             </div>
         </div>

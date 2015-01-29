@@ -21,6 +21,9 @@ class event_event(models.Model):
     badge_back = fields.Html('Badge Back', translate=True, states={'done': [('readonly', True)]})
     badge_innerleft = fields.Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
     badge_innerright = fields.Html('Badge Inner Right', translate=True, states={'done': [('readonly', True)]})
+    seats_availability = fields.Selection(
+        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        'Available Seat', required=True, store=True, compute='_compute_seats_availability')
 
     @api.model
     def _default_tickets(self):
@@ -38,6 +41,18 @@ class event_event(models.Model):
     @api.depends('event_ticket_ids.seats_max')
     def _compute_seats_max(self):
         self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
+
+    @api.one
+    @api.depends('event_ticket_ids.seats_max')
+    def _compute_seats_availability(self):
+        # set unlimited if any tickets has maximum seats as 0(unlimited) to check constrains
+        if self.event_ticket_ids:
+            for ticket in filter(lambda ticket: not ticket.seats_max, self.event_ticket_ids):
+                self.seats_availability = 'unlimited'
+                return True
+            self.seats_availability = 'limited'
+        else:
+            self.seats_availability = 'unlimited'
 
 
 class event_ticket(models.Model):
@@ -70,8 +85,11 @@ class event_ticket(models.Model):
         #        be considered in the timezone of the event, not the timezone of the user!
         #        Until we add a TZ on the event we'll use the context's current date, more accurate
         #        than using UTC all the time.
-        current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
-        self.is_expired = self.deadline < current_date
+        if self.deadline:
+            current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
+            self.is_expired = self.deadline < current_date
+        else:
+            self.is_expired = False
 
     # FIXME non-stored fields wont ends up in _columns (and thus _all_columns), which forbid them
     #       to be used in qweb views. Waiting a fix, we create an old function field directly.
