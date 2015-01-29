@@ -95,4 +95,5 @@ This module provides the core of the OpenERP Web Client.
         "static/test/list-editable.js",
         "static/test/mutex.js"
     ],
+    'bootstrap': True, # load translations for login screen
 }
