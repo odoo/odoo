@@ -1309,7 +1309,7 @@ class Binary(openerpweb.Controller):
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
+            res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
             res = Model.read([int(id)], fields, context)[0]
         else:
