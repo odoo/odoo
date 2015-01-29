@@ -409,7 +409,8 @@ define([
         var content = '<div class="btn-group">' + fullButton + halfButton + quarterButton + '</div>' +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
                       '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
-                      '<div class="btn-group">' + removeButton + '</div>';
+                      '<div class="btn-group">' + removeButton + '</div>'+
+                      '<div class="note-color btn-group hidden" style="display:none;">'+tplButtonInfo.color(lang, options) + '</div>';
         return tplPopover('note-image-popover', content);
       };
 

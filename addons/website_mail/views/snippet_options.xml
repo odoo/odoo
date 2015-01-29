@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options">
+
+    <t t-raw="0"/>
+
+    <div data-js='width-x'
+        data-selector="img, .mv, .col_mv">
+    </div>
+
+    <div data-js='media'
+        data-selector="img:not(.cke_iframe)">
+        <li data-edition="edition"><a>Change Image ...</a></li>
+    </div>
+
+    <div data-js='table_row'
+        data-selector=".row"
+        data-drop-near=".row">
+    </div>
+
+    <div data-js='table_column'
+        data-selector=".col>td, .col>th"
+        data-drop-near=".col>td, .col>th">
+    </div>
+
+    <div data-js='table_column_mv'
+        data-selector=".col_mv"
+        data-drop-near=".col_mv">
+    </div>
+
+    <div data-js='content' class="hidden"
+        data-selector="[data-oe-field='body_html'] > div, .oe_snippet_body"
+        data-drop-near="[data-oe-field='body_html'] > *"
+        data-drop-in="[data-oe-field='body_html']">
+    </div>
+
+
+    <div data-js='resize'
+        data-selector="div.snippet_row"
+        data-drop-in=".oe_structure, [data-oe-type=html]">
+    </div>
+    
+    <div data-js='background'
+        data-selector="div.snippet_row">
+        <li class="dropdown-submenu" data-background="">
+            <a tabindex="-1" href="#">Background Image</a>
+            <ul class="dropdown-menu">
+                <li data-background="/website_mail/static/src/img/theme_imgs/skyline_bg.gif"><a>Diary</a></li>
+                <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
+                <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+                <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+                <li data-background="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+                <li data-background="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+                <li data-background="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+                <li data-background="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+                <li data-background="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+                <li data-background="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+                <li data-background="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+                <li data-background="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+                <li data-background="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+                <li data-background="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+                <li data-background="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+                <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+                <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+                <li data-background=""><a>None</a></li>
+                <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
+                <li data-choose_image="choose_image" data-background=""><a><b>Choose an image...</b></a></li>
+            </ul>
+        </li>
+    </div>
+
+</template>
+
+</odoo>

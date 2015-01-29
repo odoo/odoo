@@ -5,13 +5,14 @@
 
 .email_preview_border {
     overflow:                 hidden !important;
-    border:                   2px solid grey;
-    height:                   300px;
+    border:                   1px solid lightgray;
+    height:                   180px;
 }
 .email_preview {
-    -webkit-transform:        scale(.50);
-    -ms-transform:            scale(.50);
-    transform:                scale(.50);
+    width:200%;
+    -webkit-transform:        scale(.28);
+    -ms-transform:            scale(.28);
+    transform:                scale(.28);
     -webkit-transform-origin: 0 0; 
     -ms-transform-origin:     0 0; 
     transform-origin:         0 0; 
@@ -19,6 +20,105 @@
 }
 
 .o_mail_body {
-    width: 620px;
+    width: 600px;
     margin-left: 16px;
+}
+#email_template_theme{
+    display:block;
+}
+.theme_thumbnail{
+    position:inherit;
+    margin-top:15px;
+}
+.theme_thumbnail div{
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+.theme_thumbnail img.img{
+    height: 180px;
+    width: auto;
+}
+
+.modal-body  .theme_thumbnail img.img{
+    height: 100px;
+}
+
+.theme_thumbnail div.overlay{
+    z-index: 2;
+    max-height: 135px;
+    position:absolute;
+    padding:25% 0;
+    opacity: 0;
+}
+.theme_thumbnail div.overlay p{
+    color:#616161;
+    font-weight:bold;
+    text-transform: capitalize;
+}
+.theme_thumbnail:hover>img.img{
+    opacity:0.3;
+}
+.theme_thumbnail:hover>div.overlay{
+    opacity: 1;
+}
+
+.email_head {
+    border-width: 0px 0px 2px 0px;
+}
+.email_head div{
+    font-size:14px;
+}
+.email_head .popover-title{
+    font-weight:bold;
+}
+.no_color{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALklEQVQ4T2P8DwQMeMCJEyfwSTMwjhowLMLg+PHjeNOBhYUF/nQwagAD49APAwCFR1KRaFT48gAAAABJRU5ErkJggg==);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#email_designer .oe_drop_zone.oe_insert{
+    width: 600px !important;
+}
+
+.template_options{
+    position: absolute;
+    width: 88%;
+    z-index: 22;
+    opacity:0;
+    top: 38%;
+}
+.template_name{
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.email_template *{
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+.email_template:hover .template_thumbnail{
+    opacity:0.3;
+}
+.email_template:hover .template_options{
+    opacity:1;
+}
+
+.editor_enable .editable_mode_hidden {
+    display: none;
+}
+
+.snippet_title {
+    display: block;
+    text-align: center;
+    background: rgba(40, 40, 40, 1);
+    padding: 4px;
+}
+
+.snippet_title .title_text{
+    background: #EDEDED;
+    padding: 1px 8px;
+    border-radius: 10px;
+    color: #414141;
 }

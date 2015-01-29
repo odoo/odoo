@@ -35,8 +35,6 @@ class TestMassMailing(osv.TransientModel):
                     'mailing_id': mailing.id,
                 }
                 mail_mail_obj = Mail.browse(cr, uid, Mail.create(cr, uid, mail_values, context=context), context=context)
-                unsubscribe_url = Mail._get_unsubscribe_url(cr, uid, mail_mail_obj, test_mail, context=context)
-                body = tools.append_content_to_html(mailing.body_html, unsubscribe_url, plaintext=False, container_tag='p')
                 Mail.write(cr, uid, mail_mail_obj.id, {'body_html': mailing.body_html}, context=context)
                 mail_ids.append(mail_mail_obj.id)
             Mail.send(cr, uid, mail_ids, context=context)
