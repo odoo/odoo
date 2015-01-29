@@ -181,13 +181,17 @@ openerp.web_timeline = function (session) {
             this.domain = dataset.domain || [];
             this.context = dataset.context || {};
 
+            var opt = _.clone(this.context.options);
             this.options = options || {};
+            this.options = _.extend(this.options, (opt || {}));
             this.options = _.extend({
                 'show_reply_button': true,
                 'show_read_unread_button': true,
                 'show_link': true,
                 'fetch_limit': 1000,
             }, this.options);
+
+            console.log("options", this.options);
 
             this.view_name = parent.view_name || 'inbox';
 
@@ -322,6 +326,7 @@ openerp.web_timeline = function (session) {
             }
             return menu.rpc("/web/menu/load_needaction", {'menu_ids': [menu.current_menu]})
                 .done(function(r) {
+                    console.log("r", r);
                     menu.on_needaction_loaded(r);
                 }).then(function () {
                     menu.trigger("need_action_reloaded");
