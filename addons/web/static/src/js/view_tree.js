@@ -258,11 +258,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
 
     do_show: function () {
         this.$el.show();
+        this._super();
     },
 
     do_hide: function () {
         this.$el.hide();
         this.hidden = true;
+        this._super();
     }
 });
 })();
