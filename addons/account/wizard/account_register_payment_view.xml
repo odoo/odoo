@@ -22,11 +22,15 @@
                          </group>
                     </group>
                     <group>
-                        <field name="payment_difference"/>
-                        <field name="writeoff_account" attrs="{'required': [('payment_difference', '=', 'reconcile')], 'invisible': [('payment_difference', '!=', 'reconcile')]}"/>
+                        <group>
+                            <field name="payment_difference"/>
+                            <field name="writeoff_account" attrs="{'required': [('payment_difference', '=', 'reconcile')], 'invisible': [('payment_difference', '!=', 'reconcile')]}"/>
+                        </group>
+                        <group>
+                        </group>
                     </group>
                     <footer>
-                        <button string='Pay' name="pay" type="object" class="oe_highlight"/>
+                        <button string='Register Payment' name="pay" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
