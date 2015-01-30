@@ -152,7 +152,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="dates" t-as="date">
                     <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
-                        <a t-attf-href="/event?{{ keep_query('country', 'type', 'search', 'search_category', date=date[0]) }}"><t t-esc="date[1]"/>
+                        <a t-attf-href="/event?{{ keep_query('country', 'type', 'search', 'search_category', 'category_searches', date=date[0]) }}"><t t-esc="date[1]"/>
                             <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
@@ -168,7 +168,7 @@
             <t t-foreach="types" t-as="type">
                 <li t-if="type['type']"
                     t-att-class="searches.get('type') == str(type['type'] and type['type'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('country', 'date', 'search', 'search_category', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
+                    <a t-attf-href="/event?{{ keep_query('country', 'date', 'search', 'search_category', 'category_searches', type=type['type'][0]) }}"><t t-esc="type['type'][1]"/>
                         <span class="badge pull-right"><t t-esc="type['type_count']"/></span>
                     </a>
                 </li>
@@ -181,20 +181,21 @@
     <xpath expr="//div[@id='search_event']" position="before">
         <div class="row">
             <div class="form-inline col-md-8 pull-right mt8">
-                <form role="search" t-attf-action="/event" method="get">
+                <form role="search" method="get">
                     <div class="input-group has-feedback" id="search_event">
-                        <input type="text" name="search" data-toggle="dropdown" id="event_search" class="dropdown-toggle form-control input-lg event-input-right" t-att-value="current_search" placeholder="Search for an event" autocomplete="off"/>
-                        <i class="fa fa-calendar fa-lg form-control-feedback event-icon-left"></i>
+                        <input type="text" name="search" data-toggle="dropdown" id="event_search" class="dropdown-toggle form-control input-lg oe_event_input_right" t-att-value="current_search" placeholder="Search for an event" autocomplete="off"/>
+                        <i class="fa fa-calendar fa-lg form-control-feedback oe_event_icon_left"></i>
                         <span class="input-group-btn">
-                            <button ttype="submit" class="btn btn-lg btn-default event-submit-btn"><i class="fa fa-lg fa-search"></i></button>
+                            <button ttype="submit" class="btn btn-lg btn-default oe_event_submit_btn"><i class="fa fa-lg fa-search"></i></button>
                         </span>
-                        <ul class="dropdown-menu event-dropdown-menu">
+                        <ul class="dropdown-menu oe_event_dropdown_menu">
                             <li>
                                 <div class="input-group has-feedback">
-                                    <input type="text" name="search_category" t-att-value="current_category" class="form-control input-lg event-input-right" placeholder="Enter a category"/>
-                                    <i class="fa fa-lg fa-tag form-control-feedback event-icon-left"></i>
+                                    <input type="text" name="search_category" class="form-control input-lg oe_event_input_right" placeholder="Enter a category"/>
+                                    <input type="text" name="category_searches" class="form-control hidden" t-att-value="category_searches"/>
+                                    <i class="fa fa-lg fa-tag form-control-feedback oe_event_icon_left"></i>
                                     <span class="input-group-btn">
-                                        <button ttype="submit" id="category_submit" class="btn btn-lg btn-default event-btn"><i class="fa fa-lg fa-search"></i></button>
+                                        <button ttype="submit" id="category_submit" class="btn btn-lg btn-default oe_event_btn"><i class="fa fa-lg fa-search"></i></button>
                                     </span>
                                 </div>
                             </li>
@@ -205,11 +206,14 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='middle_column']" position="before">
-        <div class="mb16 breadcrumb col-md-4" t-if="searches.get('search') or searches.get('search_category')">
+        <div class="mb16 breadcrumb col-md-4" t-if="searches.get('search') or searches.get('category_searches')">
             <span> Search for <span t-if="searches.get('search')" class="label label-default"><t t-esc="searches.get('search')"/></span></span>
-            <a t-if="searches.get('search')" t-attf-href="/event?{{ keep_query('country', 'date', 'type', 'search_category', search='') }}"><span class="event-tag-padding">X</span></a>
-             <span t-if="searches.get('search_category')">category :<span class="label label-default"><t t-esc="searches.get('search_category')"/></span></span>
-            <a t-if="searches.get('search_category')" t-attf-href="/event?{{ keep_query('country', 'date', 'type', 'search', search_category='') }}"><span>X</span></a>
+            <a t-if="searches.get('search')" t-attf-href="/event?{{ keep_query('country', 'date', 'type', 'search_category', 'category_searches', search='') }}"><span class="oe_event_tag_padding">X</span></a>
+            <span t-if="searches.get('category_searches')">category</span>
+            <t t-foreach="searches.get('category_searches')" t-as="category">
+                <span class="label label-default"><t t-esc="category"/></span>
+                <a t-if="category" t-attf-href="/event?{{ keep_query('country', 'date', 'type', 'search', category_searches=[searches.get('category_searches')], remove_search=category) }}"><span>X</span></a>
+            </t>
         </div>
     </xpath>
 </template>
@@ -219,12 +223,12 @@
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries" t-as="country">
                 <li t-if="country['country_id']" t-att-class="searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('type', 'date', 'search', 'search_category', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', 'search', 'search_category', 'category_searches', country=country['country_id'][0]) }}"><t t-esc="country['country_id'][1]"/>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
                 <li t-if="not country['country_id']" t-att-class="searches.get('country') == 'online' and 'active' or ''">
-                    <a t-attf-href="/event?{{ keep_query('type', 'date', 'search', 'search_category', country='online') }}">
+                    <a t-attf-href="/event?{{ keep_query('type', 'date', 'search', 'search_category', 'category_searches', country='online') }}">
                         <span>Online Events</span>
                         <span class="badge pull-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
