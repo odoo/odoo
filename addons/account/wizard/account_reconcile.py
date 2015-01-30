@@ -66,10 +66,13 @@ class account_move_line_reconcile(osv.osv_memory):
                 credit += line.credit
                 debit += line.debit
                 account = line.account_id
+        writeoff = debit - credit
         # If the write-off is lower than the account precision,
         # set it to 0.
+        if not account:
+            return {'trans_nbr': count, 'account_id': False,
+                    'credit': credit, 'debit': debit, 'writeoff': writeoff}
         currency = account.company_id.currency_id
-        writeoff = debit - credit
         if self.pool['res.currency'].is_zero(cr, uid, currency, writeoff):
             writeoff = 0.0
         return {'trans_nbr': count, 'account_id': account.id,
