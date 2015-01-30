@@ -33,7 +33,7 @@ class account_tax_python(models.Model):
             localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner}
             exec self.python_compute in localdict
             return localdict['result']
-        return super(account_tax_python, self)._unit_compute(base_amount, price_unit, quantity, product, partner)
+        return super(account_tax_python, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
 
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
