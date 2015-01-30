@@ -1132,7 +1132,7 @@ class pos_order(osv.osv):
 
                 for tax in computed_taxes:
                     tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
-                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
+                    group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'], tax['account_analytic_collected_id'])
 
                     group_tax.setdefault(group_key, 0)
                     group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
@@ -1206,7 +1206,8 @@ class pos_order(osv.osv):
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
                     'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False,
+                    'analytic_account_id': tax.account_analytic_collected_id.id,
                 })
 
             # counterpart
