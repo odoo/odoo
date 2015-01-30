@@ -630,6 +630,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 action : self.action,
                 action_views_ids : views_ids,
             }, self.flags, self.flags[view.type], view.options);
+            view.$container = self.$(".oe-view-manager-view-" + view.type);
             // show options.$buttons as views will put their $buttons inside it
             // and call show/hide on them
             view.options.$buttons.show();
@@ -743,7 +744,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             options.initial_mode = 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options),
-            $container = this.$(".oe-view-manager-view-" + view.type + ":first");
+            $container = view.$container;
 
         $container.hide();
         view.controller = controller;
