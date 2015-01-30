@@ -17,39 +17,38 @@ class account_move_line(models.Model):
     _description = "Journal Item"
     _order = "date desc, id desc"
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id',
-        'matched_debit_ids.amount', 'matched_credit_ids.amount')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
             for unreconciled lines, and something in-between for partially reconciled lines.
         """
         for line in self:
-
+            #amounts in the partial reconcile table aren't signed, so we need to use abs()
             amount = abs(line.debit - line.credit)
+            amount_residual_currency = abs(line.amount_currency) or 0.0
             sign = 1 if (line.debit - line.credit) > 0 else -1
 
-            amount_residual_currency = abs(line.amount_currency) or 0.0
-            digits_rounding_precision = line.currency_id.rounding if line.currency_id else line.company_id.currency_id.rounding
-
             for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
-                date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                 amount -= partial_line.amount
+                #getting the date of the matched item to compute the amount_residual in currency
+                date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                 if line.currency_id:
                     if partial_line.currency_id and partial_line.currency_id == line.currency_id:
                         amount_residual_currency -= partial_line.amount_currency
-                    elif partial_line.currency_id and partial_line.currency_id != line.currency_id:
-                        amount_residual_currency -= line.currency_id.with_context(date=date).compute(partial_line.amount_currency, partial_line.currency_id)
                     else:
                         amount_residual_currency -= line.currency_id.with_context(date=date).compute(partial_line.amount, line.company_id.currency_id)
 
-            line.amount_residual = amount*sign
-            line.amount_residual_currency = amount_residual_currency*sign
-
+            #computing the `reconciled` field. As we book exchange rate difference on each partial matching,
+            #we can only check the amount in company currency
+            reconciled = False
+            digits_rounding_precision = line.company_id.currency_id.rounding
             if float_is_zero(amount, digits_rounding_precision):
-                line.reconciled = True
-            else:
-                line.reconciled = False
+                reconciled = True
+            line.reconciled = reconciled
+
+            line.amount_residual = line.company_id.currency_id.round(amount * sign)
+            line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
     @api.model
     def _get_currency(self):
@@ -463,51 +462,57 @@ class account_move_line(models.Model):
         else:
             self.reconcile()
 
-
     ####################################################
     # Reconciliation methods
     ####################################################
 
     def _get_pair_to_reconcile(self):
+        #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
+        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         #target the pair of move in self with smallest debit, credit
         smallest_debit = smallest_credit = False
         for aml in self:
-            if aml.amount_residual > 0:
-                smallest_debit = (not smallest_debit or aml.amount_residual < smallest_debit.amount_residual) and aml or smallest_debit
-            elif aml.amount_residual < 0:
-                smallest_credit = (not smallest_credit or aml.amount_residual > smallest_credit.amount_residual) and aml or smallest_credit
+            if aml[field] > 0:
+                smallest_debit = (not smallest_debit or aml[field] < smallest_debit[field]) and aml or smallest_debit
+            elif aml[field] < 0:
+                smallest_credit = (not smallest_credit or aml[field] > smallest_credit[field]) and aml or smallest_credit
         return smallest_debit, smallest_credit
 
     def auto_reconcile_lines(self):
         """ This function iterates recursively on the recordset given as parameter as long as it
             can find a debit and a credit to reconcile together. It returns the recordset of the
-            account move lines that were not reconciled during the process
+            account move lines that were not reconciled during the process.
         """
+        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
         #there is no more pair to reconcile so return what move_line are left
         if not sm_credit_move or not sm_debit_move:
             return self
 
         #Reconcile the pair together
-        amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual)
+        amount_reconcile = min(sm_debit_move[field], -sm_credit_move[field])
         #Remove from recordset the one(s) that will be totally reconciled
-        if amount_reconcile == sm_debit_move.amount_residual:
+        if amount_reconcile == sm_debit_move[field]:
             self -= sm_debit_move
-        if amount_reconcile == sm_credit_move.amount_residual:
+        if amount_reconcile == sm_credit_move[field]:
             self -= sm_credit_move
 
-        #Check for currency
+        #Check for the currency and amount_currency we can set
         currency = False
         amount_reconcile_currency = 0
-        if sm_debit_move.currency_id == sm_credit_move.currency_id:
-            currency = sm_credit_move.currency_id
+        if sm_debit_move.currency_id == sm_credit_move.currency_id and sm_debit_move.currency_id.id:
+            currency = sm_credit_move.currency_id.id
             amount_reconcile_currency = min(sm_debit_move.amount_residual_currency, -sm_credit_move.amount_residual_currency)
 
-        self.env['account.partial.reconcile'].create({'debit_move_id': sm_debit_move.id,
+        amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual)
+
+        self.env['account.partial.reconcile'].create({
+            'debit_move_id': sm_debit_move.id,
             'credit_move_id': sm_credit_move.id,
             'amount': amount_reconcile,
             'amount_currency': amount_reconcile_currency,
-            'currency_id': currency and currency.id or False,})
+            'currency_id': currency,
+        })
 
         #Iterate process again on self
         return self.auto_reconcile_lines()
@@ -515,27 +520,27 @@ class account_move_line(models.Model):
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
         #Perform all checks on lines
-        company_ids = []
+        company_ids = set()
         all_accounts = []
-        partners = []
-        for move in self:
-            company_ids.append(move.company_id.id)
-            all_accounts.append(move.account_id)
-            if (move.account_id.internal_type in ('receivable', 'payable')):
-                partners.append(move.partner_id.id)
-            if move.reconciled:
+        partners = set()
+        for line in self:
+            company_ids.add(line.company_id.id)
+            all_accounts.append(line.account_id)
+            if (line.account_id.internal_type in ('receivable', 'payable')):
+                partners.add(line.partner_id.id)
+            if line.reconciled:
                 raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))
-
-        if len(set(company_ids)) > 1:
+        if len(company_ids) > 1:
             raise Warning(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
             raise Warning(_('Entries are not of the same account!'))
         if not all_accounts[0].reconcile:
             raise Warning(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
-        if len(set(partners)) > 1:
+        if len(partners) > 1:
             raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
         #reconcile everything that can be
+        currency_id = all_accounts[0].currency_id.id
         remaining_moves = self.auto_reconcile_lines()
 
         #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
@@ -544,6 +549,7 @@ class account_move_line(models.Model):
             #add writeoff line to reconcile algo and finish the reconciliation
             remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
 
+    #TODO: need to be rewritten in a cleaner way
     def _create_writeoff(self, vals):
         """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals,
 
@@ -940,3 +946,66 @@ class account_partial_reconcile(models.Model):
     amount = fields.Float()
     amount_currency = fields.Float(string="Amount in Currency")
     currency_id = fields.Many2one('res.currency', string='Currency')
+    company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
+
+    def create_exchange_rate_entry(self):
+        """ Automatically create a journal entry to book the exchange rate difference between the `debit_move_id`
+            and the `credit_move_id`, if both share the same currency, and at the prorata of the amount matched
+            between them.
+            That new journal entry is made in the company `currency_exchange_journal_id` and one of its journal
+            items is matched with the other lines to ensure having the residual amount in company currency that
+            reflects perfectly the residual amount in foreign currency.
+        """
+        for rec in self:
+            if rec.currency_id and rec.debit_move_id.amount_currency and rec.credit_move_id.amount_currency:
+                #create exchange rate difference journal entry
+                rate_diff = rec.debit_move_id.debit / rec.debit_move_id.amount_currency - rec.credit_move_id.credit / -rec.credit_move_id.amount_currency
+                if rate_diff and rec.amount_currency:
+                    if not rec.company_id.currency_exchange_journal_id:
+                        raise Warning(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                    if not self.company_id.income_currency_exchange_account_id.id:
+                        raise Warning(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                    if not self.company_id.expense_currency_exchange_account_id.id:
+                        raise Warning(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                    amount_diff = rec.company_id.currency_id.round(rec.amount_currency * rate_diff)
+                    move = rec.env['account.move'].create({'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id})
+                    line_to_reconcile = rec.env['account.move.line'].with_context(novalidate=True).create({
+                        'name': _('Currency exchange rate difference'),
+                        'debit': amount_diff < 0 and -amount_diff or 0.0,
+                        'credit': amount_diff > 0 and amount_diff or 0.0,
+                        'account_id': rec.debit_move_id.account_id.id,
+                        'move_id': move.id,
+                        'currency_id': rec.currency_id.id,
+                    })
+                    rec.env['account.move.line'].create({
+                        'name': _('Currency exchange rate difference'),
+                        'debit': amount_diff > 0 and amount_diff or 0.0,
+                        'credit': amount_diff < 0 and -amount_diff or 0.0,
+                        'account_id': amount_diff > 0 and rec.company_id.currency_exchange_journal_id.default_debit_account_id.id or rec.company_id.currency_exchange_journal_id.default_credit_account_id.id,
+                        'move_id': move.id,
+                        'currency_id': rec.currency_id.id,
+                    })
+                    rec.env['account.partial.reconcile'].create({
+                        'debit_move_id': amount_diff < 0 and line_to_reconcile.id or rec.debit_move_id.id,
+                        'credit_move_id': amount_diff > 0 and line_to_reconcile.id or rec.credit_move_id.id,
+                        'amount': amount_diff,
+                        'amount_currency': 0.0,
+                        'currency_id': rec.debit_move_id.currency_id.id,
+                    })
+
+    @api.model
+    def create(self, vals):
+        res = super(account_partial_reconcile, self).create(vals)
+        #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
+        res.create_exchange_rate_entry()
+        return res
+
+    @api.multi
+    def unlink(self):
+        """ When removing a link between entries, we need to revert the eventual journal entries we created to book the
+            fluctuation of the foreign currency's exchange rate.
+        """
+        #TODO: do the below lines as soon os the reverse entry feature/wizard is implemented
+        #exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
+        #exchange_rate_entries.inverse()
+        return super(account_partial_reconcile, self).unlink()

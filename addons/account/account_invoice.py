@@ -6,7 +6,7 @@ from lxml import etree
 
 from openerp import api, fields, models, _
 from openerp.exceptions import except_orm, RedirectWarning, Warning
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_is_zero
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -138,6 +138,8 @@ class account_invoice(models.Model):
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
+                if payment.currency_id and float_is_zero(amount_currency, precision_digits=payment.currency_id.decimal_places):
+                    continue
                 info['content'].append({
                     'name': payment.name,
                     'ref': payment.journal_id.name,
@@ -261,7 +263,7 @@ class account_invoice(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]})
 
-    residual = fields.Float(string='Amount due', digits=0,
+    residual = fields.Float(string='Amount Due', digits=0,
         compute='_compute_residual', store=True, help="Remaining amount due.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')

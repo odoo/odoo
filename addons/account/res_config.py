@@ -123,9 +123,12 @@ class account_config_settings(models.TransientModel):
         help="Allows you to use the analytic accounting.")
     group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier invoices', 
         implied_group="account.group_supplier_inv_check_total")
+    currency_exchange_journal_id = fields.Many2one('account.journal',
+        related='company_id.currency_exchange_journal_id',
+        string="Rate Difference Journal",)
     income_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.income_currency_exchange_account_id',
-        string="Gain Exchange Rate Account", 
+        string="Gain Exchange Rate Account",
         domain="[('internal_type', '=', 'other'), ('deprecated', '=', False)]")
     expense_currency_exchange_account_id = fields.Many2one('account.account',
         related='company_id.expense_currency_exchange_account_id',
