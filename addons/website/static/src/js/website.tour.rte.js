@@ -61,12 +61,12 @@
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first',
-                element:   '.note-popover button[data-event="color"]',
+                element:   '.note-popover button[data-event="color"]:visible',
                 title:     "change text bg-color after triple click",
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection to change text color",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font');
@@ -75,12 +75,12 @@
                 }
             },
             {
-                element:   'div[data-target-event="foreColor"] .note-color-row:eq(1) button[data-event="foreColor"]:first',
+                element:   'div[data-target-event="foreColor"]:visible .note-color-row:eq(1) button[data-event="foreColor"]:first',
                 title:     "change text color",
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(2)',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection to change text bg-color again",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(2)');
@@ -94,7 +94,7 @@
             },
             {
                 waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(4)',
-                element:   '.note-color button.dropdown-toggle',
+                element:   '.note-color button.dropdown-toggle:visible',
                 title:     "change selection (h1 and p) to change text color with class",
                 onload: function () {
                     var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(4)');
@@ -103,7 +103,7 @@
                 }
             },
             {
-                element:   'div[data-target-event="foreColor"] button[data-event="foreColor"][data-value^="text-"]:first',
+                element:   'div[data-target-event="foreColor"]:visible button[data-event="foreColor"][data-value^="text-"]:first',
                 title:     "change text foreColor again",
             },
             {

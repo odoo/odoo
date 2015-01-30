@@ -99,31 +99,19 @@ define(['summernote/summernote'], function () {
         // resize for fa
         var $resizefa = $('<div class="btn-group hidden only_fa"/>')
             .insertAfter($imagePopover.find('.btn-group:has([data-event="resize"])'));
-        $(tplButton('<span class="note-fontsize-10">1x</span>', {
-          title: "1x",
-          event: 'resizefa',
-          value: '1'
-        })).appendTo($resizefa);
-        $(tplButton('<span class="note-fontsize-10">2x</span>', {
-          title: "2x",
-          event: 'resizefa',
-          value: '2'
-        })).appendTo($resizefa);
-        $(tplButton('<span class="note-fontsize-10">3x</span>', {
-          title: "3x",
-          event: 'resizefa',
-          value: '3'
-        })).appendTo($resizefa);
-        $(tplButton('<span class="note-fontsize-10">4x</span>', {
-          title: "4x",
-          event: 'resizefa',
-          value: '4'
-        })).appendTo($resizefa);
-        $(tplButton('<span class="note-fontsize-10">5x</span>', {
-          title: "5x",
-          event: 'resizefa',
-          value: '5'
-        })).appendTo($resizefa);
+        for (var size=1; size<=5; size++) {
+            $(tplButton('<span class="note-fontsize-10">'+size+'x</span>', {
+              title: size+"x",
+              event: 'resizefa',
+              value: size+''
+            })).appendTo($resizefa);
+        }
+        var $colorfa = $airPopover.find('.note-color').clone();
+        $colorfa.find(".btn-group:first").remove();
+        $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
+        $colorfa.find('button[data-event="color"]').attr('data-value', '{"foreColor": "#f00"}')
+            .find("i").css({'background': '', 'color': '#f00'});
+        $resizefa.after($colorfa);
 
         // show dialog box and delete
         var $imageprop = $('<div class="btn-group"/>');
@@ -214,6 +202,8 @@ define(['summernote/summernote'], function () {
 
                 $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
                 
+                $container.find('.note-color').removeClass("hidden");
+
             } else {
 
                 $container.find('.hidden:not(.only_fa)').removeClass("hidden");
@@ -231,6 +221,8 @@ define(['summernote/summernote'], function () {
                 if (!$(oStyle.image).is("img")) {
                     $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
                 }
+
+                $container.find('.note-color').addClass("hidden");
 
             }
 
