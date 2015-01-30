@@ -23,7 +23,7 @@ function odoo_project_timesheet_utils(project_timesheet) {
             hours = hours.toString();
         }
 
-        return [hours, minutes];
+        return hours + ":" + minutes;;
     };
 
     // Takes a string as input and tries to parse it as a hh:mm duration/ By default, strings without ":" are considered to be hh. 

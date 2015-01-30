@@ -715,7 +715,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget.screen_selector.set_current_screen("activity", {}, {}, false, true);
         },
         on_activity_remove: function() {
-            //This method will set activity command to 2, so while synchronize we will set that activty as a to_delete
+            //This method will set activity command to 2, so while synchronize we will set that activity as a to_delete
             var project_activity_data = this.get_form_data();
             project_activity_data['id'] = this.current_id; //Activity Existing ID
             var activities_collection = this.project_timesheet_model.get("activities");
@@ -1209,7 +1209,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
             _.extend(self.events,
                 {
                     "click .pt_button_plus_activity":"goto_edit_activity_screen",
-                    "click .pt_activity":"edit_activity"
+                    "click .pt_activity":"edit_activity",
+                    "click .pt_btn_start_activity":"start_activity"
                 }
             );
 
@@ -1231,6 +1232,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         edit_activity: function(event){
             this.project_timesheet_widget.edit_activity_screen.re_render(event.currentTarget.dataset.activity_id);
             this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
+        },
+        start_activity: function(){
+
         }
     });
 
@@ -1270,7 +1274,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 }
             );
 
-            this.projects = this.project_timesheet_model.projects;
             this.settings = this.project_timesheet_model.settings;
         },
         on_change_minimal_duration: function(){
@@ -1293,17 +1296,19 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Edit Activity";
             this.project_timesheet_model = options.project_timesheet_model;
+            this.unit_amount_to_hours_minutes = project_timesheet.unit_amount_to_hours_minutes;
 
             _.extend(self.events,
                 {
                     "click .pt_activity_project":"select_project",
                     "click .pt_activity_task":"select_task",
-                    "change input.pt_activity_duration":"on_change_duration"
+                    "change input.pt_activity_duration":"on_change_duration",
+                    "change textarea.pt_description":"on_change_description",
+                    "click .pt_project_create_confirm":"create_project",
+                    "change input.pt_selected_task":"on_change_task"
                 }
             );
 
-            this.projects = options.project_timesheet_model.projects;
-            this.all_tasks = options.project_timesheet_model.tasks;
             this.tasks = {};
             this.activity = {
                 project: undefined,
@@ -1312,17 +1317,25 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 unit_amount: undefined
             };
         },
+        on_change_task: function(event){
+            console.log(this.$("input.pt_selected_task").val());
+            debugger
+        },
         select_project: function(event){
             var project_id = parseInt(event.currentTarget.dataset.project_id);
-            this.activity.project = _.findWhere(this.projects, {id : project_id});
+            this.activity.project = _.findWhere(this.project_timesheet_model.projects, {id : project_id});
             this.activity.task = undefined;
-            this.tasks = _.where(this.all_tasks, {project_id : project_id});
+            this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : project_id});
             this.renderElement();
         },
         select_task: function(event){
             var task_id = parseInt(event.currentTarget.dataset.task_id);
             this.activity.task = _.findWhere(this.tasks, {id : task_id});
             this.renderElement();
+        },
+        create_project: function(){
+            this.project_timesheet_model.create_project(this.$(".pt_new_project_name").val());
+            this.$("#pt_project_creator").modal('hide');
         },
         on_change_duration: function(event){
             var duration = project_timesheet.validate_duration(this.$("input.pt_activity_duration").val());
@@ -1337,11 +1350,18 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 this.activity.unit_amount = project_timesheet.hh_mm_to_unit_amount(duration);
             }
         },
-        // Function to re-render the screen with a new activity
+        on_change_description: function(event){
+            this.activity.desc = this.$("textarea.pt_description").val();
+        },
+        // Function to re-render the screen with a new activity.
+        // we use clone to work on a temporary version of activity.
         re_render: function(activity_id){
-            this.activity = _.findWhere(project_timesheet.project_timesheet_model.account_analytic_lines,  {id:parseInt(activity_id)});
-            debugger
-            console.log(activity_id);
+            this.activity = _.clone(_.findWhere(project_timesheet.project_timesheet_model.account_analytic_lines,  {id:parseInt(activity_id)}));
+
+            if(!_.isUndefined(this.activity.project)){
+                this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
+            }
+            this.renderElement();
         }
     });
 }

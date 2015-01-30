@@ -122,18 +122,18 @@ function odoo_project_timesheet_models(project_timesheet) {
                 self.day_plan = data.day_plan;
                 self.settings = data.settings;                
 
-                _.each(self.account_analytic_lines, function(account_analytic_line){
+                // _.each(self.account_analytic_lines, function(account_analytic_line){
 
-                    var this_task = _.findWhere(self.tasks, {id:account_analytic_line.task_id});
-                    if(! _.isUndefined(this_task)){
-                       account_analytic_line.task_name = this_task.name;
-                    }
+                //     var this_task = _.findWhere(self.tasks, {id:account_analytic_line.task_id});
+                //     if(! _.isUndefined(this_task)){
+                //        account_analytic_line.task_name = this_task.name;
+                //     }
 
-                    var this_project = _.findWhere(self.projects, {id:account_analytic_line.project_id});
-                    if(! _.isUndefined(this_project)){
-                        account_analytic_line.project_name = this_project.name;
-                    }
-                });
+                //     var this_project = _.findWhere(self.projects, {id:account_analytic_line.project_id});
+                //     if(! _.isUndefined(this_project)){
+                //         account_analytic_line.project_name = this_project.name;
+                //     }
+                // });
 
                 _.each(self.tasks, function(task){
                     var this_project = _.findWhere(self.projects, {id:task.project_id});
@@ -189,6 +189,15 @@ function odoo_project_timesheet_models(project_timesheet) {
                 }
 
             this.db.update_data();
+        },
+        create_project: function(project_name){
+            this.projects.push({
+                "id": new ObjectId(),
+                "name":project_name
+            });
+        },
+        create_task: function(task_name){
+
         }
 
     });

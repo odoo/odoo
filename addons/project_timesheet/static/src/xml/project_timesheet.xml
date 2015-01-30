@@ -29,34 +29,33 @@
 				<t t-foreach="widget.account_analytic_lines" t-as="account_analytic_line">
 					<div class="panel">
 						<div class="panel-body">
-					<div class="row">
-							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
-								<t t-if="account_analytic_line.project_name">
-									<t t-esc="account_analytic_line.project_name"/><br/>
-									<t t-if="account_analytic_line.task_name">
-							    		<t t-esc="account_analytic_line.task_name"/>
-							    	</t>
-								</t>
-                                <t t-if="!account_analytic_line.project_name">
-                                    <p><small>Select a project</small></p>
-                                </t>
-
-							</div>
-							<div class="col-xs-1">
-								<div class="row">
-								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-								</div>
-								<div class="row">
-								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-								</div>
-							</div>
-							<div class="col-xs-2">
-                                <t t-if="account_analytic_line.hours_minutes">
-    								<t t-esc="account_analytic_line.hours_minutes[0]"/>:<t t-esc="account_analytic_line.hours_minutes[1]"/>
-                                </t>
-							</div>
-						</div>
-					</div>
+        					<div class="row">
+    							<div class="col-xs-7 pt_activity" t-att-data-activity_id="account_analytic_line.id">
+    								<t t-if="account_analytic_line.project">
+    									<t t-esc="account_analytic_line.project.name"/><br/>
+    									<t t-if="account_analytic_line.task">
+    							    		<t t-esc="account_analytic_line.task.name"/>
+    							    	</t>
+    								</t>
+                                    <t t-if="!account_analytic_line.project">
+                                        <p><small>Select a project</small></p>
+                                    </t>
+    							</div>
+    							<div class="col-xs-1">
+    								<div class="row">
+    								<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    								</div>
+    								<div class="row">
+    								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+    								</div>
+    							</div>
+    							<div class="col-xs-2">
+                                    <t t-if="account_analytic_line.hours_minutes">
+        								<t t-esc="account_analytic_line.hours_minutes"/>
+                                    </t>
+    							</div>
+        					</div>
+    					</div>
 					</div>
 				</t>
 			</t>
@@ -118,8 +117,8 @@
 					        </a>
 					        <ul class="dropdown-menu">
 					        	<li><a href="javascript:void(0)">Create project</a></li>
-				            	<t t-if="widget.projects">
-				            		<t t-foreach="widget.projects" t-as="project">
+				            	<t t-if="widget.project_timesheet_model.projects">
+				            		<t t-foreach="widget.project_timesheet_model.projects" t-as="project">
 				            			<li><a href="javascript:void(0)" t-att-data-project_id="project.id" class="pt_default_project"><t t-esc="project.name"/></a></li>
 				            		</t>
 				            	</t>
@@ -158,13 +157,10 @@
     <t t-name="edit_activity_screen">
         <t t-call="header">
         </t>
-        <div class="pt_edit_activity_screen container-fluid">
-            <div class="panel">
-                <div class="panel-heading">
-                    <p>Project</p>
-                </div>
-                <div class="panel-body">
-                    <!--For some reason, the dropdown does not work without the following div-->
+        <div class="pt_edit_activity_screen container-fluid"> 
+                <p>Project</p>
+                <!--For some reason, the dropdown does not work without the following div-->
+                <div class="row">
                     <div class="col-xs-12">
                         <a class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
@@ -177,14 +173,30 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="javascript:void(0)">Create Project</a></li>
-                                <t t-if="widget.projects">
-                                    <t t-foreach="widget.projects" t-as="project">
+                                <li><a href="javascript:void(0)" data-toggle="modal" data-target="#pt_project_creator">Create Project</a></li>
+                                <t t-if="widget.project_timesheet_model.projects">
+                                    <t t-foreach="widget.project_timesheet_model.projects" t-as="project">
                                         <li><a href="javascript:void(0)" t-att-data-project_id="project.id" class="pt_activity_project"><t t-esc="project.name"/></a></li>
                                     </t>
                                 </t>
                             </ul>
                         </a>
+                    </div>
+                </div>
+            <!--Dialog box for project creation-->
+            <div class="modal fade" id="pt_project_creator" tabindex="-1" role="dialog" aria-labelledby="pt_dialog_label" aria-hidden="true">
+               <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="pt_dialog_label">Create a new project</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" placeholder="Project name" class="pt_new_project_name"></input>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
+                            <button type="button" class="btn btn-primary pt_project_create_confirm">Create</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,7 +208,7 @@
                     <t t-if="widget.activity.project">
                         <!--For some reason, the dropdown does not work without the following div-->
                         <div class="col-xs-12">
-                            <a class="dropdown">
+                            <!-- <a class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
                                     <t t-if="!widget.activity.task">
                                         Select a Task
@@ -214,7 +226,18 @@
                                         </t>
                                     </t>
                                 </ul>
-                            </a>
+                            </a> -->
+                            <t t-if="widget.activity.task">
+                                <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" t-att-value="widget.activity.task.name"/>
+                            </t>
+                            <t t-if="!widget.activity.task">
+                                <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" value="Select a Task"/>
+                            </t>
+                            <datalist id="pt_tasks_list">
+                                <t t-foreach="widget.tasks" t-as="task">
+                                    <option t-att-data-task_id="task.id" t-att-value="task.name"><t t-esc="task.name"/></option>
+                                </t>
+                            </datalist>
                         </div>
                     </t>
                     <t t-if="!widget.activity.project">
@@ -224,28 +247,45 @@
             </div>
             <div>
                 <p>Time spent (hh:mm)</p>
-                <input type="text" class="pt_activity_duration" aria-describedby="Time Spent"></input>
+                <t t-if="widget.activity.unit_amount">
+                    <input type="text" class="pt_activity_duration" aria-describedby="Time Spent" t-att-value="widget.unit_amount_to_hours_minutes(widget.activity.unit_amount)"></input>
+                </t>
+                <t t-if="!widget.activity.unit_amount">
+                    <input type="text" class="pt_activity_duration" aria-describedby="Time Spent" placeholder="00:00"></input>
+                </t>
                 <!--Empty p for alert in case of wrong input -->
                 <p></p>
+            </div>
+            <div>
+                <p>Work Summary</p>
+                <t t-if="widget.activity.desc">
+                    <textarea class="pt_description"><t t-esc="widget.activity.desc"/></textarea>
+                </t>
+                <t t-if="!widget.activity.desc">
+                    <textarea class="pt_description"></textarea>
+                </t>
             </div>
 
         </div>
     </t>
-
     <t t-name="header">
     	<!-- <div class="panel-material-grey"> -->
     		<div class="well">
     	    	<div class="row">
     	    		<div class="col-xs-2">
-    	    			<div class="dropdown">
-    	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
-    	    				<ul class="dropdown-menu">
-    	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
-    	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
-    	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
-    	    				</ul>
-
-    	    			</div>
+                        <t t-if="widget.screen_name != 'Edit Activity'">
+        	    			<div class="dropdown">
+        	    				<a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+        	    				<ul class="dropdown-menu">
+        	    					<li><a class="pt_activities_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-alarm"></i>   Activities </div></a></li>
+        	    					<li><a class="pt_day_planner_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-notification-event-note"></i>   Day Planner </div></a></li>
+        	    					<li><a class="pt_settings_link" href="javascript:void(0)"><div class="icon-preview"><i class="mdi-action-settings"></i>   Settings </div></a></li>
+        	    				</ul>
+        	    			</div>
+                        </t>
+                        <t t-if="widget.screen_name == 'Edit Activity'">
+                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+                        </t>
 
     	    		</div>
     	    		<div class="col-xs-8">

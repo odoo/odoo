@@ -18,7 +18,10 @@ function odoo_project_timesheet_db(project_timesheet) {
                     "session_server":"http://localhost:8069",
                     "data":{
                         "settings":{
-                        "default_project_id":1,
+                        "default_project":{
+                            "id":1,
+                            "name":"Implementation"
+                        },
                         "minimal_duration":15,
                         "time_unit":15
                         },
@@ -47,22 +50,37 @@ function odoo_project_timesheet_db(project_timesheet) {
                         ],
                         "account_analytic_lines":[
                             {
-                                "project_id":1,
                                 "task_id":1,
                                 "id":1,
                                 "desc":"/",
-                                "unit_amount":1
+                                "unit_amount":1,
+                                "project":{
+                                    "id":1,
+                                    "name":"Implementation"   
+                                },
+                                "task":{
+                                    "id":1,
+                                    "name":"C#",
+                                }
                             },
                             {
-                                "project_id":1,
-                                "task_id":2,
                                 "id":2,
-                                "desc":"/",
-                                "unit_amount":2  
+                                "desc":"Conversion from py 2.7 to 3.3",
+                                "unit_amount":2,
+                                "project":{
+                                    "id":1,
+                                    "name":"Implementation"   
+                                },
+                                "task":{
+                                    "id":2,
+                                    "name":"Python",
+                                }
+
                             },
                             {
                                 "id":3,
-                                "desc":"/"
+                                "desc":"/",
+                                "unit_amount":0.5
                             }
                         ],
                         "day_plan":[
