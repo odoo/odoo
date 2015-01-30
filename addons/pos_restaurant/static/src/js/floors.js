@@ -238,6 +238,13 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                     }
                     self.renderElement();
                 });
+            }, function(err,event) {
+                self.gui.show_popup('error',{
+                    'title':_t('Changes could not be saved'),
+                    'body': _t('Check your internet connection and access rights'),
+                });
+                event.stopPropagation();
+                event.preventDefault();
             });
         },
         // destroy the table.  We do not really destroy it, we set it 
