@@ -5,7 +5,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
     // At POS Startup, load the floors, and add them to the pos model
     module.load_models({
         model: 'restaurant.floor',
-        fields: ['name','background_image','table_ids','sequence'],
+        fields: ['name','background_color','table_ids','sequence'],
         domain: function(self){ return [['pos_config_id','=',self.config.id]] },
         loaded: function(self,floors){
             self.floors = floors;
@@ -354,6 +354,29 @@ openerp.pos_restaurant.load_floors = function(instance,module){
         background_image_url: function(floor) { 
             return '/web/binary/image?model=restaurant.floor&id='+floor.id+'&field=background_image';
         },
+        get_floor_style: function() {
+            var style = "";
+            if (this.floor.background_image) {
+                style += "background-image: url(" + this.background_image_url(this.floor) + "); ";
+            }
+            if (this.floor.background_color) {
+                style += "background-color: " + _.escape(this.floor.background_color) + ";";
+            }
+            return style;
+        },
+        set_background_color: function(background) {
+            this.floor.background_color = background;
+            (new instance.web.Model('restaurant.floor'))
+                .call('set_background_color',[this.floor.id, background]).fail(function(err,event){
+                    self.gui.show_popup('error',{
+                        'title':_t('Changes could not be saved'),
+                        'body': _t('Check your internet connection and access rights'),
+                    });
+                    event.stopPropagation();
+                    event.preventDefault();
+                });
+            this.renderElement();
+        },
         deselect_tables: function(){
             for (var i = 0; i < this.table_widgets.length; i++) {
                 var table = this.table_widgets[i];
@@ -385,13 +408,18 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             }
         },
         tool_colorpicker_open: function(){
+            this.$('.color-picker').addClass('oe_hidden');
             if (this.selected_table) {
-                this.$('.color-picker').removeClass('oe_hidden');
+                this.$('.color-picker.fg-picker').removeClass('oe_hidden');
+            } else {
+                this.$('.color-picker.bg-picker').removeClass('oe_hidden');
             }
         },
         tool_colorpicker_pick: function(event,$el){
             if (this.selected_table) {
                 this.selected_table.set_table_color($el[0].style['background-color']);
+            } else {
+                this.set_background_color($el[0].style['background-color']);
             }
         },
         tool_colorpicker_close: function(){
