@@ -548,7 +548,8 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.subcategories = [];
             this.product_list_widget = options.product_list_widget || null;
             this.category_cache = new module.DomCache();
-            this.set_category();
+            this.start_categ_id = this.pos.config.iface_start_categ_id ? this.pos.config.iface_start_categ_id[0] : 0;
+            this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
             
             this.switch_category_handler = function(event){
                 self.set_category(self.pos.db.get_category_by_id(Number(this.dataset['categoryId'])));
@@ -685,7 +686,7 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         
         // resets the current category to the root category
         reset_category: function(){
-            this.set_category();
+            this.set_category(this.pos.db.get_category_by_id(this.start_categ_id));
             this.renderElement();
         },
 
