@@ -45,11 +45,11 @@
            t-att-title="record.name" t-att-data-partner="record.id">
                <t t-esc="record.name"/> </a>
     </span>
-    <span t-if="record.is_editable and (widget.records_length &gt; 1)" 
-          class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" 
-          t-att-data-id="record.id">&amp;</span>
-    <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" 
-          title="Remove this follower" t-att-data-id="record.id">X</span>
+    <i t-if="record.is_editable and (widget.records_length &gt; 1)" 
+       class="oe_edit_subtype fa fa-pencil oe_hidden" title="Edit subscription" 
+       t-att-data-id="record.id"/>
+    <i t-if="widget.view_is_editable" class="oe_remove_follower fa fa-remove" 
+       title="Remove this follower" t-att-data-id="record.id"/>
 </li>
 
 <t t-name="timeline_followers_add_more">

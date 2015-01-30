@@ -191,8 +191,6 @@ openerp.web_timeline = function (session) {
                 'fetch_limit': 1000,
             }, this.options);
 
-            console.log("options", this.options);
-
             this.view_name = parent.view_name || 'inbox';
 
             this.fields_view = {};
@@ -1401,7 +1399,7 @@ openerp.web_timeline = function (session) {
             var message_ids = _.map(messages, function (val) { return val.id; });
 
             this.ds_message.call('set_message_read', [message_ids, read_value, true, get_childs, this.context])
-                .then(function () {
+                .then(function (nb_read) {
                     // apply modification
                     _.each(messages, function (msg) {
                         msg.to_read = !read_value;
@@ -1410,6 +1408,10 @@ openerp.web_timeline = function (session) {
                             msg.options.show_unread = !msg.to_read;
                         }
                     });
+                    if (nb_read && self.parent_message) {
+                        self.parent_message.nb_messages -= nb_read;
+                        self.parent_message.$('.oe_tl_nb_unread_msg').html(self.parent_message.nb_messages);
+                    }
                     // check if the message must be display, destroy or rerender
                     self.check_for_rerender();
                 });
@@ -1473,8 +1475,6 @@ openerp.web_timeline = function (session) {
     });
 
     openerp.web_timeline.ThreadParent = openerp.web_timeline.ThreadMessageCommon.extend({
-        template: 'ThreadParent',
-
         events: {
              'click .oe_tl_parent_subject.default':'on_parent_message',
              'click .oe_tl_parent_subject.disp':'on_parent_message_hide',
@@ -1485,12 +1485,30 @@ openerp.web_timeline = function (session) {
             this._super(parent, dataset, options);
 
             this.nb_messages = dataset.nb_messages;
-            this.options.hidden_child = true;
+            this.nb_followers = 0;
+
+            this.is_ready = $.Deferred();
+
+            var self = this;
+            if (this.model && this.res_id) {
+                this.ds_model = new session.web.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
+                this.ds_model.read_slice().then(function (data) {
+                    self.nb_followers = data[0].message_follower_ids.length;
+                    self.is_ready.resolve();
+                });
+            }
+            else {
+                this.is_ready.resolve();
+            }
         },
 
         start: function () {
-            this.create_thread();
-            return this._super.apply(this, arguments);
+            var self = this;
+            return this.is_ready.then(function () {
+                var $el = $(session.web.qweb.render('ThreadParent', {'widget': self}));
+                self.replaceElement($el);
+                self.create_thread();
+            });
         },
 
         on_parent_message: function (event) {
@@ -1503,14 +1521,12 @@ openerp.web_timeline = function (session) {
             }).then(function () {
                 self.$('.oe_tl_parent_subject').removeClass('default').addClass('disp');
                 self.$('.oe_tl_msg_date.default').hide();
-                self.options.hidden_child = false;
             });
         },
 
         on_parent_message_hide: function (event) {
             event.stopPropagation();
         
-            this.options.hidden_child = true;
             this.$('.oe_thread').empty(); 
             this.$('.oe_tl_parent_subject').removeClass('disp').addClass('default');
             this.$('.oe_tl_msg_date.default').show();

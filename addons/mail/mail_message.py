@@ -484,11 +484,11 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
-                'author_avatar': message.author_avatar,
+                #'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
-                'has_voted': has_voted,
+                #'has_voted': has_voted,
                 'is_favorite': message.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
@@ -751,6 +751,8 @@ class mail_message(osv.Model):
             message_list = [msg_list[0] for (key, msg_list) in parent_list]
             message_list = map(_get_parent, message_list)
 
+            
+
             msg_to_read = [max([msg['to_read'] for msg in msg_list]) for (key, msg_list) in parent_list]
             message_unread_nb = [len(msg_list) for (key, msg_list) in parent_list]
 
@@ -767,13 +769,13 @@ class mail_message(osv.Model):
                         m = msg
                 msg_last_date.append(msg['date'])
                 msg_last_author.append(msg['author_id'])
-                msg_last_author_avatar.append(msg['author_avatar'])
+                #msg_last_author_avatar.append(msg['author_avatar'])
 
             for i in range (0, len(message_list)):
                 message_list[i]['to_read'] = msg_to_read[i]
                 message_list[i]['last_date'] = msg_last_date[i]
                 message_list[i]['last_author_id'] = msg_last_author[i]
-                message_list[i]['last_author_avatar'] = msg_last_author_avatar[i]
+                #message_list[i]['last_author_avatar'] = msg_last_author_avatar[i]
                 message_list[i]['nb_messages'] = message_unread_nb[i]
 
             return message_list

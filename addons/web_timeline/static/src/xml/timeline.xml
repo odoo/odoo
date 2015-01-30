@@ -184,7 +184,7 @@
 <div t-name="ThreadParent" class="oe_tl_thread_parent">
 
     <div class="col-md-2"> <!-- *** date *** -->
-        <div class="oe_tl_msg_date default" t-if="widget.options.hidden_child">
+        <div class="oe_tl_msg_date default">
             <span> 
                 <t t-if="widget.timerelative" t-esc="widget.timerelative"/>
                 <t t-if="!widget.timerelative" t-raw="widget.display_date"/>
@@ -228,20 +228,26 @@
         <span class="oe_tl_parent_author">
             <a t-if="widget.options.show_link and widget.author_id[0]"
                t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-               t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author">
+               t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author"
+               title="Last sender">
                  <t t-raw="widget.author_id[2]"/>
             </a>
             <a t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"
-               class="oe_timeline_action_author">
+               class="oe_timeline_action_author"
+               title="Last sender">
                  <t t-raw="widget.author_id[2]"/>
             </a>
         </span>
-        <div t-attf-class="oe_tl_msg_icons" 
-         t-if="!widget.options.readonly"> 
+        <span class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
              <span class='oe_reply' t-if="widget.options.show_reply_button">
                 <i title="Reply" class="fa fa-reply"/>
             </span>
-        </div>
+        </span>
+        <span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0"
+              title="Number of follwers">
+            <t t-raw="widget.nb_followers"/>
+            <i class="fa fa-users"></i>
+        </span>
     </div>
 </div>
 

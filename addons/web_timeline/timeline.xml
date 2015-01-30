@@ -165,10 +165,10 @@
             'default_res_id': uid,
             'thread_model': 'res.partner',
             'needaction_menu_ref': ['web_timeline.timeline_tomefeeds', 'web_timeline.timeline_starfeeds'],
-            'options' : { 'view_mailbox': True,
-                          'view_inbox': True,
-                          'read_action': 'read',
-                          'show_compose_message': False}
+            'options' : {'view_mailbox': True,
+                         'view_inbox': True,
+                         'read_action': 'read',
+                         'show_compose_message': False}
         }</field>
         <field name="domain">[
             ('to_read', '=', True),
@@ -187,10 +187,10 @@
             'thread_model': 'res.partner',
             'search_default_message_unread': True,
             'needaction_menu_ref': ['web_timeline.timeline_starfeeds', 'web_timeline.timeline_inboxfeeds'],
-            'options' : { 'view_mailbox': True,
-                          'view_inbox': True,
-                          'read_action': 'read',
-                          'show_compose_message': False}
+            'options' : {'view_mailbox': True,
+                         'view_inbox': True,
+                         'read_action': 'read',
+                         'show_compose_message': False}
         }</field>
         <field name="domain">[
             ('partner_ids.user_ids', 'in', [uid])
@@ -207,10 +207,10 @@
             'default_res_id': uid,
             'thread_model': 'res.partner',
             'search_default_message_unread': True,
-            'options' : { 'view_mailbox': True,
-                          'view_inbox': True,
-                          'read_action': 'read',
-                          'show_compose_message': False}
+            'options' : {'view_mailbox': True,
+                         'view_inbox': True,
+                         'read_action': 'read',
+                         'show_compose_message': False}
         }</field>
         <field name="domain">[
             ('starred', '=', True),
@@ -239,9 +239,9 @@
             'needaction_menu_ref': ['web_timeline.timeline_tomefeeds', 
                                     'web_timeline.timeline_starfeeds', 
                                     'web_timeline.timeline_inboxfeeds'],
-            'options' : { 'view_mailbox': True,
-                          'view_inbox': True,
-                          'show_compose_message': False}
+            'options' : {'view_mailbox': True,
+                         'view_inbox': True,
+                         'show_compose_message': False}
         }</field>
         <field name="domain">[
             '|',
@@ -278,19 +278,7 @@
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
     </record> 
 
-    <!-- <menuitem id="timeline_to_read" name="Inbox"
-              parent="web_timeline.mail_feeds" action="action_timeline_to_read"/>  -->
-
-    <!--<menuitem id="timeline_menu_to_me" name="To:me"
-        parent="timeline.mail_feeds_main" action="test_action_to_me"/>-->   
-
-    <!--<menuitem id="timeline_menu_to_do" name="To do"
-        parent="timeline.mail_feeds_main" action="test_action_to_do"/>-->
-
-    <!--<menuitem id="timeline_menu_archives" name="Archives"
-        parent="timeline.mail_feeds_main" action="test_action_archive"/>-->
-
-    <!--<record model="ir.ui.view" id="mail_tree_view">
+    <record model="ir.ui.view" id="mail_tree_view">
         <field name="name">mail.message.tree</field>
         <field name="model">mail.message</field>
         <field name="priority">4</field>
@@ -302,22 +290,21 @@
                 <field name="parent_id"/>
                 <field name="res_id"/>
                 <field name="model"/>
-                <field name="model_desc"/>
-                <field name="starred"/>
+                <field name="notified_partner_ids"/>
                 <field name="has_attachment"/>
             </tree>
         </field>
-    </record>-->
+    </record>
 
-    <!--<record model="ir.actions.act_window" id="test_action_all">
+    <record model="ir.actions.act_window" id="test_action_all">
         <field name="name">All</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
         <field name="view_mode">timeline,tree</field>
-    </record>-->
+    </record>
 
-    <!--<menuitem id="timeline_menu_all" name="All"
-        parent="timeline.mail_feeds_main" action="test_action_all"/>-->
+    <menuitem id="timeline_menu_all" name="All"
+        parent="web_timeline.mail_feeds" action="test_action_all"/>
 
 
 </data>

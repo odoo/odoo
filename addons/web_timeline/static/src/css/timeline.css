@@ -379,7 +379,7 @@
 /* -------------- parent message -------------- */
 
 .openerp .oe_timeline .oe_tl_thread_parent {
-    width: 1000px;
+    width: 1050px;
     margin-top: 10px;
 }
 
@@ -405,6 +405,12 @@
    color: #337ab7;
 }
 
+/* date */
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_msg_date {
+   margin-top: 7px;
+}
+
 /* avatar */
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar {                           
@@ -422,6 +428,26 @@
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_avatar .oe_tl_msg_icon {
     width: 25px;
     border-radius: 2px;
+}
+
+/* followers */
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_followers {
+    float: right;
+    margin-right: 20px; 
+    margin-top: 3px;
+    color: #337ab7;
+}
+
+.openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_followers i {
+    text-decoration: none;
+    color: #FFF;
+    font-size: 1.1em;
+    text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
+    -webkit-transition: all 0.2s linear;
+       -moz-transition: all 0.2s linear;
+         -o-transition: all 0.2s linear;
+            transition: all 0.2s linear;
 }
 
 /* icons */
@@ -443,7 +469,7 @@
 }
 
 .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_msg_icons .oe_reply {
-    margin-top: -14px;
+    margin-top: 3px;
     float: right;
 }
 
@@ -906,7 +932,12 @@
     cursor: pointer;
     position: absolute;
     right: 10px;
-    line-height: 25px;
+    height: 25px;
+    vertical-align: middle;
+}
+
+.openerp .oe_tl_followers .oe_remove_follower.fa-remove {
+    margin-top: 6px;
 }
 
 .openerp .oe_tl_followers .oe_partner .oe_hidden {

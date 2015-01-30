@@ -56,9 +56,11 @@ openerp.web_timeline.followers = function(session, mail) {
         },
 
         reinit: function() {
+            console.log("reinit followers1", this.value);
             this.data_subtype = {};
             this.message_is_follower == undefined;
             this.display_buttons();
+            console.log("reinit followers2", this.value);
         },
 
         bind_events: function() {
@@ -221,7 +223,7 @@ openerp.web_timeline.followers = function(session, mail) {
 
         /* Display generic info about follower, for people not having access to res_partner */
         display_generic: function () {
-          var self = this;
+            var self = this;
             var node_user_list = this.$('.oe_tl_follower_list').empty();
             this.$('.oe_tl_follower_title').html(this._format_followers(this.value.length));
         },
