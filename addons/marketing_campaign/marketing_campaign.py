@@ -35,6 +35,7 @@ from openerp import api
 from openerp.osv import fields, osv
 from openerp.report import render_report
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -108,7 +109,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started. There are no activities in it."))
+            raise UserError(_("The campaign cannot be started. There are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -120,7 +121,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
+            raise UserError(_("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -130,7 +131,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
         if segment_ids :
-            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
+            raise UserError(_("The campaign cannot be marked as done before all segments are closed."))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -186,7 +187,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_("Operation not supported"), _("You cannot duplicate a campaign, Not supported yet."))
+        raise UserError(_('Duplicating campaigns is not supported.'))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
@@ -397,7 +398,7 @@ class marketing_campaign_activity(osv.osv):
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
-        'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
+        'email_template_id': fields.many2one('mail.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
@@ -452,7 +453,7 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').send_mail(cr, uid,
+        return self.pool.get('mail.template').send_mail(cr, uid,
                                             activity.email_template_id.id,
                                             workitem.res_id, context=context)
 
@@ -769,7 +770,7 @@ class marketing_campaign_workitem(osv.osv):
         res = {}
         wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
-            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'email_template', 'email_template_preview_form')
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'email_template_preview_form')
             res = {
                 'name': _('Email Preview'),
                 'view_type': 'form',
@@ -797,12 +798,12 @@ class marketing_campaign_workitem(osv.osv):
                 'datas' : datas,
             }
         else:
-            raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
+            raise UserError(_('The current step for this item has no email or report to preview.'))
         return res
 
 
-class email_template(osv.osv):
-    _inherit = "email.template"
+class mail_template(osv.osv):
+    _inherit = "mail.template"
     _defaults = {
         'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
     }
@@ -820,7 +821,3 @@ class report_xml(osv.osv):
             model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

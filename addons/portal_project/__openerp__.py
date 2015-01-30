@@ -41,4 +41,3 @@ This module adds project menu and features (tasks) to your portal if project and
     'auto_install': True,
     'category': 'Hidden',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

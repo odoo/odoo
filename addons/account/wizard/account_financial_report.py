@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-
+from openerp.exceptions import UserError
 
 class accounting_report(models.TransientModel):
     _name = "accounting.report"
@@ -44,7 +43,7 @@ class accounting_report(models.TransientModel):
             result['date_to'] = data['form']['date_to_cmp']
         elif data['form']['filter_cmp'] == 'filter_period':
             if not data['form']['period_from_cmp'] or not data['form']['period_to_cmp']:
-                raise Warning(_('Select a starting and an ending period'))
+                raise UserError(_('Select a starting and an ending period'))
             result['period_from'] = data['form']['period_from_cmp']
             result['period_to'] = data['form']['period_to_cmp']
         return result
@@ -66,4 +65,3 @@ class accounting_report(models.TransientModel):
         data['form'].update(self.read(['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter','target_move'])[0])
         return self.env['report'].get_action(self.env['accounting.report'], 'account.report_financial', data=data)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

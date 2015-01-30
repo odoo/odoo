@@ -16,8 +16,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function () {
-    'use strict';
+(function () {
+'use strict';
+openerp.website.if_dom_contains('.js_surveyresult', function () {
     console.debug("[survey] Survey Result JS is loading...");
 
     //Script For Pagination
@@ -175,3 +176,4 @@ $(document).ready(function () {
 
     console.debug("[survey] Survey Result JS loaded!");
 });
+})();

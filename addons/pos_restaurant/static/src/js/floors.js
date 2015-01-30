@@ -1,9 +1,9 @@
-function openerp_restaurant_floors(instance,module){
+openerp.pos_restaurant.load_floors = function(instance,module){
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
 
     // At POS Startup, load the floors, and add them to the pos model
-    module.PosModel.prototype.models.push({
+    module.load_models({
         model: 'restaurant.floor',
         fields: ['name','background_image','table_ids','sequence'],
         domain: function(self){ return [['pos_config_id','=',self.config.id]] },
@@ -25,7 +25,7 @@ function openerp_restaurant_floors(instance,module){
 
     // At POS Startup, after the floors are loaded, load the tables, and associate
     // them with their floor. 
-    module.PosModel.prototype.models.push({
+    module.load_models({
         model: 'restaurant.table',
         fields: ['name','width','height','position_h','position_v','shape','floor_id','color'],
         loaded: function(self,tables){
@@ -324,11 +324,11 @@ function openerp_restaurant_floors(instance,module){
             if (this.editing) { 
                 this.toggle_editing();
             }
-            this.pos_widget.order_selector.show();
+            this.chrome.widget.order_selector.show();
         },
         show: function(){
             this._super();
-            this.pos_widget.order_selector.hide();
+            this.chrome.widget.order_selector.hide();
             for (var i = 0; i < this.table_widgets.length; i++) { 
                 this.table_widgets[i].renderElement();
             }
@@ -393,8 +393,8 @@ function openerp_restaurant_floors(instance,module){
         tool_rename_table: function(){
             var self = this;
             if (this.selected_table) {
-                this.pos_widget.screen_selector.show_popup('textinput',{
-                    'message':_t('Table Name ?'),
+                this.gui.show_popup('textinput',{
+                    'title':_t('Table Name ?'),
                     'value': this.selected_table.table.name,
                     'confirm': function(value) {
                         self.selected_table.set_table_name(value);
@@ -441,8 +441,8 @@ function openerp_restaurant_floors(instance,module){
         tool_trash_table: function(){
             var self = this;
             if (this.selected_table) {
-                this.pos_widget.screen_selector.show_popup('confirm',{
-                    'message':_t('Are you sure ?'),
+                this.gui.show_popup('confirm',{
+                    'title':  _t('Are you sure ?'),
                     'comment':_t('Removing a table cannot be undone'),
                     'confirm': function(){
                         self.selected_table.trash();
@@ -562,36 +562,21 @@ function openerp_restaurant_floors(instance,module){
         },
     });
 
+    module.Gui.define_screen({
+        'name': 'floors',
+        'widget': module.FloorScreenWidget,
+        'condition': function(){
+            return this.pos.config.iface_floorplan;
+        },
+    });
+
     // Add the FloorScreen to the GUI, and set it as the default screen
-    module.PosWidget.include({
+    module.Chrome.include({
         build_widgets: function(){
             var self = this;
             this._super();
             if (this.pos.config.iface_floorplan) {
-                this.floors_screen = new module.FloorScreenWidget(this,{});
-                this.floors_screen.appendTo(this.$('.screens'));
-                this.screen_selector.add_screen('floors',this.floors_screen);
-                this.screen_selector.change_default_screen('floors');
-            }
-        },
-    });
-
-    // when the floor plan is activated, we need to go back to the floor plan
-    // when an order is completed. Usually on order completion, a new order is
-    // set as the current one. Now, we set the new order to null. 
-    // load_saved_screen() is called whenever the current order is changed, and 
-    // will detect this, and set the current screen to the default_screen, 
-    // which is the floor plan.
-    module.ScreenSelector.include({
-        load_saved_screen: function(){
-            if (this.pos.config.iface_floorplan) {
-                if (!this.pos.get_order()) {
-                    this.set_current_screen(this.default_screen,null,'refresh');
-                } else {
-                    this._super({default_screen:'products'});
-                }
-            } else {
-                this._super.apply(this,arguments);
+                this.gui.set_startup_screen('floors');
             }
         },
     });
@@ -756,4 +741,5 @@ function openerp_restaurant_floors(instance,module){
             }
         },
     });
-}
+};
+

@@ -14,8 +14,15 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
+<<<<<<< HEAD
 from openerp import api, fields, models, _
 from openerp.exceptions import Warning
+=======
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp.exceptions import UserError
+
+>>>>>>> master
 _logger = logging.getLogger(__name__)
 
 
@@ -81,7 +88,7 @@ class account_installer(models.TransientModel):
     def check_unconfigured_cmp(self):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp():
-            raise Warning(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
+            raise UserError(_("There is currently no company without chart of account. The wizard will therefore not be executed."))
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

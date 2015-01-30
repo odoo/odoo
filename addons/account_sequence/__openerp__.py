@@ -39,7 +39,6 @@ You can customize the following attributes of the sequence:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com',
-    'images': ['images/internal_sequence_number.jpeg'],
     'depends': ['account'],
     'data': [
         'account_sequence_data.xml',
@@ -50,5 +49,3 @@ You can customize the following attributes of the sequence:
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

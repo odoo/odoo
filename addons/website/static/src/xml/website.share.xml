@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.social_hover">
+        <div class="row clearfix" style='font-size:16px'>
+            <div class="col-xs-12 css_editable_mode_hidden">
+                <t t-foreach="medias" t-as="media">
+                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
+                        <span class="fa fa-square fa-stack-2x"></span>
+                        <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

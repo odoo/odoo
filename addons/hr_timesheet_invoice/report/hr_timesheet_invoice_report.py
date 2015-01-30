@@ -211,6 +211,3 @@ class report_timesheet_invoice(osv.osv):
                     a.user_id
             )
         """)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

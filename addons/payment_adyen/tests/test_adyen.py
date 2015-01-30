@@ -6,7 +6,6 @@ import urlparse
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_adyen.controllers.main import AdyenController
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 

@@ -34,7 +34,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'category' : 'Accounting & Finance',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'board', 'report'],
+    'depends' : ['base_setup', 'product', 'analytic', 'board', 'report', 'web_tip'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -108,5 +108,3 @@ You could use this simplified accounting in case you work with an (external) acc
     'application': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

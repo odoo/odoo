@@ -29,7 +29,8 @@ import openerp.tools.lru
 from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
-from openerp.tools import html_escape as escape, which
+from openerp.tools import html_escape as escape
+from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -475,7 +476,9 @@ class QWeb(orm.AbstractModel):
         record = self.eval_object(record, qwebcontext)
 
         field = record._fields[field_name]
-        options = json.loads(template_attributes.get('field-options') or '{}')
+        foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
+        options = json.loads(foptions)
+
         field_type = get_field_type(field, options)
 
         converter = self.get_converter_for(field_type)
@@ -546,19 +549,23 @@ class FieldConverter(osv.AbstractModel):
           ``type``, may not be any Field subclass name)
         * ``translate``, a boolean flag (``0`` or ``1``) denoting whether the
           field is translatable
+        * ``readonly``, has this attribute if the field is readonly
         * ``expression``, the original expression
 
         :returns: iterable of (attribute name, attribute value) pairs.
         """
         field = record._fields[field_name]
         field_type = get_field_type(field, options)
-        return [
+        data = [
             ('data-oe-model', record._name),
             ('data-oe-id', record.id),
             ('data-oe-field', field_name),
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
+        if record._all_columns[field_name].column.readonly:
+            data.append(('data-oe-readonly', 1))
+        return data
 
     def value_to_html(self, cr, uid, value, field, options=None, context=None):
         """ value_to_html(cr, uid, value, field, options=None, context=None)
@@ -1522,18 +1529,22 @@ class SassStylesheetAsset(PreprocessedCSS):
         return "/*! %s */\n%s" % (self.id, content)
 
     def get_command(self):
-        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-        sass = which('sass', path=os.pathsep.join(defpath))
+        try:
+            sass = find_in_path('sass')
+        except IOError:
+            sass = 'sass'
         return [sass, '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
                 '-r', 'bootstrap-sass']
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
-        defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
-        if os.name == 'nt':
-            lessc = which('lessc.cmd', path=os.pathsep.join(defpath))
-        else:
-            lessc = which('lessc', path=os.pathsep.join(defpath))
+        try:
+            if os.name == 'nt':
+                lessc = find_in_path('lessc.cmd')
+            else:
+                lessc = find_in_path('lessc')
+        except IOError:
+            lessc = 'lessc'
         webpath = openerp.http.addons_manifest['web']['addons_path']
         lesspath = os.path.join(webpath, 'web', 'static', 'lib', 'bootstrap', 'less')
         return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
@@ -1581,5 +1592,3 @@ def rjsmin(script):
         r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
     ).strip()
     return result
-
-# vim:et:

@@ -36,10 +36,7 @@ You can track your suppliers, customers and other contacts.
     'data': [
         'contacts_view.xml',
     ],
-    'images': ['images/contacts.jpeg'],
     'installable': True,
     'application': True,
-    'auto_install': False,
+    'auto_install': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

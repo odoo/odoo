@@ -31,6 +31,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
+from openerp.exceptions import UserError, AccessError
 
 
 class project_issue_version(osv.Model):
@@ -196,7 +197,8 @@ class project_issue(osv.Model):
     def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
-            if issue.project_id.parent_id.type == 'contract':
+            esc_proj = issue.project_id.project_escalation_id
+            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
                 res[issue.id] = True
         return res
 
@@ -260,7 +262,8 @@ class project_issue(osv.Model):
                         domain="[('project_ids', '=', project_id)]", copy=False),
         'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
-        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
+        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]",
+            help="You can link this issue to an existing task or directly create a new one from here"),
         'day_open': fields.function(_compute_day, string='Days to Assign',
                                     multi='compute_day', type="float",
                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
@@ -406,7 +409,7 @@ class project_issue(osv.Model):
             data = {}
             esc_proj = issue.project_id.project_escalation_id
             if not esc_proj:
-                raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
 
             data['project_id'] = esc_proj.id
             if esc_proj.user_id:
@@ -436,7 +439,7 @@ class project_issue(osv.Model):
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
                     self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
-        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+        except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
 
@@ -522,7 +525,7 @@ class account_analytic_account(osv.Model):
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'use_issues': fields.boolean('Issues', help="Check this box to manage customer activities through this project"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
@@ -542,7 +545,7 @@ class account_analytic_account(osv.Model):
         proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
         has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
         if has_issues:
-            raise osv.except_osv(_('Warning!'), _('Please remove existing issues in the project linked to the accounts you want to delete.'))
+            raise UserError(_('Please remove existing issues in the project linked to the accounts you want to delete.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
 
 
@@ -595,4 +598,3 @@ class res_partner(osv.osv):
     _columns = {
         'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
     }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

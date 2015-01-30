@@ -126,10 +126,10 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
                 dates_query += ' BETWEEN %s AND %s)'
                 args_list += (form[str(i)]['start'], form[str(i)]['stop'])
             elif form[str(i)]['start']:
-                dates_query += ' > %s)'
+                dates_query += ' >= %s)'
                 args_list += (form[str(i)]['start'],)
             else:
-                dates_query += ' < %s)'
+                dates_query += ' <= %s)'
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
             self._cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.reconcile_partial_id
@@ -394,4 +394,3 @@ class AgedPartnerBalanceReport(models.AbstractModel, common_report_header):
         }
         return report_obj.render('account.report_agedpartnerbalance', docargs)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

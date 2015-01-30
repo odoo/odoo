@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class account_aged_trial_balance(models.TransientModel):
@@ -24,9 +24,9 @@ class account_aged_trial_balance(models.TransientModel):
 
         period_length = data['form']['period_length']
         if period_length<=0:
-            raise Warning(_('You must set a period length greater than 0.'))
+            raise UserError(_('You must set a period length greater than 0.'))
         if not data['form']['date_from']:
-            raise Warning(_('You must set a start date.'))
+            raise UserError(_('You must set a start date.'))
 
         start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
 

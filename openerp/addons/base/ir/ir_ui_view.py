@@ -171,8 +171,11 @@ class view(osv.osv):
                 if context and key in context:
                     imd = context[key]
                     if self._model._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
-                        # we store the relative path to the resource instead of the absolute path
-                        data['arch_fs'] = '/'.join(get_resource_from_path(imd['xml_file'])[0:2])
+                        # we store the relative path to the resource instead of the absolute path, if found
+                        # (it will be missing e.g. when importing data-only modules using base_import_module)
+                        path_info = get_resource_from_path(imd['xml_file'])
+                        if path_info:
+                            data['arch_fs'] = '/'.join(path_info)[0:2]
                 self.write(cr, uid, ids, data, context=context)
 
         return True
@@ -194,7 +197,7 @@ class view(osv.osv):
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob'),
+        'arch_db': fields.text('Arch Blob', oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
@@ -426,7 +429,7 @@ class view(osv.osv):
                           'parent': view.inherit_id.id or not_avail,
                           'msg': message,
                         }
-        _logger.error(message)
+        _logger.info(message)
         raise AttributeError(message)
 
     def locate_node(self, arch, spec):
@@ -761,10 +764,17 @@ class view(osv.osv):
             if node.get('string') and node.get('string').strip() and not result:
                 term = node.get('string').strip()
                 trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans == term and ('base_model_name' in context):
-                    # If translation is same as source, perhaps we'd have more luck with the alternative model name
-                    # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
+                if trans == term:
+                    if 'base_model_name' in context:
+                        # If translation is same as source, perhaps we'd have more luck with the alternative model name
+                        # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
+                        trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
+                    else:
+                        inherit_model = self.browse(cr, user, view_id, context=context).inherit_id.model or model
+                        if inherit_model != model:
+                            # parent view has a different model, if the terms belongs to the parent view, the translation
+                            # should be checked on the parent model as well
+                            trans = Translations._get_source(cr, user, inherit_model, 'view', context['lang'], term)
                 if trans:
                     node.set('string', trans)
 
@@ -858,7 +868,9 @@ class view(osv.osv):
                 node_model = self.pool[node.getchildren()[0].get('object')]
                 node_fields = node_model.fields_get(cr, user, None, context)
                 fields.update(node_fields)
-                if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
+                if not node.get("create") and \
+                   not node_model.check_access_rights(cr, user, 'create', raise_exception=False) or \
+                   not context.get("create", True):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
@@ -871,7 +883,9 @@ class view(osv.osv):
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
+                if not node.get(action) and \
+                   not Model.check_access_rights(cr, user, operation, raise_exception=False) or \
+                   not context.get(action, True):
                     node.set(action, 'false')
         if node.tag in ('kanban'):
             group_by_name = node.get('default_group_by')
@@ -880,7 +894,9 @@ class view(osv.osv):
                 if group_by_field.type == 'many2one':
                     group_by_model = Model.pool[group_by_field.comodel_name]
                     for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                        if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
+                        if not node.get(action) and \
+                           not group_by_model.check_access_rights(cr, user, operation, raise_exception=False) or \
+                           not context.get(action, True):
                             node.set(action, 'false')
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
@@ -1001,7 +1017,7 @@ class view(osv.osv):
         :rtype: boolean
         """
         return any(
-            (attr in ('data-oe-model', 'group') or (attr != 't-field' and attr.startswith('t-')))
+            (attr in ('data-oe-model', 'group') or (attr.startswith('t-')))
             for attr in node.attrib
         )
 
@@ -1188,5 +1204,3 @@ class view(osv.osv):
         for vid, in cr.fetchall():
             if not self._check_xml(cr, uid, [vid]):
                 self.raise_view_error(cr, uid, "Can't validate view", vid)
-
-# vim:et:

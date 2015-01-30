@@ -137,6 +137,3 @@ class purchase_report(osv.osv):
                     partner.commercial_partner_id
             )
         """)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

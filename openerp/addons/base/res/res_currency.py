@@ -28,6 +28,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -56,7 +57,7 @@ class res_currency(osv.osv):
                 res[id] = 0
             else:
                 currency = self.browse(cr, uid, id, context=context)
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
+                raise UserError(_("No currency rate associated for currency '%s' for the given period: %s") % (currency.name, date))
         return res
 
     def _decimal_places(self, cr, uid, ids, name, arg, context=None):
@@ -234,7 +235,7 @@ class res_currency(osv.osv):
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
-            raise osv.except_osv(_('Error'), _('No rate found \n' \
+            raise UserError(_('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
@@ -312,5 +313,3 @@ class res_currency_rate(osv.osv):
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
     }
     _order = "name desc"
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

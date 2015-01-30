@@ -437,7 +437,8 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
                 try {
                     if (options.error) {
                         var body = this.contentDocument.body;
-                        var node = body.childNodes[1] || body.childNodes[0];
+                        var nodes = body.children.length === 0 ? body.childNodes : body.children;
+                        var node = nodes[1] || nodes[0];
                         options.error(JSON.parse(node.textContent));
                     }
                 } finally {
@@ -538,10 +539,6 @@ instance.web.TranslationDataBase.include({
 });
 
 /** Custom jQuery plugins */
-$.browser = $.browser || {};
-if(navigator.appVersion.indexOf("MSIE") !== -1) {
-    $.browser.msie = 1;
-}
 $.fn.getAttributes = function() {
     var o = {};
     if (this.length) {
@@ -788,5 +785,3 @@ $.fn.tooltip.Constructor.prototype.show = function () {
 instance.web.client_actions = new instance.web.Registry();
 
 })();
-
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -3,7 +3,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
 
     var QWeb = instance.web.qweb;
 	var _t = instance.web._t;
-    var barcode_parser_module = instance.barcodes;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -24,7 +23,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var  self = this;
             this.session = session;                 
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
-            this.pos_widget = attributes.pos_widget;
+            this.chrome = attributes.chrome;
+            this.gui    = attributes.gui;
 
             this.proxy = new module.ProxyDevice(this);              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});
@@ -34,7 +34,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
             
             // Business data; loaded from the server at launch
-            this.accounting_precision = 2; //TODO
             this.company_logo = null;
             this.company_logo_base64 = '';
             this.currency = null;
@@ -73,18 +72,23 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.get('orders').bind('remove', function(order,_unused_,options){ 
                 self.on_removed_order(order,options.index,options.reason); 
             });
-            
+
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            this.ready = this.load_server_data()
-                .then(function(){
-                    if(self.config.use_proxy){
-                        return self.connect_to_proxy();
-                    }
-                });  // used to read barcodes);
+            this.ready = this.load_server_data().then(function(){
+                return self.after_load_server_data();
+            });;
         },
-
+        after_load_server_data: function(){
+             this.barcode_reader.connect();
+             this.load_orders();
+             this.set_start_order();
+             this.push_order();
+             if(this.config.use_proxy){
+                 return this.connect_to_proxy();
+             }
+        },
         // releases ressources holds by the model at the end of life of the posmodel
         destroy: function(){
             // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
@@ -93,18 +97,19 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.barcode_reader.disconnect();
             this.barcode_reader.disconnect_from_proxy();
         },
+
         connect_to_proxy: function(){
             var self = this;
             var  done = new $.Deferred();
             this.barcode_reader.disconnect_from_proxy();
-            this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
-            this.pos_widget.loading_skip(function(){
+            this.chrome.loading_message(_t('Connecting to the PosBox'),0);
+            this.chrome.loading_skip(function(){
                     self.proxy.stop_searching();
                 });
             this.proxy.autoconnect({
                     force_ip: self.config.proxy_ip || undefined,
                     progress: function(prog){ 
-                        self.pos_widget.loading_progress(prog);
+                        self.chrome.loading_progress(prog);
                     },
                 }).then(function(){
                     if(self.config.iface_scan_via_proxy){
@@ -114,13 +119,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     done.resolve();
                 });
             return done;
-        },
-
-        // helper function to load data from the server. Obsolete use the models loader below.
-        fetch: function(model, fields, domain, ctx){
-            this._load_progress = (this._load_progress || 0) + 0.05; 
-            this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
-            return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
 
         // Server side model loaders. This is the list of the models that need to be loaded from
@@ -185,7 +183,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             },
         },{
             model:  'account.tax',
-            fields: ['name','amount', 'price_include', 'type'],
+            fields: ['name','amount', 'price_include', 'include_base_amount', 'type'],
             domain: null,
             loaded: function(self,taxes){ 
                 self.taxes = taxes; 
@@ -286,7 +284,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             },
         },{
             model:  'pos.category',
-            fields: ['id','name','parent_id','child_id','image'],
+            fields: ['id','name','parent_id','child_id'],
             domain: null,
             loaded: function(self, categories){
                 self.db.add_categories(categories);
@@ -397,7 +395,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         }, {
             label: 'barcodes',
             loaded: function(self) {
-                var barcode_parser = new barcode_parser_module.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
+                var barcode_parser = new instance.barcodes.BarcodeParser({'nomenclature_id': self.config.barcode_nomenclature_id});
                 self.barcode_reader.set_barcode_parser(barcode_parser);
                 return barcode_parser.is_loaded();
             },
@@ -417,7 +415,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     loaded.resolve();
                 }else{
                     var model = self.models[index];
-                    self.pos_widget.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
                     var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
                     if (!cond) {
@@ -593,7 +591,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var self = this;
 
             if(order){
-                this.proxy.log('push_order',order.export_as_JSON());
                 this.db.add_order(order.export_as_JSON());
             }
             
@@ -649,7 +646,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 transfer.pipe(function(order_server_id){    
 
                     // generate the pdf and download it
-                    self.pos_widget.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
+                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
                         active_ids:order_server_id,
                     }});
 
@@ -722,9 +719,9 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     if (error.data.exception_type == 'warning') {
                         delete error.data.debug;
                     }
-                    self.pos_widget.screen_selector.show_popup('error-traceback',{
-                        message: error.data.message,
-                        comment: error.data.debug
+                    self.gui.show_popup('error-traceback',{
+                        'title': error.data.message,
+                        'body':  error.data.debug
                     });
                 }
                 // prevent an error popup creation by the rpc failure
@@ -755,6 +752,96 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return true;
         },
     });
+
+    // Add fields to the list of read fields when a model is loaded
+    // by the point of sale.
+    // e.g: module.load_fields("product.product",['price','category'])
+
+    module.load_fields = function(model_name, fields) {
+        if (!(fields instanceof Array)) {
+            fields = [fields];
+        }
+
+        var models = module.PosModel.prototype.models;
+        for (var i = 0; i < models.length; i++) {
+            var model = models[i];
+            if (model.model === model_name) {
+                // if 'fields' is empty all fields are loaded, so we do not need
+                // to modify the array
+                if ((model.fields instanceof Array) && model.fields.length > 0) {
+                    model.fields = model.fields.concat(fields || []);
+                }
+            }
+        }
+    };
+
+    // Loads openerp models at the point of sale startup.
+    // load_models take an array of model loader declarations.
+    // - The models will be loaded in the array order. 
+    // - If no openerp model name is provided, no server data
+    //   will be loaded, but the system can be used to preprocess
+    //   data before load.
+    // - loader arguments can be functions that return a dynamic
+    //   value. The function takes the PosModel as the first argument
+    //   and a temporary object that is shared by all models, and can
+    //   be used to store transient information between model loads.
+    // - There is no dependency management. The models must be loaded
+    //   in the right order. Newly added models are loaded at the end
+    //   but the after / before options can be used to load directly
+    //   before / after another model.
+    //
+    // models: [{
+    //  model: [string] the name of the openerp model to load.
+    //  label: [string] The label displayed during load.
+    //  fields: [[string]|function] the list of fields to be loaded. 
+    //          Empty Array / Null loads all fields.
+    //  order:  [[string]|function] the models will be ordered by 
+    //          the provided fields
+    //  domain: [domain|function] the domain that determines what
+    //          models need to be loaded. Null loads everything
+    //  ids:    [[id]|function] the id list of the models that must
+    //          be loaded. Overrides domain.
+    //  context: [Dict|function] the openerp context for the model read
+    //  condition: [function] do not load the models if it evaluates to
+    //             false.
+    //  loaded: [function(self,model)] this function is called once the 
+    //          models have been loaded, with the data as second argument
+    //          if the function returns a deferred, the next model will
+    //          wait until it resolves before loading.
+    // }]
+    //
+    // options:
+    //   before: [string] The model will be loaded before the named models
+    //           (applies to both model name and label)
+    //   after:  [string] The model will be loaded after the (last loaded)
+    //           named model. (applies to both model name and label)
+    //
+    module.load_models = function(models,options) {
+        options = options || {};
+        if (!(models instanceof Array)) {
+            models = [models];
+        }
+
+        var pmodels = module.PosModel.prototype.models;
+        var index = pmodels.length;
+        if (options.before) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.before ||
+                        pmodels[i].label === options.before ){
+                    index = i;
+                    break;
+                }
+            }
+        } else if (options.after) {
+            for (var i = 0; i < pmodels.length; i++) {
+                if (    pmodels[i].model === options.after ||
+                        pmodels[i].label === options.after ){
+                    index = i + 1;
+                }
+            }
+        }
+        pmodels.splice.apply(pmodels,[index,0].concat(models));
+    };
 
     var orderline_id = 1;
 
@@ -787,6 +874,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.price = json.price_unit;
             this.set_discount(json.discount);
             this.set_quantity(json.qty);
+            this.id    = json.id;
+            orderline_id = Math.max(this.id+1,orderline_id)
         },
         clone: function(){
             var orderline = new module.Orderline({},{
@@ -823,6 +912,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         // product's unity of measure properties. Quantities greater than zero will not get 
         // rounded to zero
         set_quantity: function(quantity){
+            this.order.assert_editable();
             if(quantity === 'remove'){
                 this.order.remove_orderline(this);
                 return;
@@ -902,6 +992,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             }
         },
         merge: function(orderline){
+            this.order.assert_editable();
             this.set_quantity(this.get_quantity() + orderline.get_quantity());
         },
         export_as_JSON: function() {
@@ -910,6 +1001,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().id,
+                id: this.id,
             };
         },
         //used to create a json of the ticket, to be sent to the printer
@@ -930,6 +1022,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
+            this.order.assert_editable();
             this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
             this.trigger('change',this);
         },
@@ -949,7 +1042,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
-            return  round_pr(round_pr(this.get_unit_price() * this.get_quantity(),rounding) * (1- this.get_discount()/100.0),rounding);
+            return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
         },
         get_display_price: function(){
             return this.get_base_price();
@@ -967,6 +1060,22 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         get_tax: function(){
             return this.get_all_prices().tax;
+        },
+        get_applicable_taxes: function(){
+            // Shenaningans because we need
+            // to keep the taxes ordering.
+            var ptaxes_ids = this.get_product().taxes_id;
+            var ptaxes_set = {};
+            for (var i = 0; i < ptaxes_ids.length; i++) {
+                ptaxes_set[ptaxes_ids[i]] = true;
+            }
+            var taxes = [];
+            for (var i = 0; i < this.pos.taxes.length; i++) {
+                if (ptaxes_set[this.pos.taxes[i].id]) {
+                    taxes.push(this.pos.taxes[i]);
+                }
+            }
+            return taxes;
         },
         get_tax_details: function(){
             return this.get_all_prices().taxDetails;
@@ -987,12 +1096,10 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var totalNoTax = base;
             
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
-            var taxes =  self.pos.taxes;
+            var taxes = this.get_applicable_taxes();
             var taxtotal = 0;
             var taxdetail = {};
-            _.each(taxes_ids, function(el) {
-                var tax = _.detect(taxes, function(t) {return t.id === el;});
+            _.each(taxes, function(tax) {
                 if (tax.price_include) {
                     var tmp;
                     if (tax.type === "percent") {
@@ -1015,7 +1122,13 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                     } else {
                         throw "This type of tax is not supported by the point of sale: " + tax.type;
                     }
+
                     tmp = round_pr(tmp,currency_rounding);
+                    
+                    if (tax.include_base_amount) {
+                        base += tmp;
+                    }
+
                     taxtotal += tmp;
                     totalTax += tmp;
                     taxdetail[tax.id] = tmp;
@@ -1038,6 +1151,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
     module.Paymentline = Backbone.Model.extend({
         initialize: function(attributes, options) {
             this.pos = options.pos;
+            this.order = options.order;
             this.amount = 0;
             this.selected = false;
             if (options.json) {
@@ -1054,6 +1168,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
+            this.order.assert_editable();
             this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
             this.trigger('change',this);
         },
@@ -1069,6 +1184,10 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 this.selected = selected;
                 this.trigger('change',this);
             }
+        },
+        // returns the payment type: 'cash' | 'bank'
+        get_type: function(){
+            return this.cashregister.journal.type
         },
         // returns the associated cashregister
         //exports as JSON for server communication
@@ -1107,13 +1226,14 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             this.pos            = options.pos; 
             this.selected_orderline   = undefined;
             this.selected_paymentline = undefined;
-            this.screen_data    = {};  // see ScreenSelector
+            this.screen_data    = {};  // see Gui
             this.temporary      = options.temporary || false;
             this.creation_date  = new Date();
             this.to_invoice     = false;
             this.orderlines     = new module.OrderlineCollection();
             this.paymentlines   = new module.PaymentlineCollection(); 
             this.pos_session_id = this.pos.pos_session.id;
+            this.finalized      = false; // if true, cannot be modified.
 
             this.set({ client: null });
 
@@ -1171,7 +1291,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             var paymentlines = json.statement_ids;
             for (var i = 0; i < paymentlines.length; i++) {
                 var paymentline = paymentlines[i][2];
-                var newpaymentline = new module.Paymentline({},{pos: this.pos, json: paymentline});
+                var newpaymentline = new module.Paymentline({},{pos: this.pos, order: this, json: paymentline});
                 this.paymentlines.add(newpaymentline);
 
                 if (i === paymentlines.length - 1) {
@@ -1236,7 +1356,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                         qweb.default_dict = _.clone(QWeb.default_dict);
                         qweb.add_template('<templates><t t-name="subreceipt">'+subreceipt+'</t></templates>');
                     
-                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.pos_widget,'order':self, 'receipt': receipt}) ;
+                    return qweb.render('subreceipt',{'pos':self.pos,'widget':self.pos.chrome,'order':self, 'receipt': receipt}) ;
                 }
             }
 
@@ -1320,8 +1440,14 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         get_name: function() {
             return this.name;
         },
+        assert_editable: function() {
+            if (this.finalized) {
+                throw new Error('Finalized Order cannot be modified');
+            }
+        },
         /* ---- Order Lines --- */
         add_orderline: function(line){
+            this.assert_editable();
             if(line.order){
                 line.order.remove_orderline(line);
             }
@@ -1345,10 +1471,12 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return this.orderlines.at(this.orderlines.length -1);
         },
         remove_orderline: function( line ){
+            this.assert_editable();
             this.orderlines.remove(line);
             this.select_orderline(this.get_last_orderline());
         },
         add_product: function(product, options){
+            this.assert_editable();
             options = options || {};
             var attr = JSON.parse(JSON.stringify(product));
             attr.pos = this.pos;
@@ -1403,7 +1531,8 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         /* ---- Payment Lines --- */
         add_paymentline: function(cashregister) {
-            var newPaymentline = new module.Paymentline({},{cashregister:cashregister, pos: this.pos});
+            this.assert_editable();
+            var newPaymentline = new module.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
             if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
                 newPaymentline.set_amount( Math.max(this.get_due(),0) );
             }
@@ -1415,6 +1544,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             return this.paymentlines.models;
         },
         remove_paymentline: function(line){
+            this.assert_editable();
             if(this.selected_paymentline === line){
                 this.select_paymentline(undefined);
             }
@@ -1478,11 +1608,6 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         get_tax_details: function(){
             var details = {};
             var fulldetails = [];
-            var taxes_by_id = {};
-            
-            for(var i = 0; i < this.pos.taxes.length; i++){
-                taxes_by_id[this.pos.taxes[i].id] = this.pos.taxes[i];
-            }
 
             this.orderlines.each(function(line){
                 var ldetails = line.get_tax_details();
@@ -1495,7 +1620,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             
             for(var id in details){
                 if(details.hasOwnProperty(id)){
-                    fulldetails.push({amount: details[id], tax: taxes_by_id[id], name: taxes_by_id[id].name});
+                    fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name});
                 }
             }
 
@@ -1595,6 +1720,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         },
         /* ---- Invoice --- */
         set_to_invoice: function(to_invoice) {
+            this.assert_editable();
             this.to_invoice = to_invoice;
         },
         is_to_invoice: function(){
@@ -1603,6 +1729,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         /* ---- Client / Customer --- */
         // the client related to the current order.
         set_client: function(client){
+            this.assert_editable();
             this.set('client',client);
         },
         get_client: function(){

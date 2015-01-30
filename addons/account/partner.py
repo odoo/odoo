@@ -2,8 +2,9 @@
 
 from operator import itemgetter
 import time
+from openerp.exceptions import UserError
 
-from openerp import api, fields, models
+from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -31,7 +32,7 @@ class account_fiscal_position(models.Model):
     @api.constrains('country_id', 'country_group_id')
     def _check_country(self):
         if self.country_id and self.country_group_id:
-            raise Warning(_('You can not select a country and a group of countries.'))
+            raise UserError(_('You can not select a country and a group of countries.'))
 
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):

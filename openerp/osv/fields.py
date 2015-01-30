@@ -521,6 +521,11 @@ class datetime(_column):
                               exc_info=True)
         return utc_timestamp
 
+    @classmethod
+    def _as_display_name(cls, field, cr, uid, obj, value, context=None):
+        value = datetime.context_timestamp(cr, uid, DT.datetime.strptime(value, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        return tools.ustr(value.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))
+
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
@@ -1683,6 +1688,3 @@ class column_info(object):
         return '%s(%s, %s, %s, %s, %s)' % (
             self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -149,6 +149,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 }
             } else {
                 var task_name = task.__name;
+                var duration_in_business_hours = false;
                 var task_start = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_start]);
                 if (!task_start)
                     return;
@@ -162,12 +163,15 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                         self.fields[self.fields_view.arch.attrs.date_delay]);
                     if (!tmp)
                         return;
-                    var m_task_start = moment(task_start).add(tmp, 'hours');
+                    var m_task_start = moment(task_start).add(instance.web.parse_value(tmp, {type:"float"}), 'hours');
                     task_stop = m_task_start.toDate();
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var id = _.uniqueId("gantt_task_");
-                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8) || 1, percent);
+                if (!duration_in_business_hours){
+                    duration = (duration / 24) * 8;
+                }
+                var task_info = new GanttTaskInfo(id, task_name, task_start, (duration) || 1, percent);
                 task_info.internal_task = task;
                 task_ids[id] = task_info;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};
@@ -208,7 +212,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var self = this;
         var itask = task_obj.TaskInfo.internal_task;
         var start = task_obj.getEST();
-        var duration = (task_obj.getDuration() / 8) * 24;
+        var duration = task_obj.getDuration();
+        var duration_in_business_hours = !!self.fields_view.arch.attrs.date_delay;        
+        if (!duration_in_business_hours){
+            duration = (duration / 8 ) * 24;
+        }
         var end = moment(start).add(duration, 'hours').toDate();
         var data = {};
         data[self.fields_view.arch.attrs.date_start] =

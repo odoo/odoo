@@ -686,7 +686,7 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
-                        <field name="journal_ids" colspan="4" nolabel="1">
+                        <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1}">
                             <tree string="Journals">
                                 <field name="code" />
                                 <field name="name" />
@@ -715,7 +715,7 @@
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
-                            <field name="receipt_footer" string="Footer" placeholder="A custom receipt header footage"/>
+                            <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                         </group>
                     </sheet>
 

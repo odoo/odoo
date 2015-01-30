@@ -27,7 +27,7 @@ from openerp.osv import fields, osv
 class crm_team(osv.Model):
     _name = "crm.team"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = "Sales Teams"
+    _description = "Sales Team"
     _order = "complete_name"
     _period_number = 5
 

@@ -21,8 +21,8 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.fields import Many2one
 from openerp import api
+from openerp.exceptions import UserError
 
 
 class product_template(osv.osv):
@@ -92,7 +92,7 @@ class product_template(osv.osv):
 
                 diff = product.standard_price - new_price
                 if not diff:
-                    raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
+                    raise UserError(_("No difference between standard price and new price!"))
                 for prod_variant in product.product_variant_ids:
                     qty = prod_variant.qty_available
                     if qty:
@@ -130,9 +130,6 @@ class product_template(osv.osv):
         return True
 
 
-
-
-
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
@@ -164,4 +161,3 @@ class product_category(osv.osv):
             domain=[('deprecated', '=', False)],
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
-

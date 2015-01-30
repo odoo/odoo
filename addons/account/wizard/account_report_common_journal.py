@@ -27,4 +27,3 @@ class account_common_journal_report(models.TransientModel):
         # TODO : account_journal_period has been removed
 #         data['form']['active_ids'] = self.env['account.journal.period'].search([('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)])
         return data
-

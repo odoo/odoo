@@ -4,11 +4,11 @@
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
             <field name="name">Email Templates</field>
-            <field name="res_model">email.template</field>
+            <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="email_template.email_template_tree" />
-            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="view_id" ref="mail.email_template_tree" />
+            <field name="search_view_id" ref="mail.view_email_template_search"/>
             <field name="context" eval="{'search_default_model_id': ref('purchase.model_purchase_order')}"/>
         </record>
     </data>
@@ -17,7 +17,7 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
         <!--Email template -->
-        <record id="email_template_edi_purchase" model="email.template">
+        <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">RFQ - Send by Email</field>
             <field name="email_from">${(object.validator.email or '')|safe}</field>
             <field name="subject">${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })</field>
@@ -91,7 +91,7 @@
 
 
         <!--Email template -->
-        <record id="email_template_edi_purchase_done" model="email.template">
+        <record id="email_template_edi_purchase_done" model="mail.template">
             <field name="name">Purchase Order - Send by Email</field>
             <field name="email_from">${object.validator.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>

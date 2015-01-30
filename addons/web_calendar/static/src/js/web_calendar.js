@@ -22,6 +22,14 @@ openerp.web_calendar = function(instance) {
     function get_fc_defaultOptions() {
         shortTimeformat = moment._locale._longDateFormat.LT;
         var dateFormat = instance.web.normalize_format(_t.database.parameters.date_format);
+
+        // adapt format for fullcalendar v1.
+        // see http://fullcalendar.io/docs1/utilities/formatDate/
+        var conversions = [['YYYY', 'yyyy'], ['YY', 'y'], ['DDDD', 'dddd'], ['DD', 'dd']];
+        _.each(conversions, function(conv) {
+            dateFormat = dateFormat.replace(conv[0], conv[1]);
+        });
+
         return {
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
@@ -528,7 +536,10 @@ openerp.web_calendar = function(instance) {
                 }
                 else {
                     var res_text= [];
-                    _.each(temp_ret, function(val,key) { res_text.push(val); });
+                    _.each(temp_ret, function(val,key) {
+                        if( typeof(val) == 'boolean' && val == false ) { }
+                        else { res_text.push(val) };
+                    });
                     the_title = res_text.join(', ');
                 }
                 the_title = _.escape(the_title);
@@ -869,17 +880,8 @@ openerp.web_calendar = function(instance) {
         },
 
         do_show: function() {            
-            if (this.$buttons) {
-                this.$buttons.show();
-            }
             this.do_push_state({});
             this.shown.resolve();
-            return this._super();
-        },
-        do_hide: function () {
-            if (this.$buttons) {
-                this.$buttons.hide();
-            }
             return this._super();
         },
         is_action_enabled: function(action) {

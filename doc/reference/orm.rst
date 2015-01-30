@@ -1,13 +1,18 @@
 .. _reference/orm:
 
-===
-ORM
-===
+=======
+ORM API
+=======
 
 Recordsets
 ==========
 
 .. versionadded:: 8.0
+
+    This page documents the New API added in Odoo 8.0 which should be the
+    primary development API going forward. It also provides information about
+    porting from or bridging with the "old API" of versions 7 and earlier, but
+    does not explicitly document that API. See the old documentation for that.
 
 Interaction with models and records is performed through recordsets, a sorted
 set of records of the same model.
@@ -444,8 +449,8 @@ Clearing caches can be performed using the
 
 .. _reference/orm/oldapi:
 
-Old API compatibility
-=====================
+Compatibility between new API and old API
+=========================================
 
 Odoo is currently transitioning from an older (less regular) API, it can be
 necessary to manually bridge from one to the other manually:
@@ -1026,9 +1031,10 @@ Domain criteria can be combined using logical operators in *prefix* form:
         AND (language is NOT english)
         AND (country is Belgium OR Germany)
 
-Porting from the old API
-========================
+Porting from the old API to the new API
+=======================================
 
+* bare lists of ids are to be avoided in the new API, use recordsets instead
 * methods still written in the old API should be automatically bridged by the
   ORM, no need to switch to the old API, just call them as if they were a new
   API method. See :ref:`reference/orm/oldapi/bridging` for more details.

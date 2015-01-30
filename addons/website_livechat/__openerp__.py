@@ -7,6 +7,7 @@
 Odoo Website LiveChat
 ========================
 For website built with Odoo CMS, this module include a chat button on your Website, and allow your visitors to chat with your collabarators.
+It also will include the feedback tool for the livechat, and web pages to display your channel and its ratings on the website.
         """,
     'author': 'OpenERP SA',
     'depends': ['website', 'im_livechat'],
@@ -14,6 +15,8 @@ For website built with Odoo CMS, this module include a chat button on your Websi
     'data': [
         'views/website_livechat.xml',
         'views/res_config.xml',
-        'website_livechat_data.xml'
+        'views/website_livechat_view.xml',
+        'security/ir.model.access.csv',
+        'website_livechat_data.xml',
     ],
 }

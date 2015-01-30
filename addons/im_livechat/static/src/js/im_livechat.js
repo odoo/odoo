@@ -1,7 +1,3 @@
-/*
-    This file must compile in EcmaScript 3 and work in IE7.
-*/
-
 (function() {
 
     "use strict";
@@ -20,9 +16,7 @@
             this._super.apply(this, arguments);
             this.shown = true;
             this.loading_history = true; // since the session is kept after a refresh, anonymous can reload their history
-
-			this.feedback = false;
-            this.rating = false;
+            this.feedback = false;
         },
         define_options: function(){
             // no options for anonymous user
@@ -57,51 +51,17 @@
             openerp.set_cookie(im_livechat.COOKIE_NAME, JSON.stringify(session), 60*60);
         },
         click_close: function(event) {
-            this.$('.oe_im_chatview_input').attr('disabled','disabled');
             if(!this.feedback && (this.get('messages').length > 1)){
-                this.feedback = true;
-                this.$(".oe_im_chatview_content").html(openerp.qweb.render("support_feedback"));
-                this.$('.oe_im_feedback_choices a').on('click', _.bind(this.choose_feedback, this));
-                this.$('.oe_im_chatview_feedback #submit').on('click', _.bind(this.submit_feedback, this));
+                this.feedback = new im_livechat.Feedback(this);
+                this.$(".oe_im_chatview_content").empty();
+                this.$(".oe_im_chatview_input").prop('disabled', true);
+                this.feedback.appendTo( this.$(".oe_im_chatview_content"));
+                // bind event to close conversation
+                this.feedback.on("feedback_sent", this, this.click_close);
             }else{
-                if(this.rating){
-                    this.send_feedback(this.rating);
-                }
-				// delete cookie
-				openerp.set_cookie(im_livechat.COOKIE_NAME, "", -1);
                 this._super.apply(this, arguments);
             }
         },
-        choose_feedback: function(e){
-            var self = this;
-            this.rating = parseInt($(e.currentTarget).data('value'));
-            this.$('.oe_im_feedback_choices a').removeClass('selected');
-            this.$('.oe_im_feedback_choices a[data-value="'+this.rating+'"]').addClass('selected');
-        },
-        submit_feedback: function(e){
-            var self = this;
-            if(this.rating){
-                var reason = self.$('.oe_im_chatview_feedback textarea').val();
-                if(this.rating > 1){
-                    this.send_feedback(this.rating, reason);
-                }else{
-                    if(reason){
-                        this.send_feedback(this.rating, reason);
-                    }else{
-                        self.$('.oe_im_chatview_feedback textarea').css('border', 'red solid 2px');
-                    }
-                }
-            }else{
-                this.feedback = false;
-            }
-        },
-        send_feedback: function(rate, reason){
-            var self = this;
-            openerp.session.rpc("/im_livechat/feedback", {uuid: this.get('session').uuid, rating: rate, reason : reason}).then(function(res) {
-                self.$(".oe_im_chatview_feedback").html($(document.createElement('div')).addClass("oe_im_feedback_text").html(_t("Thanks you for your feedback. You can close the chat window now.")));
-            });
-            this.rating = false;
-        }
     });
 
     // To avoid exeption when the anonymous has close his
@@ -138,11 +98,14 @@
             openerp.session = new openerp.Session(null, server_url, { use_cors: false });
             this.load_template(db, channel, options, rule);
         },
+        _get_template_list: function(){
+            return ['/im_chat/static/src/xml/im_chat.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
+        },
         load_template: function(db, channel, options, rule){
             var self = this;
             // load the qweb templates
             var defs = [];
-            var templates = ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
+            var templates = this._get_template_list();
             _.each(templates, function(tmpl){
                 defs.push(openerp.session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
                     openerp.qweb.add_template(xml);
@@ -191,7 +154,7 @@
             this.no_session_message = _t("None of our collaborators seems to be available, please try again later.");
         },
         start: function() {
-            this.$().append(openerp.qweb.render("chatButton", {widget: this}));
+            this.$().append(openerp.qweb.render("im_livechat.chatButton", {widget: this}));
             // set up the manager
             this.manager = new openerp.im_chat.ConversationManager(this, this.options);
             this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
@@ -254,6 +217,48 @@
                     }, 1000);
                 }
             }
+        }
+    });
+
+    /* Rating livechat object */
+    im_livechat.Feedback = openerp.Widget.extend({
+        template : "im_livechat.feedback",
+        init: function(parent){
+            this._super(parent);
+            this.conversation = parent;
+            this.reason = false;
+            this.rating = false;
+        },
+        start: function(){
+            this._super.apply(this.arguments);
+            // bind events
+            this.$('.oe_livechat_rating_choices img').on('click', _.bind(this.click_smiley, this));
+            this.$('#rating_submit').on('click', _.bind(this.click_send, this));
+        },
+        click_smiley: function(ev){
+            this.rating = parseInt($(ev.currentTarget).data('value'));
+            this.$('.oe_livechat_rating_choices img').removeClass('selected');
+            this.$('.oe_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
+            // only display textearea if bad smiley selected
+            if(this.rating == 0){
+                this.$('.oe_livechat_rating_reason').show();
+            }else{
+                this.$('.oe_livechat_rating_reason').hide();
+            }
+            this.$('textarea').val(''); // empty the reason each time a click on a smiley is done
+        },
+        click_send: function(ev){
+            this.reason = this.$('textarea').val();
+            if(_.contains([0,5,10], this.rating)){ // need to use contains, since the rating can 0, evaluate to false
+                this._send_feedback();
+            }
+        },
+        _send_feedback: function(){
+            var self = this;
+            var uuid = this.conversation.get('session').uuid;
+            openerp.session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+                self.trigger("feedback_sent"); // will close the conversation
+            });
         }
     });
 

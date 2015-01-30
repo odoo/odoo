@@ -94,5 +94,3 @@ class wrapped_report_resultat(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'l10n_fr.report_l10nfrresultat'
     _wrapped_report_class = cdr
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -48,18 +48,10 @@
         <t t-if="widget.update_mode">Edit Menu Entry</t>
     </t>
     <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
-    <t t-jquery="ul.list-group" t-operation="before">
-        <div class="list-group">
-            <div class="form-group list-group-item active">
-                <h3 class="list-group-item-heading">
-                    <label for="link-new" class="control-label">
-                        Menu Label
-                    </label>
-                </h3>
-                <input type="text" class="form-control"
-                       id="link-text" required="required"/>
-            </div>
-        </div>
+    <t t-jquery="form > div.list-group:first label" t-operation="replace">
+        <label for="link-new" class="control-label">
+            Menu Label
+        </label>
     </t>
 </t>
 </templates>

@@ -2,16 +2,11 @@
 <openerp>
     <data>
 
-        <template id="assets_frontend" inherit_id="web.assets_common">
+        <template id="assets" inherit_id="point_of_sale.assets">
           <xpath expr="." position="inside">
               <script type="text/javascript" src="/pos_loyalty/static/src/js/loyalty.js"></script>
-          </xpath>
-        </template>
-
-        <template id="css_pos" inherit_id="point_of_sale.index">
-            <xpath expr="//head" position="inside">
               <link rel="stylesheet" href="/pos_loyalty/static/src/css/loyalty.css" />
-            </xpath>
+          </xpath>
         </template>
 
     </data>

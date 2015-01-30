@@ -39,4 +39,3 @@ This module applies to companies based in Vietnamese Accounting Standard (VAS).
     'auto_install': False,
     "installable": True,
 }
-

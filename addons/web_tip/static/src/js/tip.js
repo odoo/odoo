@@ -163,7 +163,7 @@
             var triggers = tip.trigger_selector ? tip.trigger_selector.split(',') : [];
             var trigger_tip = true;
 
-            if(!$(highlight_selector).length > 0) {
+            if(!$(highlight_selector).length > 0 || !$(highlight_selector).is(":visible")) {
                 return def.reject();
             }
             for (var i = 0; i < triggers.length; i++) {
@@ -264,7 +264,7 @@
         end_tip: function(tip) {
             var self = this;
             var Tips = new instance.web.Model('web.tip');
-            $('#' + self.$element.attr('aria-describedby')).remove();
+            self.$element.popover('destroy');
             self.$overlay.remove();
             self.$helper.remove();
             self.$element.removeClass('oe_tip_show_element');

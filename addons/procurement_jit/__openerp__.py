@@ -47,4 +47,3 @@ In that case, you can not use priorities any more on the different picking.
     'installable': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

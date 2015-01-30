@@ -30,5 +30,3 @@ class procurement_order(osv.osv):
         self.run(cr, uid, [procurement_id], context=context)
         self.check(cr, uid, [procurement_id], context=context)
         return procurement_id
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

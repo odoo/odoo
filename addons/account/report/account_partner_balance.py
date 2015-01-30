@@ -300,4 +300,3 @@ class PartnerBalanceReport(models.AbstractModel, common_report_header):
         }
         return report_obj.render('account.report_partnerbalance', docargs)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

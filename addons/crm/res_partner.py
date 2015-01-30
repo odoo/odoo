@@ -30,8 +30,9 @@ class res_partner(osv.osv):
         # the user may not have access rights for opportunities or meetings
         try:
             for partner in self.browse(cr, uid, ids, context):
+                opp_ids = self.pool['crm.lead'].search(cr, uid, [('partner_id', '=', partner.id), ('type', '=', 'opportunity'), ('probability', '<', '100')], context=context)
                 res[partner.id] = {
-                    'opportunity_count': len(partner.opportunity_ids),
+                    'opportunity_count': len(opp_ids),
                     'meeting_count': len(partner.meeting_ids),
                 }
         except:

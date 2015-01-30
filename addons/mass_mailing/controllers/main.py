@@ -18,30 +18,25 @@ class MassMailController(http.Controller):
 
         return response
 
-    @http.route('/mail/mailing/<int:mailing_id>/unsubscribe', type='http', auth='none')
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', auth='none', website=True)
     def mailing(self, mailing_id, email=None, res_id=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        MassMailing = request.registry['mail.mass_mailing']
-        mailing_ids = MassMailing.exists(cr, SUPERUSER_ID, [mailing_id], context=context)
-        if not mailing_ids:
-            return 'KO'
-        mailing = MassMailing.browse(cr, SUPERUSER_ID, mailing_ids[0], context=context)
-        if mailing.mailing_model == 'mail.mass_mailing.contact':
-            list_ids = [l.id for l in mailing.contact_list_ids]
-            record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('list_id', 'in', list_ids), ('id', '=', res_id), ('email', 'ilike', email)], context=context)
-            request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
-        else:
-            email_fname = None
-            model = request.registry[mailing.mailing_model]
-            if 'email_from' in model._fields:
-                email_fname = 'email_from'
-            elif 'email' in model._fields:
-                email_fname = 'email'
-            if email_fname:
-                record_ids = model.search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
-            if 'opt_out' in model._fields:
-                model.write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
-        return 'OK'
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing.exists():
+            if mailing.mailing_model == 'mail.mass_mailing.contact':
+                contacts =request.env['mail.mass_mailing.contact'].sudo().search([('email', 'ilike', email)])
+                return request.website.render('mass_mailing.page_unsubscribe', {'contacts': contacts, 'email': email, 'mailing_id':mailing_id})
+            else:
+                mailing.update_opt_out(mailing_id, email, [res_id], True)
+                return request.website.render('mass_mailing.page_unsubscribed')
+
+    @http.route(['/mail/mailing/unsubscribe'], type='json', auth='none', website=True)
+    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        print mailing
+        print email
+        if mailing.exists():
+            mailing.update_opt_out(mailing_id, email, opt_in_ids, False)
+            mailing.update_opt_out(mailing_id, email, opt_out_ids, True) 
 
     @http.route('/website_mass_mailing/is_subscriber', type='json', auth="public", website=True)
     def is_subscriber(self, list_id, **post):

@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
-
-from openerp import workflow
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
-from openerp.exceptions import RedirectWarning, Warning
-from openerp.addons import decimal_precision as dp
-from openerp import tools
+from openerp.exceptions import RedirectWarning
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
+from openerp.exceptions import UserError
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -123,7 +119,7 @@ class account_move_line(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
 
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
@@ -132,7 +128,7 @@ class account_move_line(models.Model):
     def _check_account_type(self):
         for line in self:
             if line.account_id.internal_type == 'consolidation':
-                raise Warning(_('You cannot create journal items on an account of type consolidation.'))
+                raise UserError(_('You cannot create journal items on an account of type consolidation.'))
 
     @api.multi
     @api.constrains('currency_id')
@@ -140,14 +136,14 @@ class account_move_line(models.Model):
         for line in self:
             if line.account_id.currency_id:
                 if not line.currency_id or not line.currency_id.id == line.account_id.currency_id.id:
-                    raise Warning(_('The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.'))
+                    raise UserError(_('The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.'))
 
     @api.multi
     @api.constrains('currency_id','amount_currency')
     def _check_currency_and_amount(self):
         for line in self:
             if (line.amount_currency and not line.currency_id):
-                raise Warning(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
+                raise UserError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
 
     @api.multi
     @api.constrains('amount_currency')
@@ -155,8 +151,7 @@ class account_move_line(models.Model):
         for line in self:
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
-                    raise Warning(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
-
+                    raise UserError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
 
     ####################################################
     # Reconciliation interface methods
@@ -213,7 +208,7 @@ class account_move_line(models.Model):
                 res_alias,
                 is_partner and 'RIGHT JOIN res_partner p ON (l.partner_id = p.id)' or ' ',
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
-                res_id and 'AND '+res_alias+'.id = '+str(res_id) or '',
+                res_id and 'AND ' + res_alias + '.id = ' + str(res_id) or '',
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
@@ -378,6 +373,11 @@ class account_move_line(models.Model):
                 amount = debit - credit
                 amount_currency = line.amount_currency
 
+            # For already reconciled lines, don't use amount_residual(_currency)
+            if line.account_id.type == 'liquidity':
+                amount = abs(debit - credit)
+                amount_currency = line.amount_currency
+
             # Get right debit / credit:
             target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
@@ -444,7 +444,7 @@ class account_move_line(models.Model):
             :param new_mv_line_dicts: list of dicts containing values suitable fot account_move_line.create()
         """
         if len(self) < 1 or len(self) + len(new_mv_line_dicts) < 2:
-            raise Warning(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
+            raise UserError(_('Error!'), _('A reconciliation must involve at least 2 move lines.'))
 
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
@@ -455,10 +455,9 @@ class account_move_line(models.Model):
                 if account_currency != company_currency:
                     mv_line_dict['debit'] = account_currency.compute(mv_line_dict['debit'], company_currency)
                     mv_line_dict['credit'] = account_currency.compute(mv_line_dict['credit'], company_currency)
-                    amount_currency = mv_line_dict['debit'] - mv_line_dict['credit']
                 writeoff_lines += self._create_writeoff(mv_line_dict)
 
-            (self+writeoff_lines).reconcile()
+            (self + writeoff_lines).reconcile()
         else:
             self.reconcile()
 
@@ -529,25 +528,24 @@ class account_move_line(models.Model):
             if (line.account_id.internal_type in ('receivable', 'payable')):
                 partners.add(line.partner_id.id)
             if line.reconciled:
-                raise Warning(_('You are trying to reconcile some entries that are already reconciled!'))
+                raise UserError(_('You are trying to reconcile some entries that are already reconciled!'))
         if len(company_ids) > 1:
-            raise Warning(_('To reconcile the entries company should be the same for all entries!'))
+            raise UserError(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
-            raise Warning(_('Entries are not of the same account!'))
+            raise UserError(_('Entries are not of the same account!'))
         if not all_accounts[0].reconcile:
-            raise Warning(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
+            raise UserError(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
         if len(partners) > 1:
-            raise Warning(_('The partner has to be the same on all lines for receivable and payable accounts!'))
+            raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
         #reconcile everything that can be
-        currency_id = all_accounts[0].currency_id.id
         remaining_moves = self.auto_reconcile_lines()
 
         #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
         if writeoff_acc_id and writeoff_journal_id and remaining_moves:
             writeoff_to_reconcile = remaining_moves._create_writeoff({'account_id': writeoff_acc_id.id, 'journal_id': writeoff_journal_id.id})
             #add writeoff line to reconcile algo and finish the reconciliation
-            remaining_moves = (remaining_moves+writeoff_to_reconcile).auto_reconcile_lines()
+            remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
 
     #TODO: need to be rewritten in a cleaner way
     def _create_writeoff(self, vals):
@@ -557,22 +555,22 @@ class account_move_line(models.Model):
                 be processed to create bot writeoff acount.move.line and their enclosing account.move.
         """
         # Check and complete vals
-        if not 'account_id' in vals or not 'journal_id' in vals:
-            raise Warning("It is mandatory to specify an account and a journal to create a write-off.")
+        if 'account_id' not in vals or 'journal_id' not in vals:
+            raise UserError("It is mandatory to specify an account and a journal to create a write-off.")
         if ('debit' in vals) ^ ('credit' in vals):
-            raise Warning("Either pass both debit and credit or none.")
+            raise UserError("Either pass both debit and credit or none.")
         company_currency = self[0].account_id.company_id.currency_id
         account_currency = self[0].account_id.currency_id or company_currency
-        if not 'credit' in vals and not 'debit' in vals:
+        if 'credit' not in vals and 'debit' not in vals:
             amount = sum([r.amount_residual for r in self])
             vals['debit'] = amount > 0 and amount or 0.0
             vals['credit'] = amount < 0 and abs(amount) or 0.0
-        if not 'account_currency' in vals and account_currency != company_currency:
+        if 'account_currency' not in vals and account_currency != company_currency:
             vals['currency_id'] = account_currency
             vals['amount_currency'] = sum([r.amount_residual_currency for r in self])
-        if not 'date' in vals:
+        if 'date' not in vals:
             vals['date'] = self._context.get('date_p') or time.strftime('%Y-%m-%d')
-        if not 'name' in vals:
+        if 'name' not in vals:
             vals['name'] = self._context.get('comment') or _('Write-Off')
 
         # Writeoff line in the account of self
@@ -614,7 +612,6 @@ class account_move_line(models.Model):
             rec_move_ids += account_move_line.matched_credit_ids
         return rec_move_ids.unlink()
 
-
     ####################################################
     # CRUD methods
     ####################################################
@@ -629,7 +626,6 @@ class account_move_line(models.Model):
                 apply taxes in the default fashion (eg. taxes). You can also pass 'dont_create_taxes' in context.
         """
         AccountObj = self.env['account.account']
-        TaxObj = self.env['account.tax']
         MoveObj = self.env['account.move']
         context = dict(self._context or {})
         amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
@@ -641,7 +637,7 @@ class account_move_line(models.Model):
             if move.date and not vals.get('date'):
                 vals['date'] = move.date
         if ('account_id' in vals) and AccountObj.browse(vals['account_id']).deprecated:
-            raise Warning(_('You cannot use deprecated account.'))
+            raise UserError(_('You cannot use deprecated account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
         if 'date' in vals and vals['date']:
@@ -673,7 +669,7 @@ class account_move_line(models.Model):
                     move_id = MoveObj.with_context(context).create(v)
                     vals['move_id'] = move_id.id
                 else:
-                    raise Warning(_('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise UserError(_('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = AccountObj.browse(vals['account_id'])
@@ -697,7 +693,7 @@ class account_move_line(models.Model):
                     ctx['date'] = vals['date']
                 vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(amount, account.currency_id)
         if not ok:
-            raise Warning(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+            raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
         # Create tax lines
         tax_lines_vals = []
@@ -709,7 +705,7 @@ class account_move_line(models.Model):
                 vals.get('currency_id', None), 1, vals.get('product_id', None), vals.get('partner_id', None), context=context)
             # Adjust line amount if any tax is price_include
             if abs(res['total_excluded']) < abs(amount):
-                if vals ['debit'] != 0.0: vals['debit'] = res['total_excluded']
+                if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
                 if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
                 if vals.get('amount_currency'):
                     vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (amount / res['total_excluded']))
@@ -762,9 +758,9 @@ class account_move_line(models.Model):
     @api.multi
     def write(self, vals, check=True, update_check=True):
         if vals.get('tax_line_id') or vals.get('tax_ids'):
-            raise Warning(_('You cannot change the tax, you should remove and recreate lines.'))
+            raise UserError(_('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
-            raise Warning(_('You cannot use deprecated account.'))
+            raise UserError(_('You cannot use deprecated account.'))
         if update_check and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             self._update_check()
 
@@ -796,9 +792,9 @@ class account_move_line(models.Model):
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state != 'draft' and (not line.journal_id.entry_posted):
-                raise Warning(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
+                raise UserError(_('You cannot do this modification on a confirmed entry. You can just change some non legal fields or you must unconfirm the journal entry first.\n%s.') % err_msg)
             if line.reconciled:
-                raise Warning(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
+                raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             t = (line.journal_id.id, line.date)
             if t not in done:
                 self._update_journal_check(line.journal_id.id, line.date)
@@ -822,7 +818,6 @@ class account_move_line(models.Model):
         #         'period_id': period.id
         #     })
         return True
-
 
     ####################################################
     # Misc / utility methods
@@ -855,7 +850,7 @@ class account_move_line(models.Model):
         for obj_line in self:
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
-                    raise Warning(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                    raise UserError(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_lines:
                     obj_line.analytic_lines.unlink()
                 vals_line = self._prepare_analytic_line(obj_line)
@@ -875,7 +870,7 @@ class account_move_line(models.Model):
             'unit_amount': obj_line.quantity,
             'product_id': obj_line.product_id and obj_line.product_id.id or False,
             'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
-            'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
+            'amount': (obj_line.credit or 0.0) - (obj_line.debit or 0.0),
             'general_account_id': obj_line.account_id.id,
             'journal_id': obj_line.journal_id.analytic_journal_id.id,
             'ref': obj_line.ref,
@@ -887,35 +882,23 @@ class account_move_line(models.Model):
     def _query_get(self, obj='l'):
         """ Build SQL query to fetch lines based on obj and context """
 
-        fiscalyear_obj = self.env['account.fiscalyear']
         account_obj = self.env['account.account']
-        fiscalyear_ids = []
         context = dict(self._context or {})
         initial_bal = context.get('initial_bal', False)
         company_clause = " "
         query = ''
         if context.get('company_id', False):
-            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
-        if not context.get('fiscalyear', False):
-            if context.get('all_fiscalyear', False):
-                #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
-                fiscalyear_ids = fiscalyear_obj.search([]).ids
-            else:
-                fiscalyear_ids = fiscalyear_obj.search([('state', '=', 'draft')]).ids
-        else:
-            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
-            fiscalyear_ids = [context['fiscalyear']]
+            company_clause = " AND " + obj + ".company_id = %s" % context.get('company_id', False)
 
-        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         state = context.get('state', False)
         where_move_state = ''
         where_move_lines_by_date = ''
 
         if context.get('date_from', False) and context.get('date_to', False):
             if initial_bal:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+                where_move_lines_by_date = " AND " + obj + ".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
             else:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+                where_move_lines_by_date = " AND " + obj + ".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
 
         if state:
             if state.lower() not in ['all']:
@@ -923,7 +906,7 @@ class account_move_line(models.Model):
         if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
-            raise Warning(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+            raise UserError(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
 
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
@@ -962,11 +945,11 @@ class account_partial_reconcile(models.Model):
                 rate_diff = rec.debit_move_id.debit / rec.debit_move_id.amount_currency - rec.credit_move_id.credit / -rec.credit_move_id.amount_currency
                 if rate_diff and rec.amount_currency:
                     if not rec.company_id.currency_exchange_journal_id:
-                        raise Warning(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                        raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     if not self.company_id.income_currency_exchange_account_id.id:
-                        raise Warning(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                        raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     if not self.company_id.expense_currency_exchange_account_id.id:
-                        raise Warning(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                        raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     amount_diff = rec.company_id.currency_id.round(rec.amount_currency * rate_diff)
                     move = rec.env['account.move'].create({'journal_id': rec.company_id.currency_exchange_journal_id.id, 'rate_diff_partial_rec_id': rec.id})
                     line_to_reconcile = rec.env['account.move.line'].with_context(novalidate=True).create({

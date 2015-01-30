@@ -32,15 +32,20 @@ class MailGroup(http.Controller):
         mail_message_obj = request.registry.get('mail.message')
         group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
         groups = group_obj.browse(cr, uid, group_ids, context)
+
         # compute statistics
         month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
+        result = mail_message_obj.read_group(
+            cr, SUPERUSER_ID,
+            [('model', '=', 'mail.group'), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
+            [], ['res_id'],
+            context=context)
+        result = dict([(x['res_id'], x['res_id_count']) for x in result])
+
         group_data = dict()
         for group in groups:
-            group_data[group.id] = {
-                'monthly_message_nbr': mail_message_obj.search(
-                    cr, SUPERUSER_ID,
-                    [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
-                    count=True, context=context)}
+            group_data[group.id] = {'monthly_message_nbr': result.get(group.id, 0)}
+
         values = {'groups': groups, 'group_data': group_data}
         return request.website.render('website_mail_group.mail_groups', values)
 

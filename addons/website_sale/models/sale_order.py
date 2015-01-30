@@ -215,5 +215,3 @@ class website(orm.Model):
             'sale_transaction_id': False,
             'sale_order_code_pricelist_id': False,
         })
-
-

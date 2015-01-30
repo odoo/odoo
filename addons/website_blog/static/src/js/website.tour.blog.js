@@ -27,7 +27,7 @@
                 popover:   { fixed: true },
             },
             {
-                element:   '.modal:has(#editor_new_blog) button.btn-primary',
+                element:   '.modal-dialog:has(#editor_new_blog) button.btn-primary',
                 placement: 'right',
                 title:     _t("Create Blog Post"),
                 content:   _t("Click <em>Continue</em> to create the blog post."),
@@ -47,24 +47,10 @@
             },
             {
                 waitNot:   '#wrap h1[data-oe-model="blog.post"]:contains("Blog Post Title")',
-                element:   'button[data-action=snippet]',
-                placement: 'left',
-                title:     _t("Layout Your Blog Post"),
-                content:   _t("Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content."),
-                popover:   { fixed: true },
-            },
-            {
                 snippet:   '#snippet_structure .oe_snippet:eq(2)',
                 placement: 'bottom',
                 title:     _t("Drag & Drop a Block"),
                 content:   _t("Drag this block and drop it in your page."),
-                popover:   { fixed: true },
-            },
-            {
-                element:   'button[data-action=snippet]',
-                placement: 'bottom',
-                title:     _t("Add Another Block"),
-                content:   _t("Let's add another block to your post."),
                 popover:   { fixed: true },
             },
             {
@@ -89,9 +75,9 @@
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=edit]:visible',
+                waitFor:   '#website-top-edit:hidden',
                 element:   'button.btn-danger.js_publish_btn',
-                placement: 'top',
+                placement: 'bottom',
                 title:     _t("Publish Your Post"),
                 content:   _t("Your blog post is not yet published. You can update this draft version and publish it once you are ready."),
             },

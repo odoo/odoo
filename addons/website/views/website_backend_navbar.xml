@@ -53,6 +53,9 @@
                     <li groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
                     <li groups="base.group_website_designer"><a href="#" data-action="new_page">New Page</a></li>
+                    <t t-if="deletable">
+                        <li groups="base.group_website_designer"><a href="#" data-action="delete_page">Delete this page</a></li>
+                    </t>
                 </ul>
             </li>
 

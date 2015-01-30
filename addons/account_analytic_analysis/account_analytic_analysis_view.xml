@@ -80,7 +80,7 @@
                                 <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id], 'default_pricelist_id': pricelist_id}"
                                     />
                             </td>
                         </tr><tr>
@@ -198,6 +198,7 @@
             <field name="name">account.analytic.account.list.contract</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
@@ -293,6 +294,23 @@
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
         <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="base.menu_invoiced" sequence="5"/>
 
+        <!-- Action Show all invoices related to a contract -->
+        <record id="action_contract_invoices_all" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoice_line.account_analytic_id', '=', active_id)]</field>
+            <field name="context">{'create':False}</field>
+            <field name="help" type="html">
+              <p>
+                You will find here all the invoices related to this contract.
+                If you want to create a new invoice for this contract, you should use
+                the invoicing menu on the contract form view instead.
+              </p>
+            </field>
+        </record>
+
         <!-- Action Sales/Invoicing/Contract to renew -->
         <record id="action_account_analytic_overdue" model="ir.actions.act_window">
             <field name="name">Contracts to Renew</field>
@@ -358,6 +376,10 @@
                         name="%(action_hr_tree_invoiced_all)d"
                         type="action"
                         context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
+                    <button class="oe_inline oe_stat_button" string="Invoices"
+                        icon="fa-book"
+                        name="%(action_contract_invoices_all)d"
+                        type="action"/>
                 </xpath>
             </field>
         </record>

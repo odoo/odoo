@@ -21,7 +21,6 @@
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.exceptions import AccessError
-from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
@@ -35,7 +34,7 @@ class TestMailGroup(TestMail):
         # Do: Bert reads Jobs -> ok, public
         self.mail_group.read(cr, user_noone_id, [self.group_jobs_id])
         # Do: Bert read Pigs -> ko, restricted to employees
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.read(cr, user_noone_id, [self.group_pigs_id])
         # Do: Raoul read Pigs -> ok, belong to employees
         self.mail_group.read(cr, user_employee_id, [self.group_pigs_id])
@@ -50,7 +49,7 @@ class TestMailGroup(TestMail):
         self.mail_group.read(cr, user_noone_id, [new_group_id])
 
         # Do: Raoul reads Priv -> ko, private
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.read(cr, user_employee_id, [self.group_priv_id])
         # Do: Raoul added in follower, read -> ok, in followers
         self.mail_group.message_subscribe_users(cr, uid, [self.group_priv_id], [user_employee_id])
@@ -62,7 +61,7 @@ class TestMailGroup(TestMail):
         with self.assertRaises(AccessError):
             self.mail_group.write(cr, user_noone_id, [self.group_priv_id], {'name': 're-modified'})
         # Test: Bert cannot unlink the group
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.unlink(cr, user_noone_id, [self.group_priv_id])
         # Do: Raoul unlinks the group, there are no followers and messages left
         self.mail_group.unlink(cr, user_employee_id, [self.group_priv_id])

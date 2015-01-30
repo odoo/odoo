@@ -45,15 +45,26 @@ class Website(openerp.addons.web.controllers.main.Home):
                     return request.registry['ir.http'].reroute(first_menu.url)
         return self.page(page)
 
+    #------------------------------------------------------
+    # Login - overwrite of the web login so that regular users are redirected to the backend 
+    # while portal users are redirected to the frontend by default
+    #------------------------------------------------------
     @http.route(website=True, auth="public")
-    def web_login(self, *args, **kw):
-        # TODO: can't we just put auth=public, ... in web client ?
-        return super(Website, self).web_login(*args, **kw)
+    def web_login(self, redirect=None, *args, **kw):
+        r = super(Website, self).web_login(redirect=redirect, *args, **kw)
+        if request.params['login_success'] and not redirect:
+            if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
+                redirect = '/web?' + request.httprequest.query_string
+            else:
+                redirect = '/'
+            return http.redirect_with_hash(redirect)
+        return r
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
+            'deletable': True, # used to add 'delete this page' in content menu
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
@@ -163,7 +174,8 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
         if add_menu:
-            request.registry['website.menu'].create(request.cr, request.uid, {
+            request.registry['website.menu'].create(
+                request.cr, request.uid, {
                     'name': path,
                     'url': "/page/" + xml_id,
                     'parent_id': request.website.menu_id.id,
@@ -174,7 +186,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
-        return werkzeug.utils.redirect(url)
+        return werkzeug.utils.redirect(url + "?enable_editor=1")
 
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
@@ -202,10 +214,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, full=False, bundles=False):
-        """ Lists the templates customizing ``xml_id``. By default, only
-        returns optional templates (which can be toggled on and off), if
-        ``full=True`` returns all templates customizing ``xml_id``
+    def customize_template_get(self, key, full=False, bundles=False):
+        """ Get inherit view's informations of the template ``key``. By default, only
+        returns ``customize_show`` templates (which can be active or not), if
+        ``full=True`` returns inherit view's informations of the template ``key``.
         ``bundles=True`` returns also the asset bundles
         """
         imd = request.registry['ir.model.data']
@@ -215,9 +227,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         user = request.registry['res.users']\
             .browse(request.cr, request.uid, request.uid, request.context)
         user_groups = set(user.groups_id)
-
         views = request.registry["ir.ui.view"]\
-            ._views_get(request.cr, request.uid, xml_id, bundles=bundles, context=dict(request.context or {}, active_test=False))
+            ._views_get(request.cr, request.uid, key, bundles=bundles, context=dict(request.context or {}, active_test=False))
         done = set()
         result = []
         for v in views:
@@ -228,7 +239,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     result.append({
                         'name': v.inherit_id.name,
                         'id': v.id,
-                        'xml_id': v.xml_id,
+                        'key': v.key,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
@@ -237,7 +248,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 result.append({
                     'name': v.name,
                     'id': v.id,
-                    'xml_id': v.xml_id,
+                    'key': v.key,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
                     'active': v.active,
@@ -311,6 +322,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             }, request.context)
         else:                                                  # images provided
             try:
+                attachment_ids = []
                 for c_file in request.httprequest.files.getlist('upload'):
                     image_data = c_file.read()
                     image = Image.open(cStringIO.StringIO(image_data))
@@ -319,9 +331,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                         raise ValueError(
                             u"Image size excessive, uploaded images must be smaller "
                             u"than 42 million pixel")
-    
-                if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                    image_data = image_save_for_web(image)
+
+                    if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                        image_data = image_save_for_web(image)
 
                     attachment_id = Attachments.create(request.cr, request.uid, {
                         'name': c_file.filename,
@@ -329,11 +341,11 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'datas_fname': c_file.filename,
                         'res_model': 'ir.ui.view',
                     }, request.context)
-    
-                    [attachment] = Attachments.read(
-                        request.cr, request.uid, [attachment_id], ['website_url'],
-                        context=request.context)
-                    uploads.append(attachment)
+                    attachment_ids.append(attachment_id)
+
+                uploads = Attachments.read(
+                    request.cr, request.uid, attachment_ids, ['website_url'],
+                    context=request.context)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)
@@ -421,6 +433,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         self.theme_customize(enable and enable.split(",") or [],disable and disable.split(",") or [])
         return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true"))
 
+    @http.route(['/website/multi_render'], type='json', auth="public", website=True)
+    def multi_render(self, ids_or_xml_ids, values=None):
+        res = {}
+        for id_or_xml_id in ids_or_xml_ids:
+            res[id_or_xml_id] = request.env["ir.ui.view"].render(id_or_xml_id, values=values, engine='ir.qweb')
+        return res
+
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
@@ -456,19 +475,22 @@ class Website(openerp.addons.web.controllers.main.Home):
         xmlid can be used to load the image. But the field image must by base64-encoded
         """
         if xmlid and "." in xmlid:
-            xmlid = xmlid.split(".", 1)
             try:
-                model, id = request.registry['ir.model.data'].get_object_reference(request.cr, request.uid, xmlid[0], xmlid[1])
+                record = request.env.ref(xmlid)
+                model, id = record._name, record.id
             except:
                 raise werkzeug.exceptions.NotFound()
-            if model == 'ir.attachment':
-                field = "datas"
+            if model == 'ir.attachment' and not field:
+                if record.sudo().type == "url":
+                    field = "url"
+                else:
+                    field = "datas"
 
         if not model or not id or not field:
             raise werkzeug.exceptions.NotFound()
 
         try:
-            idsha = id.split('_')
+            idsha = str(id).split('_')
             id = idsha[0]
             response = werkzeug.wrappers.Response()
             return request.registry['website']._image(
@@ -515,4 +537,3 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
-

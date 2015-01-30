@@ -62,4 +62,3 @@ class Overdue(models.AbstractModel):
         }
         return report_obj.render('account.report_overdue', docargs)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -10,6 +10,7 @@ import openerp
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
@@ -96,7 +97,7 @@ class account_payment_term_line(models.Model):
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
-            raise Warning(_('Percentages for Payment Term Line must be between 0 and 100.'))
+            raise UserError(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 
 class account_account_type(models.Model):
@@ -216,18 +217,18 @@ class account_account(models.Model):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             for account in self:
                 if (account.company_id.id <> vals['company_id']) and move_lines:
-                    raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
+                    raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
         return super(account_account, self).write(vals)
 
     @api.multi
     def unlink(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
-            raise Warning(_('You cannot do that on an account that contains journal items.'))
+            raise UserError(_('You cannot do that on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
         if partner_prop_acc:
-            raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
+            raise UserError(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return super(account_account, self).unlink()
 
     @api.multi
@@ -292,9 +293,9 @@ class account_journal(models.Model):
     def _check_currency(self):
         if self.currency:
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
+                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
+                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
 
     @api.one
     def copy(self, default=None):
@@ -309,7 +310,7 @@ class account_journal(models.Model):
         for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
+                    raise UserError(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
 
     @api.model
@@ -368,7 +369,7 @@ class account_fiscalyear(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop < self.date_start:
-            raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
+            raise UserError(_('Error!\nThe start date of a fiscal year must precede its end date.'))
 
 
 #----------------------------------------------------------
@@ -419,6 +420,7 @@ class account_move(models.Model):
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
+    statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
 
     @api.multi
     def post(self):
@@ -441,7 +443,7 @@ class account_move(models.Model):
                             sequence = journal.refund_sequence_id
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
-                        raise Warning(_('Please define a sequence on the journal.'))
+                        raise UserError(_('Please define a sequence on the journal.'))
 
                 if new_name:
                     move.name = new_name
@@ -461,7 +463,7 @@ class account_move(models.Model):
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
-                raise Warning(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if self.ids:
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
@@ -473,7 +475,7 @@ class account_move(models.Model):
     def unlink(self, check=True):
         for move in self:
             if move['state'] != 'draft':
-                raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
+                raise UserError(_('You cannot delete a posted journal entry "%s".') %  move['name'])
             move.line_id._update_check()
             move.line_id.unlink()
         return super(account_move, self).unlink()
@@ -486,12 +488,12 @@ class account_move(models.Model):
             for line in move.line_id:
                 amount += line.debit - line.credit
                 if not move.company_id.id == line.account_id.company_id.id:
-                    raise Warning(_("Cannot create moves for different companies."))
+                    raise UserError(_("Cannot create moves for different companies."))
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
+                        raise UserError(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
             if abs(amount) > 10 ** -4:
-                raise Warning(_('You cannot validate a non-balanced entry.'))
+                raise UserError(_('You cannot validate a non-balanced entry.'))
         return True
 
     @api.model
@@ -554,7 +556,7 @@ class account_tax(models.Model):
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
-            raise Warning(_('The application scope of taxes in a group must be either the same as the group or "None".'))
+            raise UserError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
     def copy(self, default=None):
@@ -801,7 +803,7 @@ class account_add_tmpl_wizard(models.TransientModel):
         ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
         account = False
         if not ptids or not ptids[0]['code']:
-            raise Warning(_('There is no parent code for the template account.'))
+            raise UserError(_('There is no parent code for the template account.'))
             account = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
         return account
 
@@ -1394,8 +1396,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         ir_values_obj = self.env['ir.values']
         company_id = self.company_id.id
 
-        self.company_id.write({'currency_id': self.currency_id.id})
-        self.company_id.write({'accounts_code_digits': self.code_digits})
+        self.company_id.write({'currency_id': self.currency_id.id, 'accounts_code_digits': self.code_digits})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
@@ -1433,16 +1434,15 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :return: mapping of field names and values
         :rtype: dict
         '''
-
         # we need to loop to find next number for journal code
         for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
-            if not Journals:
+            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company.id)], context=context)
+            if not ids:
                 break
         else:
-            raise Warning(_('Cannot generate an unused journal code.'))
+            raise UserError(_('Cannot generate an unused journal code.'))
 
         return {
                 'name': line['acc_name'],
@@ -1474,24 +1474,33 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # Seek the next available number for the account code
         code_digits = company.accounts_code_digits or 0
         bank_account_code_char = company.bank_account_code_char or ''
-        available_digits = abs(code_digits - len(bank_account_code_char))
-        for num in xrange(1, pow(10, available_digits)):
-            new_code = str(bank_account_code_char.ljust(code_digits-len(str(num)), '0')) + str(num)
-            recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])
-            if not recs:
+        for num in xrange(1, 100):
+            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
+            ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company.id)])
+            if not ids:
                 break
         else:
-            raise Warning(_('Error!'), _('Cannot generate an unused account code.'))
+            raise UserError(_('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
-        cash_type = self.env.ref('account.data_account_type_cash') or False
-        bank_type = self.env.ref('account.data_account_type_bank') or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
+        cash_type = tmp and tmp[1] or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
+        bank_type = tmp and tmp[1] or False
+        parent_id = False
+        if acc_template_ref:
+            parent_id = acc_template_ref[ref_acc_bank.id]
+        else:
+            tmp = self.pool.get('account.account').search(cr, uid, [('code', '=', company.bank_account_code_char)], context=context)
+            if tmp:
+                parent_id = tmp[0]
+        
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
+                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
                 'company_id': company.id,
         }
 
@@ -1520,7 +1529,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 journal_data.append(vals)
         ref_acc_bank = self.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
-            raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
+            raise UserError(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
         company.write({'bank_account_code_char': ref_acc_bank.code})
 
         for line in journal_data:

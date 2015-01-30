@@ -5,8 +5,10 @@ import json
 from lxml import etree
 
 from openerp import api, fields, models, _
-from openerp.exceptions import except_orm, RedirectWarning, Warning
-from openerp.tools import float_compare, float_is_zero
+from openerp.tools import float_is_zero
+
+from openerp.exceptions import UserError, RedirectWarning
+
 import openerp.addons.decimal_precision as dp
 
 # mapping invoice type to journal type
@@ -76,8 +78,7 @@ class account_invoice(models.Model):
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
-            raise except_orm(_('No Analytic Journal!'),
-                _("You must define an analytic journal of type '%s'!") % (journal_type,))
+            raise UserError(_("You must define an analytic journal of type '%s'!") % (journal_type,))
         return journal
 
     @api.model
@@ -388,9 +389,9 @@ class account_invoice(models.Model):
     def unlink(self):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
-                raise Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
+                raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
             elif invoice.internal_number:
-                raise Warning(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
+                raise UserError(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(account_invoice, self).unlink()
 
     @api.multi
@@ -474,8 +475,7 @@ class account_invoice(models.Model):
         if pterm_list:
             return {'value': {'date_due': max(line[0] for line in pterm_list)}}
         else:
-            raise except_orm(_('Insufficient Data!'),
-                _('The payment term of supplier does not have a payment term line.'))
+            raise UserError(_('The payment term of supplier does not have a payment term line.'))
 
     @api.multi
     def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id):
@@ -508,7 +508,7 @@ class account_invoice(models.Model):
                     acc_id = rec_account.id
                 else:
                     acc_id = pay_account.id
-                values= {'account_id': acc_id}
+                values = {'account_id': acc_id}
 
             if self:
                 if company_id:
@@ -528,10 +528,7 @@ class account_invoice(models.Model):
                     if len(line_cmd) >= 3 and isinstance(line_cmd[2], dict):
                         line = self.env['account.account'].browse(line_cmd[2]['account_id'])
                         if line.company_id.id != company_id:
-                            raise except_orm(
-                                _('Configuration Error!'),
-                                _("Invoice line account's company and invoice's company does not match.")
-                            )
+                            raise UserError(_("""Configuration Error!\nInvoice line account's company and invoice's company does not match."""))
 
         if company_id and type:
             journal_type = TYPE2JOURNAL[type]
@@ -547,7 +544,7 @@ class account_invoice(models.Model):
                 action = self.env.ref('account.action_account_journal_form')
                 msg = _('Cannot find any account journal of type "%s" for this company, You should create one.\n Please go to Journal Configuration') % type_label
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
-            domain = {'journal_id':  [('id', 'in', journals.ids)]}
+            domain = {'journal_id': [('id', 'in', journals.ids)]}
 
         return {'value': values, 'domain': domain}
 
@@ -613,11 +610,10 @@ class account_invoice(models.Model):
                 account_invoice_tax.create(tax)
 
         # dummy write on self to trigger recomputations
-        ctx = dict(self._context) # TODO : why lang in context ?
+        ctx = dict(self._context)  # TODO : why lang in context ?
         if self[0].partner_id.lang:
             ctx['lang'] = self[0].partner_id.lang
         return self.with_context(ctx).write({'invoice_line': []})
-
 
     @api.multi
     def compute_amount(self, set_total=False):
@@ -702,31 +698,6 @@ class account_invoice(models.Model):
             res.append(move_line_dict)
         return res
 
-    @api.multi
-    def _get_analytic_line(self):
-        company_currency = self.company_id.currency_id
-        sign = 1 if self.type in ('out_invoice', 'in_refund') else -1
-        if self.type in ('in_invoice', 'in_refund'):
-            ref = self.reference
-        else:
-            ref = self.number
-        if not self.journal_id.analytic_journal_id:
-            raise except_orm(_('No Analytic Journal!'),
-                _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
-        currency = self.currency_id.with_context(date=self.date_invoice)
-        return {
-            'name': il['name'],
-            'date': self.date_invoice,
-            'account_id': il['account_analytic_id'],
-            'unit_amount': il['quantity'],
-            'amount': currency.compute(il['price'], company_currency) * sign,
-            'product_id': il['product_id'],
-            'product_uom_id': il['uos_id'],
-            'general_account_id': il['account_id'],
-            'journal_id': self.journal_id.analytic_journal_id.id,
-            'ref': ref,
-        }
-
     @api.model
     def tax_line_move_line_get(self):
         res = []
@@ -783,9 +754,9 @@ class account_invoice(models.Model):
 
         for inv in self:
             if not inv.journal_id.sequence_id:
-                raise except_orm(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
+                raise UserError(_('Please define sequence on the journal related to this invoice.'))
             if not inv.invoice_line:
-                raise except_orm(_('No Invoice Lines!'), _('Please create some invoice lines.'))
+                raise UserError(_('Please create some invoice lines.'))
             if inv.move_id:
                 continue
 
@@ -803,7 +774,7 @@ class account_invoice(models.Model):
             # I disabled the check_total feature
             if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                    raise except_orm(_('Wrong Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
+                    raise UserError(_('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
@@ -906,11 +877,11 @@ class account_invoice(models.Model):
             'partner_id': part,
             'name': line['name'][:64],
             'date': date,
-            'debit': line['price']>0 and line['price'],
-            'credit': line['price']<0 and -line['price'],
+            'debit': line['price'] > 0 and line['price'],
+            'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
             'analytic_lines': line.get('analytic_lines', []),
-            'amount_currency': line['price']>0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
+            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
             'ref': line.get('ref', False),
             'quantity': line.get('quantity',1.00),
@@ -959,9 +930,8 @@ class account_invoice(models.Model):
         for inv in self:
             if inv.move_id:
                 moves += inv.move_id
-            # TODO: replace this by a clean code
-            # if has_partial_payments():
-            #     raise except_orm(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+            if inv.payment_ids:
+                raise UserError(_('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
@@ -1088,7 +1058,7 @@ class account_invoice(models.Model):
     def pay_and_reconcile(self, pay_amount, pay_account_id, date, pay_journal_id,
                           writeoff_acc_id, writeoff_journal_id, name=''):
         # TODO check if we can use different period for payment and the writeoff line
-        assert len(self)==1, "Can only pay one invoice at a time."
+        assert len(self) == 1, "Can only pay one invoice at a time."
         # Take the seq as name for move
         SIGN = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = SIGN[self.type]
@@ -1103,7 +1073,6 @@ class account_invoice(models.Model):
             amount_currency = False
             currency_id = False
 
-        pay_journal = self.env['account.journal'].browse(pay_journal_id)
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
@@ -1180,6 +1149,30 @@ class account_invoice_line(models.Model):
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
 
+    @api.multi
+    def _get_analytic_line(self):
+        company_currency = self.company_id.currency_id
+        sign = 1 if self.type in ('out_invoice', 'in_refund') else -1
+        if self.type in ('in_invoice', 'in_refund'):
+            ref = self.invoice_id.reference
+        else:
+            ref = self.invoice_id.number
+        if not self.invoice_id.journal_id.analytic_journal_id:
+            raise UserError(_("No Analytic Journal! You have to define an analytic journal on the '%s' journal!") % (self.invoice_id.journal_id.name,))
+        currency = self.currency_id.with_context(date=self.date_invoice)
+        return {
+            'name': self.name,
+            'date': self.invoice_id.date_invoice,
+            'account_id': self.account_analytic_id.id,
+            'unit_amount': self.quantity,
+            'amount': currency.compute(self.price, company_currency) * sign,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.uos_id.id,
+            'general_account_id': self.account_id.id,
+            'journal_id': self.invoice_id.journal_id.analytic_journal_id.id,
+            'ref': ref,
+        }
+
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity',
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
@@ -1228,7 +1221,7 @@ class account_invoice_line(models.Model):
     uos_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
-        ondelete='set null', index=True)
+        ondelete='restrict', index=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
@@ -1281,7 +1274,7 @@ class account_invoice_line(models.Model):
         self = self.with_context(company_id=company_id, force_company=company_id)
 
         if not partner_id:
-            raise except_orm(_('No Partner Defined!'), _("You must first select a partner!"))
+            raise UserError(_("You must first select a partner!"))
         if not product:
             if type in ('in_invoice', 'in_refund'):
                 return {'value': {}, 'domain': {'product_uom': []}}
@@ -1340,7 +1333,7 @@ class account_invoice_line(models.Model):
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
             fposition_id=False, price_unit=False, currency_id=False, company_id=None):
         context = self._context
-        company_id = company_id if company_id != None else context.get('company_id', False)
+        company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(
