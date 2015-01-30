@@ -943,15 +943,19 @@ class product_product(osv.osv):
             return
         product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
         Supplierinfo = self.pool['product.supplierinfo']
+        # Can we have code value as 3?
         for (code, supplierinfo_id, vals) in value:
             if not supplierinfo_id and code == 0:
                 vals.update({'product_tmpl_id': product_tmpl_id, 'product_id': id})
                 Supplierinfo.create(cr, uid, vals, context=context)
-            elif supplierinfo_id and code == 1:
-                if self.pool['product.supplierinfo'].browse(cr, uid, supplierinfo_id, context=context).product_id:
+                continue
+            if supplierinfo_id and self.pool['product.supplierinfo'].browse(cr, uid, supplierinfo_id, context=context).product_id:
+                if code == 1:
                     Supplierinfo.write(cr, uid, supplierinfo_id, vals, context=context)
-                else:
-                    raise UserError(_('You are not allowed to modify Supplier reference added on Product Template.'))
+                elif code == 2:
+                    Supplierinfo.unlink(cr, uid, supplierinfo_id, context=context)
+            elif code in [1, 2]:
+                raise UserError(_('You are not allowed to modify Supplier reference added on Product Template.'))
 
     def _get_suppliers(self, cr, uid, ids, name, args, context=None):
         res = dict.fromkeys(ids, False)
