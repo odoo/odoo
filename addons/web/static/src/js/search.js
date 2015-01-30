@@ -1535,6 +1535,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             .map(function (sel) {
                 return {
                     label: _.escape(sel[1]),
+                    indent: true,
                     facet: facet_from(self, sel)
                 };
             }).value();
