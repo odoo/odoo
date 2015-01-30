@@ -1453,7 +1453,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         var results = _(this.attrs.selection).chain()
             .filter(function (sel) {
                 var value = sel[0], label = sel[1];
-                if (!value) { return false; }
+                if (value === undefined || !label) { return false; }
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
