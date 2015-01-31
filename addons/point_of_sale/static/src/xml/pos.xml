@@ -666,6 +666,9 @@
                         <div>Served by <t t-esc='receipt.cashier' /></div>
                     </div>
                 </t>
+                <t t-if='!receipt.customer_count'>
+                    <div>Guests: <t t-esc='receipt.customer_count' /></div>
+                </t>
             </div>
             <br /><br />
 
@@ -981,17 +984,29 @@
                     <button class="input-button number-char" data-action='1'>1</button>
                     <button class="input-button number-char" data-action='2'>2</button>
                     <button class="input-button number-char" data-action='3'>3</button>
-                    <button class="mode-button add" data-action='+10'>+10</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+1'>+1</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+10'>+10</button>
+                    </t>
                     <br />
                     <button class="input-button number-char" data-action='4'>4</button>
                     <button class="input-button number-char" data-action='5'>5</button>
                     <button class="input-button number-char" data-action='6'>6</button>
-                    <button class="mode-button add" data-action='+20'>+20</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+2'>+2</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+20'>+20</button>
+                    </t>
                     <br />
                     <button class="input-button number-char" data-action='7'>7</button>
                     <button class="input-button number-char" data-action='8'>8</button>
                     <button class="input-button number-char" data-action='9'>9</button>
-                    <button class="mode-button add" data-action='+50'>+50</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+5'>+5</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+50'>+50</button>
+                    </t>
                     <br />
                     <button class="input-button numpad-char" data-action='CLEAR' >C</button>
                     <button class="input-button number-char" data-action='0'>0</button>
@@ -1002,11 +1017,11 @@
                     <br />
                 </div>
                 <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
                     <div class="button cancel">
                         Cancel 
+                    </div>
+                    <div class="button confirm">
+                        Ok
                     </div>
                 </div>
             </div>

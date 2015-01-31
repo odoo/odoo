@@ -229,13 +229,6 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
                 order.saveChanges();
             }
         },
-        hilight: function(hi){
-            if (hi) {
-                this.$el.addClass('highlight');
-            } else {
-                this.$el.removeClass('highlight');
-            }
-        },
     });
 
     module.define_action_button({

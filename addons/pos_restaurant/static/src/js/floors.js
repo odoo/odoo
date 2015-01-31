@@ -27,7 +27,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
     // them with their floor. 
     module.load_models({
         model: 'restaurant.table',
-        fields: ['name','width','height','position_h','position_v','shape','floor_id','color'],
+        fields: ['name','width','height','position_h','position_v','shape','floor_id','color','seats'],
         loaded: function(self,tables){
             self.tables_by_id = {};
             for (var i = 0; i < tables.length; i++) {
@@ -161,12 +161,18 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             }
         },
         set_table_color: function(color){
-            this.table.color = color;
-            this.renderElement();
+            this.table.color = _.escape(color);
+            this.$el.css({'background': this.table.color});
         },
         set_table_name: function(name){
             if (name) {
                 this.table.name = name;
+                this.renderElement();
+            }
+        },
+        set_table_seats: function(seats){
+            if (seats) {
+                this.table.seats = Number(seats);
                 this.renderElement();
             }
         },
@@ -187,7 +193,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                         unit(Math.max(table.width,table.height)/2) : '3px',
             };
             if (table.color) {
-                style['background-color'] = table.color;
+                style['background'] = table.color;
             }
             if (table.height >= 150 && table.width >= 150) {
                 style['font-size'] = '32px';
@@ -290,8 +296,10 @@ openerp.pos_restaurant.load_floors = function(instance,module){
         },
         renderElement: function(){
             var self = this;
-            this.order_count = this.pos.get_table_orders(this.table).length;
-            this.notifications = this.get_notifications();
+            this.order_count    = this.pos.get_table_orders(this.table).length;
+            this.customer_count = this.pos.get_customer_count(this.table);
+            this.fill           = Math.min(1,Math.max(0,this.customer_count / this.table.seats));
+            this.notifications  = this.get_notifications();
             this._super();
 
             this.$el.on('mouseup',      function(event){ self.click_handler(event,$(this)); });
@@ -375,7 +383,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                     event.stopPropagation();
                     event.preventDefault();
                 });
-            this.renderElement();
+            this.$('.floor-map').css({"background-color": _.escape(background)});
         },
         deselect_tables: function(){
             for (var i = 0; i < this.table_widgets.length; i++) {
@@ -437,6 +445,19 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                 });
             }
         },
+        tool_change_seats: function(){
+            var self = this;
+            if (this.selected_table) {
+                this.gui.show_popup('number',{
+                    'title':_t('Number of Seats ?'),
+                    'cheap': true,
+                    'value': this.selected_table.table.seats,
+                    'confirm': function(value) {
+                        self.selected_table.set_table_seats(value);
+                    },
+                });
+            }
+        },
         tool_duplicate_table: function(){
             if (this.selected_table) {
                 var tw = this.create_table(this.selected_table.table);
@@ -448,12 +469,13 @@ openerp.pos_restaurant.load_floors = function(instance,module){
         },
         tool_new_table: function(){
             var tw = this.create_table({
-                'position_v': 50,
-                'position_h': 50,
-                'width': 50,
-                'height': 50,
+                'position_v': 100,
+                'position_h': 100,
+                'width': 75,
+                'height': 75,
                 'name': 'T1',
                 'shape': 'square',
+                'seats': 1,
             });
             this.select_table(tw);
         },
@@ -562,6 +584,10 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                 self.tool_rename_table();
             });
 
+            this.$('.edit-button.seats').click(function(event){
+                self.tool_change_seats();
+            });
+
             this.$('.edit-button.trash').click(function(event){
                 self.tool_trash_table();
             });
@@ -573,7 +599,6 @@ openerp.pos_restaurant.load_floors = function(instance,module){
 
             this.$('.color-picker .color').click(function(event){
                 self.tool_colorpicker_pick(event,$(this));
-                self.tool_colorpicker_close();
                 event.stopPropagation();
             });
 
@@ -624,6 +649,13 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             if (!this.table) {
                 this.table = this.pos.table;
             }
+            if (!this.customer_count) {
+                if (this.table) {
+                    this.customer_count = this.table.seats;
+                } else {
+                    this.customer_count = 1;
+                }
+            }
             this.save_to_db();
         },
         export_as_JSON: function() {
@@ -632,18 +664,28 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             json.table_id  = this.table ? this.table.id : false;
             json.floor     = this.table ? this.table.floor.name : false; 
             json.floor_id  = this.table ? this.table.floor.id : false;
+            json.customer_count = this.customer_count;
             return json;
         },
         init_from_JSON: function(json) {
             _super_order.init_from_JSON.apply(this,arguments);
             this.table = this.pos.tables_by_id[json.table_id];
             this.floor = this.table ? this.pos.floors_by_id[json.floor_id] : undefined;
+            this.customer_count = json.customer_count || 1;
         },
         export_for_printing: function() {
             var json = _super_order.export_for_printing.apply(this,arguments);
             json.table = this.table ? this.table.name : undefined;
             json.floor = this.table ? this.table.floor.name : undefined;
+            json.customer_count = this.get_customer_count();
             return json;
+        },
+        get_customer_count: function(){
+            return this.customer_count;
+        },
+        set_customer_count: function(count) {
+            this.customer_count = Math.max(count,0);
+            this.trigger('change');
         },
     });
 
@@ -759,6 +801,16 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             return t_orders;
         },
 
+        // get customer count at table
+        get_customer_count: function(table) {
+            var orders = this.get_table_orders(table);
+            var count  = 0;
+            for (var i = 0; i < orders.length; i++) {
+                count += orders[i].get_customer_count();
+            }
+            return count;
+        },
+
         // When we validate an order we go back to the floor plan. 
         // When we cancel an order and there is multiple orders 
         // on the table, stay on the table.
@@ -774,6 +826,50 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             } else {
                 _super_posmodel.on_removed_order.apply(this,arguments);
             }
+        },
+
+        
+    });
+
+    module.TableGuestsButton = module.ActionButtonWidget.extend({
+        template: 'TableGuestsButton',
+        guests: function() {
+            if (this.pos.get_order()) {
+                return this.pos.get_order().customer_count;
+            } else {
+                return 0;
+            }
+        },
+        button_click: function() {
+            var self = this;
+            this.gui.show_popup('number', {
+                'title':  _t('Guests ?'),
+                'cheap': true,
+                'value':   this.pos.get_order().customer_count,
+                'confirm': function(value) {
+                    value = Math.max(1,Number(value));
+                    self.pos.get_order().set_customer_count(value);
+                    self.renderElement();
+                },
+            });
+        },
+    });
+
+    module.OrderWidget.include({
+        update_summary: function(){
+            this._super();
+            if (this.getParent().action_buttons && 
+                this.getParent().action_buttons.guests) {
+                this.getParent().action_buttons.guests.renderElement();
+            }
+        },
+    });
+
+    module.define_action_button({
+        'name': 'guests',
+        'widget': module.TableGuestsButton,
+        'condition': function(){
+            return this.pos.config.iface_floorplan;
         },
     });
 };
