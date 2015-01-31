@@ -147,8 +147,8 @@ class account_invoice_report(osv.osv):
                     ai.partner_bank_id,
                     SUM(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                            THEN (- ail.quantity) / u.factor
-                            ELSE ail.quantity / u.factor
+                            THEN (- ail.quantity) / u.factor * u2.factor
+                            ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
                     SUM(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
@@ -196,6 +196,7 @@ class account_invoice_report(osv.osv):
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uos_id
+                LEFT JOIN product_uom u2 ON u.id = pt.uom_id
         """
         return from_str
 
