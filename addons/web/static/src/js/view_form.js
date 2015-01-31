@@ -765,11 +765,18 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_duplicate: function() {
         var self = this;
+        var def = $.Deferred();
         return this.has_been_loaded.then(function() {
-            return self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                self.record_created(new_id);
-                self.to_edit_mode();
-            });
+            if (self.datarecord.id && confirm(_t("Do you really want to duplicate this record?"))) {
+                self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
+                    self.record_created(new_id);
+                    self.to_edit_mode();
+                });
+            } else {
+                $.async_when().done(function () {
+                    def.reject();
+                });
+            }
         });
     },
     on_button_delete: function() {
