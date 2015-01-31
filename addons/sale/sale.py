@@ -1261,11 +1261,11 @@ class product_product(osv.Model):
     _inherit = 'product.product'
 
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
+        r = dict.fromkeys(ids, 0)
         domain = [
             ('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done']),
             ('product_id', 'in', ids),
         ]
-        r = {}
         for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id','product_uom_qty'], ['product_id'], context=context):
             r[group['product_id'][0]] = group['product_uom_qty']
         return r
