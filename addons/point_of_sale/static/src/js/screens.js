@@ -522,6 +522,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
         },
         update_summary: function(){
             var order = this.pos.get_order();
+            if (!order.get_orderlines().length) {
+                return;
+            }
+
             var total     = order ? order.get_total_with_tax() : 0;
             var taxes     = order ? total - order.get_total_without_tax() : 0;
 

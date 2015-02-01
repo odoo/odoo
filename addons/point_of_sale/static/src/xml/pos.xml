@@ -1097,21 +1097,23 @@
         <div class="order-container">
             <div class="order-scroller touch-scrollable">
                 <div class="order">
-                    <ul class="orderlines">
-                        <t t-if="orderlines.length === 0">
-                            <li class="orderline empty">
-                                Your shopping cart is empty
-                            </li>
-                        </t>
-                    </ul>
-                    <div class="summary clearfix">
-                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-                            <div class='entry total'>
-                                <span class="label">Total: </span> <span class="value">0.00 €</span>
-                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                    <t t-if="orderlines.length === 0" >
+                        <div class='order-empty'>
+                            <i class='fa fa-shopping-cart' />
+                            <h1>Your shopping cart is empty</h1>
+                        </div>
+                    </t>
+                    <t t-if="orderlines.length > 0">
+                        <ul class="orderlines"></ul>
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class='entry total'>
+                                    <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                    <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                 </div>
             </div>
         </div>
