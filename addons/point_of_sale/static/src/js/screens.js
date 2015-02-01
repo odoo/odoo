@@ -1563,6 +1563,27 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
                 this.$('.js_invoice').removeClass('highlight');
             }
         },
+        click_tip: function(){
+            var self   = this;
+            var order  = this.pos.get_order();
+            var tip    = order.get_tip();
+            var change = order.get_change();
+            var value  = tip;
+
+            if (tip === 0 && change > 0  ) {
+                value = change;
+            }
+
+            this.gui.show_popup('number',{
+                'title': tip ? _t('Change Tip') : _t('Add Tip'),
+                'value': value,
+                'confirm': function(value) {
+                    order.set_tip(Number(value));
+                    self.order_changes();
+                    self.render_paymentlines();
+                }
+            });
+        },
         click_set_customer: function(){
             this.gui.show_screen('clientlist');
         },
@@ -1591,6 +1612,10 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
 
             this.$('.js_set_customer').click(function(){
                 self.click_set_customer();
+            });
+
+            this.$('.js_tip').click(function(){
+                self.click_tip();
             });
             this.$('.js_invoice').click(function(){
                 self.click_invoice();

@@ -593,6 +593,11 @@
                                 </div>
                             </t>
                         </t>
+                        <t t-if='widget.pos.config.tip_product_id'>
+                            <div class='button js_tip'>
+                                <i class='fa fa-heart' /> Tip 
+                            </div>
+                        </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_cashdrawer'>
                                 <i class='fa fa-archive' /> Open Cashbox

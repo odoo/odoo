@@ -94,6 +94,7 @@ class pos_config(osv.osv):
         'barcode_nomenclature_id':  fields.many2one('barcode.nomenclature','Barcodes', help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers', required=True),
         'group_pos_manager_id': fields.many2one('res.groups','Point of Sale Manager Group', help='This field is there to pass the id of the pos manager group to the point of sale client'),
         'group_pos_user_id':    fields.many2one('res.groups','Point of Sale User Group', help='This field is there to pass the id of the pos user group to the point of sale client'),
+        'tip_product_id':       fields.many2one('product.product','Tip Product', help="The product used to encode the customer tip. Leave empty if you do not accept tips."),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
