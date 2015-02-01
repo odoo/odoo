@@ -400,14 +400,17 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
 
             this.line_click_handler = function(event){
-                self.pos.get_order().select_orderline(this.orderline);
-                self.numpad_state.reset();
+                self.click_line(this.orderline, event);
             };
 
             if (this.pos.get_order()) {
                 this.bind_order_events();
             }
 
+        },
+        click_line: function(orderline, event) {
+            this.pos.get_order().select_orderline(orderline);
+            this.numpad_state.reset();
         },
         set_value: function(val) {
         	var order = this.pos.get_order();
