@@ -466,6 +466,7 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
             if (this.pos.debug) {
                 this.widget.debug.show();
             } else {
+                var self  = this;
                 var time  = (new Date()).getTime();
                 var delay = 500;
                 if (this.logo_click_time + 500 < time) {
@@ -476,7 +477,9 @@ openerp.point_of_sale.load_chrome = function load_chrome(instance, module){ //mo
                     this.logo_click_count += 1;
                     if (this.logo_click_count >= 6) {
                         this.logo_click_count = 0;
-                        this.widget.debug.show();
+                        this.gui.sudo().then(function(){
+                            self.widget.debug.show();
+                        });
                     }
                 }
             }
