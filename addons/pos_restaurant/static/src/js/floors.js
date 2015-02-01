@@ -606,8 +606,9 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                 self.toggle_editing();
             });
 
-            this.$('.floor-map').click(function(event){
-                if (event.target === self.$('.floor-map')[0]) {
+            this.$('.floor-map,.floor-map .tables').click(function(event){
+                if (event.target === self.$('.floor-map')[0] ||
+                    event.target === self.$('.floor-map .tables')[0]) {
                     self.deselect_tables();
                 }
             });
