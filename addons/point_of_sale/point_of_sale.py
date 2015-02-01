@@ -1072,7 +1072,7 @@ class pos_order(osv.osv):
                 # if have_to_group_by:
 
                 sale_journal_id = order.sale_journal.id
-                period = account_period_obj.find(cr, uid, context=dict(context or {}, company_id=current_company.id))[0]
+                period = account_period_obj.find(cr, uid, dt=order.date_order[:10], context=dict(context or {}, company_id=current_company.id))[0]
 
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
