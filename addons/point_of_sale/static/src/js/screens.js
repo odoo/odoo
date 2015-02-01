@@ -1516,12 +1516,19 @@ openerp.point_of_sale.load_screens = function load_screens(instance, module){ //
             }
 
             var lines = order.get_paymentlines();
+            var due   = order.get_due();
+            var extradue = 0;
+            if (due && lines.length  && due !== order.get_due(lines[lines.length-1])) {
+                extradue = due;
+            }
+
 
             this.$('.paymentlines-container').empty();
             var lines = $(QWeb.render('PaymentScreen-Paymentlines', { 
                 widget: this, 
                 order: order,
                 paymentlines: lines,
+                extradue: extradue,
             }));
 
             lines.on('click','.delete-button',function(){
