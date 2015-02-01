@@ -51,6 +51,7 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
                     self.printers.push(printer);
                 }
             }
+            self.config.iface_printers = !!self.printers.length;
         },
     });
 
@@ -58,6 +59,9 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
     module.Orderline = module.Orderline.extend({
         initialize: function(args) {
             _super_orderline.initialize.apply(this,arguments);
+            if (!this.pos.config.iface_printers) {
+                return;
+            }
             if (typeof this.mp_dirty === 'undefined') {
                 // mp dirty is true if this orderline has changed
                 // since the last kitchen print
@@ -81,7 +85,7 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
             return json;
         },
         set_quantity: function(quantity) {
-            if (quantity !== this.quantity) {
+            if (this.pos.config.iface_printers && quantity !== this.quantity) {
                 this.mp_dirty = true;
             }
             _super_orderline.set_quantity.apply(this,arguments);
@@ -118,15 +122,19 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
     module.OrderWidget.include({
         render_orderline: function(orderline) {
             var node = this._super(orderline);
-            if (orderline.mp_skip) {
-                node.classList.add('skip');
-            } else if (orderline.mp_dirty) {
-                node.classList.add('dirty');
+            if (this.pos.config.iface_printers) {
+                if (orderline.mp_skip) {
+                    node.classList.add('skip');
+                } else if (orderline.mp_dirty) {
+                    node.classList.add('dirty');
+                }
             }
             return node;
         },
         click_line: function(line, event) {
-            if (this.pos.get_order().selected_orderline !== line) {
+            if (!this.pos.config.iface_printers) {
+                this._super(line, event);
+            } else if (this.pos.get_order().selected_orderline !== line) {
                 this.mp_dbclk_time = (new Date()).getTime();
             } else if (!this.mp_dbclk_time) {
                 this.mp_dbclk_time = (new Date()).getTime();
@@ -136,6 +144,7 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
             } else {
                 this.mp_dbclk_time = (new Date()).getTime();
             }
+
             this._super(line, event);
         },
     });
