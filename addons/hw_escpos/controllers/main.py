@@ -171,6 +171,9 @@ class EscposDriver(Thread):
                 elif task == 'xml_receipt':
                     if timestamp >= time.time() - 1 * 60 * 60:
                         printer.receipt(data)
+                elif task == 'xml_check':
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        printer.check(data)
                 elif task == 'cashbox':
                     if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
@@ -359,6 +362,11 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
+
+    @http.route('/hw_proxy/print_xml_check', type='json', auth='none', cors='*')
+    def print_xml_check(self, check):
+        _logger.info('ESC/POS: PRINT XML CHECK')
+        driver.push_task('xml_check',check)
 
     @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
     def add_supported_device(self, device_string):

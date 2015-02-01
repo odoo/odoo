@@ -8,10 +8,17 @@ CTL_FF    = '\x0c'             # Form feed
 CTL_CR    = '\x0d'             # Carriage return
 CTL_HT    = '\x09'             # Horizontal tab
 CTL_VT    = '\x0b'             # Vertical tab
+# Print Region
+REGION = '\x1b\x57'            # Set print region in page mode
 # Printer hardware
-HW_INIT   = '\x1b\x40'         # Clear data in buffer and reset modes
-HW_SELECT = '\x1b\x3d\x01'     # Printer select
-HW_RESET  = '\x1b\x3f\x0a\x00' # Reset printer hardware
+HW_INIT       = '\x1b\x40'         # Clear data in buffer and reset modes
+HW_SELECT     = '\x1b\x3d\x01'     # Printer select
+HW_RESET      = '\x1b\x3f\x0a\x00' # Reset printer hardware
+HW_PRINT_ROLL = '\x1B\x63\x30\x03' # 80mm roll, thermal
+HW_PRINT_SLIP = '\x1B\x63\x30\x04' # Slip / Cheque, dot matrix
+HW_PAGE_MODE  = '\x1b\x4c'         # Page mode
+HW_LANDSCAPE  = '\x1b\x54\x01'     # Set orientation=landscape
+
 # Cash Drawer
 CD_KICK_2 = '\x1b\x70\x00'     # Sends a pulse to pin 2 [] 
 CD_KICK_5 = '\x1b\x70\x01'     # Sends a pulse to pin 5 [] 
@@ -176,3 +183,10 @@ S_RASTER_N      = '\x1d\x76\x30\x00' # Set raster image normal size
 S_RASTER_2W     = '\x1d\x76\x30\x01' # Set raster image double width
 S_RASTER_2H     = '\x1d\x76\x30\x02' # Set raster image double height
 S_RASTER_Q      = '\x1d\x76\x30\x03' # Set raster image quadruple
+
+# Slip printer
+SLIP_TOP_MARGIN          = 5        # Set top margin (mm)
+SLIP_PRINTER_WIDTH       = 91       # Set max slip printer width (mm)
+SLIP_PAPER_DEFAULT_WIDTH = 80       # Set default paper width (mm)
+SLIP_PITCH_HORIZONTAL    = 0.174    # Printer horizontal pitch size (mm)
+SLIP_PITCH_VERTICAL      = 0.158    # Printer vertical pitch size (mm)
