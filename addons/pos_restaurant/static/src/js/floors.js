@@ -491,7 +491,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
             
             this.floor.tables.push(table);
             var tw = new module.TableWidget(this,{table: table});
-                tw.appendTo('.floor-map');
+                tw.appendTo('.floor-map .tables');
             this.table_widgets.push(tw);
             return tw;
         },
@@ -556,7 +556,7 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                 var tw = new module.TableWidget(this,{
                     table: this.floor.tables[i],
                 });
-                tw.appendTo(this.$('.floor-map'));
+                tw.appendTo(this.$('.floor-map .tables'));
                 this.table_widgets.push(tw);
             }
 

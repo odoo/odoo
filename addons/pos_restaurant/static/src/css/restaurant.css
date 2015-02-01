@@ -2,7 +2,6 @@
 
 .screen .screen-content-flexbox {
     margin:     0px auto;
-    max-width:  1024px;
     text-align: left;
     height:     100%;
     overflow:   hidden;
@@ -52,23 +51,18 @@
     transition: all 300ms ease-in-out;
 }
 
+.floor-map .tables {
+    position: relative;
+}
 @media screen and (min-width: 1024px) {
-    .floor-map {
-        margin: 8px;
-        border-radius: 3px;
-    }
-    .floor-selector {
-        margin: 8px;
-        margin-bottom: 0;
-        box-sizing: border-box;
-        width: auto;
-        border: none;
-    }
-    .floor-selector .button {
-        border-left: none;
-    }
-    .floor-selector .button.active{
-        border-radius: 3px;
+    .floor-map .tables {
+        max-width: 1024px;
+        margin: auto;
+        max-height: 540px;
+        border-radius: 0px 0px 6px 6px;
+        border: dashed 2px rgba(0,0,0,0.1);
+        border-top: none;
+        height: 100%;
     }
 }
 
