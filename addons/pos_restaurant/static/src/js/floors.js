@@ -473,17 +473,32 @@ openerp.pos_restaurant.load_floors = function(instance,module){
                 'position_h': 100,
                 'width': 75,
                 'height': 75,
-                'name': 'T1',
                 'shape': 'square',
                 'seats': 1,
             });
             this.select_table(tw);
+        },
+        new_table_name: function(name){
+            if (name) {
+                var num = Number((name.match(/\d+/g) || [])[0] || 0);
+                var str = (name.replace(/\d+/g,''));
+                var n   = {num: num, str:str};
+                    n.num += 1;
+                this.last_name = n;
+            } else if (this.last_name) {
+                this.last_name.num += 1;
+            } else {
+                this.last_name = {num: 1, str:'T'};
+            }
+            return '' + this.last_name.str + this.last_name.num;
         },
         create_table: function(params) {
             var table = {};
             for (var p in params) {
                 table[p] = params[p];
             }
+            
+            table.name = this.new_table_name(params.name);
 
             delete table['id']; 
             table.floor_id = [this.floor.id,''];
