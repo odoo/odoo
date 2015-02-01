@@ -735,7 +735,7 @@
         </div>
         <div class="question-block">
             <div class="pull-right author-box">
-                <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-rounded img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                 <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
