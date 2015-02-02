@@ -211,7 +211,10 @@ class ir_sequence(models.Model):
             return ''
 
         def _interpolation_dict():
-            t = time.localtime()  # Actually, the server is always in UTC.
+            if self.env.context.get('ir_sequence_date'):
+                t = time.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
+            else:
+                t = time.localtime()  # Actually, the server is always in UTC.
             return {
                 'year': time.strftime('%Y', t),
                 'month': time.strftime('%m', t),
