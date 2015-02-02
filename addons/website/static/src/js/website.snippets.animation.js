@@ -7,6 +7,22 @@
     if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
+    function load_called_template () {
+        var ids_or_xml_ids = _.uniq($("[data-oe-call]").map(function () {return $(this).data('oe-call');}).get());
+        if (ids_or_xml_ids.length) {
+            openerp.jsonRpc('/website/multi_render', 'call', {
+                    'ids_or_xml_ids': ids_or_xml_ids
+                }).then(function (data) {
+                    for (var k in data) {
+                        var $data = $(data[k]).addClass('o_block_'+k);
+                        $("[data-oe-call='"+k+"']").each(function () {
+                            $(this).replaceWith($data.clone());
+                        });
+                    }
+                });
+        }
+    }
+
     website.snippet.start_animation = function (editable_mode, $target) {
         for (var k in website.snippet.animationRegistry) {
             var Animation = website.snippet.animationRegistry[k];
@@ -27,6 +43,8 @@
                         !$snipped_id.data("snippet-view")) {
                     website.snippet.readyAnimation.push($snipped_id);
                     $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
+                } else if ($snipped_id.data("snippet-view")) {
+                    $snipped_id.data("snippet-view").start(editable_mode);
                 }
             });
         }
@@ -40,6 +58,7 @@
         });
     };
 
+    load_called_template(); // if asset is placed into head, move this call into $(document).ready
 
     $(document).ready(function () {
         if ($(".o_gallery:not(.oe_slideshow)").size()) {
@@ -65,7 +84,7 @@
         *  start
         *  This method is called after init
         */
-        start: function () {
+        start: function (editable_mode) {
         },
         /*
         *  stop
@@ -144,23 +163,44 @@
         start: function () {
             var url = encodeURIComponent(window.location.href);
             var title = encodeURIComponent($("title").text());
-            this.$target.find("a").each(function () {
+            this.$("a").each(function () {
                 var $a = $(this);
                 $a.attr("href", $(this).attr("href").replace("{url}", url).replace("{title}", title));
-                if ($a.attr("target") && $a.attr("target").match(/_blank/i)) {
-                    $a.click(function () {
+                if ($a.attr("target") && $a.attr("target").match(/_blank/i) && !$a.closest('.o_editable').length) {
+                    $a.on('click', function () {
                         window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
                         return false;
                     });
                 }
             });
-        },
+        }
     });
 
     website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
         selector: ".media_iframe_video",
         start: function () {
-            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+            if (!this.$target.has('.media_iframe_video_size')) {
+                var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
+                var size = '<div class="media_iframe_video_size">&nbsp;</div>';
+                this.$target.html(editor+size+'<iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+            }
+        },
+    });
+    
+    website.snippet.animationRegistry.ul = website.snippet.Animation.extend({
+        selector: "ul.o_ul_folded, ol.o_ul_folded",
+        start: function (editable_mode) {
+            this.$('.o_ul_toggle_self').off('click').on('click', function (event) {
+                $(this).toggleClass('o_open');
+                $(this).closest('li').find('ul,ol').toggleClass('o_close');
+                event.preventDefault();
+            });
+
+            this.$('.o_ul_toggle_next').off('click').on('click', function (event) {
+                $(this).toggleClass('o_open');
+                $(this).closest('li').next().toggleClass('o_close');
+                event.preventDefault();
+            });
         },
     });
     
@@ -188,12 +228,14 @@
                     milliseconds = undefined,
                     params = undefined,
                     $images = $cur.closest(".o_gallery").find("img"),
+                    size = 0.8,
                     dimensions = {
-                        min_width  : Math.round( window.innerWidth  *  0.7),
-                        min_height : Math.round( window.innerHeight *  0.7),
-                        max_width  : Math.round( window.innerWidth  *  0.7),
-                        max_height : Math.round( window.innerHeight *  0.7),
-                        height : Math.round( window.innerHeight *  0.7)
+                        min_width  : Math.round( window.innerWidth  *  size*0.9),
+                        min_height : Math.round( window.innerHeight *  size),
+                        max_width  : Math.round( window.innerWidth  *  size*0.9),
+                        max_height : Math.round( window.innerHeight *  size),
+                        width : Math.round( window.innerWidth *  size*0.9),
+                        height : Math.round( window.innerHeight *  size)
                 };
 
                 $images.each(function() {
@@ -222,11 +264,59 @@
 
                 });
                 $modal.find(".modal-content, .modal-body.o_slideshow").css("height", "100%");
-
                 $modal.appendTo(document.body);
-                $modal.find(".carousel").carousel();
+
+                this.carousel = new website.snippet.animationRegistry.gallery_slider($modal.find(".carousel").carousel());
             }
         } // click_handler  
+    });
+    website.snippet.animationRegistry.gallery_slider = website.snippet.Animation.extend({
+        selector: ".o_slideshow",
+        start: function() {
+            var $carousel = this.$target.is(".carousel") ? this.$target : this.$target.find(".carousel");
+            var self = this;
+            var $indicator = $carousel.find('.carousel-indicators');
+            var $lis = $indicator.find('li:not(.fa)');
+            var $prev = $indicator.find('li.fa:first');
+            var $next = $indicator.find('li.fa:last');
+            var index = ($lis.filter('.active').index() || 1) -1;
+            var page = Math.floor(index / 10);
+            var nb = Math.ceil($lis.length / 10);
+
+             // fix bootstrap use index insead of data-slide-to
+            $carousel.on('slide.bs.carousel', function() {
+                setTimeout(function () {
+                    var $item = $carousel.find('.carousel-inner .prev, .carousel-inner .next');
+                    var index = $item.index();
+                    $lis.removeClass("active")
+                        .filter('[data-slide-to="'+index+'"]')
+                        .addClass("active");
+                },0);
+            });
+
+            function hide () {
+                $lis.addClass('hidden').each(function (i) {
+                    if (i >= page*10 && i < (page+1)*10) {
+                        $(this).removeClass('hidden');
+                    }
+                });
+                $prev.css('visibility', page === 0 ? 'hidden' : '');
+                $next.css('visibility', (page+1) >= nb ? 'hidden' : '');
+            }
+
+            $indicator.find('li.fa').on('click', function () {
+                page = (page + ($(this).hasClass('o_indicators_left')?-1:1)) % nb;
+                $carousel.carousel(page*10);
+                hide();
+            });
+            hide();
+
+            $carousel.on('slid.bs.carousel', function() {
+                var index = ($lis.filter('.active').index() || 1) -1;
+                page = Math.floor(index / 10);
+                hide();
+            });
+        }
     });
 
 })();

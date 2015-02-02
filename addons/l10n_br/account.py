@@ -44,7 +44,7 @@ class account_tax(osv.osv):
                'amount_mva': fields.float('MVA Percent', required=True, 
                                           digits=0,
                                           help="Um percentual decimal em % entre 0-1."),
-                'amount_type': fields.selection([('group', 'Group of Taxes'),
+               'amount_type': fields.selection([('group', 'Group of Taxes'),
                                                  ('fixed', 'Fixed'),
                                                  ('percent', 'Percentage of Price'),
                                                  ('division', 'Percentage of Price Tax Included')],

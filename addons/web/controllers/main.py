@@ -38,6 +38,7 @@ from openerp.tools.translate import _
 from openerp import http
 
 from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -486,7 +487,7 @@ class Home(http.Controller):
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
-
+        request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
 
@@ -494,10 +495,6 @@ class Home(http.Controller):
             request.uid = openerp.SUPERUSER_ID
 
         values = request.params.copy()
-        if not redirect:
-            redirect = '/web?' + request.httprequest.query_string
-        values['redirect'] = redirect
-
         try:
             values['databases'] = http.db_list()
         except openerp.exceptions.AccessDenied:
@@ -507,6 +504,9 @@ class Home(http.Controller):
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
+                request.params['login_success'] = True
+                if not redirect:
+                    redirect = '/web'
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
@@ -744,24 +744,21 @@ class Database(http.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token, **kwargs):
+    def backup(self, backup_db, backup_pwd, token, backup_format='zip'):
         try:
-            format = kwargs.get('format')
-            ext = "zip" if format == 'zip' else "dump"
-            db_dump = base64.b64decode(
-                request.session.proxy("db").dump(backup_pwd, backup_db, format))
-            filename = "%(db)s_%(timestamp)s.%(ext)s" % {
-                'db': backup_db,
-                'timestamp': datetime.datetime.utcnow().strftime(
-                    "%Y-%m-%d_%H-%M-%SZ"),
-                'ext': ext
-            }
-            return request.make_response(db_dump,
-               [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', content_disposition(filename))],
-               {'fileToken': token}
-            )
+            openerp.service.security.check_super(backup_pwd)
+            ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            filename = "%s_%s.%s" % (backup_db, ts, backup_format)
+            headers = [
+                ('Content-Type', 'application/octet-stream; charset=binary'),
+                ('Content-Disposition', content_disposition(filename)),
+            ]
+            dump_stream = openerp.service.db.dump_db(backup_db, None, backup_format)
+            response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
+            response.set_cookie('fileToken', token)
+            return response
         except Exception, e:
+            _logger.exception('Database.backup')
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
@@ -959,7 +956,7 @@ class DataSet(http.Controller):
                 return records
 
         if method.startswith('_'):
-            raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
+            raise AccessError(_("Underscore prefixed methods cannot be remotely called"))
 
         return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
@@ -1101,10 +1098,14 @@ class Binary(http.Controller):
         Model = request.registry[model]
         cr, uid, context = request.cr, request.uid, request.context
         fields = [field]
+        content_type = 'application/octet-stream'
         if filename_field:
             fields.append(filename_field)
         if id:
+            fields.append('file_type')
             res = Model.read(cr, uid, [int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(cr, uid, fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1115,7 +1116,7 @@ class Binary(http.Controller):
             if filename_field:
                 filename = res.get(filename_field, '') or filename
             return request.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
+                [('Content-Type', content_type),
                  ('Content-Disposition', content_disposition(filename))])
 
     @http.route('/web/binary/saveas_ajax', type='http', auth="public")
@@ -1128,6 +1129,7 @@ class Binary(http.Controller):
         id = jdata.get('id', None)
         filename_field = jdata.get('filename_field', None)
         context = jdata.get('context', {})
+        content_type = 'application/octet-stream'
 
         Model = request.session.model(model)
         fields = [field]
@@ -1136,7 +1138,10 @@ class Binary(http.Controller):
         if data:
             res = { field: data }
         elif id:
+            fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
+            if res.get('file_type'):
+                content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
@@ -1148,7 +1153,7 @@ class Binary(http.Controller):
             if filename_field:
                 filename = res.get(filename_field, '') or filename
             return request.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
+                headers=[('Content-Type', content_type),
                         ('Content-Disposition', content_disposition(filename))],
                 cookies={'fileToken': token})
 
@@ -1562,6 +1567,7 @@ class Reports(http.Controller):
     @serialize_exception
     def index(self, action, token):
         action = simplejson.loads(action)
+
         report_srv = request.session.proxy("report")
         context = dict(request.context)
         context.update(action["context"])
@@ -1604,14 +1610,12 @@ class Reports(http.Controller):
             else:
                 file_name = action['report_name']
         file_name = '%s.%s' % (file_name, report_struct['format'])
-        headers=[
-             ('Content-Disposition', content_disposition(file_name)),
-             ('Content-Type', report_mimetype),
-             ('Content-Length', len(report))]
-        if action.get('pdf_viewer'):
-            del headers[0]
+
         return request.make_response(report,
-             headers=headers,
+             headers=[
+                 ('Content-Disposition', content_disposition(file_name)),
+                 ('Content-Type', report_mimetype),
+                 ('Content-Length', len(report))],
              cookies={'fileToken': token})
 
 class Apps(http.Controller):
@@ -1638,7 +1642,3 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
-
-
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

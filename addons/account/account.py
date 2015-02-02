@@ -10,6 +10,7 @@ import openerp
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.exceptions import UserError
 
 import openerp.addons.decimal_precision as dp
 
@@ -22,9 +23,10 @@ _logger = logging.getLogger(__name__)
 class res_company(models.Model):
     _inherit = "res.company"
 
-    income_currency_exchange_account_id = fields.Many2one('account.account',
+    currency_exchange_journal_id = fields.Many2one('account.journal', string="Currency Adjustments Journal", domain=[('type', '=', 'general')])
+    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id',
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    expense_currency_exchange_account_id = fields.Many2one('account.account',
+    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
 
 
@@ -95,7 +97,7 @@ class account_payment_term_line(models.Model):
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
-            raise Warning(_('Percentages for Payment Term Line must be between 0 and 100.'))
+            raise UserError(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
 
 class account_account_type(models.Model):
@@ -166,12 +168,12 @@ class account_account(models.Model):
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type.type', store=True)
     child_consol_ids = fields.Many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', string='Consolidated Children', domain=[('deprecated', '=', False)])
-    last_time_entries_checked = fields.Datetime(string='Latest Manual Reconciliation Date', readonly=True, copy=False,
-        help='Last time the manual reconciliation was performed on this account. It is set either if there\'s not at least '\
+    last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
+        help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
 
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
-        help="Check this box if this account allows reconciliation of journal items.")
+    reconcile = fields.Boolean(string='Allow Invoices & Payments Matching', default=False,
+        help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
@@ -215,18 +217,18 @@ class account_account(models.Model):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             for account in self:
                 if (account.company_id.id <> vals['company_id']) and move_lines:
-                    raise Warning(_('You cannot change the owner company of an account that already contains journal items.'))
+                    raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
         return super(account_account, self).write(vals)
 
     @api.multi
     def unlink(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
-            raise Warning(_('You cannot do that on an account that contains journal items.'))
+            raise UserError(_('You cannot do that on an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference','in', values)], limit=1)
         if partner_prop_acc:
-            raise Warning(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
+            raise UserError(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return super(account_account, self).unlink()
 
     @api.multi
@@ -291,9 +293,9 @@ class account_journal(models.Model):
     def _check_currency(self):
         if self.currency:
             if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
+                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency.id:
-                raise Warning(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
+                raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
 
     @api.one
     def copy(self, default=None):
@@ -308,7 +310,7 @@ class account_journal(models.Model):
         for journal in self:
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 if self.env['account.move.line'].search([('journal_id', 'in', self.ids)], limit=1):
-                    raise Warning(_('This journal already contains items, therefore you cannot modify its company field.'))
+                    raise UserError(_('This journal already contains items, therefore you cannot modify its company field.'))
         return super(account_journal, self).write(vals)
 
     @api.model
@@ -367,7 +369,7 @@ class account_fiscalyear(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop < self.date_start:
-            raise Warning(_('Error!\nThe start date of a fiscal year must precede its end date.'))
+            raise UserError(_('Error!\nThe start date of a fiscal year must precede its end date.'))
 
 
 #----------------------------------------------------------
@@ -419,6 +421,7 @@ class account_move(models.Model):
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(string='Date', required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
+    rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of')
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
       help='All manually created new journal entries are usually in the status \'Unposted\', '
@@ -434,6 +437,8 @@ class account_move(models.Model):
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.user.company_id)
     reconciled_percentage = fields.Float('Percentage Reconciled', compute='_compute_reconcile_percentage', digits=0, store=True, readonly=True)
+    statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
+    to_check = fields.Boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
     @api.multi
     def post(self):
@@ -456,7 +461,7 @@ class account_move(models.Model):
                             sequence = journal.refund_sequence_id
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
-                        raise Warning(_('Please define a sequence on the journal.'))
+                        raise UserError(_('Please define a sequence on the journal.'))
 
                 if new_name:
                     move.name = new_name
@@ -476,7 +481,7 @@ class account_move(models.Model):
     def button_cancel(self):
         for move in self:
             if not move.journal_id.update_posted:
-                raise Warning(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if self.ids:
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
@@ -488,7 +493,7 @@ class account_move(models.Model):
     def unlink(self, check=True):
         for move in self:
             if move['state'] != 'draft':
-                raise Warning(_('You cannot delete a posted journal entry "%s".') % move['name'])
+                raise UserError(_('You cannot delete a posted journal entry "%s".') %  move['name'])
             move.line_id._update_check()
             move.line_id.unlink()
         return super(account_move, self).unlink()
@@ -501,12 +506,12 @@ class account_move(models.Model):
             for line in move.line_id:
                 amount += line.debit - line.credit
                 if not move.company_id.id == line.account_id.company_id.id:
-                    raise Warning(_("Cannot create moves for different companies."))
+                    raise UserError(_("Cannot create moves for different companies."))
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise Warning(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
+                        raise UserError(_("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
             if abs(amount) > 10 ** -4:
-                raise Warning(_('You cannot validate a non-balanced entry.'))
+                raise UserError(_('You cannot validate a non-balanced entry.'))
         return True
 
     @api.model
@@ -540,8 +545,8 @@ class account_tax(models.Model):
     _order = 'sequence'
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -568,27 +573,26 @@ class account_tax(models.Model):
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
-        if not all(child.type_tax_use in ('as_child', self.type_tax_use) for child in self.children_tax_ids):
-            raise Warning(_('The application scope of taxes in a group must be either the same as the group or "Only in Tax Group".'))
+        if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
+            raise UserError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
     @api.one
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(account_tax, self).copy(default=default)
 
-    #@api.model
-    #def name_search(self, name, args=None, operator='ilike', limit=80):
-    #    """
-    #    Returns a list of tupples containing id, name, as internally it is called {def name_get}
-    #    result format: {[(id, name), (id, name), ...]}
-    #    """
-    #    args = args or []
-    #    if operator in expression.NEGATIVE_TERM_OPERATORS:
-    #        domain = [('description', operator, name), ('name', operator, name)]
-    #    else:
-    #        domain = ['|', ('description', operator, name), ('name', operator, name)]
-    #    taxes = self.search(expression.AND([domain, args]), limit=limit)
-    #    return taxes.name_get()
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=80):
+        """ Returns a list of tupples containing id, name, as internally it is called {def name_get}
+            result format: {[(id, name), (id, name), ...]}
+        """
+        args = args or []
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('description', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('description', operator, name), ('name', operator, name)]
+        taxes = self.search(expression.AND([domain, args]), limit=limit)
+        return taxes.name_get()
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -607,19 +611,19 @@ class account_tax(models.Model):
 
         return super(account_tax, self).search(args, offset, limit, order, count=count)
 
-    #@api.multi
-    #@api.depends('name', 'description')
-    #def name_get(self):
-    #    res = []
-    #    for record in self:
-    #        name = record.description and record.description or record.name
-    #        res.append((record.id, name))
-    #    return res
+    @api.multi
+    @api.depends('name', 'description')
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.description and record.description or record.name
+            res.append((record.id, name))
+        return res
 
     @api.onchange('amount')
     def onchange_amount(self):
-        if not self.description and self.amount_type in ('percent', 'division') and self.amount != 0.0:
-            self.description = "{0:.4g} %".format(self.amount)
+        if self.amount_type in ('percent', 'division') and self.amount != 0.0:
+            self.description = "{0:.4g}%".format(self.amount)
 
     @api.onchange('account_id')
     def onchange_account_id(self):
@@ -633,8 +637,24 @@ class account_tax(models.Model):
     @api.multi
     def normalized_set(self):
         """ Returns a recordset where groups are replaced by their children and each tax appears only once sorted by default sort order (sequence).
-            NB : It might make more sense to first filter out first-level taxes that appear in groups. """
+            Warning : It might make more sense to first filter out first-level taxes that appear in groups.
+            Eg. considering letters as taxes and alphabetic order as sequence :
+            [G, B([A, D, F]), E, C] sould become [A, C, D, E, F, G] or [A, D, F, C, E, G] ? """
         return self.mapped(lambda r: r.amount_type == 'group' and r.children_tax_ids or r).sorted()
+
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+        """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
+            price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
+        """
+        self.ensure_one()
+        if self.amount_type == 'fixed':
+            return math.copysign(self.amount, base_amount)
+        if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
+            return base_amount * self.amount / 100
+        if self.amount_type == 'percent' and self.price_include:
+            return base_amount - (base_amount / (1 + self.amount / 100))
+        if self.amount_type == 'division' and not self.price_include:
+            return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
@@ -658,6 +678,7 @@ class account_tax(models.Model):
         taxes = []
         prec = currency.decimal_places
         total_excluded = total_included = base = round(price_unit * quantity, prec)
+
         for tax in self:
             if tax.amount_type == 'group':
                 ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
@@ -668,22 +689,18 @@ class account_tax(models.Model):
                 taxes += ret['taxes']
                 continue
 
-            if tax.amount_type == 'fixed':
-                tax_amount = math.copysign(tax.amount, base)
-            elif (tax.amount_type == 'percent' and not tax.price_include) or (tax.amount_type == 'division' and tax.price_include):
-                tax_amount = base * tax.amount / 100
-            elif tax.amount_type == 'percent' and tax.price_include:
-                tax_amount = base - (base / (1 + tax.amount / 100))
-            elif tax.amount_type == 'division' and not tax.price_include:
-                tax_amount = base / (1 - tax.amount / 100) - base
+            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
             tax_amount = currency.round(tax_amount)
+
             if tax.price_include:
                 total_excluded -= tax_amount
                 base -= tax_amount
             else:
                 total_included += tax_amount
-                if tax.include_base_amount:
-                    base += tax_amount
+
+            if tax.include_base_amount:
+                base += tax_amount
+
             taxes.append({
                 'id': tax.id,
                 'name': tax.name,
@@ -693,6 +710,7 @@ class account_tax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
+
         return {
             'taxes': taxes,
             'total_excluded': currency.round(total_excluded),
@@ -723,7 +741,7 @@ class account_account_template(models.Model):
     user_type = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+    reconcile = fields.Boolean(string='Allow Invoices & payments Matching', default=False,
         help="Check this option if you want the user to reconcile entries in this account.")
     note = fields.Text(string='Note')
     tax_ids = fields.Many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', string='Default Taxes')
@@ -803,7 +821,7 @@ class account_add_tmpl_wizard(models.TransientModel):
         ptids = tmpl_obj.read([tids[0]['parent_id'][0]], ['code'])
         account = False
         if not ptids or not ptids[0]['code']:
-            raise Warning(_('There is no parent code for the template account.'))
+            raise UserError(_('There is no parent code for the template account.'))
             account = self.env['account.account'].search([('code', '=', ptids[0]['code'])], limit=1)
         return account
 
@@ -872,7 +890,7 @@ class account_tax_template(models.Model):
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('as_child', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'Only in Tax Group')], string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Choose 'Only in Tax Group' if it shouldn't be used outside a group of tax.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
@@ -930,7 +948,7 @@ class account_tax_template(models.Model):
                 'type_tax_use': tax.type_tax_use,
                 'amount_type': tax.amount_type,
                 'active': tax.active,
-                'company_id': tax.company_id,
+                'company_id': tax.company_id.id,
                 'children_tax_ids': tax.children_tax_ids,
                 'sequence': tax.sequence,
                 'amount': tax.amount,
@@ -1049,7 +1067,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
     def _get_chart_parent_ids(self, chart_template):
         """ Returns the IDs of all ancestor charts, including the chart itself.
             (inverse of child_of operator)
-        
+
             :param browse_record chart_template: the account.chart.template record
             :return: the IDS of all ancestor charts, including the chart itself.
         """
@@ -1074,7 +1092,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
-                base_tax_domain = [('chart_template_id', 'in', chart_ids), ('parent_id', '=', False)]
+                base_tax_domain = [('chart_template_id', 'in', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
                 sale_taxes = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
@@ -1115,7 +1133,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 if model_data:
                     chart_id = model_data[0]['res_id']
             chart = account_chart_template.browse(chart_id)
-            chart_hierarchy_ids = self._get_chart_parent_ids(chart) 
+            chart_hierarchy_ids = self._get_chart_parent_ids(chart)
             if 'chart_template_id' in fields:
                 res.update({'only_one_chart_template': len(chart_templates) == 1,
                             'chart_template_id': chart_id})
@@ -1306,7 +1324,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
             tmp1, tmp2 = self._install_template(template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2, tmp3 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref)
+        tmp1, tmp2 = self._load_template(template_id, company_id, code_digits=code_digits, obj_wizard=obj_wizard, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
@@ -1345,10 +1363,10 @@ class wizard_multi_charts_accounts(models.TransientModel):
 
         # writing account values on tax after creation of accounts
         for key, value in generated_tax_res['account_dict'].items():
-            if value['account_collected_id'] or value['account_paid_id']:
+            if value['account_id'] or value['refund_account_id']:
                 AccountTaxObj.browse(key).write({
-                    'account_collected_id': account_ref.get(value['account_collected_id'], False),
-                    'account_paid_id': account_ref.get(value['account_paid_id'], False),
+                    'account_id': account_ref.get(value['account_id'], False),
+                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
                 })
 
         # Create Journals
@@ -1396,8 +1414,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
         ir_values_obj = self.env['ir.values']
         company_id = self.company_id.id
 
-        self.company_id.write({'currency_id': self.currency_id.id})
-        self.company_id.write({'accounts_code_digits': self.code_digits})
+        self.company_id.write({'currency_id': self.currency_id.id, 'accounts_code_digits': self.code_digits})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company_id==1:
@@ -1435,16 +1452,15 @@ class wizard_multi_charts_accounts(models.TransientModel):
         :return: mapping of field names and values
         :rtype: dict
         '''
-
         # we need to loop to find next number for journal code
         for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            Journals = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
-            if not Journals:
+            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company.id)], context=context)
+            if not ids:
                 break
         else:
-            raise Warning(_('Cannot generate an unused journal code.'))
+            raise UserError(_('Cannot generate an unused journal code.'))
 
         return {
                 'name': line['acc_name'],
@@ -1476,24 +1492,33 @@ class wizard_multi_charts_accounts(models.TransientModel):
         # Seek the next available number for the account code
         code_digits = company.accounts_code_digits or 0
         bank_account_code_char = company.bank_account_code_char or ''
-        available_digits = abs(code_digits - len(bank_account_code_char))
-        for num in xrange(1, pow(10, available_digits)):
-            new_code = str(bank_account_code_char.ljust(code_digits-len(str(num)), '0')) + str(num)
-            recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])
-            if not recs:
+        for num in xrange(1, 100):
+            new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
+            ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company.id)])
+            if not ids:
                 break
         else:
-            raise Warning(_('Error!'), _('Cannot generate an unused account code.'))
+            raise UserError(_('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
-        cash_type = self.env.ref('account.data_account_type_cash') or False
-        bank_type = self.env.ref('account.data_account_type_bank') or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
+        cash_type = tmp and tmp[1] or False
+        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
+        bank_type = tmp and tmp[1] or False
+        parent_id = False
+        if acc_template_ref:
+            parent_id = acc_template_ref[ref_acc_bank.id]
+        else:
+            tmp = self.pool.get('account.account').search(cr, uid, [('code', '=', company.bank_account_code_char)], context=context)
+            if tmp:
+                parent_id = tmp[0]
+        
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
+                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
                 'company_id': company.id,
         }
 
@@ -1522,7 +1547,7 @@ class wizard_multi_charts_accounts(models.TransientModel):
                 journal_data.append(vals)
         ref_acc_bank = self.chart_template_id.bank_account_view_id
         if journal_data and not ref_acc_bank.code:
-            raise Warning(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
+            raise UserError(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
         company.write({'bank_account_code_char': ref_acc_bank.code})
 
         for line in journal_data:
@@ -1548,7 +1573,7 @@ class account_bank_accounts_wizard(models.TransientModel):
 
 class account_operation_template(models.Model):
     _name = "account.operation.template"
-    _description = "Preset to create journal entries during a reconciliation"
+    _description = "Preset to create journal entries during a invoices and payments matching"
 
     # TODO :
     # - wait for account.analytic.account to ckeck that domain=[('state','not in',('close','cancelled'))] is correct

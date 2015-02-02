@@ -311,7 +311,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return eval(c, globals_dict, locals_dict)
-    except openerp.osv.orm.except_orm:
+    except openerp.exceptions.except_orm:
         raise
     except openerp.exceptions.Warning:
         raise
@@ -321,9 +321,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except openerp.exceptions.AccessError:
         raise
+    except openerp.exceptions.MissingError:
+        raise
     except Exception, e:
         import sys
         exc_info = sys.exc_info()
         raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

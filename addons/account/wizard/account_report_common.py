@@ -3,8 +3,8 @@ import time
 from lxml import etree
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
 from openerp.osv.orm import setup_modifiers
+from openerp.exceptions import UserError
 
 class account_common_report(models.TransientModel):
     _name = "account.common.report"
@@ -107,7 +107,7 @@ class account_common_report(models.TransientModel):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise Warning(_('Select a starting and an ending period.'))
+                raise UserError(_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result

@@ -1,11 +1,8 @@
 # encoding: utf-8
 
-import time
 
 from openerp import api, fields, models, _
-import openerp.addons.decimal_precision as dp
-from openerp.tools import float_compare
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class account_cashbox_line(models.Model):
@@ -46,7 +43,7 @@ class account_cash_statement(models.Model):
         for statement in self:
             for line in statement.line_ids:
                 if line.journal_entry_id:
-                    raise Warning(_('Cannot cancel a cash register that already created journal items.'))
+                    raise UserError(_('Cannot cancel a cash register that already created journal items.'))
         self.state = 'draft'
 
     @api.model
@@ -99,13 +96,13 @@ class account_cash_statement(models.Model):
                 account = statement.journal_id.loss_account_id
                 name = _('Loss')
                 if not statement.journal_id.loss_account_id:
-                    raise Warning(_('There is no Loss Account on the journal %s.') % (statement.journal_id.name,))
+                    raise UserError(_('There is no Loss Account on the journal %s.') % (statement.journal_id.name,))
             else:
                 # statement.difference > 0.0
                 account = statement.journal_id.profit_account_id
                 name = _('Profit')
                 if not statement.journal_id.profit_account_id:
-                    raise Warning(_('There is no Profit Account on the journal %s.') % (statement.journal_id.name,))
+                    raise UserError(_('There is no Profit Account on the journal %s.') % (statement.journal_id.name,))
 
             values = {
                 'statement_id': statement.id,

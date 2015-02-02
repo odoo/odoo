@@ -271,12 +271,11 @@
                             </div>
                             <div class="modal-body" id="sign-dialog">
                               <p>
-                                  I agree that by signing this proposal, I
-                                  accept it on the behalf of <b t-field="quotation.company_id"/>,
-                                  for an amount of 
+                                  <span>I agree that by signing this proposal, I
+                                  accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
                                   <b data-id="total_amount" t-field="quotation.amount_total"
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
-                                  with payment terms: <b t-field="quotation.payment_term"/>.
+                                  <span>with payment terms: </span><b t-field="quotation.payment_term"/>.
                               </p>
                               <div id="signer" class="form-group">
                                   <label class="control-label" for="name">Your Name:</label>

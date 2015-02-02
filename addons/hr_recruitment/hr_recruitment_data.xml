@@ -18,7 +18,7 @@
     </record>
 
     <!-- Templates for interest / refusing applicants -->
-    <record id="applicant_refuse" model="email.template">
+    <record id="applicant_refuse" model="mail.template">
         <field name="name">Application refused</field>
         <field name="subject">Application refused</field>
         <field name="email_to">${object.email_from}</field>
@@ -36,7 +36,7 @@
          ${object.user_id and object.user_id.signature | safe or ''}]]></field>
     </record>
 
-    <record id="applicant_interest" model="email.template">
+    <record id="applicant_interest" model="mail.template">
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
         <field name="email_to">${object.email_from}</field>
@@ -53,22 +53,6 @@
         <br/>
          ${object.user_id.signature | safe}]]></field>
     </record>
-
-        <!--    HR Recruitment Source        -->
-
-    <record model="hr.recruitment.source" id="source_linkedin">
-        <field name="name">LinkedIn</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_monster">
-        <field name="name">Monster</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_word">
-        <field name="name">Word of Mouth</field>
-    </record>
-    <record model="hr.recruitment.source" id="source_website_company">
-        <field name="name">Company Website</field>
-    </record>
-
 
         <!--    Resource(type_id)        -->
 
@@ -182,5 +166,9 @@
     <record id="tag_applicant_sales" model="hr.applicant_category">
         <field name="name">Sales</field>
     </record>
+    <record model="utm.campaign" id="utm_campaign_job">
+            <field name="name">Job Campaign</field>
+    </record>
+
 </data>
 </openerp>

@@ -20,5 +20,3 @@
 ##############################################################################
 
 import analytic_contract_hr_expense
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

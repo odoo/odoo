@@ -25,6 +25,7 @@
 import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
@@ -115,7 +116,7 @@ class subscription_subscription(osv.osv):
                 id = int(id)
                 model = self.pool[model_name]
             except:
-                raise osv.except_osv(_('Wrong Source Document!'), _('Please provide another source document.\nThis one does not exist!'))
+                raise UserError(_('Please provide another source document.\nThis one does not exist!'))
 
             default = {'state':'draft'}
             doc_obj = self.pool.get('subscription.document')
@@ -142,7 +143,7 @@ class subscription_subscription(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context or {}):
             if record.state=="running":
-                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription!'))
+                raise UserError(_('You cannot delete an active subscription!'))
         return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):
@@ -165,7 +166,3 @@ class subscription_subscription_history(osv.osv):
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

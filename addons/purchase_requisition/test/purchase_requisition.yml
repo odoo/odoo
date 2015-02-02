@@ -46,7 +46,7 @@
   !context
     uid: 'res_users_purchase_requisition_user'
 -
-  I open another requisition and set tender state to choose bidding line.
+  I open another requisition and set tender state to choose tendering line.
 -
   !python {model: purchase.requisition}: |
     self.tender_in_progress(cr, uid, [ref("requisition1")], context=context)
@@ -58,7 +58,7 @@
     context.update({"active_model": "purchase.requisition","active_ids": [ref("requisition1")],"active_id": ref("requisition1")})
 - 
   !record {model: purchase.requisition.partner, id: requisition_partner_0}:
-    partner_id: base.res_partner_12
+    partner_ids: [base.res_partner_12]
 - 
   !python {model: purchase.requisition.partner}: |
     context.update({"mail_create_nolog" : True })

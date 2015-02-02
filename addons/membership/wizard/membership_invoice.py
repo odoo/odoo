@@ -72,6 +72,3 @@ class membership_invoice(osv.osv_memory):
             'views': [(False, 'tree'), (form_view_id, 'form')],
             'search_view_id': search_view_id,
         }
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

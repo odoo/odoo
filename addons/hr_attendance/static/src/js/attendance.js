@@ -69,25 +69,11 @@ openerp.hr_attendance = function (instance) {
         },
     });
 
-    instance.web.UserMenu.include({
-        do_update: function () {
-            this._super();
-            var self = this;
-            this.update_promise.done(function () {
-                if (!_.isUndefined(self.attendanceslider)) {
-                    return;
-                }
-                // check current user is an employee
-                var Users = new instance.web.Model('res.users');
-                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
-                    if (is_employee) {
-                        self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
-                        self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
-                    } else {
-                        self.attendanceslider = null;
-                    }
-                });
-            });
-        },
-    });
+    // Put the AttendanceSlider widget in the systray menu if the user is an employee
+    var Users = new instance.web.Model('res.users');
+    Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+        if (is_employee) {
+            instance.web.SystrayItems.push(instance.hr_attendance.AttendanceSlider);
+        }
+    })
 };

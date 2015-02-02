@@ -2,17 +2,30 @@
 <openerp>
     <data>
 
-<!-- Phone calls by user and team Graph View -->
+<!-- Phone calls by user and team Pivot View -->
 
-        <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
-            <field name="name">crm.phonecall.report.graph</field>
+        <record id="view_report_crm_phonecall_pivot" model="ir.ui.view">
+            <field name="name">crm.phonecall.report.pivot</field>
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Phone calls" type="pivot" stacked="True">
+                <pivot string="Phone calls" disable_linking="True">
                     <field name="team_id" type="row"/>
                     <field name="create_date" interval="month" type="col"/>
                     <field name="nbr" type="measure"/>
                     <field name="duration" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+<!-- Phone calls by user and team Graph View -->
+        <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
+            <field name="name">crm.phonecall.report.graph</field>
+            <field name="model">crm.phonecall.report</field>
+            <field name="arch" type="xml">
+                <graph string="Phone calls">
+                    <field name="create_date" interval="month"/>
+                    <field name="team_id"/>
+                    <field name="nbr" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -83,9 +96,8 @@
             <field name="name">Phone Calls Analysis</field>
             <field name="res_model">crm.phonecall.report</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
+            <field name="view_mode">pivot,graph</field>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="view_id" ref="view_report_crm_phonecall_graph"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
             <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>
         </record>
@@ -94,6 +106,13 @@
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_phonecall_graph"/>
+            <field name="act_window_id" ref="action_report_crm_phonecall"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_pivot">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_report_crm_phonecall_pivot"/>
             <field name="act_window_id" ref="action_report_crm_phonecall"/>
         </record>
 

@@ -54,5 +54,3 @@ This module adds several restaurant features to the Point of Sale:
     'installable': True,
     'auto_install': False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -14,4 +14,3 @@ class account_common_account_report(models.TransientModel):
     def pre_print_report(self, data):
         data['form'].update(self.read(['display_account'])[0])
         return data
-

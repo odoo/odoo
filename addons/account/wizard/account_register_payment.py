@@ -57,6 +57,7 @@ class account_register_payment(models.TransientModel):
             raise Warning(_('Configuration Error !'), _('The journal ' + self.journal_id.name + ' does not have a sequence, please specify one.'))
         if not self.journal_id.sequence_id.active:
             raise Warning(_('Configuration Error !'), _('The sequence of journal ' + self.journal_id.name + ' is deactivated.'))
+        self = self.with_context(ir_sequence_date=self.date_paid, date=self.date_paid)
         move_name = self.journal_id.sequence_id.next_by_id()
 
         sign = self.invoice_id.type in ('out_invoice', 'in_refund') and -1 or 1

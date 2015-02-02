@@ -45,4 +45,3 @@ class sale_report(osv.osv):
 
     def _group_by(self):
         return super(sale_report, self)._group_by() + ", s.warehouse_id, s.shipped"
-

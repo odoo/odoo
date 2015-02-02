@@ -93,4 +93,3 @@ class Crawler(openerp.tests.HttpCase):
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
         _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration/count, float(sql)/count)
-

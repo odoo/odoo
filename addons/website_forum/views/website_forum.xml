@@ -9,7 +9,6 @@
     </xpath>
 </template>
 
-<!-- Front-end custom css / js + ckeditor lib and customization -->
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
@@ -19,16 +18,8 @@
         <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
         <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
+        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
         <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = '/web/static/lib/ckeditor/';
-        </script>
-        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-         <script type="text/javascript">
-                CKEDITOR.config.toolbar = [['Bold','Italic','Underline','Strike'],['NumberedList','BulletedList', 'Blockquote']
-                ,['Outdent','Indent','Link','Unlink','Image'],] ;
-        </script>
-
     </xpath>
 </template>
 
@@ -60,6 +51,7 @@
                 <button type="button" class="btn btn-link js_close_intro" data-dismiss="alert" aria-hidden="true">Hide Intro</button>
             </div>
         </div>
+        
         <div class="container mt16 website_forum">
             <div class="navbar navbar-default">
                 <div class="navbar-header">
@@ -398,7 +390,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <button class="btn btn-primary" disabled="True" id="btn_post_your_article">Post</button>
+                    <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''}" disabled="True" id="btn_post_your_article"
+                        data-hashtags="#link" data-social-target-type="other">Post</button>
                 </div>
             </div>
         </form>
@@ -423,7 +416,8 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="text" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button class="btn btn-primary">Post Your Topic</button>
+            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''}"
+                data-hashtags="#discussion" data-social-target-type="default">Post Your Topic</button>
         </form>
     </t>
 </template>
@@ -458,8 +452,9 @@
             <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
             <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             <br/><br/>
-            <button t-attf-class="btn btn-primary #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
-                t-att-data-karma="forum.karma_ask">Post Your Question</button>
+            <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
+                t-att-data-karma="forum.karma_ask"
+                data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
         </form>
     </t>
 </template>
@@ -483,7 +478,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="karma_retag" t-attf-value="#{forum.karma_retag}" id="karma_retag"/>
-                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}"/>
+                <input type="text" name="post_tag" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
                 <br/>
             </div>
             <button class="btn btn-primary btn-lg">Save</button>
@@ -531,20 +526,21 @@
 
 <!-- Edition: post a reply -->
 <template id="post_reply">
-    <div class="css_editable_mode_hidden">
-        <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
+    <div class="css_editable_mode_hidden" groups="base.group_user">
+        <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" t-attf-id="content-#{str(object.id)}" class="form-control load_editor" required="True"/>
-            <button class="btn btn-primary">Post Comment</button>
+            <button class="btn btn-primary mb16">Post Comment</button>
         </form>
     </div>
 </template>
 
 <!-- Edition: post an answer -->
 <template id="post_answer">
-    <h3 class="mt8">Your Answer</h3>
+    <h3 class="mt8" t-if="question.post_type == 'question'">Your Answer</h3>
+    <h3 class="mt8" t-if="question.post_type != 'question'">Add a Comment</h3>
     <p t-if="question.post_type == 'question'">
         <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
         <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>
@@ -554,8 +550,9 @@
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" role="form">
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control load_editor" required="True"/>
-        <button t-attf-class="btn btn-primary mt16 #{not question.can_answer and 'karma_required' or ''}"
-            t-att-data-karma="question.forum_id.karma_answer">Post Answer</button>
+        <button t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} mt16 #{not question.can_answer and 'karma_required' or ''}"
+                t-att-data-karma="question.forum_id.karma_answer"
+                data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
     </form>
 </template>
 
@@ -575,7 +572,7 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-        <div t-attf-class="question">
+        <div t-attf-class="question #{can_bump and 'oe_js_bump' or ''}" t-att-data-type="question.post_type" t-att-data-last-update="question.write_date" t-att-data-id="question.id">
             <div class="pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
@@ -683,6 +680,9 @@
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
+                        <li t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                            <a t-attf-class="fa fa-reply" href="#post_reply"> Reply</a>
+                        </li>
                         <li t-if="question.post_type == 'question'">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
                                 t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
@@ -690,6 +690,10 @@
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
                                 Comment
                             </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="oe_social_share fa fa-share-square-o"
+                                t-attf-data-hashtags="#{question.post_type}">Share</a>
                         </li>
                     </ul>
                 </div>
@@ -705,7 +709,8 @@
                 <t t-set="answer" t-value="post_answer"/>
             </t>
         </div>
-        <div t-if="question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered and question.state != 'close' and question.active != False">
+        <div id="post_reply"
+                t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
             <t t-call="website_forum.post_answer"/>
         </div>
         <div t-if="question.post_type == 'question' and question.uid_has_answered" class="mb16">
@@ -735,7 +740,10 @@
                     t-field="answer.create_uid"
                     t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
-                <div class="text-muted">On <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></div>
+                <div class="text-muted">
+                    <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#answer_#{answer.id}">On</a> 
+                    <span t-field="answer.create_date" t-field-options='{"format":"short"}'/>
+                </div>
             </div>
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
@@ -774,9 +782,7 @@
                         </a>
                     </li>
                     <li t-if="question.post_type != 'question'">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" data-toggle="collapse"
+                        <a t-attf-class="fa fa-reply" style="cursor: pointer" data-toggle="collapse"
                             t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
                         </a>
                     </li>

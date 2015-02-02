@@ -1,15 +1,17 @@
-from openerp.osv import osv, fields
 
-class website(osv.osv):
+from openerp import fields, models
+
+class website(models.Model):
+
     _inherit = "website"
 
-    _columns = {
-        'channel_id': fields.many2one('im_livechat.channel', string="Channel"),
-    }
+    channel_id = fields.Many2one('im_livechat.channel', string='Live Chat Channel')
 
-class website_config_settings(osv.osv_memory):
+
+class website_config_settings(models.TransientModel):
+
     _inherit = 'website.config.settings'
 
-    _columns = {
-        'channel_id': fields.related('website_id', 'channel_id', type='many2one', relation='im_livechat.channel', string='Live Chat Channel'),
-    }
+    channel_id = fields.Many2one('im_livechat.channel', string='Live Chat Channel', related='website_id.channel_id')
+
+

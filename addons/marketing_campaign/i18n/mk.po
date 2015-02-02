@@ -7,15 +7,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-11-06 15:15+0000\n"
+"POT-Creation-Date: 2014-08-14 13:09+0000\n"
+"PO-Revision-Date: 2014-10-28 12:03+0000\n"
 "Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-07 07:34+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"X-Launchpad-Export-Date: 2014-10-29 07:49+0000\n"
+"X-Generator: Launchpad (build 17203)\n"
+
+#. module: marketing_crm
+#: help:marketing.config.settings,module_crm_profiling:0
+msgid ""
+"Allows users to perform segmentation within partners.\n"
+"-This installs the module crm_profiling."
+msgstr ""
+"Им дозволува на корисниците да извршат сегментација помеѓу партнерите.\n"
+"-Ова го инсталира модулот crm_profiling."
+
+#. module: marketing_crm
+#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid "Demo data for marketing campaigns"
+msgstr "Демо податоци за маркетинг кампањи"
+
+#. module: marketing_crm
+#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid ""
+"Installs demo data like leads, campaigns and segments for Marketing "
+"Campaigns.\n"
+"-This installs the module marketing_campaign_crm_demo."
+msgstr ""
+"Инсталира демо податоци како траги, кампањи и сегменти за маркетинг "
+"кампањи.\n"
+"-Ова го инсталира модулот marketing_campaign_crm_demo."
+
+#. module: marketing_crm
+#: view:crm.lead:marketing_crm.view_crm_lead_form
+#: view:crm.lead:marketing_crm.view_crm_opportunity_form
+msgid "Marketing"
+msgstr "Маркетинг"
+
+#. module: marketing_crm
+#: field:marketing.config.settings,module_crm_profiling:0
+msgid "Track customer profile to focus your campaigns"
+msgstr "Следење на профилот за фокусирање на кампањите"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -198,8 +234,7 @@ msgid "Cancel Workitem"
 msgstr ""
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -466,8 +501,7 @@ msgstr "Групирање според"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
-"Здраво, ќе го добиете вашиот пакет за добредојде преку е-маил наскоро."
+msgstr "Здраво, ќе го добиете вашиот пакет за добредојде преку е-маил наскоро."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
@@ -497,8 +531,7 @@ msgid "How is the destination workitem triggered"
 msgstr ""
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
@@ -672,8 +705,7 @@ msgid "Month(s)"
 msgstr "Месец(и)"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -1050,8 +1082,7 @@ msgstr "Кампањата не може да биде започната. Не�
 #: code:addons/marketing_campaign/marketing_campaign.py:800
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
-"Следниот чекор за оваа точка нема email или извештај за прегледување."
+msgstr "Следниот чекор за оваа точка нема email или извештај за прегледување."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0

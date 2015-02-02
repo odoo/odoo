@@ -28,6 +28,7 @@ from openerp.tools.misc import find_in_path
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.exceptions import UserError
 
 import re
 import time
@@ -49,10 +50,7 @@ from pyPdf import PdfFileWriter, PdfFileReader
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    wkhtmltopdf_bin = find_in_path('wkhtmltopdf')
-    if wkhtmltopdf_bin is None:
-        raise IOError
-    return wkhtmltopdf_bin
+    return find_in_path('wkhtmltopdf')
 
 
 #--------------------------------------------------------------------------
@@ -291,10 +289,7 @@ class Report(osv.Model):
         try:
             report = report_obj.browse(cr, uid, idreport[0], context=context)
         except IndexError:
-            raise osv.except_osv(
-                _('Bad Report Reference'),
-                _('This report is not loaded into the database: %s.' % report_name)
-            )
+            raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
         return {
             'context': context,
@@ -446,9 +441,8 @@ class Report(osv.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise osv.except_osv(_('Report (PDF)'),
-                                         _('Wkhtmltopdf failed (error code: %s). '
-                                           'Message: %s') % (str(process.returncode), err))
+                    raise UserError(_('Wkhtmltopdf failed (error code: %s). '
+                                        'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -463,7 +457,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.warning("Cannot save PDF report %r as attachment",
+                            _logger.info("Cannot save PDF report %r as attachment",
                                             attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',
@@ -519,7 +513,7 @@ class Report(osv.Model):
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
             command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-        elif paperformat.margin_top:
+        else:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
 
         if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
@@ -536,12 +530,9 @@ class Report(osv.Model):
         elif paperformat.header_spacing:
             command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
-        if paperformat.margin_left:
-            command_args.extend(['--margin-left', str(paperformat.margin_left)])
-        if paperformat.margin_bottom:
-            command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-        if paperformat.margin_right:
-            command_args.extend(['--margin-right', str(paperformat.margin_right)])
+        command_args.extend(['--margin-left', str(paperformat.margin_left)])
+        command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
+        command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
         if paperformat.header_line:

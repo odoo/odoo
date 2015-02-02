@@ -14,7 +14,7 @@
                 'stage_type':'lead',
                 'empty_list_help_model': 'crm.team',
                 'needaction_menu_ref': 'crm.menu_crm_opportunities',
-                'search_default_unassigned':1,
+                'search_default_to_process':1,
             }
         </field>
         <field name="help" type="html">
@@ -33,7 +33,7 @@
     <record model="ir.actions.act_window" id="crm_lead_opportunities">
         <field name="name">Opportunities</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">kanban,tree,graph,form,calendar</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
         <field name="domain">[('type','=','opportunity')]</field>
         <field name="context">{
                 'stage_type': 'opportunity',
@@ -41,7 +41,6 @@
                 'default_user_id': uid
             }
         </field>
-        <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         <field name="help" type="html">
             <p>

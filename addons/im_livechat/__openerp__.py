@@ -14,6 +14,7 @@ Live Chat Support
 Allow to drop instant messaging widgets on any web page that will communicate
 with the current server and dispatch visitors request amongst several live
 chat operators.
+Help your customers with this chat, and analyse their feedback.
 
         """,
     'data': [
@@ -27,7 +28,7 @@ chat operators.
     'demo': [
         "im_livechat_demo.xml",
     ],
-    'depends' : ["mail", "im_chat"],
+    'depends' : ["mail", "rating", "im_chat"],
     'installable': True,
     'auto_install': False,
     'application': True,

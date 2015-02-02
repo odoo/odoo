@@ -2,11 +2,6 @@
 <templates id="template" xml:space="preserve">
 
     <!-- Snippet loader -->
-    <t t-name="website.snippets_button">
-        <li class="navbar-form js_hide_on_translate" style="margin-top: 6px;">
-            <button type="button" data-action="snippet" class="btn btn-primary btn-xs">Insert Blocks</button>
-        </li>
-    </t>
     <t t-name="website.snippets_style">
         <li class="navbar-form">
             <div class="btn-group">
@@ -19,7 +14,13 @@
     </t>
 
     <t t-name="website.snippets">
-        <div id='oe_snippets'></div>
+        <div id='oe_snippets' class="o_open">
+            <div class="o_arrow">
+                <span class="fa fa-angle-double-right fa-1x" style="top: 10px;"></span>
+                <div>Insert Blocks</div>
+                <span class="fa fa-angle-double-right fa-1x" style="bottom: 10px;"></span>
+            </div>
+        </div>
     </t>
 
     <t t-name="website.snippet_overlay">
@@ -53,4 +54,20 @@
         <div class='oe_snippet_manipulator'></div>
     </t>
 
+    <!-- t-field options -->
+
+    <t t-name="website.many2one.button">
+        <div class="dropdown">
+            <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
+            <ul class="dropdown-menu contact_menu" role="menu">
+                <li><a><input href="#" type="email" placeholder="Search"/></a></li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="website.many2one.search">
+        <t t-foreach="contacts" t-as="item">
+            <li><a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
+        </t>
+    </t>
 </templates>

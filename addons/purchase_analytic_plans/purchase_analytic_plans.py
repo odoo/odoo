@@ -38,6 +38,3 @@ class purchase_order(osv.osv):
         res = super(purchase_order, self)._prepare_inv_line(cr, uid, account_id, order_line, context=context)
         res['analytics_id'] = order_line.analytics_id.id
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

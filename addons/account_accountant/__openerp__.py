@@ -44,4 +44,3 @@ It assigns manager and user access rights to the Administrator for the accountin
     'auto_install': False,
     'application': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

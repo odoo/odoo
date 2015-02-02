@@ -118,6 +118,7 @@
                                 <label for="group_multi_currency"/>
                                 <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
                                     <group>
+                                        <field name="currency_exchange_journal_id"/>
                                         <field name="income_currency_exchange_account_id"/>
                                         <field name="expense_currency_exchange_account_id"/>
                                     </group>

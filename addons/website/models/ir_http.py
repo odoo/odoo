@@ -38,9 +38,13 @@ class ir_http(orm.AbstractModel):
         )
 
     def _auth_method_public(self):
-        # TODO: select user_id from matching website
         if not request.session.uid:
-            request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base.public_user')
+            domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+            website_id = self.pool['website']._get_current_website_id(request.cr, openerp.SUPERUSER_ID, domain_name, context=request.context)
+            if website_id:
+                request.uid = self.pool['website'].browse(request.cr, openerp.SUPERUSER_ID, website_id, request.context).user_id.id
+            else:
+                request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
         else:
             request.uid = request.session.uid
 
@@ -76,7 +80,7 @@ class ir_http(orm.AbstractModel):
             if self.geo_ip_resolver and request.httprequest.remote_addr:
                 record = self.geo_ip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
-            
+
         if request.website_enabled:
             try:
                 if func:
@@ -166,38 +170,8 @@ class ir_http(orm.AbstractModel):
                     path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
 
-    def _serve_attachment(self):
-        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
-        if attach:
-            wdate = attach[0]['__last_update']
-            datas = attach[0]['datas']
-            response = werkzeug.wrappers.Response()
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(wdate, server_format)
-
-            response.set_etag(hashlib.sha1(datas).hexdigest())
-            response.make_conditional(request.httprequest)
-
-            if response.status_code == 304:
-                return response
-
-            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
-            response.data = datas.decode('base64')
-            return response
 
     def _handle_exception(self, exception, code=500):
-        # This is done first as the attachment path may
-        # not match any HTTP controller, so the request
-        # may not be website-enabled.
-        attach = self._serve_attachment()
-        if attach:
-            return attach
-
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
         if not is_website_request:
             # Don't touch non website requests exception handling
@@ -293,15 +267,17 @@ class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
     def generate(self, cr, uid, query=None, args={}, context=None):
         View = request.registry['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-            fields=['xml_id','priority','write_date'], order='name', context=context)
+        domain = [('page', '=', True)]
+        query = query and query.startswith('website.') and query[8:] or query
+        if query:
+            domain += [('key', 'like', query)]
+
+        views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
-            xid = view['xml_id'].startswith('website.') and view['xml_id'][8:] or view['xml_id']
+            xid = view['key'].startswith('website.') and view['key'][8:] or view['key']
             # the 'page/homepage' url is indexed as '/', avoid aving the same page referenced twice
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
-            if query and query.lower() not in xid.lower():
-                continue
             record = {'loc': xid}
             if view['priority'] <> 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)

@@ -17,6 +17,7 @@
                         <group>
                             <field name="field_parent"/>
                             <field name="inherit_id"/>
+                            <field name="mode"/>
                             <field name="model_data_id"/>
                             <field name="xml_id"/>
                             <field name="active"/>
@@ -72,7 +73,7 @@
                     <field name="model"/>
                     <field name="inherit_id"/>
                     <field name="type"/>
-                    <field name="arch"/>
+                    <field name="arch_db" string="View Architecture"/>
                     <group expand="0" string="Group By">
                         <filter string="Object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" domain="[]" context="{'group_by':'type'}"/>

@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
 
 class change_production_qty(osv.osv_memory):
     _name = 'change.production.qty'
@@ -80,12 +81,12 @@ class change_production_qty(osv.osv_memory):
                 if not bom_point:
                     bom_id = bom_obj._bom_find(cr, uid, product_id=prod.product_id.id, context=context)
                     if not bom_id:
-                        raise osv.except_osv(_('Error!'), _("Cannot find bill of material for this product."))
+                        raise UserError(_("Cannot find bill of material for this product."))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
                     bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
 
                 if not bom_id:
-                    raise osv.except_osv(_('Error!'), _("Cannot find bill of material for this product."))
+                    raise UserError(_("Cannot find bill of material for this product."))
 
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 product_details, workcenter_details = \
@@ -97,6 +98,3 @@ class change_production_qty(osv.osv_memory):
                 move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
         return {}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -94,6 +94,7 @@ class account_voucher(models.Model):
             ('pay_later', 'Pay Later or Group Funds'),
         ], 'Payment', select=True, readonly=True, states={'draft': [('readonly', False)]}, default='pay_now')
     date_due = fields.Date('Due Date', readonly=True, select=True, states={'draft': [('readonly', False)]})
+    audit = fields.Boolean('To Review', related="move_id.to_check", help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
     @api.multi
     def compute_tax(self):

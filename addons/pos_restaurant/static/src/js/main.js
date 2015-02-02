@@ -1,14 +1,16 @@
-openerp.pos_restaurant = function(instance){
+openerp.pos_restaurant = function(openerp){
 
-    var module = instance.point_of_sale;
+    var module = openerp.point_of_sale;
 
-    openerp_restaurant_notes(instance,module);
+    openerp.pos_restaurant.load_notes(openerp,module);
 
-    openerp_restaurant_splitbill(instance,module);
+    openerp.pos_restaurant.load_splitbill(openerp,module);
 
-    openerp_restaurant_printbill(instance,module);
+    openerp.pos_restaurant.load_printbill(openerp,module);
 
-    openerp_restaurant_floors(instance,module);
+    openerp.pos_restaurant.load_floors(openerp,module);
 
-    openerp_restaurant_multiprint(instance,module);
+    openerp.pos_restaurant.load_multiprint(openerp,module);
+
 };
+

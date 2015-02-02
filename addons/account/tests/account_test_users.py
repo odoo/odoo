@@ -17,7 +17,7 @@ class AccountTestUsers(TransactionCase):
         self.tax_model = self.env['account.tax']
         self.account_model = self.env['account.account']
         self.account_type_model = self.env['account.account.type']
-        self.currency_model = self.env['res.currency']
+        self.currency_euro = self.env.ref('base.EUR')
 
         self.account_user = self.res_user_model.create(dict(
             name="Accountant",

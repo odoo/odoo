@@ -439,5 +439,3 @@ if __name__=="__main__":
     else:
         print 'Usage: rml2html input.rml >output.html'
         print 'Try \'rml2html --help\' for more information.'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -48,16 +48,6 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
-
-def check_ssl():
-    try:
-        from OpenSSL import SSL
-        import socket
-
-        return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
-    except:
-        return False
-
 DEFAULT_LOG_HANDLER = [':INFO']
 
 def _get_default_datadir():
@@ -74,6 +64,12 @@ def _get_default_datadir():
 
 class configmanager(object):
     def __init__(self, fname=None):
+        """Constructor.
+
+        :param fname: a shortcut allowing to instantiate :class:`configmanager`
+                      from Python code without resorting to environment
+                      variable
+        """
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
@@ -95,7 +91,6 @@ class configmanager(object):
 
         self.misc = {}
         self.config_file = fname
-        self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([
             (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
@@ -142,24 +137,6 @@ class configmanager(object):
                          help="specify the TCP port for longpolling requests", type="int")
         parser.add_option_group(group)
 
-        # XML-RPC / HTTPS
-        title = "XML-RPC Secure Configuration"
-        if not self.has_ssl:
-            title += " (disabled as ssl is unavailable)"
-
-        group = optparse.OptionGroup(parser, title)
-        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", my_default='',
-                         help="Specify the TCP IP address for the XML-RPC Secure protocol. The empty string binds to all interfaces.")
-        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", my_default=8071,
-                         help="specify the TCP port for the XML-RPC Secure protocol", type="int")
-        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", my_default=True,
-                         help="disable the XML-RPC Secure protocol")
-        group.add_option("--cert-file", dest="secure_cert_file", my_default='server.cert',
-                         help="specify the certificate file for the SSL connection")
-        group.add_option("--pkey-file", dest="secure_pkey_file", my_default='server.pkey',
-                         help="specify the private key file for the SSL connection")
-        parser.add_option_group(group)
-
         # WEB
         group = optparse.OptionGroup(parser, "Web interface Configuration")
         group.add_option("--db-filter", dest="dbfilter", my_default='.*',
@@ -197,7 +174,7 @@ class configmanager(object):
         ]
         group.add_option('--log-level', dest='log_level', type='choice',
                          choices=levels, my_default='info',
-                         help='specify the level of the logging. Accepted values: %s (deprecated option).' % (levels,))
+                         help='specify the level of the logging. Accepted values: %s.' % (levels,))
 
         parser.add_option_group(group)
 
@@ -265,8 +242,6 @@ class configmanager(object):
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
-        group.add_option("-t", "--timezone", dest="timezone", my_default=False,
-                         help="specify reference timezone for the server (e.g. Europe/Brussels")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. The default is False, which means no count-based limit.",
@@ -377,8 +352,7 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            self.config_file or opt.config \
-                or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            self.config_file or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
         # Verify that we want to log or not, if not the output will go to stdout
@@ -394,9 +368,8 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
-                'xmlrpc', 'syslog', 'without_demo', 'timezone',
-                'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'log_db',
+                'xmlrpc', 'syslog', 'without_demo',
+                'dbfilter', 'log_handler', 'log_level', 'log_db',
                 'geoip_database',
         ]
 
@@ -417,7 +390,7 @@ class configmanager(object):
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs', 'proxy_mode',
+            'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
@@ -444,12 +417,17 @@ class configmanager(object):
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
+            default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
+            if os.path.exists(base_addons):
+                default_addons.append(base_addons)
             main_addons = os.path.abspath(os.path.join(self.options['root_path'], '../addons'))
-            self.options['addons_path'] = '%s,%s' % (base_addons, main_addons)
+            if os.path.exists(main_addons):
+                default_addons.append(main_addons)
+            self.options['addons_path'] = ','.join(default_addons)
         else:
             self.options['addons_path'] = ",".join(
-                    os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
+                    os.path.abspath(os.path.expanduser(os.path.expandvars(x.strip())))
                       for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
@@ -457,28 +435,6 @@ class configmanager(object):
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
-
-        # TODO checking the type of the parameters should be done for every
-        # parameters, not just the timezone.
-        # The call to get_server_timezone() sets the timezone; this should
-        # probably done here.
-        if self.options['timezone']:
-            # Prevent the timezone to be True. (The config file parsing changes
-            # the string 'True' to the boolean value True. It would be probably
-            # be better to remove that conversion.)
-            die(not isinstance(self.options['timezone'], basestring),
-                "Invalid timezone value in configuration or environment: %r.\n"
-                "Please fix this in your configuration." %(self.options['timezone']))
-
-            # If an explicit TZ was provided in the config, make sure it is known
-            try:
-                import pytz
-                pytz.timezone(self.options['timezone'])
-            except pytz.UnknownTimeZoneError:
-                die(True, "The specified timezone (%s) is invalid" % self.options['timezone'])
-            except:
-                # If pytz is missing, don't check the provided TZ, it will be ignored anyway.
-                pass
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
@@ -671,6 +627,3 @@ class configmanager(object):
         return os.path.join(self['data_dir'], 'filestore', dbname)
 
 config = configmanager()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

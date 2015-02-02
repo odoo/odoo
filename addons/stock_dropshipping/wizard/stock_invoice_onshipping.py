@@ -35,9 +35,12 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick = pickings and pickings[0]
         src_usage = pick.move_lines[0].location_id.usage
         dest_usage = pick.move_lines[0].location_dest_id.usage
-        pick_purchase = pick.move_lines and pick.move_lines[0].purchase_line_id and pick.move_lines[0].purchase_line_id.order_id.invoice_method == 'picking'
-        if pick.picking_type_id.code == 'outgoing' and src_usage == 'supplier' and dest_usage == 'customer' and pick_purchase:
-            return 'in_invoice'
+        if src_usage == 'supplier' and dest_usage == 'customer':
+            pick_purchase = pick.move_lines and pick.move_lines[0].purchase_line_id and pick.move_lines[0].purchase_line_id.order_id.invoice_method == 'picking'
+            if pick_purchase:
+                return 'purchase'
+            else:
+                return 'sale'
         else:
             return super(stock_invoice_onshipping, self)._get_invoice_type(cr, uid, context=context)
 

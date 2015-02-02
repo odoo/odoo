@@ -79,7 +79,14 @@
                             <field name="name"/>
                             <field name="sequence"/>
                             <field name="type"/>
-                            <field name="probability"/>
+                            <label for="probability" />
+                            <div>
+                                <field name="probability"/>
+                                <p class="text-muted">
+                                    A stage will be considered as 'Won' if the probability is 100% and it is folded in Kanban View.<br/>
+                                    A stage will be considered as  'Lost (Dead)' if the probability is 0% and it is folded in Kanban View.
+                                </p>
+                            </div>
                             <field name="case_default" groups="base.group_multi_salesteams"/>
                         </group>
                         <group>

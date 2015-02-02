@@ -29,5 +29,3 @@ class code_barcode(report_sxw.rml_parse):
             'time': time,
         })
 report_sxw.report_sxw('report.mrp.code.barcode', 'mrp_operations.operation.code', 'addons/mrp_operations/report/mrp_code_barcode.rml',parser=code_barcode,header=False)
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

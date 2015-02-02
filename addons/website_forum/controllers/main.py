@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 import werkzeug.urls
 import werkzeug.wrappers
 import simplejson
@@ -194,6 +195,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
+            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
@@ -293,7 +295,7 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
-            post.with_context(mail_create_nosubcribe=True).message_post(
+            post.with_context(mail_create_nosubscribe=True).message_post(
                 body=kwargs.get('comment'),
                 type='comment',
                 subtype='mt_comment')
@@ -344,6 +346,9 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
+    #  JSON utilities
+    # --------------------------------------------------
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", website=True)
     def post_upvote(self, forum, post, **kwargs):
         if not request.session.uid:
@@ -361,6 +366,13 @@ class WebsiteForum(http.Controller):
             return {'error': 'own_post'}
         upvote = True if post.user_vote < 0 else False
         return post.vote(upvote=upvote)
+
+    @http.route('/forum/post/bump', type='json', auth="public", website=True)
+    def post_bump(self, post_id, **kwarg):
+        post = request.env['forum.post'].browse(int(post_id))
+        if not post.exists() or post.parent_id:
+            return False
+        return post.bump()
 
     # User
     # --------------------------------------------------
@@ -438,16 +450,19 @@ class WebsiteForum(http.Controller):
                     (count_user_questions and current_user.karma > forum.karma_unlink_all))):
             return request.website.render("website_forum.private_profile", values)
 
-        # displaying only the 20 most recent questions
-        user_questions = user_question_ids[:20]
+        # limit length of visible posts by default for performance reasons, except for the high
+        # karma users (not many of them, and they need it to properly moderate the forum)
+        post_display_limit = None
+        if current_user.karma < forum.karma_unlink_all:
+            post_display_limit = 20
 
+        user_questions = user_question_ids[:post_display_limit]
         user_answer_ids = Post.search([
             ('parent_id', '!=', False),
             ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
             order='create_date desc')
         count_user_answers = len(user_answer_ids)
-        # displaying only the 20  most recent answers
-        user_answers = user_answer_ids[:20]
+        user_answers = user_answer_ids[:post_display_limit]
 
         # showing questions which user following
         post_ids = [follower.res_id for follower in Followers.sudo().search([('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]

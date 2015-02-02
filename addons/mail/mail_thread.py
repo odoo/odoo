@@ -46,6 +46,7 @@ from openerp.osv import fields, osv, orm
 from openerp.osv.orm import BaseModel
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
 
@@ -169,7 +170,7 @@ class mail_thread(osv.AbstractModel):
         for id in ids:
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
-                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><i class='fa fa-comments'/> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
             res[id].pop('message_unread_count', None)
         return res
 
@@ -649,7 +650,7 @@ class mail_thread(osv.AbstractModel):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
                     action = model_obj.get_access_action(cr, uid, res_id, context=context)
-                except (osv.except_osv, orm.except_orm):
+                except AccessError:
                     pass
             action.update({
                 'context': {
@@ -803,7 +804,7 @@ class mail_thread(osv.AbstractModel):
             mail_mail.send(cr, uid, [mail_id], context=context)
 
         def _warn(message):
-            _logger.warning('Routing mail with Message-Id %s: route %s: %s',
+            _logger.info('Routing mail with Message-Id %s: route %s: %s',
                                 message_id, route, message)
 
         # Wrong model
@@ -1352,7 +1353,7 @@ class mail_thread(osv.AbstractModel):
                 else:
                     stored_date = parsed_date.astimezone(tz=pytz.utc)
             except Exception:
-                _logger.warning('Failed to parse Date header %r in incoming mail '
+                _logger.info('Failed to parse Date header %r in incoming mail '
                                 'with message-id %r, assuming current date/time.',
                                 message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()
@@ -1442,18 +1443,34 @@ class mail_thread(osv.AbstractModel):
                     if follower.email == email_address:
                         partner_id = follower.id
             # second try: check in partners that are also users
+            # Escape special SQL characters in email_address to avoid invalid matches
+            email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+            email_brackets = "<%s>" % email_address
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address),
-                                                ('user_ids', '!=', False)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address),
+                                          ('user_ids', '!=', False)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets),
+                                              ('user_ids', '!=', False)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             # third try: check in partners
             if not partner_id:
-                ids = partner_obj.search(cr, SUPERUSER_ID, [
-                                                ('email', 'ilike', email_address)
-                                            ], limit=1, context=context)
+                # exact, case-insensitive match
+                ids = partner_obj.search(cr, SUPERUSER_ID,
+                                         [('email', '=ilike', email_address)],
+                                         limit=1, context=context)
+                if not ids:
+                    # if no match with addr-spec, attempt substring match within name-addr pair
+                    ids = partner_obj.search(cr, SUPERUSER_ID,
+                                             [('email', 'ilike', email_brackets)],
+                                             limit=1, context=context)
                 if ids:
                     partner_id = ids[0]
             partner_ids.append(partner_id)
@@ -1473,13 +1490,15 @@ class mail_thread(osv.AbstractModel):
             partner_id = partner_ids[idx]
             partner_info = {'full_name': email_address, 'partner_id': partner_id}
             result.append(partner_info)
-
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:
+                # Escape special SQL characters in email_address to avoid invalid matches
+                email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
+                email_brackets = "<%s>" % email_address
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
-                                    ('email_from', '=', email_address),
-                                    ('email_from', 'ilike', '<%s>' % email_address),
+                                    ('email_from', '=ilike', email_address),
+                                    ('email_from', 'ilike', email_brackets),
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:
@@ -1698,7 +1717,7 @@ class mail_thread(osv.AbstractModel):
             try:
                 self.check_access_rights(cr, uid, 'read')
                 self.check_access_rule(cr, uid, ids, 'read')
-            except (osv.except_osv, orm.except_orm):
+            except AccessError:
                 return False
         else:
             self.check_access_rights(cr, uid, 'write')

@@ -1,5 +1,5 @@
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class validate_account_move(models.TransientModel):
@@ -13,7 +13,7 @@ class validate_account_move(models.TransientModel):
     def validate_move(self):
         moves = self.env['account.move'].search([('state', '=', 'draft'), ('journal_id', 'in', self.journal_ids.ids), ('date', '=', self.date)], order='date')
         if not moves:
-            raise Warning(_('Specified journals do not have any account move entries in draft state for the specified periods.'))
+            raise UserError(_('Specified journals do not have any account move entries in draft state for the specified periods.'))
         moves.button_validate()
         return {'type': 'ir.actions.act_window_close'}
 
@@ -32,10 +32,6 @@ class validate_account_move_lines(models.TransientModel):
                 move_ids.append(line.move_id)
         move_ids = list(set(move_ids))
         if not move_ids:
-            raise Warning(_('Selected Entry Lines does not have any account move entries in draft state.'))
-        for moves in move_ids:
-            moves.button_validate()
+            raise UserError(_('Selected Entry Lines does not have any account move entries in draft state.'))
+        move_ids.button_validate()
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

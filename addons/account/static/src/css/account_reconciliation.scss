@@ -111,8 +111,22 @@ $aestetic_animation_speed: 300ms;
         }
     }
 
+    .show_more_container {
+        text-align: center;
+        
+        .show_more {
+            display: none;
+        }
+    }
     .notification_area {
         margin: 0 $actionColWidth;
+        .fa {
+            font-size: 20px;
+            margin-left: 7px;
+            line-height: 14px;
+            position: relative;
+            top: 3px;
+        }
     }
 
     .interface_options {
@@ -490,6 +504,7 @@ $aestetic_animation_speed: 300ms;
             border: 1px solid #d5d5d5;
             border-radius: 5px;
             padding: 10px;
+            overflow: auto;
 
             .quick_add {
                 position: relative;

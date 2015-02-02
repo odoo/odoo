@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<templates>
+<templates xml:space="preserve">
 
-    <t t-name="chatButton">
+    <t t-name="im_livechat.chatButton">
         <t t-esc="widget.text"/>
     </t>
 
-    <t t-name="support_feedback">
-        <div class="oe_im_chatview_feedback">
+    <t t-name="im_livechat.feedback">
+        <div class="oe_livechat_rating">
             <div class="oe_im_feedback_text">
-                Please take a second to rate our Livechat Support ...
+                Did we correctly answer your question ?
             </div>
-            <div class="oe_im_feedback_choices">
-                <a data-value="10" name="good" title="Good"><img src='/im_livechat/static/src/img/good.png'/></a>
-                <a data-value="5" name="ok" title="OK"><img src='/im_livechat/static/src/img/ok.png'/></a>
-                <a data-value="1" name="bad" title="Bad"><img src='/im_livechat/static/src/img/bad.png'/></a>
+            <div class="oe_livechat_rating_choices">
+                <img src='/rating/static/src/img/rating_10.png' alt="Good" data-value="10"/>
+                <img src='/rating/static/src/img/rating_5.png' alt="OK" data-value="5"/>
+                <img src='/rating/static/src/img/rating_0.png' alt="Bad" data-value="0" />
             </div>
-            <div class="oe_im_feedback_small_text">
-                Click on the icon that represent the most your feeling.
-            </div>
-            <div class="oe_im_feedback_reason">
+            <div class="oe_livechat_rating_reason">
                 <textarea id="reason" placeholder="Explain your note"></textarea>
             </div>
-            <div class="oe_im_feedback_btn">
-                <input type="button" id="submit" value="Send" />
+            <div class="oe_livechat_rating_reason_button">
+                <input type="button" id="rating_submit" value="Send" />
             </div>
         </div>
     </t>
+
 
 </templates>

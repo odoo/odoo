@@ -31,5 +31,3 @@ SREG2AX = {     # from http://www.axschema.org/types/#sreg
     'language': 'http://axschema.org/pref/language',
     'timezone': 'http://axschema.org/pref/timezone',
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -5,9 +5,9 @@ import time
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import Warning
 from openerp.report import report_sxw
 from openerp.tools import float_compare, float_round
+from openerp.exceptions import UserError
 
 
 class account_bank_statement(models.Model):
@@ -34,7 +34,7 @@ class account_bank_statement(models.Model):
         for statement in self:
             for line in statement.line_ids:
                 if line.journal_entry_id:
-                    raise Warning(_('Cannot cancel a statement that already created journal items.'))
+                    raise UserError(_('Cannot cancel a statement that already created journal items.'))
         self.state = 'open'
 
     @api.one
@@ -45,7 +45,7 @@ class account_bank_statement(models.Model):
     @api.one
     @api.depends('line_ids.journal_entry_id')
     def _check_lines_reconciled(self):
-        self.all_lines_reconciled = all([line.journal_entry_id.id for line in self.line_ids])
+        self.all_lines_reconciled = all([line.journal_entry_id.id or line.account_id.id for line in self.line_ids])
 
     _order = "date desc, id desc"
     _name = "account.bank.statement"
@@ -53,7 +53,7 @@ class account_bank_statement(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]},
-        readonly=True, # readonly for account_cash_statement
+        readonly=True,  # readonly for account_cash_statement
         copy=False, default='/',
         help='if you give the Name other then /, its created Accounting Entries Move '
              'will be with same name as statement name. '
@@ -90,7 +90,7 @@ class account_bank_statement(models.Model):
     @api.constrains('state', 'balance_end', 'balance_end_real')
     def _balance_check(self, journal_type='bank'):
         if self.state == 'confirmed' and float_compare(self.difference, 0.0, precision_digits=dp.get('Account')) != 0:
-            raise ValidationError(_('The ending balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
+            raise UserError(_('The ending balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (self.balance_end_real, self.balance_end))
         return True
 
     @api.multi
@@ -98,14 +98,13 @@ class account_bank_statement(models.Model):
         for statement in self:
             if statement.state in ('open'):
                 continue
-            journal_type = statement.journal_id.type
 
             if (not statement.journal_id.default_credit_account_id) or (not statement.journal_id.default_debit_account_id):
-                raise Warning(_('Please verify that a credit and a debit account is defined in the journal.'))
+                raise UserError(_('Please verify that a credit and a debit account is defined in the journal.'))
 
             for line in statement.move_line_ids:
                 if line.state != 'valid':
-                    raise Warning(_('The account entries lines are not in valid state.'))
+                    raise UserError(_('The account entries lines are not in valid state.'))
 
             moves = []
             for st_line in statement.line_ids:
@@ -121,7 +120,7 @@ class account_bank_statement(models.Model):
                     }
                     st_line.process_reconciliation([vals])
                 elif not st_line.journal_entry_id:
-                    raise Warning(_('All the account entries lines must be processed in order to close the statement.'))
+                    raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
                 moves.append(st_line.journal_entry_id)
             if moves:
                 moves.post()
@@ -133,7 +132,7 @@ class account_bank_statement(models.Model):
     def unlink(self):
         for statement in self:
             if statement.state != 'open':
-                raise Warning(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
+                raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
             # Explicitly unlink bank statement lines so it will check that
             # the related journal entries have been deleted first
             statement.line_ids.unlink()
@@ -196,7 +195,7 @@ class account_bank_statement(models.Model):
                 else:
                     counterpart = [line['id'] for line in counterpart]
                 try:
-                    if operation == 'reconciliation': 
+                    if operation == 'reconciliation':
                         st_line.process_reconciliation(counterpart)
                     else:
                         st_line.process_rapprochement(counterpart)
@@ -248,7 +247,7 @@ class account_bank_statement_line(models.Model):
     def unlink(self):
         for line in self:
             if line.journal_entry_id:
-                raise Warning(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
+                raise UserError(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
         return super(account_bank_statement_line, self).unlink()
 
     @api.v7
@@ -295,7 +294,7 @@ class account_bank_statement_line(models.Model):
             'name': self.name,
             'date': self.date,
             'amount': amount,
-            'amount_str': amount_str, # Amount in the statement line currency
+            'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': self.currency_id.id or statement_currency.id,
             'partner_id': self.partner_id.id,
             'statement_id': self.statement_id.id,
@@ -303,7 +302,7 @@ class account_bank_statement_line(models.Model):
             'account_name': self.journal_id.default_debit_account_id.name,
             'partner_name': self.partner_id.name,
             'communication_partner_name': self.partner_name,
-            'amount_currency_str': amount_currency_str, # Amount in the statement currency
+            'amount_currency_str': amount_currency_str,  # Amount in the statement currency
             'has_no_partner': not self.partner_id.id,
         }
         if self.partner_id:
@@ -344,7 +343,7 @@ class account_bank_statement_line(models.Model):
 
         # Look for structured communication match
         if self.name:
-            overlook_partner = not self.partner_id # If the transaction has no partner, look for match in payable and receivable account anyway
+            overlook_partner = not self.partner_id  # If the transaction has no partner, look for match in payable and receivable account anyway
             domain = equal_amount_domain + [('ref', '=', self.name)]
             match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=2, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids and len(match_ids) == 1:
@@ -368,7 +367,7 @@ class account_bank_statement_line(models.Model):
 
         # Look for structured communication match
         if self.name:
-            overlook_partner = not self.partner_id # If the transaction has no partner, look for match in payable and receivable account anyway
+            overlook_partner = not self.partner_id  # If the transaction has no partner, look for match in payable and receivable account anyway
             domain = [('ref', '=', self.name)]
             match_ids = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=1, additional_domain=domain, overlook_partner=overlook_partner)
             if match_ids:
@@ -387,12 +386,12 @@ class account_bank_statement_line(models.Model):
             return []
 
         # Look for a set of move line whose amount is <= to the line's amount
-        domain = [('reconciled', '=', False)] # Make sure we can't mix reconciliation and 'rapprochement'
-        domain += [('account_id.internal_type', '=', amount > 0 and 'receivable' or 'payable')] # Make sure we can't mix receivable and payable
-        domain += amount_domain_maker('<', amount) # Will also enforce > 0
-        mv_lines = self.get_move_lines_for_bank_reconciliation(excluded_ids=excluded_ids, limit=5, additional_domain=domain)
-        currency = self.currency_id or self.journal_id.currency or self.journal_id.company_id.currency_id
-        precision = currency.rounding
+        domain += [('account_id.type', 'in', ((amount > 0 and 'receivable' or 'payable'), 'liquidity'))]  # Make sure we can't mix receivable and payable
+        if amount_field == 'amount_currency' and amount < 0:
+            domain += [(amount_field, '<', 0), (amount_field, '>', (sign * amount))]
+        else:
+            domain += [(amount_field, '>', 0), (amount_field, '<', (sign * amount))]
+        mv_lines = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, limit=5, additional_domain=domain)
         ret = []
         total = 0
         for line in mv_lines:
@@ -468,11 +467,11 @@ class account_bank_statement_line(models.Model):
         # Check only using already reconciled entries
         for move_line in move_lines:
             if move_line.move_id.line_id.filtered(lambda l: l.account_id.reconcile).reconciled == False:
-                raise Warning(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
+                raise UserError(_('Error!'), _('You cannot mix reconciled and unreconciled items.'))
         # Check all move lines are from the same move
         move = move_lines[0].move_id
         if any([move_line.move_id != move for move_line in move_lines]):
-            raise Warning(_('Error!'), _('You cannot mix items from different journal entries.'))
+            raise UserError(_('Error!'), _('You cannot mix items from different journal entries.'))
         # Link move lines to the bank statement
         move_lines.write({'statement_id': self.statement_id.id})
         # Mark the statement line as reconciled
@@ -541,11 +540,11 @@ class account_bank_statement_line(models.Model):
         if currency_diff < 0:
             account_id = self.company_id.expense_currency_exchange_account_id.id
             if not account_id:
-                raise Warning(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
             account_id = self.company_id.income_currency_exchange_account_id.id
             if not account_id:
-                raise Warning(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+                raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         return {
             'move_id': move_id,
             'name': _('change') + ': ' + (self.name or '/'),
@@ -584,13 +583,15 @@ class account_bank_statement_line(models.Model):
 
         # Check and prepare received data
         if self.journal_entry_id.id:
-            raise Warning(_('The bank statement line was already reconciled.'))
+            raise UserError(_('The bank statement line was already reconciled.'))
         for mv_line_dict in mv_line_dicts:
             if mv_line_dict.get('counterpart_move_line_id'):
                 mv_line_dict['move_line'] = aml_obj.browse(mv_line_dict['counterpart_move_line_id'])
                 del mv_line_dict['counterpart_move_line_id']
                 if mv_line_dict['move_line'].reconciled:
-                    raise Warning(_('A selected move line was already reconciled.'))
+                    raise UserError(_('A selected move line was already reconciled.'))
+            if mv_line_dict.get('tax_ids') and mv_line_dict['tax_ids'] and isinstance(mv_line_dict['tax_ids'][0], (int, long)):
+                mv_line_dict['tax_ids'] = map(lambda id: (4, id, None), mv_line_dict['tax_ids'])
 
         # Create the move
         move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
@@ -668,7 +669,7 @@ class account_bank_statement_line(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('journal_entry_id', '=', False)]
+        return [('journal_entry_id', '=', False), ('account_id', '=', False)]
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"

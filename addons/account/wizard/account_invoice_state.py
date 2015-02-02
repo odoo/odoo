@@ -17,7 +17,7 @@ class account_invoice_confirm(models.TransientModel):
 
         for record in self.env['account.invoice'].browse(active_ids):
             if record.state not in ('draft', 'proforma', 'proforma2'):
-                raise Warning(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
+                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
             record.signal_workflow('invoice_open')
 
         return {'type': 'ir.actions.act_window_close'}
@@ -39,6 +39,6 @@ class account_invoice_cancel(models.TransientModel):
 
         for record in self.env['account.invoice'].browse(active_ids):
             if record.state in ('cancel','paid'):
-                raise Warning(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
+                raise UserError(_("Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state."))
             record.signal_workflow('invoice_cancel')
         return {'type': 'ir.actions.act_window_close'}

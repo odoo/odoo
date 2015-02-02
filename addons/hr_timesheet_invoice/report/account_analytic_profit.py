@@ -127,5 +127,3 @@ class report_account_analytic_profit(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'hr_timesheet_invoice.report_analyticprofit'
     _wrapped_report_class = account_analytic_profit
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

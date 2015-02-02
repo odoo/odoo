@@ -26,5 +26,3 @@ from task import Project, BalancedProject, AdjustedProject, Task, \
     DailyMax, VariableLoad
 
 from resource import Resource
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

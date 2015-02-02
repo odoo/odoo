@@ -47,7 +47,7 @@ class TestBankStatementReconciliation(TransactionCase):
         self.assertIsNotNone(counterpart_mv_line)
         self.assertTrue(rcv_mv_line.reconciled)
         self.assertTrue(counterpart_mv_line.reconciled)
-        self.assertEqual(counterpart_mv_line.reconcile_partial_with_ids, rcv_mv_line.reconcile_partial_ids)
+        self.assertEqual(counterpart_mv_line.matched_credit_ids, rcv_mv_line.matched_debit_ids)
 
     def test_reconcile_with_write_off(self):
         pass

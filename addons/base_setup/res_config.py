@@ -32,7 +32,7 @@ class base_config_settings(osv.osv_memory):
             help='Work in multi-company environments, with appropriate security access between companies.\n'
                  '-This installs the module multi_company.'),
         'module_share': fields.boolean('Allow documents sharing',
-            help="""Share or embbed any screen of openerp."""),
+            help="""Share or embbed any screen of Odoo."""),
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),
@@ -43,8 +43,6 @@ class base_config_settings(osv.osv_memory):
                                               help="""This installs the module google_calendar."""),
         'font': fields.many2one('res.font', string="Report Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
-        'module_web_pdf_viewer': fields.boolean('Use embedded PDF viewer for documents',
-                                              help="""Enable this option will open your documents in an embedded PDF viewer"""),
 
     }
     
@@ -92,9 +90,4 @@ class sale_config_settings(osv.osv_memory):
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
         'module_sale' : fields.boolean('SALE'),
-        'module_mass_mailing': fields.boolean(
-            'Manage mass mailing campaigns',
-            help='Get access to statistics with your mass mailing, manage campaigns.'),
     }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from openerp.osv import osv, fields
 
 
@@ -10,10 +9,10 @@ class MailComposeMessage(osv.TransientModel):
 
     _columns = {
         'mass_mailing_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
+            'mail.mass_mailing.campaign', 'Mass Mailing Campaign'
         ),
         'mass_mailing_id': fields.many2one(
-            'mail.mass_mailing', 'Mass Mailing'
+            'mail.mass_mailing', 'Mass Mailing', ondelete='cascade'
         ),
         'mass_mailing_name': fields.char('Mass Mailing'),
         'mailing_list_ids': fields.many2many(

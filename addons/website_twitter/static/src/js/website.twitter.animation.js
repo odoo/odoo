@@ -17,9 +17,6 @@
                     if (url) {
                         window.open(url, '_blank');
                     }
-                    else {
-                        debugger;
-                    }
                 }
             });
             $("<center><div><img src='/website_twitter/static/src/img/loadtweet.gif'></div></center>").appendTo(timeline);

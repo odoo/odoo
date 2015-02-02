@@ -17,6 +17,23 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_voucher_tree_nocreate">
+            <field name="name">account.voucher.tree_nocreate</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries" create="0" edit="0">
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="reference"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="voucher_type" invisible="context.get('visible', True)"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="audit" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
@@ -94,7 +111,6 @@
                 </graph>
             </field>
          </record>
-
 
         <act_window
             id="act_journal_voucher_open"

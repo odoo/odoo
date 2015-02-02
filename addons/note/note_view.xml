@@ -57,21 +57,18 @@
               <t t-set="record.group_fancy" t-value="1"  groups="note.group_note_fancy"/>
 
               <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
-                <div class="oe_dropdown_kanban">
-
+                <div class="oe_dropdown_kanban oe_dropdown_toggle">
                   <!-- dropdown menu -->
-                  <span class="oe_dropdown_toggle">
-                    <span class="oe_e">i</span>
-                    <ul class="oe_dropdown_menu">
-                      <li><a type="delete">Delete</a></li>
-                      <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                    </ul>
-                  </span>
-                  <div style="display: inline">
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
-                  </div>
+                  <i class="fa fa-bars fa-lg"/>
+                  <ul class="oe_dropdown_menu">
+                    <li><a type="delete">Delete</a></li>
+                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                  </ul>
                 </div>
+                  <div style="display: inline" class="oe_dropdown_kanban">
+                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-check"/></a>
+                  </div>
                 <!-- kanban note -->
                 <div t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->

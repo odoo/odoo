@@ -2,7 +2,7 @@
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 from openerp.osv import fields as old_fields
 
 
@@ -11,12 +11,7 @@ class event_event(models.Model):
 
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket',
-            default=lambda rec: rec._default_tickets(), copy=True)
-    seats_max = fields.Integer(
-        string='Maximum Available Seats',
-        help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
-             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-        store=True, readonly=True, compute='_compute_seats_max')
+        default=lambda rec: rec._default_tickets(), copy=True)
 
     badge_back = fields.Html('Badge Back', translate=True, states={'done': [('readonly', True)]})
     badge_innerleft = fields.Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
@@ -33,11 +28,6 @@ class event_event(models.Model):
             }]
         except ValueError:
             return self.env['event.event.ticket']
-
-    @api.one
-    @api.depends('event_ticket_ids.seats_max')
-    def _compute_seats_max(self):
-        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
 
 class event_ticket(models.Model):
@@ -70,8 +60,11 @@ class event_ticket(models.Model):
         #        be considered in the timezone of the event, not the timezone of the user!
         #        Until we add a TZ on the event we'll use the context's current date, more accurate
         #        than using UTC all the time.
-        current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
-        self.is_expired = self.deadline < current_date
+        if self.deadline:
+            current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
+            self.is_expired = self.deadline < current_date
+        else:
+            self.is_expired = False
 
     # FIXME non-stored fields wont ends up in _columns (and thus _all_columns), which forbid them
     #       to be used in qweb views. Waiting a fix, we create an old function field directly.
@@ -99,7 +92,12 @@ class event_ticket(models.Model):
     }
 
     # seats fields
-    seats_max = fields.Integer('Maximum Available Seats', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )")
+    seats_availability = fields.Selection(
+        [('limited', 'Limited'), ('unlimited', 'Unlimited')],
+        'Available Seat', required=True, store=True, compute='_compute_seats', default="limited")
+    seats_max = fields.Integer('Maximum Available Seats',
+                               help="Define the number of available tickets. If you have too much registrations you will"
+                                    "not BE able to sell tickets anymore. Set 0 to ignore this rule set as unlimited.")
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=True)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=True)
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seat Reservations', compute='_compute_seats', store=True)
@@ -109,8 +107,9 @@ class event_ticket(models.Model):
     @api.depends('seats_max', 'registration_ids.state')
     def _compute_seats(self):
         """ Determine reserved, available, reserved but unconfirmed and used seats. """
-        # initialize fields to 0
+        # initialize fields to 0 + compute seats availability
         for ticket in self:
+            ticket.seats_availability = 'unlimited' if ticket.seats_max == 0 else 'limited'
             ticket.seats_unconfirmed = ticket.seats_reserved = ticket.seats_used = ticket.seats_available = 0
         # aggregate registrations by ticket and by state
         if self.ids:
@@ -137,7 +136,7 @@ class event_ticket(models.Model):
     @api.constrains('registration_ids', 'seats_max')
     def _check_seats_limit(self):
         if self.seats_max and self.seats_available < 0:
-            raise Warning('No more available seats for the ticket')
+            raise UserError(_('No more available seats for the ticket'))
 
     @api.onchange('product_id')
     def onchange_product_id(self):
@@ -149,30 +148,34 @@ class event_registration(models.Model):
     _inherit = 'event.registration'
 
     event_ticket_id = fields.Many2one('event.event.ticket', 'Event Ticket')
-    # sale_order_line_id = fields.Many2one('sale.order.line', 'Sale Order Line', ondelete='cascade')
+    # in addition to origin generic fields, add real relational fields to correctly
+    # handle attendees linked to sale orders and their lines
+    # TDE FIXME: maybe add an onchange on sale_order_id + origin
+    sale_order_id = fields.Many2one('sale.order', 'Source Sale Order', ondelete='cascade')
+    sale_order_line_id = fields.Many2one('sale.order.line', 'Sale Order Line', ondelete='cascade')
 
     @api.one
     @api.constrains('event_ticket_id', 'state')
     def _check_ticket_seats_limit(self):
         if self.event_ticket_id.seats_max and self.event_ticket_id.seats_available < 0:
-            raise Warning('No more available seats for this ticket')
+            raise UserError(_('No more available seats for this ticket'))
 
-    @api.one
+    @api.multi
     def _check_auto_confirmation(self):
-        res = super(event_registration, self)._check_auto_confirmation()[0]
-        if res and self.origin:
-            orders = self.env['sale.order'].search([('name', '=', self.origin)], limit=1)
-            if orders and orders[0].state == 'draft':
+        res = super(event_registration, self)._check_auto_confirmation()
+        if res:
+            orders = self.env['sale.order'].search([('state', '=', 'draft'), ('id', 'in', self.mapped('sale_order_id').ids)], limit=1)
+            if orders:
                 res = False
         return res
 
     @api.model
     def create(self, vals):
         res = super(event_registration, self).create(vals)
-        if res.origin:
+        if res.origin or res.sale_order_id:
             message = _("The registration has been created for event %(event_name)s%(ticket)s from sale order %(order)s") % ({
                 'event_name': '<i>%s</i>' % res.event_id.name,
                 'ticket': res.event_ticket_id and _(' with ticket %s') % (('<i>%s</i>') % res.event_ticket_id.name) or '',
-                'order': res.origin})
+                'order': res.origin or res.sale_order_id.name})
             res.message_post(body=message)
         return res

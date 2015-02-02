@@ -22,7 +22,6 @@
     'version': '0.1',
     'author': 'OpenERP SA',
     'category': 'Purchase Management',
-    'images': ['images/purchase_requisitions.jpeg'],
     'website': 'https://www.odoo.com/page/purchase',
     'description': """
 This module allows you to manage your Purchase Requisition.
@@ -54,5 +53,3 @@ keep track and order all your purchase orders.
     ],
     'installable': True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

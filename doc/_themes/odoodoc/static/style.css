@@ -4076,7 +4076,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .navbar-default {
-  background-color: #ffffff;
+  background-color: white;
   border-color: 0;
 }
 .navbar-default .navbar-brand {
@@ -6663,48 +6663,42 @@ div.section > h2 {
 .admonition.exercise > .admonition-title {
   color: #555555;
 }
-/*
- * Code snippets
- *
- * Generated via Pygments
- */
+.highlight {
+  position: relative;
+  color: #333333;
+  background: #eeeeee none !important;
+  border: 1px solid #777777;
+  border-radius: 4px 0 4px 4px;
+  margin: 10px 0;
+}
 .highlight pre {
-  padding: 4px;
+  padding: 0;
+  margin: 10px;
   font-size: 75%;
   word-break: normal;
   word-wrap: normal;
+  background: none;
+  border: none;
 }
-.switchable .highlight.with-btn-clipboard pre {
-  padding-right: 50px;
+.highlight:hover .btn-show-setup {
+  display: block;
 }
-/*
- * ZeroClipboard styles
- */
-.highlight {
-  position: relative;
-}
-.btn-clipboard {
+.highlight .btn-show-setup {
+  display: none;
   position: absolute;
-  top: 0;
+  bottom: 100%;
   right: 0;
   z-index: 3;
-  display: block;
   padding: 5px 8px;
   font-size: 12px;
-  color: #777;
+  color: #777777;
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e1e1e8;
-  border-radius: 0 4px 0 4px;
+  border: 1px solid #777777;
+  border-radius: 4px 4px 0 0;
+  background: inherit;
 }
-.btn-clipboard:focus {
+.highlight .btn-show-setup:focus {
   outline: none;
-}
-.btn-clipboard.active {
-  background-color: #ffffad;
-  -webkit-transition: background-color 0.5s linear;
-  -o-transition: background-color 0.5s linear;
-  transition: background-color 0.5s linear;
 }
 img.align-center {
   display: block;
@@ -6843,20 +6837,14 @@ td.field-body > ul {
     border-bottom-color: #777777;
     border-right-color: #777777;
   }
-  .stripe .section > .force-right pre,
-  .stripe .section > [class*=highlight] pre {
-    padding: 0;
-    margin: 10px;
-    background: none;
-    border: none;
-  }
   .stripe .section > .force-right .highlight,
   .stripe .section > [class*=highlight] .highlight {
     border-color: #555555;
     border-style: solid;
     border-width: 1px 0;
+    border-radius: 0;
     color: #cccccc;
-    background: none;
+    background: none !important;
     /* Line Numbers */
     /* Comment */
     /* Error */
@@ -7243,14 +7231,12 @@ td.field-body > ul {
   .stripe .highlight pre {
     white-space: pre-wrap;
   }
-  .stripe .btn-clipboard {
+  .stripe .btn-show-setup {
     background-color: transparent;
     color: #eeeeee;
     border-color: #777777;
-    border-top: none;
-    border-top-right-radius: 0;
   }
-  .stripe .btn-clipboard.active {
+  .stripe .btn-show-setup.active {
     background-color: #555555;
     -webkit-transition: background-color 0.5s linear;
     -o-transition: background-color 0.5s linear;

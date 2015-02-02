@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 
 class product_category(models.Model):
@@ -43,7 +43,7 @@ class product_template(models.Model):
         if 'uom_po_id' in vals:
             products = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids)])
             if self.env['account.move.line'].search([('product_id', 'in', products.ids)], limit=1):
-                raise Warning(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
+                raise UserError(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
         return super(product_template, self).write(vals)
 
 

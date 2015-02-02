@@ -23,7 +23,7 @@ import time
 
 from datetime import datetime, timedelta
 from openerp import _, api, fields, models
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -231,7 +231,7 @@ class ir_sequence(models.Model):
             interpolated_prefix = _interpolate(self.prefix, d)
             interpolated_suffix = _interpolate(self.suffix, d)
         except ValueError:
-            raise Warning(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
+            raise UserError(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
@@ -387,5 +387,3 @@ class ir_sequence_date_range(models.Model):
             seq_to_alter = self.filtered(lambda seq: seq.sequence_id.implementation == 'standard')
             seq_to_alter._alter_sequence(number_next=values.get('number_next'))
         return super(ir_sequence_date_range, self).write(values)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

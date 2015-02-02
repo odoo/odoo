@@ -83,5 +83,3 @@ class change_standard_price(osv.osv_memory):
         
         prod_obj.do_change_standard_price(cr, uid, [rec_id], res[0].new_price, context)
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

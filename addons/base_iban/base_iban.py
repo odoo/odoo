@@ -180,6 +180,3 @@ class res_partner_bank(osv.osv):
         (check_iban, _construct_constraint_msg, ["iban", "acc_number", "state"]),
         (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['bic'])
     ]
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

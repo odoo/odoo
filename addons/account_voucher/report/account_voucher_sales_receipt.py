@@ -112,6 +112,3 @@ class sale_receipt_report(models.Model):
                     av.pay_now
             )
         """)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

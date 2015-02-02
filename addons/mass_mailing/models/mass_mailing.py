@@ -2,24 +2,25 @@
 
 from datetime import datetime
 from dateutil import relativedelta
-import json
 import random
 import re
 
 from openerp import tools
 from openerp import models, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import UserError
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import ustr
+from openerp.tools.translate import _
 from openerp.osv import osv, fields
 
-URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
+URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
 
 
-class MassMailingCategory(osv.Model):
+class MassMailingTag(osv.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
-    _name = 'mail.mass_mailing.category'
-    _description = 'Mass Mailing Category'
+    _name = 'mail.mass_mailing.tag'
+    _description = 'Mass Mailing Tag'
     _order = 'name'
 
     _columns = {
@@ -185,6 +186,7 @@ class MassMailingCampaign(osv.Model):
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
+            row['bounced_ratio'] = 100.0 * row['bounced'] / total
         return results
 
     def _get_clicks_ratio(self, cr, uid, ids, name, arg, context=None):
@@ -202,6 +204,12 @@ class MassMailingCampaign(osv.Model):
 
         return res
 
+    def _get_total_mailings(self, cr, uid, ids, field_name, arg, context=None):
+        result = dict.fromkeys(ids, 0)
+        for mail in self.pool['mail.mass_mailing'].read_group(cr, uid, [('mass_mailing_campaign_id', 'in', ids)], ['mass_mailing_campaign_id'], ['mass_mailing_campaign_id'], context=context):
+            result[mail['mass_mailing_campaign_id'][0]] = mail['mass_mailing_campaign_id_count']
+        return result
+
     _columns = {
         'name': fields.char('Name', required=True),
         'stage_id': fields.many2one('mail.mass_mailing.stage', 'Stage', required=True),
@@ -211,9 +219,9 @@ class MassMailingCampaign(osv.Model):
         ),
         'campaign_id': fields.many2one('utm.campaign', 'campaign_id', 
             required=True, ondelete='cascade'),
-        'category_ids': fields.many2many(
-            'mail.mass_mailing.category', 'mail_mass_mailing_category_rel',
-            'category_id', 'campaign_id', string='Categories'),
+        'tag_ids': fields.many2many(
+            'mail.mass_mailing.tag', 'mail_mass_mailing_tag_rel',
+            'tag_id', 'campaign_id', string='Tags'),
         'mass_mailing_ids': fields.one2many(
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
@@ -273,6 +281,11 @@ class MassMailingCampaign(osv.Model):
             _get_statistics, string='Replied Ratio',
             type='integer', multi='_get_statistics',
         ),
+        'total_mailings': fields.function(_get_total_mailings, string='Mailings', type='integer'),
+        'bounced_ratio': fields.function(
+            _get_statistics, string='Bounced Ratio',
+            type='integer', multi='_get_statistics',
+        ),
     }
 
     def _get_default_stage_id(self, cr, uid, context=None):
@@ -321,6 +334,32 @@ class MassMailingCampaign(osv.Model):
 
             return {'value': {'campaign_id': utm_campaign_id}}
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        """ Override read_group to always display all states. """
+        if groupby and groupby[0] == "stage_id":
+            # Default result structure
+            states_read = self.pool['mail.mass_mailing.stage'].search_read(cr, uid, [], ['name'], context=context)
+            states = [(state['id'], state['name']) for state in states_read]
+            read_group_all_states = [{
+                '__context': {'group_by': groupby[1:]},
+                '__domain': domain + [('stage_id', '=', state_value)],
+                'stage_id': state_value,
+                'state_count': 0,
+            } for state_value, state_name in states]
+            # Get standard results
+            read_group_res = super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            # Update standard results with default results
+            result = []
+            for state_value, state_name in states:
+                res = filter(lambda x: x['stage_id'] == (state_value, state_name), read_group_res)
+                if not res:
+                    res = filter(lambda x: x['stage_id'] == state_value, read_group_all_states)
+                res[0]['stage_id'] = [state_value, state_name]
+                result.append(res[0])
+            return result
+        else:
+            return super(MassMailingCampaign, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
 
 class MassMailing(osv.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
@@ -331,6 +370,7 @@ class MassMailing(osv.Model):
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'sent_date DESC'
+    # _send_trigger = 5  # Number under which mails are send directly
 
     _inherit = ['utm.mixin']
 
@@ -363,25 +403,6 @@ class MassMailing(osv.Model):
             section_result[timedelta.days] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field)}
         return section_result
 
-    def _get_daily_statistics(self, cr, uid, ids, field_name, arg, context=None):
-        """ Get the daily statistics of the mass mailing. This is done by a grouping
-        on opened and replied fields. Using custom format in context, we obtain
-        results for the next 6 days following the mass mailing date. """
-        obj = self.pool['mail.mail.statistics']
-        res = {}
-        for mailing in self.browse(cr, uid, ids, context=context):
-            res[mailing.id] = {}
-            date = mailing.sent_date if mailing.sent_date else mailing.create_date
-            date_begin = datetime.strptime(date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_end = date_begin + relativedelta.relativedelta(days=self._period_number - 1)
-            date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            domain = [('mass_mailing_id', '=', mailing.id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
-            res[mailing.id]['opened_daily'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['opened'], 'opened_count', 'opened:day', date_begin, context=context))
-            domain = [('mass_mailing_id', '=', mailing.id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
-            res[mailing.id]['replied_daily'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['replied'], 'replied_count', 'replied:day', date_begin, context=context))
-        return res
-
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing """
         results = {}
@@ -395,7 +416,8 @@ class MassMailing(osv.Model):
                 COUNT(CASE WHEN s.sent is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
-                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced
+                COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
+                COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
             FROM
                 mail_mail_statistics s
             RIGHT JOIN
@@ -412,6 +434,7 @@ class MassMailing(osv.Model):
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
+            row['bounced_ratio'] = 100.0 * row['bounced'] / total
         return results
 
     def _get_mailing_model(self, cr, uid, context=None):
@@ -437,6 +460,30 @@ class MassMailing(osv.Model):
             res[record['id']] = 100 * record['nb_clicks'] / record['nb_mails']
 
         return res
+    def _get_next_departure(self, cr, uid, ids, name, arg, context=None):
+        mass_mailings = self.browse(cr, uid, ids, context=context)
+        cron_next_call = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, 'mass_mailing.ir_cron_mass_mailing_queue', context=context).nextcall
+
+        result = {}
+        for mass_mailing in mass_mailings:
+            schedule_date = mass_mailing.schedule_date
+            if schedule_date:
+                if datetime.now() > datetime.strptime(schedule_date, tools.DEFAULT_SERVER_DATETIME_FORMAT):
+                    result[mass_mailing.id] = cron_next_call
+                else:
+                    result[mass_mailing.id] = schedule_date
+            else:
+                result[mass_mailing.id] = cron_next_call
+        return result
+
+    def _get_total(self, cr, uid, ids, name, arg, context=None):
+        mass_mailings = self.browse(cr, uid, ids, context=context)
+
+        result = {}
+        for mass_mailing in mass_mailings:
+            mailing = self.browse(cr, uid, mass_mailing.id, context=context)
+            result[mass_mailing.id] = len(self.get_recipients(cr, uid, mailing, context=context))
+        return result
 
     # indirections for inheritance
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)
@@ -446,6 +493,7 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
+        'schedule_date': fields.datetime('Scheduled Send Date'),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -461,8 +509,8 @@ class MassMailing(osv.Model):
             type="integer",
         ),
         'state': fields.selection(
-            [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
-            string='Status', required=True, copy=False,
+            [('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
+            string='Status', required=True, copy=False
         ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
@@ -470,7 +518,7 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'reply_to_mode': fields.selection(
-            [('thread', 'In Document'), ('email', 'Specified Email Address')],
+            [('thread', 'Followers of leads/applicants'), ('email', 'Specified Email Address')],
             string='Reply-To Mode', required=True,
         ),
         'reply_to': fields.char('Reply To', help='Preferred Reply-To Address'),
@@ -482,7 +530,7 @@ class MassMailing(osv.Model):
             string='Mailing Lists',
         ),
         'contact_ab_pc': fields.integer(
-            'AB Testing percentage',
+            'A/B Testing percentage',
             help='Percentage of the contacts that will be mailed. Recipients will be taken randomly.'
         ),
         # statistics data
@@ -491,8 +539,8 @@ class MassMailing(osv.Model):
             'Emails Statistics',
         ),
         'total': fields.function(
-            _get_statistics, string='Total',
-            type='integer', multi='_get_statistics',
+            _get_total, string='Total',
+            type='integer',
         ),
         'scheduled': fields.function(
             _get_statistics, string='Scheduled',
@@ -522,6 +570,10 @@ class MassMailing(osv.Model):
             _get_statistics, string='Bounced',
             type='integer', multi='_get_statistics',
         ),
+        'failed': fields.function(
+            _get_statistics, string='Failed',
+            type='integer', multi='_get_statistics',
+        ),
         'received_ratio': fields.function(
             _get_statistics, string='Received Ratio',
             type='integer', multi='_get_statistics',
@@ -534,15 +586,14 @@ class MassMailing(osv.Model):
             _get_statistics, string='Replied Ratio',
             type='integer', multi='_get_statistics',
         ),
-        # daily ratio
-        'opened_daily': fields.function(
-            _get_daily_statistics, string='Opened',
-            type='char', multi='_get_daily_statistics',
+        'bounced_ratio': fields.function(
+            _get_statistics, String='Bouncded Ratio',
+            type='integer', multi='_get_statistics',
         ),
-        'replied_daily': fields.function(
-            _get_daily_statistics, string='Replied',
-            type='char', multi='_get_daily_statistics',
-        )
+        'next_departure': fields.function(
+            _get_next_departure, string='Next Departure',
+            type='datetime'
+        ),
     }
 
     def mass_mailing_statistics_action(self, cr, uid, ids, context=None):
@@ -575,7 +626,6 @@ class MassMailing(osv.Model):
             dic = {'campaign_id': mass_mailing_campaign[0].campaign_id.id, 
                    'source_id': mass_mailing_campaign[0].source_id.id, 
                    'medium_id': mass_mailing_campaign[0].medium_id.id}
-            print dic
             return {'value': dic}
 
     #------------------------------------------------------
@@ -593,7 +643,7 @@ class MassMailing(osv.Model):
         if groupby and groupby[0] == "state":
             # Default result structure
             # states = self._get_state_list(cr, uid, context=context)
-            states = [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')]
+            states = [('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')]
             read_group_all_states = [{
                 '__context': {'group_by': groupby[1:]},
                 '__domain': domain + [('state', '=', state_value)],
@@ -614,6 +664,16 @@ class MassMailing(osv.Model):
         else:
             return super(MassMailing, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
 
+    def update_opt_out(self, cr, uid, mailing_id, email, res_ids, value, context=None):
+        mailing = self.browse(cr, uid, mailing_id, context=context)
+        model = self.pool[mailing.mailing_model]
+        if 'opt_out' in model._fields:
+            email_fname = 'email_from'
+            if 'email' in model._fields:
+                email_fname = 'email'
+            record_ids = model.search(cr, uid, [('id', 'in', res_ids), (email_fname, 'ilike', email)], context=context)
+            model.write(cr, uid, record_ids, {'opt_out': value}, context=context)
+
     #------------------------------------------------------
     # Views & Actions
     #------------------------------------------------------
@@ -628,7 +688,7 @@ class MassMailing(osv.Model):
                 elif len(item) == 3:
                     mailing_list_ids |= set(item[2])
             if mailing_list_ids:
-                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list(mailing_list_ids)
+                value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
@@ -674,6 +734,7 @@ class MassMailing(osv.Model):
             'target': 'self',
         }
 
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
@@ -700,14 +761,26 @@ class MassMailing(osv.Model):
             res_ids = random.sample(remaining, topick)
         return res_ids
 
+    def get_remaining_recipients(self, cr, uid, mailing, context=None):
+        res_ids = self.get_recipients(cr, uid, mailing, context=context)
+        already_mailed = self.pool['mail.mail.statistics'].search_read(cr, uid, [('model', '=', mailing.mailing_model),
+                                                                                 ('res_id', 'in', res_ids),
+                                                                                 ('mass_mailing_id', '=', mailing.id)], ['res_id'], context=context)
+        already_mailed_res_ids = [record['res_id'] for record in already_mailed]
+        return list(set(res_ids) - set(already_mailed_res_ids))
+
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         for mailing in self.browse(cr, uid, ids, context=context):
             # instantiate an email composer + send emails
-            res_ids = self.get_recipients(cr, uid, mailing, context=context)
+            res_ids = self.get_remaining_recipients(cr, uid, mailing, context=context)
             if not res_ids:
-                raise Warning('Please select recipients.')
-            comp_ctx = dict(context, active_ids=res_ids)
+                raise UserError(_('Please select recipients.'))
+
+            if context:
+                comp_ctx = dict(context, active_ids=res_ids)
+            else:
+                comp_ctx = {'active_ids': res_ids}
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
@@ -723,8 +796,9 @@ class MassMailing(osv.Model):
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
+
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
-            self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
+            self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], auto_commit=True, context=comp_ctx)
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
@@ -733,8 +807,11 @@ class MassMailing(osv.Model):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
             res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
+            
+            for match in re.findall(URL_REGEX, res[mass_mailing.id]):
+                href = match[0]
+                long_url = match[1]
 
-            for long_url in re.findall(URL_REGEX, res[mass_mailing.id]):
                 utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
 
                 vals = {'url': long_url}
@@ -750,8 +827,37 @@ class MassMailing(osv.Model):
                 shorten_url = website_links.browse(cr, uid, link_id, context=context)[0].short_url
 
                 if shorten_url:
-                    res[mass_mailing.id] = res[mass_mailing.id].replace(long_url, shorten_url)
+                    new_href = href.replace(long_url, shorten_url)
+                    res[mass_mailing.id] = res[mass_mailing.id].replace(href, new_href)
         return res
+
+    def put_in_queue(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'in_queue'}, context=context)
+
+    def cancel_mass_mailing(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
+    def retry_failed_mail(self, cr, uid, mass_mailing_ids, context=None):
+        mail_mail_ids = self.pool.get('mail.mail').search(cr, uid, [('mailing_id', 'in', mass_mailing_ids), ('state', '=', 'exception')], context=context)
+        self.pool.get('mail.mail').unlink(cr, uid, mail_mail_ids, context=context)
+
+        mail_mail_statistics_ids = self.pool.get('mail.mail.statistics').search(cr, uid, [('mail_mail_id_int', 'in', mail_mail_ids)])
+        self.pool.get('mail.mail.statistics').unlink(cr, uid, mail_mail_statistics_ids, context=context)
+
+        self.write(cr, uid, mass_mailing_ids, {'state': 'in_queue'})
+
+    def _process_mass_mailing_queue(self, cr, uid, context=None):
+        now = datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        mass_mailing_ids = self.search(cr, uid, [('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', now), ('schedule_date', '=', False)], context=context)
+
+        for mass_mailing_id in mass_mailing_ids:
+            mass_mailing_record = self.browse(cr, uid, mass_mailing_id, context=context)
+
+            if len(self.get_remaining_recipients(cr, uid, mass_mailing_record, context=context)) > 0:
+                self.write(cr, uid, [mass_mailing_id], {'state': 'sending'}, context=context)
+                self.send_mail(cr, uid, [mass_mailing_id], context=context)
+            else:
+                self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=context)
 
 
 class MailMail(models.Model):
@@ -761,9 +867,11 @@ class MailMail(models.Model):
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
         if mail.mailing_id and mail.body_html:
-            urls = re.findall(URL_REGEX, mail.body_html)
-            
-            for url in urls:
-                mail.body_html = mail.body_html.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+            for match in re.findall(URL_REGEX, mail.body_html):
+                href = match[0]
+                url = match[1]
+                if mail.statistics_ids:
+                    new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
+                    mail.body_html = mail.body_html.replace(href, new_href)
 
         return super(MailMail, self).send_get_mail_body(mail, partner=partner)

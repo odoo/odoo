@@ -20,10 +20,8 @@
                 self.$target.find('a.js_subscribe_btn')
                     .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
                 self.$target.removeClass("hidden");
-                if (data.is_subscriber) {
-                    self.$target.find('.js_subscribe_btn').addClass('hidden');
-                    self.$target.find('.js_subscribed_btn').removeClass('hidden');
-                }
+                self.$target.find('.js_subscribe_btn').toggleClass('hidden', !!data.is_subscriber);
+                self.$target.find('.js_subscribed_btn').toggleClass('hidden', !data.is_subscriber);
             });
 
             // not if editable mode to allow designer to edit alert field
@@ -56,5 +54,32 @@
                 self.$target.attr("data-subscribe", subscribe ? 'on' : 'off');
             });
         },
+    });
+
+    openerp.website.if_dom_contains('div.o_unsubscribe_form', function() {
+        $('#unsubscribe_form').on('submit', function(e) {
+            e.preventDefault();
+
+            var email = $("input[name='email']").val();
+            var mailing_id = parseInt($("input[name='mailing_id']").val());
+
+            var checked_ids = [];
+            $("input[type='checkbox']:checked").each(function(i){
+              checked_ids[i] = parseInt($(this).val());
+            });
+
+            var unchecked_ids = [];
+            $("input[type='checkbox']:not(:checked)").each(function(i){
+              unchecked_ids[i] = parseInt($(this).val());
+            });
+
+            openerp.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
+                .then(function(result) {
+                    $('.alert-info').html('Your changes has been saved.').removeClass('alert-info').addClass('alert-success');
+                })
+                .fail(function() {
+                    $('.alert-info').html('You changes has not been saved, try again later.').removeClass('alert-info').addClass('alert-warning');
+                }); 
+        });
     });
 })();
