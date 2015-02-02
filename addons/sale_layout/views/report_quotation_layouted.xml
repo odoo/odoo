@@ -3,7 +3,7 @@
     <data>
         <template id="report_sale_layouted" inherit_id="sale.report_saleorder_document">
             <xpath expr="//table/tbody[@class='sale_tbody']" position="replace">
-                <t t-foreach="o.sale_layout_lines(order_id = o.id)" t-as="p">
+                <t t-foreach="doc.sale_layout_lines(order_id = doc.id)" t-as="p">
                     <!-- Name of the category -->
                     <t t-call="sale_layout.category_template" />
 
@@ -28,7 +28,7 @@
                             </td>
                             <td class="text-right">
                                 <span t-field="l.price_subtotal"
-                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                             </td>
                         </tr>
                     </t>
