@@ -638,7 +638,7 @@ def guess(method):
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id':
+                elif names[3] == 'id' or names[3] == 'res_id':
                     if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
