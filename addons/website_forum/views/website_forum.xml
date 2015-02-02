@@ -43,12 +43,12 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
-        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
+        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissible" id="oe_forum_intro">
             <div class="container">
                 <h1 class="mt0">Welcome!</h1>
                 <div t-field="forum.description"/>
                 <a class='btn btn-primary' t-attf-href="/web?redirect=#{ request.httprequest.url }">Register</a>
-                <button type="button" class="btn btn-link js_close_intro" data-dismiss="alert" aria-hidden="true">Hide Intro</button>
+                <button type="button" href="#oe_forum_intro" class="btn btn-link js_close_intro" data-dismiss="alert" aria-label="Close" aria-hidden="true">Hide Intro</button>
             </div>
         </div>
         
