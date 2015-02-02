@@ -8,10 +8,7 @@
             report_type="qweb-pdf"
             name="account_check_writing.report_check" 
             file="account_check_writing.report_check" 
+            paperformat="account_check_writing.paperformat_frenchcheck"
         />
-
-        <record id="action_report_check" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="account_check_writing.paperformat_frenchcheck"/>
-        </record>
     </data>
 </openerp>

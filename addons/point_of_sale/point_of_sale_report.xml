@@ -25,10 +25,8 @@
             report_type="qweb-pdf"
             name="point_of_sale.report_receipt"
             file="point_of_sale.report_receipt"
+            paperformat="point_of_sale.paperformat_posreceipt"
         />
-        <record id="action_report_pos_receipt" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="point_of_sale.paperformat_posreceipt"/>
-        </record>
 
         <report
             id="pos_lines_report"
