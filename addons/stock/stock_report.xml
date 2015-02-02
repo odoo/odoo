@@ -9,7 +9,15 @@
             name="stock.report_picking"
             file="stock.report_picking_operations"
         />
-        <report 
+        <report
+            string="Delivery Slip"
+            id="action_report_delivery"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="stock.report_deliveryslip"
+            file="stock.report_deliveryslip"
+        />
+        <report
             string="Inventory" 
             id="action_report_inventory" 
             model="stock.inventory" 
