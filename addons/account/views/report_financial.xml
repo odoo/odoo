@@ -22,9 +22,14 @@
     <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_executivesummary0'))"/>
     <field name="target">self</field>
 </record>
+<record model="ir.actions.act_url" id="action_account_report_ar">
+    <field name="name">Aged Receivable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedreceivable0'))"/>
+    <field name="target">self</field>
+</record>
 <record model="ir.actions.act_url" id="action_account_report_ap">
-    <field name="name">Aged Partner Balance</field>
-    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedpartner0'))"/>
+    <field name="name">Aged Payable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedpayable0'))"/>
     <field name="target">self</field>
 </record>
 <record model="ir.actions.act_url" id="action_account_report_gt">
@@ -36,7 +41,8 @@
 <menuitem id="menu_action_account_report_bs" name="Balance Sheet" action="action_account_report_bs" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_cs" name="Cash Summary" action="action_account_report_cs" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_es" name="Executive Summary" action="action_account_report_es" parent="account.menu_finance_legal_statement"/>
-<menuitem id="menu_action_account_report_ap" name="Aged Partner Balance" action="action_account_report_ap" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ap" name="Aged Payable" action="action_account_report_ap" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ar" name="Aged Receivable" action="action_account_report_ar" parent="account.menu_finance_legal_statement"/>
 <menuitem id="menu_action_account_report_gt" name="Generic Tax Report" action="action_account_report_gt" parent="account.menu_finance_legal_statement"/>
 
 <template id="report_financial_footnote_sup">
