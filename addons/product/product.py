@@ -489,7 +489,7 @@ class product_template(osv.osv):
 
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for product in self.browse(cr, uid, ids):
+        for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = len(product.product_variant_ids)
         return res
 
