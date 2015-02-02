@@ -1456,8 +1456,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         for num in xrange(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = _('BNK')[:3] + str(num)
-            ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company.id)], context=context)
-            if not ids:
+            recs = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
+            if not recs:
                 break
         else:
             raise UserError(_('Cannot generate an unused journal code.'))
@@ -1494,25 +1494,23 @@ class wizard_multi_charts_accounts(models.TransientModel):
         bank_account_code_char = company.bank_account_code_char or ''
         for num in xrange(1, 100):
             new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
-            ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company.id)])
-            if not ids:
+            recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])
+            if not recs:
                 break
         else:
             raise UserError(_('Cannot generate an unused account code.'))
 
         # Get the id of the user types fr-or cash and bank
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_cash')
-        cash_type = tmp and tmp[1] or False
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'data_account_type_bank')
-        bank_type = tmp and tmp[1] or False
+        cash_type = self.env.ref('account.data_account_type_cash') or False
+        bank_type = self.env.ref('account.data_account_type_bank') or False
         parent_id = False
         if acc_template_ref:
             parent_id = acc_template_ref[ref_acc_bank.id]
         else:
-            tmp = self.pool.get('account.account').search(cr, uid, [('code', '=', company.bank_account_code_char)], context=context)
+            tmp = self.env['account.account'].search([('code', '=', company.bank_account_code_char)])
             if tmp:
                 parent_id = tmp[0]
-        
+
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,

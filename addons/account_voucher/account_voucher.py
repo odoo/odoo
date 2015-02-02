@@ -23,6 +23,7 @@
 from openerp import fields, models, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.tools import float_compare
+from openerp.exceptions import UserError
 
 
 class account_voucher(models.Model):
@@ -218,14 +219,11 @@ class account_voucher(models.Model):
                 name = voucher.number
             elif voucher.journal_id.sequence_id:
                 if not voucher.journal_id.sequence_id.active:
-                    raise Warning(_('Please activate the sequence of selected journal !'))
+                    raise UserError(_('Please activate the sequence of selected journal !'))
                 name = voucher.journal_id.sequence_id.next_by_id()
             else:
-                raise Warning(_('Please define a sequence on the journal.'))
-            if not voucher.reference:
-                ref = name.replace('/','')
-            else:
-                ref = voucher.reference
+                raise UserError(_('Please define a sequence on the journal.'))
+            ref = voucher.reference or name
 
             move = {
                 'name': name,

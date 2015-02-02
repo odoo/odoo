@@ -37,7 +37,7 @@ class TestBankStatementReconciliation(TransactionCase):
         }])
 
         # check everything went as expected
-        rec_move = st_line.journal_entry_id
+        rec_move = st_line.journal_entry_ids[0]
         self.assertTrue(rec_move)
         counterpart_mv_line = None
         for l in rec_move.line_id:

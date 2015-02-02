@@ -42,7 +42,7 @@ class account_cash_statement(models.Model):
     def button_cancel(self):
         for statement in self:
             for line in statement.line_ids:
-                if line.journal_entry_id:
+                if line.journal_entry_ids:
                     raise UserError(_('Cannot cancel a cash register that already created journal items.'))
         self.state = 'draft'
 
@@ -143,5 +143,5 @@ class account_journal_cashbox_line(models.Model):
     _order = 'coin_value asc'
 
     coin_value = fields.Float(string='Values', digits=0)
-    journal_id = fields.Many2one('account.journal', string='Journal', 
+    journal_id = fields.Many2one('account.journal', string='Journal',
         required=True, index=True, ondelete="cascade")
