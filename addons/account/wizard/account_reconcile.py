@@ -24,7 +24,6 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.tools.float_utils import float_is_zero
 
 
 class account_move_line_reconcile(osv.osv_memory):
