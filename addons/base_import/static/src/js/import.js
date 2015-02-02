@@ -233,6 +233,11 @@ var DataImport = Widget.extend({
         this.$('.oe_import_button, .oe_import_file_reload')
                 .prop('disabled', true);
         this.$el.addClass('oe_import_with_file');
+        if (!(this.$('input.oe_import_file').val().split('.').pop() == "csv")) {
+            this.$el.find('.oe_import_toggle').hide();
+        }else {
+            this.$el.find('.oe_import_toggle').show();
+        }
         // TODO: test that write // succeeded?
         this.$el.removeClass('oe_import_preview_error oe_import_error');
         this.$el.toggleClass(

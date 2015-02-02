@@ -2,6 +2,12 @@ import csv
 import itertools
 import logging
 import operator
+from odsreader import *
+
+try:
+    import xlrd
+except ImportError:
+    xlrd = None
 
 try:
     from cStringIO import StringIO
@@ -12,6 +18,7 @@ import psycopg2
 
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
+from openerp.exceptions import UserError
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
@@ -126,6 +133,32 @@ class ir_import(orm.TransientModel):
         # TODO: cache on model?
         return fields
 
+    def _read_import_file(self, record, options):
+        if record.file_type == 'text/csv':
+            rows = self._read_csv(record, options)
+        elif record.file_type == 'application/vnd.ms-excel' or record.file_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            if xlrd is None:
+                raise UserError(_(" XLRD library not found. XLS/XLSX file would not import."))
+            else:
+                rows = self._read_xls_xlsx(record)
+        elif record.file_type == 'application/vnd.oasis.opendocument.spreadsheet':
+            rows = self._read_ods(record)
+        return rows
+
+    def _read_xls_xlsx(self, record):
+        book = xlrd.open_workbook(file_contents=record.file)
+        bk = book.sheet_by_index(0)
+        dict_list = []
+        for row_index in xrange(0, bk.nrows):
+            keys = [bk.cell(row_index, col_index).value for col_index in xrange(bk.ncols)]
+            dict_list.append(keys)
+        return iter(dict_list)
+
+    def _read_ods(self, record):
+        rows = odsreader(record.file)
+        dict_list = [row for row in rows]
+        return iter(dict_list)
+
     def _read_csv(self, record, options):
         """ Returns a CSV-parsed iterator of all empty lines in the file
 
@@ -225,7 +258,7 @@ class ir_import(orm.TransientModel):
         fields = self.get_fields(cr, uid, record.res_model, context=context)
 
         try:
-            rows = self._read_csv(record, options)
+            rows = self._read_import_file(record, options)
 
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
@@ -276,7 +309,7 @@ class ir_import(orm.TransientModel):
         # Get only list of actually imported fields
         import_fields = filter(None, fields)
 
-        rows_to_import = self._read_csv(record, options)
+        rows_to_import = self._read_import_file(record, options)
         if options.get('headers'):
             rows_to_import = itertools.islice(
                 rows_to_import, 1, None)

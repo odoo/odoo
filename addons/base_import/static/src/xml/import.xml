@@ -5,7 +5,7 @@
             <div class="oe_view_manager oe_view_manager_current">
                 <div class="oe-control-panel oe_padding">
                     <h2>
-                        Import a CSV File
+                        Import a File
                     </h2>
                     <input type="hidden" name="session_id"
                        t-att-value="widget.session.session_id"/>
@@ -21,13 +21,10 @@
                 </div>
             </div>
 
-            <p>Select the <a
-                    href="http://en.wikipedia.org/wiki/Comma-separated_values"
-                    class="oe_import_csv" target="_blank">.CSV</a>
-            file to import. If you need a sample importable file, you
+            <p>Select the file to import. If you need a sample importable file, you
             can use the export tool to generate one.</p>
             <div class="oe_import_box">
-                <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+                <label t-attf-for="file_#{_id}" autofocus="autofocus">File:</label>
                 <input type="file" id-attf-id="file_#{_id}"
                        name="file" class="oe_import_file"/>
                 <button type="button" class="oe_import_file_reload"
