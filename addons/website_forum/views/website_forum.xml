@@ -43,8 +43,8 @@
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
-        <div t-if="is_public_user and not no_introduction_message" class="alert alert-success alert-dismissable">
-            <div class="container">
+        <div t-if="is_public_user and not no_introduction_message" class="bg-success">
+            <div class="container alert alert-success alert-dismissable oe_remove_border">
                 <h1 class="mt0">Welcome!</h1>
                 <div t-field="forum.description"/>
                 <a class='btn btn-primary' t-attf-href="/web?redirect=#{ request.httprequest.url }">Register</a>
