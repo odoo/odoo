@@ -22,7 +22,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                     </header>
                     <sheet>
-                    <group col="4" colspan="4">
+                    <group col="4" colspan="4" name="order_fields">
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="session_id" required="1"/>
@@ -699,6 +699,8 @@
                                 <field name="iface_vkeyboard" />
                                 <field name="iface_invoicing" />
                                 <field name="iface_precompute_cash" />
+                                <field name="iface_start_categ_id" />
+                                <field name="tip_product_id" />
                             </group>
                             <group>
                                 <field name="iface_fullscreen" />

@@ -51,10 +51,65 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
                     self.printers.push(printer);
                 }
             }
+            self.config.iface_printers = !!self.printers.length;
         },
     });
 
+    var _super_orderline = module.Orderline.prototype;
     module.Orderline = module.Orderline.extend({
+        initialize: function(args) {
+            _super_orderline.initialize.apply(this,arguments);
+            if (!this.pos.config.iface_printers) {
+                return;
+            }
+            if (typeof this.mp_dirty === 'undefined') {
+                // mp dirty is true if this orderline has changed
+                // since the last kitchen print
+                this.mp_dirty = true;
+            } 
+            if (!this.mp_skip) {
+                // mp_skip is true if the cashier want this orderline
+                // not to be sent to the kitchen
+                this.mp_skip  = false;
+            }
+        },
+        init_from_JSON: function(json) {
+            _super_orderline.init_from_JSON.apply(this,arguments);
+            this.mp_dirty = json.mp_dirty;
+            this.mp_skip  = json.mp_skip;
+        },
+        export_as_JSON: function() {
+            var json = _super_orderline.export_as_JSON.apply(this,arguments);
+            json.mp_dirty = this.mp_dirty;
+            json.mp_skip  = this.mp_skip;
+            return json;
+        },
+        set_quantity: function(quantity) {
+            if (this.pos.config.iface_printers && quantity !== this.quantity) {
+                this.mp_dirty = true;
+            }
+            _super_orderline.set_quantity.apply(this,arguments);
+        },
+        can_be_merged_with: function(orderline) { 
+            return (!this.mp_skip) && 
+                   (!orderline.mp_skip) &&
+                   _super_orderline.can_be_merged_with.apply(this,arguments);
+        },
+        set_skip: function(skip) {
+            if (this.mp_dirty && skip && !this.mp_skip) {
+                this.mp_skip = true;
+                this.trigger('change',this);
+            }
+            if (this.mp_skip && !skip) {
+                this.mp_dirty = true;
+                this.mp_skip  = false;
+                this.trigger('change',this);
+            }
+        },
+        set_dirty: function(dirty) {
+            this.mp_dirty = dirty;
+            this.trigger('change',this);
+        },
         get_line_diff_hash: function(){
             if (this.get_note()) {
                 return this.get_product().id + '|' + this.get_note();
@@ -64,11 +119,44 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
         },
     });
 
+    module.OrderWidget.include({
+        render_orderline: function(orderline) {
+            var node = this._super(orderline);
+            if (this.pos.config.iface_printers) {
+                if (orderline.mp_skip) {
+                    node.classList.add('skip');
+                } else if (orderline.mp_dirty) {
+                    node.classList.add('dirty');
+                }
+            }
+            return node;
+        },
+        click_line: function(line, event) {
+            if (!this.pos.config.iface_printers) {
+                this._super(line, event);
+            } else if (this.pos.get_order().selected_orderline !== line) {
+                this.mp_dbclk_time = (new Date()).getTime();
+            } else if (!this.mp_dbclk_time) {
+                this.mp_dbclk_time = (new Date()).getTime();
+            } else if (this.mp_dbclk_time + 500 > (new Date()).getTime()) {
+                line.set_skip(!line.mp_skip);
+                this.mp_dbclk_time = 0;
+            } else {
+                this.mp_dbclk_time = (new Date()).getTime();
+            }
+
+            this._super(line, event);
+        },
+    });
+
     var _super_order = module.Order.prototype;
     module.Order = module.Order.extend({
         build_line_resume: function(){
             var resume = {};
             this.orderlines.each(function(line){
+                if (line.mp_skip) {
+                    return;
+                }
                 var line_hash = line.get_line_diff_hash();
                 var qty  = Number(line.get_quantity());
                 var note = line.get_note();
@@ -85,6 +173,9 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
         },
         saveChanges: function(){
             this.saved_resume = this.build_line_resume();
+            this.orderlines.each(function(line){
+                line.set_dirty(false);
+            });
             this.trigger('change',this);
         },
         computeChanges: function(categories){
@@ -227,13 +318,6 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
             if(order.hasChangesToPrint()){
                 order.printChanges();
                 order.saveChanges();
-            }
-        },
-        hilight: function(hi){
-            if (hi) {
-                this.$el.addClass('highlight');
-            } else {
-                this.$el.removeClass('highlight');
             }
         },
     });
