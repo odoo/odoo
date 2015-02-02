@@ -339,7 +339,7 @@ class res_partner(osv.Model, format_address):
         'tz': api.model(lambda self: self.env.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,
-        'company_id': _default_company,
+        'company_id': False,
         'color': 0,
         'is_company': False,
         'type': 'contact', # type 'default' is wildcard and thus inappropriate
