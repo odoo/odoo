@@ -272,7 +272,7 @@ class account_cash_statement(osv.osv):
                 raise AccessError((_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
-                c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
+                c = {'ir_sequence_date': statement.period_id.date_start}
                 if statement.journal_id.sequence_id:
                     st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:

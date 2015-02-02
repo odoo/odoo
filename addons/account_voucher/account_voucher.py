@@ -1057,7 +1057,7 @@ class account_voucher(osv.osv):
             if not voucher.journal_id.sequence_id.active:
                 raise UserError(_('Please activate the sequence of selected journal !'))
             c = dict(context)
-            c.update({'fiscalyear_id': voucher.period_id.fiscalyear_id.id})
+            c.update({'ir_sequence_date': voucher.period_id.date_start})
             name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id, context=c)
         else:
             raise UserError(_('Please define a sequence on the journal.'))
