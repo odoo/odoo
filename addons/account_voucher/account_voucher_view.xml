@@ -27,8 +27,7 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id" groups="account.group_account_user"/>
-                    <field name="period_id" invisible="context.get('visible', True)"/>
-                    <field name="type" invisible="context.get('visible', True)"/>
+                    <field name="voucher_type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="audit" invisible="1"/>
                     <field name="state"/>
