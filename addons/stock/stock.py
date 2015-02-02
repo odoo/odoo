@@ -2489,7 +2489,7 @@ class stock_move(osv.osv):
 
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
-        new_move = self.copy(cr, uid, move.id, defaults)
+        new_move = self.copy(cr, uid, move.id, defaults, context=context)
 
         ctx = context.copy()
         ctx['do_not_propagate'] = True
