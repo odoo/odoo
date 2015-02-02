@@ -23,7 +23,7 @@ import time
 from lxml import etree
 
 from openerp.osv import fields, osv
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -452,32 +452,32 @@ class sale_order_line(osv.osv):
         return create_ids
 
 # TODO : migrate module to new API
+from openerp import fields
+class account_bank_statement(osv.osv):
+    _inherit = "account.bank.statement"
+    _name = "account.bank.statement"
 
- class account_bank_statement(osv.osv):
-     _inherit = "account.bank.statement"
-     _name = "account.bank.statement"
-
-     @api.multi
-     def button_confirm_bank(self):
-         super(account_bank_statement, self).button_confirm_bank()
-         for st in self:
-             for st_line in st.line_ids:
-                 if st_line.analytics_id:
-                     if not st.journal_id.analytic_journal_id:
-                         raise UserError(_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
-                 if not st_line.amount:
-                     continue
-         return True
+    @api.multi
+    def button_confirm_bank(self):
+        super(account_bank_statement, self).button_confirm_bank()
+        for st in self:
+            for st_line in st.line_ids:
+                if st_line.analytics_id:
+                    if not st.journal_id.analytic_journal_id:
+                        raise UserError(_("You have to define an analytic journal on the '%s' journal.") % (st.journal_id.name,))
+                if not st_line.amount:
+                    continue
+        return True
 
 
- class account_bank_statement_line(osv.osv):
-     _inherit = "account.bank.statement.line"
-     _name = "account.bank.statement.line"
+class account_bank_statement_line(osv.osv):
+    _inherit = "account.bank.statement.line"
+    _name = "account.bank.statement.line"
    
-     analytics_id = fields.Many2one('account.analytic.plan.instance', string='Analytic Distribution')
+    analytics_id = fields.Many2one('account.analytic.plan.instance', string='Analytic Distribution')
 
-     def _prepare_move_line(self, move, amount, company_currency):
-         result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount, company_currency)
-         result['analytics_id'] = self.analytics_id.id
-         return result
+    def _prepare_move_line(self, move, amount, company_currency):
+        result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount, company_currency)
+        result['analytics_id'] = self.analytics_id.id
+        return result
 

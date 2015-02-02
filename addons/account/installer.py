@@ -14,15 +14,10 @@ except ImportError:
     import json     # noqa
 
 from openerp.release import serie
-<<<<<<< HEAD
+
 from openerp import api, fields, models, _
-from openerp.exceptions import Warning
-=======
-from openerp.tools.translate import _
-from openerp.osv import fields, osv
 from openerp.exceptions import UserError
 
->>>>>>> master
 _logger = logging.getLogger(__name__)
 
 
@@ -128,7 +123,7 @@ class account_installer(models.TransientModel):
                     name = code = res.date_start[:4]
                     if int(name) != int(res.date_stop[:4]):
                         name = res.date_start[:4] + '-' + res.date_stop[:4]
-                        code = resdate_start[2:4] + '-' + res.date_stop[2:4]
+                        code = res.date_start[2:4] + '-' + res.date_stop[2:4]
                     vals = {
                         'name': name,
                         'code': code,
