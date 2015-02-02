@@ -987,6 +987,7 @@ class view(osv.osv):
         if values is None:
             values = dict()
         qcontext = dict(
+            env=api.Environment(cr, uid, context),
             keep_query=keep_query,
             request=request, # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,

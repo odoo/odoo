@@ -574,6 +574,33 @@ class pos_order(osv.osv):
             'journal':      ui_paymentline['journal_id'],
         }
 
+    def _process_order(self, cr, uid, order, context=None):
+        order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
+
+        for payments in order['statement_ids']:
+            self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
+
+        session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+        if session.sequence_number <= order['sequence_number']:
+            session.write({'sequence_number': order['sequence_number'] + 1})
+            session.refresh()
+
+        if order['amount_return']:
+            cash_journal = session.cash_journal_id
+            if not cash_journal:
+                cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
+                if not len(cash_journal_ids):
+                    raise osv.except_osv( _('error!'),
+                        _("No cash statement found for this session. Unable to record returned cash."))
+                cash_journal = cash_journal_ids[0].journal_id
+            self.add_payment(cr, uid, order_id, {
+                'amount': -order['amount_return'],
+                'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'payment_name': _('return'),
+                'journal': cash_journal.id,
+            }, context=context)
+        return order_id
+
     def create_from_ui(self, cr, uid, orders, context=None):
         # Keep only new orders
         submitted_references = [o['data']['name'] for o in orders]
@@ -587,30 +614,7 @@ class pos_order(osv.osv):
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
-            order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
-
-            for payments in order['statement_ids']:
-                self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
-
-            session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
-            if session.sequence_number <= order['sequence_number']:
-                session.write({'sequence_number': order['sequence_number'] + 1})
-                session.refresh()
-
-            if order['amount_return']:
-                cash_journal = session.cash_journal_id
-                if not cash_journal:
-                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
-                    if not len(cash_journal_ids):
-                        raise osv.except_osv( _('error!'),
-                            _("No cash statement found for this session. Unable to record returned cash."))
-                    cash_journal = cash_journal_ids[0].journal_id
-                self.add_payment(cr, uid, order_id, {
-                    'amount': -order['amount_return'],
-                    'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'payment_name': _('return'),
-                    'journal': cash_journal.id,
-                }, context=context)
+            order_id = self._process_order(cr, uid, order, context=context)
             order_ids.append(order_id)
 
             try:
@@ -1421,6 +1425,14 @@ class product_template(osv.osv):
         'to_weight' : False,
         'available_in_pos': True,
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        product_ctx = dict(context or {}, active_test=False)
+        if self.search_count(cr, uid, [('id', 'in', ids), ('available_in_pos', '=', True)], context=product_ctx):
+            if self.pool['pos.session'].search_count(cr, uid, [('state', '!=', 'closed')], context=context):
+                raise osv.except_osv(_('Error!'),
+                    _('You cannot delete a product saleable in point of sale while a session is still opened.'))
+        return super(product_template, self).unlink(cr, uid, ids, context=context)
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'

@@ -368,4 +368,9 @@ instance.web.round_decimals = function(value, decimals){
     return instance.web.round_precision(value, Math.pow(10,-decimals));
 };
 
+instance.web.float_is_zero = function(value, decimals){
+    epsilon = Math.pow(10, -decimals);
+    return Math.abs(instance.web.round_precision(value, epsilon)) < epsilon;
+};
+
 })();

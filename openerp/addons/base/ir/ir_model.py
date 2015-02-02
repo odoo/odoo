@@ -388,9 +388,7 @@ class ir_model_fields(osv.osv):
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
 
-                if self.pool.fields_by_model is not None:
-                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
-                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
+                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
@@ -987,11 +985,15 @@ class ir_model_data(osv.osv):
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
             return False
+        id = False
         try:
-            id = self.read(cr, uid, [self._get_id(cr, uid, module, xml_id)], ['res_id'])[0]['res_id']
-            self.loads[(module,xml_id)] = (model,id)
-        except:
-            id = False
+            # One step to check the ID is defined and the record actually exists
+            record = self.get_object(cr, uid, module, xml_id)
+            if record:
+                id = record.id
+                self.loads[(module,xml_id)] = (model,id)
+        except Exception:
+            pass
         return id
 
     def clear_caches(self):

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:26+0000\n"
-"PO-Revision-Date: 2014-11-18 08:48+0000\n"
-"Last-Translator: Yenthe - Bapps.be <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-22 09:27+0000\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-19 06:47+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:52+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -130,6 +130,16 @@ msgid ""
 "automatically new claims based on incoming emails.\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Beheer claims van klanten\n"
+"=======================\n"
+"Deze applicatie staat toe om uw klanten en leveranciers hun klachten te "
+"volgen.\n"
+"\n"
+"Het is volledig geïntegreerd met de e-mail poort zodat u\n"
+"automatische nieuwe claims gebaseerd op inkomende mails kan aanmaken.\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -175,6 +185,36 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"Belgische localisatie voor in en uitgaande facturen (vereiste voor "
+"account_coda):\n"
+"============================================================================"
+"\n"
+"    - Hernoem 'Referentie' veldlabels naar 'Communicatie'\n"
+"    - Voeg ondersteuning toe voor Belgisch gestructureerde communicatie\n"
+"\n"
+"Een gestructureerde communicatie kan automatisch gegenereerd worden bij een "
+"uitgaande factuur volgens de volgende algoritmes:\n"
+"-----------------------------------------------------------------------------"
+"----------------------------------------\n"
+"    1) Willekeurig: +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Willekeurige getallen, **DD =** Controleer getallen\n"
+"    2) Datum : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Dag van het jaar, **SSS =** Sequentie nummer, **DD =** "
+"Controleer getallen\n"
+"    3) Klant referentie +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Klant referentie zonder niet-numerieke karakters, **SSS "
+"=** Sequentienummer, **DD =** Controleer getallen  \n"
+"        \n"
+"Het geprefereerde type van gestructureerde communicatie en geassocieerde "
+"algoritme kunnen\n"
+"gespecificeerd worden op het partner record. Een 'willekeurig' "
+"gestructureerde communicatie zal\n"
+"gegenereerd worden als er geen algoritme gespecificeerd is op het partner "
+"record. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -189,6 +229,16 @@ msgid ""
 "          templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    * Multi-taal ondersteuning voor rekeningschema's, BTW, BTW codes, "
+"journalen\n"
+"      Boekhoudkundige sjablonen, analytisch rekeningschema en analytische "
+"journalen.\n"
+"    * Installatiewizard veranderingen\n"
+"      - Kopieer vertalingen voor COA, BTW, BTW codes en fiscale posities "
+"van\n"
+"      templates naar doelobjecten.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -246,6 +296,14 @@ msgid ""
 "It assigns manager and user access rights to the Administrator and only user "
 "rights to the Demo user. \n"
 msgstr ""
+"\n"
+"Toegangsrechten boekhouding\n"
+"========================\n"
+"Het geeft de administrator toegang tot alle boekhoudfuncties zoals journalen "
+"en rekeningschema's.\n"
+"\n"
+"Het geeft manager en administrator rechten aan de Administrator en alleen "
+"gebruikersrechten aan de demo gebruiker. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -355,6 +413,16 @@ msgid ""
 "will automatically be sent to your customers.'\n"
 "    "
 msgstr ""
+"\n"
+"Voeg e-mail sjablonen aan producten die verstuurd moeten worden na "
+"bevestiging van het factuur\n"
+"==================================================================\n"
+"\n"
+"Met deze module kan u producten koppelen aan een sjabloon om volledige "
+"informatie en tools naar uw klant te sturen.\n"
+"Bijvoorbeeld bij het factureren van een training, de training agenda en "
+"materialen worden automatisch naar uw klant gestuurd.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -468,6 +536,15 @@ msgid ""
 "invoices from picking, OpenERP is able to add and compute the shipping "
 "line.\n"
 msgstr ""
+"\n"
+"Staat u toe om nieuwe leveringsmethodes toe te voegen in verkooporders en "
+"picking.\n"
+" ==============================================================\n"
+"\n"
+"U kan uw eigen vervoerder en leveringsroosters voor prijzen instellen. "
+"Wanneer u\n"
+"facturen aanmaakt van een picking is Odoo in de mogelijkheid om de "
+"verzendlijn te berekenen en toe te voegen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -735,6 +812,20 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
+"\n"
+"Belgische salaris regels.\n"
+"======================\n"
+"\n"
+"    * Werknemer details\n"
+"    * Werknemer contracten\n"
+"    * Paspoort gebaseerde contracten\n"
+"    * Vergoedingen en inhoudingen\n"
+"    * Sta configuratie toe van basis/bruto/netto loon\n"
+"    * Loonstrook werknemer\n"
+"    * Maandelijkse salaris register\n"
+"    * Geïntegreerd met vakantiebeheer\n"
+"    * Loon Maj, ONSS, onroerende voorheffing, kindergeld, ...\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -871,6 +962,22 @@ msgid ""
 "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
 "    "
 msgstr ""
+"\n"
+"Rekeningschema voor Costa Rica.\n"
+"=================================\n"
+"\n"
+"Bevat:\n"
+"---------\n"
+"    * account.type\n"
+"    * account.account.template\n"
+"    * account.tax.template\n"
+"    * account.tax.code.template\n"
+"    * account.chart.template\n"
+"\n"
+"Alles is in het Engels met Spaanse vertalingen. Verdere vertalingen zijn "
+"welkom,\n"
+"ga naar https://translations.launchpad.net/openobject-addons/8.0/ aub.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -939,6 +1046,21 @@ msgid ""
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
+"Maak mooie web enquêtes en visualiseer antwoorden\n"
+" ==================================================\n"
+"\n"
+"Dit hangt af van antwoorden of beoordelingen van sommige vragen door "
+"verschillende gebruikers.\n"
+"Een onderzoek kan meerdere pagina's hebben. Elke pagina mag meerdere vragen "
+"bevatten en\n"
+"elke vraag mag meerdere antwoorden hebben. Verschillende gebruikers mogen "
+"verschillende\n"
+"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan.  "
+"Partners krijgen ook\n"
+"een e-mail toegestuurd met een persoonlijk token en een uitnodiging voor de "
+"enquête.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
@@ -958,6 +1080,21 @@ msgid ""
 "      above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"Creëer terugkomende documenten.\n"
+"===========================\n"
+"\n"
+"Deze module staat de creatie van nieuwe documenten toe en het toevoegen van "
+"abonnementen op dat document.\n"
+"\n"
+"Bijvoorbeeld om automatisch periodiek een factuur te genereren:\n"
+"-------------------------------------------------------------\n"
+"    * Definieer een documenttype gebaseerd op het factuur object\n"
+"    * Definieer een abonnement waarvan het brondocument in het document "
+"gedefinieerd is\n"
+"      hier boven. Specifieer de interval informatie en partner die "
+"gefactureerd moet worden.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_sale
@@ -981,6 +1118,23 @@ msgid ""
 "for\n"
 "this event.\n"
 msgstr ""
+"\n"
+"Registraties aanmaken met verkooporders.\n"
+"=======================================\n"
+"\n"
+"Deze module stelt u in staat om registratiecreatie te koppelen met uw "
+"verkoopflow en dit te automatiseren,\n"
+"wat u in staat stelt om de facturatie functie in te schakelen.\n"
+"\n"
+"Het definieert een nieuwe soort van serviceproducten die u de mogelijkheid "
+"bieden om\n"
+"een evenement categorie te kiezen om dit mee te koppelen. Wanneer u een "
+"verkooporder codeert voor\n"
+"het product zal u de mogelijkheid hebben om een bestaande evenement te "
+"kiezen van de categorie en\n"
+"wanneer u deze verkooporder bevestigt zal er automatisch een registratie "
+"worden aangemaakt\n"
+"voor dit evenement.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -1025,7 +1179,7 @@ msgid ""
 "===\n"
 "A portal defines a specific user menu and access rights for its members.  "
 "This\n"
-"menu can ben seen by portal members, public users and any other user that\n"
+"menu can be seen by portal members, public users and any other user that\n"
 "have the access to technical features (e.g. the administrator).\n"
 "Also, each portal member is linked to a specific partner.\n"
 "\n"
@@ -1382,6 +1536,13 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"Generieke loonlijst systeem voor integratie met boekhouden.\n"
+"==================================================\n"
+"    * Kostencodering\n"
+"    * Betalingscodering\n"
+"    * Bedrijfsbijdragebeheer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll
@@ -1400,6 +1561,19 @@ msgid ""
 "    * Integrated with Holiday Management\n"
 "    "
 msgstr ""
+"\n"
+"Generiek salaris systeem.\n"
+"=======================\n"
+"\n"
+"    * Werknemer details\n"
+"    * Werknemer contracten\n"
+"    * Paspoort gebaseerd contract\n"
+"    * Vergoedingen en inhoudingen\n"
+"    * Sta configuratie van basis/brutto/netto loon toe\n"
+"    * Werknemer loonstrook\n"
+"    * Maandelijkse loonstrook register\n"
+"    * Geïntegreerd met vakantiebeheer\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_analytics
@@ -1434,6 +1608,19 @@ msgid ""
 "    * Unlimited \"Group By\" levels (not stacked), two cross level analysis "
 "(stacked)\n"
 msgstr ""
+"\n"
+"Grafiek weergaven.\n"
+"===========================\n"
+"\n"
+"    * Parsed een <graph> weergave maar staat toe om dynamisch de presentatie "
+"te wijzigen\n"
+"    * Grafiek types: taart, lijnen,  gebieden, staven, radar\n"
+"    * Gestapeld / niet gestapeld voor gebieden en staven\n"
+"    * Legendes: bovenkant, binnenin (bovenkant/links), verborgen\n"
+"    * Functies: downloaden als PNG of CSV, bladeren door data grid, wisselen "
+"van oriëntatie\n"
+"    * Ongelimiteerde \"Grouperen op\" niveau's (niet gestapeld), twee cross "
+"level analyses (gestapeld)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -1508,6 +1695,22 @@ msgid ""
 "* HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"Personeelsbeheer\n"
+"==========================\n"
+"\n"
+"Deze applicatie staat u toe om belangrijke aspecten van uw bedrijf hun "
+"personeel te beheren en ook andere details zoals hun kennis, contacten, "
+"werktijden...\n"
+"\n"
+"\n"
+"U kan het volgende beheren:\n"
+"---------------\n"
+"* Werknemers en hierarchieën: U kan werknemers definiëren met Gebruiker en "
+"weergave hierarchieën\n"
+"* HR Afdelingen\n"
+"* HR Jobs\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -1584,6 +1787,13 @@ msgid ""
 "document and Wiki based Hidden.\n"
 "    "
 msgstr ""
+"\n"
+"Installer voor kennis-gebaseerde Hidden.\n"
+"=====================================\n"
+"\n"
+"Maakt de Kennis Applicatie Configuratie beschikbaar vanuit waar u\n"
+"document en Wiki gebaseerde Hidden kan installeren.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_chat
@@ -1619,6 +1829,16 @@ msgid ""
 "Configuration > General Settings by clicking on \"Generate Google "
 "Authorization Code\"\n"
 msgstr ""
+"\n"
+"Integreer google document aan Odoo record.\n"
+"============================================\n"
+"\n"
+"Deze module staat u toe om gemakkelijk en snel Google documenten te "
+"integreren aan elk Odoo record door middel van de OAuth 2.0 voor "
+"geïnstalleerde applicaties,\n"
+"U kan de Google authorizatie code configureren vanuit Instellingen > "
+"Configuratie > Algemene instellingen en door te klikken op \"Genereer Google "
+"authorisatie code\"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_invoice_directly
@@ -1632,6 +1852,14 @@ msgid ""
 "wizard if the delivery is to be invoiced.\n"
 "    "
 msgstr ""
+"\n"
+"Factuur wizard voor levering.\n"
+"============================\n"
+"\n"
+"Wanneer u goederen verzend of levert zal deze module automatisch de "
+"facturatie\n"
+"wizard lanceren als de levering moet gefactureerd worden.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -1681,6 +1909,12 @@ msgid ""
 "Link module to map leads to issues\n"
 "        "
 msgstr ""
+"\n"
+"Leads naar problemen\n"
+"==============\n"
+"\n"
+"Link module om leads aan problemen te koppelen\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -1713,6 +1947,16 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Live chat ondersteuning\n"
+"=================\n"
+"\n"
+"Sta toe om live widgets te gebruiken om berichten te versturen op elke "
+"webpagina die communiceert\n"
+"met de huidige server en zend bezoekers hun verzoeken naar verschillende "
+"live chat operators\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -1807,6 +2051,21 @@ msgid ""
 "You can define the different phases of interviews and easily rate the "
 "applicant from the kanban view.\n"
 msgstr ""
+"\n"
+"Beheer job posities en hun aanwervingsproces\n"
+"================================================\n"
+"\n"
+"Deze applicatie staat u toe om gemakkelijk jobs, vacatures, applicaties, "
+"interviews... te beheren\n"
+"\n"
+"Het is geïntegreerd met de mail poort om automatisch e-mail op te halen die "
+"gestuurd wordt naar jobs@yourcompany.com> in de lijst van aanvragers. Het is "
+"ook geïntegreerd met het Document Beheer Systeem om CV's te bewaren en te "
+"doorzoeken om de kandidaat te vinden die u zoekt. Gelijkaardig is het ook "
+"geïntegreerd met de enquête-module zodat u interviews kan definiëren voor "
+"verschillende jobs.\n"
+"U kan de verschillende fases van een interview instellen en gemakkelijk de "
+"kandidaat beoordelen vanuit de kanban weergave.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -2095,6 +2354,27 @@ msgid ""
 ".. SAT: http://www.sat.gob.mx/\n"
 "    "
 msgstr ""
+"\n"
+"Minimale boekhouding configuratie voor Mexico.\n"
+"============================================\n"
+"\n"
+"Dit rekeningschema is het minimale voorstel om OoB te kunnen gebruiken \n"
+"in de boekhouding van Odoo.\n"
+"\n"
+"Dit heeft niet de pretentie om de volledige lokalisatie te zijn voor Mexico, "
+"dit bevat de minimale\n"
+"data om vanaf 0 te starten in de mexicaanse lokalisatie.\n"
+"\n"
+"Deze module en zijn inhoud worden regelmatig geüpdatet door het openerp-"
+"mexico team.\n"
+"\n"
+"Met deze module heeft u:\n"
+"\n"
+" - Minimale rekeningschema getest in productie omgevingen.\n"
+" - Minimale rekeningschema om te voldoen met de SAT_ eisen.\n"
+"\n"
+".. SAT: http://www.sat.gob.mx/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -2125,6 +2405,15 @@ msgid ""
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
 msgstr ""
+"\n"
+"Module voor middelenbeer\n"
+"===============================\n"
+"\n"
+"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een "
+"taak of een werkcentrum op een productieorder). Deze module beheert een "
+"middelen kalender geassocieerd met elk middel. Het beheert ook de bladeren "
+"van elk middel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -2335,6 +2624,19 @@ msgid ""
 "\n"
 "* In a module, so that administrators and users of OpenERP who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_im_odoo_support
+msgid ""
+"\n"
+"Odoo Live Support\n"
+"=================\n"
+"\n"
+"Ask your functionnal question directly to the Odoo Operators with the "
+"livechat support.\n"
+"\n"
+"        "
 msgstr ""
 
 #. module: base
@@ -2744,6 +3046,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Panamese rekeningschema en fiscale localisatie.\n"
+"\n"
+"Panamese boekhouding en belastingen volgens de geldende voorschriften\n"
+"\n"
+"In samenwerking met \n"
+"- AHMNET CORP http://www.ahmnet.com\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -2803,6 +3114,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Peruaans rekeningschema en fiscale localisatie. Volgens de PCGE 2010.\n"
+"========================================================================\n"
+"\n"
+"Peruaanse boekhouding en belastingen in overeenstemming met de toepassende "
+"bepalingen van \n"
+"SUNAT 2011 (PCGE 2010).\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -2814,6 +3134,12 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Rekeningschema van de generieke Italiaanse firma.\n"
+"================================================\n"
+"\n"
+"Italiaans rekeningschema en localisatie.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -2883,12 +3209,10 @@ msgstr ""
 msgid ""
 "\n"
 "Product extension. This module adds:\n"
-"  * Last purchase order for each product supplier \n"
-"  * New functional field: Available stock (real+outgoing stock)\n"
-"  * Computes standard price from the BoM of the product (optional for each "
-"product)\n"
-"  * Standard price is shown in the BoM and it can be computed with a wizard "
-"\n"
+"  * Computes standard price from the BoM of the product with a button on the "
+"product variant based\n"
+"    on the materials in the BoM and the work centers.  It can create the "
+"necessary accounting entries when necessary.\n"
 msgstr ""
 
 #. module: base
@@ -2908,6 +3232,20 @@ msgid ""
 "documentation at http://doc.openerp.com.\n"
 "    "
 msgstr ""
+"\n"
+"Biedt een gemeenschappelijk EDI platform aan dat andere applicaties kunnen "
+"gebruiken.\n"
+"===============================================================\n"
+"\n"
+"Odoo specificeert een generiek EDI formaat om zakelijke documenten uit te "
+"wisselen tussen\n"
+"verschillende systemen en biedt een generiek mechanisme om ze te importeren "
+"en exporteren.\n"
+"\n"
+"Meer details over het Odoo EDI formaat kan u vinden in de technische Odoo "
+"documentatie\n"
+"op http://doc.openerp.com\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -3063,6 +3401,19 @@ msgid ""
 "    * Date\n"
 "    "
 msgstr ""
+"\n"
+"Stel standaard waardes in voor analytische accounts.\n"
+"==============================================\n"
+"\n"
+"Staat toe om automatisch analytische accounts the selecteren gebaseerd op de "
+"criteria:\n"
+"---------------------------------------------------------------------\n"
+"    * Product\n"
+"    * Partner\n"
+"    * Gebruiker\n"
+"    * Bedrijf\n"
+"    * Datum\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -3119,6 +3470,12 @@ msgid ""
 "This module adds a Survey mass mailing button inside the more option of "
 "lead/customers views\n"
 msgstr ""
+"\n"
+"Enquête - CRM (bridge module)\n"
+"============================================================================="
+"====\n"
+"Deze module voegt een massa mail knop toe in de meer optie bij een "
+"lead/klanten weergave\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -3126,35 +3483,34 @@ msgid ""
 "\n"
 "Swiss localization\n"
 "==================\n"
-" **Multilang swiss STERCHI account chart and taxes**\n"
-"  **Author:** Camptocamp SA\n"
 "\n"
-"  **Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
+"**Multilang Swiss PME/KMU 2015 account chart and taxes**\n"
 "\n"
-"  **Translation contributors:** brain-tec AG, Agile Business Group\n"
+"**Author:** Camptocamp SA\n"
 "\n"
-" **This release will introduce major changes to l10n_ch.**\n"
+"**Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
 "\n"
-" Due to important refactoring needs and the Switzerland adoption of new "
-"international payment standard during 2013-2014. We have reorganised the "
-"swiss localization addons this way:\n"
+"**Translation contributors:** brain-tec AG, Agile Business Group\n"
 "\n"
-" - **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official "
-"addon)\n"
-" - **l10n_ch_base_bank**: Technical module that introduces a new and "
-"simplified version of bank type management\n"
-" - **l10n_ch_bank**: List of swiss banks\n"
-" - **l10n_ch_zip**: List of swiss postal zip\n"
-" - **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end "
+"The swiss localization addons are organized this way:\n"
+"\n"
+"``l10n_ch``\n"
+"  Multilang Swiss PME/KMU 2015 account chart and taxes (official addon)\n"
+"``l10n_ch_base_bank``\n"
+"  Technical module that introduces a new and simplified version of bank\n"
+"  type management\n"
+"``l10n_ch_bank``\n"
+"  List of swiss banks\n"
+"``l10n_ch_zip``\n"
+"  List of swiss postal zip\n"
+"``l10n_ch_dta``\n"
+"  Support of the DTA payment protocol (will be deprecated by the end of "
 "2014)\n"
-" - **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and "
-"reconciliation. Report refactored with easy element positioning.\n"
-" - **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support "
-"will be completed during 2013/2014\n"
+"``l10n_ch_payment_slip``\n"
+"  Support of ESR/BVR payment slip report and reconciliation.\n"
 "\n"
-" The modules will be soon available on OpenERP swiss localization on "
-"launchpad:\n"
-" https://launchpad.net/openerp-swiss-localization\n"
+"``l10n_ch`` is located in the core Odoo modules. The other modules are in:\n"
+"https://github.com/OCA/l10n-switzerland\n"
 msgstr ""
 
 #. module: base
@@ -3170,6 +3526,15 @@ msgid ""
 "with the effect of creating, editing and deleting either ways.\n"
 "    "
 msgstr ""
+"\n"
+"Synchronisatie van werken op projecttaken met tijdsregistratie.\n"
+"====================================================================\n"
+"\n"
+"Deze module laat uw de inschrijvingen onder taken definiëren voor \n"
+"projectbeheer op de tijdsregistratielijnen voor specifieke data en "
+"gebruikers\n"
+"met het effect de creatie, wijziging of verwijdering in beide richtingen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -3398,6 +3763,17 @@ msgid ""
 "        * Files by Partner (graph)\n"
 "        * Files Size by Month (graph)\n"
 msgstr ""
+"\n"
+"Dit is een volledig document beheer systeem\n"
+"==============================================\n"
+"    * Gebruiker authenticatie\n"
+"    * Document indentatie:-.pptx en .docx bestanden zijn niet ondersteund op "
+"het Windows platform.\n"
+"    * Dashboard voor documenten dat bevat:\n"
+"        * Nieuwe bestanden (lijst)\n"
+"        * Bestanden op extensie (grafiek)\n"
+"        * Bestanden op partner (grafiek)\n"
+"        * Bestandsgrootte per maand (grafiek)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -3451,6 +3827,29 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Dit is de basis module voor het beheren van producten en prijslijsten in "
+"Odoo.\n"
+"========================================================================\n"
+"\n"
+"Producten ondersteunen varianten, verschillende prijsmethodes, "
+"leveranciersinformatie,\n"
+"op stock/bestelling maken, verschillende maateenheden, verpakking en "
+"eigenschappen.\n"
+"\n"
+"Prijslijst ondersteunt:\n"
+"-------------------\n"
+"    * Meerdere niveau's van korting (op product, categorie, hoeveelheden)\n"
+"    * Prijs berekenen op basis van verschillende criteria:\n"
+"        * Andere prijslijsten\n"
+"        * Kostprijs\n"
+"        * Lijstprijs\n"
+"        * Leveranciersprijs\n"
+"\n"
+"Prijslijst voorkeuren op product en/of partners.\n"
+"\n"
+"Print product labels met barcode.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -3513,6 +3912,16 @@ msgid ""
 "* The main taxes used in Domincan Republic\n"
 "* Fiscal position for local "
 msgstr ""
+"\n"
+"Dit is de basismodule om het rekeningschema te beheren voor de Dominicaanse "
+"Republiek.\n"
+"============================================================================="
+"=\n"
+"\n"
+"Rekeningschema.\n"
+"* Het fiscale code systeem voor de Dominicaanse Republiek.\n"
+"* De belangrijkste belastingen gebruikt in de Dominicaanse Republiek\n"
+"* Lokale fiscale posities "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -3565,6 +3974,16 @@ msgid ""
 "includes\n"
 "taxes and the Quetzal currency."
 msgstr ""
+"\n"
+"Dit is de basismodule voor het beheren van het rekeningschema voor "
+"Guatemala.\n"
+"=====================================================================\n"
+"\n"
+"Maakt een boekhoudkundig sjabloon voor Guatemala. Het omvat ook de "
+"belastingen en munteenheden\n"
+"voor Guatemale. - Voegt het rekeningschema toe voor Guatemala. Het bevat ook "
+"de BTW \n"
+"en de lokale munteenheid."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3579,6 +3998,15 @@ msgid ""
 "taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Dit is de basis module voor het rekeningschema van Honduras\n"
+"====================================================================\n"
+"    \n"
+"Maak een boekhoudkundig rekeningschema van Honduras. Het omvat ook de "
+"belastingen\n"
+"en munteenheid van Honduras. -- Voegt het rekeningschema toe voor Honduras. "
+"Dit bevat ook de belastingen\n"
+"en de munteenheid."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3593,6 +4021,14 @@ msgid ""
 "    * the main taxes used in Luxembourg\n"
 "    * default fiscal position for local, intracom, extracom "
 msgstr ""
+"\n"
+"Dit is de basismodule voor het rekeningschema van Luxemburg.\n"
+"======================================================================\n"
+"    * Het officiële Luxemburgse rekeningschema (wet van juni 2009 + 2011 "
+"rekening en BTW),\n"
+"    * Het BTW-code schema voor Luxemburg\n"
+"    * De meest gebruikte BTW's gebruikt in Luxemburg\n"
+"    * Standaard fiscale positie voor lokaal, intracom en extracom "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -3624,6 +4060,16 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"Dit is de nieuwste UK Odoo lokalisatie die nodig is om Odoo boekhouding te "
+"gebruiken voor UK SME's met:\n"
+" "
+"============================================================================="
+"====================\n"
+"    - Een CT600-ready rekeningschema\n"
+"    - VAT100-ready BTW structuur\n"
+"    - InfoLogic UK landenlijst\n"
+"    - Een paar andere aanpassingen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -3632,17 +4078,31 @@ msgid ""
 "This is the module for computing Procurements.\n"
 "==============================================\n"
 "\n"
-"In the MRP process, procurements orders are created to launch manufacturing\n"
-"orders, purchase orders, stock allocations. Procurement orders are\n"
-"generated automatically by the system and unless there is a problem, the\n"
-"user will not be notified. In case of problems, the system will raise some\n"
-"procurement exceptions to inform the user about blocking problems that need\n"
-"to be resolved manually (like, missing BoM structure or missing supplier).\n"
+"This procurement module only depends on the product module and is not "
+"useful\n"
+"on itself.  Procurements represent needs that need to be solved by a "
+"procurement\n"
+"rule.  When a procurement is created, it is confirmed.  When a rule is "
+"found,\n"
+"it will be put in running state.  After, it will check if what needed to be "
+"done\n"
+"for the rule has been executed.  Then it will go to the done state.  A "
+"procurement\n"
+"can also go into exception, for example when it can not find a rule and it "
+"can be cancelled.\n"
 "\n"
-"The procurement order will schedule a proposal for automatic procurement\n"
-"for the product which needs replenishment. This procurement will start a\n"
-"task, either a purchase order form for the supplier, or a production order\n"
-"depending on the product's configuration.\n"
+"The mechanism will be extended by several modules.  The procurement rule of "
+"stock will\n"
+"create a move and the procurement will be fulfilled when the move is done.\n"
+"The procurement rule of sale_service will create a task.  Those of purchase "
+"or\n"
+"mrp will create a purchase order or a manufacturing order.\n"
+"\n"
+"The scheduler will check if it can assign a rule to confirmed procurements "
+"and if\n"
+"it can put running procurements to done.\n"
+"\n"
+"Procurements in exception should be checked manually and can be re-run.\n"
 "    "
 msgstr ""
 
@@ -3659,6 +4119,14 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dit is de module om het rekeningschema, BTW structuur, fiscale positie en "
+"BTW mapping te beheren.\n"
+"Het voegt ook het registratienummer voor Roemenië toe in Odoo.\n"
+"============================================================================="
+"===================================\n"
+"Roemeense rekeningschema en lokalisatie.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3719,7 +4187,7 @@ msgid ""
 "zakładając, że wszystkie towary są w obrocie hurtowym.\n"
 "\n"
 "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
-"Wewnętrzny numer wersji OpenGLOBE 1.01\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
 
@@ -3852,6 +4320,15 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"Dit is de module voor het beheer van het rekeningschema voor Vietnam in "
+"Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Deze module geldt voor bedrijven die gebaseerd zijn in het standaard "
+"Vietnamese rekeningschema (VAS).\n"
+"\n"
+"**Kredieten:** Algemene oplossingen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -3871,6 +4348,20 @@ msgid ""
 "was assigned to the partner.\n"
 "    "
 msgstr ""
+"\n"
+"Dit is de module gebruikt door Odoo om klanten door te verwijzen naar hun "
+"partners, gebaseerd op Geolocatie.\n"
+"============================================================================="
+"=========================\n"
+"\n"
+"Deze module laat u Leaads, kansen en partners vhun adres lokaliseren via "
+"geolocatie.\n"
+"\n"
+"Als het coördinaat bekend is voor de Lead/kans kan deze automatisch "
+"toegewezen worden\n"
+"aan een gepaste lokale partner, gebaseerd op de afstand en het gewicht dat "
+"is toegewezen aan de partner.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -4079,6 +4570,12 @@ msgid ""
 "=====================\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt het menu problemen en functies toe aan uw portaal als "
+"project_issue en portaal geïnstalleerd zijn.\n"
+"============================================================================="
+"=====================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_project
@@ -4182,6 +4679,14 @@ msgid ""
 "handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"Deze module voegt de ondersteuning voor tijdsregistratie voor "
+"Problemen/Bugbeheer toe in Project.\n"
+"============================================================================="
+"====\n"
+"Logs kunnen gehandhaafd worden om het aantal bestede uren te registreren dat "
+"gebruikers nodig hadden om een probleem op te lossen.\n"
+"                "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_wave
@@ -4191,6 +4696,10 @@ msgid ""
 "=================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt de 'picking wave' optie toe in magazijnbeheer.\n"
+"=================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -4230,6 +4739,22 @@ msgid ""
 "In that case, you can not use priorities any more on the different picking.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module staat Just In Time berekening toe van inkooporders.\n"
+"==================================================================\n"
+"\n"
+"Als u deze module installeert hoeft u niet de reguliere inkoop\n"
+"planner uit te voeren (maar u moet wel nog steeds de minimale bestelpunt "
+"regel planner dagelijks uitvoeren\n"
+"of laten uitvoeren).\n"
+"Alle inkooporders worden direct verwerkt, wat in sommige gevallen\n"
+"een kleine performantie impact heeft.\n"
+"\n"
+"Het kan ook uw stock grootte vergroten omdat producten gereserveerd zijn zo\n"
+"snel als mogelijk en de planner zijn tijdsbereik wordt niet meer mee "
+"berekend.\n"
+"In dit geval kan u geen prioriteiten meer gebruiken op andere pickings.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -4281,6 +4806,19 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module laat toe om actie regels te implementeren voor elk object.\n"
+"============================================================\n"
+"\n"
+"Gebruik geautomatiseerde acties om automatisch acties te doen afgaan voor "
+"meerdere schermen.\n"
+"\n"
+"**Bijvoorbeeld:** Een lead aangemaakt door een specifieke gebruiker mag "
+"automatisch op een specifiek\n"
+"verkoop team gezet worden of een mogelijkheid dat nog steeds de status "
+"afwachtend heeft na 14 dagen kan\n"
+"automatisch een herinnering e-mail sturen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_plans
@@ -4351,6 +4889,22 @@ msgid ""
 "\n"
 "Notes can be found in the 'Home' menu.\n"
 msgstr ""
+"\n"
+"Deze module staat toe dat gebruikers hun eigen notities kunnen aanmaken in "
+"Odoo\n"
+"=================================================================\n"
+"\n"
+"Schrijf notities om notities te maken van vergaderingen, organiseer ideeën, "
+"organiseer persoonlijke to-do lijsten, etc.\n"
+"Elke gebruiker beheer zijn eigen persoonlijke notities. Notities zijn enkel "
+"beschikbaar voor\n"
+"de auteur zelf, maar kunnen gedeeld worden met andere gebruikers zodat "
+"meerdere\n"
+"mensen aan één notitie kunnen werken in real time. Het is zeer efficiënt om "
+"notities\n"
+"van vergaderingen te delen.\n"
+"\n"
+"Notities kunnen in het 'Home' menu gevonden worden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_profiling
@@ -4395,6 +4949,22 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module staat u toe om een database te anonimiseren.\n"
+"===============================================\n"
+"\n"
+"Deze module zorgt ervoor dat uw data vertrouwelijk blijft voor een "
+"database.\n"
+"Het proces is handig als u het migratieproces wilt gebruikt en uw eigen of "
+"uw klant\n"
+"zijn data vertrouwelijk wilt houden. Het principe is dat u een tool uitvoert "
+"die\n"
+"de gevoelige data verbergt (ze wordt vervangen door 'XXX' karakters). Hierna "
+"kan u de geanonimiseerde data\n"
+"naar het migratie team sturen. Als u uw gemigreerde database terug krijgt "
+"kan u deze herstellen en het \n"
+"anonimisatieproces terug omkeren om uw data terug te krijgen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_user_function
@@ -4451,6 +5021,15 @@ msgid ""
 "easily\n"
 "keep track and order all your purchase orders.\n"
 msgstr ""
+"\n"
+"Deze module laat toe om aankoopaanvragen te beheren.\n"
+"===========================================================\n"
+"\n"
+"Wanneer een aankooporder is aangemaakt heeft u nu de mogelijkheid om de "
+"gerelateerde\n"
+"vordering te bewaren. Dit nieuwe object zal zich hergroeperen en staat u toe "
+"om gemakkelijk\n"
+"aankooporders op te volgen en om alle aankooporders te ordenen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -4618,6 +5197,16 @@ msgid ""
 "Adds menu to show relevant information to each manager.You can also view the "
 "report of account analytic summary user-wise as well as month-wise.\n"
 msgstr ""
+"\n"
+"Deze module is voor het wijzigen van analytische weergaves om belangrijke "
+"data te tonen aan projectbeheerders aan dienstverlenende bedrijven te "
+"tonen.\n"
+"============================================================================="
+"======================================\n"
+"\n"
+"Voegt een menu toe om relevante informatie te tonen aan elke manager. U kunt "
+"ook het rapport van de analytische samenvattingen als gebruiker bekijken en "
+"ook maandelijks.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_contract_hr_expense
@@ -4761,6 +5350,19 @@ msgid ""
 "    * Number Padding\n"
 "    "
 msgstr ""
+"\n"
+"Deze module beheert de interne sequentienummering voor boekingen.\n"
+"======================================================================\n"
+"\n"
+"Stelt u in staat om de boekhoudingsequenties te beheren.\n"
+"\n"
+"U kan de volgende attributen van een sequentie personaliseren:\n"
+"----------------------------------------------------------\n"
+"    * Voorvoegsel\n"
+"    * Achtervoegsel\n"
+"    * Volgend nummer\n"
+"    * Nummer vulling\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -4777,6 +5379,16 @@ msgid ""
 "order.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module biedt de mogelijkheid aan de gebruiker om de MRP en "
+"verkoopmodule tegelijk te installeren.\n"
+"============================================================================="
+"=======\n"
+"\n"
+"Het wordt gebruikt om gegenereerde productiebestellingen te volgen\n"
+"vanuit verkooporders. Het voegt verkoopnamen en verkoopreferenties toe aan "
+"productiebestellingen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -4795,7 +5407,7 @@ msgid ""
 "    * Define input segments that will select the items that should enter "
 "the\n"
 "      campaign (e.g leads from certain countries.)\n"
-"    * Run you campaign in simulation mode to test it real-time or "
+"    * Run your campaign in simulation mode to test it real-time or "
 "accelerated,\n"
 "      and fine-tune it\n"
 "    * You may also start the real campaign in manual mode, where each "
@@ -4827,6 +5439,13 @@ msgid ""
 "Please keep in mind that you should review and adapt it with your "
 "Accountant, before using it in a live Environment.\n"
 msgstr ""
+"\n"
+"Deze module biedt het standaard rekeningschema aan dat gebaseerd is op het "
+"sjabloon van BMF.gv.at.\n"
+"============================================================================="
+"================================ \n"
+"Houdt er aub rekening mee dat u deze moet controleren en wijzigen met uw "
+"boekhouding voordat u deze module gebruikt in een live omgeving.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_anglo_saxon
@@ -4903,6 +5522,17 @@ msgid ""
 "their status quickly as they evolve.\n"
 "    "
 msgstr ""
+"\n"
+"Traceert Problemen/Bugbeheer voor projecten\n"
+"=========================================\n"
+"Deze applicatie stelt u in staat om problemen die u mogelijk tegen komt in "
+"een project zoals bugs in een systeem, klachten van klanten of materiële "
+"schade te beheren. \n"
+"\n"
+"Het stelt de manager in staat om snel het probleem te bekijken, toe te "
+"wijzen en de status te beslissen van het probleem naar mate het probleem "
+"vordert.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -4921,6 +5551,19 @@ msgid ""
 "Also implements the removal strategy First Expiry First Out (FEFO) widely "
 "used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Traceer verschillende datums op producten en partijen.\n"
+"======================================================\n"
+"\n"
+"Volgende datums kunnen getraceerd worden:\n"
+"-------------------------------\n"
+"    - Einde leven\n"
+"    - Best te gebruiken voor\n"
+"    - Verwijder datum\n"
+"    - Waarschuwingsdatum\n"
+"\n"
+"Implementeert ook de verwijderstrategie Eerste Vervaldatum Eerst Uit (FEFO) "
+"dat wijdgebruikt is, bijvoorbeeld, in de voedselindustrie.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -4958,6 +5601,14 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
+"\n"
+"Rekeningschema boekhouding voor Odoo in Turkije.\n"
+"==========================================================\n"
+"\n"
+"Na het voltooien van deze installatie loopt een configuratie wizard.\n"
+"    * Wizard van de account die de template gebruikt\n"
+"      om de bankgegevens, informatie en rekeningschema in te stellen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -4968,6 +5619,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Rekeningschema en lokalisatie voor de Verenigde Arabische Emiraten.\n"
+"=======================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -5058,7 +5714,7 @@ msgid ""
 "\n"
 "Vehicle, leasing, insurances, cost\n"
 "==================================\n"
-"With this module, OpenERP helps you managing all your vehicles, the\n"
+"With this module, Odoo helps you managing all your vehicles, the\n"
 "contracts associated to those vehicle as well as services, fuel log\n"
 "entries, costs and many other features necessary to the management \n"
 "of your fleet of vehicle(s)\n"
@@ -5229,7 +5885,7 @@ msgstr "%p - Equivalent van AM of PM"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:355
+#: code:addons/base/res/res_partner.py:356
 #: code:addons/base/res/res_users.py:120
 #: code:addons/base/res/res_users.py:371
 #: code:addons/base/res/res_users.py:373
@@ -5253,7 +5909,7 @@ msgid "%y - Year without century [00,99]."
 msgstr "%y - Jaar zonder eeuw [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:997
+#: code:addons/base/ir/ir_model.py:1015
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5264,25 +5920,25 @@ msgstr ""
 "module.reference_id"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:191
+#: code:addons/base/ir/ir_fields.py:172
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s' lijkt geen nummer te zijn voor veld '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:204
+#: code:addons/base/ir/ir_fields.py:188
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s' is geen geldige datum '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:235
+#: code:addons/base/ir/ir_fields.py:219
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr "'%s' is geen geldige datum/tijd voor veld '%%(field)s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:183
+#: code:addons/base/ir/ir_fields.py:163
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr "'%s' lijkt geen geheel getal te zijn voor veld '%%(field)s'"
@@ -5641,7 +6297,7 @@ msgid "A module with dummy methods."
 msgstr "Een module met dummy methodes"
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:835
+#: code:addons/base/ir/ir_qweb.py:882
 #, python-format
 msgid "A unit must be provided to duration widgets"
 msgstr "Een eenheid moet worden aangeleverd bij tijdsduur widgets"
@@ -5691,6 +6347,12 @@ msgstr "Toegangsrechten"
 #: model:ir.ui.menu,name:base.menu_ir_access_act
 msgid "Access Controls List"
 msgstr "Overzicht toegangscontrole"
+
+#. module: base
+#: code:addons/base/ir/ir_attachment.py:257
+#, python-format
+msgid "Access Denied"
+msgstr "Toegang geweigerd"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -6083,9 +6745,9 @@ msgid ""
 msgstr "Administratieve onderverdelen van een land."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:548
-#: code:addons/base/ir/ir_model.py:609
-#: code:addons/base/ir/ir_model.py:1116
+#: code:addons/base/ir/ir_model.py:566
+#: code:addons/base/ir/ir_model.py:627
+#: code:addons/base/ir/ir_model.py:1134
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Administrator toegang is nodig om een module te kunnen verwijderen."
@@ -6180,7 +6842,7 @@ msgid "Always Searchable"
 msgstr "Altijd doorzoekbaar"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:373
+#: code:addons/base/ir/ir_fields.py:350
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -6274,7 +6936,7 @@ msgid "Applicant Resumes and Letters"
 msgstr "Sollicitant brieven en CV's"
 
 #. module: base
-#: code:addons/base/res/res_users.py:735
+#: code:addons/base/res/res_users.py:739
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
@@ -6294,7 +6956,7 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: base
-#: code:addons/base/module/module.py:568
+#: code:addons/base/module/module.py:569
 #: view:base.module.upgrade:base.view_base_module_upgrade_install
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
@@ -6663,7 +7325,7 @@ msgid "Base Kanban"
 msgstr "Basis Kanban"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:189
+#: code:addons/base/res/res_lang.py:203
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
 msgstr "Standaard taal 'en_US' kan niet worden verwijderd!"
@@ -6948,7 +7610,7 @@ msgid "Campaign in Mass Mailing"
 msgstr "Campaignes in Bulk mailingen"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:370
+#: code:addons/base/ir/ir_fields.py:347
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
@@ -6963,13 +7625,13 @@ msgid "Can not remove root user!"
 msgstr "U kunt de hoofdgebruiker niet verwijderen!"
 
 #. module: base
-#: code:addons/base/module/module.py:548
+#: code:addons/base/module/module.py:549
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Kan module '%s' niet bijwerken. Deze is niet geïnstalleerd."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:456
+#: code:addons/base/ir/ir_model.py:464
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Kan slechts één kolom per keer wijzigen!"
@@ -7026,7 +7688,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Het is niet mogelijk de instellingen te dupliceren!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:458
+#: code:addons/base/ir/ir_model.py:466
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
@@ -7112,7 +7774,7 @@ msgid "Change the user password."
 msgstr "Gebruikers wachtwoord wijzigen."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:378
+#: code:addons/base/res/res_partner.py:379
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -7127,20 +7789,20 @@ msgstr ""
 "wijziging af te breken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:467
+#: code:addons/base/ir/ir_model.py:475
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Het wijzigen van het model van een veld is niet toegestaan!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:413
+#: code:addons/base/ir/ir_model.py:419
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 "Het veranderen van het opslagsysteem voor veld \"%s\" is niet toegestaan."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:470
+#: code:addons/base/ir/ir_model.py:478
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -7158,6 +7820,11 @@ msgstr "Char"
 #: model:ir.module.module,summary:base.module_website_livechat
 msgid "Chat With Your Website Visitors"
 msgstr "Chat met uw website bezoekers"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_im_odoo_support
+msgid "Chat with the Odoo collaborators"
+msgstr "Chant met Odoo medewerkers"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_writing
@@ -7317,6 +7984,7 @@ msgid "Christmas Island"
 msgstr "Christmaseiland"
 
 #. module: base
+#: code:addons/base/res/res_partner.py:69
 #: view:res.bank:base.view_res_bank_form
 #: field:res.bank,city:0
 #: view:res.company:base.view_company_form
@@ -7325,6 +7993,7 @@ msgstr "Christmaseiland"
 #: field:res.partner,city:0
 #: view:res.partner.bank:base.view_partner_bank_form
 #: field:res.partner.bank,city:0
+#, python-format
 msgid "City"
 msgstr "Plaats"
 
@@ -7647,13 +8316,13 @@ msgid "Connection Security"
 msgstr "Connectie beveiliging"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:208
 #, python-format
 msgid "Connection Test Failed!"
 msgstr "Connectie test niet geslaagd!"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:226
+#: code:addons/base/ir/ir_mail_server.py:215
 #, python-format
 msgid "Connection Test Succeeded!"
 msgstr "Connectie test geslaagd!"
@@ -7786,7 +8455,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Costa Rica - Boekhouding"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:629
+#: code:addons/base/res/res_partner.py:638
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "Niet mogelijk een contactpersoon aan te maken zonder e-mail adres"
@@ -7828,6 +8497,11 @@ msgstr "Landcode"
 #: view:res.country.group:base.view_country_group_tree
 msgid "Country Group"
 msgstr "Landengroep"
+
+#. module: base
+#: field:res.country,country_group_ids:0
+msgid "Country Groups"
+msgstr "Land groepen"
 
 #. module: base
 #: field:res.country,name:0
@@ -8226,7 +8900,7 @@ msgid "Custom Shortcuts"
 msgstr "Eigen sneltoetsen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:381
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Eigen velden dienen een naam te hebben die begint met 'x_' !"
@@ -8507,7 +9181,7 @@ msgid "Delete Access Right"
 msgstr "Toegangsrechten verwijderen"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:839
+#: code:addons/base/ir/ir_actions.py:841
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Verwijderen van de actieregel is mislukt."
@@ -8617,7 +9291,7 @@ msgid "Directory"
 msgstr "Map"
 
 #. module: base
-#: code:addons/base/res/res_config.py:471
+#: code:addons/base/res/res_config.py:472
 #, python-format
 msgid ""
 "Disabling this option will also uninstall the following modules \n"
@@ -8714,8 +9388,8 @@ msgid "Document Management System"
 msgstr "Document Beheer Systeem"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:771
-#: code:addons/base/ir/ir_model.py:774
+#: code:addons/base/ir/ir_model.py:789
+#: code:addons/base/ir/ir_model.py:792
 #, python-format
 msgid "Document model"
 msgstr "Document model"
@@ -8793,7 +9467,7 @@ msgstr ""
 "Het dupliceren avne en workflow is niet toegestaan. Maak een nieuwe aan."
 
 #. module: base
-#: code:addons/base/ir/ir_qweb.py:833
+#: code:addons/base/ir/ir_qweb.py:880
 #, python-format
 msgid "Durations can't be negative"
 msgstr "Tijdsduur kan niet negatief zijn"
@@ -8957,22 +9631,22 @@ msgid "Eritrea"
 msgstr "Eritrea"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:844
-#: code:addons/base/ir/ir_model.py:176
-#: code:addons/base/ir/ir_model.py:296
-#: code:addons/base/ir/ir_model.py:310
-#: code:addons/base/ir/ir_model.py:350
-#: code:addons/base/ir/ir_model.py:369
-#: code:addons/base/ir/ir_model.py:374
-#: code:addons/base/ir/ir_model.py:377
-#: code:addons/base/ir/ir_translation.py:396
+#: code:addons/base/ir/ir_actions.py:846
+#: code:addons/base/ir/ir_model.py:183
+#: code:addons/base/ir/ir_model.py:299
+#: code:addons/base/ir/ir_model.py:313
+#: code:addons/base/ir/ir_model.py:353
+#: code:addons/base/ir/ir_model.py:376
+#: code:addons/base/ir/ir_model.py:381
+#: code:addons/base/ir/ir_model.py:384
+#: code:addons/base/ir/ir_translation.py:401
 #: code:addons/base/module/module.py:339
 #: code:addons/base/module/module.py:381
 #: code:addons/base/module/module.py:386
 #: code:addons/base/module/module.py:396
-#: code:addons/base/module/module.py:522
-#: code:addons/base/module/module.py:548
-#: code:addons/base/module/module.py:562
+#: code:addons/base/module/module.py:523
+#: code:addons/base/module/module.py:549
+#: code:addons/base/module/module.py:563
 #: code:addons/base/res/res_currency.py:230
 #: code:addons/base/res/res_users.py:126
 #: code:addons/custom.py:554
@@ -9002,14 +9676,14 @@ msgstr ""
 "Weergave`%(view_name)s`"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:413
-#: code:addons/base/ir/ir_model.py:415
-#: code:addons/base/ir/ir_model.py:442
-#: code:addons/base/ir/ir_model.py:456
-#: code:addons/base/ir/ir_model.py:458
-#: code:addons/base/ir/ir_model.py:460
-#: code:addons/base/ir/ir_model.py:467
-#: code:addons/base/ir/ir_model.py:470
+#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:450
+#: code:addons/base/ir/ir_model.py:464
+#: code:addons/base/ir/ir_model.py:466
+#: code:addons/base/ir/ir_model.py:468
+#: code:addons/base/ir/ir_model.py:475
+#: code:addons/base/ir/ir_model.py:478
 #: code:addons/base/module/wizard/base_update_translations.py:39
 #: code:addons/base/res/res_currency.py:59
 #, python-format
@@ -9057,7 +9731,7 @@ msgid "Events Sales"
 msgstr "Verkoop evenementen"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:226
+#: code:addons/base/ir/ir_mail_server.py:215
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr "Alles lijkt goed geïnstalleerd te zijn!"
@@ -9108,7 +9782,7 @@ msgstr "Uitvoering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expense Tracker"
-msgstr "Kosten volger"
+msgstr "Beheer declaraties"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
@@ -9308,7 +9982,7 @@ msgid "Field Type"
 msgstr "Soort veld"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:834
+#: code:addons/base/ir/ir_ui_view.py:841
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Veld %(field_name)s` bestaat niet"
@@ -9527,11 +10201,10 @@ msgstr ""
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
 msgid ""
-"For more details about translating OpenERP in your language, please refer to "
-"the"
+"For more details about translating Odoo in your language, please refer to the"
 msgstr ""
-"Voor meer informatie over het vertalen van Odoo in uw eigen taal, raadpleeg "
-"de"
+"Voor meer informatie over het vertalen van Odoo in uw eigen taal, verwijzen "
+"wij u naar de"
 
 #. module: base
 #: help:ir.model.fields,relation_field:0
@@ -9548,7 +10221,7 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "Voor relatievelden, de technische naam van het doelmodel"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:369
+#: code:addons/base/ir/ir_model.py:376
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Voor selectievelden moeten de selectie-opties opgegeven worden!"
@@ -9567,7 +10240,7 @@ msgid "Format Layout"
 msgstr "Formaat opmaak"
 
 #. module: base
-#: code:addons/base/res/res_bank.py:188
+#: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "Formating Error"
 msgstr "Opmaakfout"
@@ -9588,7 +10261,7 @@ msgid "Forum, FAQ, Q&A"
 msgstr "Forum, FAQ, Q&A"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:343
+#: code:addons/base/ir/ir_fields.py:320
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr "Meerdere overeenkomsten gevonden voor '%%(field)s' (%d matches)"
@@ -9796,7 +10469,7 @@ msgid "Glue module holding mail improvements for website."
 msgstr "Verbindingsmodule voor mail verbeteringen voor de website."
 
 #. module: base
-#: code:addons/base/res/res_config.py:703
+#: code:addons/base/res/res_config.py:705
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Ga naar de instellingen"
@@ -10140,7 +10813,7 @@ msgid "Here is the exported translation file:"
 msgstr "Hier is het geëxporteerde vertaalbestand:"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:208
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -10224,11 +10897,6 @@ msgid "Human Resources"
 msgstr "Personeelszaken"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_human_ressources
-msgid "Human Ressources"
-msgstr "Personeelsbeheer"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hu
 msgid "Hungarian - Accounting"
 msgstr "Hongarije - Boekhouding"
@@ -10249,6 +10917,7 @@ msgid "IBAN Bank Accounts"
 msgstr "IBAN Bankrekeningen"
 
 #. module: base
+#: field:_unknown,id:0
 #: field:base.language.export,id:0
 #: field:base.language.import,id:0
 #: field:base.language.install,id:0
@@ -10477,6 +11146,11 @@ msgid ""
 "actions executing code that returns an action, or server actions returning a "
 "client action."
 msgstr ""
+"Als meerdere kindacties een actie terug sturen zal enkel de laatste worden "
+"uitgevoerd.\n"
+"                                    Dit kan gebeuren wanneer een server "
+"actie code uitvoert die een actie terugstuurt of een server actie die een "
+"cliënt actie terugstuurt."
 
 #. module: base
 #: help:res.users,action_id:0
@@ -10494,6 +11168,9 @@ msgid ""
 "related to a model that uses the need_action mechanism, this field is set to "
 "true. Otherwise, it is false."
 msgstr ""
+"Als de menu-item actie een act_window actie is en deze actie is gerelateerd "
+"aan een model dat het need_action mechanisme gebruikt zal dit veld op True "
+"worden gezet."
 
 #. module: base
 #: help:res.partner,lang:0
@@ -10773,6 +11450,12 @@ msgid "Inline View"
 msgstr "Inline weergave"
 
 #. module: base
+#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:57
+#, python-format
+msgid "Input"
+msgstr "Ontvangst"
+
+#. module: base
 #: code:addons/base/module/module.py:440
 #: view:ir.module.module:base.module_form
 #: view:ir.module.module:base.module_view_kanban
@@ -10871,13 +11554,13 @@ msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
 msgstr "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
 
 #. module: base
-#: code:addons/base/res/res_bank.py:188
+#: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "Invalid Bank Account Type Name format."
 msgstr "Ongeldig bankrekening typenaam formaat."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:85
+#: code:addons/base/ir/ir_model.py:92
 #, python-format
 msgid "Invalid Search Criteria"
 msgstr "Ongeldige zoekcriteria"
@@ -10888,19 +11571,19 @@ msgid "Invalid arguments"
 msgstr "Ongeldige argumenten"
 
 #. module: base
-#: code:addons/base/res/res_users.py:846
+#: code:addons/base/res/res_users.py:850
 #, python-format
 msgid "Invalid context default_groups_ref value (model.name_id) : \"%s\""
 msgstr "Ongeldige context default_groups_ref value (model.name_id) : \"%s\""
 
 #. module: base
-#: code:addons/base/res/res_users.py:846
+#: code:addons/base/res/res_users.py:850
 #, python-format
 msgid "Invalid context value"
 msgstr "Ongeldige context waarde"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:323
+#: code:addons/base/ir/ir_fields.py:302
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr "Ongeldige database id '%s'voor het veld '%%(field)s'"
@@ -10925,7 +11608,7 @@ msgstr ""
 "de weergave een andere weergave uitbreiden"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:222
+#: code:addons/base/ir/ir_actions.py:227
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Ongeldige modelnaam in de definitie van de actie."
@@ -11760,13 +12443,13 @@ msgid "Madam"
 msgstr "Mevrouw"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:485
+#: code:addons/base/ir/ir_mail_server.py:474
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "E-mail afleveren mislukt"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:481
+#: code:addons/base/ir/ir_mail_server.py:470
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -11844,6 +12527,11 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
+"Beheer en personaliseer de items beschikbaar en die weergegeven worden in uw "
+"Odoo systeem menu. U kan een item verwijderen door te klikken op het vakje "
+"aan het begin van elke lijn en verwijder het item dan door de knop die "
+"verschijnt. Items kunnen toegewezen worden aan specifieke groepen om ze zo "
+"beschikbaar te maken aan bepaalde gebruikers in het systeem."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -12121,7 +12809,7 @@ msgid "Miss"
 msgstr "Mej."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:459
+#: code:addons/base/ir/ir_mail_server.py:448
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Ontbrekende SMTP Server"
@@ -12161,13 +12849,13 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:377
+#: code:addons/base/ir/ir_model.py:384
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Model %s bestaat niet!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:176
+#: code:addons/base/ir/ir_model.py:183
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr "Model '%s' bevat module gegevens die niet verwijderd kunnen worden!"
@@ -12233,7 +12921,7 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:584
-#: code:addons/base/ir/ir_ui_view.py:791
+#: code:addons/base/ir/ir_ui_view.py:798
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Model niet gevonden: %(model)s"
@@ -12316,7 +13004,7 @@ msgid "Module dependency"
 msgstr "Afhankelijkheden module"
 
 #. module: base
-#: code:addons/base/module/module.py:684
+#: code:addons/base/module/module.py:685
 #, python-format
 msgid "Module not found"
 msgstr "Module niet gevonden"
@@ -12564,7 +13252,7 @@ msgid "New Caledonia (French)"
 msgstr "Nieuw Caledonië (Frans)"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:39
+#: code:addons/base/module/wizard/base_export_language.py:40
 #, python-format
 msgid "New Language (Empty translation template)"
 msgstr "Nieuwe taal (lege vertaling sjabloon)"
@@ -12586,7 +13274,7 @@ msgid "New Zealand"
 msgstr "Nieuw-Zeeland"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:460
+#: code:addons/base/ir/ir_model.py:468
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -12668,7 +13356,7 @@ msgid "No language with code \"%s\" exists"
 msgstr "Taal met code \"%s\" bestaat niet"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:351
+#: code:addons/base/ir/ir_fields.py:328
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
@@ -12842,10 +13530,15 @@ msgstr "Occitan (FR, post 1500) / Occitan"
 
 #. module: base
 #. openerp-web
-#: code:addons/base/static/src/js/apps.js:105
+#: code:addons/base/static/src/js/apps.js:179
 #, python-format
 msgid "Odoo Apps will be available soon"
 msgstr "Odoo apps zijn binnenkort beschikbaar"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_im_odoo_support
+msgid "Odoo Live Support"
+msgstr "Odoo Live Support"
 
 #. module: base
 #: help:ir.sequence,padding:0
@@ -12924,13 +13617,13 @@ msgid "Online Proposals"
 msgstr "Online offertes"
 
 #. module: base
-#: code:addons/base/res/res_config.py:539
+#: code:addons/base/res/res_config.py:541
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr "Alleen administrators kunnen deze instelling wijzigen"
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:79
+#: code:addons/base/ir/ir_attachment.py:81
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Alleen administrators kunnen deze actie starten"
@@ -12958,7 +13651,7 @@ msgid "Only if this bank account belong to your company"
 msgstr "Alleen wanneer dit bankrekeningnummer behoort tot uw bedrijf"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:771
+#: code:addons/base/ir/ir_model.py:789
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -13088,8 +13781,8 @@ msgid "Original View"
 msgstr "Oorspronkelijke Weergave"
 
 #. module: base
-#: code:addons/base/res/res_users.py:746
-#: code:addons/base/res/res_users.py:898
+#: code:addons/base/res/res_users.py:750
+#: code:addons/base/res/res_users.py:902
 #: selection:res.partner,type:0
 #: view:res.users:base.user_groups_view
 #, python-format
@@ -13132,6 +13825,12 @@ msgid "Outgoing Transitions"
 msgstr "Uitgaande overgangen"
 
 #. module: base
+#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:64
+#, python-format
+msgid "Output"
+msgstr "Uitgaand"
+
+#. module: base
 #: field:base.language.import,overwrite:0
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
@@ -13162,6 +13861,12 @@ msgstr "PO(T) formaat: u kunt deze bewerken met een PO editor"
 #: view:base.language.export:base.wizard_lang_export
 msgid "POEdit"
 msgstr "POEdit"
+
+#. module: base
+#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:70
+#, python-format
+msgid "Packing Zone"
+msgstr "Verpakking zone"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -13258,6 +13963,11 @@ msgid "Parent Right"
 msgstr "Rechts bovenliggende"
 
 #. module: base
+#: field:res.partner,parent_name:0
+msgid "Parent name"
+msgstr "Bovenliggende naam"
+
+#. module: base
 #: field:ir.actions.report.xml,parser:0
 msgid "Parser Class"
 msgstr "Parser Classe"
@@ -13324,7 +14034,7 @@ msgid "Partners Geo-Localization"
 msgstr "Partners Geo-Lokalisatie"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:765
+#: code:addons/base/res/res_partner.py:774
 #, python-format
 msgid "Partners: "
 msgstr "Relaties: "
@@ -13421,9 +14131,9 @@ msgid "Periodical Evaluations, Appraisals, Surveys"
 msgstr "Periodieke evaluaties, beoordelingen, enquêtes"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:548
-#: code:addons/base/ir/ir_model.py:609
-#: code:addons/base/ir/ir_model.py:1116
+#: code:addons/base/ir/ir_model.py:566
+#: code:addons/base/ir/ir_model.py:627
+#: code:addons/base/ir/ir_model.py:1134
 #, python-format
 msgid "Permission Denied"
 msgstr "Toegang geweigerd"
@@ -13488,14 +14198,14 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "Plan is goed voor SNC Portugal"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:774
+#: code:addons/base/ir/ir_model.py:792
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
 msgstr "Neem contact op met uw beheerder, als u denkt dat dit een fout is."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:460
+#: code:addons/base/ir/ir_mail_server.py:449
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -13527,7 +14237,7 @@ msgstr ""
 "Zet de actie van de basismodule om dynamische expressies te bouwen aan aub."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:844
+#: code:addons/base/ir/ir_actions.py:846
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "Specificeer een actie om te starten!"
@@ -13615,12 +14325,12 @@ msgstr "Voorraad portaal"
 msgid ""
 "Portal members have specific access rights (such as record rules and "
 "restricted menus).\n"
-"                They usually do not belong to the usual OpenERP groups."
+"                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"Portaal gebruikers hebben speciale toegangsrechten (zoals beperkingen op "
-"records en menu's).\n"
-"                ze maken normaliter geen onderdeel uit van een normale Odoo "
-"groep."
+"Portaal gebruikers hebben specifieke toegangsrechten (zoals record-regels en "
+"specifieke menu's).\n"
+"                Normaliter behoren deze niet tot een normale Odoo "
+"gebruikersgroep.."
 
 #. module: base
 #: model:res.country,name:base.pt
@@ -13783,7 +14493,7 @@ msgid "Properties"
 msgstr "Eigenschappen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:443
+#: code:addons/base/ir/ir_model.py:451
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -13827,11 +14537,12 @@ msgstr "Openbare projecten"
 msgid ""
 "Public users have specific access rights (such as record rules and "
 "restricted menus).\n"
-"                They usually do not belong to the usual OpenERP groups."
+"                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"Openbare gebruikers hebben specifieke toegangsrechten (zoals registratie "
-"regels en beperkte menu's).\n"
-"                Ze behoren meestal niet tot de gebruikelijke Odoo groepen."
+"Pubieke gebruikers hebben specifieke toegangsrechten (zoals record-regels en "
+"specifieke menu's).\n"
+"                Normaliter behoren deze niet tot een normale Odoo "
+"gebruikersgroep.."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
@@ -13930,6 +14641,12 @@ msgstr "Qatar"
 #: field:ir.values,key2:0
 msgid "Qualifier"
 msgstr "Kwalificatie"
+
+#. module: base
+#: code:addons/base/maintenance/migrations/stock/7.saas~5.1.1/post-10-warehouseconf.py:68
+#, python-format
+msgid "Quality Control"
+msgstr "Kwaliteitscontrole"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
@@ -14043,7 +14760,7 @@ msgid "Record Rules"
 msgstr "Record-regels"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:281
+#: code:addons/base/ir/ir_cron.py:280
 #, python-format
 msgid "Record cannot be modified right now"
 msgstr "Regel kan nu niet worden bijgewerkt"
@@ -14144,7 +14861,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr "Verwijder de contextuele actie behorende bij deze server actie"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:415
+#: code:addons/base/ir/ir_model.py:421
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Hernoemen sparse veld \"%s\" is niet toegestaan"
@@ -14170,7 +14887,7 @@ msgstr "Herhaal elke x."
 #: model:ir.module.module,shortdesc:base.module_report
 #: model:ir.module.module,summary:base.module_report
 msgid "Report"
-msgstr "Overzicht"
+msgstr "Rapport"
 
 #. module: base
 #: view:res.company:base.view_company_form
@@ -14197,7 +14914,7 @@ msgstr "Rapport model"
 #: view:ir.actions.report.xml:base.act_report_xml_search_view
 #: field:ir.actions.report.xml,report_type:0
 msgid "Report Type"
-msgstr "Soort overzicht"
+msgstr "Soort rapport"
 
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_search_view
@@ -14207,12 +14924,12 @@ msgstr "Rapport Xml"
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr "XML overzicht"
+msgstr "XML Rapport"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Report/Template"
-msgstr "Overzicht/sjabloon"
+msgstr "Rapport/sjabloon"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_reporting
@@ -14369,7 +15086,7 @@ msgid "Rules can not be applied on the Record Rules model."
 msgstr "Regels kunnen niet toegepaste worden op het record regel model."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:821
+#: code:addons/base/ir/ir_actions.py:823
 #, python-format
 msgid "Run %s"
 msgstr "Voer %s uit"
@@ -14395,11 +15112,6 @@ msgid "Rwanda"
 msgstr "Rwanda"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_saas_worker
-msgid "SAAS Worker"
-msgstr "SAAS Worker"
-
-#. module: base
 #: field:ir.mail_server,smtp_port:0
 msgid "SMTP Port"
 msgstr "SMTP poort"
@@ -14416,7 +15128,7 @@ msgid "SMTP Server"
 msgstr "SMTP Server"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:244
+#: code:addons/base/ir/ir_mail_server.py:233
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr "SMTP-over-SSL mode onbeschikbaar"
@@ -14498,11 +15210,6 @@ msgid "Sale Layout, page-break, subtotals, separators, report"
 msgstr "Verkoop layout, pagina-einde, sub-totalen, verdelers, rapport"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_sales_team
-msgid "Sale Team"
-msgstr "Verkoopteam"
-
-#. module: base
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.ui.menu,name:base.menu_base_partner
 #: model:ir.ui.menu,name:base.menu_sale_config
@@ -14531,6 +15238,11 @@ msgstr "Verkoopbeheer"
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Team"
 msgstr "Verkoopteam"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sales_team
+msgid "Sales Teams"
+msgstr "Verkoopteams"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -14662,7 +15374,7 @@ msgid "See all Leads"
 msgstr "Bekijk alle leads"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:304
+#: code:addons/base/ir/ir_fields.py:284
 #, python-format
 msgid "See all possible values"
 msgstr "Bekijk alle mogelijke waarden"
@@ -14910,7 +15622,7 @@ msgstr "Afleveradres"
 
 #. module: base
 #. openerp-web
-#: code:addons/base/static/src/js/apps.js:105
+#: code:addons/base/static/src/js/apps.js:179
 #, python-format
 msgid "Showing locally available modules"
 msgstr "Lokaal beschikbare modules worden weergegeven"
@@ -14987,7 +15699,7 @@ msgid "Size"
 msgstr "Grootte"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:315
+#: code:addons/base/ir/ir_model.py:318
 #, python-format
 msgid "Size of the field can never be less than 0 !"
 msgstr "Grootte van het veld kan nooit minder dan 0 zijn!"
@@ -15060,25 +15772,26 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Soms BIC of Swift genoemd."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:765
+#: code:addons/base/ir/ir_attachment.py:257
+#: code:addons/base/ir/ir_model.py:783
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Sorry, u heeft geen toegang tot dit document."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:767
+#: code:addons/base/ir/ir_model.py:785
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Sorry, u mag dit soort documenten niet aanmaken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:768
+#: code:addons/base/ir/ir_model.py:786
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Sorry, u mag dit document niet verwijderen."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:766
+#: code:addons/base/ir/ir_model.py:784
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Sorry, het is u niet toegestaan om dit document te wijzigen"
@@ -15302,6 +16015,7 @@ msgid "Start configuration"
 msgstr "Start configuratie"
 
 #. module: base
+#: code:addons/base/res/res_partner.py:69
 #: view:res.bank:base.view_res_bank_form
 #: view:res.company:base.view_company_form
 #: view:res.country.state:base.view_country_state_form
@@ -15309,6 +16023,7 @@ msgstr "Start configuratie"
 #: view:res.partner:base.view_partner_form
 #: field:res.partner,state_id:0
 #: view:res.partner.bank:base.view_partner_bank_form
+#, python-format
 msgid "State"
 msgstr "Provincie/Staat"
 
@@ -15584,11 +16299,11 @@ msgstr "TGZ-archiefbestand"
 msgid ""
 "TGZ format: this is a compressed archive containing a PO file, directly "
 "suitable\n"
-"                                for uploading to OpenERP's translation "
-"platform,"
+"                                for uploading to Odoo's translation platform,"
 msgstr ""
-"TGZ formaat: dit is een gecomprimeerd PO bestand, welke direct geschikt is\n"
-"                                om te uploaden naar het Odoo vertaal "
+"TGZ formaat: dis is een gecomprimeerd archief bestand welke het PO bestand "
+"bevat. Direct bruikbaar\n"
+"                                voor het uploaden in het Odoo vertaal "
 "platform,"
 
 #. module: base
@@ -15789,7 +16504,7 @@ msgstr ""
 "U kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:138
+#: code:addons/base/ir/ir_model.py:145
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -15797,7 +16512,7 @@ msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:311
+#: code:addons/base/ir/ir_model.py:314
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -15806,7 +16521,7 @@ msgstr ""
 "Het formaat van de selectie-opties moet zijn: [('sleutel', 'waarde'), ...]!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:297
+#: code:addons/base/ir/ir_model.py:300
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -15816,6 +16531,7 @@ msgstr ""
 "een waarde in van de vorm [('sleutel', 'waarde'), ...]."
 
 #. module: base
+#: constraint:res.lang:0
 #: help:res.lang,grouping:0
 msgid ""
 "The Separator Format should be like [,n] where 0 < n :starting from Unit "
@@ -15830,7 +16546,7 @@ msgstr ""
 "scheidingsteken."
 
 #. module: base
-#: code:addons/base/module/module.py:685
+#: code:addons/base/module/module.py:686
 #, python-format
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
@@ -15839,7 +16555,7 @@ msgstr ""
 "De `%s` module is op dit moment niet beschikbaar, probeer het later opnieuw."
 
 #. module: base
-#: code:addons/base/module/module.py:522
+#: code:addons/base/module/module.py:523
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr "De `base` module kan niet worden gedeinstalleerd"
@@ -16010,7 +16726,7 @@ msgstr ""
 "Bijvoorbeeld: [('color','=','red')]"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:85
+#: code:addons/base/ir/ir_model.py:92
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -16080,7 +16796,7 @@ msgid "The record id this is attached to"
 msgstr "Het record id waaraan dit is verbonden"
 
 #. module: base
-#: code:addons/fields.py:800
+#: code:addons/fields.py:847
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -16156,13 +16872,13 @@ msgid "This Window"
 msgstr "Dit venster"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:350
+#: code:addons/base/ir/ir_model.py:353
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Deze kolom bevat module data en kan niet verwijderd worden!"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:282
+#: code:addons/base/ir/ir_cron.py:281
 #, python-format
 msgid ""
 "This cron task is currently being executed and may not be modified, please "
@@ -16448,7 +17164,7 @@ msgid "Translation comments"
 msgstr "Opmerkingen op vertaling"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:396
+#: code:addons/base/ir/ir_translation.py:401
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra OpenERP "
@@ -16689,7 +17405,7 @@ msgid "Unicode/UTF-8"
 msgstr "Unicode/UTF-8"
 
 #. module: base
-#: code:addons/base/module/module.py:525
+#: code:addons/base/module/module.py:526
 #: view:ir.module.module:base.module_form
 #, python-format
 msgid "Uninstall"
@@ -16722,13 +17438,13 @@ msgid "Unknown report type: %s"
 msgstr "Ongeldig rapport type: %s"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:347
+#: code:addons/base/ir/ir_fields.py:324
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "Onbekend subveld '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:173
+#: code:addons/base/ir/ir_fields.py:152
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr "Onbekende waarde '%s' voor boolean veld '%%(field)s', neem '%s' aan"
@@ -16842,7 +17558,7 @@ msgid "Usability"
 msgstr "Gebruiksvriendelijkheid"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:175
+#: code:addons/base/ir/ir_fields.py:154
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr "gebruik '1' voor ja en '0' voor nee"
@@ -16866,6 +17582,12 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
+"Gebruik de HR resources voor het gamification proces.\n"
+"\n"
+"De HR manager kan nu uitdagingen en badges beheren.\n"
+"Dit geeft de gebruiker de mogelijkheid om badges te sturen naar werknemers "
+"in plaats van normale gebruikers.\n"
+"Ontvangen badges worden weergegeven bij het profiel van de gebruiker.\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -16873,8 +17595,8 @@ msgid "Use the base model of the action"
 msgstr "Gebruik het basis model van de actie"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:205
-#: code:addons/base/ir/ir_fields.py:236
+#: code:addons/base/ir/ir_fields.py:189
+#: code:addons/base/ir/ir_fields.py:220
 #, python-format
 msgid "Use the format '%s'"
 msgstr "Gebruik het formaat '%s'"
@@ -16916,9 +17638,9 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:189
-#: code:addons/base/res/res_lang.py:191
-#: code:addons/base/res/res_lang.py:193
+#: code:addons/base/res/res_lang.py:203
+#: code:addons/base/res/res_lang.py:205
+#: code:addons/base/res/res_lang.py:207
 #, python-format
 msgid "User Error"
 msgstr "Gebruikersfout"
@@ -17007,7 +17729,7 @@ msgid "Value"
 msgstr "Waarde"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:274
+#: code:addons/base/ir/ir_fields.py:255
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr "Waarde '%s' is niet gevonden in selectieveld '%%(field)s'"
@@ -17202,12 +17924,12 @@ msgid "Warehouse Management: Waves"
 msgstr "Warehouse Management: Waves"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:839
-#: code:addons/base/ir/ir_mail_server.py:492
+#: code:addons/base/ir/ir_actions.py:841
+#: code:addons/base/ir/ir_mail_server.py:481
 #: code:addons/base/ir/ir_sequence.py:260
-#: code:addons/base/res/res_partner.py:377
-#: code:addons/base/res/res_partner.py:549
-#: code:addons/base/res/res_partner.py:629
+#: code:addons/base/res/res_partner.py:378
+#: code:addons/base/res/res_partner.py:558
+#: code:addons/base/res/res_partner.py:638
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -17220,7 +17942,7 @@ msgstr "Waarschuwingsberichten en meldingen"
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:134
 #: code:addons/base/ir/ir_sequence.py:160
-#: code:addons/base/res/res_config.py:469
+#: code:addons/base/res/res_config.py:471
 #: code:addons/base/res/res_users.py:512
 #, python-format
 msgid "Warning!"
@@ -17397,6 +18119,13 @@ msgid ""
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
 msgstr ""
+"Bij het aanpassen van een workflow, zorg ervoor dat je niet een bestaande "
+"knooppunt of pijl te wijzigen, maar het is beter om nieuwe knooppunten of "
+"pijlen toe te voegen. Als je het absoluut nodig hebt om een bestaand "
+"knooppunt of pijl  te wijzigen, kunt u alleen velden die leeg zijn of zijn "
+"ingesteld op de standaardwaarde wijzigen. Als je dat niet doet, zal uw "
+"aanpassing worden overschreven bij de volgende update of upgrade naar een "
+"toekomstige versie van Odoo."
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -17582,7 +18311,7 @@ msgstr "XML Pad"
 #. module: base
 #: view:ir.actions.report.xml:base.act_report_xml_view
 msgid "XML Report"
-msgstr "XML Overzicht"
+msgstr "XML rapport"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -17616,7 +18345,7 @@ msgstr ""
 "wachtwoord."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:549
+#: code:addons/base/res/res_partner.py:558
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -17683,7 +18412,7 @@ msgid "You cannot create recursive Partner hierarchies."
 msgstr "Het is niet mogelijk een recursieve relatie hiërarchie te maken"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:193
+#: code:addons/base/res/res_lang.py:207
 #, python-format
 msgid ""
 "You cannot delete the language which is Active!\n"
@@ -17693,7 +18422,7 @@ msgstr ""
 "Maak de taal eerst inactief."
 
 #. module: base
-#: code:addons/base/res/res_lang.py:191
+#: code:addons/base/res/res_lang.py:205
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
 msgstr ""
@@ -17728,7 +18457,7 @@ msgstr ""
 "geïnstalleerd"
 
 #. module: base
-#: code:addons/base/module/module.py:562
+#: code:addons/base/module/module.py:563
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -17747,7 +18476,7 @@ msgstr ""
 "editeren onder het Instellingen / Gebruikers menu."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:245
+#: code:addons/base/ir/ir_mail_server.py:234
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -17759,7 +18488,7 @@ msgstr ""
 "is, dient u up te graden naar Python 2.6 op de server."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:493
+#: code:addons/base/ir/ir_mail_server.py:482
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -17774,10 +18503,12 @@ msgid "Yugoslavia"
 msgstr "Joegoslavië"
 
 #. module: base
+#: code:addons/base/res/res_partner.py:69
 #: view:res.bank:base.view_res_bank_form
 #: view:res.company:base.view_company_form
 #: view:res.partner:base.view_partner_form
 #: view:res.partner.bank:base.view_partner_bank_form
+#, python-format
 msgid "ZIP"
 msgstr "Postcode"
 
@@ -17815,6 +18546,11 @@ msgid "`code` must be unique."
 msgstr "`code`moet uniek zijn."
 
 #. module: base
+#: view:res.partner:base.res_partner_kanban_view
+msgid "at"
+msgstr "bij"
+
+#. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_bic
 msgid "bank_bic"
 msgstr "bank_bic"
@@ -17845,7 +18581,7 @@ msgid "cr: database cursor"
 msgstr "cr: database cursor"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:313
+#: code:addons/base/ir/ir_fields.py:293
 #, python-format
 msgid "database id"
 msgstr "database id"
@@ -17935,13 +18671,13 @@ msgid "email@yourcompany.com"
 msgstr "email@uwbedrijf.nl"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:326
+#: code:addons/base/ir/ir_fields.py:305
 #, python-format
 msgid "external id"
 msgstr "Externe id"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:155
+#: code:addons/base/ir/ir_fields.py:132
 #, python-format
 msgid "false"
 msgstr "onwaar"
@@ -18008,13 +18744,13 @@ msgid "n/a"
 msgstr "n/b"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:337
+#: code:addons/base/ir/ir_fields.py:315
 #, python-format
 msgid "name"
 msgstr "naam"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:155
+#: code:addons/base/ir/ir_fields.py:132
 #, python-format
 msgid "no"
 msgstr "Nee"
@@ -18035,6 +18771,27 @@ msgstr "object.partner_id"
 #: view:ir.actions.server:base.view_server_action_form
 msgid "object.partner_id.currency_id"
 msgstr "object.partner_id.currency_id"
+
+#. module: base
+#: view:ir.attachment:base.view_attachment_form
+msgid "on"
+msgstr "aan"
+
+#. module: base
+#: view:base.language.export:base.wizard_lang_export
+#: view:base.language.import:base.view_base_import_language
+#: view:base.language.install:base.view_base_language_install
+#: view:base.module.update:base.view_base_module_update
+#: view:base.module.upgrade:base.view_base_module_upgrade
+#: view:base.module.upgrade:base.view_base_module_upgrade_install
+#: view:base.update.translations:base.wizard_update_translations
+#: view:change.password.wizard:base.change_password_wizard_view
+#: view:res.config:base.res_config_view_base
+#: view:res.config.installer:base.res_config_installer
+#: view:res.users:base.view_users_form_simple_modif
+#: view:wizard.ir.model.menu.create:base.view_model_menu_create
+msgid "or"
+msgstr "of"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -18171,7 +18928,7 @@ msgid "title"
 msgstr "titel"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:155
+#: code:addons/base/ir/ir_fields.py:132
 #, python-format
 msgid "true"
 msgstr "waar"
@@ -18182,7 +18939,7 @@ msgid "uid: current user id"
 msgstr "uid: huidige gebruiker id"
 
 #. module: base
-#: code:addons/fields.py:161
+#: code:addons/fields.py:196
 #, python-format
 msgid "undefined get method !"
 msgstr "Ongedefinieerde get methode !"
@@ -18202,7 +18959,7 @@ msgid "workflow: Workflow engine"
 msgstr "workflow: Workflow engine"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:155
+#: code:addons/base/ir/ir_fields.py:132
 #, python-format
 msgid "yes"
 msgstr "Ja"
@@ -18228,3 +18985,23 @@ msgstr "Chinees boekhoudingsschema"
 
 #~ msgid "Installed Modules"
 #~ msgstr "Geïnstalleerde modules"
+
+#~ msgid "SAAS Worker"
+#~ msgstr "SAAS Worker"
+
+#~ msgid ""
+#~ "TGZ format: this is a compressed archive containing a PO file, directly "
+#~ "suitable\n"
+#~ "                                for uploading to OpenERP's translation "
+#~ "platform,"
+#~ msgstr ""
+#~ "TGZ formaat: dit is een gecomprimeerd PO bestand, welke direct geschikt is\n"
+#~ "                                om te uploaden naar het Odoo vertaal "
+#~ "platform,"
+
+#~ msgid ""
+#~ "For more details about translating OpenERP in your language, please refer to "
+#~ "the"
+#~ msgstr ""
+#~ "Voor meer informatie over het vertalen van Odoo in uw eigen taal, raadpleeg "
+#~ "de"
