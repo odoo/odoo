@@ -48,3 +48,11 @@ class test_field_inherit(common.TransactionCase):
         self.assertEqual(res.property_to_function_many2one_new_api,
                          default_account_id,
                          "Account isn't correct")
+
+    def test_field_inherit_function_float(self):
+        test_model = self.env['fields.inherit.test']
+        res = test_model.create({'name': 'Test'})
+        # Here, we check that the value on property_to_function_float_new_api
+        # field is equal to 2.0.
+        self.assertAlmostEqual(res.property_to_function_float_new_api, 2.0, 2,
+                               "Float Value isn't correct")

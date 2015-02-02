@@ -38,7 +38,13 @@ class fields_inherit_test(orm.Model):
                 'property_to_function_many2one_new_api': fields.property(
                 type='many2one',
                 relation='account.account',
-                string='property_to_function_many2one_new_api')
+                string='property_to_function_many2one_new_api'),
+                'property_to_function_float_new_api': fields.property(
+                type='float',
+                string='property_to_function_float_new_api'),
+                'property_to_function_float_new_api': fields.property(
+                type='float',
+                string='property_to_function_float_new_api'),
                 }
 
 
@@ -84,7 +90,14 @@ class fields_inherit_test(models.Model):
         default_account_id = self.env.ref('account.a_sale')
         self.property_to_function_many2one_new_api = default_account_id
 
+    @api.one
+    def _get_float(self):
+        """This method aims to return a float value at the
+        computation of the inherited field(new type function)"""
+        self.property_to_function_float_new_api = 2.0
+
     property_to_function_many2one_new_api = fields_new_api\
         .Many2one('account.account', compute='_get_value',
-                  company_dependent=False,
-                  string='property_to_function_many2one')
+                  company_dependent=False)
+    property_to_function_float_new_api = fields_new_api\
+        .Float(compute='_get_float', company_dependent=False)
