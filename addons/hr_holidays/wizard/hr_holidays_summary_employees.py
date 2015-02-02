@@ -38,14 +38,10 @@ class hr_holidays_summary_employee(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
-        data['emp'] = context['active_ids']
+        data['emp'] = context.get('active_ids',[])
         datas = {
              'ids': [],
              'model': 'hr.employee',
              'form': data
             }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'holidays.summary',
-            'datas': datas,
-            }
+        return self.pool['report'].get_action(cr, uid, data['emp'], 'hr_holidays.report_holidayssummary', data=datas, context=context)
