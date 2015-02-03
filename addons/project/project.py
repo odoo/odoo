@@ -941,7 +941,7 @@ class task(osv.osv):
             delegated_task_id = self.copy(cr, uid, task.id, {
                 'name': delegate_data['name'],
                 'project_id': delegate_data['project_id'] and delegate_data['project_id'][0] or False,
-                'stage_id': delegate_data.get('stage_id') and delegate_data.get('stage_id')[0] or False,
+                'stage_id': delegate_data.get('stage_id') and delegate_data.get('stage_id')[0] or self._get_default_stage_id(cr, uid, context),
                 'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
                 'planned_hours': delegate_data['planned_hours'] or 0.0,
                 'parent_ids': [(6, 0, [task.id])],
