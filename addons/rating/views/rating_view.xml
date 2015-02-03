@@ -30,6 +30,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_rating_rating_pivot">
+            <field name="name">rating.rating.pivot</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <pivot string="Rating Average" display_quantity="true">
+                    <field name="res_name" type="row"/>
+                    <field name="rating" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_rating_rating_graph">
            <field name="name">rating.rating.graph</field>
            <field name="model">rating.rating</field>
@@ -70,7 +81,7 @@
         <record id="action_view_rating" model="ir.actions.act_window">
             <field name="name">Rating</field>
             <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,graph</field>
+            <field name="view_mode">graph,pivot,kanban</field>
             <field name="help" type="html">
                 <p>
                     There is no rating for this object at the moment.
