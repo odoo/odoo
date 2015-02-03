@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-from . import test_move_explode
+from . import test_move_explode, test_sale_mrp_flow
 
