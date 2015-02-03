@@ -638,14 +638,6 @@
 
                 <div class="clearfix">
                     <ul class="pull-right list-inline mb0" id="options">
-                        <li t-if="question.state != 'close'">
-                            <t t-call="website_forum.link_button">
-                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
-                                <t t-set="label" t-value="'Close'"/>
-                                <t t-set="classes" t-value="'fa-times'"/>
-                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
-                            </t>
-                        </li>
                         <li t-if="question.state == 'close'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
@@ -662,6 +654,14 @@
                                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                             </t>
                         </li>
+                        <li t-if="question.state != 'close'">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
+                                <t t-set="label" t-value="'Close'"/>
+                                <t t-set="classes" t-value="'fa-times'"/>
+                                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                            </t>
+                        </li>
                         <li t-if="question.active">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
@@ -673,7 +673,7 @@
                         <li t-if="not question.active">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
-                                <t t-set="label" t-value="'Undelete'"/>
+                                <t t-set="label" t-value="'Reactivate'"/>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
@@ -693,7 +693,7 @@
                         </li>
                         <li>
                             <a href="javascript:void(0)" class="oe_social_share fa fa-share-square-o"
-                                t-attf-data-hashtags="#{question.post_type}">Share</a>
+                                t-attf-data-hashtags="#{question.post_type}"> Share</a>
                         </li>
                     </ul>
                 </div>
