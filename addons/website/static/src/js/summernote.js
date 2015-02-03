@@ -919,7 +919,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     options.keyMap.mac['ESCAPE'] = 'cancel';
     
     $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
-        var $editable = layoutInfo.editable();
+      var $editable = layoutInfo.editable();
       var dimension = sDim.split('x');
       var rng = range.create();
       rng = rng.deleteContents();
@@ -930,6 +930,8 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
       dom.isBodyContainer = isBodyContainer;
 
       editor.afterCommand($editable);
+      event.preventDefault();
+      return false;
     };
     $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
         var $editable = layoutInfo.editable();
@@ -1772,6 +1774,15 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
             };
         }
 
+        if (startPoint.node.tagName && startPoint.node.childNodes[startPoint.offset]) {
+            startPoint.node = startPoint.node.childNodes[startPoint.offset];
+            startPoint.offset = 0;
+        }
+        if (endPoint.node.tagName && endPoint.node.childNodes[endPoint.offset]) {
+            endPoint.node = endPoint.node.childNodes[endPoint.offset];
+            endPoint.offset = 0;
+        }
+
         // get first and last point
         if (endPoint.offset && endPoint.offset != dom.nodeLength(endPoint.node)) {
           var ancestor = dom.ancestor(endPoint.node, dom.isFont) || endPoint.node;
@@ -1792,8 +1803,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         var nodes = [];
         dom.walkPoint(startPoint, endPoint, function (point) {
           var node = point.node;
-          if ((dom.isText(node) && dom.isVisibleText(node)) ||
-              (dom.isFont(node) && !dom.isVisibleText(node))) {
+          if (((dom.isText(node) && dom.isVisibleText(node)) ||
+              (dom.isFont(node) && !dom.isVisibleText(node))) &&
+              (node != endPoint.node || endPoint.offset)) {
 
               nodes.push(point.node);
 
