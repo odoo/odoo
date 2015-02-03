@@ -562,7 +562,7 @@ class product_template(osv.osv):
             'product.packaging', 'product_tmpl_id', 'Logistical Units',
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Suppliers'),
         'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.related('seller_ids','qty', type='float', string='Supplier Quantity',
@@ -938,31 +938,42 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _set_suppliers(self, cr, uid, id, name, value, args, context=None):
-        if not value:
+    def _set_suppliers(self, cr, uid, id, field_name, field_value, args, context=None):
+        if not field_value:
             return
         product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
-        Supplierinfo = self.pool['product.supplierinfo']
-        # Can we have code value as 3?
-        for (code, supplierinfo_id, vals) in value:
-            if not supplierinfo_id and code == 0:
-                vals.update({'product_tmpl_id': product_tmpl_id, 'product_id': id})
-                Supplierinfo.create(cr, uid, vals, context=context)
-                continue
-            if supplierinfo_id and self.pool['product.supplierinfo'].browse(cr, uid, supplierinfo_id, context=context).product_id:
-                if code == 1:
-                    Supplierinfo.write(cr, uid, supplierinfo_id, vals, context=context)
-                elif code == 2:
-                    Supplierinfo.unlink(cr, uid, supplierinfo_id, context=context)
-            elif code in [1, 2]:
-                raise UserError(_('You are not allowed to modify Supplier reference added on Product Template.'))
+        supplierinfo = self.pool['product.supplierinfo']
+        for value in field_value:
+            if value[0] == 0:
+                value[2].update(product_tmpl_id=product_tmpl_id, product_id=id)
+                supplierinfo.create(cr, uid, value[2], context=context)
+            elif value[0] == 1:
+                if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    raise UserError(_("You are not allowed to modify the attributes of product template's suppliers."))
+                supplierinfo.write(cr, uid, [value[1]], value[2], context=context)
+            elif value[0] in [2, 3]:
+                if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    raise UserError(_("You are not allowed to remove the suppliers of Product Template."))
+                supplierinfo.unlink(cr, uid, [value[1]], context=context)
+            elif value[0] == 4:
+                vals = {}
+                if supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    vals = dict(product_id=id)
+                supplierinfo.write(cr, uid, [value[1]], dict(vals, product_tmpl_id=product_tmpl_id), context=context)
+            elif value[0] in [5, 6]:
+                old_ids = supplierinfo.search(cr, uid, [('product_id', '=', id)], context=context)
+                supplierinfo.unlink(cr, uid, old_ids, context=context)
+                if value[0] == 6:
+                    supplierinfo.write(cr, uid, value[2], dict(product_tmpl_id=product_tmpl_id, product_id=id), context=context)
+        return
 
     def _get_suppliers(self, cr, uid, ids, name, args, context=None):
         res = dict.fromkeys(ids, False)
-        Supplierinfo = self.pool['product.supplierinfo']
+        supplierinfo = self.pool['product.supplierinfo']
         for id in ids:
             product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
-            supplier_ids = Supplierinfo.search(cr, uid, ['|', ('product_id', '=', id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)], context=context)
+            supplier_ids = supplierinfo.search(cr, uid, ['|', ('product_id', '=', id),
+                 ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)], context=context)
             res[id] = supplier_ids
         return res
 
@@ -976,8 +987,14 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
-        'seller_ids': fields.function(_get_suppliers, fnct_inv=_set_suppliers, string="Seller", type="one2many", relation="product.supplierinfo"),
-        'seller_id': fields.related('seller_ids', 'name', type='many2one', relation='res.partner', string='Main Supplier', help="Main Supplier who has highest priority in Supplier List."),
+        'seller_ids': fields.function(_get_suppliers, fnct_inv=_set_suppliers, string='Variant Suppliers', type='one2many', relation='product.supplierinfo'),
+        'seller_id': fields.related('seller_ids', 'name', type='many2one', relation='res.partner', string='Main Supplier',
+            help='Main Supplier who has highest priority in Supplier List.'),
+        'seller_delay': fields.related('seller_ids', 'delay', type='integer', string='Supplier Lead Time',
+            help='This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier.\
+            It is used by the scheduler to order requests based on reordering delays.'),
+        'seller_qty': fields.related('seller_ids', 'qty', type='float', string='Supplier Quantity',
+            help='This is minimum quantity to purchase from Main Supplier.'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
