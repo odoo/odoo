@@ -8,8 +8,7 @@ class account_move_reversal(models.TransientModel):
     _description = 'Account move reversal'
 
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
-    use_specific_journal = fields.Boolean(string='Use specific journal')
-    journal_id = fields.Many2one('account.journal', string='Reversal journal', help='If empty, uses the journal of the journal entry to be reversed.')
+    journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.')
 
     @api.multi
     def reverse_moves(self):

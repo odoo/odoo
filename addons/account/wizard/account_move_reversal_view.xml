@@ -9,8 +9,7 @@
                 <form string="Account Move Reversal">
                     <group col="4">
                         <field name="date"/>
-                        <field name="use_specific_journal"/>
-                        <field name="journal_id" attrs="{'invisible': [('use_specific_journal', '=', False)]}"/>
+                        <field name="journal_id"/>
                     </group>
                     <footer>
                         <button string="Reverse Moves" name="reverse_moves" type="object" class="oe_highlight"/>
