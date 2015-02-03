@@ -26,7 +26,7 @@
 {%- endblock -%}
 
 {%- block content -%}
-  <div class="document-super {% if meta is defined %}{{ meta.classes }}{% endif %}">
+  <div class="document-super {% if meta is defined %}{{ meta.classes }}{% endif %} {% if render_sidebar %}with-sidebar{% endif %}">
     {{ super() }}
   </div>
 {%- endblock -%}
@@ -34,6 +34,7 @@
 {# sidebar to the left, except sidebar1 is *outside* div.document where
    sidebar2 is inside, so inject sidebar into document block #}
 {%- block document -%}
+  {%- if render_sidebar -%}
   <div class="sphinxsidebar">
     <div class="sphinxsidebarwrapper">
       {{ toctree(maxdepth=4, collapse=False, includehidden=True,
@@ -45,6 +46,7 @@
       {% endif %}
     </div>
   </div>
+  {%- endif -%}
   {{ super() }}
 {%- endblock -%}
 {%- block sidebar1 -%}{%- endblock -%}

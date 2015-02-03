@@ -1108,7 +1108,7 @@ class Binary(http.Controller):
                 content_type = res['file_type']
         else:
             res = Model.default_get(cr, uid, fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             return request.not_found()
         else:
@@ -1136,7 +1136,7 @@ class Binary(http.Controller):
         if filename_field:
             fields.append(filename_field)
         if data:
-            res = { field: data }
+            res = {field: data, filename_field: jdata.get('filename', None)}
         elif id:
             fields.append('file_type')
             res = Model.read([int(id)], fields, context)[0]
@@ -1144,7 +1144,7 @@ class Binary(http.Controller):
                 content_type = res['file_type']
         else:
             res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field, ''))
+        filecontent = base64.b64decode(res.get(field) or '')
         if not filecontent:
             raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))

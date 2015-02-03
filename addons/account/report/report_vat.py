@@ -91,18 +91,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         i = 0
         top_result = []
         while i < len(res):
-            res_dict = { 'code': res[i][1].code,
-                'name': res[i][1].name,
+            res_dict = { 'code': res[i][1]['code'],
+                'name': res[i][1]['name'],
                 'debit': 0,
                 'credit': 0,
-                'tax_amount': res[i][1].sum_period,
+                'tax_amount': res[i][1]['sum_period'],
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
+            res_general = self._get_general(res[i][1]['id'], period_list, company_id, based_on, context=context)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -171,7 +171,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
 
     def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
+        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], context=context)
 
         res = []
         for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
@@ -192,13 +192,20 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
             ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
-            sum_tax_add = 0
+            code = {}
             for period_ind in period_list:
                 context2 = dict(context, period_id=period_ind, based_on=based_on)
-                for code in obj_tc.browse(self.cr, self.uid, ids, context=context2):
-                    sum_tax_add = sum_tax_add + code.sum_period
+                record = obj_tc.browse(self.cr, self.uid, ids, context=context2)[0]
+                if not code:
+                    code = {
+                        'id': record.id,
+                        'name': record.name,
+                        'code': record.code,
+                        'sequence': record.sequence,
+                        'sum_period': 0,
+                    }
+                code['sum_period'] += record.sum_period
 
-            code.sum_period = sum_tax_add
             res.append((account[0], code))
         return res
 
