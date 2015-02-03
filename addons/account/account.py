@@ -1494,8 +1494,8 @@ class wizard_multi_charts_accounts(models.TransientModel):
         bank_account_code_char = company.bank_account_code_char or ''
         for num in xrange(1, 100):
             new_code = str(bank_account_code_char.ljust(code_digits - 1, '0')) + str(num)
-            recs = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)])
-            if not recs:
+            rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
+            if not rec:
                 break
         else:
             raise UserError(_('Cannot generate an unused account code.'))
@@ -1507,16 +1507,16 @@ class wizard_multi_charts_accounts(models.TransientModel):
         if acc_template_ref:
             parent_id = acc_template_ref[ref_acc_bank.id]
         else:
-            tmp = self.env['account.account'].search([('code', '=', company.bank_account_code_char)])
+            tmp = self.env['account.account'].search([('code', '=', company.bank_account_code_char)], limit=1)
             if tmp:
-                parent_id = tmp[0]
+                parent_id = tmp
 
         return {
                 'name': line['acc_name'],
                 'currency_id': line['currency_id'] or False,
                 'code': new_code,
                 'type': 'liquidity',
-                'user_type': line['account_type'] == 'cash' and cash_type or bank_type,
+                'user_type': line['account_type'] == 'cash' and cash_type.id or bank_type.id,
                 'company_id': company.id,
         }
 
