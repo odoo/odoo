@@ -84,36 +84,17 @@ class res_currency(osv.osv):
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
         'active': fields.boolean('Active'),
-        'company_id':fields.many2one('res.company', 'Company'),
-        'base': fields.boolean('Base'),
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
         'position' : 'after',
         'rounding': 0.01,
-        'company_id': False,
     }
     _sql_constraints = [
-        # this constraint does not cover all cases due to SQL NULL handling for company_id,
-        # so it is complemented with a unique index (see below). The constraint and index
-        # share the same prefix so that IntegrityError triggered by the index will be caught
-        # and reported to the user with the constraint's error message.
-        ('unique_name_company_id', 'unique (name, company_id)', 'The currency code must be unique per company!'),
+        ('unique_name', 'unique (name)', 'The currency code must be unique!'),
     ]
     _order = "name"
-
-    def init(self, cr):
-        # CONSTRAINT/UNIQUE INDEX on (name,company_id) 
-        # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
-        # only support field names in constraint definitions, and we need a function here:
-        # we need to special-case company_id to treat all NULL company_id as equal, otherwise
-        # we would allow duplicate "global" currencies (all having company_id == NULL) 
-        cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_currency_unique_name_company_id_idx'""")
-        if not cr.fetchone():
-            cr.execute("""CREATE UNIQUE INDEX res_currency_unique_name_company_id_idx
-                          ON res_currency
-                          (name, (COALESCE(company_id,-1)))""")
 
     date = fields2.Date(compute='compute_date')
 
@@ -308,6 +289,7 @@ class res_currency_rate(osv.osv):
         'name': fields.datetime('Date', required=True, select=True),
         'rate': fields.float('Rate', digits=(12, 6), help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company')
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
