@@ -361,7 +361,7 @@ class account_move_line(models.Model):
                 'ref': line.move_id.ref,
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
-                'already_paid': line.account_id.type == 'liquidity',
+                'already_paid': line.account_id.internal_type == 'liquidity',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
@@ -381,7 +381,7 @@ class account_move_line(models.Model):
             amount_currency = line.amount_residual_currency
 
             # For already reconciled lines, don't use amount_residual(_currency)
-            if line.account_id.type == 'liquidity':
+            if line.account_id.internal_type == 'liquidity':
                 amount = abs(debit - credit)
                 amount_currency = line.amount_currency
 
