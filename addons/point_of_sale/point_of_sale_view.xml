@@ -26,7 +26,7 @@
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="session_id" required="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
