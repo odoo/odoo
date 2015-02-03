@@ -288,13 +288,13 @@
                         <page string="Advanced Settings">
                             <group>
                                 <group>
-                                    <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
-                                    <field name="sequence_id" groups="base.group_no_one"/>
-                                    <field name="refund_sequence_id" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one"/>
-                                </group>
-                                <group>
                                     <field name="entry_posted"/>
                                     <field name="group_invoice_lines"/>
+                                </group>
+                                <group>
+                                    <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+                                    <field name="sequence_id" groups="base.group_no_one" required="0"/>
+                                    <field name="refund_sequence_id" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one" required="0"/>
                                 </group>
                             </group>
                         </page>
