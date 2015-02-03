@@ -720,10 +720,13 @@ openerp.web_timeline = function (session) {
             this.user_pid = dataset.user_pid || false,
             this.to_read = dataset.to_read || false,
             this.date = dataset.date || dataset.last_date || '',
-            this.author_id = dataset.author_id || dataset.last_author_id || false,
-            this.author_avatar = dataset.author_avatar || dataset.last_author_avatar || false;
+            this.author_id = dataset.author_id || false,
+            this.author_avatar = dataset.author_avatar || false,
 
-            this.format_data();
+            this.format_date();
+            this.format_partners();
+            this.avatar = this.format_avatar(this.author_avatar, this.author_id);
+            this.author_id = this.format_author(this.author_id);
 
             // update record_name: Partner profile
             if (this.model == 'res.partner') {
@@ -737,11 +740,7 @@ openerp.web_timeline = function (session) {
             this.thread = false;
         },
 
-        /** 
-         * Convert date, timerelative and avatar in displayable data. 
-         */
-        format_data: function () {
-            //formating and add some fields for render
+        format_date: function () {
             var date = this.date ? session.web.str_to_datetime(this.date) : false;
             if (date) {
                 this.display_date = moment(new Date(date).toISOString()).format('ddd MMM DD YYYY LT');
@@ -751,27 +750,9 @@ openerp.web_timeline = function (session) {
                     this.date = this.timerelative;
                 }
             }
+        },
 
-            if (this.author_avatar) {
-                this.avatar = "data:image/png;base64," + this.author_avatar;
-            }
-            else if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
-                this.avatar = ('/mail/static/src/img/email_icon.png');
-            } 
-            else if (this.author_id && this.template != 'mail.compose_message') {
-                this.avatar = openerp.web_timeline.ChatterUtils.get_image(
-                    this.session, 'res.partner', 'image_small', this.author_id[0]);
-            } 
-            else {
-                this.avatar = openerp.web_timeline.ChatterUtils.get_image(
-                    this.session, 'res.users', 'image_small', this.session.uid);
-            }
-
-            if (this.author_id && this.author_id[1]) {
-                var parsed_email = openerp.web_timeline.ChatterUtils.parse_email(this.author_id[1]);
-                this.author_id.push(parsed_email[0], parsed_email[1]);
-            }
-
+        format_partners: function () {
             if (this.partner_ids && this.partner_ids.length > 3) {
                 this.extra_partners_nbr = this.partner_ids.length - 3;
                 this.extra_partners_str = ''
@@ -781,7 +762,34 @@ openerp.web_timeline = function (session) {
                     this.extra_partners_str += extra_partners[key][1];
                 }
             }
-        },              
+        },
+
+        format_avatar: function (avatar, author) {
+            var avt = false;
+            if (avatar) {
+                avt = "data:image/png;base64," + avatar;
+            }
+            else if (this.type == 'email' && (!author || !author[0])) {
+                avt = ('/mail/static/src/img/email_icon.png');
+            } 
+            else if (this.author_id && this.template != 'mail.compose_message') {
+                avt  = openerp.web_timeline.ChatterUtils.get_image(
+                    this.session, 'res.partner', 'image_small', author[0]);
+            } 
+            else {
+                avt = openerp.web_timeline.ChatterUtils.get_image(
+                    this.session, 'res.users', 'image_small', this.session.uid);
+            }
+            return avt;
+        },
+
+        format_author: function (author) {
+            if (author && author[1]) {
+                var parsed_email = openerp.web_timeline.ChatterUtils.parse_email(author[1]);
+                author.push(parsed_email[0], parsed_email[1]);
+            }
+            return author;
+        },            
 
         /** 
          * Upload the file on the server, add in the attachments list and reload display
@@ -1267,7 +1275,9 @@ openerp.web_timeline = function (session) {
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
                 if (parent_message) {
                     var messages = parent_message.get_childs();
-                    console.log("compute email from messages", messages);
+                    if (!messages.length) {
+                        messages = [this];
+                    }
                 }
             } 
             else if (this.options.emails_from_on_composer) {
@@ -1484,11 +1494,16 @@ openerp.web_timeline = function (session) {
         init: function (parent, dataset, options) {
             this._super(parent, dataset, options);
 
+            this.last_author_id = dataset.last_author_id || false,
+            this.last_author_avatar = dataset.last_author_avatar || false;
             this.nb_messages = dataset.nb_messages;
             this.nb_followers = 0;
             this.follower_ids = [];
 
             this.is_ready = $.Deferred();
+
+            this.last_avatar = this.format_avatar(this.last_author_avatar, this.last_author_id);
+            this.last_author_id = this.format_author(this.last_author_id);
 
             var self = this;
             if (this.model && this.res_id) {

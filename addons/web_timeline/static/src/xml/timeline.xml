@@ -219,23 +219,23 @@
         </span>
         <span class="oe_tl_parent_avatar">
             <a t-if="widget.options.show_link" 
-               t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-               t-att-title="widget.author_id[1]">
-                   <img class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+               t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
+               t-att-title="widget.last_author_id[1]">
+                   <img class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
             </a>
-            <img t-if="!widget.options.show_link" class="oe_tl_msg_icon" t-att-src="widget.avatar"/>
+            <img t-if="!widget.options.show_link" class="oe_tl_msg_icon" t-att-src="widget.last_avatar"/>
         </span>
         <span class="oe_tl_parent_author">
-            <a t-if="widget.options.show_link and widget.author_id[0]"
-               t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" 
-               t-att-data-partner="widget.author_id[0]" class="oe_timeline_action_author"
+            <a t-if="widget.options.show_link and widget.last_author_id[0]"
+               t-attf-href="#model=res.partner&amp;id=#{widget.last_author_id[0]}" 
+               t-att-data-partner="widget.last_author_id[0]" class="oe_timeline_action_author"
                title="Last sender">
-                 <t t-raw="widget.author_id[2]"/>
+                 <t t-raw="widget.last_author_id[2]"/>
             </a>
-            <a t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"
+            <a t-if="widget.author_id and (!widget.options.show_link or !widget.last_author_id[0])"
                class="oe_timeline_action_author"
                title="Last sender">
-                 <t t-raw="widget.author_id[2]"/>
+                 <t t-raw="widget.last_author_id[2]"/>
             </a>
         </span>
         <span class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
