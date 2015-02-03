@@ -43,7 +43,7 @@ class event_ticket(models.Model):
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', 'Registrations')
     price = fields.Float('Price', digits=dp.get_precision('Product Price'))
     deadline = fields.Date("Sales End")
-    is_expired = fields.Boolean('Is Expired', compute='_is_expired', store=True)
+    is_expired = fields.Boolean('Is Expired', compute='_is_expired')
 
     @api.model
     def _default_product_id(self):
@@ -56,10 +56,6 @@ class event_ticket(models.Model):
     @api.one
     @api.depends('deadline')
     def _is_expired(self):
-        # FIXME: A ticket is considered expired when the deadline is passed. The deadline should
-        #        be considered in the timezone of the event, not the timezone of the user!
-        #        Until we add a TZ on the event we'll use the context's current date, more accurate
-        #        than using UTC all the time.
         if self.deadline:
             current_date = fields.Date.context_today(self.with_context({'tz': self.event_id.date_tz}))
             self.is_expired = self.deadline < current_date
