@@ -1267,6 +1267,7 @@ openerp.account = function (instance) {
                                 var first_child = self.getChildren()[0];
                                 if (first_child.get("mode") === "inactive") {
                                     first_child.set("mode", "match");
+                                }
                             }
                             self.$(".reconciliation_lines_container, .show_more_container").fadeIn(self.aestetic_animation_speed);
                         });
@@ -1394,23 +1395,6 @@ openerp.account = function (instance) {
                         self.updateShowMoreButton();
                     });
                 });
-        },
-
-        displayReconciliation: function(st_line_id, mode, animate_entrance, initial_data_provided, st_line, reconciliation_proposition) {
-            var self = this;
-            animate_entrance = (animate_entrance === undefined ? true : animate_entrance);
-            initial_data_provided = (initial_data_provided === undefined ? false : initial_data_provided);
-
-            var context = {
-                st_line_id: st_line_id,
-                mode: mode,
-                animate_entrance: animate_entrance,
-                initial_data_provided: initial_data_provided,
-                st_line: initial_data_provided ? st_line : undefined,
-                reconciliation_proposition: initial_data_provided ? reconciliation_proposition : undefined,
-            };
-            var widget = new instance.web.account.bankStatementReconciliationLine(self, context);
-            return widget.appendTo(self.$(".reconciliation_lines_container"));
         },
 
         childValidated: function(child) {
@@ -1572,29 +1556,6 @@ openerp.account = function (instance) {
                 this.$(".show_more").show().find(".num_items_remaining").text(items_remaining);
             else
                 this.$(".show_more").hide();
-        },
-
-        updateProgressbar: function() {
-            var self = this;
-            var done = self.already_reconciled_lines + self.reconciled_lines;
-            var total = self.already_reconciled_lines + self.st_lines.length;
-            var prog_bar = self.$(".progress .progress-bar");
-            prog_bar.attr("aria-valuenow", done);
-            prog_bar.css("width", (done/total*100)+"%");
-            self.$(".progress .progress-text .valuenow").text(done);
-        },
-
-        /* reloads the needaction badge */
-        doReloadMenuReconciliation: function () {
-            var menu = instance.webclient.menu;
-            if (!menu || !this.reconciliation_menu_id) {
-                return $.when();
-            }
-            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [this.reconciliation_menu_id]}).done(function(r) {
-                menu.on_needaction_loaded(r);
-            }).then(function () {
-                menu.trigger("need_action_reloaded");
-            });
         },
     });
 
