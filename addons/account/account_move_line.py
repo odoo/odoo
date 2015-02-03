@@ -104,7 +104,7 @@ class account_move_line(models.Model):
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True)
     narration = fields.Text(related='move_id.narration', string='Internal Note')
-    ref = fields.Char(related='move_id.ref', string='Reference', store=True)
+    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False)
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
@@ -950,7 +950,7 @@ class account_partial_reconcile(models.Model):
             if rec.currency_id and rec.debit_move_id.amount_currency and rec.credit_move_id.amount_currency:
                 #create exchange rate difference journal entry
                 rate_diff = rec.debit_move_id.debit / rec.debit_move_id.amount_currency - rec.credit_move_id.credit / -rec.credit_move_id.amount_currency
-                if rate_diff and rec.amount_currency:
+                if rec.amount_currency and rec.company_id.currency_id.round(rec.amount_currency * rate_diff):
                     if not rec.company_id.currency_exchange_journal_id:
                         raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
                     if not self.company_id.income_currency_exchange_account_id.id:
@@ -996,6 +996,6 @@ class account_partial_reconcile(models.Model):
             fluctuation of the foreign currency's exchange rate.
         """
         #TODO: do the below lines as soon os the reverse entry feature/wizard is implemented
-        #exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
-        #exchange_rate_entries.inverse()
+        exchange_rate_entries = self.env['account.move'].search([('rate_diff_partial_rec_id', 'in', self.ids)])
+        exchange_rate_entries.reverse_moves()
         return super(account_partial_reconcile, self).unlink()

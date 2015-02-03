@@ -536,7 +536,8 @@ class account_move(models.Model):
         # - raise a warning if the centralisation move is posted (and offer to create it ?)
 
     @api.multi
-    def reverse_moves(self, date, journal_id=None):
+    def reverse_moves(self, date=None, journal_id=None):
+        date = date or fields.Date.today()
         for ac_move in self:
             reversed_move = ac_move.copy(default={'date': date,
                 'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
