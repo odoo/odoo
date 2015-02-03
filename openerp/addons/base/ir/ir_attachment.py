@@ -264,10 +264,10 @@ class ir_attachment(osv.osv):
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
         mimetype = 'application/octet-stream'
-        if 'datas_fname' in values:
-            mimetype = mimetypes.guess_type(values.get('datas_fname'))[0]
-        if 'datas' in values:
-            mimetype = guess_mimetype(values.get('datas').decode('base64'))
+        if values.get('datas_fname'):
+            mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if values.get('datas'):
+            mimetype = guess_mimetype(values['datas'].decode('base64'))
         return mimetype
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
