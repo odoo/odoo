@@ -320,6 +320,14 @@ animationRegistry.gallery_slider = Animation.extend({
     }
 });
 
+website.snippet.animationRegistry.countdown = website.snippet.Animation.extend({
+    selector: ".countdown:not(section.oe_snippet_body)",
+    start: function () {
+        website.countdown(this.$target, true);
+    },
+});
+
+
 return {
     Animation: Animation,
     readyAnimation: readyAnimation,
@@ -329,4 +337,3 @@ return {
 };
 
 });
-
