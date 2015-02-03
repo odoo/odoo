@@ -30,7 +30,7 @@
             },
             {
                 title:     "Check the cart",
-                element:   '#top_menu .my_cart_quantity:contains(5)'
+                element:   'li:has(.my_cart_quantity):contains(5)'
             },
             {
                 title:     "Check if the cart have 2 order lines and add one VIP ticket",
