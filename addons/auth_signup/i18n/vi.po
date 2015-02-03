@@ -62,12 +62,15 @@ msgid ""
 "href=\"${object.signup_url}\">this link</a>.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "Bạn có thể đổi mật khẩu của bạn bằng cách bấm vào <a "
+"href=\"${object.signup_url}\">link này</a>.</p>\n"
+"\n"
+"<p>Lưu ý: Nếu bạn không muốn điều này, hãy bỏ qua email này.</p>"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "Lời mời kết nối hệ thống Odoo từ ${object.company_id.name}"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
@@ -90,25 +93,25 @@ msgstr "Cho phép người dùng bên ngoài đăng ký."
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Một email chứa các thông tin quan trọng để đặt lại mật khẩu của bạn đã được gửi cho bạn."
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "An invitation email containing the following subscription link has been sent:"
-msgstr ""
+msgstr "Một thư mời đã được gửi qua email chưa liên kết (link) đăng ký dưới đây:"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:125
 #, python-format
 msgid "Authentification Failed."
-msgstr ""
+msgstr "Xác thực bị thất bại"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
 #: view:website:auth_signup.signup
 msgid "Back to Login"
-msgstr ""
+msgstr "Về trang đăng nhập"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:295
@@ -125,12 +128,12 @@ msgstr "Xác nhận mật khẩu"
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Không thể đặt lại mật khẩu của bạn"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Kích hoạt chức năng đặt lại mật khẩu ở trang đăng nhập"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
@@ -141,22 +144,22 @@ msgstr "Nếu không chọn, chỉ những người được mời mới đượ
 #: code:addons/auth_signup/controllers/main.py:109
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Token đăng ký không hợp lệ"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Chưa kết nối bao giờ"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Đối tác"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Mật khẩu"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -166,7 +169,7 @@ msgstr "Quên mật khẩu"
 #. module: auth_signup
 #: view:website:web.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Đặt lại mật khẩu"
 
 #. module: auth_signup
 #: view:website:auth_signup.reset_password
@@ -176,28 +179,28 @@ msgstr "Đặt lại mật khẩu"
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Gửi hướng dẫn đặt lại mật khẩu"
 
 #. module: auth_signup
 #: view:res.users:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Gửi một thư mời qua email"
 
 #. module: auth_signup
 #: view:website:auth_signup.signup
 #: view:website:web.login
 msgid "Sign up"
-msgstr ""
+msgstr "Đăng ký"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Hạn đăng ký"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Token đăng ký"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -207,12 +210,12 @@ msgstr "Loại mã đăng ký"
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Token đăng ký hợp lệ"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "URL đăng ký"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -238,14 +241,14 @@ msgstr "Người dùng"
 #: view:website:auth_signup.fields
 #: view:website:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Email của bạn (mà bạn đã dùng để đăng ký tài khoản với chúng tôi)"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Tên bạn"
 
 #. module: auth_signup
 #: view:website:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "vd: Trần Văn A"
