@@ -9,9 +9,7 @@
 <t t-name="ComposeMessage">
     <div t-if="widget.show_composer and !widget.options.readonly" 
          class="oe_tl_msg oe_tl_msg_composer">
-        <div class="oe_tl_msg_left">
-            
-        </div>
+        
         <div class="oe_tl_msg_center">
             <div class="oe_tl_msg_content">
                 <button class="oe_full" title="Open the full mail composer">
@@ -154,26 +152,28 @@
                 <t t-set="inc" t-value="inc+1"/>
             </t>
         </t>
+
         <t t-if="widget.partner_ids.length > 3">
             <span class="oe_more">
                 , <a><t t-esc="widget.partner_ids.length - 3"/> others...</a>
             </span>
             <a class="oe_more_hidden">&lt;&lt;&lt;</a>
         </t>
+    
+        <div class="oe_tl_recipients" t-if="!widget.is_log">
+            <t t-foreach='widget.recipients' t-as='recipient'>
+                <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                    <input type="checkbox" 
+                           t-att-checked="recipient.checked ? 'checked' : undefined" 
+                           t-att-data="recipient.full_name"/>
+                    <t t-esc="recipient.name"/> 
+                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                    <t t-if="!recipient.email_address">(no email address)</t>
+                </label>
+            </t>
+        </div>
     </div>
-    <div class="oe_tl_recipients" t-if="!widget.is_log">
-        <t t-foreach='widget.recipients' t-as='recipient'>
-            <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                <input type="checkbox" 
-                       t-att-checked="recipient.checked ? 'checked' : undefined" 
-                       t-att-data="recipient.full_name"/>
-                <t t-esc="recipient.name"/> 
-                <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
-                <t t-if="!recipient.email_address">(no email address)</t>
-            </label>
-        </t>
-    </div>
-    <div t-if="widget.is_log">
+    <div class="oe_tl_is_log" t-if="widget.is_log">
         <span class="oe_grey">
             Log an internal note which will not be sent to followers. 
             Note that users reading the document can read internal notes.
@@ -244,9 +244,9 @@
             </span>
         </span>
         <span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0"
-              title="Number of follwers">
+              title="Number of followers">
             <t t-raw="widget.nb_followers"/>
-            <i class="fa fa-users"></i>
+            <i class="oe_follwrs fa fa-users"></i>
         </span>
     </div>
 </div>

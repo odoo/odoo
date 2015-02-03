@@ -103,9 +103,9 @@
                                             <span class='oe_unread' t-if="!widget.is_favorite and options.show_unread">
                                                 <i title="Move to Inbox" class="fa fa-inbox"/>
                                             </span>
-                                            <span class='oe_reply' t-if="options.show_reply_button">
+                                            <!--<span class='oe_reply' t-if="options.show_reply_button">
                                                 <i title="Reply" class="fa fa-reply"/>
-                                            </span>
+                                            </span>-->
                                             <span t-attf-class="oe_star #{widget.is_favorite ? 'oe_starred':''}">
                                                 <i title="Mark as Todo" class="fa fa-star"/>
                                             </span>
@@ -173,6 +173,7 @@
         <field name="domain">[
             ('to_read', '=', True),
             ('starred', '=', False),
+            ('author_id.user_ids', 'not in', [uid]),
         ]</field>
     </record>
 
