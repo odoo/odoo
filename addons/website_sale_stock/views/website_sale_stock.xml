@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Product Options">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/website_sale_stock/static/src/js/website_sale_stock.js"></script>
+    </xpath>
+  </template>
+  <template id="products_out_of_stock_warning" inherit_id="website_sale.cart" active="False" customize_show="True" name="Out of Stock Warning">
+    <xpath expr="//table[@id='cart_products']" position="attributes">
+        <attribute name="class">table table-striped table-condensed show_outofstock_warning</attribute>
+    </xpath>
+  </template>
+
   <template id="orders_followup_shipping" name="Orders Shipping Followup" inherit_id="website_sale.order_invoice">
     <xpath expr="//div[@id='shipping_address']" position="inside">
       <t t-if="o.picking_ids">
