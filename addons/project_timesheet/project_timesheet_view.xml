@@ -13,9 +13,11 @@
                     <field name="currency_id"/>
                     <field name="partner_id"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]/a" position="after">
-                    <a t-if="record.invoice_on_timesheets.raw_value" style="margin-right: 10px"
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_infos')]/div" position="after">
+                    <div class="col-md-6">
+                        <a t-if="record.invoice_on_timesheets.raw_value" style="margin-right: 10px"
                         name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
+                    </div>
                 </xpath>
             </field>
         </record>

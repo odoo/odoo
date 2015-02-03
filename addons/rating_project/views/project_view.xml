@@ -42,18 +42,12 @@
                     <field name="percentage_satisfaction_project" invisible="1"/>
                     <field name="is_visible_happy_customer" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="after">
-                    <div class="row oe_margin_top_8 oe_kanban_project_list">
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_tags')]" position="inside">
                         <a t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt; -1" name="action_view_all_rating" type="object" title="Percentage of happy people about this project">
-                            <img t-if="record.percentage_satisfaction_project.raw_value &gt;= 0 and record.percentage_satisfaction_project.raw_value &lt;= 30" class="rating" src="rating/static/src/img/rating_0.png" style="width:10%;height:10%"></img>
-                            <img t-if="record.percentage_satisfaction_project.raw_value &gt; 30 and record.percentage_satisfaction_project.raw_value &lt;= 69" class="rating" src="rating/static/src/img/rating_5.png" style="width:10%;height:10%"></img>
-                            <img t-if="record.percentage_satisfaction_project.raw_value &gt;= 70" class="rating" src="rating/static/src/img/rating_10.png" style="width:10%;height:10%"></img>
-                            <img t-if="record.percentage_satisfaction_project.raw_value &lt; 0" class="rating" src="rating/static/src/img/rating_-1.png" style="width:10%;height:10%"></img>
-                            <t t-if="record.percentage_satisfaction_project.raw_value &gt;= 0">
-                                <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
-                            </t>
+                            <h5 t-attf-class="label #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'label-success' : 'label-warning'}">
+                                <i t-attf-class="fa #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'fa-smile-o' : 'fa-frown-o'}"/> <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
+                            </h5>
                         </a>
-                    </div>
                 </xpath>
             </field>
         </record>

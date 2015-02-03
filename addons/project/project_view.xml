@@ -272,35 +272,49 @@
                                 </div>
                                 <div class="oe_project_kanban_content">
                                     <div class="row">
-                                        <h4 class="text-center"><strong><field name="name"/></strong></h4>
-                                        <div class="text-center oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
-                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                        <h4 class="text-center">
+                                            <field name="name"/>
+                                        </h4>
+                                        <div t-if="record.alias_name.value and record.alias_domain.value" class="text-center text-muted">
+                                            <small>
+                                                <i class="fa fa-envelope-o"></i> <field name="alias_id"/>
+                                            </small>
                                         </div>
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <a t-if="record.use_tasks.raw_value" class="oe_sparkline_bar_link" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: -5px">
-                                            <t t-raw="record.task_ids.raw_value.length" /> <field name="label_tasks"/>
-                                            <field name="monthly_tasks" widget="sparkline_bar" options="{'delayIn': '1000'}">
-                                                Created Tasks
-                                            </field>
-                                        </a>
-                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" style="margin-top: 6px;margin-left:20px;">
+                                        <div class="col-md-6">
+                                            <a t-if="record.use_tasks.raw_value" class="oe_sparkline_bar_link" name="%(act_project_project_2_project_task_all)d" type="action">
+                                                <t t-raw="record.task_ids.raw_value.length" />
+                                                <field name="label_tasks"/>
+                                                <field name="monthly_tasks" widget="sparkline_bar" options="{'delayIn': '1000'}">
+                                                    Created Tasks
+                                                </field>
+                                            </a>
+                                        </div>
+                                        <div t-if="record.use_tasks.raw_value and record.task_count.raw_value lt 1" class="col-md-12">
                                             <img src="/project/static/src/img/top_left_arrow.png" style="margin-top: -8px; width: 22px;" />
                                             <span>No activity yet, click to enter in the project.</span>
                                         </div>
                                     </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_project_list">
-                                        <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
+                                    <div class="row oe_margin_top_8 oe_kanban_project_infos">
+                                        <div class="col-md-6">
+                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object">
+                                                <field name="doc_count"/> Documents
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span groups="project.group_time_work_estimation_tasks">
+                                                <i class="fa fa-clock-o"/>
+                                                <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/>
+                                                <field name="company_uom_id"/>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="row oe_margin_top_8 oe_kanban_footer_left">
-                                        <span groups="project.group_time_work_estimation_tasks">
-                                            <i class="fa fa-clock-o"/>
-                                            <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
-                                        </span>
-                                        <span t-if="record.date.raw_value">
+                                    <div class="row oe_margin_top_8 oe_kanban_project_tags">
+                                        <h5 t-if="record.date.raw_value" class="label label-default">
                                             <i class="fa fa-calendar"/>
                                             <field name="date"/>
-                                        </span>
+                                        </h5>
                                     </div>
                                     <div class="row oe_margin_top_8 oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value.slice(0,11)" t-as="member">
@@ -553,7 +567,7 @@
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection" 
+                                            <field name="kanban_state" widget="kanban_state_selection"
                                                 options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                                             <field name="priority" widget="priority"/>
                                         </div>
