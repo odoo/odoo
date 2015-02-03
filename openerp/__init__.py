@@ -25,10 +25,10 @@
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
 # Is the server running with gevent.
+# the module must be available, and the debugger must be off
 import sys
-evented = False
-if sys.modules.get("gevent") is not None:
-    evented = True
+evented = (sys.modules.get("gevent") is not None
+           and sys.gettrace() is None)
 
 # Is the server running in pefork mode (e.g. behind Gunicorn).
 # If this is True, the processes have to communicate some events,
