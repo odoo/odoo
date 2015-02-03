@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
+import copy
 import cStringIO
 import datetime
 import hashlib
@@ -61,12 +62,31 @@ def raise_qweb_exception(etype=None, **kw):
         e.qweb['cause'] = original
         raise
 
+class FileSystemLoader(object):
+    def __init__(self, path):
+        # TODO: support multiple files #add_file() + add cache
+        self.path = path
+        self.doc = etree.parse(path).getroot()
+
+    def __iter__(self):
+        for node in self.doc:
+            name = node.get('t-name')
+            if name:
+                yield name
+
+    def __call__(self, name):
+        for node in self.doc:
+            if node.get('t-name') == name:
+                root = etree.Element('templates')
+                root.append(copy.deepcopy(node))
+                arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+                return arch
+
 class QWebContext(dict):
-    def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
+    def __init__(self, cr, uid, data, loader=None, context=None):
         self.cr = cr
         self.uid = uid
         self.loader = loader
-        self.templates = templates or {}
         self.context = context
         dic = dict(data)
         super(QWebContext, self).__init__(dic)
@@ -85,7 +105,6 @@ class QWebContext(dict):
         """
         return QWebContext(self.cr, self.uid, dict.copy(self),
                            loader=self.loader,
-                           templates=self.templates,
                            context=self.context)
 
     def __copy__(self):
@@ -142,50 +161,24 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def add_template(self, qwebcontext, name, node):
-        """Add a parsed template in the context. Used to preprocess templates."""
-        qwebcontext.templates[name] = node
+    def get_template(self, name, qwebcontext):
+        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
+        try:
+            document = qwebcontext.loader(name)
+        except ValueError:
+            raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
 
-    def load_document(self, document, res_id, qwebcontext):
-        """
-        Loads an XML document and installs any contained template in the engine
-
-        :type document: a parsed lxml.etree element, an unparsed XML document
-                        (as a string) or the path of an XML file to load
-        """
-        if not isinstance(document, basestring):
-            # assume lxml.etree.Element
+        if hasattr(document, 'documentElement'):
             dom = document
         elif document.startswith("<?xml"):
             dom = etree.fromstring(document)
         else:
             dom = etree.parse(document).getroot()
 
+        res_id = isinstance(name, (int, long)) and name or None
         for node in dom:
-            if node.get('t-name'):
-                name = str(node.get("t-name"))
-                self.add_template(qwebcontext, name, node)
-            if res_id and node.tag == "t":
-                self.add_template(qwebcontext, res_id, node)
-                res_id = None
-
-    def get_template(self, name, qwebcontext):
-        """ Tries to fetch the template ``name``, either gets it from the
-        context's template cache or loads one with the context's loader (if
-        any).
-
-        :raises QWebTemplateNotFound: if the template can not be found or loaded
-        """
-        origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
-        if qwebcontext.loader and name not in qwebcontext.templates:
-            try:
-                xml_doc = qwebcontext.loader(name)
-            except ValueError:
-                raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
-            self.load_document(xml_doc, isinstance(name, (int, long)) and name or None, qwebcontext=qwebcontext)
-
-        if name in qwebcontext.templates:
-            return qwebcontext.templates[name]
+            if node.get('t-name') or (res_id and node.tag == "t"):
+                return node
 
         raise QWebTemplateNotFound("Template %r not found" % name, template=origin_template)
 
@@ -427,6 +420,30 @@ class QWeb(orm.AbstractModel):
 
     def render_tag_call(self, element, template_attributes, generated_attributes, qwebcontext):
         d = qwebcontext.copy()
+
+        trad_possible = d.context and 'lang' in d.context and 'lang' in template_attributes
+
+        # if there is a t-lang attribute, change context to include this language
+        if trad_possible:
+            # we need to store the original language
+            d.context['init_lang'] = d.context['lang']
+            lang = template_attributes['lang']
+            # lang can be a lang code (ex: 'en_US' or 'fr') or a record field
+            lang_regex = re.compile("^[a-z]{2}(_[A-Z]{2})?$")
+            if not lang_regex.match(lang):
+                try:
+                    try_lang=self.eval(lang,d)
+                    if not try_lang or not lang_regex.match(try_lang):
+                        template = qwebcontext.get('__template__')
+                        raise_qweb_exception(message="Field is not a valid language code: %s" % try_lang)
+                    lang = try_lang
+                except QWebException as err:
+                    _logger.warning("Could not render element %s", lang)
+                    _logger.warning(" Using default language %s", d.context['lang'])
+                    lang = d.context['lang']
+                    pass
+            d.context['lang']= lang
+
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
@@ -436,7 +453,14 @@ class QWeb(orm.AbstractModel):
             template = int(template)
         except ValueError:
             pass
-        return self.render(cr, uid, template, d)
+
+        res = self.render(cr,uid,template,d)
+        # we need to reset the lang after the rendering
+        if trad_possible and 'init_lang' in d.context:
+            d.context['lang'] = d.context['init_lang']
+            del d.context['init_lang']
+
+        return res
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
