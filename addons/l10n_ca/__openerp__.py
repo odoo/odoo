@@ -57,7 +57,7 @@ position.
         'account',
         'base_iban',
         'base_vat',
-        'account_anglo_saxon'
+        'stock',
     ],
     'data': [
         'account_chart_en.xml',

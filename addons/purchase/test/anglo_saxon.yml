@@ -1,4 +1,9 @@
 -
+  I first set the company to use anglo saxon accounting.
+-
+  !python {model: res.company}: |
+    self.pool.get('res.company').write(cr, uid, ref("base.main_company"), {'anglo_saxon_accounting': True,})
+-
   In order to test anglo_saxon Configure Different Accounts.
 -
   !record {model: account.account, id: account_anglo_stock_valuation}:
@@ -323,3 +328,8 @@
     # Due to debit field is removed
     # debit = self.browse(cr, uid, ref('account_anglo_cash')).debit
     # float_compare(debit, 20, precision_digits=2) == 0, "Bank/Cash account is not successfully credited."
+-
+  I reset the company to not use anglo saxon accounting.
+-
+  !python {model: res.company}: |
+    self.pool.get('res.company').write(cr, uid, ref("base.main_company"), {'anglo_saxon_accounting': False,})

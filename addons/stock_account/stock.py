@@ -156,6 +156,7 @@ class stock_move(osv.osv):
             'price_unit': self._get_price_unit_invoice(cr, uid, move, inv_type),
             'discount': 0.0,
             'account_analytic_id': False,
+            'move_id': move.id,
         }
 
 #----------------------------------------------------------
@@ -229,7 +230,10 @@ class stock_picking(osv.osv):
         """
         context = context or {}
         todo = {}
+        anglo_saxon_accounting = False
         for picking in self.browse(cr, uid, ids, context=context):
+            if picking.company_id.anglo_saxon_accounting:
+                anglo_saxon_accounting = True
             partner = self._get_partner_to_invoice(cr, uid, picking, context)
             #grouping is based on the invoiced partner
             if group:
@@ -244,6 +248,20 @@ class stock_picking(osv.osv):
         invoices = []
         for moves in todo.values():
             invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+        
+        #For anglo-saxon accounting
+        if anglo_saxon_accounting:
+            if type in ('in_invoice', 'in_refund'):
+                for inv in self.pool.get('account.invoice').browse(cr, uid, invoices, context=context):
+                    for ol in inv.invoice_line:
+                        if ol.product_id.type != 'service':
+                            oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
+                            if not oa:
+                                oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
+                            if oa:
+                                fpos = ol.invoice_id.fiscal_position or False
+                                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                                self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return invoices
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
