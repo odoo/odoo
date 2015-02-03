@@ -97,8 +97,7 @@ var DataExport = Widget.extend({
             .done(function (formats){
                 self.$el.find('#export_format').append(QWeb.render('Export.Formats', {'formats': formats}))
                 self.$el.find('#export_format input:first').attr("checked","checked");
-            }),
-            this.show_exports_list());
+            }));
     },
     show_buttons: function () {
         this.$el.find(".oe_export_file").removeAttr("disabled");
