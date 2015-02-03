@@ -117,12 +117,14 @@ class account_invoice(models.Model):
             lines = self.env['account.move.line'].search(domain)
             if len(lines) != 0:
                 for line in lines:
+                    line_currency = line.currency_id or line.company_id.currency_id
                     info['content'].append({
                         'ref': line.ref or line.move_id.name,
-                        'amount': abs(line.amount_residual) if line.currency_id != self.currency_id else abs(line.amount_residual_currency),
-                        'currency': line.company_id.currency_id.symbol if line.currency_id != self.currency_id else line.currency_id.symbol,
+                        'amount': line_currency.compute(abs(line.amount_residual),self.currency_id) if line_currency != self.currency_id else abs(line.amount_residual_currency),
+                        'currency': self.currency_id.symbol,
                         'id': line.id,
-                        'digits': [69,line.company_id.currency_id.decimal_places if line.currency_id != self.currency_id else line.currency_id.decimal_places],
+                        'position': self.currency_id.position,
+                        'digits': [69, self.currency_id.decimal_places],
                     })
                 info['title'] = type_payment + ' from ' + line.partner_id.name
                 self.outstanding_credits_debits_widget = json.dumps(info)
@@ -141,12 +143,14 @@ class account_invoice(models.Model):
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
                 if payment.currency_id and float_is_zero(amount_currency, precision_digits=payment.currency_id.decimal_places):
                     continue
+                payment_currency = payment.currency_id or payment.company_id.currency_id
                 info['content'].append({
                     'name': payment.name,
                     'ref': payment.journal_id.name,
-                    'amount': -amount if payment.currency_id != self.currency_id else -amount_currency,
-                    'currency': payment.company_id.currency_id.symbol if payment.currency_id != self.currency_id else payment.currency_id.symbol,
-                    'digits': [69,payment.company_id.currency_id.decimal_places if payment.currency_id != self.currency_id else payment.currency_id.decimal_places],
+                    'amount': payment_currency.compute(-amount,self.currency_id) if payment_currency != self.currency_id else -amount_currency,
+                    'currency': self.currency_id.symbol,
+                    'digits': [69, self.currency_id.decimal_places],
+                    'position': self.currency_id.position,
                     'date': payment.date,
                 })
             self.payments_widget = json.dumps(info)
