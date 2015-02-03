@@ -56,10 +56,10 @@
           <field name="name">Water</field>
           <field name="image" type="base64" file="point_of_sale/static/img/water-image.jpg"/>
         </record>
-        <record id="plain_water" model="pos.category">
+        <record id="still_water" model="pos.category">
           <field name="parent_id" ref="water"/>
-          <field name="name">Plain Water</field>
-          <field name="image" type="base64" file="point_of_sale/static/img/plain_water-image.jpg"/>
+          <field name="name">Still Water</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/still_water-image.jpg"/>
         </record>
         <record id="sparkling_water" model="pos.category">
           <field name="parent_id" ref="water"/>
@@ -667,56 +667,56 @@
           <field name="available_in_pos">True</field>
           <field name="list_price">0.52</field>
           <field name="name">Evian 50cl</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/evian_50cl-image.jpg"/>
         </record>
         <record id="evian_1l" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.70</field>
           <field name="name">Evian 1L</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/evian_1l-image.jpg"/>
         </record>
         <record id="evian_2l" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.26</field>
           <field name="name">2L Evian</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/evian_2l-image.jpg"/>
         </record>
         <record id="spa_33cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.40</field>
           <field name="name">Spa Reine 33cl</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/spa_33cl-image.jpg"/>
         </record>
         <record id="spa_50cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.46</field>
           <field name="name">Spa Reine 50cl</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/spa_50cl-image.jpg"/>
         </record>
         <record id="spa_1l" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.65</field>
           <field name="name">Spa Reine 1L</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/spa_1l-image.jpg"/>
         </record>
         <record id="spa_2l" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.30</field>
           <field name="name">Spa Reine 2L</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/spa_2l-image.jpg"/>
         </record>
         <record id="chaudfontaine_33cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.34</field>
           <field name="name">Chaudfontaine 33cl</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_33cl-image.jpg"/>
         </record>
         <record id="chaudfontaine_50cl" model="product.product">
@@ -724,14 +724,14 @@
           <field name="list_price">0.44</field>
           <field name="barcode">5449000111715</field>
           <field name="name">Chaudfontaine 50cl</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_50cl-image.jpg"/>
         </record>
         <record id="chaudfontaine_1,5l" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.86</field>
           <field name="name">Chaudfontaine 1.5l</field>
-          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="pos_categ_id" ref="still_water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_1,5l-image.jpg"/>
         </record>
 
