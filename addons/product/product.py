@@ -516,9 +516,9 @@ class product_template(osv.osv):
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.related('product_variant_ids', 'standard_price', type = 'float', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                 "Expressed in the default unit of measure of the product..", groups="base.group_user", string="Cost Price"),        
-        'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        'volume': fields.related('product_variant_ids', 'volume', string='Volume', help="The volume in m3."),
+        'weight': fields.related('product_variant_ids', 'weight', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
+        'weight_net': fields.related('product_variant_ids', 'weight_net', string='Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -971,6 +971,9 @@ class product_product(osv.osv):
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                "Expressed in the default unit of measure of the product.",
                                           groups="base.group_user", string="Cost Price"),
+        'volume': fields.float('Volume', help="The volume in m3."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
+        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
     }
 
     _defaults = {

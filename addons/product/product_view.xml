@@ -88,7 +88,7 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group name="general" col="4">
-                                        <field name="standard_price"/>
+                                        <field name="standard_price" attrs="{'invisible':[('product_variant_count','!=',1)]}"/>
                                         <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
@@ -103,7 +103,7 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
+                                    <group name="weight" string="Weights" attrs="{'invisible':['|', ('type','=','service'), ('product_variant_count','!=',1)]}">
                                         <field digits="(14, 3)" name="volume"/>
                                         <field digits="(14, 3)" name="weight"/>
                                         <field digits="(14, 3)" name="weight_net"/>
@@ -378,6 +378,16 @@
                     <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
                 </field>
+                <field name="standard_price" position="replace">
+                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"/>
+                </field>
+                <group name="weight" position="replace">
+                    <group name="weight" string="Weights" attrs="{'invisible':['|', ('type','=','service'), ('product_variant_count','=',1)]}">
+                        <field digits="(14, 3)" name="volume"/>
+                        <field digits="(14, 3)" name="weight"/>
+                        <field digits="(14, 3)" name="weight_net"/>
+                    </group>
+                </group>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags"/>
                 </xpath>
