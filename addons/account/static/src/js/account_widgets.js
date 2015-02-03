@@ -1582,7 +1582,7 @@ openerp.account = function (instance) {
             this.is_rapprochement; // matching a statement line with an already reconciled journal item
             this.st_line_id = context.line_id;
             this.model_bank_statement_line = this.getParent().model_bank_statement_line;
-            this.formatCurrency = this.getParent().formatCurrency;
+            this.formatCurrencies = this.getParent().formatCurrencies;
 
             if (context.initial_data_provided) {
                 // Process data
@@ -1878,14 +1878,13 @@ openerp.account = function (instance) {
 
             function createOpenBalance(name) {
                 var balance = self.get("balance");
-                var amount = self.formatCurrency(Math.abs(balance), self.st_line.currency_id);
-                var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {
+                var amount = self.formatCurrencies(Math.abs(balance), self.get("currency_id"));
+                var $line = $(QWeb.render("reconciliation_line_open_balance", {
                     debit: balance > 0 ? amount : "",
                     credit: balance < 0 ? amount : "",
-                    account_code: self.map_account_id_code[self.st_line.open_balance_account_id]
+                    account_code: self.map_account_id_code[self.st_line.open_balance_account_id],
+                    label: name || "Open balance"
                 }));
-                if (name !== undefined)
-                    $line.find(".cell_label").text(name);
                 self.$(".tbody_open_balance").empty().append($line);
             }
         },
@@ -2011,7 +2010,7 @@ openerp.account = function (instance) {
                 });
         },
 
-        // Returns an object that can be passed to process_reconciliation()
+        // Returns an object that can be passed to process_reconciliations()
         prepareSelectedMoveLinesForPersisting: function(lines) {
             return _.collect(lines, function(line) {
                 return {
@@ -2043,7 +2042,6 @@ openerp.account = function (instance) {
             mv_line_dicts = mv_line_dicts.concat(this.prepareCreatedMoveLinesForPersisting(this.getCreatedLines()));
             if (Math.abs(this.get("balance")).toFixed(4) !== "0.0000") mv_line_dicts.push(this.prepareOpenBalanceForPersisting());
             return {
-                'type': 'reconciliation',
                 'st_line_id': this.st_line_id,
                 'mv_line_dicts': mv_line_dicts,
             };
