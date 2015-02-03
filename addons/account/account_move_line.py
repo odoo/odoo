@@ -33,7 +33,7 @@ class account_move_line(models.Model):
                     if partial_line.currency_id and partial_line.currency_id == line.currency_id:
                         amount_residual_currency -= partial_line.amount_currency
                     else:
-                        amount_residual_currency -= line.currency_id.with_context(date=date).compute(partial_line.amount, line.company_id.currency_id)
+                        amount_residual_currency -= line.company_id.currency_id.with_context(date=date).compute(partial_line.amount, line.currency_id)
 
             #computing the `reconciled` field. As we book exchange rate difference on each partial matching,
             #we can only check the amount in company currency
