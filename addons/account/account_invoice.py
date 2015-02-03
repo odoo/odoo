@@ -49,11 +49,16 @@ class account_invoice(models.Model):
     #     inv.compute_taxes();
 
     @api.one
-    @api.depends('invoice_line.price_subtotal', 'tax_line.amount')
+    @api.depends('invoice_line.price_subtotal', 'tax_line.amount', 'currency_id', 'company_id')
     def _compute_amount(self):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line)
         self.amount_tax = sum(line.amount for line in self.tax_line)
         self.amount_total = self.amount_untaxed + self.amount_tax
+        amount_total_signed = self.amount_total
+        if self.currency_id != self.company_id.currency_id:
+            amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
+        self.amount_total_signed = amount_total_signed * sign
 
     @api.model
     def _default_journal(self):
@@ -248,6 +253,9 @@ class account_invoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Float(string='Total', digits=0,
         store=True, readonly=True, compute='_compute_amount')
+    amount_total_signed = fields.Float(string='Total Signed', digits=0,
+        store=True, readonly=True, compute='_compute_amount',
+        help="Total amount in the currency of the company, negative for credit notes.")
 
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
