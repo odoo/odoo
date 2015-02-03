@@ -6248,6 +6248,18 @@ body {
 @media (min-width: 992px) {
   .documentwrapper {
     float: left;
+    width: 100%;
+  }
+}
+.with-sidebar .documentwrapper {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 992px) {
+  .with-sidebar .documentwrapper {
+    float: left;
     width: 75%;
   }
 }
@@ -6610,6 +6622,9 @@ div.section > h2 {
   font-size: 36px;
   padding-top: 20px;
   margin-top: 0;
+}
+.body {
+  position: relative;
 }
 .body > .section > .section {
   margin-bottom: 60px;
