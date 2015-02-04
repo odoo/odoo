@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- CSS Style Bundle -->
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Rating Project Issue Assets">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/website_rating_project_issue/static/src/css/website_rating_project_issue.css"/>
+            </xpath>
+        </template>
+
+        <!-- Layout add footer -->
+        <template id="header_footer_custom" inherit_id="website.footer_default" name="Project Issue Rating Footer Link">
+            <xpath expr="//ul[@id='products']" position="inside">
+                <li><a href="/project/rating/">Project Customer Satisfaction</a></li>
+            </xpath>
+        </template>
+
+        <!-- Page : List of project -->
+        <template id="index" name="Project Issue Rating List">
+            <t t-call="website.layout">
+                <t t-set="additional_title">Project Satisfaction</t>
+                <div id="wrap">
+                    <div class="oe_structure"/>
+                    <div class="container oe_website_rating_project">
+                        <div class="row text-center">
+                            <h2>Projects</h2>
+                        </div>
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <t t-foreach="projects" t-as="project">
+                                <div t-if="project.percentage_satisfaction_project != -1" class="col-sm-6 col-xs-4 col-md-4 col-lg-4">
+                                    <div class="thumbnail">
+                                        <div>
+                                            <div class="caption">
+                                                <span class="label label-default pull-right"><t t-esc="project.privacy_visibility"/></span>
+                                                <h4><t t-esc="project.name"/></h4>
+                                                <p t-if="project.date"  class="text-muted">
+                                                    <i class="fa fa-calendar"/> End date : <t t-esc="project.date"/>
+                                                </p>
+                                                <p t-if="project.alias_name and project.alias_domain"  class="text-muted">
+                                                    <i class="fa fa-envelope"/> Email : <t t-esc="project.alias_name"/>@<t t-esc="project.alias_domain"/>
+                                                </p>
+                                                <div class="row">
+                                                    <div t-if="project.use_tasks" class="col-md-6 text-center">
+                                                        <h2><t t-esc="len(project.task_ids)"/></h2>
+                                                        <p><t t-esc="project.label_tasks"/></p>
+                                                    </div>
+                                                    <div t-if="project.use_issues" class="col-md-6 text-center">
+                                                        <h2><t t-esc="len(project.issue_ids)"/></h2>
+                                                        <p><t t-esc="project.label_issues"/></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="caption">
+                                                <p>
+                                                    <a t-att-href="'/project/rating/%s' % (slug(project),)" class="btn btn-primary btn-lg btn-block">
+                                                        <i class="fa fa-arrow-circle-right "/> See the feedbacks
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+              </div>
+            </t>
+        </template>
+
+        <!-- Page : Rating of a particular project -->
+        <template id="project_rating_page" name="Project Issue Rating Page">
+            <t t-call="website.layout">
+                 <div id="wrap">
+                    <div class="oe_structure"/>
+                    <div class="container oe_website_rating_project">
+                        <div class="row text-center">
+                            <h2><t t-esc="project.name"/> <small>Customer Satisfaction</small></h2>
+                        </div>
+                        <div class="row mb32">
+                            <div class="col-md-8">
+                                <h3>The statistics</h3>
+                                <div class="row">
+                                    <div class="col-md-8 col-md-offset-2 well">
+                                    <t t-foreach="stats" t-as="grade">
+                                        <div class="progress">
+                                            <div t-attf-class="progress-bar progress-bar-#{grade}" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" t-att-style="'width: '+ str(stats[grade]) +'%;'">
+                                                <span class="sr-only"><t t-esc="stats[grade]"/>% Complete</span>
+                                            </div>
+                                            <span class="progress-type"><t t-esc="labels[grade]"/></span>
+                                            <span class="progress-completed"><t t-esc="stats[grade]"/>%</span>
+                                        </div>
+                                    </t>
+                                    </div>
+                                </div>
+                                <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
+                                <div class="text-center">
+                                    <t t-foreach="ratings" t-as="rating" class="media">
+                                        <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" t-att-title="rating.res_name"/>
+                                        <t t-if="(rating_index+1) % 10 == 0">
+                                            <br/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h3>The Team</h3>
+                                <t t-foreach="team" t-as="user" class="media">
+                                    <div class="media">
+                                        <div class="pull-left">
+                                            <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name"/>
+                                        </div>
+                                        <div class="media-body">
+                                            <h5><t t-esc="user.name"/></h5>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>
