@@ -18,10 +18,10 @@ openerp.voip = function(openerp) {
             this.config = result;
             var ua_config = {};
             var error_found = false;
-            if(result.login && result.wsServer && result.pbx_ip && result.password){
+            if(result.login && result.pbx_ip && result.password){
                 ua_config = {
                     uri: result.login +'@'+result.pbx_ip,
-                    wsServers: result.wsServer,
+                    wsServers: result.wsServer || null,
                     authorizationUser: result.login,
                     password: result.password,
                     hackIpInContact: true,

@@ -77,16 +77,6 @@ class crm_phonecall(models.Model):
     def get_list(self):
         return {"phonecalls": self.search([('in_queue','=',True),('user_id','=',self.env.user[0].id)], order='sequence,id').get_info()}
 
-    @api.model
-    def get_pbx_config(self):
-        return {'pbx_ip': self.env['ir.config_parameter'].get_param('crm.voip.pbx_ip'),
-                'wsServer': self.env['ir.config_parameter'].get_param('crm.voip.wsServer'),
-                'login': self.env.user[0].sip_login,
-                'password': self.env.user[0].sip_password,
-                'physical_phone': self.env.user[0].sip_physicalPhone,
-                'always_transfert': self.env.user[0].sip_always_transfert,
-                'ring_number': self.env.user[0].sip_ring_number}
-
 
 class crm_lead(models.Model):
     _inherit = "crm.lead"
