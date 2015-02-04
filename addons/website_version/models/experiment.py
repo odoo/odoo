@@ -63,7 +63,7 @@ class Experiment(models.Model):
                     raise ValidationError('This experiment must have versions which are in the same website')
 
     _group_by_full = {
-        'state': lambda *args, **kwargs: ([s[0] for s in [('running', 'Running'), ('paused', 'Paused'), ('ended', 'Ended')]], dict()),
+        'state': lambda *args, **kwargs: ([('running', 'Running'), ('paused', 'Paused'), ('ended', 'Ended')], dict())
     }
 
     @api.one
