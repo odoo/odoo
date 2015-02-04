@@ -972,6 +972,12 @@ var py = {};
         __len__: function () {
             return this._values.length;
         },
+        __nonzero__: function () {
+            var len = this.__len__();
+            if (len === 0) return py.False;
+            if (len === 1 && py.PY_not(this._values[0])) return py.False;
+            return py.True;
+        },
         __contains__: function (value) {
             for(var i=0, len=this._values.length; i<len; ++i) {
                 if (py.PY_isTrue(this._values[i].__eq__(value))) {
@@ -1001,7 +1007,12 @@ var py = {};
             return t;
         }
     });
-    py.list = py.tuple;
+    py.list = py.type('list', null, {
+        __nonzero__: function () {
+            return this.__len__ > 0 ? py.True : py.False;
+        },
+    });
+    _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
     py.dict = py.type('dict', null, {
         __init__: function () {
             this._store = {};
@@ -1018,6 +1029,9 @@ var py = {};
         },
         __len__: function () {
             return Object.keys(this._store).length
+        },
+        __nonzero__: function () {
+            return this.__len__ > 0;
         },
         get: function () {
             var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
