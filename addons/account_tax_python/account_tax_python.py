@@ -8,7 +8,7 @@ class account_tax_python(models.Model):
     def __init__(self, parent, cr):
         super(account_tax_python, self).__init__(parent, cr)
         option = ('code', 'Python Code')
-        type_selection = self._columns['amount_type'].selection
+        type_selection = self._fields['amount_type'].selection
         if option not in type_selection:
             type_selection.append(option)
 
