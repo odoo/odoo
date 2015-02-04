@@ -149,6 +149,20 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
+    def _has_non_stockable(self, cr, uid, ids, *args):
+        res = dict.fromkeys(ids, False)
+        for order in self.browse(cr, uid, ids):
+            for order_line in order.order_line:
+                if (
+                    not order_line.product_id
+                    or
+                    order_line.product_id
+                    and order_line.product_id.type not in ('product',
+                                                           'consu')
+                ):
+                    res[order.id] = True
+        return res
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
@@ -224,6 +238,9 @@ class purchase_order(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'has_non_stockable': fields.function(
+            _has_non_stockable, method=True, type='boolean',
+            string='Contains non-stockable items'),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -470,6 +487,13 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
+            if po.invoice_method == 'picking' \
+                    and po.has_non_stockable is True:
+                        raise osv.except_osv(
+                            _('Error!'),
+                            _("You cannot confirm a purchase order "
+                              "with Invoice Control Method 'Based on incoming "
+                              "shipments' that contains non-stockable items."))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
@@ -619,6 +643,11 @@ class purchase_order(osv.osv):
                         _('You must first cancel all receptions related to this purchase order.'))
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+            for order_line in purchase.order_line:
+                if order_line.invoiced:
+                    raise osv.except_osv(
+                        _('Unable to cancel this purchase order.'),
+                        _('Invoices have already been created.'))
             self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
                     {'state': 'cancel'})
 
@@ -865,6 +894,12 @@ class purchase_order(osv.osv):
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
         return orders_info
+
+    def check_has_non_stockable(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.has_non_stockable:
+                return True
+        return False
 
 
 class purchase_order_line(osv.osv):

@@ -113,7 +113,12 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">purchase_cancel</field>
         </record>
-        
+        <record id="trans_invoice_end_cancel" model="workflow.transition">
+            <field name="act_from" ref="purchase.act_invoice_end"/>
+            <field name="act_to" ref="purchase.act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+            <field name="condition">check_has_non_stockable()</field>
+        </record>
         <record id="trans_confirmed_cancel" model="workflow.transition">
             <field name="act_from" ref="act_confirmed"/>
             <field name="act_to" ref="act_cancel"/>
