@@ -43,7 +43,8 @@ class sales_coupon(models.Model):
     @api.onchange('coupon_type')
     def onchange_coupon_type_id(self):
         self.expiration_use = self.coupon_type.expiration_use
-        self.expiration_date = self.env['sales.coupon.type'].browse([self.coupon_type.id]).get_expiration_date(fields.date.today())
+        self.expiration_date = self.env['sales.coupon.type'].browse(
+            [self.coupon_type.id]).get_expiration_date(fields.date.today())
 
     def compute_expiration(self):
         for coupon in self:
@@ -53,10 +54,9 @@ class sales_coupon(models.Model):
     @api.one
     def count_coupon(self):
         self.coupon_used = self.env['sale.order.line'].search_count(
-            [('coupon_id', 'in', self.id), ('is_coupon', '=', True), ('sales_coupon_type_id', '=', False), ('product_id', '=', False)])
+            [('coupon_ids', '=', self.id), ('is_coupon', '=', True), ('sales_coupon_type_id', '=', False), ('product_id', '=', False)])
 
-    code = fields.Char(string='Coupon Code',
-                       default=lambda self: 'SC' +
+    code = fields.Char(string='Coupon Code', default=lambda self: 'SC' +
                        (hashlib.sha1(
                            str(random.getrandbits(256)).encode('utf-8')).hexdigest()[:7]).upper(),
                        required=True, readonly=True, help="Coupon Code")
@@ -66,11 +66,11 @@ class sales_coupon(models.Model):
     expiration_date = fields.Date(
         string='Expiration Date', help="Till this period you can use coupon")
     expired_on = fields.Char(compute="compute_expiration",
-                                  string='Expiration Date', help="Till this period you can use coupon")
+                             string='Expiration Date', help="Till this period you can use coupon")
     expiration_use = fields.Integer(
         string='Expiration Use', help="Limit of time you can use coupon")
     number_of_use = fields.Char(compute="compute_expiration",
-                                 string='Expiration Use', help="Limit of time you can use coupon")
+                                string='Expiration Use', help="Limit of time you can use coupon")
     product_id = fields.Many2one(
         'product.product', string='Product', required=True)
     state = fields.Selection([
@@ -78,8 +78,6 @@ class sales_coupon(models.Model):
         ('used', 'Used'),
         ('expired', 'Expired'),
     ], string='Status', default='current', readonly=True, select=True)
-    order_line_id = fields.Many2one(
-        'sale.order.line', string='Order Reference', readonly=True)
     line_id = fields.Many2one(
         'sale.order.line', string='Line', readonly=True)
     coupon_used = fields.Integer(compute="count_coupon", string="Coupon Used")
@@ -88,7 +86,7 @@ class sales_coupon(models.Model):
     def return_action_to_open_orders(self):
         res = self.env['ir.actions.act_window'].for_xml_id(
             'website_sale_coupon', 'action_open_sale_order_line_view')
-        res['domain'] = [('coupon_id', '=', self.id), (
+        res['domain'] = [('coupon_ids', '=', self.id), (
             'is_coupon', '=', True), ('product_id', '!=', False)]
         return res
 

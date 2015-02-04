@@ -16,7 +16,7 @@
                         </thead>
                         <tbody>
                             <t t-foreach="o.order_line" t-as="l">
-                                <tr t-foreach="o.order_line.coupon_id" t-as="coupon">
+                                <tr t-foreach="o.order_line.coupon_ids" t-as="coupon">
                                     <t t-if="not l.is_coupon">
                                         <td>
                                            <span t-field="coupon.product_id"/>
