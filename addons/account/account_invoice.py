@@ -57,7 +57,7 @@ class account_invoice(models.Model):
         amount_total_signed = self.amount_total
         if self.currency_id != self.company_id.currency_id:
             amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
-        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
+        sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
         self.amount_total_signed = amount_total_signed * sign
 
     @api.model
@@ -97,14 +97,18 @@ class account_invoice(models.Model):
         'move_id.line_id.currency_id')
     def _compute_residual(self):
         residual = 0.0
+        residual_signed = 0.0
         for line in self.sudo().move_id.line_id:
             if line.account_id.internal_type in ('receivable', 'payable'):
+                sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
+                residual_signed += line.amount_residual * sign
                 if line.currency_id == self.currency_id:
                     residual += line.currency_id and line.amount_residual_currency or line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
         self.residual = abs(residual)
+        self.residual_signed = residual_signed
         self.reconciled = residual == 0.0
 
     @api.one
@@ -278,6 +282,8 @@ class account_invoice(models.Model):
 
     residual = fields.Float(string='Amount Due', digits=0,
         compute='_compute_residual', store=True, help="Remaining amount due.")
+    residual_signed = fields.Float(string='Amount Due Signed', digits=0,
+        compute='_compute_residual', store=True, help="Remaining amount due in the currency of the company.")
     payment_ids = fields.Many2many('account.move.line', string='Payments',
         compute='_compute_payments')
     move_name = fields.Char(string='Journal Entry', readonly=True,
@@ -1187,12 +1193,16 @@ class account_invoice_line(models.Model):
 
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_id', 'quantity',
-        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id')
+        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id')
     def _compute_price(self):
         currency = self.invoice_id and self.invoice_id.currency_id or None
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = self.invoice_line_tax_id.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
-        self.price_subtotal = taxes['total_excluded']
+        self.price_subtotal = price_subtotal_signed = taxes['total_excluded']
+        if self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+            price_subtotal_signed = self.invoice_id.currency_id.compute(price_subtotal_signed, self.company_id.currency_id)
+        sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
+        self.price_subtotal_signed = price_subtotal_signed * sign
 
     @api.model
     def _default_price_unit(self):
@@ -1242,6 +1252,10 @@ class account_invoice_line(models.Model):
         default=_default_price_unit)
     price_subtotal = fields.Float(string='Amount', digits=0,
         store=True, readonly=True, compute='_compute_price')
+    price_subtotal_signed = fields.Float(string='Amount Signed', digits=0,
+        store=True, readonly=True, compute='_compute_price',
+        help="Total amount in the currency of the company, negative for credit notes.")
+
     quantity = fields.Float(string='Quantity', digits= dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits= dp.get_precision('Discount'),
