@@ -817,6 +817,8 @@ class website_sale(http.Controller):
             composer_values.update(composer_obj.onchange_template_id(cr, SUPERUSER_ID, None, *template_values, context=context).get('value', {}))
             if not composer_values.get('email_from') and uid == request.website.user_id.id:
                 composer_values['email_from'] = request.website.user_id.company_id.email
+            if composer_values.get('attachment_ids'):
+                composer_values['attachment_ids'] = [(6, 0, composer_values['attachment_ids'])]
             composer_id = composer_obj.create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
             composer_obj.send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
 
