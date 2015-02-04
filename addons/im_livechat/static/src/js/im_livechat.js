@@ -236,28 +236,36 @@
             this.$('#rating_submit').on('click', _.bind(this.click_send, this));
         },
         click_smiley: function(ev){
+            var self = this;
             this.rating = parseInt($(ev.currentTarget).data('value'));
             this.$('.oe_livechat_rating_choices img').removeClass('selected');
             this.$('.oe_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
             // only display textearea if bad smiley selected
+            var close_conv = false;
             if(this.rating == 0){
                 this.$('.oe_livechat_rating_reason').show();
+
             }else{
                 this.$('.oe_livechat_rating_reason').hide();
+                close_conv = true;
             }
-            this.$('textarea').val(''); // empty the reason each time a click on a smiley is done
+            this._send_feedback(close_conv).then(function(){
+                self.$('textarea').val(''); // empty the reason each time a click on a smiley is done
+            });
         },
         click_send: function(ev){
             this.reason = this.$('textarea').val();
             if(_.contains([0,5,10], this.rating)){ // need to use contains, since the rating can 0, evaluate to false
-                this._send_feedback();
+                this._send_feedback(true);
             }
         },
-        _send_feedback: function(){
+        _send_feedback: function(close){
             var self = this;
             var uuid = this.conversation.get('session').uuid;
-            openerp.session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
-                self.trigger("feedback_sent"); // will close the conversation
+            return openerp.session.rpc("/rating/livechat/feedback", {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+                if(close){
+                    self.trigger("feedback_sent"); // will close the conversation
+                }
             });
         }
     });
