@@ -165,7 +165,7 @@ class account_invoice(models.Model):
         self.payment_ids = self.env['account.move.line'].browse(payment_lines).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -1263,9 +1263,9 @@ class account_invoice_line(models.Model):
         return res
 
     @api.v8
-    def get_invoice_line_account(self, product, fpos):
+    def get_invoice_line_account(self, type, product, fpos, company):
         accounts = product.get_product_accounts(fpos)
-        if self.invoice_id.type in ('out_invoice', 'out_refund'):
+        if type in ('out_invoice', 'out_refund'):
             return accounts['income']
         return accounts['expense']
 
@@ -1275,6 +1275,7 @@ class account_invoice_line(models.Model):
             company_id=None):
         context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
+
         self = self.with_context(company_id=company_id, force_company=company_id)
 
         if not partner_id:
@@ -1289,13 +1290,15 @@ class account_invoice_line(models.Model):
 
         part = self.env['res.partner'].browse(partner_id)
         fpos = self.env['account.fiscal.position'].browse(fposition_id)
+        company = self.env['res.company'].browse(company_id)
+        currency = self.env['res.currency'].browse(currency_id)
 
         if part.lang:
             self = self.with_context(lang=part.lang)
         product = self.env['product.product'].browse(product)
 
         values['name'] = product.partner_ref
-        account = self.get_invoice_line_account(product, fpos)
+        account = self.get_invoice_line_account(type, product, fpos, company)
         values['account_id'] = account.id
 
         if type in ('out_invoice', 'out_refund'):
@@ -1317,9 +1320,6 @@ class account_invoice_line(models.Model):
 
         values['uos_id'] = uom_id or product.uom_id.id
         domain = {'uos_id': [('category_id', '=', product.uom_id.category_id.id)]}
-
-        company = self.env['res.company'].browse(company_id)
-        currency = self.env['res.currency'].browse(currency_id)
 
         if company and currency:
             if company.currency_id != currency:
