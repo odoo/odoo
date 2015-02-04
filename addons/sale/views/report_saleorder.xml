@@ -3,51 +3,52 @@
 <data>
 <template id="report_saleorder_document">
     <t t-call="report.external_layout">
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <div class="page">
             <div class="oe_structure"/>
             <div class="row">
                 <div class="col-xs-6">
-                    <strong t-if="o.partner_shipping_id == o.partner_invoice_id">Invoice and shipping address:</strong>
-                    <strong t-if="o.partner_shipping_id != o.partner_invoice_id">Invoice address:</strong>
-                    <div t-field="o.partner_invoice_id" 
+                    <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoice and shipping address:</strong>
+                    <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoice address:</strong>
+                    <div t-field="doc.partner_invoice_id" 
                         t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                    <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
-                    <div t-if="o.partner_shipping_id != o.partner_invoice_id" class="mt8">
+                    <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
+                    <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
                         <strong>Shipping address:</strong>
-                        <div t-field="o.partner_shipping_id" 
+                        <div t-field="doc.partner_shipping_id" 
                             t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
-                        <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                        <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
                     </div>                        
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
-                    <div t-field="o.partner_id"
+                    <div t-field="doc.partner_id"
                         t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
                 </div>
             </div>
 
             <h2>
-                <span t-if="o.state not in ['draft','sent']">Order N° </span>
-                <span t-if="o.state in ['draft','sent']">Quotation N° </span>
-                <span t-field="o.name"/>
+                <span t-if="doc.state not in ['draft','sent']">Order N° </span>
+                <span t-if="doc.state in ['draft','sent']">Quotation N° </span>
+                <span t-field="doc.name"/>
             </h2>
 
             <div class="row mt32 mb32" id="informations">
-                <div t-if="o.client_order_ref" class="col-xs-3">
+                <div t-if="doc.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>
-                    <p t-field="o.client_order_ref"/>
+                    <p t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="o.date_order" class="col-xs-3">
-                    <strong t-if="o.state not in ['draft','sent']">Date Ordered:</strong>
-                    <strong t-if="o.state in ['draft','sent']">Quotation Date:</strong>
-                    <p t-field="o.date_order"/>
+                <div t-if="doc.date_order" class="col-xs-3">
+                    <strong t-if="doc.state not in ['draft','sent']">Date Ordered:</strong>
+                    <strong t-if="doc.state in ['draft','sent']">Quotation Date:</strong>
+                    <p t-field="doc.date_order"/>
                 </div>
-                <div t-if="o.user_id.name" class="col-xs-3">
+                <div t-if="doc.user_id.name" class="col-xs-3">
                     <strong>Salesperson:</strong>
-                    <p t-field="o.user_id.name"/>
+                    <p t-field="doc.user_id.name"/>
                 </div>
-                <div name="payment_term" t-if="o.payment_term" class="col-xs-3">
+                <div name="payment_term" t-if="doc.payment_term" class="col-xs-3">
                     <strong>Payment Term:</strong>
-                    <p t-field="o.payment_term.name"/>
+                    <p t-field="doc.payment_term.name"/>
                 </div>
             </div>
 
@@ -63,7 +64,7 @@
                     </tr>
                </thead>
                <tbody class="sale_tbody">
-                    <tr t-foreach="o.order_line" t-as="l">
+                    <tr t-foreach="doc.order_line" t-as="l">
                         <td>
                            <span t-field="l.name"/>
                         </td>
@@ -82,7 +83,7 @@
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal"
-                                t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                         </td>
                     </tr>
                 </tbody>
@@ -94,48 +95,49 @@
                         <tr class="border-black">
                             <td><strong>Total Without Taxes</strong></td>
                             <td class="text-right">
-                                <span t-field="o.amount_untaxed"
-                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                <span t-field="doc.amount_untaxed"
+                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                             </td>
                         </tr>
                         <tr>
                             <td>Taxes</td>
                             <td class="text-right">
-                                <span t-field="o.amount_tax"
-                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                <span t-field="doc.amount_tax"
+                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                             </td>
                         </tr>
                         <tr class="border-black">
                             <td><strong>Total</strong></td>
                             <td class="text-right">
-                                <span t-field="o.amount_total"
-                                    t-field-options='{"widget": "monetary", "display_currency": "o.pricelist_id.currency_id"}'/>
+                                <span t-field="doc.amount_total"
+                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <p t-field="o.note" />
-            <p t-if="o.payment_term.note">
-                <span t-field="o.payment_term.note"/>
+            <p t-field="doc.note" />
+            <p t-if="doc.payment_term.note">
+                <span t-field="doc.payment_term.note"/>
             </p>
-            <p t-if="not o.payment_term and o.partner_id.property_payment_term">
-                <span t-field="o.partner_id.property_payment_term.note"/>
+            <p t-if="not doc.payment_term and doc.partner_id.property_payment_term">
+                <span t-field="doc.partner_id.property_payment_term.note"/>
             </p>
-            <p t-if="o.fiscal_position and o.fiscal_position.note">
+            <p t-if="doc.fiscal_position and doc.fiscal_position.note">
                 <strong>Fiscal Position Remark:</strong>
-                <span t-field="o.fiscal_position.note"/>
+                <span t-field="doc.fiscal_position.note"/>
             </p>
             <div class="oe_structure"/>
         </div>
     </t>
 </template>
 
+
 <template id="report_saleorder">
     <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale.report_saleorder_document')"/>
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>
