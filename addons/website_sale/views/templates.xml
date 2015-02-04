@@ -1165,6 +1165,21 @@
                     </table>
                     <div class="clearfix"/>
                     <div class="oe_structure"/>
+                    <h3 class="text-left"><strong>Payment information:</strong></h3>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <t t-call="website_sale.payment_confirmation_status"/>
+                                </td>
+                                <td class="text-right" width="100"><strong>Total:</strong></td>
+                                <td class="text-right" width="100">
+                                    <strong t-field="order.amount_total"
+                                        t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
               </div>
               <div class="col-md-3 col-md-offset-1 text-muted">
@@ -1241,6 +1256,29 @@
             </tr>
         </thead>
     </table>
+</template>
+
+<!-- payment acquirer information -->
+<template id="payment_confirmation_status">
+    <strong>Payment Method:</strong> <t t-esc="order.payment_acquirer_id.name"/><br />
+    <strong>Payment Status:</strong>
+    <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
+        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+    </t>
+    <t t-if="order.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
+        <t t-if="order.payment_tx_id.state == 'pending'">
+            <t t-raw="order.payment_acquirer_id.pending_msg"/>
+        </t>
+        <t t-if="order.payment_tx_id.state == 'done'">
+            <t t-raw="order.payment_acquirer_id.done_msg"/>
+        </t>
+        <t t-if="order.payment_tx_id.state == 'cancel'">
+            <t t-raw="order.payment_acquirer_id.cancel_msg"/>
+        </t>
+        <t t-if="order.payment_tx_id.state == 'error'">
+            <t t-raw="order.payment_acquirer_id.error_msg"/>
+        </t>
+    </t>
 </template>
 
 <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">

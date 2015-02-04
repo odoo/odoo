@@ -35,30 +35,46 @@
                                     attrs="{'invisible': [('fees_active', '=', False)]}"/>
                             </group>
                         </group>
-                        <group name="acquirer_display">
-                            <field name="pre_msg"/>
-                            <field name="post_msg"/>
-                            <label for="view_template_id"/>
-                            <div>
-                                <field name="view_template_id" nolabel="1"/>
-                                <div>
-                                    This template renders the acquirer button with all necessary values.
-                                    It is be rendered with qWeb with the following evaluation context:
-                                    <ul>
-                                        <li>tx_url: transaction URL to post the form</li>
-                                        <li>acquirer: payment.acquirer browse record</li>
-                                        <li>user: current user browse record</li>
-                                        <li>reference: the transaction reference number</li>
-                                        <li>currency: the transaction currency browse record</li>
-                                        <li>amount: the transaction amount, a float</li>
-                                        <li>partner: the buyer partner browse record, not necessarily set</li>
-                                        <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
-                                        <li>tx_values: transaction values</li>
-                                        <li>context: the current context dictionary</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </group>
+                        <notebook>
+                            <page string="Message">
+                                <group>
+                                    <field name="pre_msg"/>
+                                    <field name="post_msg"/>
+                                </group>
+                            </page>
+                            <page string="Status">
+                                <group>
+                                    <field name="pending_msg"/>
+                                    <field name="done_msg"/>
+                                    <field name="cancel_msg"/>
+                                    <field name="error_msg"/>
+                                </group>
+                            </page>
+                            <page string="Configuration">
+                                <group name="acquirer_display">
+                                    <label for="view_template_id"/>
+                                    <div>
+                                        <field name="view_template_id" nolabel="1"/>
+                                        <div>
+                                            This template renders the acquirer button with all necessary values.
+                                            It is be rendered with qWeb with the following evaluation context:
+                                            <ul>
+                                                <li>tx_url: transaction URL to post the form</li>
+                                                <li>acquirer: payment.acquirer browse record</li>
+                                                <li>user: current user browse record</li>
+                                                <li>reference: the transaction reference number</li>
+                                                <li>currency: the transaction currency browse record</li>
+                                                <li>amount: the transaction amount, a float</li>
+                                                <li>partner: the buyer partner browse record, not necessarily set</li>
+                                                <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
+                                                <li>tx_values: transaction values</li>
+                                                <li>context: the current context dictionary</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

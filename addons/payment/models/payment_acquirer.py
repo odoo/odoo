@@ -82,6 +82,10 @@ class PaymentAcquirer(osv.Model):
              ('at_pay_confirm', 'At payment confirmation'),
              ('at_pay_now', 'At payment')],
             string='Order Confirmation', required=True),
+        'pending_msg': fields.html('Pending Message', translate=True, help='Message displayed, if order is in pending state after having done the payment process.'),
+        'done_msg': fields.html('Done Message', translate=True, help='Message displayed, if order is done successfully after having done the payment process.'),
+        'cancel_msg': fields.html('Cancel Message', translate=True, help='Message displayed, if order is cancel during the payment process.'),
+        'error_msg': fields.html('Error Message', translate=True, help='Message displayed, if error is occur during the payment process.'),
         # Fees
         'fees_active': fields.boolean('Compute fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
@@ -97,6 +101,10 @@ class PaymentAcquirer(osv.Model):
         'validation': 'automatic',
         'website_published': True,
         'auto_confirm': 'at_pay_confirm',
+        'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
+        'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
+        'cancel_msg': '<i>Cancel,</i> Your payment has been cancelled.',
+        'error_msg': '<i>Error,</i> An error occurred. We cannot process your payment for the moment, please try again later.'
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
