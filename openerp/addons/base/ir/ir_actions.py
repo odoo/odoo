@@ -871,11 +871,11 @@ class ir_actions_server(osv.osv):
             action.write({
                 'menu_ir_values_id': ir_values_id,
             })
-
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
         """ Remove the contextual actions created for the server actions. """
+        self.check_access_rights(cr , uid, 'write', raise_exception=True)
         for action in self.browse(cr, uid, ids, context=context):
             if action.menu_ir_values_id:
                 try:
