@@ -150,6 +150,33 @@ class ir_actions_report_xml(osv.osv):
 
         return new_report
 
+    def create_action(self, cr, uid, ids, context=None):
+        """ Create a contextual action for each of the report."""
+        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+            ir_values_id = self.pool['ir.values'].create(cr, SUPERUSER_ID, {
+                'name': ir_actions_report_xml.name,
+                'model': ir_actions_report_xml.model,
+                'key2': 'client_print_multi',
+                'value': "ir.actions.report.xml,%s" % ir_actions_report_xml.id,
+            }, context)
+            ir_actions_report_xml.write({
+                'ir_values_id': ir_values_id,
+            })
+        return True
+
+    def unlink_action(self, cr, uid, ids, context=None):
+        """ Remove the contextual actions created for the reports."""
+        self.check_access_rights(cr , uid, 'write', raise_exception=True)
+        for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
+            if ir_actions_report_xml.ir_values_id:
+                try:
+                    self.pool['ir.values'].unlink(
+                        cr, SUPERUSER_ID, ir_actions_report_xml.ir_values_id.id, context
+                    )
+                except Exception:
+                    raise UserError(_('Deletion of the action record failed.'))
+        return True
+
     def render_report(self, cr, uid, res_ids, name, data, context=None):
         """
         Look up a report definition and render the report for the provided IDs.
@@ -186,11 +213,14 @@ class ir_actions_report_xml(osv.osv):
                     ], 'Report Type', required=True, help="HTML will open the report directly in your browser, PDF will use wkhtmltopdf to render the HTML into a PDF file and let you download it, Controller allows you to define the url of a custom controller outputting any kind of report."),
         'report_name': fields.char('Template Name', required=True, help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'ir_values_id': fields.many2one('ir.values', 'More Menu entry', readonly=True,
+                                        help='More menu entry.', copy=False),
 
         # options
         'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
         'attachment': fields.char('Save as Attachment Prefix', help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+
 
         # Deprecated rml stuff
         'usage': fields.char('Action Usage'),
