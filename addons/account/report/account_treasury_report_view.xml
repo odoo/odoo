@@ -60,6 +60,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="view_account_treasury_report_search"/>
+        <field name="view_id"></field>  <!-- force empty -->
+        <field name="context">{}</field>  <!-- force empty -->
         <field name="help">From this view, have an analysis of your treasury. It sums the balance of every accounting entries made on liquidity accounts per period.</field>
     </record>
     <menuitem action="action_account_treasury_report_all" id="menu_action_account_treasury_report_all"
