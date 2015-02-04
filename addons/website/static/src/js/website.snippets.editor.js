@@ -1419,32 +1419,32 @@ options.marginAndResize = Option.extend({
         set_countdown: function () {
             var self = this;
             var release_date = this.date_input.datepicker( 'getDate' );
-            var hour = document.getElementById("web_countdown_hour").value;
-            var minute = document.getElementById("web_countdown_min").value;
-            var second = document.getElementById("web_countdown_sec").value;
-            var local_date  = new Date(release_date.getFullYear(),release_date.getMonth(),release_date.getDate(), hour, minute, second);
+            var hour = $("#web_countdown_hour").val();
+            var minute = $("#web_countdown_min").val();
+            var second = $("#web_countdown_sec").val();
+            if (!hour)
+                hour = '00';
+            if (!minute)
+                minute = '00';
+            if (!second)
+                second = '00';
+            var temp_date = $("#web_countdown_date").val();
+            var dt_format = temp_date +' '+ hour + ':' + minute +':'+ second;
+            release_date.setHours(hour, minute, second);
             var add_warning = function (msg){
                 self.$el.find(".alert").remove();
                 self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
+            };
+            if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', true).isValid()) {
+                add_warning('Invalid Values');
             }
-            if(hour > 23 | hour < 0 ){
-                add_warning("Enter valid HOURS (Between 0 to 23)");
-            }
-            else if(minute > 59 | minute < 0 ){
-                add_warning("Enter valid MINUTES (Between 0 to 59)");
-            }
-            else if(second > 59 | second < 0 ){
-                add_warning("Enter valid SECONDS (Between 0 to 59)");
-            }
-            else if(local_date == "Invalid Date" ){
-                add_warning("Invalid date format. Valid Date format is MM/DD/YYYY");
-            }else{
-                self.$target.attr("data-release_date",local_date.getTime())
+            else {
+                self.$target.attr("data-release_date",release_date.getTime());
                 self.trigger('set_countdown');
             }
         },
     });
-    
+
     website.snippet.options.countdown = website.snippet.Option.extend({
         start : function () {
             var self = this;
@@ -1456,12 +1456,12 @@ options.marginAndResize = Option.extend({
             var release_date = parseInt(this.$target[0].getAttribute("data-release_date"));
             var set_dialog = new website.editor.countdown(self);
             set_dialog.appendTo($(document.body));
-            if (release_date){
-                var date = new Date(release_date)
-                $('input#web_countdown_date').val((date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear());
-                $('input#web_countdown_hour').val(date.getHours());
-                $('input#web_countdown_min').val(date.getMinutes());
-                $('input#web_countdown_sec').val(date.getSeconds());
+            if (release_date) {
+                var date = new Date(release_date);
+                $('input#web_countdown_date').val(moment(date).format('MM/DD/YYYY'));
+                $('input#web_countdown_hour').val(moment(date).format('HH'));
+                $('input#web_countdown_min').val(moment(date).format('mm'));
+                $('input#web_countdown_sec').val(moment(date).format('ss'));
             }
             set_dialog.on('set_countdown', this, function () {
                 website.countdown(self.$target[0], false);
