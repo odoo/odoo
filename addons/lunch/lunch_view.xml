@@ -379,9 +379,16 @@
                                 <field name='date'/>
                             </group>
                         </group>
-                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline oe_lunch_alert"/> 
-                        <div name="preferences">
-                        </div>
+                        <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline oe_lunch_alert alert alert-danger"/>
+                        <field name="previous_order_details">
+                            <tree string='List' editable='bottom'>
+                                <field name='product_id' on_change='onchange_price(product_id)'/>
+                                <field name='note' />
+                                <field name='price' on_change='onchange_price(product_id)'/>
+                                <field name='supplier' invisible="1"/>
+                                <field name="state" invisible="1"/>
+                            </tree>
+                        </field>
                         <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>

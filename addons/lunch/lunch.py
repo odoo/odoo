@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-from xml.sax.saxutils import escape
 import time
 from openerp.osv import fields, osv
 from datetime import datetime
-from lxml import etree
 from openerp import tools
 from openerp.tools.translate import _
 
@@ -64,26 +62,6 @@ class lunch_order(osv.Model):
             if order_line.order_id:
                 result.add(order_line.order_id.id)
         return list(result)
-
-    def add_preference(self, cr, uid, ids, pref_id, context=None):
-        """ 
-        create a new order line based on the preference selected (pref_id)
-        """
-        assert len(ids) == 1
-        orderline_ref = self.pool.get('lunch.order.line')
-        prod_ref = self.pool.get('lunch.product')
-        order = self.browse(cr, uid, ids[0], context=context)
-        pref = orderline_ref.browse(cr, uid, pref_id, context=context)
-        new_order_line = {
-            'date': order.date,
-            'user_id': uid,
-            'product_id': pref.product_id.id,
-            'note': pref.note,
-            'order_id': order.id,
-            'price': pref.product_id.price,
-            'supplier': pref.product_id.supplier.id
-        }
-        return orderline_ref.create(cr, uid, new_order_line, context=context)
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
         """ 
@@ -141,6 +119,20 @@ class lunch_order(osv.Model):
                     alert_msg.append(alert.message)
         return '\n'.join(alert_msg)
 
+    def _get_lunch_order_detail(self, cr, uid, ids, name, arg, context=None):
+        """
+        get the previous lunch order details to display on the order form
+        """
+        data = self._default_get_lunch_order_detail(cr, uid, context=None)
+        res = {}
+        for id in ids:
+            res[id] = data
+        return res
+
+    def _default_get_lunch_order_detail(self, cr, uid, context=None):
+        pref_ids = self.pool.get("lunch.order.line").search(cr, uid, [('user_id', '=', uid)], order='id desc', context=context)
+        return pref_ids
+
     def onchange_price(self, cr, uid, ids, order_line_ids, context=None):
         """
         Onchange methode that refresh the total price of order
@@ -158,143 +150,6 @@ class lunch_order(osv.Model):
             res = {'value': {'total': tot}}
         return res
 
-    def __getattr__(self, attr):
-        """ 
-        this method catch unexisting method call and if it starts with
-        add_preference_'n' we execute the add_preference method with 
-        'n' as parameter 
-        """
-        if attr.startswith('add_preference_'):
-            pref_id = int(attr[15:])
-            def specific_function(cr, uid, ids, context=None):
-                return self.add_preference(cr, uid, ids, pref_id, context=context)
-            return specific_function
-        return super(lunch_order, self).__getattr__(attr)
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        """ 
-        Add preferences in the form view of order.line 
-        """
-        res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        line_ref = self.pool.get("lunch.order.line")
-        if view_type == 'form':
-            doc = etree.XML(res['arch'])
-            pref_ids = line_ref.search(cr, uid, [('user_id', '=', uid)], order='id desc', context=context)
-            xml_start = etree.Element("div")
-            #If there are no preference (it's the first time for the user)
-            if len(pref_ids)==0:
-                #create Elements
-                xml_no_pref_1 = etree.Element("div")
-                xml_no_pref_1.set('class','oe_inline oe_lunch_intro')
-                xml_no_pref_2 = etree.Element("h3")
-                xml_no_pref_2.text = _("This is the first time you order a meal")
-                xml_no_pref_3 = etree.Element("p")
-                xml_no_pref_3.set('class','oe_grey')
-                xml_no_pref_3.text = _("Select a product and put your order comments on the note.")
-                xml_no_pref_4 = etree.Element("p")
-                xml_no_pref_4.set('class','oe_grey')
-                xml_no_pref_4.text = _("Your favorite meals will be created based on your last orders.")
-                xml_no_pref_5 = etree.Element("p")
-                xml_no_pref_5.set('class','oe_grey')
-                xml_no_pref_5.text = _("Don't forget the alerts displayed in the reddish area")
-                #structure Elements
-                xml_start.append(xml_no_pref_1)
-                xml_no_pref_1.append(xml_no_pref_2)
-                xml_no_pref_1.append(xml_no_pref_3)
-                xml_no_pref_1.append(xml_no_pref_4)
-                xml_no_pref_1.append(xml_no_pref_5)
-            #Else: the user already have preferences so we display them
-            else:
-                preferences = line_ref.browse(cr, uid, pref_ids, context=context)
-                categories = {} #store the different categories of products in preference
-                count = 0
-                for pref in preferences:
-                    #For each preference
-                    categories.setdefault(pref.product_id.category_id.name, {})
-                    #if this product has already been added to the categories dictionnary
-                    if pref.product_id.id in categories[pref.product_id.category_id.name]:
-                        #we check if for the same product the note has already been added
-                        if pref.note not in categories[pref.product_id.category_id.name][pref.product_id.id]:
-                            #if it's not the case then we add this to preferences
-                            categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
-                    #if this product is not in the dictionnay, we add it
-                    else:
-                        categories[pref.product_id.category_id.name][pref.product_id.id] = {}
-                        categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
-
-                currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
-
-                #For each preferences that we get, we will create the XML structure
-                for key, value in categories.items():
-                    xml_pref_1 = etree.Element("div")
-                    xml_pref_1.set('class', 'oe_lunch_30pc')
-                    xml_pref_2 = etree.Element("h2")
-                    xml_pref_2.text = key
-                    xml_pref_1.append(xml_pref_2)
-                    i = 0
-                    value = value.values()
-                    #TODO: sorted_values is used for a quick and dirty hack in order to display the 5 last orders of each categories.
-                    #It would be better to fetch only the 5 items to display instead of fetching everything then sorting them in order to keep only the 5 last.
-                    #NB: The note could also be ignored + we could fetch the preferences on the most ordered products instead of the last ones...
-                    sorted_values = {}
-                    for val in value:
-                        for elmt in val.values():
-                            sorted_values[elmt.id] = elmt
-                    for key, pref in sorted(sorted_values.iteritems(), key=lambda (k, v): (k, v), reverse=True):
-                        #We only show 5 preferences per category (or it will be too long)
-                        if i == 5:
-                            break
-                        i += 1
-                        xml_pref_3 = etree.Element("div")
-                        xml_pref_3.set('class','oe_lunch_vignette')
-                        xml_pref_1.append(xml_pref_3)
-
-                        xml_pref_4 = etree.Element("span")
-                        xml_pref_4.set('class','oe_lunch_button')
-                        xml_pref_3.append(xml_pref_4)
-
-                        xml_pref_5 = etree.Element("button")
-                        xml_pref_5.set('name',"add_preference_"+str(pref.id))
-                        xml_pref_5.set('class','oe_link oe_i oe_button_plus')
-                        xml_pref_5.set('type','object')
-                        xml_pref_5.set('string','+')
-                        xml_pref_4.append(xml_pref_5)
-
-                        xml_pref_6 = etree.Element("button")
-                        xml_pref_6.set('name',"add_preference_"+str(pref.id))
-                        xml_pref_6.set('class','oe_link oe_button_add')
-                        xml_pref_6.set('type','object')
-                        xml_pref_6.set('string',_("Add"))
-                        xml_pref_4.append(xml_pref_6)
-
-                        xml_pref_7 = etree.Element("div")
-                        xml_pref_7.set('class','oe_group_text_button')
-                        xml_pref_3.append(xml_pref_7)
-
-                        xml_pref_8 = etree.Element("div")
-                        xml_pref_8.set('class','oe_lunch_text')
-                        xml_pref_8.text = escape(pref.product_id.name)+str(" ")
-                        xml_pref_7.append(xml_pref_8)
-
-                        price = pref.product_id.price or 0.0
-                        cur = currency.name or ''
-                        xml_pref_9 = etree.Element("span")
-                        xml_pref_9.set('class','oe_tag')
-                        xml_pref_9.text = str(price)+str(" ")+cur
-                        xml_pref_8.append(xml_pref_9)
-
-                        xml_pref_10 = etree.Element("div")
-                        xml_pref_10.set('class','oe_grey')
-                        xml_pref_10.text = escape(pref.note or '')
-                        xml_pref_3.append(xml_pref_10)
-
-                        xml_start.append(xml_pref_1)
-
-            first_node = doc.xpath("//div[@name='preferences']")
-            if first_node and len(first_node)>0:
-                first_node[0].append(xml_start)
-            res['arch'] = etree.tostring(doc)
-        return res
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User Name', required=True, readonly=True, states={'new':[('readonly', False)]}),
@@ -311,6 +166,7 @@ class lunch_order(osv.Model):
                                     ('partially','Partially Confirmed')] \
                                 ,'Status', readonly=True, select=True, copy=False),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
+        'previous_order_details': fields.function(_get_lunch_order_detail, string="Previous Orders", type='one2many', relation="lunch.order.line"),
     }
 
     _defaults = {
@@ -318,6 +174,7 @@ class lunch_order(osv.Model):
         'date': fields.date.context_today,
         'state': 'new',
         'alerts': _default_alerts_get,
+        'previous_order_details': _default_get_lunch_order_detail,
     }
 
 
