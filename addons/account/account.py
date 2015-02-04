@@ -105,8 +105,6 @@ class account_account_type(models.Model):
     _description = "Account Type"
 
     name = fields.Char(string='Account Type', required=True, translate=True)
-    close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
-        string='Deferral Method', required=True, default='none')
     report_type = fields.Selection([
         ('none','/'),
         ('income', _('Profit & Loss (Income account)')),
