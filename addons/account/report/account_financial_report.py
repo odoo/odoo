@@ -197,6 +197,9 @@ class account_financial_report_line(models.Model):
             return round(value, 1)
         if self.figure_type == 'float':
             currency_id = self.env.user.company_id.currency_id
+            if currency_id.is_zero(value):
+                #don't print -0.0 in reports
+                value = abs(value)
             return formatLang(self.env, value, currency_obj=currency_id)
         if self.figure_type == 'percents':
             return str(round(value * 100, 1)) + '%'
