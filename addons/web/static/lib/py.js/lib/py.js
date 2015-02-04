@@ -973,7 +973,7 @@ var py = {};
             return this._values.length;
         },
         __nonzero__: function () {
-            var len = this.__len__();
+            var len = py.PY_size(this);
             if (len === 0) return py.False;
             if (len === 1 && py.PY_not(this._values[0])) return py.False;
             return py.True;
@@ -1009,7 +1009,7 @@ var py = {};
     });
     py.list = py.type('list', null, {
         __nonzero__: function () {
-            return this.__len__ > 0 ? py.True : py.False;
+            return py.PY_size(this) > 0 ? py.True : py.False;
         },
     });
     _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
@@ -1031,7 +1031,7 @@ var py = {};
             return Object.keys(this._store).length
         },
         __nonzero__: function () {
-            return this.__len__ > 0;
+            return py.PY_size(this) > 0;
         },
         get: function () {
             var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
