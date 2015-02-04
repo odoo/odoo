@@ -100,9 +100,9 @@ class mrp_production(osv.osv):
                     product_uos_factor = product_uom_obj._compute_qty(cr, uid, production.product_uos.id, production.product_uos_qty, production.bom_id.product_uos.id)
                 if sub_product.subproduct_type == 'variable':
                     if production.product_qty:
-                        qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
+                        qty1 *= product_uom_factor / (production.product_qty or 1.0)
                     if production.product_uos_qty:
-                        qty2 *= product_uos_factor / (production.bom_id.product_uos_qty or 1.0)
+                        qty2 *= product_uos_factor / (production.product_uos_qty or 1.0)
                 data = {
                     'name': 'PROD:'+production.name,
                     'date': production.date_planned,
