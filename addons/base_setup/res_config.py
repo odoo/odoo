@@ -26,7 +26,7 @@ from openerp.report.render.rml2pdf import customfonts
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
-        
+
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
             help='Work in multi-company environments, with appropriate security access between companies.\n'
@@ -43,13 +43,16 @@ class base_config_settings(osv.osv_memory):
                                               help="""This installs the module google_calendar."""),
         'font': fields.many2one('res.font', string="Report Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
-
+        'company_share_partner': fields.boolean('Share partners to all companies',
+            help="Share your partners to all companies defined in your instance.\n"
+                 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
+                 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."),
     }
-    
+
     _defaults= {
         'font': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.font.id,
     }
-    
+
     def open_company(self, cr, uid, ids, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
@@ -64,10 +67,10 @@ class base_config_settings(osv.osv_memory):
 
     def _change_header(self, header,font):
         """ Replace default fontname use in header and setfont tag """
-        
+
         default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
         return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
-    
+
     def set_base_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids, context)[0]
@@ -79,6 +82,19 @@ class base_config_settings(osv.osv_memory):
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
         return self.pool.get("res.font").font_scan(cr, uid, context=context)
+
+
+    def get_default_company_share_partner(self, cr, uid, ids, fields, context=None):
+        partner_rule = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'base.res_partner_rule', context=context)
+        return {
+            'company_share_partner': not bool(partner_rule.active)
+        }
+
+    def set_default_company_share_partner(self, cr, uid, ids, context=None):
+        partner_rule = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'base.res_partner_rule', context=context)
+        for wizard in self.browse(cr, uid, ids, context=context):
+            self.pool['ir.rule'].write(cr, uid, [partner_rule.id], {'active': not bool(wizard.company_share_partner)}, context=context)
+
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm.

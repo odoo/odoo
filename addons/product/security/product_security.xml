@@ -11,7 +11,7 @@
         <field name="name">Purchase Pricelists</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-	
+
     <record id="group_uom" model="res.groups">
         <field name="name">Manage Multiple Units of Measure</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -40,6 +40,7 @@
         <field name="model_id" ref="model_product_template"/>
         <field name="global" eval="True"/>
         <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+        <field name="active" eval="False"/>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">
