@@ -30,7 +30,7 @@
             },
             {
                 title:     "Check the cart",
-                element:   'li:has(.my_cart_quantity):contains(5)'
+                element:   'a:has(.my_cart_quantity):contains(5)'
             },
             {
                 title:     "Check if the cart have 2 order lines and add one VIP ticket",
