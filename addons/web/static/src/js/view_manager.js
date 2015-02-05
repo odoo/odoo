@@ -1,21 +1,13 @@
 odoo.define('web.ViewManager', function (require) {
 "use strict";
 
-var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var data = require('web.data');
-var Dialog = require('web.Dialog');
-var formats = require('web.formats');
-var framework = require('web.framework');
 var Model = require('web.Model');
 var pyeval = require('web.pyeval');
-var utils = require('web.utils');
-var SearchView = require('web.SearchView');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var QWeb = core.qweb;
 
 var ViewManager = Widget.extend({
     template: "ViewManager",
@@ -23,24 +15,13 @@ var ViewManager = Widget.extend({
      * @param {Object} [dataset] null object (... historical reasons)
      * @param {Array} [views] List of [view_id, view_type]
      * @param {Object} [flags] various boolean describing UI state
+     * @param {Object} [cp_bus] Bus to allow communication with ControlPanel
      */
-    init: function(parent, dataset, views, flags, action) {
+    init: function(parent, dataset, views, flags, action, cp_bus) {
         if (action) {
             flags = action.flags || {};
             if (!('auto_search' in flags)) {
                 flags.auto_search = action.auto_search !== false;
-            }
-            if (action.res_model === 'board.board' && action.view_mode === 'form') {
-                action.target = 'inline';
-                // Special case for Dashboards
-                _.extend(flags, {
-                    views_switcher : false,
-                    display_title : false,
-                    search_view : false,
-                    pager : false,
-                    sidebar : false,
-                    action_buttons : false
-                });
             }
             this.action = action;
             this.action_manager = parent;
@@ -62,6 +43,7 @@ var ViewManager = Widget.extend({
         this.active_view = null;
         this.registry = core.view_registry;
         this.title = this.action && this.action.name;
+        this.cp_bus = cp_bus;
 
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type,
@@ -81,10 +63,8 @@ var ViewManager = Widget.extend({
             self.views[view_type] = view_descr;
         });
 
-        // Instantiate ControlPanel
-        this.control_panel = new ControlPanel(self);
-        // Listen to event 'switch_view' trigerred when clicking on switch-buttons
-        this.control_panel.on('switch_view', this, function(view_type) {
+        // Listen to event 'switch_view' indicating that the VM must now display view wiew_type
+        this.on('switch_view', this, function(view_type) {
             if (view_type === 'form' && this.active_view && this.active_view.type === 'form') {
                 this._display_view(view_type);
             } else {
@@ -114,17 +94,85 @@ var ViewManager = Widget.extend({
 
         this.$el.addClass("oe_view_manager_" + ((this.action && this.action.target) || 'current'));
 
-        // Insert ControlPanel in the DOM
-        var cp_loaded = this.control_panel.prependTo(this.$el);
-        var main_view_loaded = this.switch_mode(default_view, null, default_options);
+        if (this.cp_bus) {
+            // Tell the ControlPanel to setup its search view
+            this.search_view_loaded = $.Deferred();
+            this.cp_bus.trigger('setup_search_view', this, this.action, this.dataset, this.flags);
+            $.when(this.search_view_loaded).then(function() {
+                self.searchview.on('search_data', self, self.search);
+            });
 
-        return $.when(main_view_loaded, cp_loaded);
+            // Tell the ControlPanel to render and append the (switch-)buttons to the DOM
+            this.cp_bus.trigger('render_buttons', this.views);
+            this.cp_bus.trigger('render_switch_buttons', this.view_order);
+        }
+
+        _.each(this.views, function (view) {
+            // Expose buttons, sidebar and pager elements to the views so that they can insert stuff in them
+            view.options = _.extend(view.options, {
+                $buttons : self.$ext_buttons ? self.$ext_buttons.find('.oe-' + view.type + '-buttons') : undefined,
+                $sidebar : self.$ext_sidebar,
+                $pager : self.$ext_pager,
+            }, self.flags, self.flags[view.type], view.options);
+        });
+
+        // Switch to the default_view to load it
+        this.main_view_loaded = this.switch_mode(default_view, null, default_options);
+
+        return $.when(self.main_view_loaded, this.search_view_loaded);
     },
     /**
-     * Needed for dashboard.js to add Favorites to Dashboard
+     * Sets the external nodes in which the ViewManager and its views should insert elements
+     * @param {Object} [nodes] a dictionnary of jQuery nodes
      */
-    get_searchview: function() {
-        return this.control_panel.searchview;
+    set_external_nodes: function(nodes) {
+        this.$ext_buttons = nodes.$buttons;
+        this.$ext_sidebar = nodes.$sidebar;
+        this.$ext_pager = nodes.$pager;
+    },
+    /**
+     * Executed by the ControlPanel when the searchview requested by this ViewManager is loaded
+     * @param {Widget} [searchview] the SearchView
+     * @param {Deferred} [search_view_loaded_def] will be resolved when the SearchView is loaded
+     */
+    set_search_view: function(searchview, search_view_loaded_def) {
+        this.searchview = searchview;
+        this.search_view_loaded = search_view_loaded_def;
+    },
+    /**
+     * Executed on event "search_data" thrown by the SearchView
+     */
+    search: function(domains, contexts, groupbys) {
+        var self = this,
+            controller = this.active_view.controller, // AAB: Correct view must be loaded here
+            action_context = this.action.context || {},
+            view_context = controller.get_context();
+        pyeval.eval_domains_and_contexts({
+            domains: [this.action.domain || []].concat(domains || []),
+            contexts: [action_context, view_context].concat(contexts || []),
+            group_by_seq: groupbys || []
+        }).done(function (results) {
+            if (results.error) {
+                self.active_search.resolve();
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
+            self.dataset._model = new Model(
+                self.dataset.model, results.context, results.domain);
+            var groupby = results.group_by.length
+                        ? results.group_by
+                        : action_context.group_by;
+            if (_.isString(groupby)) {
+                groupby = [groupby];
+            }
+            if (!controller.grouped && !_.isEmpty(groupby)){
+                self.dataset.set_sort([]);
+            }
+            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
+                self.active_search.resolve();
+            });
+        });
     },
     get_default_view: function() {
         return this.flags.default_view || this.view_order[0].type;
@@ -147,15 +195,22 @@ var ViewManager = Widget.extend({
             if (this.active_view.controller) this.active_view.controller.do_hide();
             if (this.active_view.$container) this.active_view.$container.hide();
         }
-        this.active_view = this.control_panel.active_view = view;
+        this.active_view = view;
 
         if (!view.created) {
             view.created = this.create_view.bind(this)(view, view_options);
         }
-        // Tell the ControlPanel to call do_search on its searchview
-        var active_search = this.control_panel.activate_search(view.created);
 
-        return $.when(view.created, active_search).done(function () {
+        // Call do_search on the searchview to compute domains, contexts and groupbys
+        if (this.searchview &&
+                this.flags.auto_search &&
+                view.controller.searchable !== false) {
+            this.active_search = $.Deferred();
+            $.when(this.search_view_loaded, view.created).done(function() {
+                self.searchview.do_search();
+            });
+        }
+        return $.when(view.created, this.active_search).done(function () {
             self._display_view(view_options);
             self.trigger('switch_mode', view_type, no_store, view_options);
         });
@@ -165,17 +220,21 @@ var ViewManager = Widget.extend({
         this.active_view.$container.show();
         $.when(this.active_view.controller.do_show(view_options)).done(function () {
             // Tell the ControlPanel to update its elemnts
-            self.control_panel.update(self.active_view);
+            if (self.cp_bus) {
+                var search_view_hidden = self.active_view.controller.searchable === false;
+                var breadcrumbs = self.action_manager.get_breadcrumbs();
+                self.cp_bus.trigger("update", self.active_view, search_view_hidden, breadcrumbs);
+            }
         });
     },
     create_view: function(view, view_options) {
         var self = this,
-            View = this.registry.get_object(view.type),
+            View = this.registry.get(view.type),
             options = _.clone(view.options),
             view_loaded = $.Deferred();
 
-        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline')) ||
-                (view_options && view_options.mode === 'edit'))) {
+        if (view.type === "form" && ((this.action && (this.action.target === 'new' || this.action.target === 'inline'))
+                || (view_options && view_options.mode === 'edit'))) {
             options.initial_mode = 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options),
@@ -193,7 +252,10 @@ var ViewManager = Widget.extend({
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            self.control_panel.update_breadcrumbs();
+            if (self.cp_bus) {
+                var breadcrumbs = self.action_manager.get_breadcrumbs();
+                self.cp_bus.trigger("update_breadcrumbs", breadcrumbs);
+            }
         });
         controller.on('view_loaded', this, function () {
             view_loaded.resolve();

@@ -1,6 +1,7 @@
 odoo.define('web.ActionManager', function (require) {
 "use strict";
 
+var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var data = require('web.data');
@@ -11,7 +12,63 @@ var session = require('web.session');
 var ViewManager = require('web.ViewManager');
 var Widget = require('web.Widget');
 
-var CompoundContext = data.CompoundContext;
+var State = core.Class.extend({
+    init: function(title, flags) {
+        this.title = title;
+        this.flags = flags;
+    },
+    enable: function() { return $.when(); },
+    disable: function() {},
+    destroy: function() {},
+    get_widget: function() {},
+    get_title: function() { return this.title; },
+    get_flags: function() { return this.flags; },
+    get_action: function() {},
+    get_active_view: function() {},
+});
+
+var WidgetState = State.extend({
+    init: function(title, flags, widget) {
+        this._super(title, flags);
+
+        this.widget = widget;
+        if (this.widget.get('title')) {
+            this.title = title;
+        } else {
+            this.widget.set('title', title);
+        }
+        this.widget.on("do_search", this, function() {
+            // active_search = this.control_panel.activate_search(view.created);
+            // call activate search on search view
+            // domain context and groupby computed are important
+        });
+    },
+    set_cp_content: function(content) { this.cp_content = content; },
+    get_cp_content: function() { return this.cp_content; },
+    get_action: function() { return this.widget.action; },
+    get_active_view: function() { return this.widget.active_view; },
+    destroy: function() { 
+        if (this.cp_content && this.cp_content.searchview) {
+            this.cp_content.searchview.destroy();
+        }
+        this.widget.destroy();
+    },
+    get_widget: function() {
+        return this.widget;
+    },
+});
+
+var FunctionState = State.extend({
+    init: function(title, flags) {
+        this._super(title, flags);
+
+        this.widget = {
+            view_stack: [{
+                controller: { get: function () { return this.title; }}
+            }]
+        };
+    }
+});
 
 var ActionManager = Widget.extend({
     template: "ActionManager",
@@ -22,8 +79,27 @@ var ActionManager = Widget.extend({
         this.webclient = parent;
         this.dialog = null;
         this.dialog_widget = null;
-        this.widgets = [];
+        this.states = [];
         this.on('history_back', this, this.proxy('history_back'));
+    },
+    start: function() {
+        this._super();
+
+        // Instantiate the unique main control panel used by every widget in this.states
+        this.main_control_panel = new ControlPanel(this);
+        // Listen to event "switch_view" trigerred on the control panel when clicking
+        // on switch buttons. Forward this event to the current inner_widget
+        this.main_control_panel.on("switch_view", this, function(view_type) {
+            this.inner_widget.trigger("switch_view", view_type);
+        });
+        // Listen to event "on_breadcrumb_click" trigerred on the control panel when
+        // clicking on a part of the breadcrumbs. Call select_state for this breadcrumb.
+        this.main_control_panel.on("on_breadcrumb_click", this, function(state, index) {
+            this.select_state(state, index);
+        });
+
+        // Append the main control panel to the DOM (inside the ActionManager jQuery element)
+        this.main_control_panel.appendTo(this.$el);
     },
     dialog_stop: function (reason) {
         if (this.dialog) {
@@ -32,125 +108,150 @@ var ActionManager = Widget.extend({
         this.dialog = null;
     },
     /**
-     * Add a new widget to the action manager
+     * Add a new state to the action manager
      *
-     * widget: typically, widgets added are instance.web.ViewManager.  The action manager
+     * widget: typically, widgets added are web.ViewManager.  The action manager
      *      uses this list of widget to handle the breadcrumbs.
      * action: new action
      * options.on_reverse_breadcrumb: will be called when breadcrumb is selected
      * options.clear_breadcrumbs: boolean, if true, current widgets are destroyed
-     * options.replace_breadcrumb: boolean, if true, replace current breadcrumb
      */
-    push_widget: function(widget, action, options) {
+    push_state: function(widget, action, options) {
         var self = this,
             to_destroy,
-            old_widget = this.inner_widget;
+            old_widget = this.inner_widget,
+            old_state = this.get_current_state();
         options = options || {};
 
         if (options.clear_breadcrumbs) {
-            to_destroy = this.widgets;
-            this.widgets = [];
-        } else if (options.replace_breadcrumb) {
-            to_destroy = _.last(this.widgets);
-            this.widgets = _.initial(this.widgets);
+            to_destroy = this.states;
+            this.states = [];
         }
+        var new_state,
+            title = action.display_name || action.name;
         if (widget instanceof Widget) {
-            var title = widget.get('title') || action.display_name || action.name;
-            widget.set('title', title);
-            this.widgets.push(widget);
+            new_state = new WidgetState(title, action.flags, widget);
         } else {
-            this.widgets.push({
-                view_stack: [{
-                    controller: {get: function () {return action.display_name || action.name; }},
-                }],
-                destroy: function () {},
-            });
+            new_state = new FunctionState(title, action.flags);
         }
-        _.last(this.widgets).__on_reverse_breadcrumb = options.on_reverse_breadcrumb;
+        this.states.push(new_state);
+
+        this.get_current_state().__on_reverse_breadcrumb = options.on_reverse_breadcrumb;
         this.inner_action = action;
         this.inner_widget = widget;
-        return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
-            if ((action.target !== 'inline') && (!action.flags.headless) && widget.$header) {
-                widget.$header.show();
+
+        // Sets the main ControlPanel state
+        // AAB: temporary restrict the use of main control panel to act_window actions
+        if (action.type === 'ir.actions.act_window') {
+            // if (old_state) old_state.disable();
+            // new_state.enable();
+            this.main_control_panel.set_state(new_state, old_state);
+            // Expose the ControlPanel nodes to the inner_widget only if the ControlPanel is
+            // displayed so that the inner_widget don't insert stuff in hidden nodes
+            var new_state_flags = new_state.get_flags();
+            if (!new_state_flags.headless) {
+                this.inner_widget.set_external_nodes(this.main_control_panel.get_cp_nodes());
             }
+        }
+
+        return $.when(this.inner_widget.appendTo(this.$el)).done(function () {
             if (old_widget) {
                 old_widget.$el.hide();
             }
             if (options.clear_breadcrumbs) {
-                self.clear_widgets(to_destroy);
+                self.clear_states(to_destroy);
             }
         });
     },
     get_breadcrumbs: function () {
-        return _.flatten(_.map(this.widgets, function (widget) {
-            if (widget instanceof ViewManager) {
-                return widget.view_stack.map(function (view, index) { 
+        return _.flatten(_.map(this.states, function (state) {
+            if (state.widget instanceof ViewManager) {
+                return state.widget.view_stack.map(function (view, index) {
                     return {
-                        title: view.controller.get('title') || widget.title,
+                        title: view.controller.get('title') || state.get_title(),
                         index: index,
-                        widget: widget,
+                        widget: state,
                     }; 
                 });
             } else {
-                return {title: widget.get('title'), widget: widget };
+                return { title: state.get_title(), widget: state };
             }
         }), true);
     },
     get_title: function () {
-        if (this.widgets.length === 1) {
+        if (this.states.length === 1) {
             // horrible hack to display the action title instead of "New" for the actions
             // that use a form view to edit something that do not correspond to a real model
             // for example, point of sale "Your Session" or most settings form,
-            var widget = this.widgets[0];
-            if (widget instanceof ViewManager && widget.view_stack.length === 1) {
-                return widget.title;
+            var state = this.states[0];
+            if (state.widget instanceof ViewManager && state.widget.view_stack.length === 1) {
+                return state.get_title();
             }
         }
         return _.pluck(this.get_breadcrumbs(), 'title').join(' / ');
     },
-    get_widgets: function () {
-        return this.widgets.slice(0);
+    get_states: function () {
+        return this.states;
+    },
+    get_current_state: function() {
+        return _.last(this.states);
+    },
+    get_inner_action: function() {
+        return this.inner_action;
+    },
+    get_inner_widget: function() {
+        return this.inner_widget;
     },
     history_back: function() {
-        var widget = _.last(this.widgets);
-        if (widget instanceof ViewManager) {
-            var nbr_views = widget.view_stack.length;
+        var state = this.get_current_state();
+        if (state.widget instanceof ViewManager) {
+            var nbr_views = state.widget.view_stack.length;
             if (nbr_views > 1) {
-                return this.select_widget(widget, nbr_views - 2);
+                return this.select_state(state, nbr_views - 2);
             } 
         } 
-        if (this.widgets.length > 1) {
-            widget = this.widgets[this.widgets.length - 2];
-            var index = widget.view_stack && widget.view_stack.length - 1;
-            return this.select_widget(widget, index);
+        if (this.states.length > 1) {
+            state = this.states[this.states.length - 2];
+            var index = state.widget.view_stack && state.widget.view_stack.length - 1;
+            return this.select_state(state, index);
         }
         return $.Deferred().reject();
     },
-    select_widget: function(widget, index) {
+    select_state: function(state, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
             return $.Deferred().reject();
         }
-        var widget_index = this.widgets.indexOf(widget),
-            def = $.when(widget.select_view && widget.select_view(index));
 
+        // Client widget (-> put in ClientState?)
+        if (state.__on_reverse_breadcrumb) {
+            state.__on_reverse_breadcrumb();
+        }
+        // Set the control panel new state
+        // Put in VMState?
+        // Inform the ControlPanel that the current state changed
+        self.main_control_panel.set_state(state, this.get_current_state());
+
+        var state_index = this.states.indexOf(state),
+            def = $.when(state.widget.select_view && state.widget.select_view(index));
+
+        self.clear_states(self.states.splice(state_index + 1));
+        var last_state = _.last(self.states);
+        self.inner_widget = last_state.widget;
+        // AAB: preceeding two lines probably equal to
+        // self.inner_widget = state;
         return def.done(function () {
-            if (widget.__on_reverse_breadcrumb) {
-                widget.__on_reverse_breadcrumb();
-            }
-            _.each(self.widgets.splice(widget_index + 1), function (w) {
-                w.destroy();
-            });
-            self.inner_widget = _.last(self.widgets);
             if (self.inner_widget.do_show) {
                 self.inner_widget.do_show();
             }
         });
     },
-    clear_widgets: function(widgets) {
-        _.invoke(widgets || this.widgets, 'destroy');
-        if (!widgets) {
-            this.widgets = [];
+    clear_states: function(states) {
+        _.map(states || this.states, function(state) {
+            state.destroy();
+        });
+        if (!states) {
+            this.states = [];
             this.inner_widget = null;
         }
     },
@@ -202,7 +303,7 @@ var ActionManager = Widget.extend({
         var self = this,
             action_loaded;
         if (state.action) {
-            if (_.isString(state.action) && core.action_registry.contains(state.action)) {
+            if (_.isString(state.action) && core.action_regisry.contains(state.action)) {
                 var action_client = {
                     type: "ir.actions.client",
                     tag: state.action,
@@ -300,7 +401,7 @@ var ActionManager = Widget.extend({
 
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
-        } else if (_.isString(action) && core.action_registry.contains(action)) {
+        } else if (_.isString(action) && core.action_regisry.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action, params: {} };
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
@@ -318,7 +419,7 @@ var ActionManager = Widget.extend({
         core.bus.trigger('action', action);
 
         // Ensure context & domain are evaluated and can be manipulated/used
-        var ncontext = new CompoundContext(options.additional_context, action.context || {});
+        var ncontext = new data.CompoundContext(options.additional_context, action.context || {});
         action.context = pyeval.eval('context', ncontext);
         if (action.context.active_id || action.context.active_ids) {
             // Here we assume that when an `active_id` or `active_ids` is used
@@ -335,39 +436,56 @@ var ActionManager = Widget.extend({
             console.error("No type for action", action);
             return $.Deferred().reject();
         }
+
         var type = action.type.replace(/\./g,'_');
-        var popup = action.target === 'new';
-        var inline = action.target === 'inline' || action.target === 'inlineview';
-        var form = _.str.startsWith(action.view_mode, 'form');
-        action.flags = _.defaults(action.flags || {}, {
-            views_switcher : !popup && !inline,
-            search_view : !popup && !inline,
-            action_buttons : !popup && !inline,
-            sidebar : !popup && !inline,
-            pager : (!popup || !form) && !inline,
-            display_title : !popup,
-            headless: (popup || inline) && form,
-            search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
-        });
         action.menu_id = options.action_menu_id;
         action.context.params = _.extend({ 'action' : action.id }, action.context.params);
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
         }
+
+        // Special case for Dashboards, this should definitively be done upstream
+        if (action.res_model === 'board.board' && action.view_mode === 'form') {
+            action.target = 'inline';
+            _.extend(action.flags, {
+                headless: true,
+                views_switcher: false,
+                display_title: false,
+                search_view: false,
+                pager: false,
+                sidebar: false,
+                action_buttons: false
+            });
+        } else {
+            var popup = action.target === 'new';
+            var inline = action.target === 'inline' || action.target === 'inlineview';
+            var form = _.str.startsWith(action.view_mode, 'form');
+            action.flags = _.defaults(action.flags || {}, {
+                views_switcher : !popup && !inline,
+                search_view : !popup && !inline,
+                action_buttons : !popup && !inline,
+                sidebar : !popup && !inline,
+                pager : (!popup || !form) && !inline,
+                display_title : !popup,
+                headless: (popup || inline) && form,
+                search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
+            });
+        }
+
         return this[type](action, options);
     },
     null_action: function() {
         this.dialog_stop();
-        this.clear_widgets();
+        this.clear_states();
     },
     /**
      *
      * @param {Object} executor
      * @param {Object} executor.action original action
-     * @param {Function<instance.web.Widget>} executor.widget function used to fetch the widget instance
+     * @param {Function<web.Widget>} executor.widget function used to fetch the widget instance
      * @param {String} executor.klass CSS class to add on the dialog root, if action.target=new
-     * @param {Function<instance.web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
+     * @param {Function<web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
      * @param {Object} options
      * @return {*}
      */
@@ -425,14 +543,13 @@ var ActionManager = Widget.extend({
         }
         widget = executor.widget();
         this.dialog_stop(executor.action);
-        return this.push_widget(widget, executor.action, options);
+        return this.push_state(widget, executor.action, options);
     },
     ir_actions_act_window: function (action, options) {
         var self = this;
-
         return this.ir_actions_common({
             widget: function () { 
-                return new ViewManager(self, null, null, null, action); 
+                return new ViewManager(self, null, null, null, action, self.main_control_panel.get_bus());
             },
             action: action,
             klass: 'oe_act_window',
@@ -440,7 +557,7 @@ var ActionManager = Widget.extend({
     },
     ir_actions_client: function (action, options) {
         var self = this;
-        var ClientWidget = core.action_registry.get(action.tag);
+        var ClientWidget = core.action_registry.get_object(action.tag);
         if (!ClientWidget) {
             return self.do_warn("Action Error", "Could not find client action '" + action.tag + "'.");
         }
@@ -454,7 +571,11 @@ var ActionManager = Widget.extend({
         }
 
         return this.ir_actions_common({
-            widget: function () { return new ClientWidget(self, action); },
+            widget: function () {
+                // AAB: temporary fix: Hide main control panel as client actions do not use it
+                self.main_control_panel.do_hide();
+                return new ClientWidget(self, action);
+            },
             action: action,
             klass: 'oe_act_client',
         }, options).then(function () {

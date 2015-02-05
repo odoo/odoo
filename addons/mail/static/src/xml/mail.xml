@@ -171,18 +171,20 @@
         Template used to display the communication history in the wall.
         -->
     <div t-name="mail.wall" class="oe-view-manager oe_mail_wall oe_view_manager_current">
-        <div class="oe-control-panel container-fluid">
-            <div class="row">
-                <div class="col-md-6 oe-cp-title">
-                    <ol class="oe-view-title breadcrumb">
-                        <li class="active"><t t-esc="widget.action.name"/></li>
-                    </ol>
+        <div class="oe-control-panel">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6 oe-cp-title">
+                        <ol class="oe-view-title breadcrumb">
+                            <li class="active"><t t-esc="widget.action.name"/></li>
+                        </ol>
+                    </div>
+                    <div class="oe-cp-search-view col-md-6" />
                 </div>
-                <div class="oe-cp-search-view col-md-6" />
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-6">
-                    <div class="oe-search-options btn-group"/>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <div class="oe-search-options btn-group"/>
+                    </div>
                 </div>
             </div>
         </div>

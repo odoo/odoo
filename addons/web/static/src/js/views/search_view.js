@@ -376,6 +376,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
         this.query = undefined;
         this.dataset = dataset;
         this.view_id = view_id;
+        this.title = options.action && options.action.name;
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
@@ -410,6 +411,9 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
         return this.alive($.when(this._super(), this.alive(load_view).then(this.view_loaded.bind(this))));
+    },
+    get_title: function() {
+        return this.title;
     },
     view_loaded: function (r) {
         var custom_filters_ready;

@@ -25,6 +25,26 @@
     margin-top: -2px;
 }
 
+/* -------- Mail Wall + Control Panel --------- */
+.openerp .oe_mail_wall{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+}
+.openerp .oe_mail_wall .oe-view-manager-content{
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    overflow: auto;
+    position: static;
+}
+
 /* ---------------- MESSAGES ------------------ */
 
 .openerp .oe_mail .oe_msg{
@@ -729,10 +749,6 @@
 .subtype-border {
     border-bottom: 1px solid #dddddd;
     margin-bottom: 10px;
-}
-
-.oe_mail_wall .oe-groupby-menu, .oe_mail_wall .add-to-dashboard {
-    display: none;
 }
 
 .oe-view-manager-content .oe_mail {

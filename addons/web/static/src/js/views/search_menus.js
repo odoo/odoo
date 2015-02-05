@@ -37,7 +37,7 @@ return Widget.extend({
         this.$save_name = this.$('.oe-save-name');
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
-        this.$inputs.eq(0).val(this.searchview.getParent().title);
+        this.$inputs.eq(0).val(this.searchview.get_title());
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
         $shared_filter.click(function () {$default_filter.prop('checked', false);});

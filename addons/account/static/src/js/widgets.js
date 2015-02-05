@@ -539,12 +539,12 @@ var bankStatementReconciliation = Widget.extend({
             .call("get_object_reference", ['account', 'action_bank_statement_tree'])
             .then(function (result) {
                 var action_id = result[1];
-                var breadcrumbs = self.action_manager.get_widgets();
-                var widget = _.find(breadcrumbs, function(widget){
-                    return widget.action && widget.action.id === action_id;
+                var breadcrumbs = self.action_manager.get_states();
+                var state = _.find(breadcrumbs, function(state){
+                    return state.widget.action && state.widget.action.id === action_id;
                 });
-                if (widget) {
-                    self.action_manager.select_widget(widget, 0);
+                if (state) {
+                    self.action_manager.select_state(state, 0);
                 } else {
                     self.action_manager.do_action(action_id, {
                         clear_breadcrumbs: true

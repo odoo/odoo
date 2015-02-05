@@ -225,7 +225,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="backup_pwd">Master Password:</label></td>
                         <td><input type="password" name="backup_pwd" class="required" /></td>
                     </tr>
                 </table>
@@ -470,40 +469,43 @@
 <div t-name="ActionManager" class="oe_application" />
 
 <t t-name="ControlPanel">
-    <div class="oe-control-panel container-fluid">
-        <div class="row">
-            <div class="col-md-6 oe-cp-title">
-                <div t-if="widget.debug" class="oe_debug_view btn-group btn-group-sm"/>
-                <ol class="oe-view-title breadcrumb" t-if="widget.flags.display_title !== false">
-                </ol>
-            </div>
-            <div class="oe-cp-search-view col-md-6" />
-        </div>
-        <div class="row">
-            <div class="col-md-6 oe-button-column">
-                <div class="oe-cp-buttons">
-                    <t t-foreach="widget.views" t-as="view">
-                        <div t-attf-class="oe-#{view}-buttons"/>
-                    </t>
+    <div class="oe-control-panel">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 oe-cp-title">
+                    <div t-if="widget.debug" class="oe_debug_view btn-group btn-group-sm"/>
+                    <ol class="oe-view-title breadcrumb">
+                    </ol>
                 </div>
-                <div class="oe-cp-sidebar"></div>
+                <div class="oe-cp-search-view col-md-6" />
             </div>
-            <div class="col-md-6">
-                <div class="oe-search-options btn-group"/>
-                <div class="oe-right-toolbar">
-                    <div class="oe-cp-pager"></div>
-                    <t t-if="widget.multiple_views">
-                        <div class="oe-cp-switch-buttons btn-group btn-group-sm">
-                            <t t-foreach="widget.view_order" t-as="view">
-                                <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label">
-                                </button>
-                            </t>
-                        </div>
-                    </t>
+            <div class="row">
+                <div class="col-md-6 oe-button-column">
+                    <div class="oe-cp-buttons"></div>
+                    <div class="oe-cp-sidebar"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="oe-search-options btn-group"/>
+                    <div class="oe-right-toolbar">
+                        <div class="oe-cp-pager"></div>
+                        <div class="oe-cp-switch-buttons btn-group btn-group-sm"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</t>
+
+<t t-name="ControlPanel.buttons">
+    <t t-foreach="views" t-as="view">
+        <div t-attf-class="oe-#{view}-buttons"/>
+    </t>
+</t>
+
+<t t-name="ControlPanel.switch-buttons">
+    <t t-foreach="views" t-as="view">
+        <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
+    </t>
 </t>
 
 <div t-name="ViewManager" class="oe-view-manager">

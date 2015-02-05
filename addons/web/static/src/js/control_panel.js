@@ -5,11 +5,12 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var formats = require('web.formats');
 var framework = require('web.framework');
-var Model = require('web.Model');
-var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+
+var QWeb = core.qweb;
+var _t = core._t;
 
 var ControlPanel = Widget.extend({
     template: 'ControlPanel',
@@ -27,58 +28,118 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.view_manager = parent;
-        this.action_manager = this.view_manager.action_manager;
-        this.action = this.view_manager.action;
-        this.dataset = this.view_manager.dataset;
-        this.active_view = this.view_manager.active_view;
-        this.views = this.view_manager.views;
-        this.flags = this.view_manager.flags;
-        this.title = this.view_manager.title; // needed for Favorites of searchview
-        this.view_order = this.view_manager.view_order;
-        this.multiple_views = (this.view_order.length > 1);
+        this.bus = new core.Bus();
+        this.bus.on("setup_search_view", this, this.setup_search_view);
+        this.bus.on("update", this, this.update);
+        this.bus.on("update_breadcrumbs", this, this.update_breadcrumbs);
+        this.bus.on("render_buttons", this, this.render_buttons);
+        this.bus.on("render_switch_buttons", this, this.render_switch_buttons);
+
+        this.searchview = null;
+
+        this.flags = null;
+        this.dataset = null;
+        this.active_view = null;
+        this.title = null; // Needed for Favorites of searchview
     },
     start: function() {
-        var self = this;
-
-        // Retrieve control panel elements
+        // Retrieve ControlPanel jQuery nodes
         this.$control_panel = this.$('.oe-control-panel-content');
         this.$breadcrumbs = this.$('.oe-view-title');
-        this.$switch_buttons = this.$('.oe-cp-switch-buttons button');
+        this.$buttons = this.$('.oe-cp-buttons');
+        this.$switch_buttons = this.$('.oe-cp-switch-buttons');
         this.$title_col = this.$control_panel.find('.oe-cp-title');
         this.$search_col = this.$control_panel.find('.oe-cp-search-view');
-        // AAB: Use sidebar and pager of the ControlPanel only if it is displayed, otherwise set them
-        // to undefined to that the view uses its own elements to sidebar and pager, as follows:
-        // this.$sidebar = !this.flags.headless && this.flags.sidebar ? this.$('.oe-cp-sidebar') : undefined,
-        // this.$pager = !this.flags.headless ? this.$('.oe-cp-pager') : undefined;
-        // But rather use the following definition to keep behavior as it is for now (i.e. it does not
-        // display the pager in one2many list views)
-        this.$sidebar = this.flags.sidebar ? this.$('.oe-cp-sidebar') : undefined;
+        this.$searchview = this.$(".oe-cp-search-view");
+        this.$searchview_buttons = this.$('.oe-search-options');
         this.$pager = this.$('.oe-cp-pager');
-
-        // Hide the ControlPanel in headless mode
-        if (this.flags.headless) {
-            this.$control_panel.hide();
-        }
-
-        _.each(this.views, function (view) {
-            // Expose control panel elements to the views so that they can insert stuff in them
-            view.options = _.extend(view.options, {
-                $buttons : !self.flags.headless ? self.$('.oe-' + view.type + '-buttons') : undefined,
-                $sidebar : self.$sidebar,
-                $pager : self.$pager,
-            }, self.flags, self.flags[view.type], view.options);
-            // Show $buttons as views will put their own buttons inside it and show/hide them
-            if (view.options.$buttons) view.options.$buttons.show();
-            self.$('.oe-cp-switch-' + view.type).tooltip();
-        });
-
-        // Create the searchview
-        this.search_view_loaded = this.setup_search_view();
+        this.$sidebar = this.$('.oe-cp-sidebar');
 
         return this._super();
     },
     /**
+     * @return {Object} Dictionnary of ControlPanel nodes
+     */
+    get_cp_nodes: function() {
+        return {
+            $buttons: this.$buttons,
+            $switch_buttons: this.$switch_buttons,
+            $sidebar: this.$sidebar,
+            $pager: this.$pager
+        };
+    },
+    get_bus: function() {
+        return this.bus;
+    },
+    // Sets the state of the controlpanel (in the case of a viewmanager, set_state must be
+    // called before switch_mode for the controlpanel and the viewmanager to be synchronized)
+    set_state: function(state, old_state) {
+        // Detach control panel elements in which sub-elements are inserted by other widgets
+        var old_content = {
+            '$buttons': this.$buttons.contents().detach(),
+            '$switch_buttons': this.$switch_buttons.contents().detach(),
+            '$pager': this.$pager.contents().detach(),
+            '$sidebar': this.$sidebar.contents().detach(),
+            'searchview': this.searchview, // AAB: do better with searchview
+            '$searchview': this.$searchview.contents().detach(),
+            '$searchview_buttons': this.$searchview_buttons.contents().detach(),
+        };
+        if (old_state) {
+            // Store them to re-attach them if we come back to that state (e.g. using breadcrumbs)
+            old_state.set_cp_content(old_content);
+        }
+
+        this.state = state;
+        this.flags = state.get_flags();
+
+        this.flags = state.widget.flags;
+        this.active_view = state.widget.active_view;
+        this.dataset = state.widget.dataset;
+        this.title = state.widget.title; // needed for Favorites of searchview
+
+        // Hide the ControlPanel in headless mode
+        this.$el.toggle(!this.flags.headless);
+
+        var content = state.get_cp_content();
+        if (content) {
+            // This state has already been rendered once
+            content.$buttons.appendTo(this.$buttons);
+            content.$switch_buttons.appendTo(this.$switch_buttons);
+            content.$pager.appendTo(this.$pager);
+            content.$sidebar.appendTo(this.$sidebar);
+            this.searchview = content.searchview;
+            content.$searchview.appendTo(this.$searchview);
+            content.$searchview_buttons.appendTo(this.$searchview_buttons);
+        }
+    },
+    get_state: function() {
+        return this.state;
+    },
+    render_buttons: function(views) {
+        var self = this;
+
+        var buttons_divs = QWeb.render('ControlPanel.buttons', {views: views});
+        $(buttons_divs).appendTo(this.$buttons);
+
+        // Show each div as views will put their own buttons inside it and show/hide them
+        _.each(views, function(view) {
+            self.$('.oe-' + view.type + '-buttons').show();
+        });
+    },
+    render_switch_buttons: function(views) {
+        if (views.length > 1) {
+            var self = this;
+
+            var switch_buttons = QWeb.render('ControlPanel.switch-buttons', {views: views});
+            $(switch_buttons).appendTo(this.$switch_buttons);
+
+            // Create tooltips
+            _.each(views, function(view) {
+                self.$('.oe-cp-switch-' + view.type).tooltip();
+            });
+        }
+    },
+     /**
      * Triggers an event when switch-buttons are clicked on
      */
     on_switch_buttons_click: function(event) {
@@ -87,22 +148,34 @@ var ControlPanel = Widget.extend({
     },
     /**
      * Updates its status according to the active_view
+     * @param {Object} [active_view] the current active view
+     * @param {Boolean} [search_view_hidden] true if the searchview is hidden, false otherwise
+     * @param {Array} [breadcrumbs] the breadcrumbs to display
      */
-    update: function(active_view) {
-        this.active_view = active_view;
+    update: function(active_view, search_view_hidden, breadcrumbs) {
+        this.active_view = active_view; // this.active_view only used for debug view
 
-        this.update_search_view();
-        this.update_breadcrumbs();
+        this.update_switch_buttons(active_view);
+        this.update_search_view(search_view_hidden);
+        this.update_breadcrumbs(breadcrumbs);
         this.render_debug_view();
-
-        // Update switch-buttons
-        this.$switch_buttons.removeClass('active');
-        this.$('.oe-cp-switch-' + this.active_view.type).addClass('active');
     },
-    update_breadcrumbs: function () {
+    /**
+     * Removes active class on all switch-buttons and adds it to the one of the active view
+     * @param {Object} [active_view] the active_view
+     */
+    update_switch_buttons: function(active_view) {
+        _.each(this.$switch_buttons.contents('button'), function(button) {
+            $(button).removeClass('active');
+        });
+        this.$('.oe-cp-switch-' + active_view.type).addClass('active');
+    },
+    /**
+     * Updates the breadcrumbs
+     **/
+    update_breadcrumbs: function (breadcrumbs) {
         var self = this;
-        if (!this.action_manager) return;
-        var breadcrumbs = this.action_manager.get_breadcrumbs();
+
         if (!breadcrumbs.length) return;
 
         var $breadcrumbs = breadcrumbs.map(function (bc, index) {
@@ -119,27 +192,27 @@ var ControlPanel = Widget.extend({
                     .toggleClass('active', is_last);
             if (!is_last) {
                 $bc.click(function () {
-                    self.action_manager.select_widget(bc.widget, bc.index);
+                    self.trigger("on_breadcrumb_click", bc.widget, bc.index);
                 });
             }
             return $bc;
         }
     },
     /**
-     * Sets up the search view.
+     * Sets up the search view and calls set_search_view on the widget requesting it
      *
-     * @returns {jQuery.Deferred} search view startup deferred
+     * @param {Object} [src] the widget requesting a search_view
+     * @param {Object} [action] the action (required to instantiated the SearchView)
+     * @param {Object} [dataset] the dataset (required to instantiated the SearchView)
+     * @param {Object} [flags] a dictionnary of Booleans
      */
-    setup_search_view: function() {
-        if (this.searchview) {
-            this.searchview.destroy();
-        }
-
-        var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
+    setup_search_view: function(src, action, dataset, flags) {
+        var self = this;
+        var view_id = (action && action.search_view_id && action.search_view_id[0]) || false;
 
         var search_defaults = {};
 
-        var context = this.action ? this.action.context : [];
+        var context = action ? action.context : [];
         _.each(context, function (value, key) {
             var match = /^search_default_(.*)$/.exec(key);
             if (match) {
@@ -148,66 +221,28 @@ var ControlPanel = Widget.extend({
         });
 
         var options = {
-            hidden: this.flags.search_view === false,
-            disable_custom_filters: this.flags.search_disable_custom_filters,
-            $buttons: this.$('.oe-search-options'),
-            action: this.action,
+            hidden: flags.search_view === false,
+            disable_custom_filters: flags.search_disable_custom_filters,
+            $buttons: this.$searchview_buttons,
+            action: action,
         };
-        this.searchview = new SearchView(this, this.dataset, view_id, search_defaults, options);
 
-        this.searchview.on('search_data', this, this.search.bind(this));
-        return this.searchview.appendTo(this.$(".oe-cp-search-view:first"));
+        // Instantiate the SearchView and append it to the DOM
+        this.searchview = new SearchView(this, dataset, view_id, search_defaults, options);
+        var search_view_loaded = this.searchview.appendTo(this.$searchview);
+        // Sets the SearchView in the widget which made the request
+        src.set_search_view(self.searchview, search_view_loaded);
     },
-    update_search_view: function() {
+    /**
+     * Updates the SearchView's visibility and extend the breadcrumbs area if the SearchView is not visible
+     * @param {Boolean} [is_hidden] visibility of the searchview
+     **/
+    update_search_view: function(is_hidden) {
         if (this.searchview) {
-            var is_hidden = this.active_view.controller.searchable === false;
             this.searchview.toggle_visibility(!is_hidden);
             this.$title_col.toggleClass('col-md-6', !is_hidden).toggleClass('col-md-12', is_hidden);
             this.$search_col.toggle(!is_hidden);
         }
-    },
-    search: function(domains, contexts, groupbys) {
-        var self = this,
-            controller = this.active_view.controller,
-            action_context = this.action.context || {},
-            view_context = controller.get_context();
-        pyeval.eval_domains_and_contexts({
-            domains: [this.action.domain || []].concat(domains || []),
-            contexts: [action_context, view_context].concat(contexts || []),
-            group_by_seq: groupbys || []
-        }).done(function (results) {
-            if (results.error) {
-                self.active_search.resolve();
-                throw new Error(
-                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
-                                      JSON.stringify(results.error)));
-            }
-            self.dataset._model = new Model(
-                self.dataset.model, results.context, results.domain);
-            var groupby = results.group_by.length ?
-                          results.group_by :
-                          action_context.group_by;
-            if (_.isString(groupby)) {
-                groupby = [groupby];
-            }
-            if (!controller.grouped && !_.isEmpty(groupby)){
-                self.dataset.set_sort([]);
-            }
-            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
-                self.active_search.resolve();
-            });
-        });
-    },
-    activate_search: function(view_created_def) {
-        this.active_search = $.Deferred();
-        if (this.searchview &&
-                this.flags.auto_search &&
-                this.active_view.controller.searchable !== false) {
-            $.when(this.search_view_loaded,view_created_def).done(this.searchview.do_search);
-        } else {
-            this.active_search.resolve();
-        }
-        return this.active_search;
     },
     on_debug_changed: function (evt) {
         var self = this,
@@ -231,7 +266,7 @@ var ControlPanel = Widget.extend({
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
                     this.dataset.call('get_metadata', [ids]).done(function(result) {
-                        var dialog = new Dialog(this, {
+                        new Dialog(this, {
                             title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
                             size: 'medium',
                             buttons: {
