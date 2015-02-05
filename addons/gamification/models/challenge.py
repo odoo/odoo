@@ -56,11 +56,9 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
     else:  # period == 'once':
         start_date = default_start_date  # for manual goal, start each time
         end_date = default_end_date
-
-    if start_date and end_date:
-        return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
-    else:
         return (start_date, end_date)
+
+    return (datetime.strftime(start_date, DF), datetime.strftime(end_date, DF))
 
 
 class gamification_challenge(osv.Model):
