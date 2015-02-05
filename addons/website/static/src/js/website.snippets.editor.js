@@ -1428,17 +1428,16 @@ options.marginAndResize = Option.extend({
                 minute = '00';
             if (!second)
                 second = '00';
-            var temp_date = $("#web_countdown_date").val();
-            var dt_format = temp_date +' '+ hour + ':' + minute +':'+ second;
-            release_date.setHours(hour, minute, second);
+            var dt_format = $("#web_countdown_date").val() +' '+ hour + ':' + minute +':'+ second;
             var add_warning = function (msg){
                 self.$el.find(".alert").remove();
                 self.$el.find(".modal-body").append('<div class="alert alert-danger mt8">'+ msg +'</div>');
             };
             if (!moment(dt_format, 'MM/DD/YYYY HH:mm:ss', true).isValid()) {
-                add_warning('Invalid Values');
+                add_warning('Invalid Input. Please enter proper DATE, HOURS, MINUTES, SECONDS');
             }
             else {
+                release_date.setHours(hour, minute, second);
                 self.$target.attr("data-release_date",release_date.getTime());
                 self.trigger('set_countdown');
             }
