@@ -890,7 +890,7 @@ class stock_picking(osv.osv):
             }
             if not picking.date_done:
                 values['date_done'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            self.write(cr, uid, ids, values, context=context)
+            picking.write(values)
         return True
 
     def action_move(self, cr, uid, ids, context=None):
