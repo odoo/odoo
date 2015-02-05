@@ -16,8 +16,14 @@ import pickle
 import re
 import subprocess
 import traceback
-from xmlescpos import *
-from exception import *
+
+try: 
+    from xmlescpos import *
+    from xmlescpos.exceptions import *
+    from xmlescpos.printer import Usb
+except ImportError:
+    escpos = printer = None
+
 from threading import Thread, Lock
 from Queue import Queue, Empty
 
@@ -25,13 +31,6 @@ try:
     import usb.core
 except ImportError:
     usb = None
-
-try:
-    from .. import escpos
-    from ..escpos import printer
-    from ..escpos import supported_devices
-except ImportError:
-    escpos = printer = None
 
 from PIL import Image
 
@@ -116,7 +115,7 @@ class EscposDriver(Thread):
         printers = self.connected_usb_devices()
         if len(printers) > 0:
             self.set_status('connected','Connected to '+printers[0]['name'])
-            return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
+            return Usb(printers[0]['vendor'], printers[0]['product'])
         else:
             self.set_status('disconnected','Printer Not Found')
             return None
@@ -195,7 +194,8 @@ class EscposDriver(Thread):
             finally:
                 if error: 
                     self.queue.put((timestamp, task, data))
-                printer.close()
+                if printer:
+                    printer.close()
 
     def push_task(self,task, data = None):
         self.lockedstart()
