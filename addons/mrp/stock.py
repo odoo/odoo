@@ -46,12 +46,17 @@ class StockMove(osv.osv):
     def _check_phantom_bom(self, cr, uid, move, context=None):
         """check if product associated to move has a phantom bom
             return list of ids of mrp.bom for that product """
+        return self._check_product_phantom_bom(cr, uid, move.product_id, context=context)
+
+    def _check_product_phantom_bom(self, cr, uid, product, context=None):
+        """check if product has a phantom bom
+            return list of ids of mrp.bom for that product """
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
         #without giving him the right to read the boms.
         domain = [
-            '|', ('product_id', '=', move.product_id.id),
-            '&', ('product_id', '=', False), ('product_tmpl_id.product_variant_ids', '=', move.product_id.id),
+            '|', ('product_id', '=', product.id),
+            '&', ('product_id', '=', False), ('product_tmpl_id.product_variant_ids', '=', product.id),
             ('type', '=', 'phantom'),
             '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
@@ -318,3 +323,10 @@ class stock_warehouse(osv.osv):
                         res.remove(product_id)
                         break
         return res
+
+class stock_quant(osv.Model):
+    _inherit = 'stock.quant'
+
+    def _get_account_move_ref(self, cr, uid, move, context=None):
+        return move.production_id.name or \
+            super(stock_quant, self)._get_account_move_ref(cr, uid, move, context=context)

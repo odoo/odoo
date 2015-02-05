@@ -68,6 +68,37 @@ class account_invoice_line(osv.osv):
                 price = price_unit * i_line.quantity
             return round(price, decimal_precision.precision_get(cr, uid, 'Account'))
 
+    def _invoiced_product_move_lines(self, cr, uid, inv, i_line, dacc, cacc, context=None):
+        company_currency = inv.company_id.currency_id.id
+        price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
+        return [
+            {
+                'type':'src',
+                'name': i_line.name[:64],
+                'price_unit':price_unit,
+                'quantity':i_line.quantity,
+                'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                'account_id':dacc,
+                'product_id':i_line.product_id.id,
+                'uos_id':i_line.uos_id.id,
+                'account_analytic_id': False,
+                'taxes':i_line.invoice_line_tax_id,
+            },
+
+            {
+                'type':'src',
+                'name': i_line.name[:64],
+                'price_unit':price_unit,
+                'quantity':i_line.quantity,
+                'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
+                'account_id':cacc,
+                'product_id':i_line.product_id.id,
+                'uos_id':i_line.uos_id.id,
+                'account_analytic_id': False,
+                'taxes':i_line.invoice_line_tax_id,
+            },
+        ]
+
     def _anglo_saxon_sale_move_lines(self, cr, uid, i_line, res, context=None):
         """Return the additional move lines for sales invoices and refunds.
 
@@ -75,7 +106,6 @@ class account_invoice_line(osv.osv):
         res: The move line entries produced so far by the parent move_line_get.
         """
         inv = i_line.invoice_id
-        company_currency = inv.company_id.currency_id.id
 
         if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
             # debit account dacc will be the output account
@@ -89,34 +119,7 @@ class account_invoice_line(osv.osv):
             if not cacc:
                 cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
             if dacc and cacc:
-                price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
-                return [
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                        'account_id':dacc,
-                        'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
-                        'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_id,
-                    },
-
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit':price_unit,
-                        'quantity':i_line.quantity,
-                        'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                        'account_id':cacc,
-                        'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
-                        'account_analytic_id': False,
-                        'taxes':i_line.invoice_line_tax_id,
-                    },
-                ]
+                return self._invoiced_product_move_lines(cr, uid, inv, i_line, dacc, cacc, context=context)
         return []
 
 
