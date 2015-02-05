@@ -33,7 +33,7 @@
 
     <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" 
          t-attf-class="oe_tl_msg oe_tl_msg_composer_compact">
-        <t t-if="!widget.options.view_mailbox">
+        <t t-if="!widget.options.view_inbox">
             <div class="field_text oe_tl_compact oe_tl_compact_record">
                 <div class="btn-group btn-group-sm">
                 <button type="button" class="oe_tl_compose_post btn btn-primary"
@@ -41,7 +41,7 @@
                         <t t-raw="widget.options.compose_placeholder"/>
                 </button>
                 <button type="button" class="oe_tl_compose_post btn btn-primary" 
-                        t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox"
+                        t-if="!widget.options.compose_placeholder and !widget.options.view_inbox"
                 	    title="Send a message. Followers will be notified.">
                         New message
                 </button>
@@ -243,9 +243,8 @@
                 <i title="Reply" class="fa fa-reply"/>
             </span>
         </span>
-        <span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0"
-              title="Number of followers">
-            <t t-raw="widget.nb_followers"/>
+        <span class="oe_tl_parent_followers" t-if="widget.nb_followers > 0">
+            <span title="Number of followers"> <t t-raw="widget.nb_followers"/> </span>
             <i class="oe_follwrs fa fa-users"></i>
         </span>
     </div>

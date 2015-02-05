@@ -606,12 +606,9 @@ class mail_message(osv.Model):
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
             message_id = message.id
-            #print "message_tree 1: ", message_tree
-            #print "- message id : ", message_id
             if message_id in message_tree:
                 continue
             message_tree[message_id] = message
-            #print "message_tree 2: ", message_tree
 
             # find parent_id
             if thread_level == 0:
@@ -624,15 +621,10 @@ class mail_message(osv.Model):
                     tree_parent_id = parent.id
                 if not parent.id in message_tree:
                     message_tree[parent.id] = parent
-                #print "message_tree 3:", message_tree
             # newest messages first
-            #print "- tree parent id : ", tree_parent_id
             parent_tree.setdefault(tree_parent_id, [])
-            #print "parent_tree 1:", parent_tree
             if tree_parent_id != message_id:
-                #print "query parent id :", self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context)
                 parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
-                #print "parent_tree 2: ", parent_tree
 
         if thread_level:
             for key, message_id_list in parent_tree.iteritems():
@@ -745,7 +737,7 @@ class mail_message(osv.Model):
 
         # create final ordered message_list based on parent_tree
         parent_list = parent_tree.items()
-        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
+        parent_list = sorted(parent_list, key=lambda item: max([msg.get('date') for msg in item[1]]) if item[1] else item[0], reverse=True)
 
         message_list = [message for (key, msg_list) in parent_list for message in msg_list]
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
@@ -753,8 +745,6 @@ class mail_message(osv.Model):
         if mode == 'parent':
             message_list = [msg_list[0] for (key, msg_list) in parent_list]
             message_list = map(_get_parent, message_list)
-
-            
 
             msg_to_read = [max([msg['to_read'] for msg in msg_list]) for (key, msg_list) in parent_list]
             message_unread_nb = [len(msg_list) for (key, msg_list) in parent_list]

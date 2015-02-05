@@ -173,12 +173,12 @@
         <field name="domain">[
             ('to_read', '=', True),
             ('starred', '=', False),
-            ('author_id.user_ids', 'not in', [uid]),
         ]</field>
+        <!--('author_id.user_ids', 'not in', [uid]),-->
     </record>
 
     <record model="ir.actions.act_window" id="action_timeline_to_me">
-        <field name="name">To:me</field>
+        <field name="name">To me</field>
         <field name="res_model">mail.message</field>
         <field name="view_type">form</field>
         <field name="view_mode">timeline</field>
@@ -188,13 +188,13 @@
             'thread_model': 'res.partner',
             'search_default_message_unread': True,
             'needaction_menu_ref': ['web_timeline.timeline_starfeeds', 'web_timeline.timeline_inboxfeeds'],
-            'options' : {'view_mailbox': True,
-                         'view_inbox': True,
+            'options' : {'view_inbox': True,
                          'read_action': 'read',
+                         'to_me': True,
                          'show_compose_message': False}
         }</field>
         <field name="domain">[
-            ('partner_ids.user_ids', 'in', [uid])
+            ('partner_ids.user_ids', 'in', [uid]),
         ]</field>
     </record>
 
@@ -208,23 +208,13 @@
             'default_res_id': uid,
             'thread_model': 'res.partner',
             'search_default_message_unread': True,
-            'options' : {'view_mailbox': True,
-                         'view_inbox': True,
+            'options' : {'view_inbox': True,
                          'read_action': 'read',
                          'show_compose_message': False}
         }</field>
         <field name="domain">[
             ('starred', '=', True),
         ]</field>
-        <field name="help" type="html">
-            <p>
-                <b>Good Job!</b> Your inbox is empty.
-            </p><p>
-                Your inbox contains private messages or emails sent to you
-                as well as information related to documents or people you
-                follow.
-            </p>
-        </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_timeline_archives">
@@ -240,8 +230,7 @@
             'needaction_menu_ref': ['web_timeline.timeline_tomefeeds', 
                                     'web_timeline.timeline_starfeeds', 
                                     'web_timeline.timeline_inboxfeeds'],
-            'options' : {'view_mailbox': True,
-                         'view_inbox': True,
+            'options' : {'view_inbox': True,
                          'show_compose_message': False}
         }</field>
         <field name="domain">[
@@ -259,7 +248,7 @@
     </record>
 
     <record id="timeline_tomefeeds" model="ir.ui.menu">
-        <field name="name">To:me</field>
+        <field name="name">To me</field>
         <field name="sequence" eval="11"/>
         <field name="action" ref="action_timeline_to_me"/>
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
@@ -279,7 +268,7 @@
         <field name="parent_id" ref="web_timeline.mail_feeds"/>
     </record> 
 
-    <record model="ir.ui.view" id="mail_tree_view">
+    <!--<record model="ir.ui.view" id="mail_tree_view">
         <field name="name">mail.message.tree</field>
         <field name="model">mail.message</field>
         <field name="priority">4</field>
@@ -305,7 +294,7 @@
     </record>
 
     <menuitem id="timeline_menu_all" name="All"
-        parent="web_timeline.mail_feeds" action="test_action_all"/>
+        parent="web_timeline.mail_feeds" action="test_action_all"/>-->
 
 
 </data>

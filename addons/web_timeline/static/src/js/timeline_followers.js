@@ -56,11 +56,9 @@ openerp.web_timeline.followers = function(session, mail) {
         },
 
         reinit: function() {
-            console.log("reinit followers1", this.value);
             this.data_subtype = {};
             this.message_is_follower == undefined;
             this.display_buttons();
-            console.log("reinit followers2", this.value);
         },
 
         bind_events: function() {
