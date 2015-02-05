@@ -544,6 +544,7 @@ class account_bank_statement_line(models.Model):
             st_line = self.browse(cr, uid, datum['st_line_id'], context)
             self.process_reconciliation(cr, uid, datum[0], datum[1], context=context)
 
+    @api.v8
     def process_reconciliation(self, mv_line_dicts):
         """ Creates a move line for each item of mv_line_dicts and for the statement line. Reconcile a new move line with its counterpart_move_line_id if specified.
             Finally, mark the statement line as reconciled by putting the reconciled moves ids in the column journal_entry_ids.
