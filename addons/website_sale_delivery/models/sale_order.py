@@ -10,7 +10,7 @@ class delivery_carrier(orm.Model):
     _inherit = ['delivery.carrier', 'website.published.mixin']
 
     _columns = {
-        'website_description': fields.text('Description for the website'),
+        'website_description': fields.text('Description for Online Quotations'),
     }
     _defaults = {
         'website_published': True
