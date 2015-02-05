@@ -204,10 +204,10 @@
       </ul>
   </xpath>
   <xpath expr="//div[@id='products_grid_before']" position="attributes">
-      <attribute name="class">col-md-3 hidden-xs</attribute>
+      <attribute name="class">col-md-3 col-sm-4 hidden-xs</attribute>
   </xpath>
   <xpath expr="//div[@id='products_grid']" position="attributes">
-      <attribute name="class">col-md-9</attribute>
+      <attribute name="class">col-md-9 col-sm-8</attribute>
   </xpath>
 </template>
 
@@ -295,7 +295,7 @@
             <div class="col-sm-3">
               <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
             </div>
-            <div class="col-sm-4" groups="base.group_sale_manager">
+            <div id="website_published_button" class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
                   <t t-set="object" t-value="product"/>
                   <t t-set="publish_edit" t-value="True"/>
