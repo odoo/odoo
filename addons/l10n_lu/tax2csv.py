@@ -91,9 +91,9 @@ class LuxTaxGenerator:
         for row in taxes_iterator:
             if not _is_true(row['active']):
                 continue
-            if row['child_depend'] and row['amount']:
-                raise RuntimeError('amount and child_depend '
-                                   'both specified for %s' % row['id'])
+            if row['child_depend'] and row['amount'] != 1:
+                raise RuntimeError('amount must be one if child_depend '
+                                   'for %s' % row['id'])
             # base parent
             base_code = row['BASE_CODE']
             if not base_code or base_code == '/':
@@ -119,7 +119,7 @@ class LuxTaxGenerator:
             if tax_code not in tax_codes:
                 raise RuntimeError('undefined tax code %s' % tax_code)
             if tax_code == 'NA':
-                if row['amount']:
+                if row['amount'] and not row['child_depend']:
                     raise RuntimeError('TAX_CODE not specified '
                                        'for non-zero tax %s' % row['id'])
                 if row['tax_code_id:id']:
