@@ -28,6 +28,12 @@
             <field name="name">YourCompany</field>
         </record>
 
+        <record model="res.partner.bank" id="bank_company">
+            <field name="name">Your Company Bank</field>
+            <field name="acc_number">BE123456789</field>
+            <field name="company_id" ref="main_company" />
+        </record>
+
 
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>
