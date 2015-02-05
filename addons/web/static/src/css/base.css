@@ -923,59 +923,73 @@
 }
 .openerp .oe_application {
   height: 100%;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  -ms-flex-negative: 1;
-  display: inline-block\9;
-  overflow: auto\9;
-  width: -webkit-calc(100% - 220px);
-  width: calc(100% - 220px);
+  width: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
 }
 .openerp .oe_application .oe_application {
   width: 100%;
 }
 .openerp .oe-view-manager {
-  width: 100%;
-  height: 100%;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  overflow: auto;
+  position: relative;
 }
 .openerp .oe-view-manager .oe-view-manager-content {
-  overflow: auto;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 .openerp .oe-view-manager .oe-view-manager-content a {
   color: #7C7BAD;
 }
 .openerp .oe-view-manager .oe-view-manager-content > div {
-  position: absolute;
-  position: static\9;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
+  height: 100%;
+  position: static;
   display: none;
 }
+.openerp .oe-view-manager .oe-view-manager-content .oe-view-manager-content {
+  position: static;
+}
 .openerp .oe-view-manager .oe-view-manager-content .oe-view-manager-content > div {
-  position: relative;
   display: block;
 }
 .openerp .oe-view-manager .oe-view-manager-debug {
   margin-right: 5px;
 }
+.openerp .oe-o2m-control-panel {
+  width: 100%;
+}
+.openerp .oe-o2m-control-panel .oe-cp-buttons div {
+  display: inline-block;
+  padding: 5px 5px;
+}
+.openerp .oe-o2m-control-panel .oe-cp-pager div {
+  display: inline-block;
+  padding: 5px 5px;
+}
 .openerp .oe-control-panel {
   background-color: #f0eeee;
   border-bottom: 1px solid #afafb6;
-  -webkit-flex-shrink: 0;
-  flex-shrink: 0;
-  width: 100%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
   user-select: none;
+}
+.openerp .oe-control-panel > .container-fluid {
+  width: 100%;
 }
 .openerp .oe-control-panel .oe-button-column {
   height: 30px;
@@ -1092,7 +1106,8 @@
 }
 .openerp .oe-control-panel .oe-cp-sidebar .oe_sidebar_delete_item {
   padding: 0;
-  display: inline-block;
+  position: absolute;
+  right: 10px;
 }
 .openerp .oe-control-panel .oe-cp-sidebar .dropdown-menu li a {
   width: 100%;
@@ -1109,9 +1124,6 @@
 }
 .openerp .oe-control-panel .oe-pager-buttons {
   min-height: 30px;
-}
-.openerp .oe_view_manager_inline > .oe-control-panel-content, .openerp .oe_view_manager_inlineview > .oe-control-panel-content {
-  display: none;
 }
 .openerp .o-modal-header > div {
   margin-left: 45%;
@@ -2010,7 +2022,7 @@
   margin: 4px 7px;
 }
 .openerp .oe_form .oe-view-manager-content {
-  overflow: visible;
+  overflow: hidden;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_integer input {
   width: 6em;
@@ -3206,7 +3218,7 @@ body.oe_single_form .oe_single_form_container {
 .modal .oe_act_window.modal-body {
   padding: 0;
 }
-.modal .oe-view-manager-content > div {
+.modal .oe-view-manager-content {
   position: static !important;
 }
 

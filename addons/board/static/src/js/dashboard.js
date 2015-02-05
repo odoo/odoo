@@ -326,17 +326,24 @@ instance.web.search.FavoriteMenu.include({
     prepare_dropdown_menu: function (filters) {
         var self = this;
         this._super(filters);
-        this.$('.favorites-menu').append(QWeb.render('SearchView.addtodashboard'));
-        var $add_to_dashboard = this.$('.add-to-dashboard');
-        this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
-        this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
-        this.$add_dashboard_link = $add_to_dashboard.first();
-        var title = this.searchview.getParent().title;
-        this.$add_dashboard_input.val(title);
-        this.$add_dashboard_link.click(function () {
-            self.toggle_dashboard_menu();
+        var am = this.findAncestor(function (a) {
+            return a instanceof instance.web.ActionManager;
         });
-        this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
+        if (am && am.get_inner_widget() instanceof instance.web.ViewManager) {
+            this.view_manager = am.get_inner_widget();
+            this.add_to_dashboard_available = true;
+            this.$('.favorites-menu').append(QWeb.render('SearchView.addtodashboard'));
+            var $add_to_dashboard = this.$('.add-to-dashboard');
+            this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
+            this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
+            this.$add_dashboard_link = $add_to_dashboard.first();
+            var title = this.searchview.get_title();
+            this.$add_dashboard_input.val(title);
+            this.$add_dashboard_link.click(function () {
+                self.toggle_dashboard_menu();
+            });
+            this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
+        }
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
@@ -349,29 +356,24 @@ instance.web.search.FavoriteMenu.include({
         }
     },
     close_menus: function () {
-        this.toggle_dashboard_menu(false);
+        if (this.add_to_dashboard_available) {
+            this.toggle_dashboard_menu(false);
+        }
         this._super();
     },
     add_dashboard: function () {
-        var self = this,
-            view_manager = this.findAncestor(function (a) {
-                return a instanceof instance.web.ViewManager
-            });
-        if (!view_manager.action) {
-            this.do_warn(_t("Can't find dashboard action"));
-            return;
-        }
-        var searchview = view_manager.get_searchview(),
-            data = searchview.build_search_data(),
-            context = new instance.web.CompoundContext(searchview.dataset.get_context() || []),
-            domain = new instance.web.CompoundDomain(searchview.dataset.get_domain() || []);
+        var self = this;
+
+        var data = this.searchview.build_search_data(),
+            context = new instance.web.CompoundContext(this.searchview.dataset.get_context() || []),
+            domain = new instance.web.CompoundDomain(this.searchview.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
 
         context.add({
             group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
         });
-        context.add(view_manager.active_view.controller.get_context());
+        context.add(this.view_manager.active_view.controller.get_context());
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
@@ -388,10 +390,10 @@ instance.web.search.FavoriteMenu.include({
             .then(function (board_list) {
                 return self.rpc('/board/add_to_dashboard', {
                     menu_id: board_list[0].id,                    
-                    action_id: view_manager.action.id,
+                    action_id: self.action_id,
                     context_to_save: c,
                     domain: d,
-                    view_mode: view_manager.active_view.type,
+                    view_mode: self.view_manager.active_view.type,
                     name: name,
                 });
             }).then(function (r) {

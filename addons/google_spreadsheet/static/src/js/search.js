@@ -19,14 +19,19 @@ openerp.google_spreadsheet = function(instance) {
     instance.web.search.FavoriteMenu.include({
         prepare_dropdown_menu: function (filters) {
             this._super(filters);
-            this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
-            this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+            var am = this.findAncestor(function(a) {
+                return a instanceof instance.web.ActionManager;
+            });
+            if (am && am.get_inner_widget() instanceof instance.web.ViewManager) {
+                this.view_manager = am.get_inner_widget();
+                this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+                this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
+            }
         },
         add_to_spreadsheet: function () {
             var data = this.searchview.build_search_data(),
                 model = this.searchview.dataset.model,
-                view_manager = this.searchview.getParent(),
-                list_view = view_manager.views.list,
+                list_view = this.view_manager.views.list,
                 list_view_id = list_view ? list_view.view_id : false,
                 context = this.searchview.dataset.get_context() || [],
                 domain = this.searchview.dataset.get_domain() || [],

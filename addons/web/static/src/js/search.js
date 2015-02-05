@@ -376,6 +376,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.query = undefined;
         this.dataset = dataset;
         this.view_id = view_id;
+        this.title = options.action && options.action.name;
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
@@ -411,6 +412,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
         return this.alive($.when(this._super(), this.alive(load_view).then(this.view_loaded.bind(this))));
+    },
+    get_title: function() {
+        return this.title;
     },
     view_loaded: function (r) {
         var self = this;
@@ -1604,7 +1608,7 @@ instance.web.search.FavoriteMenu = instance.web.Widget.extend({
         this.$save_name = this.$('.oe-save-name');
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
-        this.$inputs.eq(0).val(this.searchview.getParent().title);
+        this.$inputs.eq(0).val(this.searchview.get_title());
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
         $shared_filter.click(function () {$default_filter.prop('checked', false)});

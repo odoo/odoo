@@ -801,54 +801,64 @@ $sheet-padding: 16px
         text-decoration: underline
     .oe_application
         height: 100%
-        -webkit-flex-grow: 1
-        flex-grow: 1
-        -ms-flex-negative: 1
-        display: inline-block\9
-        overflow: auto\9
-        width: -webkit-calc(100% - 220px)
-        width: calc(100% - 220px)
+        width: 100%
+        display: -webkit-box
+        display: -moz-box
+        display: -ms-flexbox
+        display: -webkit-flex
+        display: flex
+        -ms-flex-direction: column
+        -webkit-flex-direction: column
+        flex-direction: column        
         .oe_application
             width: 100%
     // }}}
     // ViewManager common {{{
     .oe-view-manager
-        width: 100%
-        height: 100%
-        display: -webkit-flex
-        display: flex
-        -webkit-flex-direction: column
-        flex-direction: column
+        -webkit-box-flex: 1
+        -webkit-flex: 1 1 auto
+        -ms-flex: 1 1 auto
+        flex: 1 1 auto
+        overflow: auto
+        position: relative
         .oe-view-manager-content
-            overflow: auto
-            -webkit-flex-grow: 1
-            flex-grow: 1
-            position: relative
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 0
+            left: 0
             a
                 color: $link-color
             > div
-                position: absolute
-                position: static\9
-                top: 0
-                bottom: 0
-                right: 0
-                left: 0
+                height: 100%
+                position: static
                 display: none
             .oe-view-manager-content
+                position: static
                 > div
-                    position: relative
                     display: block
         .oe-view-manager-debug
             margin-right: 5px
+    .oe-o2m-control-panel
+        width: 100%
+        .oe-cp-buttons
+            div
+                display: inline-block
+                padding: 5px 5px
+        .oe-cp-pager
+            div
+                display: inline-block
+                padding: 5px 5px
     .oe-control-panel
         background-color: rgb(240, 238, 238)
         border-bottom: 1px solid #afafb6
-        -webkit-flex-shrink: 0
-        flex-shrink: 0
-        width: 100%
-        -webkit-user-select: none
-        -moz-user-select: none
+        -webkit-box-flex: 0
+        -webkit-flex: 0 0 auto
+        -ms-flex: 0 0 auto
+        flex: 0 0 auto
         user-select: none
+        > .container-fluid
+            width: 100%
         .oe-button-column
             height: 30px
         .dropdown-menu
@@ -950,9 +960,6 @@ $sheet-padding: 16px
 
         .oe-pager-buttons
             min-height: 30px
-    .oe_view_manager_inline, .oe_view_manager_inlineview
-        > .oe-control-panel-content
-            display: none
 
         // }}}
     // FormPopup {{{
@@ -1673,8 +1680,7 @@ $sheet-padding: 16px
             margin: 4px 7px
         // Override ViewManager overflow auto for One2Many fields
         .oe-view-manager-content
-            overflow: visible
-
+            overflow: hidden
     .oe_form_editable
         .oe_form
             .oe_form_field_integer input
@@ -2641,7 +2647,7 @@ body.oe_single_form
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
-    .oe-view-manager-content > div
+    .oe-view-manager-content
         position: static !important
 
 @media (min-width: 768px)
