@@ -540,12 +540,16 @@ class hr_applicant(osv.Model):
 
     def _broadcast_welcome(self, cr, uid, employee_id, context=None):
         """ Broadcast the welcome message to all users in the employee company. """
-        employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
-        mail_group_action, mail_group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
-        self.pool.get('mail.group').message_post(
-            cr, uid, [mail_group_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with Odoo!') % (employee.name),
-            subtype='mail.mt_comment', context=context)
+        IrModelData = self.pool['ir.model.data']
+        group_all_employees = IrModelData.xmlid_to_object(cr, uid, 'mail.group_all_employees', context=context)
+        template_new_employee = IrModelData.xmlid_to_object(cr, uid, 'hr_recruitment.hr_welcome_new_employee', context=context)
+        if template_new_employee:
+            MailTemplate = self.pool['mail.template']
+            body_html = MailTemplate.render_template(cr, uid, template_new_employee.body_html, 'hr.employee', employee_id, context=context)
+            subject = MailTemplate.render_template(cr, uid, template_new_employee.subject, 'hr.employee', employee_id, context=context)
+            self.pool['mail.group'].message_post(cr, uid, [group_all_employees.id],
+                body=body_html, subject=subject,
+                subtype='mail.mt_comment', context=context)
         return True
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
