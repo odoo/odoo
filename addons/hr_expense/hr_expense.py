@@ -313,7 +313,7 @@ class hr_expense_expense(osv.osv):
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
-                    exp.currency_id,
+                    exp.currency_id.id,
                     line.unit_quantity, line.product_id,
                     exp.user_id.partner_id)['taxes']:
                 tax_code_id = tax['base_code_id']
