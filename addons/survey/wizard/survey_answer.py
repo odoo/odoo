@@ -404,7 +404,7 @@ class survey_question_wiz(osv.osv_memory):
                     result['context'] = context
                 else:
                     survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
-                    sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
+                    sur_response_obj.write(cr, uid, [int(sur_name_read.response)], {'state' : 'done'})
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
                     if context.get('active_model') in self.pool:
@@ -792,7 +792,7 @@ class survey_question_wiz(osv.osv_memory):
                         if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == que_id:
                             for res_id in response_list:
                                 if key.split('_')[2] in res_id.split('_')[1]:
-                                    a = res_ans_obj.write(cr, uid, [res_id.split('_')[0]], {'comment_field':val})
+                                    a = res_ans_obj.write(cr, uid, [int(res_id.split('_')[0])], {'comment_field':val})
                                     sur_name_read['store_ans'][resp_id].update({key:val})
 
                     if comment_field and comment_value:
