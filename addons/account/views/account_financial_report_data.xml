@@ -153,7 +153,16 @@
             <field name="name">Current Assets</field>
             <field name="code">CA</field>
             <field name="parent_id" ref='account_financial_report_total_assets0'/>
-            <field name="formulas">balance = CAS.balance + PRE.balance; credit = CAS.credit + PRE.credit; debit = CAS.debit + PRE.debit</field>
+            <field name="formulas">balance = REC.balance + CAS.balance + PRE.balance; credit = REC.credit + CAS.credit + PRE.credit; debit = REC.debit + CAS.debit + PRE.debit</field>
+            <field name="sequence" eval="1"/>
+        </record>
+        <record id="account_financial_report_receivable0" model="account.financial.report.line">
+            <field name="name">Receivables</field>
+            <field name="code">REC</field>
+            <field name="parent_id" ref='account_financial_report_current_assets_view0'/>
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable')]" />
+            <field name="groupby">account_id</field>
+            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
             <field name="sequence" eval="1"/>
         </record>
         <record id="account_financial_report_current_assets0" model="account.financial.report.line">
@@ -163,7 +172,7 @@
             <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_current_assets'))]" />
             <field name="groupby">account_id</field>
             <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
         </record>
         <record id="account_financial_report_prepayements0" model="account.financial.report.line">
             <field name="name">Prepayments</field>
@@ -172,7 +181,7 @@
             <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_prepayments'))]" />
             <field name="groupby">account_id</field>
             <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
-            <field name="sequence" eval="2"/>
+            <field name="sequence" eval="3"/>
         </record>
         <record id="account_financial_report_bank_view0" model="account.financial.report.line">
             <field name="name">Plus Bank and Cash Accounts</field>
@@ -214,7 +223,7 @@
             <field name="name">Current Liabilities</field>
             <field name="code">CL</field>
             <field name="parent_id" ref='account_financial_report_liabilities_view0'/>
-            <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_current_liabilities'))]" />
+            <field name="domain" eval="['|', ('account_id.user_type', '=', ref('data_account_type_current_liabilities')), ('account_id.user_type.type', '=', 'payable')]"/>
             <field name="groupby">account_id</field>
             <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
             <field name="sequence" eval="1"/>
