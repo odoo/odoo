@@ -1587,16 +1587,11 @@
             <field name="parent_id" ref="ch_coa_89"/>
             <field eval="False" name="reconcile"/>
         </record>
-        <record id="vat_code_chart_root" model="account.tax.code.template">
-            <field name="name">VAT</field>
-            <field name="parent_id" eval="False"/>
-        </record>
 
         <!-- Chart Template -->
         <record id="l10nch_chart_template" model="account.chart.template">
             <field name="name">Plan comptable 2015</field>
             <field name="account_root_id" ref="ch_coa_0"/>
-            <field name="tax_code_root_id" ref="vat_code_chart_root"/>
             <field name="bank_account_view_id" ref="ch_coa_1020"/>
             <field name="property_account_receivable" ref="ch_coa_1100"/>
             <field name="property_account_payable" ref="ch_coa_2000"/>
