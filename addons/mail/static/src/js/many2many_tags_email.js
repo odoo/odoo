@@ -81,8 +81,6 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
 /**
  * Registry of form fields
  */
-instance.web.form.widgets = instance.web.form.widgets.extend({
-    'many2many_tags_email' : 'instance.web.form.FieldMany2ManyTagsEmail',
-});
+instance.web.form.widgets.add('many2many_tags_email', 'instance.web.form.FieldMany2ManyTagsEmail');
 
 };

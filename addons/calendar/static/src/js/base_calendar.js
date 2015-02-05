@@ -266,9 +266,7 @@ function reload_favorite_list(result) {
             }
         }
     });
-    instance.web.form.widgets = instance.web.form.widgets.extend({
-        'many2manyattendee' : 'instance.web.form.Many2ManyAttendee',
-    });
+    instance.web.form.widgets.add('many2manyattendee', 'instance.web.form.Many2ManyAttendee');
 
     instance.calendar.event = function (db, action, id, view, attendee_data) {
         instance.session.session_bind(instance.session.origin).done(function () {
