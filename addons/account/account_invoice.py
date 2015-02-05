@@ -99,7 +99,7 @@ class account_invoice(models.Model):
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual = max(residual, 0.0)
+        self.residual = abs(residual)
         self.reconciled = residual == 0.0
 
     @api.one
