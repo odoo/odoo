@@ -87,7 +87,6 @@ class report_account_financial_report(models.Model):
     name = fields.Char()
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
     line_id = fields.Many2one('account.financial.report.line', string='First/Top Line')
-    offset_level = fields.Integer('Level at which the report starts', default=0)
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
                                     ('no_date_range', 'Based on a single date')],
@@ -116,7 +115,6 @@ class report_account_financial_report(models.Model):
             date_from_cmp=context_id.date_from_cmp,
             date_to_cmp=context_id.date_to_cmp,
             cash_basis=context_id.cash_basis,
-            level=self.offset_level,
             periods_number=context_id.periods_number,
             context_id=context_id,
         ).get_lines(self)[0]
@@ -154,6 +152,7 @@ class account_financial_report_line(models.Model):
     hidden = fields.Boolean('Should this line be hidden', default=False, required=True)
     show_domain = fields.Boolean('Show the domain', default=True, required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
+    level = fields.Integer(required=True)
 
     @api.model
     def _ids_to_sql(self, ids):
@@ -322,7 +321,6 @@ class account_financial_report_line(models.Model):
             extended = True
         lines = []
         context = self.env.context
-        level = context['level']
         currency_id = self.env.user.company_id.currency_id
         if self.closing_balance or financial_report_id.report_type == 'no_date_range':
             self = self.with_context(closing_bal=True)
@@ -334,7 +332,7 @@ class account_financial_report_line(models.Model):
             'id': self.id,
             'name': self.name,
             'type': 'line',
-            'level': level,
+            'level': self.level,
             'footnotes': self._get_footnotes('line', self.id),
         }
         [vals['unfolded'], vals['unfoldable']] = self._get_unfold(financial_report_id)
@@ -421,7 +419,7 @@ class account_financial_report_line(models.Model):
                         gb_non_issued = dict(self.env.cr.fetchall())
 
                     for gb in gbs:
-                        vals = {'id': gb[0], 'name': self._get_gb_name(gb[0]), 'level': level + 2, 
+                        vals = {'id': gb[0], 'name': self._get_gb_name(gb[0]), 'level': self.level + 2, 
                                 'type': self.groupby, 'footnotes': self._get_footnotes(self.groupby, gb[0])}
                         total = 0
                         flag = False
@@ -475,7 +473,7 @@ class account_financial_report_line(models.Model):
                                     extra_gbs.append(key)
                         for extra_gb in extra_gbs:
                             total = 0
-                            vals = {'id': extra_gb, 'name': self._get_gb_name(extra_gb), 'level': level + 2, 'type': self.groupby,
+                            vals = {'id': extra_gb, 'name': self._get_gb_name(extra_gb), 'level': self.level + 2, 'type': self.groupby,
                                     'balance': self._format(0), 'comparison': [], 'footnotes': self._get_footnotes(self.groupby, extra_gb)}
                             for gb_cmp in gbs_cmp:
                                 if extra_gb in gb_cmp:
@@ -502,7 +500,7 @@ class account_financial_report_line(models.Model):
 
             else:
                 for aml in amls:
-                    vals = {'id': aml.id, 'name': aml.name, 'type': 'aml', 'level': level + 2, 'footnotes': self._get_footnotes('aml', aml.id)}
+                    vals = {'id': aml.id, 'name': aml.name, 'type': 'aml', 'level': self.level + 2, 'footnotes': self._get_footnotes('aml', aml.id)}
                     c = FormulaContext(self.env['account.financial.report.line'], aml)
                     flag = False
                     if self.formulas:
@@ -548,13 +546,13 @@ class account_financial_report_line(models.Model):
                     if flag:
                         vals = self._put_columns_together(vals)
                         lines.append(vals)
-        new_lines = self.children_ids.with_context(level=level+1).get_lines(financial_report_id)
+        new_lines = self.children_ids.get_lines(financial_report_id)
         result = []
-        if level > 0:
+        if self.level > 0:
             result += lines
         for new_line in new_lines:
             result += new_line
-        if level <= 0:
+        if self.level <= 0:
             result += lines
         return result
 

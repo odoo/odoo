@@ -927,7 +927,7 @@ class account_move_line(models.Model):
                                            " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))"\
                                            " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +dt+"' AND date <= '"+context['date_from']+"')"
             elif context.get('closing_bal', False):
-                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_to']+"')"
+                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_to']+"')"
             elif context.get('opening_year_bal', False):
                 dt = context['date_from'][:4] + '-01-01'
                 where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +dt+"')"
@@ -935,7 +935,7 @@ class account_move_line(models.Model):
                 where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date > '" +context['date_to']+"')"
             else:
                 where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')" \
-                                           " OR ("+obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"'))" \
+                                           " OR ("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_from']+"'))" \
                                            " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))" \
 
         if state:
