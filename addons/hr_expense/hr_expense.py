@@ -311,7 +311,7 @@ class hr_expense_expense(osv.osv):
             tax_l = []
             base_tax_amount = line.total_amount
             #Calculating tax on the line and creating move?
-            for tax in tax_obj.compute_all(cr, uid, taxes,
+            for tax in tax_obj.compute_all(cr, uid, [tax.id for tax in taxes],
                     line.unit_amount ,
                     exp.currency_id.id,
                     line.unit_quantity, line.product_id,
