@@ -845,8 +845,7 @@ class Environment(object):
     def add_todo(self, field, records):
         """ Mark `field` to be recomputed on `records`. """
         recs_list = self.all.todo.setdefault(field, [])
-        # use user admin for accessing records without access rights issues
-        recs_list.append(records.sudo())
+        recs_list.append(records)
 
     def remove_todo(self, field, records):
         """ Mark `field` as recomputed on `records`. """

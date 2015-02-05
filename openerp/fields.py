@@ -146,6 +146,9 @@ class Field(object):
         :param store: whether the field is stored in database (boolean, by
             default ``False`` on computed fields)
 
+        :param compute_sudo: whether the field should be recomputed as superuser
+            to bypass access rights (boolean, by default ``False``)
+
         The methods given for `compute`, `inverse` and `search` are model
         methods. Their signature is shown in the following example::
 
@@ -271,6 +274,7 @@ class Field(object):
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
+    compute_sudo = False        # whether field should be recomputed as admin
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
@@ -903,7 +907,13 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
-                    target.with_env(records.env)._recompute_todo(field)
+                    # recompute field on target in the environment of records,
+                    # and as user admin if required
+                    if field.compute_sudo:
+                        target = target.with_env(records.env(user=SUPERUSER_ID))
+                    else:
+                        target = target.with_env(records.env)
+                    target._recompute_todo(field)
             else:
                 spec.append((field, None))
 
