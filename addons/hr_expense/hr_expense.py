@@ -314,8 +314,8 @@ class hr_expense_expense(osv.osv):
             for tax in tax_obj.compute_all(cr, uid, [tax.id for tax in taxes],
                     line.unit_amount ,
                     exp.currency_id.id,
-                    line.unit_quantity, line.product_id,
-                    exp.user_id.partner_id)['taxes']:
+                    line.unit_quantity, line.product_id.id,
+                    exp.user_id.partner_id.id)['taxes']:
                 pass
 # TODO: Need to adapt changes according to new tax design.
 #                 tax_code_id = tax['base_code_id']
