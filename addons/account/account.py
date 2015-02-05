@@ -105,26 +105,7 @@ class account_account_type(models.Model):
     name = fields.Char(string='Account Type', required=True, translate=True)
     close_method = fields.Selection([('none', 'None'), ('balance', 'Balance')],
         string='Deferral Method', required=True, default='none')
-    report_type = fields.Selection([
-        ('none','/'),
-        ('revenue', _('Revenue (P&L Income account)')),
-        ('sales', _('Sales (P&L Income account)')),
-        ('direct_costs', _('Direct Costs (P&L Cost Of Sales account)')),
-        ('other_income', _('Other Income (P&L Other Income account)')),
-        ('expenses', _('Expenses (P&L Expenses account)')),
-        ('depreciation', _('Depreciation (P&L Expenses account)')),
-        ('overheads', _('Overheads (P&L Expenses account)')),
-        ('current_assets', _('Current Assets (BS Current Assets account)')),
-        ('prepayments', _('Prepayments (BS Current Assets account)')),
-        ('bank_accounts', _('Bank (BS Bank account)')),
-        ('fixed_assets', _('Fixed Assets (BS Fixed Assets account)')),
-        ('non_current_assets', _('Non-Current Assets (BS Non-Current Assets account)')),
-        ('current_liabilities', _('Current Liabilities (BS Current Liabilities account)')),
-        ('liabilities', _('Liabilities (BS Non-Current Liabilities account)')),
-        ('non_current_liabilities', _('Non-Current Liabilities (BS Non-Current Liabilities account)')),
-        ('equity', _('Equity (BS Equity account)')),
-        ],
-        default='none',string='P&L / BS Category', help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True)
+    include_initial_balance = fields.Boolean()
     type = fields.Selection([
         ('other', 'Regular'),
         ('receivable', 'Receivable'),

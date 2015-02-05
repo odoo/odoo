@@ -38,6 +38,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
+        'data/data_account_type.xml',
         'views/account_menuitem.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
@@ -66,7 +67,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',
         'data/account_data.xml',
-        'data/data_account_type.xml',
         'data/configurable_account_chart.xml',
         'data/invoice_action_data.xml',
         'views/account_invoice_workflow.xml',

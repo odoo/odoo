@@ -548,7 +548,6 @@ class account_financial_report_line(models.Model):
                     if flag:
                         vals = self._put_columns_together(vals)
                         lines.append(vals)
-
         new_lines = self.children_ids.with_context(level=level+1).get_lines(financial_report_id)
         result = []
         if level > 0:

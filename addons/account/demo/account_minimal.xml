@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--
-        Account Type
-        -->
-
-        <record id="account_type_cash_equity" model="account.account.type">
-            <field name="name">Equity</field>
-            <field name="close_method">balance</field>
-            <field name="report_type">equity</field>
-        </record>
 
         <!--
         Chart of Accounts
@@ -82,7 +73,7 @@
         <record id="bnk" model="account.account">
             <field name="code">X11004</field>
             <field name="name">Bank Current Account - (test)</field>
-            <field name="user_type" ref="data_account_type_bank"/>
+            <field name="user_type" ref="data_account_type_liquidity"/>
         </record>
 
         <record id="cash" model="account.account">
@@ -99,7 +90,7 @@
         <record id="usd_bnk" model="account.account">
             <field name="code">X11007</field>
             <field name="name">USD Bank Account - (test)</field>
-            <field name="user_type" ref="data_account_type_bank"/>
+            <field name="user_type" ref="data_account_type_liquidity"/>
             <field name="currency_id" ref="base.USD"/>
         </record>
 
