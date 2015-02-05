@@ -235,6 +235,10 @@ class TestAPI(common.TransactionCase):
         for p in demo_partners:
             self.assertEqual(p.env, demo_env)
 
+        # by default company_id is false on partner, so give one to allow following tests
+        company_id = self.browse_ref('base.main_company').id
+        demo_partners[0].sudo().write({'company_id': company_id})
+
         # demo user can read but not modify company data
         demo_partners[0].company_id.name
         with self.assertRaises(AccessError):

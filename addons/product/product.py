@@ -763,7 +763,7 @@ class product_template(osv.osv):
         return super(product_template, self).copy(cr, uid, id, default=default, context=context)
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
+        'company_id': False,
         'list_price': 1,
         'standard_price': 0.0,
         'sale_ok': 1,        
@@ -1261,7 +1261,7 @@ class product_supplierinfo(osv.osv):
         'min_qty': 0.0,
         'sequence': 1,
         'delay': 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'company_id': False,
     }
 
     _order = 'sequence'
