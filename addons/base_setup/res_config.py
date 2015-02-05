@@ -43,6 +43,8 @@ class base_config_settings(osv.osv_memory):
                                               help="""This installs the module google_calendar."""),
         'font': fields.many2one('res.font', string="Report Font", domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
             help="Set the font into the report header, it will be used as default font in the RML reports of the user company"),
+        'module_inter_company_rules': fields.boolean('Manage Inter Company',
+            help="""This installs the module inter_company_rules.\n Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."""),
         'company_share_partner': fields.boolean('Share partners to all companies',
             help="Share your partners to all companies defined in your instance.\n"
                  " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
