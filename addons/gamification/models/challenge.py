@@ -415,10 +415,10 @@ class gamification_challenge(osv.Model):
                 date_clause = ""
                 query_params = [line.id]
                 if start_date:
-                    date_clause += "AND g.start_date = %s"
+                    date_clause += " AND g.start_date = %s"
                     query_params.append(start_date)
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
+                    date_clause += " AND g.end_date = %s"
                     query_params.append(end_date)
             
                 query = """SELECT u.id AS user_id
