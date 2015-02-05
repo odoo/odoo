@@ -86,7 +86,7 @@ class report_account_financial_report(models.Model):
 
     name = fields.Char()
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
-    line = fields.Many2one('account.financial.report.line', 'First/Top Line')
+    line_id = fields.Many2one('account.financial.report.line', string='First/Top Line')
     offset_level = fields.Integer('Level at which the report starts', default=0)
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
@@ -102,7 +102,7 @@ class report_account_financial_report(models.Model):
     def get_lines(self, context_id, line_id=None):
         if isinstance(context_id, int):
             context_id = self.env['account.financial.report.context'].browse(context_id)
-        line_obj = self.line
+        line_obj = self.line_id
         if line_id:
             line_obj = self.env['account.financial.report.line'].search([('id', '=', line_id)])
         if context_id.comparison:
@@ -138,12 +138,11 @@ class account_financial_report_line(models.Model):
 
     name = fields.Char('Line Name')
     code = fields.Char('Line Code')
-    parent_ids = fields.Many2many('account.financial.report.line', 'parent_financial_report_lines',
-                                  'parent_id', 'child_id', string='Parents')
-    children_ids = fields.Many2many('account.financial.report.line', 'parent_financial_report_lines',
-                                    'child_id', 'parent_id', string='Children')
-    financial_report = fields.Many2one('account.financial.report', 'Financial Report')
+    financial_report_id = fields.Many2one('account.financial.report', 'Financial Report')
+    parent_id = fields.Many2one('account.financial.report.line', string='Parent')
+    children_ids = fields.One2many('account.financial.report.line', 'parent_id', string='Children')
     sequence = fields.Integer('Sequence')
+
     domain = fields.Char('Domain', default=None)
     formulas = fields.Char('Formulas')
     groupby = fields.Char('Group By', default=False)

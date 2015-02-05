@@ -1052,8 +1052,7 @@
             <field name="arch" type="xml">
                 <graph string="Account Statistics" type="bar">
                     <field name="account_id"/>
-                    <field name="debit" operator="+" widget="monetary"/>
-                    <field name="credit" operator="+" widget="monetary"/>
+                    <field name="balance" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>
@@ -1063,8 +1062,7 @@
             <field name="arch" type="xml">
                 <graph string="Account Statistics" type="bar">
                     <field name="date"/>
-                    <field name="debit" operator="+" widget="monetary"/>
-                    <field name="credit" operator="+" widget="monetary"/>
+                    <field name="balance" operator="+" widget="monetary"/>
                 </graph>
             </field>
         </record>

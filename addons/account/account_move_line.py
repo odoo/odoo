@@ -51,6 +51,16 @@ class account_move_line(models.Model):
             else:
                 line.reconciled = False
 
+    @api.depends('debit', 'credit')
+    def _store_balance(self):
+        for line in self:
+            line.balance = line.debit - line.credit
+
+    @api.depends('credit_cash_basis', 'debit_cash_basis')
+    def _store_balance_cash_basis(self):
+        for line in self:
+            line.balance_cash_basis = line.debit_cash_basis - line.credit_cash_basis
+
     @api.model
     def _get_currency(self):
         currency = False
@@ -84,8 +94,10 @@ class account_move_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     debit_cash_basis = fields.Float('Debit with cash basis method', default=0.0)
     credit_cash_basis = fields.Float('Credit with cash basis method', default=0.0)
+    balance_cash_basis = fields.Float(compute='_store_balance_cash_basis', store=True, digits=0, default=0.0, help="Technical field holding the debit_cash_basis - credit_cash_basis in order to open meaningful graph views from reports")
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
+    balance = fields.Float(compute='_store_balance', store=True, digits=0, default=0.0, help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
     amount_currency = fields.Float(string='Amount Currency', default=0.0,  digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
