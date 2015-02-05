@@ -44,10 +44,9 @@
         <record model="ir.actions.act_window" id="action_open_sale_order_line_view">
             <field name="name">Orders</field>
             <field name="res_model">sale.order.line</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="coupon_sale_order_line_tree"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-
     </data>
 </openerp>
 

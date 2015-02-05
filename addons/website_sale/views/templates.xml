@@ -1102,8 +1102,8 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="order.order_line" t-as="line">
-                                <td t-if="line.product_id.product_tmpl_id">
-                                    <div>
+                                <td>
+                                    <div t-if="line.product_id">
                                         <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
                                             <strong t-esc="line.product_id.name_get()[0][1]"/>
                                         </a>

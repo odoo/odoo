@@ -65,11 +65,11 @@
             <field name="arch" type="xml">
                 <tree string="Coupon Manager" >
                     <field name="code"/>
-                    <field name="partner_id"/>
-                    <field name="coupon_type"/>
-                    <field name="product_id"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="coupon_type" invisible="1"/>
                     <field name="expired_on"/>
                     <field name="number_of_use"/>
+                    <field name="product_id"/>
                     <field name="state"/>
                 </tree>
             </field>

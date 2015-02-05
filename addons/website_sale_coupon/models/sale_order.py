@@ -26,7 +26,7 @@ class sale_order_line(models.Model):
 
     def _prepare_coupon_so_line(self, coupon):
         return {
-            'order_id': self.order_id.id,
+            'order_id': [line for line in self if line.product_id][0].order_id.id,
             'name': _('Coupon : %s , Product: %s') % (coupon.code, coupon.product_id.name),
             'price_unit': - coupon.product_id.list_price,
             'coupon_ids': [(4, coupon.id)],
@@ -35,7 +35,7 @@ class sale_order_line(models.Model):
 
     def _prepare_product_coupon_so_line(self, coupon):
         return {
-            'order_id': self.order_id.id,
+            'order_id': [line for line in self if line.product_id][0].order_id.id,
             'product_id': coupon.product_id.id,
             'name': coupon.product_id.name,
             'product_uom_qty': 1,
@@ -50,11 +50,11 @@ class sale_order_line(models.Model):
         if coupon:
             if coupon.line_id and coupon.line_id.state != 'done':
                 return {'error': _('you can not use %s. Code is not activated or your previous order not completed.') % (promocode)}
+            if coupon.id in [coupon_id.id for line in self for coupon_id in line.coupon_ids]:
+                return {'error': _('Coupon %s already applied on %s.') % (promocode, coupon.product_id.name)}
             check_expiration = coupon.check_expiration()[0]
             if check_expiration:
                 return check_expiration
-            if coupon.id in [coupon_id.id for line in self for coupon_id in line.coupon_ids]:
-                return {'error': _('Coupon %s already applied on %s.') % (promocode, coupon.product_id.name)}
             if any([line_ids.product_id.id == coupon.product_id.id for line_ids in self]):
                 for line in self.search([('product_id', '=', coupon.product_id.id)]):
                     if len([code.id for code in line.coupon_ids]) > 0:

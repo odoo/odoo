@@ -32,7 +32,6 @@ class TestSaleCoupon(TestSaleCouponCommon):
         order_id2.order_line.apply_coupon(
             order_id1.order_line.coupon_ids[0].code)
         order_id2.action_button_confirm()
-        print 'order_id2.amount_untaxed',order_id2.order_line
         self.assertEqual(
             order_id2.amount_untaxed, 1.0, 'Coupon Code: Coupon Code not Apply')
 
@@ -42,7 +41,6 @@ class TestSaleCoupon(TestSaleCouponCommon):
             'date_order': datetime.datetime.now(),
             'order_line': [(0, 0, {'product_id': self.conference_product.id, 'product_uom_qty': 5})]
         })
-
         order_id3.order_line.apply_coupon(
             order_id1.order_line.coupon_ids[1].code)
         order_id3.action_button_confirm()
