@@ -40,13 +40,16 @@ class FormulaLine(object):
                 if res.get(obj.id):
                     for field in field_names:
                         fields[field] = res[obj.id][field]
+        elif type == 'not_computed':
+            for field in fields:
+                fields[field] = obj.get(field, 0)
         self.balance = fields['balance']
         self.credit = fields['credit']
         self.debit = fields['debit']
 
 
 class FormulaContext(dict):
-    def __init__(self, reportLineObj, curObj, *data):
+    def __init__(self, reportLineObj, curObj=None, *data):
         self.reportLineObj = reportLineObj
         self.curObj = curObj
         return super(FormulaContext, self).__init__(data)
@@ -418,6 +421,14 @@ class account_financial_report_line(models.Model):
                         self.env.cr.execute(query)
                         gb_non_issued = dict(self.env.cr.fetchall())
 
+                    c = FormulaContext(self.env['account.financial.report.line'])
+                    if self.formulas:
+                        for f in self.formulas.split(';'):
+                            [column, formula] = f.split('=')
+                            column = column.strip()
+                            if column == 'balance':
+                                balance_formula = formula
+
                     for gb in gbs:
                         vals = {'id': gb[0], 'name': self._get_gb_name(gb[0]), 'level': self.level + 2, 
                                 'type': self.groupby, 'footnotes': self._get_footnotes(self.groupby, gb[0])}
@@ -425,18 +436,30 @@ class account_financial_report_line(models.Model):
                         flag = False
                         for column in xrange(1, len(columns) + 1):
                             value = gb[column]
-                            vals[columns[column - 1]] = self._format(value)
+                            vals[columns[column - 1]] = value
                             if columns[column - 1] == 'balance':
                                 total += value
                             if not currency_id.is_zero(value):
                                 flag = True
+                        c['sum'] = FormulaLine(vals, type='not_computed')
+                        if self.formulas:
+                            for f in self.formulas.split(';'):
+                                [column, formula] = f.split('=')
+                                column = column.strip()
+                                if column == 'balance':
+                                    balance_formula = formula
+                                if column in vals:
+                                    value = report_safe_eval(formula, c, nocopy=True)
+                                    vals[column] = self._format(value)
                         if context['comparison']:
                             vals['comparison'] = []
                             for gb_cmp in gbs_cmp:
                                 if gb_cmp.get(gb[0]):
-                                    vals['comparison'].append(self._format(gb_cmp[gb[0]]))
-                                    total += gb_cmp[gb[0]]
-                                    if not currency_id.is_zero(gb_cmp[gb[0]]):
+                                    c['sum'] = FormulaLine({'balance': gb_cmp[gb[0]]}, type='not_computed')
+                                    value = report_safe_eval(balance_formula, c, nocopy=True)
+                                    vals['comparison'].append(self._format(value))
+                                    total += value
+                                    if not currency_id.is_zero(value):
                                         flag = True
                                     del gb_cmp[gb[0]]
                                 else:
@@ -445,17 +468,21 @@ class account_financial_report_line(models.Model):
                                     vals['comparison_pc'] = self._build_cmp(gb[1], gb_cmp.get(gb[0], 0))
                         if extended:
                             if gb_older.get(gb[0]):
-                                vals['older'] = self._format(gb_older[gb[0]])
-                                total += gb_older[gb[0]]
-                                if not currency_id.is_zero(gb_older[gb[0]]):
+                                c['sum'] = FormulaLine({'balance': gb_older[gb[0]]}, type='not_computed')
+                                value = report_safe_eval(balance_formula, c, nocopy=True)
+                                vals['older'] = self._format(value)
+                                total += value
+                                if not currency_id.is_zero(value):
                                     flag = True
                                 del gb_older[gb[0]]
                             else:
                                 vals['older'] = self._format(0)
                             if gb_non_issued.get(gb[0]):
-                                vals['non_issued'] = self._format(gb_non_issued[gb[0]])
-                                total += gb_non_issued[gb[0]]
-                                if not currency_id.is_zero(gb_non_issued[gb[0]]):
+                                c['sum'] = FormulaLine({'balance': gb_non_issued[gb[0]]}, type='not_computed')
+                                value = report_safe_eval(balance_formula, c, nocopy=True)
+                                vals['non_issued'] = self._format(value)
+                                total += value
+                                if not currency_id.is_zero(value):
                                     flag = True
                                 del gb_non_issued[gb[0]]
                             else:
@@ -477,21 +504,27 @@ class account_financial_report_line(models.Model):
                                     'balance': self._format(0), 'comparison': [], 'footnotes': self._get_footnotes(self.groupby, extra_gb)}
                             for gb_cmp in gbs_cmp:
                                 if extra_gb in gb_cmp:
-                                    vals['comparison'].append(self._format(gb_cmp[extra_gb]))
-                                    total += gb_cmp[extra_gb]
+                                    c['sum'] = FormulaLine({'balance': gb_cmp[extra_gb]}, type='not_computed')
+                                    value = report_safe_eval(balance_formula, c, nocopy=True)
+                                    vals['comparison'].append(self._format(value))
+                                    total += value
                                 else:
                                     vals['comparison'].append(self._format(0))
                                 if context['periods_number'] == 1:
                                     vals['comparison_pc'] = self._build_cmp(0, gb_cmp.get(extra_gb, 0))
                             if extended:
                                 if extra_gb in gb_older:
-                                    vals['older'] = self._format(gb_older[extra_gb])
-                                    total += gb_older[extra_gb]
+                                    c['sum'] = FormulaLine({'balance': gb_older[extra_gb]}, type='not_computed')
+                                    value = report_safe_eval(balance_formula, c, nocopy=True)
+                                    vals['older'] = self._format(value)
+                                    total += value
                                 else:
                                     vals['older'] = self._format(0)
                                 if extra_gb in gb_non_issued:
-                                    vals['non_issued'] = self._format(gb_non_issued[extra_gb])
-                                    total += gb_non_issued[extra_gb]
+                                    c['sum'] = FormulaLine({'balance': gb_non_issued[extra_gb]}, type='not_computed')
+                                    value = report_safe_eval(balance_formula, c, nocopy=True)
+                                    vals['non_issued'] = self._format(value)
+                                    total += value
                                 else:
                                     vals['non_issued'] = self._format(0)
                                 vals['total'] = self._format(total)
