@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-09-24 10:16+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-22 08:29+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-25 07:00+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:51+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -456,6 +456,7 @@ msgid "Cumulative Flow"
 msgstr "Cumulatieve flow"
 
 #. module: project
+#: view:project.project:project.edit_project
 #: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Klant"
@@ -869,6 +870,12 @@ msgstr ""
 "module is geïnstalleerd)."
 
 #. module: project
+#: code:addons/project/project.py:201
+#, python-format
+msgid "Internal project: all employees can access"
+msgstr "Intern project: Alle werknemers hebben toegang"
+
+#. module: project
 #: code:addons/project/project.py:171
 #, python-format
 msgid "Invalid Action!"
@@ -1202,6 +1209,12 @@ msgid "Privacy / Visibility"
 msgstr "Prive / Zichtbaarheid"
 
 #. module: project
+#: code:addons/project/project.py:202
+#, python-format
+msgid "Private project: followers Only"
+msgstr "Privé project: Alleen voor volgers"
+
+#. module: project
 #: field:project.project,progress_rate:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
@@ -1331,6 +1344,12 @@ msgstr ""
 "- Dit installeert de module project_issue-sheet."
 
 #. module: project
+#: code:addons/project/project.py:200
+#, python-format
+msgid "Public project"
+msgstr "Openbaar project"
+
+#. module: project
 #: view:project.project:project.edit_project
 msgid "Re-open project"
 msgstr "Her-open project"
@@ -1457,6 +1476,11 @@ msgstr "Taken fases"
 #: view:project.task.type:project.task_type_search
 msgid "Stages common to all projects"
 msgstr "Fases van taken, geldend voor alle projecten"
+
+#. module: project
+#: view:project.project:project.edit_project
+msgid "Start Date"
+msgstr "Startdatum"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -1857,6 +1881,11 @@ msgid "Usability"
 msgstr "Gebruiksvriendelijkheid"
 
 #. module: project
+#: view:project.project:project.edit_project
+msgid "Use Tasks"
+msgstr "Gebruik taak"
+
+#. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
 msgstr "Gebruik geintegreerde samenwerkings pads op taken."
@@ -1961,6 +1990,12 @@ msgstr "_Delegeren"
 #: view:project.task:project.view_task_kanban
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
+
+#. module: project
+#: view:project.config.settings:project.view_config_settings
+#: view:project.task.delegate:project.view_project_task_delegate
+msgid "or"
+msgstr "of"
 
 #. module: project
 #: code:addons/project/project.py:878

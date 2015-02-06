@@ -52,8 +52,9 @@ class TestRelatedField(common.TransactionCase):
         company_ids = self.company.search(self.cr, self.uid, [('partner_id', '!=', False)], limit=1)
         company = self.company.browse(self.cr, self.uid, company_ids[0])
 
-        # find partners that satisfy [('partner_id.company_id', '=', company.id)]
-        partner_ids = self.partner.search(self.cr, self.uid, [('related_company_partner_id', '=', company.id)])
+        # find partners that satisfy [('company_id.partner_id', '=', company.partner_id.id)]
+        partner_ids = self.partner.search(self.cr, self.uid, [('related_company_partner_id', '=', company.partner_id.id)])
+        self.assertGreater(len(partner_ids), 0)
         partner = self.partner.browse(self.cr, self.uid, partner_ids[0])
 
         # create a new partner, and assign it to company

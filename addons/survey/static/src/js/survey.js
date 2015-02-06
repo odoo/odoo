@@ -80,33 +80,48 @@ $(document).ready(function () {
 
     // Pre-filling of the form with previous answers
     function prefill(){
-        var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
-            .done(function(json_data){
-                _.each(json_data, function(value, key){
-                    the_form.find(".form-control[name=" + key + "]").val(value);
-                    the_form.find("input[name^=" + key + "]").each(function(){
-                        $(this).val(value);
+        if (! _.isUndefined(prefill_controller)) {
+            var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
+                .done(function(json_data){
+                    _.each(json_data, function(value, key){
+
+                        // prefill of text/number/date boxes
+                        var input = the_form.find(".form-control[name=" + key + "]");
+                        input.val(value);
+
+                        // special case for comments under multiple suggestions questions
+                        if (_.string.endsWith(key, "_comment") &&
+                            (input.parent().hasClass("js_comments") || input.parent().hasClass("js_ck_comments"))) {
+                            input.siblings().find('>input').attr("checked","checked");
+                        }
+
+                        // checkboxes and radios
+                        the_form.find("input[name^=" + key + "][type!='text']").each(function(){
+                            $(this).val(value);
+                        });
                     });
+                })
+                .fail(function(){
+                    console.warn("[survey] Unable to load prefill data");
                 });
-            })
-            .fail(function(){
-                console.warn("[survey] Unable to load prefill data");
-            });
-        return prefill_def;
+            return prefill_def;
+        }
     }
 
     // Display score if quiz correction mode
     function display_scores(){
-        var score_def = $.ajax(scores_controller, {dataType: "json"})
-            .done(function(json_data){
-                _.each(json_data, function(value, key){
-                    the_form.find("span[data-score-question=" + key + "]").text("Your score: " + value);
+        if (! _.isUndefined(scores_controller)) {
+            var score_def = $.ajax(scores_controller, {dataType: "json"})
+                .done(function(json_data){
+                    _.each(json_data, function(value, key){
+                        the_form.find("span[data-score-question=" + key + "]").text("Your score: " + value);
+                    });
+                })
+                .fail(function(){
+                    console.warn("[survey] Unable to load score data");
                 });
-            })
-            .fail(function(){
-                console.warn("[survey] Unable to load score data");
-            });
-        return score_def;
+            return score_def;
+        }
     }
 
     // Parameters for form submission

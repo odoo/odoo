@@ -555,12 +555,9 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.do_notify(_t("Backed"), _t("Database backed up successfully"));
             },
             error: function(error){
-               if(error){
-                  self.display_error({
-                        title: _t("Backup Database"),
-                        error: 'AccessDenied'
-                  });
-               }
+                if (error && error[1]) {
+                    self.display_error(error[1][0]);
+                }
             },
             complete: function() {
                 self.unblockUI();
@@ -1224,7 +1221,7 @@ instance.web.WebClient = instance.web.Client.extend({
         $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
         if ($.blockUI) {
             var imgkit = Math.floor(Math.random() * 2 + 1);
-            $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
+            $.blockUI.defaults.message = '<img src="/web/static/src/img/k-waiting' + imgkit + '.gif" class="loading-kitten">';
         }
     },
     /**

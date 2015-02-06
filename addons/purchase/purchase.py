@@ -58,15 +58,13 @@ class purchase_order(osv.osv):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
+        pol_obj = self.pool.get('purchase.order.line')
         for po in self.browse(cr, uid, ids, context=context):
             if po.order_line:
-                cr.execute("""update purchase_order_line set
-                        date_planned=%s
-                    where
-                        order_id=%s and
-                        (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
-            cr.execute("""update purchase_order set
-                    minimum_planned_date=%s where id=%s""", (value, po.id))
+                pol_ids = pol_obj.search(cr, uid, [
+                    ('order_id', '=', po.id), '|', ('date_planned', '=', po.minimum_planned_date), ('date_planned', '<', value)
+                ], context=context)
+                pol_obj.write(cr, uid, pol_ids, {'date_planned': value}, context=context)
         self.invalidate_cache(cr, uid, context=context)
         return True
 
@@ -1445,6 +1443,13 @@ class product_product(osv.Model):
             product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
             for product_id in ids
         }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = self.pool['product.template']._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
+        return result
 
     _columns = {
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),

@@ -122,14 +122,17 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         currency_obj = pool['res.currency']
         attribute_value_ids = []
+        visible_attrs = set(l.attribute_id.id
+                                for l in product.attribute_line_ids
+                                    if len(l.value_ids) > 1)
         if request.website.pricelist_id.id != context['pricelist']:
             website_currency_id = request.website.currency_id.id
             currency_id = self.get_pricelist().currency_id.id
             for p in product.product_variant_ids:
                 price = currency_obj.compute(cr, uid, website_currency_id, currency_id, p.lst_price)
-                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, price])
+                attribute_value_ids.append([p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, price])
         else:
-            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if len(v.attribute_id.value_ids) > 1], p.price, p.lst_price]
+            attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, p.lst_price]
                 for p in product.product_variant_ids]
 
         return attribute_value_ids
@@ -802,13 +805,23 @@ class website_sale(http.Controller):
 
         # send the email
         if email_act and email_act.get('context'):
+            composer_obj = request.registry['mail.compose.message']
             composer_values = {}
             email_ctx = email_act['context']
-            public_id = request.website.user_id.id
-            if uid == public_id:
+            template_values = [
+                email_ctx.get('default_template_id'),
+                email_ctx.get('default_composition_mode'),
+                email_ctx.get('default_model'),
+                email_ctx.get('default_res_id'),
+            ]
+            composer_values.update(composer_obj.onchange_template_id(cr, SUPERUSER_ID, None, *template_values, context=context).get('value', {}))
+            if not composer_values.get('email_from') and uid == request.website.user_id.id:
                 composer_values['email_from'] = request.website.user_id.company_id.email
-            composer_id = request.registry['mail.compose.message'].create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
-            request.registry['mail.compose.message'].send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
+            for key in ['attachment_ids', 'partner_ids']:
+                if composer_values.get(key):
+                    composer_values[key] = [(6, 0, composer_values[key])]
+            composer_id = composer_obj.create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
+            composer_obj.send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)
