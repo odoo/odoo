@@ -923,7 +923,13 @@ class stock_picking(osv.osv):
         This method is called at the end of the workflow by the activity "done".
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for picking in self.browse(cr, uid, ids, context=context):
+            values = {
+                'state': 'done'
+            }
+            if not picking.date_done:
+                values['date_done'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            picking.write(values)
         return True
 
     def action_move(self, cr, uid, ids, context=None):
