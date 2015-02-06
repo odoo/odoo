@@ -408,16 +408,7 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight"
-                                    attrs="{'invisible': [('body_html', '!=', False)]}"/>
-                                <button name="action_edit_html" type="object" string="Change Email Design"
-                                    attrs="{'invisible': [('body_html', '=', False)]}"/>
-                                <div attrs="{'invisible' : ['|', ('state', '=', 'done'), ('body_html','!=',False)]}" class="oe_view_nocontent oe_clear">
-                                    <p class="oe_view_nocontent_create">
-                                        Click to design your email.
-                                    </p>
-                                </div>
-                                <field name="body_html" readonly="1"/>
+                                <field name="body_html" options="{'editor_url': '/website_mail/field/email_template'}"/>
                                 <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
                             </page>
                             <page string="Options">

@@ -693,6 +693,7 @@ class MassMailing(osv.Model):
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
             value['mailing_domain'] = False
+        value['body_html'] = "on_change_model_and_list"
         return {'value': value}
 
     def action_duplicate(self, cr, uid, ids, context=None):
@@ -721,19 +722,6 @@ class MassMailing(osv.Model):
             'target': 'new',
             'context': ctx,
         }
-
-    def action_edit_html(self, cr, uid, ids, context=None):
-        if not len(ids) == 1:
-            raise ValueError('One and only one ID allowed for this action')
-        mail = self.browse(cr, uid, ids[0], context=context)
-        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&template_model=%s&enable_editor=1' % (ids[0], mail.mailing_model)
-        return {
-            'name': _('Open with Visual Editor'),
-            'type': 'ir.actions.act_url',
-            'url': url,
-            'target': 'self',
-        }
-
 
     #------------------------------------------------------
     # Email Sending
