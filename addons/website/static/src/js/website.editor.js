@@ -424,6 +424,20 @@ define(['summernote/summernote'], function () {
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var fn_visible = $.summernote.pluginEvents.visible;
+    $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
+        var res = fn_visible.call(this, event, editor, layoutInfo);
+        var $node = $(dom.node(range.create().sc));
+        if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) && $node.hasClass("o_editable") && !$node[0].children.length) {
+            var p = $('<p><br/></p>')[0];
+            $node.append( p );
+            range.createFromNode(p.firstChild).select();
+        }
+        return res;
+    };
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /* fix ie and re-range to don't break snippet*/
 
     var initial_data = {};
