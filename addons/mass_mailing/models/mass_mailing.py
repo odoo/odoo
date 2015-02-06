@@ -772,7 +772,7 @@ class MassMailing(osv.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self.convert_link(cr, uid, [mailing.id], context=context)[mailing.id],
+                'body': self.convert_links(cr, uid, [mailing.id], context=context)[mailing.id],
                 'subject': mailing.name,
                 'model': mailing.mailing_model,
                 'email_from': mailing.email_from,
@@ -790,33 +790,12 @@ class MassMailing(osv.Model):
             self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
-    def convert_link(self, cr, uid, ids, context=None):
-        website_links = self.pool['website.links']
+    def convert_links(self, cr, uid, ids, context=None):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
             res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
-            
-            for match in re.findall(URL_REGEX, res[mass_mailing.id]):
-                href = match[0]
-                long_url = match[1]
-
-                utm_object = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
-
-                vals = {'url': long_url}
-
-                if utm_object.campaign_id:
-                    vals['campaign_id'] = utm_object.campaign_id.id
-                if utm_object.source_id:
-                    vals['source_id'] = utm_object.source_id.id
-                if utm_object.medium_id:
-                    vals['medium_id'] = utm_object.medium_id.id
-
-                link_id = website_links.create(cr, uid, vals, context=context)
-                shorten_url = website_links.browse(cr, uid, link_id, context=context)[0].short_url
-
-                if shorten_url:
-                    new_href = href.replace(long_url, shorten_url)
-                    res[mass_mailing.id] = res[mass_mailing.id].replace(href, new_href)
+            utm_mixin = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
+            res[mass_mailing.id] = self.pool['website.links'].convert_links(cr, uid, res[mass_mailing.id], utm_mixin, context=context)            
         return res
 
     def put_in_queue(self, cr, uid, ids, context=None):
@@ -851,14 +830,18 @@ class MassMailing(osv.Model):
 class MailMail(models.Model):
     _inherit = ['mail.mail']
 
+    links_backlist = ['/unsubscribe_from_list']
+
     @api.model
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
-        if mail.mailing_id and mail.body_html:
+        if mail.mailing_id and mail.body_html and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
+
                 href = match[0]
                 url = match[1]
-                if mail.statistics_ids:
+                
+                if not [s for s in self.links_backlist if s in href]:
                     new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     mail.body_html = mail.body_html.replace(href, new_href)
 
