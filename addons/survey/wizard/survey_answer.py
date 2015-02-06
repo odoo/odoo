@@ -988,7 +988,7 @@ class survey_question_wiz(osv.osv_memory):
                     if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == sur_name_read['store_ans'][update]['question_id']:
                         for res_id in response_list:
                             if key.split('_')[2] in res_id.split('_')[1]:
-                                a = res_ans_obj.write(cr, uid, [res_id.split('_')[0]], {'comment_field':val})
+                                a = res_ans_obj.write(cr, uid, [int(res_id.split('_')[0])], {'comment_field':val})
                                 sur_name_read['store_ans'][update].update({key:val})
 
                 if comment_field and comment_value:
