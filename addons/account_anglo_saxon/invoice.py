@@ -99,7 +99,7 @@ class account_invoice_line(osv.osv):
                         'price_unit':price_unit,
                         'quantity':i_line.quantity,
                         'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
-                        'account_id':fiscal_pool.map_account(cr, uid, fpos, dacc),
+                        'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uos_id':i_line.uos_id.id,
                         'account_analytic_id': False,
