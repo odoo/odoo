@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_sale_coupon_tree">
+            <field name="name">Pre Sale Coupon Type</field>
+            <field name="model">sales.coupon.type</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Coupon">
+                    <field name="name"/>
+                    <field name="validity_duration"/>
+                    <field name="duration" string="Duration"/>
+                    <field name="expiration_use"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sale_coupon_form" model="ir.ui.view">
+            <field name="name">Pre Sale Coupon Type</field>
+            <field name="model">sales.coupon.type</field>
+            <field name="arch" type="xml">
+                <form string="Sales Coupon">
+                    <sheet string="Sales Coupon">
+                        <group>
+                            <field name="name" placeholder="Coupon for event"/>
+                            <field name="is_active"/>
+                            <label for="expiration_use"/>
+                            <div>
+                                <field name="expiration_use" class="oe_inline"/><span class="oe_grey oe_inline"> if 0, there is no limit of use</span>
+                            </div>
+                            <label for="validity_duration"/>
+                            <div>
+                                <field name="duration" class="oe_inline"/>
+                                <field name="validity_duration" class="oe_inline"/><span class="oe_grey oe_inline"> if 0, there is no limit of time</span>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_sale_coupon_configuration" model="ir.actions.act_window">
+            <field name="name">Pre Sale Coupon Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sales.coupon.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new type of coupon.
+                </p>
+                <p>
+                    Use coupon to allow your customer to buy a service and subscribe to this service later from your shop.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sales_config" parent="base.menu_base_config" sequence="1" name="Sales"/>
+        <menuitem action="action_sale_coupon_configuration" id="base.menu_coupon_type_config" parent="base.menu_sales_config"/>
+
+        <record model="ir.ui.view" id="view_coupon_manager_tree">
+            <field name="name">Pre Sale Coupon</field>
+            <field name="model">sales.coupon</field>
+            <field name="arch" type="xml">
+                <tree string="Coupon Manager" >
+                    <field name="code"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="coupon_type" invisible="1"/>
+                    <field name="expired_on"/>
+                    <field name="number_of_use"/>
+                    <field name="product_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_coupon_manager_form" model="ir.ui.view">
+            <field name="name">Pre Sale Coupon</field>
+            <field name="model">sales.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Coupon Manager">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="current,used,expired"/>
+                    </header>
+                    <sheet string="Coupon Manager">
+                        <div class="oe_title">
+                        <label for="code" class="oe_edit_only"/>
+                            <h1><field name="code" placeholder="Coupon Code"/></h1>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="return_action_to_open_orders"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list-alt">
+                                <field name="coupon_used" widget="statinfo" string="Orders"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="partner_id"/>
+                                <div>
+                                    <field name="partner_id" attrs="{'readonly' : [('state', '!=', 'current')] }"/>
+                                </div>
+                                <label for="product_id" />
+                                <div>
+                                    <field name="product_id" attrs="{'readonly' : [('state', '!=', 'current')] }"/>
+                                </div>
+                            </group>
+                            <group>
+                                <label for="coupon_type"/>
+                                <div>
+                                    <field name="coupon_type" attrs="{'readonly' : [('state', '!=', 'current')] }"/>
+                                    <field name="expiration_date" invisible="1" />
+                                    <field name="expiration_use" invisible="1"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_coupon_manager_filter" model="ir.ui.view">
+            <field name="name">Pre Sale Coupon</field>
+            <field name="model">sales.coupon</field>
+            <field name="arch" type="xml">
+                <search string="Coupon Manager">
+                    <filter string="Current" domain="[('state','=','current')]"/>
+                    <filter string="Expired" domain="[('state','in',('expired', 'used'))]"/>
+                    <separator/>
+                    <group string="Group By">
+                        <filter string="Coupon type" context="{'group_by':'coupon_type'}"/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="sales_coupon_manager" model="ir.actions.act_window">
+            <field name="name">Pre Sale Coupon</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sales.coupon</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_coupon_manager_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new coupon.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem action="sales_coupon_manager" id="menu_sales_coupon_manager" parent="base.menu_invoiced"/>
+
+    </data>
+</openerp>
+

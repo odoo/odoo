@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_coupon_type_template" model="ir.ui.view">
+            <field name="name">product.coupon.type</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']//group[@name='sale_condition']" position="inside">
+                    <field name="coupon_type"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

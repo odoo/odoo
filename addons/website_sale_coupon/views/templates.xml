@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Sale Coupon Assets">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_sale_coupon/static/src/js/sale_coupon.js"/>
+    </xpath>
+</template>
+
+<template id="cart_product_coupon" inherit_id="website_sale.cart" name="Sale coupon">
+    <xpath expr="//table[@id='cart_products']/tbody//td[last()]/div" position="attributes">
+        <attribute name="t-if">line.product_id</attribute>
+    </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody//td[1]" position="inside">
+        <span t-if="not line.product_id" class="text-danger" t-esc="line.name"/>
+    </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody//td[last()]" position="inside">
+        <t t-if="not line.product_id">
+            <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-esc="int(line.product_uom_qty)"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="sales_coupon_code" inherit_id="website_sale.payment" active="True">
+    <xpath expr="//div[@id='right_column']" position="inside">
+        <div class="coupon_box">
+            <h4>Coupon Code</h4>
+            <p>
+            Have a coupon code? Fill in this field and apply.
+            </p>
+            <div class="input-group">
+                <input name="promo" class='form-control' type="text" placeholder="code..."/>
+                <div class="input-group-btn">
+                    <a class="btn btn-default a-submit check_coupon">Apply</a>
+                </div>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//table[@id='cart_products']/tbody//td[1]" position="inside">
+        <span t-if="not line.product_id" class="text-danger" t-esc="line.name"/>
+    </xpath>
+</template>
+</data>
+</openerp>
