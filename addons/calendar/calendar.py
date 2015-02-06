@@ -172,10 +172,11 @@ class calendar_attendee(osv.Model):
         return res
 
     def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
-                                template_xmlid='calendar_template_meeting_invitation', context=None):
+                                template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
+        @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
 
@@ -208,7 +209,7 @@ class calendar_attendee(osv.Model):
         })
 
         for attendee in self.browse(cr, uid, ids, context=context):
-            if attendee.email and email_from and attendee.email != email_from:
+            if attendee.email and email_from and (attendee.email != email_from or force):
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
@@ -510,7 +511,14 @@ class calendar_alarm_manager(osv.AbstractModel):
         alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
 
         if alarm.type == 'email':
-            res = self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], template_xmlid='calendar_template_meeting_reminder', context=context)
+            res = self.pool['calendar.attendee']._send_mail_to_attendees(
+                cr,
+                uid,
+                [att.id for att in event.attendee_ids],
+                template_xmlid='calendar_template_meeting_reminder',
+                force=True,
+                context=context
+            )
 
         return res
 
