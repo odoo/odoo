@@ -39,7 +39,7 @@
         'credit': 1000.0,
         'debit': 0.0,
     }
-    self.process_reconciliation(cr, uid, ref("account_bank_statement_line_0"), [counterpart_line_dict])
+    self.process_reconciliations(cr, uid, ref("account_bank_statement_line_0"), [{'counterpart_aml_dicts': counterpart_line_dict}])
 -
   I confirm the bank statement using Confirm button
 -

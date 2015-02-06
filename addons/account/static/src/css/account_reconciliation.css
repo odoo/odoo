@@ -61,8 +61,18 @@
       top: 2px;
       z-index: 10;
       text-shadow: -1px -1px 0 #f5f5f5, 1px -1px 0 #f5f5f5, -1px 1px 0 #f5f5f5, 1px 1px 0 #f5f5f5; }
+  .openerp .oe_reconciliation .show_more_container {
+    text-align: center; }
+    .openerp .oe_reconciliation .show_more_container .show_more {
+      display: none; }
   .openerp .oe_reconciliation .notification_area {
     margin: 0 15px; }
+    .openerp .oe_reconciliation .notification_area .fa {
+      font-size: 20px;
+      margin-left: 7px;
+      line-height: 14px;
+      position: relative;
+      top: 3px; }
   .openerp .oe_reconciliation .interface_options {
     margin-bottom: 25px;
     padding-left: 15px; }
@@ -283,7 +293,8 @@
       margin: 0 15px;
       border: 1px solid #d5d5d5;
       border-radius: 5px;
-      padding: 10px; }
+      padding: 10px;
+      overflow: auto; }
       .openerp .oe_reconciliation .oe_reconciliation_line .create .quick_add {
         position: relative;
         margin-bottom: 10px;

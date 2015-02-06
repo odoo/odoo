@@ -28,13 +28,12 @@ class TestBankStatementReconciliation(TransactionCase):
         st_line = self.create_statement_line(100)
 
         # reconcile
-        st_line.process_reconciliation([{
-            'counterpart_move_line_id': rcv_mv_line.id,
-            'is_reconciled': False,
+        st_line.process_reconciliation(counterpart_aml_dicts={
+            'move_line': rcv_mv_line,
             'credit': 100,
             'debit': 0,
             'name': rcv_mv_line.name,
-        }])
+        })
 
         # check everything went as expected
         rec_move = st_line.journal_entry_ids[0]

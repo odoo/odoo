@@ -3,10 +3,9 @@
 import time
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
-from openerp.exceptions import RedirectWarning
+from openerp.exceptions import RedirectWarning, UserError
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
-from openerp.exceptions import UserError
 
 class account_move_line(models.Model):
     _name = "account.move.line"

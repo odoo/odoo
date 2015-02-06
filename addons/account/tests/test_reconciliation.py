@@ -76,12 +76,12 @@ class TestReconciliation(TransactionCase):
                 line_id = l
                 break
         amount_in_widget = currency_id and amount_currency or amount
-        bank_stmt_line.process_reconciliation([{
-            'counterpart_move_line_id': line_id.id, 
-            'debit': amount_in_widget < 0 and -amount_in_widget or 0.0, 
-            'credit': amount_in_widget > 0 and amount_in_widget or 0.0, 
+        bank_stmt_line.process_reconciliation(counterpart_aml_dicts={
+            'move_line': line_id,
+            'debit': amount_in_widget < 0 and -amount_in_widget or 0.0,
+            'credit': amount_in_widget > 0 and amount_in_widget or 0.0,
             'name': line_id.name,
-            }])
+            })
         return bank_stmt
 
     def check_results(self, move_line_ids, aml_dict):
