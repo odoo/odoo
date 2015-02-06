@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="currency_rate_update_tree">
+        <field name="name">exchange.rate.service</field>
+        <field name="model">currency.rate.provider</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="server_action_id"/>
+                <field name="base_currency_id"/>
+                <field name="currency_ids" widget="many2many_tags" placeholder="Type currency ids here.."/>
+            </tree>
+        </field>
+    </record>
+</odoo>

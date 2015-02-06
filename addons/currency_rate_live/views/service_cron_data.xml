@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.cron" id="ir_cron_currency_update">
+        <field name="name">Currency Rate Update</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'res.company'"/>
+        <field name="function" eval="'run_currency_update'"/>
+        <field name="args">(None,)</field>
+    </record>
+    <record id="update_rate_using_yahoo" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with yahoo</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+    datas = []
+    if len(map(lambda x: x.name, obj.currency_ids)) == 1:
+        datas.append({
+            'currency_code': data['query']['results']['rate']['Name'].split('/')[-1],
+            'rate': data['query']['results']['rate']['Rate'],
+            'date': data['query']['results']['rate']['Date']
+        })
+    else:
+        for rates in data['query']['results']['rate']:
+            datas.append({
+                'currency_code': rates['Name'].split('/')[-1],
+                'rate': rates['Rate'],
+                'date': rates['Date']
+            })
+    return datas
+base_currency = obj.base_currency_id.name
+currency_pairs = ','.join(base_currency + x.name for x in obj.currency_ids)
+request_url = "http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.xchange where pair in('{0}')&amp;format=json&amp;env=store://datatables.org/alltableswithkeys".format(currency_pairs)
+
+obj.process_currency_rate_data(request_url, response_type='json', preprocess=preprocess)
+        </field>
+    </record>
+    <record id="update_rate_using_ecb" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with ECB</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+    datas = []
+    currencies = [x.name for x in obj.currency_ids]
+    node = data['children'][2]['children'][0]
+    date = node['attrs']['time']
+    currency_node = [(x['attrs']['currency'], x['attrs']['rate']) for x in node['children'] if x['attrs']['currency'] in currencies]
+
+    base_currency_rates = [(x['attrs']['currency'], x['attrs']['rate']) for x in node['children'] if x['attrs']['currency'] == obj.base_currency_id.name]
+
+    base_currency_rate = len(base_currency_rates) and base_currency_rates[0][1] or 1
+    for currency_code, rate in currency_node:
+        datas.append({
+            'currency_code' : currency_code,
+            'rate': float(rate) / float(base_currency_rate),
+            'date': date
+        })
+    return datas
+
+request_url = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='xml')
+        </field>
+    </record>
+    <record id="update_rate_using_appspot" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with AppSpot</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+    return [{'currency_code': data['target'], 'rate': data['rate']}]
+
+url = "http://currency-api.appspot.com/api/%s" % (obj.base_currency_id.name)
+key = "10baaea3470990f4e843ac703096591974e68e41"
+
+for currency in obj.currency_ids:
+    request_url = "%s/%s.json?key=%s"  % (url, currency.name, key)
+    obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='json')
+        </field>
+    </record>
+    <record id="update_rate_using_bankofcanda" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with BankOfCanada</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+
+    def inner(node):
+        rate = 0.0
+        currency_code = False
+        date = False
+        for child in node['children']:
+            if child['tag'] == 'value':
+                rate = child['children'][0]
+            elif child['tag'] == 'targetCurrency':
+                currency_code = child['children'][0].split('_')[0]
+            elif child['tag'] == 'observationPeriod':
+                date = child['children'][0]
+        return (currency_code, float(rate), date)
+        
+    currency_code, rate, date = [inner(x) for x in data['children'][1]['children'][5]['children'] if x['tag'] == 'exchangeRate'][0]
+
+    if currency_code == obj.base_currency_id.name:
+        currency_code = 'CAD'
+        rate = 1 / rate
+        base_currency_rate = 1
+    else:
+        base_currency_rate =  1 / obj.find_base_currency_rate('CAD')
+    return [{
+        'currency_code': currency_code, 
+        'rate': rate / base_currency_rate, 
+        'date': date
+    }]
+
+url = "http://www.bankofcanada.ca/stats/assets/rates_rss/noon"
+if obj.base_currency_id.name != "CAD":
+    request_url = "%s/en_%s.xml" % (url, obj.base_currency_id.name)
+    obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='xml')
+
+for currency in obj.currency_ids:
+    request_url = "%s/en_%s.xml" % (url, currency.name)
+    obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='xml')
+        </field>
+    </record>
+    
+    <record id="update_rate_using_pln" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with Polland National Bank</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+    currencies = [x.name for x in obj.currency_ids]
+    date = data['children'][2]['children'][0]
+    datas = []
+
+    node = [(x['children'][2]['children'][0], x['children'][4]['children'][0].replace(",", ".")) for x in data['children'][3:] if x['children'][2]['children'][0] in currencies]
+
+    base_currency_node = [(x['children'][2]['children'][0], x['children'][4]['children'][0].replace(",", ".")) for x in data['children'][3:] if x['children'][2]['children'][0] == obj.base_currency_id.name]
+
+    base_currency_rate = len(base_currency_node) and base_currency_node[0][1] or 1
+    for currency_code, rate in node:
+        datas.append({
+            'currency_code': currency_code,
+            'rate': 1 / (float(rate) / float(base_currency_rate)),
+            'date': date
+        })
+    return datas
+
+request_url = "http://www.nbp.pl/kursy/xml/LastC.xml"
+obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='xml')
+
+        </field>
+    </record>
+    <record id="update_rate_using_swiss_bank" model="ir.actions.server">
+        <field name="name">Update currency exchange rate with Swiss Bank</field>
+        <field name="model_id" ref="model_currency_rate_provider"/>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="code">
+def preprocess(data):
+    datas = []
+    date = data['children'][0]['children'][0] + "T"+ data['children'][1]['children'][0]
+    currencies = [x.name for x in obj.currency_ids]
+
+    devise_node = [(x['children'][4]['children'][0].split(' ')[-1], int(x['children'][4]['children'][0].split(' ')[0]), x['children'][5]['children'][0]) for x in data['children'][2:] if x['children'][4]['children'][0].split(' ')[-1] in currencies]
+
+    base_currency_node = [(x['children'][4]['children'][0].split(' ')[-1], int(x['children'][4]['children'][0].split(' ')[0]), x['children'][5]['children'][0]) for x in data['children'][2:] if x['children'][4]['children'][0].split(' ')[-1] == obj.base_currency_id.name]
+
+    base_currency_rate = len(base_currency_node) and base_currency_node[0][1] * base_currency_node[0][2] or 1
+    for currency_code, base, rate in devise_node:
+        datas.append({
+            'currency_code': currency_code,
+            'rate': (1 / (float(rate) / float(base_currency_rate))) * base,
+            'date': date
+        })
+    return datas
+
+request_url = "http://www.afd.admin.ch/publicdb/newdb/mwst_kurse/wechselkurse.php"
+obj.process_currency_rate_data(request_url, preprocess=preprocess, response_type='xml')
+        </field>
+    </record>
+</odoo>
