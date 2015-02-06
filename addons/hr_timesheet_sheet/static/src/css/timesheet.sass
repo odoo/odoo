@@ -1,52 +1,116 @@
 @charset "utf-8"
 
 .openerp
-    .oe_form_readonly
-        .oe_timesheet_weekly
-            .oe_timesheet_button_add
-                display: none
-            div.oe_view_nocontent
-                display: none
-    .oe_timesheet_weekly
-        overflow-x: auto
-        table
-            width: 100%
-        td
-            padding: 3px
-            text-align: right
-        th
-            text-align: center
-            color: #069
-            font-family: 'Helvetica Neue', Arial, Verdana, 'Nimbus Sans L', sans-serif
-            font-size: 10px
-            background: #eee
-            min-width: 47px
-        .oe_timesheet_total
-            background: #eee
-        .oe_timesheet_weekly_account
-            text-align: left
-        .oe_timesheet_first_col
-            min-width: 130px
-        td input.oe_timesheet_weekly_input
-            padding-right: 2px !important
-            width: 40px
-            text-align: right
-            min-width: 0 !important
-        td.oe_timesheet_total
-            font-weight: bold
-            padding: 5px 3px !important
-        .oe_timesheet_weekly_adding_tot
-            display: table
-            width: 100%
-        .oe_timesheet_weekly_adding
-            display: table-cell
-            text-align: left
-        .oe_timesheet_weekly_tottot
-            display: table-cell
-        .oe_timesheet_weekly_add_row td
-            text-align: left
-        .oe_timesheet_weekly_add_row .oe_form_field_many2one
-            display: inline-block
-            width: 200px
-        .oe_timesheet_weekly_today
-            background: #fde
+  .oe_form_readonly .oe_timesheet_weekly .oe_timesheet_button_add
+    display: none
+  .oe_timesheet_weekly
+    .oe_timesheet_weekly_body
+      overflow-x: auto
+      table
+        border-collapse: separate
+    .oe_timesheet_white
+      color: white
+  .oe_timesheet_daily .oe_timesheet_white
+    color: white !important
+  .oe_timesheet_weekly .oe_timesheet_weekly_account, .oe_timesheet_daily .oe_timesheet_daily_account
+    font-weight: bold
+    color: black
+  .oe_timesheet_weekly .oe_timesheet_background_white, .oe_timesheet_daily .oe_timesheet_background_white
+    background: white
+  .oe_timesheet_weekly
+    td input.oe_timesheet_box
+      padding-right: 2px !important
+      width: 40px
+      text-align: right
+      min-width: 0 !important
+    .oe_timesheet_weekly_day
+      cursor: pointer
+    .oe_timesheet_weekly_adding_tot
+      display: table
+      width: 100%
+    .oe_timesheet_weekly_adding
+      display: table-cell
+      text-align: left
+    .oe_timesheet_weekly_daytotal
+      float: right
+  .oe_timesheet_weekly_day
+    border: 1px solid
+    border-color: #cccccc
+    border-left: 0px
+    border-bottom: 1px solid
+    border-style: solid solid solid none
+    border-color: #cccccc #cccccc #cccccc
+  .oe_timesheet_weekly_day_blank
+    border: none
+  .oe_timesheet_weekly_day:nth-child(2)
+    border-left: 1px solid #cccccc
+    border-bottom-left-radius: 4px
+    border-top-left-radius: 4px
+  .oe_timesheet_weekly_super_total
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    vertical-align: middle
+    opacity: 0.65
+  .oe_timesheet_add_row .oe_form_field_many2one
+    display: inline-block
+    width: 200px
+  .oe_timesheet_weekly .oe_hide
+    display: none
+  .oe_mt
+    margin-top: 20px
+  .oe_mb
+    margin-bottom: 20px
+  .oe_timesheet_daily
+    .oe_daily_header
+      width: 100%
+    .oe_nav
+      margin: 0px !important
+  .oe_timesheet_weekly .oe_nav
+    margin: 0px !important
+  .oe_timesheet_daily
+    h5
+      color: #428bca !important
+    .oe_header
+      width: 12.5%
+      &.oe_active_day
+        background-color: #428bca
+        color: white !important
+    .oe_hide
+      display: none
+    .oe_timesheet_box
+      text-align: right
+    .oe_timesheet_daily_footer
+      width: 100%
+      max-width: 100%
+      h4
+        text-align: right
+        color: #428bca
+        padding-right: 8px
+    .oe_timer
+      float: right !important
+      .oe_timer_clock
+        bottom: 0
+        right: 0px
+        left: initial
+        line-height: initial
+        width: initial
+    .oe_delete_line
+      float: right
+      padding-top: 10px
+      cursor: pointer
+  .oe_timesheet_weekly .oe_delete_line
+    float: right
+    padding-top: 10px
+    cursor: pointer
+    padding-top: 3px !important
+  .oe_timesheet_daily .oe_edit_account
+    cursor: pointer
+  .oe_timesheet_weekly
+    .oe_edit_account
+      cursor: pointer
+    .oe_change_account
+      display: inline
+      margin-top: 3px
+      margin-left: 3px
+  .oe_timesheet_daily .oe_display_day_total
+    font-size: 12px

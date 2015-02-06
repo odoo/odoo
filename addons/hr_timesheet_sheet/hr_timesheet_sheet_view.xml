@@ -101,69 +101,8 @@
                             <field name="total_difference" widget="float_time"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Summary">
-                            <widget type="weekly_timesheet" attrs="{'readonly': [['state', 'not in', ['new', 'draft']]]}">
-                            </widget>
-                        </page>
-                        <page string="Details">
-                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
-                                <tree editable="top" string="Timesheet Activities">
-                                    <field name="date"/>
-                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
-                                    <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field name="to_invoice" widget="selection"/>
-                                    <field invisible="1" name="journal_id"/>
-                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field invisible="1" name="amount"/>
-                                    <field invisible="1" name="general_account_id"/>
-                                    <field invisible="1" name="user_id" required="1"/>
-                                </tree>
-                                <form string="Timesheet Activities">
-                                    <field name="date"/>
-                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id)"/>
-                                    <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                    <field name="to_invoice"/>
-                                    <field name="journal_id"/>
-                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field name="amount"/>
-                                    <field name="general_account_id"/>
-                                    <field name="user_id" required="1"/>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="Attendances" groups="base.group_hr_attendance">
-                            <group>
-                                <field context="{'default_employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
-                                    <tree string="Attendances" editable="bottom">
-                                        <field name="name"/>
-                                        <field name="action"/>
-                                        <field invisible="1" name="employee_id"/>
-                                    </tree>
-                                </field>
-                                <group>
-                                    <label for="state_attendance"/>
-                                    <div>
-                                        <field name="state_attendance"/>
-                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" class="oe_link"/>
-                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" class="oe_link"/>
-                                    </div>
-                                </group>
-                            </group>
-                            <field name="period_ids">
-                                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
-                                    <field name="name"/>
-                                    <field name="total_attendance" widget="float_time" sum="Attendances"/>
-                                    <field name="total_timesheet" widget="float_time" sum="Timesheets"/>
-                                    <field name="total_difference" widget="float_time" sum="Differences"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <widget type="timesheet" attrs="{'readonly': [['state', 'not in', ['new', 'draft']]]}" />
+                    <field name="timesheet_ids" invisible="1"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
