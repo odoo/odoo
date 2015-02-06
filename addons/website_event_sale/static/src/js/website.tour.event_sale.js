@@ -39,7 +39,7 @@
             },
             {
                 title:     "Process Checkout",
-                waitFor:   '#top_menu .my_cart_quantity:contains(6)',
+                waitFor:   'a:has(.my_cart_quantity):contains(6)',
                 element:   '.btn-primary:contains("Process Checkout")'
             },
             {
