@@ -3,3 +3,6 @@
 
 %:
 	dh ${@} -Spython_distutils
+
+override_dh_installinit:
+	dh_installinit --update-rcd-params='defaults 21'
