@@ -508,7 +508,7 @@ class share_wizard(osv.TransientModel):
         # already granted
         for dummy, model in fields_relations:
             # mail.message is transversal: it should not received directly the access rights
-            if model.model in ['mail.message']: continue
+            if model.model in ['mail.message', 'mail.notification']: continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
@@ -640,7 +640,7 @@ class share_wizard(osv.TransientModel):
             if domain:
                 for rel_field, model in fields_relations:
                     # mail.message is transversal: it should not received directly the access rights
-                    if model.model in ['mail.message']: continue
+                    if model.model in ['mail.message', 'mail.notification']: continue
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:
