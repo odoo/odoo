@@ -143,11 +143,11 @@
   <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" customize_show="True" inherit_id="website_quote.chatter">
       <xpath expr="//h1" position="after">
           <section class="mb32 css_editable_mode_hidden hidden-print">
-              <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
+              <form id="comment" class="js_submit_loading" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post" method="POST">
                   <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
                   <div class="pull-left mb32" style="width: 75%%">
                       <textarea rows="4" name="comment" class="form-control" placeholder="Send us a note..."></textarea>
-                      <button type="submit" class="btn btn-primary mt8">Send</button>
+                      <button type="submit" data-loading-text="Sending..." id="btn-loading" class="btn btn-primary mt8">Send</button>
                   </div>
               </form>
           </section>
@@ -261,7 +261,7 @@
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
-                          <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json modal-content">
+                          <form id="accept" method="POST" t-attf-action="/quote/accept/#{quotation.id}/?token=#{quotation.access_token}" class="js_accept_json js_submit_loading modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
@@ -280,7 +280,7 @@
                               </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" t-attf-class="btn btn-primary">Sign Order</button> or
+                                <button type="submit" id="btn-loading" data-loading-text="Loading..." t-attf-class="btn btn-primary">Sign Order</button> or
                                 <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                             </div>
                           </form>
@@ -289,7 +289,7 @@
 
                       <div class="modal fade" id="modaldecline" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
-                          <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
+                          <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content js_submit_loading">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>
@@ -301,7 +301,7 @@
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button> or
+                                <button type="submit" id="btn-loading" data-loading-text="Loading..." t-att-id="quotation.id" class="btn btn-primary">Reject</button> or
                                 <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                             </div>
                           </form>
