@@ -212,8 +212,15 @@ class share_wizard(osv.TransientModel):
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
         share_group_name = '%s: %s (%d-%s)' %('Shared', wizard_data.name, uid, time.time())
+        values = {'name': share_group_name, 'share': True}
+        try:
+            implied_group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'group_shared')[1]
+        except ValueError:
+            implied_group_id = None
+        if implied_group_id:
+            values['implied_ids'] = [(4, implied_group_id)]
         # create share group without putting admin in it
-        return group_obj.create(cr, UID_ROOT, {'name': share_group_name, 'share': True}, {'noadmin': True})
+        return group_obj.create(cr, UID_ROOT, values, {'noadmin': True})
 
     def _create_new_share_users(self, cr, uid, wizard_data, group_id, context=None):
         """Create one new res.users record for each email address provided in

@@ -44,6 +44,7 @@ synchronization with other companies.
     'website': 'https://www.odoo.com',
     'demo': ['share_demo.xml'],
     'data': [
+        'security/ir.model.access.csv',
         'security/share_security.xml',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
