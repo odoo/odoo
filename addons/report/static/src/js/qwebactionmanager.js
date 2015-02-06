@@ -1,14 +1,19 @@
 openerp.report = function(instance) {
     var wkhtmltopdf_state;
 
-    var trigger_download = function(session, response, c) {
+    var trigger_download = function(session, response, c, action, options) {
         session.get_file({
             url: '/report/download',
             data: {data: JSON.stringify(response)},
             complete: openerp.web.unblockUI,
-            error: c.rpc_error.bind(c)
+            error: c.rpc_error.bind(c),
+            success: function(){
+                if (action && options && !action.dialog) {
+                    options.on_close();
+                }
+            },
         });
-    }
+    };
 
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
@@ -79,10 +84,10 @@ workers to print a pdf version of the reports.'), true);
  support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
  target="_blank">wkhtmltopdf.org</a>'), true);
                         }
-                        return trigger_download(self.session, response, c);
+                        return trigger_download(self.session, response, c, action, options);
                     });
                 } else if (action.report_type === 'controller') {
-                    return trigger_download(self.session, response, c);
+                    return trigger_download(self.session, response, c, action, options);
                 }                     
             } else {
                 return self._super(action, options);

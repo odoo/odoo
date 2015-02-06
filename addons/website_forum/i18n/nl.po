@@ -7,15 +7,73 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-11-06 07:09+0000\n"
-"Last-Translator: Yenthe - Bapps.be <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-22 09:08+0000\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-07 07:35+0000\n"
-"X-Generator: Launchpad (build 17231)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:52+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
+
+#. module: website_forum
+#: model:email.template,body_html:website_forum.validation_email
+msgid ""
+"\n"
+"<p>\n"
+"    Hello ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    You have been invited to validate your email in order to get access to "
+"\"${object.company_id.name}\" Q/A Forums.\n"
+"</p>\n"
+"<p>\n"
+"    To validate your email, please click on the following link:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
+"\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
+msgstr ""
+"\n"
+"<p>\n"
+"    Hallo ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    U bent uitgenodigd om uw e-mail adres te laten controleren, om toegang "
+"te krijgen tot  \"${object.company_id.name}\" V/A Forums.\n"
+"</p>\n"
+"<p>\n"
+"    Om uw e-mail adres te laten controleren klikt u op de navolgende  link:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Controleer mijn account voor "
+"\"${object.company_id.name}\" V/A Forums</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Bedankt,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
+
+#. module: website_forum
+#: model:email.template,subject:website_forum.validation_email
+msgid "${object.company_id.name} Forums validation"
+msgstr "${object.company_id.name} Forums validatie"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -43,7 +101,7 @@ msgid "-1"
 msgstr "-1"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:328
+#: code:addons/website_forum/models/forum.py:374
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -54,7 +112,7 @@ msgstr ""
 "gaan.</a></p>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:334
+#: code:addons/website_forum/models/forum.py:380
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -62,6 +120,15 @@ msgid ""
 msgstr ""
 "<p>Er is een nieuwe vraag <i>%s</i> gesteld op %s. <a "
 "href=\"%s/forum/%s/question/%s\">Klik hier om de vraag te bekijken.</a></p>"
+
+#. module: website_forum
+#: model:forum.forum,description:website_forum.forum_help
+msgid ""
+"<p>This community is for professionals and enthusiasts of our products and "
+"services.</p>"
+msgstr ""
+"<p>Deze community is voor professionals en andere enthousiaste mensen avn "
+"onze producten en diensten.</p>"
 
 #. module: website_forum
 #: view:website:website_forum.tag
@@ -80,6 +147,21 @@ msgstr ""
 #: view:website:website_forum.header
 msgid "About This Forum"
 msgstr "Over dit forum"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_own:0
+msgid "Accept an answer on its own questions"
+msgstr "Accepteer een antwoord op eigen vragen"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_all:0
+msgid "Accept an answer to all questions"
+msgstr "Accepteer een antwoord op alle vragen"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accept:0
+msgid "Accepting an answer"
+msgstr "Accepteer een vraag"
 
 #. module: website_forum
 #: field:forum.post,active:0
@@ -103,12 +185,37 @@ msgid "Answer"
 msgstr "Antwoord"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:365
+#: code:addons/website_forum/models/forum.py:411
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
 msgstr "Antwoord bewerkt"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer:0
+msgid "Answer a question"
+msgstr "Beantwoord een vraag"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accepted:0
+msgid "Answer accepted"
+msgstr "Antwoord geaccepteerd"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_downvote:0
+msgid "Answer downvoted"
+msgstr "Antwoord omlaag gestemt"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_flagged:0
+msgid "Answer flagged"
+msgstr "Antwoord gekenmerkt"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_upvote:0
+msgid "Answer upvoted"
+msgstr "Antwoord omhoog gestemt"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -129,6 +236,11 @@ msgid "Ask a Question"
 msgstr "Stel een vraag"
 
 #. module: website_forum
+#: field:forum.forum,karma_ask:0
+msgid "Ask a question"
+msgstr "Stel een vraag"
+
+#. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "Ask your Question"
 msgstr "Stel uw vraag"
@@ -143,6 +255,11 @@ msgstr "Gevraagd op"
 #: view:website:website_forum.header
 msgid "Asked:"
 msgstr "Gevraagd:"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_new:0
+msgid "Asking a question"
+msgstr "Een vraag stellen"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -239,6 +356,11 @@ msgid "Can Upvote"
 msgstr "Mag ophoog stemmen"
 
 #. module: website_forum
+#: field:forum.forum,karma_retag:0
+msgid "Change question tags"
+msgstr "Wijzig de vraag labels"
+
+#. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
 msgstr "Controleer beschikbare badges"
@@ -255,9 +377,33 @@ msgid "City"
 msgstr "Plaats"
 
 #. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Click here to send a verification email allowing you to participate to the "
+"forum."
+msgstr ""
+"Klik hier om een verificatie e-mail te versturen, om toegang te krijgen tot "
+"het forum."
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_clickable_link:0
+msgid "Clickable links (Editor)"
+msgstr "Klikbare links (Editor)"
+
+#. module: website_forum
 #: selection:forum.post,state:0
 msgid "Close"
 msgstr "Sluiten"
+
+#. module: website_forum
+#: field:forum.forum,karma_close_all:0
+msgid "Close all posts"
+msgstr "Sluit alle berichten"
+
+#. module: website_forum
+#: field:forum.forum,karma_close_own:0
+msgid "Close its own posts"
+msgstr "Sluit alleen eigen berichten"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -279,6 +425,16 @@ msgstr "Gesloten op"
 #: view:website:website_forum.post_description_full
 msgid "Comment"
 msgstr "Reactie"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_all:0
+msgid "Comment all posts"
+msgstr "Geef reacties op alle berichten"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_own:0
+msgid "Comment its own posts"
+msgstr "Geef reacties op eigen berichten"
 
 #. module: website_forum
 #: view:website:website_forum.post_comment
@@ -313,10 +469,29 @@ msgid "Completed own biography"
 msgstr "Eigen biografie voltooid"
 
 #. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Congratulations! Your email has just been validated. You may now participate "
+"to our forums."
+msgstr ""
+"Gefeliciteerd! uw e-mail is zojuist gecontroleerd. U kunt nu deelnemen aan "
+"onze forums."
+
+#. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 #: field:forum.post,content:0
 msgid "Content"
 msgstr "Inhoud"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_all:0
+msgid "Convert all answers to comments and vice versa"
+msgstr "Converteer alle antwoorden naar reacties en visa versa"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_own:0
+msgid "Convert its own answers to comments and vice versa"
+msgstr "Converteren van eigen berichten naar reacties en visa versa"
 
 #. module: website_forum
 #: help:forum.post,is_correct:0
@@ -374,6 +549,16 @@ msgid "Date of the last message posted on the record."
 msgstr "Datum van het laatste bericht verstuurt op deze regel."
 
 #. module: website_forum
+#: field:forum.forum,karma_unlink_all:0
+msgid "Delete all posts"
+msgstr "Alle berichten verwijderen"
+
+#. module: website_forum
+#: field:forum.forum,karma_unlink_own:0
+msgid "Delete its own posts"
+msgstr "Alleen eigen berichten verwijderen"
+
+#. module: website_forum
 #: field:forum.forum,description:0
 msgid "Description"
 msgstr "Omschrijving"
@@ -384,6 +569,11 @@ msgstr "Omschrijving"
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
 msgstr "Gedisciplineerd"
+
+#. module: website_forum
+#: field:forum.forum,karma_downvote:0
+msgid "Downvote"
+msgstr "Omlaag stemmen"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -401,9 +591,19 @@ msgid "Edit Your Previous Answer"
 msgstr "Wijzig je vorige antwoord"
 
 #. module: website_forum
+#: field:forum.forum,karma_edit_all:0
+msgid "Edit all posts"
+msgstr "Alle berichten bewerken"
+
+#. module: website_forum
 #: view:website:website_forum.edit_post
 msgid "Edit answer"
 msgstr "Wijzig antwoord"
+
+#. module: website_forum
+#: field:forum.forum,karma_edit_own:0
+msgid "Edit its own posts"
+msgstr "Alleen eigen berichten bewerken"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -485,6 +685,11 @@ msgstr "Favoriete vragen"
 #: view:website:website_forum.forum_index
 msgid "Filter on"
 msgstr "Filter op"
+
+#. module: website_forum
+#: field:forum.forum,karma_flag:0
+msgid "Flag a post as offensive"
+msgstr "Kenmerk een bericht als beledigend"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -675,70 +880,25 @@ msgid "Is a Follower"
 msgstr "Is een volger"
 
 #. module: website_forum
+#: view:website:website_forum.header
+msgid "It appears your email has not been verified."
+msgstr "Het lijkt erop alsof uw e-mail ades nog niet is gecontroleerd."
+
+#. module: website_forum
 #: field:res.users,karma:0
 #: view:website:website_forum.user_detail_full
 msgid "Karma"
 msgstr "Karma"
 
 #. module: website_forum
-#: field:forum.forum,karma_gen_answer_accept:0
-msgid "Karma earned for accepting an anwer"
-msgstr "Karma verdiend om een antwoord te aanvaarden"
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Gains"
+msgstr "Karma toename"
 
 #. module: website_forum
-#: field:forum.forum,karma_gen_question_downvote:0
-msgid "Karma earned for downvoting a question"
-msgstr "Karma verdiend om een vraag naar beneden te stemmen"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_answer_downvote:0
-msgid "Karma earned for downvoting an answer"
-msgstr "Karma verdiend voor het naar beneden stemmen van een antwoord"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_answer_accepted:0
-msgid "Karma earned for having an answer accepted"
-msgstr "Karma verdiend voor het accepteren van een antwoord"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_answer_flagged:0
-msgid "Karma earned for having an answer flagged"
-msgstr "Karma verdiend om een antwoord te markeren"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_question_new:0
-msgid "Karma earned for new questions"
-msgstr "Karma verdiend voor nieuwe vragen"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_question_upvote:0
-msgid "Karma earned for upvoting a question"
-msgstr "Karma verdiend om een vraag omhoog te stemmen"
-
-#. module: website_forum
-#: field:forum.forum,karma_gen_answer_upvote:0
-msgid "Karma earned for upvoting an answer"
-msgstr "Karma verdiend om een antwoord omhoog te stemmen"
-
-#. module: website_forum
-#: field:forum.forum,karma_editor_clickable_link:0
-msgid "Karma for clickable links (Editor)"
-msgstr "Karma voor klikbare hyperlinks (Editor)"
-
-#. module: website_forum
-#: field:forum.forum,karma_editor_link_files:0
-msgid "Karma for linking files (Editor)"
-msgstr "Karma voor het koppelen van bestanden (Editor)"
-
-#. module: website_forum
-#: field:forum.forum,karma_answer_accept_own:0
-msgid "Karma to accept an answer on its own questions"
-msgstr "Karma om een antwoord te aanvaarden op zijn eigen vraag"
-
-#. module: website_forum
-#: field:forum.forum,karma_answer_accept_all:0
-msgid "Karma to accept an answers to all questions"
-msgstr "Karma om een vraag te aanvaarden op alle vragen"
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Requirements"
+msgstr "Karma vereisten"
 
 #. module: website_forum
 #: field:forum.post,karma_accept:0
@@ -751,24 +911,9 @@ msgid "Karma to answer"
 msgstr "Karma om te beantwoord"
 
 #. module: website_forum
-#: field:forum.forum,karma_answer:0
-msgid "Karma to answer a question"
-msgstr "Karma om een vraag te beantwoorden"
-
-#. module: website_forum
 #: field:forum.post,karma_ask:0
 msgid "Karma to ask"
 msgstr "Karma om te vragen"
-
-#. module: website_forum
-#: field:forum.forum,karma_ask:0
-msgid "Karma to ask a new question"
-msgstr "Karma om een nieuwe vraag te stellen"
-
-#. module: website_forum
-#: field:forum.forum,karma_retag:0
-msgid "Karma to change question tags"
-msgstr "Karma om labels van vraag te wijzigen"
 
 #. module: website_forum
 #: field:forum.post,karma_close:0
@@ -776,54 +921,11 @@ msgid "Karma to close"
 msgstr "Karma om te sluiten"
 
 #. module: website_forum
-#: field:forum.forum,karma_close_all:0
-msgid "Karma to close all posts"
-msgstr "Karma om alle berichten te sluiten"
-
-#. module: website_forum
-#: field:forum.forum,karma_close_own:0
-msgid "Karma to close its own posts"
-msgstr "Karma om eigen bericht te sluiten"
-
-#. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
 msgstr "Karma om te reageren"
 
 #. module: website_forum
-#: field:forum.forum,karma_comment_all:0
-msgid "Karma to comment all posts"
-msgstr "Karma om te reageren op alle berichten"
-
-#. module: website_forum
-#: field:forum.forum,karma_comment_own:0
-msgid "Karma to comment its own posts"
-msgstr "Karma voor het geven van een opmerking op eigen bericht"
-
-#. module: website_forum
-#: field:forum.forum,karma_comment_convert_all:0
-msgid "Karma to convert all answers to answers and vice versa"
-msgstr ""
-"Karma voor het converteren van alle antwoorden naar antwoord en visa versa"
-
-#. module: website_forum
-#: field:forum.forum,karma_comment_convert_own:0
-msgid "Karma to convert its own answers to comments and vice versa"
-msgstr ""
-"Karma voor het converteren van eigen antwoord naar opmerking en visa versa"
-
-#. module: website_forum
-#: field:forum.forum,karma_unlink_all:0
-msgid "Karma to delete all posts"
-msgstr "Karma om alle berichten te verwijderen"
-
-#. module: website_forum
-#: field:forum.forum,karma_unlink_own:0
-msgid "Karma to delete its own posts"
-msgstr "Karma om eigen bericht te verwijderen"
-
-#. module: website_forum
-#: field:forum.forum,karma_downvote:0
 #: field:forum.post,karma_downvote:0
 msgid "Karma to downvote"
 msgstr "Karma voor omlaag stemmen"
@@ -834,37 +936,11 @@ msgid "Karma to edit"
 msgstr "Karma om te wijzigen"
 
 #. module: website_forum
-#: field:forum.forum,karma_edit_all:0
-msgid "Karma to edit all posts"
-msgstr "Karma om alle berichten te wijzigen"
-
-#. module: website_forum
-#: field:forum.forum,karma_edit_own:0
-msgid "Karma to edit its own posts"
-msgstr "Karma om eigen bericht te wijzigen"
-
-#. module: website_forum
-#: field:forum.forum,karma_flag:0
-msgid "Karma to flag a post as offensive"
-msgstr "Karma om een bericht als offensief aan te duiden"
-
-#. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
 msgstr "Karma voor het verwijderen van een koppeling"
 
 #. module: website_forum
-#: field:forum.forum,karma_comment_unlink_own:0
-msgid "Karma to unlink its own comments"
-msgstr "Karma voor het verwijderen van eigen opmerking"
-
-#. module: website_forum
-#: field:forum.forum,karma_comment_unlink_all:0
-msgid "Karma to unlinnk all comments"
-msgstr "Karma voor het verwijderen van alle opmerkingen"
-
-#. module: website_forum
-#: field:forum.forum,karma_upvote:0
 #: field:forum.post,karma_upvote:0
 msgid "Karma to upvote"
 msgstr "Karma voor omhoog stemmen"
@@ -905,6 +981,11 @@ msgstr "Laatste datum actief"
 #: view:website:website_forum.header
 msgid "Last updated:"
 msgstr "Laatst bijgewerkt:"
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_link_files:0
+msgid "Linking files (Editor)"
+msgstr "Bestanden koppelen (Editor)"
 
 #. module: website_forum
 #: field:forum.forum,message_ids:0
@@ -1173,12 +1254,17 @@ msgid "Question"
 msgstr "Vraag"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:368
+#: code:addons/website_forum/models/forum.py:414
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
 msgstr "Gewijzigde vraag"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_downvote:0
+msgid "Question downvoted"
+msgstr "Vraag omlaag gestemt"
 
 #. module: website_forum
 #: view:website:website_forum.404
@@ -1189,6 +1275,11 @@ msgstr "Vraag niet gevonden!"
 #: view:website:website_forum.header
 msgid "Question tools"
 msgstr "Vraag hulpmiddelen"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_upvote:0
+msgid "Question upvoted"
+msgstr "Vraag omhoog gestemt"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
@@ -1203,7 +1294,7 @@ msgid "Questions"
 msgstr "Vragen"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:330
+#: code:addons/website_forum/models/forum.py:376
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -1389,6 +1480,16 @@ msgid "Unanswered"
 msgstr "Onbeantwoord"
 
 #. module: website_forum
+#: field:forum.forum,karma_comment_unlink_all:0
+msgid "Unlink all comments"
+msgstr "Alle reacties ontkoppelen"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_unlink_own:0
+msgid "Unlink its own comments"
+msgstr "Alleen eigen reacties ontkoppelen"
+
+#. module: website_forum
 #: field:forum.forum,message_unread:0
 #: field:forum.post,message_unread:0
 msgid "Unread Messages"
@@ -1408,6 +1509,11 @@ msgstr "Bijwerken op"
 #: field:forum.post,write_uid:0
 msgid "Updated by"
 msgstr "Bijgewerkt door"
+
+#. module: website_forum
+#: field:forum.forum,karma_upvote:0
+msgid "Upvote"
+msgstr "Omhoog stemmen"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
@@ -1565,6 +1671,12 @@ msgid "bronze"
 msgstr "brons"
 
 #. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "by"
+msgstr "door"
+
+#. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by activity date"
 msgstr "op activiteitsdatum"
@@ -1658,6 +1770,18 @@ msgstr "niet relevant of verouderd"
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
 msgstr "ander onderwerp of niet relevant"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_comment
+#: view:website:website_forum.post_description_full
+msgid "on"
+msgstr "op"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "or"
+msgstr "of"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question

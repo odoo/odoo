@@ -158,6 +158,26 @@ variables for various data points:
     a boolean flag indicating that the current iteration round is on an odd
     index
 
+
+These extra variables provided and all new variables created into the
+``foreach`` are only available in the scope of the``foreach``. If the
+variable exists outside the context of the ``foreach``, the value is copied
+at the end of the foreach into the global context.
+
+::
+
+    <t t-set="existing_variable" t-value="False"/>
+    <!-- existing_variable now False -->
+
+    <p t-foreach="[1, 2, 3]" t-as="i">
+        <t t-set="existing_variable" t-value="True"/>
+        <t t-set="new_variable" t-value="True"/>
+        <!-- existing_variable and new_variable now True -->
+    </p>
+
+    <!-- existing_variable always True -->
+    <!-- new_variable undefined -->
+
 .. _reference/qweb/attributes:
 
 attributes
@@ -418,7 +438,7 @@ the name of the template to alter as parameter.
 The alteration is then performed with any number of ``t-jquery``
 sub-directives::
 
-    <t t-extends="base.template">
+    <t t-extend="base.template">
         <t t-jquery="ul" t-operation="append">
             <li>new element</li>
         </t>

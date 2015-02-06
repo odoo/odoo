@@ -517,6 +517,9 @@
         toordinal: function () {
             return py.float.fromJSON(ymd2ord(this.year, this.month, this.day));
         },
+        weekday: function () {
+            return  py.float.fromJSON((this.toordinal().toJSON()+6)%7);
+        },
         fromJSON: function (year, month, day) {
             return py.PY_call(datetime.date, [year, month, day]);
         },
