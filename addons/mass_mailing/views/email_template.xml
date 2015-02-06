@@ -21,7 +21,6 @@
                             </group>
                             <group>
                                 <div class="oe_right oe_button_box" name="buttons">
-                                    <button string="Edit Template" name="action_edit_html" type="object"/>
                                     <button name="%(mail.wizard_email_template_preview)d" string="Preview"
                                         type="action" target="new"
                                         context="{'template_id':active_id}"/>
@@ -31,7 +30,7 @@
                         </group>
                         <notebook>
                             <page string="Body">
-                                <field name="body_html" nolabel="1"/>
+                                <field name="body_html" nolabel="1" options="{'editor_url': '/website_mail/field/email_template'}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                         </notebook>
