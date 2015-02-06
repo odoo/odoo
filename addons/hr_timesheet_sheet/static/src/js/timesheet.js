@@ -250,15 +250,16 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
             attrs: {
                 name: "account",
                 type: "many2one",
-                domain: [
-                    ['type','in',['normal', 'contract']],
+                domain: ['|',
+                    ['type', '=', 'normal'],
+                    ['is_contract', '=', 1],
                     ['state', '<>', 'close'],
                     ['invoice_on_timesheets','=',1],
                     ['id', 'not in', _.pluck(self.accounts, "account")],
                 ],
                 context: {
                     default_invoice_on_timesheets: 1,
-                    default_type: "contract",
+                    default_is_contract: 1,
                 },
                 modifiers: '{"required": true}',
             },

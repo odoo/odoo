@@ -23,13 +23,13 @@ class TestInvoice(AccountingTestCase):
         self.potato_account_id = self.account_analytic_account.create(cr, uid, {
             'name': 'Potatoes Project',
             'partner_id': self.think_big_id,
-            'type': 'contract',
+            'is_contract': True,
             'state': 'open',
         })
         self.carrot_account_id = self.account_analytic_account.create(cr, uid, {
             'name': 'Carrot & Development',
             'partner_id': self.think_big_id,
-            'type': 'contract',
+            'is_contract': True,
             'state': 'open',
         })
         self.potato_id = self.product_product.create(cr, uid, {

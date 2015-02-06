@@ -199,7 +199,7 @@ class project(osv.osv):
     _order = "sequence, id"
     _defaults = {
         'active': True,
-        'type': 'contract',
+        'is_project': True,
         'label_tasks': 'Tasks',
         'state': 'open',
         'sequence': 10,
@@ -421,8 +421,8 @@ def Project():
                               alias_model_name=vals.get('alias_model', 'project.task'),
                               alias_parent_model_name=self._name)
 
-        if vals.get('type', False) not in ('template', 'contract'):
-            vals['type'] = 'contract'
+        if (vals.get('type', False) != 'template') and vals.get('is_contract', False):
+            vals['is_contract'] = True
 
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
         if ir_values:
@@ -1025,7 +1025,7 @@ class account_analytic_account(osv.osv):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
-                'type': vals.get('type','contract'),
+                'is_contract': vals.get('is_contract', False),
             }
             return project_pool.create(cr, uid, project_values, context=context)
         return False
@@ -1069,6 +1069,11 @@ class account_analytic_account(osv.osv):
 
         return super(account_analytic_account, self).name_search(cr, uid, name, args=args, operator=operator, context=context, limit=limit)
 
+    def onchange_use_tasks(self, cr, uid, ids, use_tasks, context=None):
+        res= {'value': {'is_project': False}}
+        if use_tasks:
+            res['value']['is_project'] = True
+        return res
 
 class project_project(osv.osv):
     _inherit = 'project.project'

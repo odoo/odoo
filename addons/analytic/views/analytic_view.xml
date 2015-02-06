@@ -16,6 +16,12 @@
                                 <field name="name" class="oe_inline"/>
                             </h1>
                             <div name="project"/>
+                            <div name="contract" invisible="context.get('default_is_contract', False)">
+                                <field name="is_contract"/>
+                                <label for="is_contract"/>
+                                <field name="is_project" invisible="1"/>
+                                <label for="is_project" invisible="1"/>
+                            </div>
                         </div>
 
                         <group name="main">
@@ -25,15 +31,15 @@
                                 <field name="currency_id" attrs="{'invisible': ['|',('type', '&lt;&gt;', 'view'), ('company_id', '&lt;&gt;', False)]}"/>
                             </group>
                             <group>
-                                <field name="type" invisible="context.get('default_type', False)"/>
-                                <field name="template_id" on_change="on_change_template(template_id, date_start)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
+                                <field name="type" attrs="{'required': [('is_contract', '=', False)], 'invisible': [('is_contract', '=', True)] }"/>
+                                <field name="template_id" on_change="on_change_template(template_id, date_start)" domain="[('type','=','template')]" attrs="{'invisible': [('is_contract', '=', False)]}" context="{'default_type' : 'template'}"/>
                                 <field name="code"/>
                                 <field name="parent_id" on_change="on_change_parent(parent_id)"/>
                                 <field name="company_id" on_change="on_change_company(company_id)" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
+                            <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','!=', 'template'), ('is_contract', '=', False)]}">
                                 <group string="Renewal" name="contract">
                                     <p colspan="2" class="oe_grey oe_edit_only">
                                         Once the end date of the contract is

@@ -92,6 +92,9 @@
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
                     </div>
+                    <group>
+                        <group name='align'></group>
+                    </group>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Project Name"/>
                         <h1>
@@ -471,7 +474,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks"/>
+                    <field name="use_tasks" on_change="onchange_use_tasks(use_tasks)"/>
                     <label for="use_tasks"/>
                 </xpath>
             </field>

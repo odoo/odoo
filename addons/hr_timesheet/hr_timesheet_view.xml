@@ -11,7 +11,7 @@
                     <field name="user_id" required="1" options='{"no_open": True}'
                         context="{'default_groups_ref': ['base.group_user']}"/>
                     <field name="name"/>
-                    <field domain="[('type','=','normal'),('invoice_on_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}" options="{'no_open': True, 'no_create': True}"/>
+                    <field domain="[('type','=','normal'),('invoice_on_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_is_contract': 1}" options="{'no_open': True, 'no_create': True}"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
@@ -114,9 +114,9 @@
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="invoice_on_timesheets"/>
-                    <label for="invoice_on_timesheets"/>
+                <xpath expr='//div[@name="contract"]' position='after'>
+                    <field name="invoice_on_timesheets" attrs="{'invisible': [('is_contract', '=', False)]}"/>
+                    <label for="invoice_on_timesheets" attrs="{'invisible': [('is_contract', '=', False)]}"/>
                 </xpath>
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d" 
