@@ -5789,31 +5789,34 @@ class BaseModel(object):
                 for field_seq in secondary:
                     record.mapped(field_seq)
 			
-		if not env.context.get('unchained',False)
-			# determine which fields have been modified
-			for name, oldval in values.iteritems():
-			    field = self._fields[name]
-			    newval = record[name]
-			    if field.type in ('one2many', 'many2many'):
-				if newval != oldval or newval._is_dirty():
-				    # put new value in result
-				    result['value'][name] = field.convert_to_write(
-					newval, record._origin, subfields.get(name),
-				    )
-				    todo.add(name)
-				else:
-				    # keep result: newval may have been dirty before
-				    pass
-			    else:
-				if newval != oldval:
-				    # put new value in result
-				    result['value'][name] = field.convert_to_write(
-					newval, record._origin, subfields.get(name),
-				    )
-				    todo.add(name)
-				else:
-				    # clean up result to not return another value
-				    result['value'].pop(name, None)
+
+		# determine which fields have been modified
+		for name, oldval in values.iteritems():
+		    field = self._fields[name]
+		    newval = record[name]
+		    if field.type in ('one2many', 'many2many'):
+			if newval != oldval or newval._is_dirty():
+			    # put new value in result
+			    result['value'][name] = field.convert_to_write(
+				newval, record._origin, subfields.get(name),
+			    )
+
+			    if not env.context.get('unchained',False):
+				todo.add(name)
+			else:
+			    # keep result: newval may have been dirty before
+			    pass
+		    else:
+			if newval != oldval:
+			    # put new value in result
+			    result['value'][name] = field.convert_to_write(
+				newval, record._origin, subfields.get(name),
+			    )
+			    if not env.context.get('unchained',False):
+				todo.add(name)
+			else:
+			    # clean up result to not return another value
+			    result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
