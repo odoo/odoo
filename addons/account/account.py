@@ -929,15 +929,15 @@ class account_fiscalyear(osv.osv):
                 ds = ds + relativedelta(months=interval)
         return True
 
-    def find(self, cr, uid, dt=None, exception=True, context=None):
-        res = self.finds(cr, uid, dt, exception, context=context)
+    def find(self, cr, uid, dt=None, special=False, exception=True, context=None):
+        res = self.finds(cr, uid, dt, special, exception, context=context)
         return res and res[0] or False
 
-    def finds(self, cr, uid, dt=None, exception=True, context=None):
+    def finds(self, cr, uid, dt=None, special=False, exception=True, context=None):
         if context is None: context = {}
         if not dt:
             dt = fields.date.context_today(self,cr,uid,context=context)
-        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        args = [('date_start', '<=', dt), ('date_stop', '>=', dt), ('special', '=', special)]
         if context.get('company_id', False):
             company_id = context['company_id']
         else:
