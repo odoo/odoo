@@ -2235,7 +2235,7 @@ instance.web.list.Column = instance.web.Class.extend({
         }
         if (attrs.invisible) { return ''; }
 
-        if (!(row_data[this.id] && row_data[this.id].value)) {
+        if (!row_data[this.id]) {
             return options.value_if_empty === undefined
                     ? ''
                     : options.value_if_empty;
@@ -2304,8 +2304,12 @@ instance.web.list.Binary = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var text = _t("Download");
         var value = row_data[this.id].value;
+        if (!value) {
+            return options.value_if_empty || '';
+        }
+
         var download_url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+        if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
             download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});

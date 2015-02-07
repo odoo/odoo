@@ -195,7 +195,8 @@ class BlogPost(osv.Model):
             msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [
                 ('res_id', '=', id),
                 ('model', '=', self._name),
-                '|', ('path', 'not in', existing), ('path', '=', False)
+                ('path', 'not in', existing),
+                ('path', '!=', False)
             ], context=context)
             self.pool['mail.message'].unlink(cr, SUPERUSER_ID, msg_ids, context=context)
 
