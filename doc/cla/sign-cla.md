@@ -46,7 +46,7 @@ signature is merged.
 
 2.  Make a pull request on the [odoo/odoo](/odoo/odoo) (or amend an existing
     one), adding a new file `<lowercase-company-name>.md` under the
-    [`doc/cla/corporate`](corporate/) directory. If the of the company is Odoo,
+    [`doc/cla/corporate`](corporate/) directory. If the name of the company is Odoo,
     the file would be `doc/cla/corporate/odoo.md`. The file should contain:
 
     ```
@@ -90,7 +90,7 @@ print the CLA, complete it, sign it, scan it and send it by email to
 make the pull request on your behalf.
 
 * Printable Odoo CCLA v1.0 https://www.odoo.com/files/legal/Odoo-CCLA-v1.0.pdf
-* Printable Odoo ICLA v1.0 https://www.odoo.com/files/legal/Odoo-CCLA-v1.0.pdf
+* Printable Odoo ICLA v1.0 https://www.odoo.com/files/legal/Odoo-ICLA-v1.0.pdf
 
 # FAQ
 
