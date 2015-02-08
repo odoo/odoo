@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-11-05 15:45+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-22 08:55+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-06 06:59+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:52+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: website_blog
 #: view:website:website_blog.blog_post_complete
@@ -54,7 +54,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    Klik om een nieuwe blog post aan te maken.\n"
+"                    Klik om een nieuwe blog bericht aan te maken.\n"
 "                </p>\n"
 "            "
 
@@ -443,6 +443,12 @@ msgstr ""
 "\n"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:211
+#, python-format
+msgid "A new post %s has been published on the %s blog."
+msgstr "Een nieuw bericht %s is gepubliceerd op het %s blog."
+
+#. module: website_blog
 #: view:website:website_blog.blog_post_short
 msgid "About us"
 msgstr "Over ons"
@@ -472,6 +478,11 @@ msgstr "Archieven"
 #: field:blog.post,create_uid:0
 msgid "Author"
 msgstr "Auteur"
+
+#. module: website_blog
+#: field:blog.post,author_avatar:0
+msgid "Avatar"
+msgstr "Avatar"
 
 #. module: website_blog
 #: field:blog.post,background_image:0
@@ -512,8 +523,8 @@ msgid "Blog Post History"
 msgstr "Blogbericht geschiedenis"
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:308
-#: code:addons/website_blog/models/website_blog.py:100
+#: code:addons/website_blog/controllers/main.py:305
+#: code:addons/website_blog/models/website_blog.py:133
 #, python-format
 msgid "Blog Post Title"
 msgstr "Blogbericht titel"
@@ -536,6 +547,12 @@ msgstr "Blog subtitel"
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
 msgstr "Blog label"
+
+#. module: website_blog
+#: model:ir.actions.act_window,name:website_blog.action_tags
+#: model:ir.ui.menu,name:website_blog.menu_blog_tag
+msgid "Blog Tags"
+msgstr "Blog labels"
 
 #. module: website_blog
 #: view:blog.blog:website_blog.view_blog_blog_list
@@ -567,6 +584,12 @@ msgstr "Verander cover"
 #, python-format
 msgid "Click <em>Continue</em> to create the blog post."
 msgstr "Klik <em>Vervolg</em> om blogbericht te maken."
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:212
+#, python-format
+msgid "Click here to access the post."
+msgstr "Klik hier om het bericht te openen."
 
 #. module: website_blog
 #: view:website:website_blog.blog_post_short
@@ -904,13 +927,6 @@ msgid "New Blog Post"
 msgstr "Nieuw blogbericht"
 
 #. module: website_blog
-#: model:mail.message.subtype,description:website_blog.mt_blog_post_new
-#: model:mail.message.subtype,name:website_blog.mt_blog_blog_post_new
-#: model:mail.message.subtype,name:website_blog.mt_blog_post_new
-msgid "New Post"
-msgstr "Nieuwe post"
-
-#. module: website_blog
 #: view:website:website.layout
 #: model:website.menu,name:website_blog.menu_news
 msgid "News"
@@ -982,10 +998,9 @@ msgid "Post"
 msgstr "Verstuur"
 
 #. module: website_blog
-#: model:mail.message.subtype,description:website_blog.mt_blog_post_published
-#: model:mail.message.subtype,name:website_blog.mt_blog_post_published
-msgid "Post Published"
-msgstr "Bericht geplaatst"
+#: field:blog.tag,post_ids:0
+msgid "Posts"
+msgstr "Berichten"
 
 #. module: website_blog
 #: field:blog.post,website_published:0
@@ -1010,6 +1025,12 @@ msgstr "Publiceer op de website"
 #, python-format
 msgid "Published"
 msgstr "Gepubliceerd"
+
+#. module: website_blog
+#: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
+#: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
+msgid "Published Post"
+msgstr "Gepubliceerd bericht"
 
 #. module: website_blog
 #: field:blog.post,ranking:0
@@ -1073,8 +1094,8 @@ msgid "Sub Title"
 msgstr "Ondertitel"
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:309
-#: code:addons/website_blog/models/website_blog.py:101
+#: code:addons/website_blog/controllers/main.py:306
+#: code:addons/website_blog/models/website_blog.py:134
 #, python-format
 msgid "Subtitle"
 msgstr "Ondertitel"
@@ -1085,6 +1106,16 @@ msgstr "Ondertitel"
 #: field:blog.post.history,summary:0
 msgid "Summary"
 msgstr "Samenvatting"
+
+#. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_form
+msgid "Tag Form"
+msgstr "Labelformulier"
+
+#. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_tree
+msgid "Tag List"
+msgstr "Labellijst"
 
 #. module: website_blog
 #: field:blog.post,tag_ids:0
@@ -1104,7 +1135,7 @@ msgid "The Future of Emails"
 msgstr "De toekomst van e-mails"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:211
+#: code:addons/website_blog/models/website_blog.py:265
 #, python-format
 msgid "There are no changes in revisions."
 msgstr "Er zijn geen wijzigingen in de revisies."
@@ -1176,6 +1207,11 @@ msgstr ""
 "op 'voeg blokken toe' om nieuwe inhoud te plaatsen."
 
 #. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_form
+msgid "Used in:"
+msgstr "Gebruikt in:"
+
+#. module: website_blog
 #: help:mail.message,path:0
 msgid ""
 "Used to display messages in a paragraph-based chatter using a unique path;"
@@ -1184,7 +1220,7 @@ msgstr ""
 "behulp van een uniek pad."
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:211
+#: code:addons/website_blog/models/website_blog.py:265
 #: code:addons/website_blog/wizard/document_page_show_diff.py:50
 #, python-format
 msgid "Warning!"
@@ -1345,6 +1381,11 @@ msgstr "nieuwe bezoekers"
 #: view:website:website_blog.blog_post_short
 msgid "not published"
 msgstr "niet gepubliceerd"
+
+#. module: website_blog
+#: view:website:website_blog.blog_post_complete
+msgid "on"
+msgstr "op"
 
 #. module: website_blog
 #: view:website:website_blog.blog_post_short

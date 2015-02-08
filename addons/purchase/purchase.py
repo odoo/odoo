@@ -65,7 +65,6 @@ class purchase_order(osv.osv):
                     ('order_id', '=', po.id), '|', ('date_planned', '=', po.minimum_planned_date), ('date_planned', '<', value)
                 ], context=context)
                 pol_obj.write(cr, uid, pol_ids, {'date_planned': value}, context=context)
-                self.pool.get('purchase.order').write(cr, uid, po.id, {'minimum_planned_date': value}, context=context)
         self.invalidate_cache(cr, uid, context=context)
         return True
 
@@ -1444,6 +1443,13 @@ class product_product(osv.Model):
             product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
             for product_id in ids
         }
+
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = self.pool['product.template']._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
+        return result
 
     _columns = {
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
