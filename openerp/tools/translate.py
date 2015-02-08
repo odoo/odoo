@@ -169,7 +169,8 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr
+        # try, in order: cr, cursor, self.env.cr, self.cr,
+        # qwebcontext['env'].cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
@@ -179,6 +180,17 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
+        if (frame.f_back
+            and frame.f_back.f_back
+            and frame.f_back.f_back.f_back
+            and frame.f_back.f_back.f_back.f_back
+            and frame.f_back.f_back.f_back.f_back.f_locals.get('qwebcontext')
+        ):
+            # The call is wrapped in speaklater.make_lazy_gettext,
+            # used with wtforms and evaluated in qweb.
+            cr = frame.f_back.f_back.f_back.f_back.f_locals.get(
+                'qwebcontext')['env'].cr
+            return cr, False
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -197,7 +209,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang')
+        # self.env.lang, self.localcontext.get('lang'), qwebcontext['env'].lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -212,6 +224,17 @@ class GettextAlias(object):
             if not lang:
                 if hasattr(s, 'localcontext'):
                     lang = s.localcontext.get('lang')
+            if (lang is None
+                and frame.f_back
+                and frame.f_back.f_back
+                and frame.f_back.f_back.f_back
+                and frame.f_back.f_back.f_back.f_back
+                and frame.f_back.f_back.f_back.f_back.f_locals.get('qwebcontext')
+            ):
+                # The call is wrapped in speaklater.make_lazy_gettext,
+                # used with wtforms and evaluated in qweb.
+                lang = frame.f_back.f_back.f_back.f_back.f_locals.get(
+                    'qwebcontext')['env'].lang
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
