@@ -1266,8 +1266,9 @@ class product_product(osv.Model):
             ('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done']),
             ('product_id', 'in', ids),
         ]
+        r = dict([(id,0.0) for id in ids])
         for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id','product_uom_qty'], ['product_id'], context=context):
-            r[group['product_id'][0]] = group['product_uom_qty']
+            r.update({group['product_id'][0]: group['product_uom_qty']})
         return r
 
     def action_view_sales(self, cr, uid, ids, context=None):
