@@ -8,8 +8,8 @@ requirement is explained in the [FAQ](#faq).
 
 1.  Read the [Individual Contributor License Agreement](icla-1.0.md)
 
-2.  Make a pull request on the [odoo/odoo](/odoo/odoo) (or amend an existing
-    one), adding a new file `<github-login>.md` under the
+2.  Modify your current pull request, or make a new pull request on
+    [odoo/odoo](/odoo/odoo), adding a new file `<github-login>.md` under the
     [`doc/cla/individual`](individual/) directory. If your GitHub login is
     `odony`, the file would be `doc/cla/individual/odony.md`. The file should
     contain:
@@ -44,10 +44,11 @@ signature is merged.
 
 1.  Read the [Corporate Contributor License Agreement](icla-1.0.md)
 
-2.  Make a pull request on the [odoo/odoo](/odoo/odoo) (or amend an existing
-    one), adding a new file `<lowercase-company-name>.md` under the
-    [`doc/cla/corporate`](corporate/) directory. If the name of the company is Odoo,
-    the file would be `doc/cla/corporate/odoo.md`. The file should contain:
+2.  Modify your current pull request, or make a new pull request on
+    [odoo/odoo](/odoo/odoo), adding a new file `<lowercase-company-name>.md`
+    under the [`doc/cla/corporate`](corporate/) directory.
+    If the name of the company is Odoo, the file would be
+    `doc/cla/corporate/odoo.md`. The file should contain:
 
     ```
 <country>, <date>
@@ -136,7 +137,7 @@ removed from the Odoo project.
 
 In addition, if some or all of someone's contributions are written as part of
 an employment by somebody else, the work may not belong to the contributor but
-to your employer, depending on the contract terms and local laws. In that case
+to their employer, depending on the contract terms and local laws. In that case
 the employer needs to sign the Corporate Contributor License Agreement (CCLA),
 including the names of all contributors allowed to make those contributions in
 order for those contributions to be accepted.
