@@ -7,13 +7,14 @@
             <field name="model">asset.modify</field>
             <field name="arch" type="xml">
                 <form string="Modify Asset">
+                    <field name="asset_method_time" invisible="1"/>
                     <group string="Asset Durations to Modify" col="4">
                         <group colspan="2" col="2">
                     	    <field name="name"/>
-                            <field name="method_number"/>
+                            <field name="method_number" attrs="{'invisible': [('asset_method_time', '=', 'end')]}"/>
                         </group>
                         <group colspan="2" col="2">
-	                        <field name="method_end"/>
+	                        <field name="method_end" attrs="{'invisible': [('asset_method_time', '=', 'number')]}"/>
 	                        <label for="method_period"/>
                             <div>
                                 <field name="method_period" class="oe_inline"/> months

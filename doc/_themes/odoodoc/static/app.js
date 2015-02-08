@@ -25,40 +25,6 @@ $(function () {
         });
     }, 100);
 
-    /*
-    for clipboard:
-    * add per-language setup code to document, hidden
-    * adds button to each switchable language block except when they're setup
-      stuff because fuck'em
-    * per-language, add clipboard hook to prefix with setup bit on-copy
-    * setup bit is... ?
-    * actually not all blocks because we don't want to add the setup bits to
-      the setup bits, so that's kinda shit
-     */
-
-    document.addEventListener('copy', copyCode);
-
-    ZeroClipboard.config({
-        swfPath: '../_static/zeroclipboard-2.1.6/ZeroClipboard.swf',
-        flashLoadTimeout: 3e3,
-    });
-    var zc = new ZeroClipboard();
-    zc.on('ready', function () {
-        var $highlighted = $('.switchable:not(.setup) .highlight').addClass('with-btn-clipboard');
-        var $clipboard_buttons =
-            $('<button type="button" class="btn-clipboard">Copy</button>')
-            .on('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function () {
-                $(this).removeClass('active');
-            })
-            .prependTo($highlighted);
-        zc.clip($clipboard_buttons);
-    });
-    zc.on('copy', function (e) {
-        // yellow flash
-        $(e.target).addClass('active');
-        copyCode(e);
-    });
-
     // stripe page stuff
     if ($('div.document-super').hasClass('stripe')) { (function () {
         // iterate on highlighted PL blocks (but not results because that'd
@@ -95,38 +61,31 @@ $(function () {
                 sheet.insertRule(sel + '{' + content + '}', lastIndex);
             });
         $switcher.affix();
+
+        $('<button type="button" class="btn-show-setup">Toggle Setup Code</button>')
+            .prependTo('.switchable:not(.setup) .highlight');
+        $(document).on('click', '.btn-show-setup', function (e) {
+            var $target = $(e.target);
+            var target = $target.closest('.switchable:not(.setup)').get(0);
+            // not in a switchable (???)
+            if (!target) { return; }
+            var lang = getHighlightLanguage(target);
+            if (!lang) {
+                // switchable without highlight (e.g. language-specific notes),
+                // don't munge
+                return;
+            }
+
+            var $setup_code = $target.prev();
+            if ($setup_code.length) {
+                // remove existing setup code
+                $setup_code.remove();
+            } else {
+                $('.setupcode.highlight-' + lang + ' pre').clone().insertBefore($target);
+            }
+        });
     })(); }
 
-
-    function copyCode(e) {
-        // works for both C-c and "Copy" button if copy button is injected
-        // inside highlighted code section
-        var target = $(e.target).closest('.switchable:not(.setup)').get(0);
-        // not in a switchable
-        if (!target) { return; }
-        var lang = getHighlightLanguage(target);
-        if (!lang) {
-            // switchable without highlight (e.g. language-specific notes),
-            // don't munge
-            return;
-        }
-
-        // get generic setup code
-        var setup_selector = '.setupcode.highlight-' + lang + ' pre';
-        var setup = document.querySelector(setup_selector).textContent;
-
-        // prepend setup code to current snippet, get all of current snippet
-        // in case only part of it was selected. Ensure we don't get e.g.
-        // button text around snippet itself
-        var data = setup + '\n' + target.querySelector('pre').textContent;
-        // sane browsers & ZeroClipboard
-        e.clipboardData.setData('text/plain', data);
-        // MSIE
-        e.clipboardData.setData('Text', data);
-
-        // no preventDefault on ZC event
-        e.preventDefault && e.preventDefault();
-    }
     /**
      * @param {Node} node highlight node to get the language of
      * @returns {String|null} either the highlight language or null

@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import unicodedata
 
 from openerp import tools
 import openerp.modules
@@ -124,7 +123,12 @@ class ir_translation_import_cursor(object):
 
         find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
                     " AND irt.name = ti.name AND irt.src = ti.src " \
-                    " AND (ti.type != 'model' OR ti.res_id = irt.res_id) "
+                    " AND irt.module = ti.module " \
+                    " AND ( " \
+                    "      (ti.type NOT IN ('model', 'view')) " \
+                    "   OR (ti.type = 'model' AND ti.res_id = irt.res_id) " \
+                    "   OR (ti.type = 'view' AND irt.res_id IS NULL) " \
+                    "   OR (ti.type = 'view' AND irt.res_id IS NOT NULL AND ti.res_id = irt.res_id)) "
 
         # Step 2: update existing (matching) translations
         if self._overwrite:
@@ -352,8 +356,7 @@ class ir_translation(osv.osv):
         trad = res and res[0] or u''
         if source and not trad:
             return tools.ustr(source)
-        # Remove control characters
-        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
+        return trad
 
     def create(self, cr, uid, vals, context=None):
         if context is None:

@@ -32,7 +32,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
     @param with_date: if a value is passed to this param it will return dates based on value of withdate + calendar_id
     @return: real event id
     """
-    if calendar_id and isinstance(calendar_id, (str, unicode)):
+    if calendar_id and isinstance(calendar_id, (basestring)):
         res = calendar_id.split('-')
         if len(res) >= 2:
             real_id = res[0]
@@ -46,7 +46,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (str, int, long)):
+    if isinstance(ids, (basestring, int, long)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -172,10 +172,11 @@ class calendar_attendee(osv.Model):
         return res
 
     def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
-                                template_xmlid='calendar_template_meeting_invitation', context=None):
+                                template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
+        @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
 
@@ -208,7 +209,7 @@ class calendar_attendee(osv.Model):
         })
 
         for attendee in self.browse(cr, uid, ids, context=context):
-            if attendee.email and email_from and attendee.email != email_from:
+            if attendee.email and email_from and (attendee.email != email_from or force):
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
@@ -510,7 +511,14 @@ class calendar_alarm_manager(osv.AbstractModel):
         alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
 
         if alarm.type == 'email':
-            res = self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], template_xmlid='calendar_template_meeting_reminder', context=context)
+            res = self.pool['calendar.attendee']._send_mail_to_attendees(
+                cr,
+                uid,
+                [att.id for att in event.attendee_ids],
+                template_xmlid='calendar_template_meeting_reminder',
+                force=True,
+                context=context
+            )
 
         return res
 
@@ -625,14 +633,14 @@ class ir_model(osv.Model):
     _inherit = 'ir.model'
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
+        new_ids = isinstance(ids, (basestring, int, long)) and [ids] or ids
         if context is None:
             context = {}
         data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, context=context, load=load)
         if data:
             for val in data:
                 val['id'] = calendar_id2real_id(val['id'])
-        return isinstance(ids, (str, int, long)) and data[0] or data
+        return isinstance(ids, (basestring, int, long)) and data[0] or data
 
 
 original_exp_report = openerp.service.report.exp_report
@@ -764,7 +772,7 @@ class calendar_event(osv.Model):
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
             context['tz'] = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
             tz = context['tz']
-        tz = tools.ustr(tz).encode('utf-8')  # make safe for str{p,f}time()
+        tz = tools.ustr(tz).encode('utf-8') # make safe for str{p,f}time()
 
         format_date, format_time = self.get_date_formats(cr, uid, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -851,10 +859,11 @@ class calendar_event(osv.Model):
         if values.get('start_datetime') or values.get('start_date') or values.get('start') \
                 or values.get('stop_datetime') or values.get('stop_date') or values.get('stop'):
             allday = values.get("allday", None)
+            event = self.browse(cr, uid, id, context=context)
 
             if allday is None:
                 if id:
-                    allday = self.read(cr, uid, [id], ['allday'], context=context)[0].get('allday')
+                    allday = event.allday
                 else:
                     allday = False
                     _logger.warning("Calendar - All day is not specified, arbitrarily set to False")
@@ -871,10 +880,16 @@ class calendar_event(osv.Model):
                         values[fld] = values['%s_%s' % (fld, key)]
 
             diff = False
-            if allday and values.get('stop_date') and values.get('start_date'):
-                diff = datetime.strptime(values['stop_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(values['start_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
-            elif values.get('stop_datetime') and values.get('start_datetime'):
-                diff = datetime.strptime(values['stop_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(values['start_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+            if allday and (values.get('stop_date') or values.get('start_date')):
+                stop_date = values.get('stop_date') or event.stop_date
+                start_date = values.get('start_date') or event.start_date
+                if stop_date and start_date:
+                    diff = datetime.strptime(stop_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(start_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+            elif values.get('stop_datetime') or values.get('start_datetime'):
+                stop_datetime = values.get('stop_datetime') or event.stop_datetime
+                start_datetime = values.get('start_datetime') or event.start_datetime
+                if stop_datetime and start_datetime:
+                    diff = datetime.strptime(stop_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(start_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
             if diff:
                 duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
                 values['duration'] = round(duration, 2)
@@ -960,18 +975,18 @@ class calendar_event(osv.Model):
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_ids': _get_default_partners,
-        'start_datetime': lambda *x: datetime.now(),
-        'stop_datetime': lambda *x: datetime.now() + relativedelta(hours=1),
     }
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.stop < event.start:
+            if event.start_datetime and event.stop_datetime < event.start_datetime:
+                return False
+            if event.start_date and event.stop_date < event.start_date:
                 return False
         return True
 
     _constraints = [
-        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['start', 'stop'])
+        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['start_datetime', 'stop_datetime', 'start_date', 'stop_date'])
     ]
 
     def onchange_allday(self, cr, uid, ids, start=False, end=False, starttime=False, endtime=False, startdatetime=False, enddatetime=False, checkallday=False, context=None):
@@ -1140,7 +1155,7 @@ class calendar_event(osv.Model):
         if not context:
             context = {}
 
-        if isinstance(event_id, (str, int, long)):
+        if isinstance(event_id, (basestring, int, long)):
             ids_to_browse = [event_id]  # keep select for return
         else:
             ids_to_browse = event_id
@@ -1222,7 +1237,7 @@ class calendar_event(osv.Model):
             comparers = [((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]
             ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
 
-        if isinstance(event_id, (str, int, long)):
+        if isinstance(event_id, (basestring, int, long)):
             return ids and ids[0] or False
         else:
             return ids
@@ -1385,7 +1400,7 @@ class calendar_event(osv.Model):
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        if isinstance(thread_id, str):
+        if isinstance(thread_id, basestring):
             thread_id = get_real_ids(thread_id)
         if context.get('default_date'):
             del context['default_date']
@@ -1511,7 +1526,7 @@ class calendar_event(osv.Model):
         for arg in args:
             if arg[0] == 'id':
                 for n, calendar_id in enumerate(arg[2]):
-                    if isinstance(calendar_id, str):
+                    if isinstance(calendar_id, basestring):
                         arg[2][n] = calendar_id.split('-')[0]
         return super(calendar_event, self)._name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=limit, name_get_uid=name_get_uid)
 
@@ -1530,7 +1545,7 @@ class calendar_event(osv.Model):
         self._set_date(cr, uid, values, id=ids[0], context=context)
 
         for one_ids in ids:
-            if isinstance(one_ids, (str, int, long)):
+            if isinstance(one_ids, (basestring, int, long)):
                 if len(str(one_ids).split('-')) == 1:
                     ids = [int(one_ids)]
                 else:
@@ -1626,7 +1641,7 @@ class calendar_event(osv.Model):
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (basestring, int, long)):
             select = [ids]
         else:
             select = ids
@@ -1638,7 +1653,7 @@ class calendar_event(osv.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+            if not isinstance(ls, (basestring, int, long)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 
@@ -1674,7 +1689,7 @@ class calendar_event(osv.Model):
             for k in EXTRAFIELDS:
                 if (k in r) and (fields and (k not in fields)):
                     del r[k]
-        if isinstance(ids, (str, int, long)):
+        if isinstance(ids, (basestring, int, long)):
             return result and result[0] or False
         return result
 
@@ -1713,7 +1728,7 @@ class mail_message(osv.Model):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], str):
+            if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
                 args[index][2] = get_real_ids(args[index][2])
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
@@ -1735,7 +1750,7 @@ class ir_attachment(osv.Model):
         convert the search on real ids in the case it was asked on virtual ids, then call super()
         '''
         for index in range(len(args)):
-            if args[index][0] == "res_id" and isinstance(args[index][2], str):
+            if args[index][0] == "res_id" and isinstance(args[index][2], basestring):
                 args[index][2] = get_real_ids(args[index][2])
         return super(ir_attachment, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
@@ -1743,7 +1758,7 @@ class ir_attachment(osv.Model):
         '''
         when posting an attachment (new or not), convert the virtual ids in real ids.
         '''
-        if isinstance(vals.get('res_id'), str):
+        if isinstance(vals.get('res_id'), basestring):
             vals['res_id'] = get_real_ids(vals.get('res_id'))
         return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
 

@@ -72,7 +72,7 @@ class ReportController(Controller):
     # Misc. route utils
     #------------------------------------------------------
     @route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="user")
-    def report_barcode(self, type, value, width=600, height=100):
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
         """Contoller able to render barcode images thanks to reportlab.
         Samples: 
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
@@ -82,11 +82,14 @@ class ReportController(Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
+        at the bottom of the output image
         """
         try:
-            width, height = int(width), int(height)
+            width, height, humanreadable = int(width), int(height), bool(humanreadable)
             barcode = createBarcodeDrawing(
-                type, value=value, format='png', width=width, height=height
+                type, value=value, format='png', width=width, height=height,
+                humanReadable = humanreadable
             )
             barcode = barcode.asString('png')
         except (ValueError, AttributeError):

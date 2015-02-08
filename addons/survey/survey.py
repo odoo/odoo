@@ -200,7 +200,7 @@ class survey_survey(osv.Model):
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
             help="This message will be displayed when survey is completed"),
-        'quizz_mode': fields.boolean(string='Quizz mode')
+        'quizz_mode': fields.boolean(string='Quiz mode')
     }
 
     def _default_stage(self, cr, uid, context=None):

@@ -388,9 +388,7 @@ class ir_model_fields(osv.osv):
                 if vals['model'].startswith('x_') and vals['name'] == 'x_name':
                     model._rec_name = 'x_name'
 
-                if self.pool.fields_by_model is not None:
-                    cr.execute('SELECT * FROM ir_model_fields WHERE id=%s', (res,))
-                    self.pool.fields_by_model.setdefault(vals['model'], []).append(cr.dictfetchone())
+                self.pool.clear_manual_fields()
 
                 # re-initialize model in registry
                 model.__init__(self.pool, cr)
@@ -446,6 +444,7 @@ class ir_model_fields(osv.osv):
 
             for item in self.browse(cr, user, ids, context=context):
                 obj = self.pool.get(item.model)
+                field = getattr(obj, '_fields', {}).get(item.name)
 
                 if item.state != 'manual':
                     raise except_orm(_('Error!'),
@@ -481,12 +480,12 @@ class ir_model_fields(osv.osv):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj is not None:
+                if obj is not None and field is not None:
                     # find out which properties (per model) we need to update
                     for field_name, prop_name, func in model_props:
                         if field_name in vals:
                             prop_value = func(vals[field_name])
-                            if getattr(obj._fields[item.name], prop_name) != prop_value:
+                            if getattr(field, prop_name) != prop_value:
                                 patches[obj][final_name][prop_name] = prop_value
 
         # These shall never be written (modified)
@@ -986,11 +985,15 @@ class ir_model_data(osv.osv):
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
             return False
+        id = False
         try:
-            id = self.read(cr, uid, [self._get_id(cr, uid, module, xml_id)], ['res_id'])[0]['res_id']
-            self.loads[(module,xml_id)] = (model,id)
-        except:
-            id = False
+            # One step to check the ID is defined and the record actually exists
+            record = self.get_object(cr, uid, module, xml_id)
+            if record:
+                id = record.id
+                self.loads[(module,xml_id)] = (model,id)
+        except Exception:
+            pass
         return id
 
     def clear_caches(self):

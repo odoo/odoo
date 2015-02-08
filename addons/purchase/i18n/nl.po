@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:27+0000\n"
-"PO-Revision-Date: 2014-11-05 15:55+0000\n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-01-22 08:33+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-11-06 06:58+0000\n"
-"X-Generator: Launchpad (build 17223)\n"
+"X-Launchpad-Export-Date: 2015-01-23 06:51+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
@@ -362,7 +362,7 @@ msgstr ""
 "inkooporder annuleert."
 
 #. module: purchase
-#: code:addons/purchase/stock.py:185
+#: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
 msgstr " Kopen"
@@ -552,7 +552,7 @@ msgid ""
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
 "                The quotation contains the history of the "
-"discussion/negociation\n"
+"discussion/negotiation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
@@ -565,15 +565,15 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het aanmaken van een offerteaanvraag.\n"
 "              </p><p>\n"
-"                De offerte bevat de geschiedenis van de discussie / "
-"onderhandeling\n"
-"                met uw leverancier. Eenmaal bevestigd, wordt de "
+"                De offerte bevat de geschiedenis van de "
+"discussie/onderhandeling\n"
+"                welke u had met u leverancier. Bij bevestigen, wordt een "
 "offerteaanvraag\n"
 "                omgezet in een inkooporder.\n"
-"              </ p></ p>\n"
-"                De meeste voorstellen voor inkooporders worden automatisch "
-"gemaakt\n"
-"                door Odoo op basis van voorraad behoeften.\n"
+"              </p><p>\n"
+"                De meeste offerteaanvragen worden automatisch aangemaakt "
+"door Odoo\n"
+"               op basis van de voorraadbehoefte.\n"
 "              </p>\n"
 "            "
 
@@ -850,8 +850,8 @@ msgid "Bid Valid Until"
 msgstr "Bieding geldig t/m"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1160
-#: code:addons/purchase/stock.py:179
+#: code:addons/purchase/purchase.py:1171
+#: code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
 msgstr "Kopen"
@@ -884,7 +884,17 @@ msgid "Can be Purchased"
 msgstr "Inkoop product"
 
 #. module: purchase
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:1189
+#, python-format
+msgid ""
+"Can not cancel this procurement as the related purchase order has been "
+"confirmed already.  Please cancel the purchase order first. "
+msgstr ""
+"Het is niet mogelijk deze verwerving te annuleren, omdat de gekoppeld "
+"inkooporder al bevestigd is. U dient de inkooporder eerst te annuleren. "
+
+#. module: purchase
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Kan geen algemene koop route vinden."
@@ -905,11 +915,11 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
-"Het is niet mogelijk ene inkooporder te verwijderen in de '%s\"status."
+"Het is niet mogelijk een inkooporder te verwijderen in de '%s\"status."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -940,7 +950,7 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:506
+#: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Compose Email"
 msgstr "E-mail opstellen"
@@ -951,7 +961,7 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid "Configuration Error!"
 msgstr "Configuratiefout!"
@@ -1021,7 +1031,7 @@ msgid "Date Approved"
 msgstr "Datum goedgekeurd"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Date Req."
 msgstr "Leverdatum"
 
@@ -1076,13 +1086,13 @@ msgid "Default invoicing control method"
 msgstr "Standaard factureer methode."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:546
+#: code:addons/purchase/purchase.py:555
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
 msgstr "Definieer een kostenrekening voor dit product: \"%s\" (id:%d)."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:590
+#: code:addons/purchase/purchase.py:599
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
 msgstr "Definieer het inkoopboek voor dit bedrijf: \"%s\" (id:%d)."
@@ -1108,8 +1118,8 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,name:0
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -1151,7 +1161,7 @@ msgid "Draft PO"
 msgstr "Concept inkoopporder"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1366
+#: code:addons/purchase/purchase.py:1384
 #, python-format
 msgid "Draft Purchase Order created"
 msgstr "Concept inkooporder aangemaakt."
@@ -1173,11 +1183,13 @@ msgid "Email composition wizard"
 msgstr "E-mail samenstellen wizard"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
-#: code:addons/purchase/purchase.py:529
-#: code:addons/purchase/purchase.py:546
-#: code:addons/purchase/purchase.py:589
-#: code:addons/purchase/stock.py:182
+#: code:addons/purchase/purchase.py:159
+#: code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:538
+#: code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:598
+#: code:addons/purchase/purchase.py:1188
+#: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -1192,7 +1204,7 @@ msgstr "Fout"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: field:purchase.order,minimum_planned_date:0
 #: field:purchase.report,expected_date:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Expected Date"
 msgstr "Datum verwacht"
 
@@ -1265,7 +1277,7 @@ msgid "In Shipments"
 msgstr "Leveringen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
+#: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
@@ -1319,8 +1331,8 @@ msgstr ""
 "internationaal transport."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:328
-#: code:addons/purchase/purchase.py:1007
+#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1357,13 +1369,13 @@ msgid "Invoice Received"
 msgstr "Factuur ontvangen"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1482
+#: code:addons/purchase/purchase.py:1500
 #, python-format
 msgid "Invoice paid"
 msgstr "Factuur betaald"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1462
+#: code:addons/purchase/purchase.py:1480
 #, python-format
 msgid "Invoice received"
 msgstr "Factuur ontvangen"
@@ -1460,6 +1472,13 @@ msgid "Location & Warehouse"
 msgstr "Locatie & Magazijn"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:159
+#, python-format
+msgid "Make sure you have at least an incoming picking type defined"
+msgstr ""
+"Zorg ervoor dat u tenminste een inkomende levering type heeft gedefinieerd"
+
+#. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
 msgstr "Beheer aanbestedingen"
@@ -1532,7 +1551,7 @@ msgid "Monthly Purchases"
 msgstr "Maandelijkse inkopen"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Net Price"
 msgstr "Netto-prijs"
 
@@ -1542,19 +1561,19 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1205
+#: code:addons/purchase/purchase.py:1222
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Geen adres gedefinieerd voor de leverancier"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1203
+#: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
 msgstr "Geen standaard leverancier gedefinieerd voor dit product"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1201
+#: code:addons/purchase/purchase.py:1218
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Geen leverancier voor dit product opgegeven!"
@@ -1602,7 +1621,7 @@ msgid "Order Date"
 msgstr "Orderdatum"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
 msgstr "Order datum:"
 
@@ -1645,7 +1664,7 @@ msgid "Orders"
 msgstr "Orders"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
 msgstr "Onze orderreferentie:"
 
@@ -1655,7 +1674,7 @@ msgid "Outgoing Mails"
 msgstr "Uitgaande E-mails"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1346
+#: code:addons/purchase/purchase.py:1363
 #, python-format
 msgid "PO: %s"
 msgstr "IO: %s"
@@ -1688,7 +1707,7 @@ msgid "Picking List"
 msgstr "Verzamellijst"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:404
+#: code:addons/purchase/purchase.py:413
 #, python-format
 msgid "Please create Invoices."
 msgstr "Deze order(s) hebben nog geen facturen."
@@ -1814,7 +1833,7 @@ msgid "Products by Category"
 msgstr "Producten op categorie"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:842
+#: code:addons/purchase/purchase.py:851
 #, python-format
 msgid "Products received"
 msgstr "Producten ontvangen"
@@ -1875,7 +1894,7 @@ msgid "Purchase Order"
 msgstr "Inkooporder"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation N°"
 msgstr "Inkooporder bevestiging nr."
 
@@ -1927,7 +1946,7 @@ msgid "Purchase Pricelist"
 msgstr "Inkoopprijslijst"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1368
+#: code:addons/purchase/purchase.py:1386
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
 msgstr "Inkooporderregel aangemaakt en gekoppeld aan bestaande inkooporder"
@@ -1972,8 +1991,8 @@ msgstr ""
 "klant. Laat leeg om te leveren aan uw eigen bedrijf."
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "Qty"
 msgstr "Hvhd"
 
@@ -1983,7 +2002,7 @@ msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1370
+#: code:addons/purchase/purchase.py:1388
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
 msgstr "Hoeveelheid toegevoegd aan bestaande inkooporderregel"
@@ -2021,8 +2040,8 @@ msgid "RFQ Done"
 msgstr "Offerteaanvraag gereed"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:318
-#: code:addons/purchase/purchase.py:936
+#: code:addons/purchase/purchase.py:327
+#: code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
 msgstr "Offerteaanvraag aangemaakt"
@@ -2101,7 +2120,7 @@ msgstr ""
 "levering van uw leverancier."
 
 #. module: purchase
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Regards,"
 msgstr "Met vriendelijk groet,"
 
@@ -2114,12 +2133,12 @@ msgstr "Bijbehorende locatie"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.report,state:0
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
 msgstr "Offerteaanvraag"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Request for Quotation N°"
 msgstr "Verzoek om offerte nr."
 
@@ -2164,7 +2183,7 @@ msgid "Select an Open Sales Order"
 msgstr "Selecteer een open verkooprder"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
+#: code:addons/purchase/purchase.py:1114
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -2195,10 +2214,10 @@ msgid "Shipping Exception"
 msgstr "Fouten in verzendingen"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
-msgid "Shipping address :"
-msgstr "Afleveradres :"
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
+msgid "Shipping address:"
+msgstr "Afleveradres:"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -2261,7 +2280,7 @@ msgid "Supplier Inv."
 msgstr "Lev. factuur"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:435
+#: code:addons/purchase/purchase.py:444
 #: code:addons/purchase/wizard/purchase_line_invoice.py:115
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
@@ -2277,7 +2296,7 @@ msgstr "Leverancier referentie"
 #. module: purchase
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Taxes"
 msgstr "Belastingen"
 
@@ -2306,7 +2325,7 @@ msgstr ""
 "inkoopprijs voor de geselecteerd producten."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1214
+#: code:addons/purchase/purchase.py:1231
 #, python-format
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
@@ -2316,7 +2335,7 @@ msgstr ""
 "een instellingsfout te zijn!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1134
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
@@ -2326,7 +2345,7 @@ msgstr ""
 "ingesteld. U zou niet minder moeten bestellen."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1119
+#: code:addons/purchase/purchase.py:1130
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "De geselecteerde leverancier verkoopt dit product alleen per %s"
@@ -2360,7 +2379,7 @@ msgid "The total amount"
 msgstr "Het totaalbedrag"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1318
+#: code:addons/purchase/purchase.py:1335
 #, python-format
 msgid "There is no supplier associated to product %s"
 msgstr "Er is geen leverancier gekoppeld aan dit product %s"
@@ -2397,13 +2416,8 @@ msgid "This will determine picking type of incoming shipment"
 msgstr "Dit bepaald de ontvangstwijze van de inkomende levering."
 
 #. module: purchase
-#: view:product.template:purchase.product_template_search_view_purchase
-msgid "To Purchase"
-msgstr "Inkoop product"
-
-#. module: purchase
 #: field:purchase.order,amount_total:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total"
 msgstr "Totaal"
 
@@ -2418,7 +2432,7 @@ msgid "Total Untaxed amount"
 msgstr "Totaalbedrag excl. belastingen"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Total Without Taxes"
 msgstr "Totaal excl. belastingen"
 
@@ -2428,13 +2442,13 @@ msgid "Total amount"
 msgstr "Totaalbedrag"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:694
 #, python-format
 msgid "Unable to cancel the purchase order %s."
 msgstr "Niet mogelijk om de inkooporder te annuleren %s."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:691
+#: code:addons/purchase/purchase.py:700
 #, python-format
 msgid "Unable to cancel this purchase order."
 msgstr "Niet mogelijk deze Inkoopporders te annuleren."
@@ -2450,7 +2464,7 @@ msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Unit Price"
 msgstr "Prijs"
 
@@ -2506,8 +2520,8 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
-#: view:website:purchase.report_purchasequotation
+#: view:website:purchase.report_purchaseorder_document
+#: view:website:purchase.report_purchasequotation_document
 msgid "VAT:"
 msgstr "BTW:"
 
@@ -2517,7 +2531,7 @@ msgid "Validated By"
 msgstr "Goedgekeurd door"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Validated By:"
 msgstr "Gevalideerd door:"
 
@@ -2543,9 +2557,9 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1104
-#: code:addons/purchase/purchase.py:1119
-#: code:addons/purchase/purchase.py:1123
+#: code:addons/purchase/purchase.py:1114
+#: code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1134
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
 msgid "Warning!"
@@ -2569,19 +2583,19 @@ msgstr ""
 "magazijn."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:529
+#: code:addons/purchase/purchase.py:538
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
 msgstr "Het is niet mogelijk een Inkoopporders zonder regels te bevestigen."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:686
+#: code:addons/purchase/purchase.py:695
 #, python-format
 msgid "You have already received some goods for it.  "
 msgstr "U heeft hier al goederen van ontvangen.  "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:692
+#: code:addons/purchase/purchase.py:701
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
@@ -2589,9 +2603,27 @@ msgstr ""
 "geannuleerd"
 
 #. module: purchase
-#: view:website:purchase.report_purchaseorder
+#: view:website:purchase.report_purchaseorder_document
 msgid "Your Order Reference"
 msgstr "Uw orderreferentie"
 
+#. module: purchase
+#: view:purchase.config.settings:purchase.view_purchase_configuration
+#: view:purchase.order.group:purchase.view_purchase_order_group
+#: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
+msgid "or"
+msgstr "of"
+
+#. module: purchase
+#: field:purchase.order,related_usage:0
+msgid "unknown"
+msgstr "onbekend"
+
+#~ msgid "Shipping address :"
+#~ msgstr "Afleveradres :"
+
 #~ msgid "Reference UOM"
 #~ msgstr "Referentie eenheid"
+
+#~ msgid "To Purchase"
+#~ msgstr "Inkoop product"
