@@ -22,5 +22,40 @@
             <field eval="False" name="active"/>
         </record>
 
+        <!-- deactivate minimal account sequences -->
+        
+        <record id="account.sequence_sale_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_refund_sales_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_purchase_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_refund_purchase_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_bank_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_check_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_cash_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_opening_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_miscellaneous_journal" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.sequence_statement" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
+        <record id="account.cash_sequence_statement" model="ir.sequence">
+            <field eval="False" name="active"/>
+        </record>
     </data>
 </openerp>
