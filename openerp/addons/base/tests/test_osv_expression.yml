@@ -55,19 +55,19 @@
     Testing that some domain expressions work
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('parent_id','=','Agrolait')])
+        ids = self.search(cr, uid, [('parent_id','=','OpenCorp')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator, for scalar value
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('parent_id','in','Agrolait')])
+        ids = self.search(cr, uid, [('parent_id','in','OpenCorp')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator for list value
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
+        ids = self.search(cr, uid, [('parent_id','in',['OpenCorp','Asustek'])])
         assert len(ids) >= 1, ids
 -
     Check we can use "in" operator for plain fields.
@@ -466,10 +466,10 @@
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on an untranslated field.
 -
     !python {model: res.partner }: |
-        all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
-        assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'v%')])
-        assert len(all_ids) >= 1, "Must match one partner (Vicking Direct), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=like', 'Asustek')])
+        assert len(all_ids) == 1, "Must match one partner (Asustek), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'B%')])
+        assert len(all_ids) >= 1, "Must match one partner (Bista Solutions US), got %r"%all_ids
 -
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
 -
@@ -513,17 +513,17 @@
             # Should give: 'DataError: invalid input syntax for type timestamp' or similar
             cr.execute('ROLLBACK TO SAVEPOINT expression_failure_test')
 -
-    Testing for Many2Many field with category supplier and active=False
+    Testing for Many2Many field with category Retailer and active=False
 -
     !python {model: res.partner }: |
-        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_1")])],
+        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_10")])],
                 'name': 'OpenERP Test',
                 'active': False,
                 'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': ref("base.be")})]
                 }
         self.create(cr, uid, vals, context=context)
-        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
-        assert len(res_ids) != 0, "Record not Found with category supplier and active False."
+        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'Retailer'), ('active', '=', False)])
+        assert len(res_ids) != 0, "Record not Found with category Retailer and active False."
 -
     Testing for One2Many field with country Belgium and active=False
 -
@@ -554,10 +554,10 @@
 
         # indirect search via m2o
         Partners = self.pool.get('res.partner')
-        agrolait = Partners.search(cr, uid, [('name', '=', 'Agrolait')])[0]
+        opencorp = Partners.search(cr, uid, [('name', '=', 'OpenCorp')])[0]
 
         not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgium')])
-        assert agrolait not in not_be, "Search match failed (m2o)"
+        assert opencorp not in not_be, "Search match failed (m2o)"
 
         not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgique')], context=ctx)
-        assert agrolait not in not_be, "Search match failed (m2o)"
+        assert opencorp not in not_be, "Search match failed (m2o)"

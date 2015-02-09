@@ -564,7 +564,7 @@ Conversedly, picking only three fields deemed interesting.
 
 .. code-block:: json
 
-    [{"comment": false, "country_id": [21, "Belgium"], "id": 7, "name": "Agrolait"}]
+    [{"comment": false, "country_id": [21, "Belgium"], "id": 7, "name": "OpenCorp"}]
 
 .. note:: even if the ``id`` field is not requested, it is always returned
 
@@ -709,13 +709,13 @@ if that list is not provided it'll fetch all fields of matched records):
             "comment": false,
             "country_id": [ 21, "Belgium" ],
             "id": 7,
-            "name": "Agrolait"
+            "name": "OpenCorp"
         },
         {
             "comment": false,
             "country_id": [ 76, "France" ],
             "id": 18,
-            "name": "Axelor"
+            "name": "Eezee-It"
         },
         {
             "comment": false,
@@ -727,7 +727,7 @@ if that list is not provided it'll fetch all fields of matched records):
             "comment": false,
             "country_id": [ 105, "India" ],
             "id": 14,
-            "name": "Best Designers"
+            "name": "Drishti Tech"
         },
         {
             "comment": false,

@@ -114,7 +114,7 @@ Date: Fri, 23 Aug 2013 13:17:54 +0200
 Message-ID: <CAP76m_V4BY2F7DWHzwfjteyhW8L2LJswVshtmtVym+LUJ=rASQ@mail.gmail.com>
 Subject: Test mail multipart/mixed
 From: =?ISO-8859-1?Q?Raoul Grosbedon=E9e?= <ignasse.carambar@gmail.com>
-To: Followers of ASUSTeK-Joseph-Walters <raoul@grosbedon.fr>
+To: Followers of Asustek-Joseph-Walters <raoul@grosbedon.fr>
 Content-Type: multipart/mixed; boundary=089e01536c4ed4d17204e49b8e96
 
 --089e01536c4ed4d17204e49b8e96
