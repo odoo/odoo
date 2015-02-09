@@ -34,7 +34,7 @@ class account_bank_statement(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, default='/', readonly=True)
-    """ Name is readonly by default because it's the expected behaviour in cash statements, which uses inheritance by delegation """
+    # Name is readonly by default because it's the expected behaviour in cash statements, which uses inheritance by delegation
     date = fields.Date(string='Date', required=True, states={'confirm': [('readonly', True)]}, select=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]})
@@ -244,16 +244,16 @@ class account_bank_statement_line(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
 
     @api.one
-    @api.constrains('amount', 'amount_currency')
-    def _check_amount_currency(self):
+    @api.constrains('amount')
+    def _check_amount(self):
         # This constraint could possibly underline flaws in bank statement import (eg. inability to
         # support hacks such as using dummy transactions to give additional informations)
         if self.amount == 0:
-            raise ValidationError('A transaction can\t have a 0 amount.')
+            raise ValidationError('A transaction can\'t have a 0 amount.')
 
     @api.one
-    @api.constrains('amount')
-    def _check_amount(self):
+    @api.constrains('amount', 'amount_currency')
+    def _check_amount_currency(self):
         if self.amount_currency != 0 and self.amount == 0:
             raise ValidationError('If "Amount Currency" is specified, then "Amount" must be as well.')
 
@@ -671,8 +671,8 @@ class account_bank_statement_line(models.Model):
                         aml_dict['credit'] = st_line_currency.with_context(ctx).compute(aml_dict['credit'], company_currency)
                 elif statement_currency.id != company_currency.id:
                     # Statement is in foreign currency but the transaction is in company currency
-                    prorata_factor = (mv_line_dict['debit'] - mv_line_dict['credit']) / st_line.amount_currency
-                    mv_line_dict['amount_currency'] = prorata_factor * st_line.amount
+                    prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency
+                    aml_dict['amount_currency'] = prorata_factor * self.amount
 
             # Complete dicts, create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
@@ -680,8 +680,7 @@ class account_bank_statement_line(models.Model):
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
 
-                counterpart_move_line = aml_dict['move_line']
-                del aml_dict['move_line']
+                counterpart_move_line = aml_dict['move_line'].pop('move_line')
                 new_aml = aml_obj.create(aml_dict, check=False)
                 (new_aml|counterpart_move_line).reconcile()
 

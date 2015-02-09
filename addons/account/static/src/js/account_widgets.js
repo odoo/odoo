@@ -59,7 +59,7 @@ openerp.account = function (instance) {
             this.model_presets = new instance.web.Model("account.operation.template");
             this.max_move_lines_displayed = 5;
             // Number of reconciliations loaded initially and by clicking 'show more'
-            this.num_reconciliations_fetched_in_batch = 5;
+            this.num_reconciliations_fetched_in_batch = 10;
             this.animation_speed = 100; // "Blocking" animations
             this.aestetic_animation_speed = 300; // eye candy
             // We'll need to get the code of an account selected in a many2one field (which returns the id)
@@ -1553,8 +1553,6 @@ openerp.account = function (instance) {
 
         updateShowMoreButton: function() {
             var items_remaining = this.lines.length - this.last_displayed_reconciliation_index;
-            console.log(this.lines.length);
-            console.log(this.last_displayed_reconciliation_index);
             if (items_remaining > 0)
                 this.$(".show_more").show().find(".num_items_remaining").text(items_remaining);
             else
