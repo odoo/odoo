@@ -130,10 +130,11 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="residual" sum="Residual Amount" widget="monetary"/>
                     <field name="amount_untaxed" sum="Untaxed Amount" widget="monetary"/>
                     <field name="amount_total" sum="Total Amount" widget="monetary"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="amount_total_signed" sum="Total Amount" widget="monetary" groups="base.group_multi_currency"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -225,6 +226,7 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total_signed" widget="monetary" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                 <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
@@ -357,6 +359,7 @@
                                 </div>
                                 <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total_signed" widget="monetary" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                 <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
                                 <field name="reconciled" invisible="1"/>
