@@ -70,7 +70,7 @@ class format_address(object):
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
                     for childnode in tree.getchildren():
-                        if view_has_field_use_parent_address:
+                        if view_has_field_use_parent_address and childnode.tag == 'field':
                             childnode.set(
                                 'attrs', "{'readonly': [('use_parent_address','=',True)]}")
                         modifiers = {}
