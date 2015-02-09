@@ -843,9 +843,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
                     if (!f.get("readonly")) {
-                        values[f.name] = f.get_value();
+                        values[f.name] = f.get_value(true);
                     } else {
-                        readonly_values[f.name] = f.get_value();
+                        readonly_values[f.name] = f.get_value(true);
                     }
                 }
             }
