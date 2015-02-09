@@ -790,6 +790,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().id,
+                tax_ids: [[6, false, _.map(this.get_applicable_taxes(), function(tax){ return tax.id; })]],
             };
         },
         //used to create a json of the ticket, to be sent to the printer
