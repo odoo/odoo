@@ -152,7 +152,7 @@ class Post(models.Model):
     @api.one
     @api.depends('content')
     def _get_plain_content(self):
-        self.plain_content = tools.html2plaintext(self.content)[0:500]
+        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
 
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
