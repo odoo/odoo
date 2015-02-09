@@ -2336,7 +2336,7 @@ class stock_move(osv.osv):
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
                                                           restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                if ops.result_package_id.id:
+                if ops.result_package_id.id and ops.product_id:
                     #if a result package is given, all quants go there
                     quant_dest_package_id = ops.result_package_id.id
                 elif ops.product_id and ops.package_id:
