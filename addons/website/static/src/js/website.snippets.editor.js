@@ -27,6 +27,9 @@
                 this.snippets.insertAfter(this.$el);
                 website.snippet.start_animation(true);
                 $editable.find("*").off('mousedown mouseup click');
+                this.snippets.on("snippets:ready", this, function () {
+                    self.trigger("snippets:ready");
+                });
             });
 
             return this._super.apply(this, arguments);
@@ -38,14 +41,6 @@
     });
 
     /* ----- SNIPPET SELECTOR ---- */
-
-    var observer = new website.Observer(function (mutations) {
-        if (!_(mutations).find(function (m) {
-                    return m.type === 'childList' && m.addedNodes.length > 0;
-                })) {
-            return;
-        }
-    });
 
     $.extend($.expr[':'],{
         o_editable: function(node,i,m){
@@ -91,11 +86,6 @@
             }
             this.$active_snipped_id = false;
             this.snippets = [];
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true,
-            });
         },
         start: function() {
             var self = this;
@@ -122,14 +112,8 @@
             };
 
             $(window).on('resize', function () {
-                if (self.$active_snipped_id) {
+                if (self.$active_snipped_id && self.$active_snipped_id.data("snippet-editor")) {
                     self.cover_target(self.$active_snipped_id.data("snippet-editor").$overlay, self.$active_snipped_id);
-                }
-                var $scroll = self.$snippet.find('.scroll:first').css("overflow", "");
-                if ($scroll.children().last().height() + $scroll.children().first().height() + 34 > document.body.clientHeight) {
-                    $scroll.css("overflow", "auto").css("width", "216px");
-                } else {
-                    $scroll.css("width", "");
                 }
             });
 
@@ -194,135 +178,191 @@
                 };
             }
         },
+
         fetch_snippet_templates: function () {
             var self = this;
-            openerp.jsonRpc(this._get_snippet_url(), 'call', {})
-                .then(function (html) {
-                    var $html = $(html);
-
-                    $html.siblings(".scroll").find('> ul li').tooltip({
-                            delay: { "show": 500, "hide": 100 },
-                            container: 'body',
-                            title: function () {
-                                return (navigator.appVersion.indexOf('Mac') > -1 ? 'CMD' : 'CTRL')+'+SHIFT+'+($(this).index()+1);
-                            },
-                            trigger: 'hover',
-                            placement: 'right'
-                        }).on('click', function () {$(this).tooltip('hide');});
-
-                    // t-snippet
-                    $html.find('> .tab-content > div > [data-oe-type="snippet"]').each(function () {
-                        var $div = $('<div/>').insertAfter(this).append(this).attr('name', $(this).data('oe-name'));
-                    });
-                    // end
-
-                    var selector = [];
-                    var $styles = $html.find("[data-js], [data-selector]");
-                    $styles.each(function () {
-                        var $style = $(this);
-                        var no_check = $style.data('no-check');
-                        var option_id = $style.data('js');
-                        var option = {
-                            'option' : option_id,
-                            'base_selector': $style.data('selector'),
-                            'selector': self._add_check_selector($style.data('selector'), no_check),
-                            '$el': $style,
-                            'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
-                            'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
-                            'data': $style.data()
-                        };
-                        website.snippet.templateOptions.push(option);
-                        selector.push(option.selector);
-                    });
-                    $styles.addClass("hidden");
-                    website.snippet.globalSelector = {
-                        closest: function ($from) {
-                            var $temp;
-                            var $target;
-                            var len = selector.length;
-                            for (var i = 0; i<len; i++) {
-                                $temp = selector[i].closest($from, $target && $target[0]);
-                                if (!$target || $temp.length) {
-                                    $target = $temp;
-                                }
-                            }
-                            return $target;
-                        },
-                        all: function ($from) {
-                            var $target;
-                            var len = selector.length;
-                            for (var i = 0; i<len; i++) {
-                                if (!$target) $target = selector[i].all($from);
-                                else $target = $target.add(selector[i].all($from));
-                            }
-                            return $target;
-                        },
-                        is: function ($from) {
-                            var len = selector.length;
-                            for (var i = 0; i<len; i++) {
-                                if (selector[i].is($from)) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        },
-                    };
-
-                    self.$snippets = $html.find(".tab-content > div > div")
-                        .addClass("oe_snippet")
-                        .each(function () {
-                            if (!$('.oe_snippet_thumbnail', this).size()) {
-                                var $div = $(
-                                    '<div class="oe_snippet_thumbnail">'+
-                                        '<div class="oe_snippet_thumbnail_img"/>'+
-                                        '<span class="oe_snippet_thumbnail_title"></span>'+
-                                    '</div>');
-                                $div.find('span').text($(this).attr("name"));
-                                $(this).prepend($div);
-
-                                // from t-snippet
-                                var thumbnail = $("[data-oe-thumbnail]", this).data("oe-thumbnail");
-                                if (thumbnail) {
-                                    $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
-                                }
-                                // end
-                            }
-                            $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
-                        });
-
-                    // select all default text to edit (if snippet default text)
-                    self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
-                        .contents()
-                        .filter(function() {
-                            return this.nodeType === 3 && this.textContent.match(/\S/);
-                        }).parent().addClass("o_default_snippet_text");
-                    $(document).on("mouseup", ".o_default_snippet_text", function (event) {
-                        $(event.target).selectContent();
-                    });
-                    $(document).on("keyup", function (event) {
-                        var r = $.summernote.core.range.create();
-                        $(r && r.sc).closest(".o_default_snippet_text").removeClass("o_default_snippet_text");
-                    });
-                    // end
-
-                    // clean t-oe
-                    $html.find('[data-oe-model]').each(function () {
-                        for (var k=0; k<this.attributes.length; k++) {
-                            if (this.attributes[k].name.indexOf('data-oe-') === 0) {
-                                $(this).removeAttr(this.attributes[k].name);
-                                k--;
-                            }
-                        }
-                    });
-                    // end
-
-                    self.$el.append($html);
-
-                    $(window).trigger('resize');
-
-                    self.make_snippet_draggable(self.$snippets);
-                });
+            var url = this._get_snippet_url();
+            if (!url || !url.length) {
+                this.$snippet.detach();
+                return;
+            }
+            return openerp.jsonRpc(url, 'call', {}).then(function (html) {
+                self.compute_snippet_templates(html);
+                self.trigger("snippets:ready");
+            });
         },
+        compute_snippet_templates: function (html) {
+            var self = this;
+            var $html = $(html);
+            var $left_bar = this.$el.find("#o_left_bar");
+            var $ul = $html.siblings("ul");
+            var $scroll = $html.siblings("#o_scroll");
+
+            if (!$scroll.length) {
+                throw new Error("Wrong snippets xml definition");
+            }
+
+            $ul.children().tooltip({
+                    delay: { "show": 500, "hide": 100 },
+                    container: 'body',
+                    title: function () {
+                        return (navigator.appVersion.indexOf('Mac') > -1 ? 'CMD' : 'CTRL')+'+SHIFT+'+($(this).index()+1);
+                    },
+                    trigger: 'hover',
+                    placement: 'top'
+                }).on('click', function () {$(this).tooltip('hide');});
+
+            // t-snippet
+            $html.find('[data-oe-type="snippet"][data-oe-name]').each(function () {
+                var $div = $('<div/>').insertAfter(this).append(this).attr('name', $(this).data('oe-name'));
+            });
+            // end
+
+            var selector = [];
+            var $styles = $html.find("[data-js], [data-selector]");
+            $styles.each(function () {
+                var $style = $(this);
+                var no_check = $style.data('no-check');
+                var option_id = $style.data('js');
+                var option = {
+                    'option' : option_id,
+                    'base_selector': $style.data('selector'),
+                    'selector': self._add_check_selector($style.data('selector'), no_check),
+                    '$el': $style,
+                    'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
+                    'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
+                    'data': $style.data()
+                };
+                website.snippet.templateOptions.push(option);
+                selector.push(option.selector);
+            });
+            $styles.addClass("hidden");
+            website.snippet.globalSelector = {
+                closest: function ($from) {
+                    var $temp;
+                    var $target;
+                    var len = selector.length;
+                    for (var i = 0; i<len; i++) {
+                        $temp = selector[i].closest($from, $target && $target[0]);
+                        if (!$target || $temp.length) {
+                            $target = $temp;
+                        }
+                    }
+                    return $target;
+                },
+                all: function ($from) {
+                    var $target;
+                    var len = selector.length;
+                    for (var i = 0; i<len; i++) {
+                        if (!$target) $target = selector[i].all($from);
+                        else $target = $target.add(selector[i].all($from));
+                    }
+                    return $target;
+                },
+                is: function ($from) {
+                    var len = selector.length;
+                    for (var i = 0; i<len; i++) {
+                        if (selector[i].is($from)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+            };
+
+            // oe_snippet_body
+            self.$snippets = $scroll.find(".o_panel_body").children()
+                .addClass("oe_snippet")
+                .each(function () {
+                    if (!$('.oe_snippet_thumbnail', this).size()) {
+                        var $div = $(
+                            '<div class="oe_snippet_thumbnail">'+
+                                '<div class="oe_snippet_thumbnail_img"/>'+
+                                '<span class="oe_snippet_thumbnail_title"></span>'+
+                            '</div>');
+                        $div.find('span').text($(this).attr("name"));
+                        $(this).prepend($div);
+
+                        // from t-snippet
+                        var thumbnail = $("[data-oe-thumbnail]", this).data("oe-thumbnail");
+                        if (thumbnail) {
+                            $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
+                        }
+                        // end
+                    }
+                    $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
+                });
+
+            // select all default text to edit (if snippet default text)
+            self.$snippets.find('.oe_snippet_body, .oe_snippet_body *')
+                .contents()
+                .filter(function() {
+                    return this.nodeType === 3 && this.textContent.match(/\S/);
+                }).parent().addClass("o_default_snippet_text");
+            $(document).on("mouseup", ".o_default_snippet_text", function (event) {
+                $(event.target).selectContent();
+            });
+            $(document).on("keyup", function (event) {
+                var r = $.summernote.core.range.create();
+                $(r && r.sc).closest(".o_default_snippet_text").removeClass("o_default_snippet_text");
+            });
+            // end
+
+            // clean t-oe
+            $html.find('[data-oe-model]').each(function () {
+                for (var k=0; k<this.attributes.length; k++) {
+                    if (this.attributes[k].name.indexOf('data-oe-') === 0) {
+                        $(this).removeAttr(this.attributes[k].name);
+                        k--;
+                    }
+                }
+            });
+            // end
+
+            $left_bar.append($html);
+
+            // animate for list of snippet blocks
+            $left_bar.on('click', '.scroll-link', function (event) {
+                event.preventDefault();
+                var targetOffset =  $($(this).attr("href")).position().top - $ul.outerHeight() + $scroll[0].scrollTop;
+                $scroll.animate({'scrollTop': targetOffset}, 750);
+            });
+            $scroll.on('scroll', function () {
+                var middle = $scroll.height()/4;
+                var $li = $ul.find("a").parent().removeClass('active');
+                var last;
+                for (var k=0; k<$li.length; k++) {
+                    var li = $($li[k]);
+                    if (!li.data('target')) {
+                        li.data('target', $($("a", li).attr("href")));
+                    }
+                    if (li.data('target').position().top > middle) {
+                        break;
+                    }
+                    last = $li[k];
+                }
+                $(last).addClass("active");
+            });
+            // end
+
+            // display scrollbar
+            $(window).on('resize', function () {
+                $scroll.css("overflow", "");
+                var height = $left_bar.height() - $ul.outerHeight();
+                $scroll.css("height", height);
+                var $last = $scroll.children(":visible").last().children(".o_panel_body");
+                $last.css({'min-height': (height-$last.prev().outerHeight())+'px'});
+                if ($scroll[0].scrollHeight + $ul[0].scrollHeight > document.body.clientHeight) {
+                    $scroll.css("overflow", "auto").css("width", "226px");
+                } else {
+                    $scroll.css("width", "");
+                }
+            }).trigger('resize');
+            // end
+
+            self.make_snippet_draggable(self.$snippets);
+        },
+
         cover_target: function ($el, $target){
             if($el.data('not-cover_target')) return;
             var pos = $target.offset();
@@ -442,7 +482,7 @@
             for (var k in template) {
                 var Option = options[template[k]['option']];
                 if (Option && Option.prototype.clean_for_save !== dummy) {
-                    template[k].selector.all().each(function () {
+                    template[k].selector.all().filter(".o_dirty").each(function () {
                         new Option(self, null, $(this), k).clean_for_save();
                     });
                 }
@@ -777,19 +817,10 @@
 
                     var timer;
                     $target.closest('.o_editable').on("content_changed", function (event) {
-                        if ($target[0] === $(event.target).data('last-mutation').target ||
-                            $.contains($target[0], $(event.target).data('last-mutation').target)) {
-
-                            $target.data('need_recover', true);
+                        if ($target.data('overlay') && $target.data('overlay').hasClass("oe_active")) {
                             clearTimeout(timer);
                             timer = setTimeout(function () {
-                                $(':data(need_recover)').each(function () {
-                                    var $snippet = $(this);
-                                    $snippet.data('need_recover', null);
-                                    if ($snippet.data('overlay')) {
-                                        self.cover_target($snippet.data('overlay'), $snippet);
-                                    }
-                                });
+                                self.cover_target($target.data('overlay'), $target);
                             },50);
                         }
                      });

@@ -148,12 +148,33 @@
 
 .o_editable .media_iframe_video .css_editable_mode_display
     display: block !important
-
+ 
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     background-image: url('/website/static/src/img/edit_here.png') !important
+    &:before
+        content: 'Press The Top-Left Edit Button' !important
 
-.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
-    content: 'Press The Top-Left Edit Button' !important
+.o_editable
+    &.oe_structure.oe_empty > p:empty:only-child, &[data-oe-type=html] > p:empty:only-child
+        color: #aaa
+    &.oe_structure.oe_empty:empty, &[data-oe-type=html]:empty, &.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, &[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child, &.oe_structure.oe_empty > p:empty:only-child, &[data-oe-type=html] > p:empty:only-child
+        background-image: none !important
+        &:before
+            content: 'Write your text here' !important
+        &:focus:before
+            display: none
+
+#oe_snippets ~ #wrapwrap
+    .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+        background-image: url('/website/static/src/img/drag_here.png') !important
+        &:before
+            content: 'Drag Building Blocks Here' !important
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: none
+    background-repeat: no-repeat
+    background-position: center
+    height: 220px !important
 
 [data-oe-type=html].oe_no_empty:empty:before
     content: '' !important

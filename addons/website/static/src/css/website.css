@@ -105,6 +105,30 @@ div.media_iframe_video.padding-xl iframe {
   padding: 32px;
 }
 
+.fa-6x {
+  font-size: 6em;
+}
+
+.fa-7x {
+  font-size: 7em;
+}
+
+.fa-8x {
+  font-size: 8em;
+}
+
+.fa-9x {
+  font-size: 9em;
+}
+
+.fa-10x {
+  font-size: 10em;
+}
+
+.fa.center-block {
+  text-align: center;
+}
+
 ul {
   list-style-type: disc;
 }
@@ -221,13 +245,17 @@ table.table {
   table-layout: fixed;
 }
 
-#wrapwrap p:empty:after {
-  content: "⁠";
+td {
+  min-width: 20px;
 }
 
 /* ----- Editor (for public user, like forum) ----- */
 .note-toolbar {
   margin-left: 0 !important;
+}
+
+.note-popover .popover > .arrow {
+  display: none;
 }
 
 /* ----- Snippets Styles ----- */
@@ -309,18 +337,7 @@ nav.navbar + #wrapwrap {
     width: 100%;
   }
 }
-/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
-.oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: url("/website/static/src/img/drag_here.png") !important;
-}
-
-.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  background-image: none;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 220px !important;
-}
-
+/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   position: static;
 }
@@ -329,21 +346,17 @@ nav.navbar + #wrapwrap {
   content: " ";
   text-align: center;
   display: block;
-  padding-top: 160px;
-  padding-bottom: 30px;
+  min-height: 1em;
   color: grey;
   font-size: 24px;
-}
-
-.oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: "Drag Building Blocks Here" !important;
+  padding-top: 160px;
 }
 
 .css_editable_display {
   display: none;
 }
 
-/* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
+/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
 }

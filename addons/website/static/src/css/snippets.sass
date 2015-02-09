@@ -6,15 +6,14 @@
 /* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
-    .scroll, .o_arrow
+    #o_left_bar, #o_arrow
         position: fixed
         top: 34px
         left: 0px
         bottom: 0
-        padding-top: 10px
         background: rgb(40,40,40)
         +box-shadow(0px 10px 10px -10px black inset)
-    .o_arrow
+    #o_arrow
         z-index: 1009
         width: 24px
         opacity: 0.75
@@ -28,36 +27,44 @@
         .fa
             width: 100%
             left: 40%
-    .scroll
-        left:  -220px
+    #o_left_bar
+        left:  -228px
         z-index: 1010
-        width: 200px
+        width: 208px
         @include transition(all 500ms ease)
-    &.o_open .scroll
+        ul
+            text-align: center
+            margin: 0
+            padding: 6px 0
+            list-style-type: none
+            li
+                display: inline-block
+                padding: 0 3px
+                a
+                    color: #aaa
+                .fa-stack
+                    overflow: hidden
+            li.active a.fa, li.active .fa-stack-1x
+                color: #428bca
+
+    &.o_open #o_left_bar
         left: 0
-    .nav
-        float: none
-        border-bottom: none !important
-        margin-bottom: 6px
-        > li
-            display: block
-            float: none
-            &.active
-                background: black !important
-            > a
-                padding: 2px 10px !important
-                width: 100%
-                display: block
-                border-radius: 4px
-                border: 0
-            span
-                font-size: 0.8em
-    .pill-content
+    .o_panel
+        margin: 0
         border: 0
-    .tab-content
+        width: 208px
+    .o_panel_header
+        background: #dff0d8
+        padding: 1px 8px
+        color: #414141
+        text-align: center
+        .fa-stack
+            overflow: hidden
+            font-size: 1em
+    .o_panel_body
         white-space: normal
         background: black
-        margin-left: 3px
+        padding: 7px 3px
         > div
             background: rgb(0,0,0)
             label
@@ -75,8 +82,9 @@
     display: inline-block
     vertical-align: top
     width: 93px
-    margin-left: 1px
-    margin-top: 0px
+    margin-left: 3px
+    margin-right: 3px
+    margin-top: 1px
     position: relative
     overflow: hidden
     +user-select(none)

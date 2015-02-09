@@ -51,6 +51,10 @@ define(['summernote/summernote'], function () {
         var $linkPopover = $popover.find('.note-link-popover');
         var $airPopover = $popover.find('.note-air-popover');
 
+        if (window === window.top) {
+            $popover.children().addClass("hidden-xs");
+        }
+
         //////////////// image popover
 
         // add center button for images
@@ -335,7 +339,7 @@ define(['summernote/summernote'], function () {
     eventHandler.editor.resizefa = function ($editable, sValue) {
         var $target = $(getImgTarget());
         $editable.data('NoteHistory').recordUndo();
-        $target.removeClass('fa-1x fa-2x fa-3x fa-4x fa-5x');
+        $target.attr('class', $target.attr('class').replace(/\s*fa-[0-9]+x/g, ''));
         if (+sValue > 1) {
             $target.addClass('fa-'+sValue+'x');
         }
@@ -470,41 +474,10 @@ define(['summernote/summernote'], function () {
         $(data.sc).closest('.o_editable').data('range', r);
         return r;
     }
-    $(document).mousedown(function (event) {
-        if (!$(event.target).closest(".o_editable").length) {
-            return;
-        }
-        var r = range.create();
-        if (initial_data.range && event.shiftKey) {
-            initial_data.range.select();
-        }
-        if (event.shiftKey) {
-            var rect = r && r.getClientRects();
-            initial_data.rect = rect && rect.length ? rect[0] : { top: 0, left: 0 };
-        }
-        initial_data.event = event;
-    });
-    $(document).mouseup(function (event) {
-        if (!$(event.target).closest(".o_editable").length) {
-            return;
-        }
-        if (!initial_data.range || !event.shiftKey) {
-            setTimeout(function () {
-                initial_data.range = range.create();
-            },0);
-        }
-    });
     function summernote_mouseup (event) {
         if ($(event.target).closest("#website-top-navbar, .note-popover").length) {
             return;
         }
-        if ($(event.target).is(":o_editable")) {
-            var a = summernote_ie_fix(event, function (node) { return node.tagName === "A"; });
-            if (a) {
-                range.create().select();
-            }
-        }
-
         // don't rerange if simple click
         if (initial_data.event) {
             var dx = event.clientX - (event.shiftKey ? initial_data.rect.left : initial_data.event.clientX);
@@ -513,17 +486,36 @@ define(['summernote/summernote'], function () {
                 reRangeSelect(event, dx, dy);
             }
         }
+
+        if (!$(event.target).closest(".o_editable").length) {
+            return;
+        }
+        if (!initial_data.range || !event.shiftKey) {
+            setTimeout(function () {
+                initial_data.range = range.create();
+            },0);
+        }
     }
     var remember_selection;
     function summernote_mousedown (event) {
         history.splitNext();
+
+        var $editable = $(event.target).closest(".o_editable");
         
         if (!!document.documentMode) {
             summernote_ie_fix(event, function (node) { return node.tagName === "DIV" || node.tagName === "IMG" || (node.dataset && node.dataset.oeModel); });
-        } else if (last_div && event.target !== last_div && last_div.tagName === "A") {
-            summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
+        } else if (last_div && event.target !== last_div) {
+            if (last_div.tagName === "A") {
+                summernote_ie_fix(event, function (node) { return node.dataset && node.dataset.oeModel; });
+            } else if ($editable.length) {
+                if (summernote_ie_fix(event, function (node) { return node.tagName === "A"; })) {
+                    r = range.create();
+                    r.select();
+                }
+            }
         }
 
+        // remember_selection when click on non editable area
         var r = range.create();
         if ($(r ? dom.node(r.sc) : event.srcElement || event.target).closest('#website-top-navbar, #oe_main_menu_navbar, .note-popover, .modal').length) {
             if (remember_selection && !$(event.target).is('input, select, label, button, a')) {
@@ -535,6 +527,17 @@ define(['summernote/summernote'], function () {
             }
         } else if (r && $(dom.node(r.sc)).closest('.o_editable, .note-editable').length) {
             remember_selection = r;
+        }
+
+        initial_data.event = event;
+
+        // keep selection when click with shift
+        if (event.shiftKey && $editable.length) {
+            if (initial_data.range) {
+                initial_data.range.select();
+            }
+            var rect = r && r.getClientRects();
+            initial_data.rect = rect && rect.length ? rect[0] : { top: 0, left: 0 };
         }
     }
 
@@ -790,6 +793,8 @@ define(['summernote/summernote'], function () {
             $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
             $(".oe_overlay").remove();
             $(".note-control-selection").hide();
+            
+            $editable.trigger("content_changed");
 
             if (!oSnap.bookmark) {
                 return;
@@ -852,7 +857,12 @@ define(['summernote/summernote'], function () {
         };
 
         var last;
-        this.recordUndo = function ($editable, event) {
+        this.recordUndo = function ($editable, event, internal_history) {
+            if (!internal_history) {
+                if (!event || !last || !aUndo[pos-1] || aUndo[pos-1].editable !== $editable[0]) { // don't trigger change for all keypress
+                    $(".o_editable.note-editable").trigger("content_changed");
+                }
+            }
             if (event) {
                 if (last && aUndo[pos-1] && aUndo[pos-1].editable !== $editable[0]) {
                     // => make a snap when the user change editable zone (because: don't make snap for each keydown)
@@ -926,20 +936,7 @@ define(['summernote/summernote'], function () {
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
-        var is_smartphone = $(document.body)[0].clientWidth < 767;
-
-        if (!is_smartphone) {
-            website.ready().then(website.init_editor);
-        } else {
-            var resize_smartphone = function () {
-                is_smartphone = $(document.body)[0].clientWidth < 767;
-                if (!is_smartphone) {
-                    $(window).off("resize", resize_smartphone);
-                    website.init_editor();
-                }
-            };
-            $(window).on("resize", resize_smartphone);
-        }
+        website.ready().then(website.init_editor);
 
         $(document).on('click', 'a.js_link2post', function (ev) {
             ev.preventDefault();
@@ -1049,7 +1046,6 @@ define(['summernote/summernote'], function () {
 
             var saved = {}; // list of allready saved views and data
 
-            observer.disconnect();
             var defs = $('.o_editable')
                 .filter('.o_dirty')
                 .removeAttr('contentEditable')
@@ -1222,7 +1218,7 @@ define(['summernote/summernote'], function () {
          * Add a record undo to history
          * @param {DOM} target where the dom is changed is editable zone
          */
-        historyRecordUndo: function ($target) {
+        historyRecordUndo: function ($target, internal_history) {
             var rng = range.create();
             var $editable = $($target || (rng && rng.sc)).closest(".o_editable");
             if ($editable.length) {
@@ -1240,7 +1236,7 @@ define(['summernote/summernote'], function () {
             }
             $target = $(rng.sc);
             $target.mousedown();
-            this.history.recordUndo($target);
+            this.history.recordUndo($target, null, internal_history);
             $target.mousedown();
         },
         /**
@@ -1310,6 +1306,9 @@ define(['summernote/summernote'], function () {
                     }
 
                     $target.trigger('mousedown'); // for activate selection on picture
+                    setTimeout(function () {
+                        self.historyRecordUndo($editable, true);
+                    },0);
                 }
             });
 
@@ -1336,9 +1335,10 @@ define(['summernote/summernote'], function () {
                 }
 
                 // start element observation
-                observer.observe(node, OBSERVER_CONFIG);
                 $(node).one('content_changed', function () {
                     $node.addClass('o_dirty');
+                });
+                $(node).on('content_changed', function () {
                     self.trigger('change');
                 });
             });
@@ -1391,107 +1391,6 @@ define(['summernote/summernote'], function () {
             };
         }
     });
-
-    /* ----- OBSERVER ---- */
-
-    website.Observer = window.MutationObserver || window.WebKitMutationObserver || window.JsMutationObserver;
-    var OBSERVER_CONFIG = {
-        childList: true,
-        attributes: true,
-        characterData: true,
-        subtree: true,
-        attributeOldValue: true,
-    };
-    var observer = new website.Observer(function (mutations) {
-        // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
-        //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
-        //       will not mark dirty on attribute changes (@class, img/@src,
-        //       a/@href, ...)
-        _(mutations).chain()
-            .filter(function (m) {
-                // ignore any SVG target, these blokes are like weird mon
-                if (m.target && m.target instanceof SVGElement) {
-                    return false;
-                }
-                // ignore any change related to mundane image-edit-button
-                if (m.target && m.target.className
-                        && m.target.className.indexOf('image-edit-button') !== -1) {
-                    return false;
-                }
-                switch(m.type) {
-                    case 'attributes':
-                        // ignore contenteditable modification
-                        if (m.attributeName === 'contenteditable') { return false; }
-                        if (m.attributeName === 'attributeeditable') { return false; }
-                        // remove content editable attribute from firefox
-                        if (m.attributeName.indexOf('_moz') === 0) {
-                            if (!m.oldValue) {
-                                // remove stupid _moz attributes
-                                $(m.target).filter(function () { return this.attributes[m.attributeName]; }).removeAttr(m.attributeName);
-                            }
-                            return false;
-                        }
-                        // ignore id modification
-                        if (m.attributeName === 'id') { return false; }
-                        // style not change
-                        if (m.attributeName === 'style' && (m.oldValue || "") === (m.target.attributes.style ? m.target.attributes.style.value : "")) { return false; }
-                        // if attribute is not a class, can't be .cke_focus change
-                        if (m.attributeName !== 'class') { return true; }
-
-                        // find out what classes were added or removed
-                        var oldClasses = (m.oldValue || '').split(/\s+/);
-                        var newClasses = m.target.className.split(/\s+/);
-                        var change = _.union(_.difference(oldClasses, newClasses),
-                                             _.difference(newClasses, oldClasses));
-                        // ignore mutation to create editable zone and add dirty class
-                        var change = _.difference(change, ["note-air-editor", "note-editable", "o_dirty", "o_editable", ""]);
-                        return !!change.length;
-                    case 'childList':
-                        // Remove ignorable nodes from addedNodes or removedNodes,
-                        // if either set remains non-empty it's considered to be an
-                        // impactful change. Otherwise it's ignored.
-                        return !!remove_mundane_nodes(m.addedNodes).length ||
-                               !!remove_mundane_nodes(m.removedNodes).length;
-                    default:
-                        return true;
-                }
-            })
-            .map(function (m) {
-                var node = m.target;
-                while (node && (!node.className || node.className.indexOf('o_editable')===-1)) {
-                    node = node.parentNode;
-                }
-                if (node) {
-                    $(node).data('last-mutation', m);
-                }
-                return node;
-            })
-            .compact()
-            .uniq()
-            .each(function (node) {
-                $(node).trigger('content_changed');
-            });
-    });
-    function remove_mundane_nodes(nodes) {
-        if (!nodes || !nodes.length) { return []; }
-
-        var output = [];
-        for(var i=0; i<nodes.length; ++i) {
-            var node = nodes[i];
-            if (node.nodeType === document.ELEMENT_NODE) {
-                if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
-                    // <br type="_moz"> appears when focusing RTE in FF, ignore
-                    continue;
-                } else if (node.nodeName === 'DIV' && $(node).hasClass('oe_drop_zone')) {
-                    // ignore dropzone inserted by snippets
-                    continue
-                }
-            }
-
-            output.push(node);
-        }
-        return output;
-    }
 
     /* ----- EDITOR: LINK & MEDIA ---- */
 
@@ -2267,8 +2166,12 @@ define(['summernote/summernote'], function () {
     });
 
 
-    function getCssSelectors(filter) {
-        var classes = [];
+    var cacheCssSelectors = {};
+    website.editor.getCssSelectors = function(filter) {
+        var css = [];
+        if (cacheCssSelectors[filter]) {
+            return cacheCssSelectors[filter];
+        }
         var sheets = document.styleSheets;
         for(var i = 0; i < sheets.length; i++) {
             var rules = sheets[i].rules || sheets[i].cssRules;
@@ -2277,17 +2180,19 @@ define(['summernote/summernote'], function () {
                     var selectorText = rules[r].selectorText;
                     if (selectorText) {
                         var match = selectorText.match(filter);
-                        if (match) classes.push(match[1].slice(1, match[1].length));
+                        if (match) {
+                            css.push([match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, '')]);
+                        }
                     }
                 }
             }
         }
-        return classes;
-    }
+        return cacheCssSelectors[filter] = css;
+    };
     function computeFonts() {
         _.each(website.editor.fontIcons, function (data) {
-            data.icons = _.map(getCssSelectors(data.parser), function (css) {
-                return css.replace(/::?before$/, '');
+            data.icons = _.map(website.editor.getCssSelectors(data.parser), function (css) {
+                return css[0].slice(1, css[0].length).replace(/::?before$/, '');
             });
         });
     }
@@ -2366,7 +2271,7 @@ define(['summernote/summernote'], function () {
             var self = this;
             this.parent.trigger("save", this.media);
             var icons = this.icons;
-            var style = this.media.attributes.style ? this.media.attributes.style.textContent : '';
+            var style = this.media.attributes.style ? this.media.attributes.style.value : '';
             var classes = (this.media.className||"").split(/\s+/);
             var non_fa_classes = _.reject(classes, function (cls) {
                 return self.getFont(cls);

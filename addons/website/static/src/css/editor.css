@@ -178,9 +178,35 @@
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/edit_here.png") !important;
 }
-
 .oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
   content: "Press The Top-Left Edit Button" !important;
+}
+
+.o_editable.oe_structure.oe_empty > p:empty:only-child, .o_editable[data-oe-type=html] > p:empty:only-child {
+  color: #aaa;
+}
+.o_editable.oe_structure.oe_empty:empty, .o_editable[data-oe-type=html]:empty, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child, .o_editable.oe_structure.oe_empty > p:empty:only-child, .o_editable[data-oe-type=html] > p:empty:only-child {
+  background-image: none !important;
+}
+.o_editable.oe_structure.oe_empty:empty:before, .o_editable[data-oe-type=html]:empty:before, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before, .o_editable.oe_structure.oe_empty > p:empty:only-child:before, .o_editable[data-oe-type=html] > p:empty:only-child:before {
+  content: "Write your text here" !important;
+}
+.o_editable.oe_structure.oe_empty:empty:focus:before, .o_editable[data-oe-type=html]:empty:focus:before, .o_editable.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:focus:before, .o_editable[data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:focus:before, .o_editable.oe_structure.oe_empty > p:empty:only-child:focus:before, .o_editable[data-oe-type=html] > p:empty:only-child:focus:before {
+  display: none;
+}
+
+#oe_snippets ~ #wrapwrap .oe_structure.oe_empty:empty, #oe_snippets ~ #wrapwrap [data-oe-type=html]:empty, #oe_snippets ~ #wrapwrap .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, #oe_snippets ~ #wrapwrap [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: url("/website/static/src/img/drag_here.png") !important;
+}
+#oe_snippets ~ #wrapwrap .oe_structure.oe_empty:empty:before, #oe_snippets ~ #wrapwrap [data-oe-type=html]:empty:before, #oe_snippets ~ #wrapwrap .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, #oe_snippets ~ #wrapwrap [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Drag Building Blocks Here" !important;
+}
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 220px !important;
 }
 
 [data-oe-type=html].oe_no_empty:empty:before {
