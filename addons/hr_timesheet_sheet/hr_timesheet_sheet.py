@@ -310,7 +310,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates

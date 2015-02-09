@@ -1432,7 +1432,7 @@ class Action(openerpweb.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.read([action_id], ['type'], req.context)
+        base_action = Actions.read([action_id], ['name', 'type'], req.session.get_context())
         if base_action:
             ctx = {}
             action_type = base_action[0]['type']
@@ -1441,7 +1441,7 @@ class Action(openerpweb.Controller):
             ctx.update(req.context)
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
-                value = clean_action(req, action[0])
+                value = clean_action(req, dict(action[0], **base_action[0]))
         return value
 
     @openerpweb.jsonrequest
