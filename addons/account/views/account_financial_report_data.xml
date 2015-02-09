@@ -293,13 +293,13 @@
 
         <record id="account_financial_report_cashsummary0" model="account.financial.report">
             <field name="name">Cash Summary</field>
-            <field name="line_id" ref="account_financial_report_cashsummary_line0"/>
             <field name="report_type">date_range</field>
         </record>
         <record id="account_financial_report_cashsummary_line0" model="account.financial.report.line">
             <field name="name">CASH SUMMARY</field>
             <field name="sequence" eval="1"/>
             <field name="hidden" eval="True"/>
+            <field name="level" eval="0" />
         </record>
         <record id="account_financial_report_cashsummary_net_increase0" model="account.financial.report.line">
             <field name="name">Net increase in cash and cash equivalents</field>
@@ -417,6 +417,7 @@
             <field name="name">Executive Summary</field>
             <field name="sequence" eval="1"/>
             <field name="hidden" eval="True"/>
+            <field name="level" eval="0" />
         </record>
         <record id="account_financial_report_executivesummary_cash0" model="account.financial.report.line">
             <field name="name">CASH</field>

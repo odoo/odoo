@@ -109,7 +109,7 @@ class report_account_financial_report(models.Model):
             line_obj = self.env['account.financial.report.line'].search([('id', '=', line_id)])
         if context_id.comparison:
             line_obj = line_obj.with_context(periods=context_id.get_cmp_periods())
-        return line_obj.with_context(
+        res = line_obj.with_context(
             date_from=context_id.date_from,
             date_to=context_id.date_to,
             target_move=context_id.all_entries and 'all' or 'posted',
@@ -121,6 +121,7 @@ class report_account_financial_report(models.Model):
             periods_number=context_id.periods_number,
             context_id=context_id,
         ).get_lines(self)
+        return res
 
     def get_title(self):
         return self.name
@@ -321,275 +322,278 @@ class account_financial_report_line(models.Model):
 
     @api.multi
     def get_lines(self, financial_report_id):
-        extended = False
-        if financial_report_id.report_type == 'date_range_extended':
-            extended = True
-        lines = []
-        context = self.env.context
-        currency_id = self.env.user.company_id.currency_id
-        if self.closing_balance or financial_report_id.report_type == 'no_date_range':
-            self = self.with_context(closing_bal=True)
-        if self.opening_year_balance:
-            self = self.with_context(opening_year_bal=True)
+        return_res = []
+        for line in self:
+            extended = False
+            if financial_report_id.report_type == 'date_range_extended':
+                extended = True
+            lines = []
+            context = self.env.context
+            currency_id = self.env.user.company_id.currency_id
+            if line.closing_balance or financial_report_id.report_type == 'no_date_range':
+                line = line.with_context(closing_bal=True)
+            if line.opening_year_balance:
+                line = line.with_context(opening_year_bal=True)
 
-        # Computing the lines
-        vals = {
-            'id': self.id,
-            'name': self.name,
-            'type': 'line',
-            'level': self.level,
-            'footnotes': self._get_footnotes('line', self.id),
-        }
-        [vals['unfolded'], vals['unfoldable']] = self._get_unfold(financial_report_id)
+            # Computing the lines
+            vals = {
+                'id': line.id,
+                'name': line.name,
+                'type': 'line',
+                'level': line.level,
+                'footnotes': line._get_footnotes('line', line.id),
+            }
+            [vals['unfolded'], vals['unfoldable']] = line._get_unfold(financial_report_id)
 
-        # listing the columns
-        columns = ['balance']
-        if financial_report_id.debit_credit and not context['comparison']:
-            if not context.get('cash_basis'):
-                columns += ['credit', 'debit']
-            else:
-                columns += ['credit_cash_basis', 'debit_cash_basis']
-
-        # computing the values for the lines
-        total = 0
-        if self.formulas:
-            for key, value in self.get_balance(columns)[0].items():
-                vals[key] = self._format(value)
-                if key == 'balance':
-                    balance = value
-                    total += balance
-            if context['comparison']:
-                vals['comparison'] = []
-                periods = context['periods']
-                for period in periods:
-                    cmp_line = self.with_context(date_from=period[0], date_to=period[1])
-                    value = cmp_line.get_balance(['balance'])[0]['balance']
-                    vals['comparison'].append(self._format(value))
-                    total += value
-                    if context['periods_number'] == 1:
-                        vals['comparison_pc'] = self._build_cmp(balance, value)
-            if extended:
-                if context['comparison']:
-                    older_date_to = periods[-1][0]
+            # listing the columns
+            columns = ['balance']
+            if financial_report_id.debit_credit and not context['comparison']:
+                if not context.get('cash_basis'):
+                    columns += ['credit', 'debit']
                 else:
-                    older_date_to = context['date_from']
-                older_line = self.with_context(closing_bal=True, date_to=older_date_to)
-                value = older_line.get_balance(['balance'])[0]['balance']
-                vals['older'] = self._format(value)
-                total += value
-                non_issued_line = self.with_context(non_issued=True)
-                value = non_issued_line.get_balance(['balance'])[0]['balance']
-                vals['non_issued'] = self._format(value)
-                total += value
-                vals['total'] = self._format(total)
-        if not self.hidden:
-            vals = self._put_columns_together(vals)
-            lines.append(vals)
+                    columns += ['credit_cash_basis', 'debit_cash_basis']
 
-        # if the line has a domain, computing its values
-        if self.domain and vals['unfolded'] and self.groupby and self.show_domain:
-            aml_obj = self.env['account.move.line']
-            amls = aml_obj.search(report_safe_eval(self.domain))
-
-            if self.groupby:
-                if len(amls) > 0:
-                    select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                    if financial_report_id.debit_credit and not context['comparison']:
-                        select += ',SUM(l.credit),SUM(l.debit)'
-                    sql = "SELECT l." + self.groupby + "%s FROM account_move_line l WHERE %s AND l.id IN %s GROUP BY l." + self.groupby
-                    query = sql % (select, amls._query_get(), self._ids_to_sql(amls.ids))
-                    self.env.cr.execute(query)
-                    gbs = self.env.cr.fetchall()
-                    gbs_cmp = []
+            # computing the values for the lines
+            total = 0
+            if line.formulas:
+                for key, value in line.get_balance(columns)[0].items():
+                    vals[key] = line._format(value)
+                    if key == 'balance':
+                        balance = value
+                        total += balance
+                if context['comparison']:
+                    vals['comparison'] = []
+                    periods = context['periods']
+                    for period in periods:
+                        cmp_line = line.with_context(date_from=period[0], date_to=period[1])
+                        value = cmp_line.get_balance(['balance'])[0]['balance']
+                        vals['comparison'].append(line._format(value))
+                        total += value
+                        if context['periods_number'] == 1:
+                            vals['comparison_pc'] = line._build_cmp(balance, value)
+                if extended:
                     if context['comparison']:
-                        periods = context['periods']
-                        for period in periods:
-                            aml_cmp_obj = aml_obj.with_context(date_from=period[0], date_to=period[1])
-                            aml_cmp_ids = aml_cmp_obj.search(report_safe_eval(self.domain))
-                            select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                            query = sql % (select, aml_cmp_ids._query_get(), self._ids_to_sql(aml_cmp_ids.ids))
-                            self.env.cr.execute(query)
-                            gbs_cmp.append(dict(self.env.cr.fetchall()))
-                    if extended:
-                        aml_older_obj = aml_obj.with_context(closing_bal=True, date_to=older_date_to)
-                        aml_older_ids = aml_older_obj.search(report_safe_eval(self.domain))
+                        older_date_to = periods[-1][0]
+                    else:
+                        older_date_to = context['date_from']
+                    older_line = line.with_context(closing_bal=True, date_to=older_date_to)
+                    value = older_line.get_balance(['balance'])[0]['balance']
+                    vals['older'] = line._format(value)
+                    total += value
+                    non_issued_line = line.with_context(non_issued=True)
+                    value = non_issued_line.get_balance(['balance'])[0]['balance']
+                    vals['non_issued'] = line._format(value)
+                    total += value
+                    vals['total'] = line._format(total)
+            if not line.hidden:
+                vals = line._put_columns_together(vals)
+                lines.append(vals)
+
+            # if the line has a domain, computing its values
+            if line.domain and vals['unfolded'] and line.groupby and line.show_domain:
+                aml_obj = self.env['account.move.line']
+                amls = aml_obj.search(report_safe_eval(line.domain))
+
+                if line.groupby:
+                    if len(amls) > 0:
                         select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                        query = sql % (select, aml_older_ids._query_get(), self._ids_to_sql(aml_older_ids.ids))
+                        if financial_report_id.debit_credit and not context['comparison']:
+                            select += ',SUM(l.credit),SUM(l.debit)'
+                        sql = "SELECT l." + line.groupby + "%s FROM account_move_line l WHERE %s AND l.id IN %s GROUP BY l." + line.groupby
+                        query = sql % (select, amls._query_get(), line._ids_to_sql(amls.ids))
                         self.env.cr.execute(query)
-                        gb_older = dict(self.env.cr.fetchall())
-                        aml_non_issued_obj = aml_obj.with_context(non_issued=True)
-                        aml_non_issued_ids = aml_non_issued_obj.search(report_safe_eval(self.domain))
-                        query = sql % (select, aml_non_issued_ids._query_get(), self._ids_to_sql(aml_non_issued_ids.ids))
-                        self.env.cr.execute(query)
-                        gb_non_issued = dict(self.env.cr.fetchall())
+                        gbs = self.env.cr.fetchall()
+                        gbs_cmp = []
+                        if context['comparison']:
+                            periods = context['periods']
+                            for period in periods:
+                                aml_cmp_obj = aml_obj.with_context(date_from=period[0], date_to=period[1])
+                                aml_cmp_ids = aml_cmp_obj.search(report_safe_eval(line.domain))
+                                select = ',COALESCE(SUM(l.debit-l.credit), 0)'
+                                query = sql % (select, aml_cmp_ids._query_get(), line._ids_to_sql(aml_cmp_ids.ids))
+                                self.env.cr.execute(query)
+                                gbs_cmp.append(dict(self.env.cr.fetchall()))
+                        if extended:
+                            aml_older_obj = aml_obj.with_context(closing_bal=True, date_to=older_date_to)
+                            aml_older_ids = aml_older_obj.search(report_safe_eval(line.domain))
+                            select = ',COALESCE(SUM(l.debit-l.credit), 0)'
+                            query = sql % (select, aml_older_ids._query_get(), line._ids_to_sql(aml_older_ids.ids))
+                            self.env.cr.execute(query)
+                            gb_older = dict(self.env.cr.fetchall())
+                            aml_non_issued_obj = aml_obj.with_context(non_issued=True)
+                            aml_non_issued_ids = aml_non_issued_obj.search(report_safe_eval(line.domain))
+                            query = sql % (select, aml_non_issued_ids._query_get(), line._ids_to_sql(aml_non_issued_ids.ids))
+                            self.env.cr.execute(query)
+                            gb_non_issued = dict(self.env.cr.fetchall())
 
-                    c = FormulaContext(self.env['account.financial.report.line'])
-                    if self.formulas:
-                        for f in self.formulas.split(';'):
-                            [column, formula] = f.split('=')
-                            column = column.strip()
-                            if column == 'balance':
-                                balance_formula = formula
-
-                    for gb in gbs:
-                        vals = {'id': gb[0], 'name': self._get_gb_name(gb[0]), 'level': self.level + 2, 
-                                'type': self.groupby, 'footnotes': self._get_footnotes(self.groupby, gb[0])}
-                        total = 0
-                        flag = False
-                        for column in xrange(1, len(columns) + 1):
-                            value = gb[column]
-                            vals[columns[column - 1]] = value
-                            if columns[column - 1] == 'balance':
-                                total += value
-                            if not currency_id.is_zero(value):
-                                flag = True
-                        c['sum'] = FormulaLine(vals, type='not_computed')
-                        if self.formulas:
-                            for f in self.formulas.split(';'):
+                        c = FormulaContext(self.env['account.financial.report.line'])
+                        if line.formulas:
+                            for f in line.formulas.split(';'):
                                 [column, formula] = f.split('=')
                                 column = column.strip()
                                 if column == 'balance':
                                     balance_formula = formula
-                                if column in vals:
-                                    value = report_safe_eval(formula, c, nocopy=True)
-                                    vals[column] = self._format(value)
-                        if context['comparison']:
-                            vals['comparison'] = []
-                            for gb_cmp in gbs_cmp:
-                                if gb_cmp.get(gb[0]):
-                                    c['sum'] = FormulaLine({'balance': gb_cmp[gb[0]]}, type='not_computed')
+
+                        for gb in gbs:
+                            vals = {'id': gb[0], 'name': line._get_gb_name(gb[0]), 'level': line.level + 2, 
+                                    'type': line.groupby, 'footnotes': line._get_footnotes(line.groupby, gb[0])}
+                            total = 0
+                            flag = False
+                            for column in xrange(1, len(columns) + 1):
+                                value = gb[column]
+                                vals[columns[column - 1]] = value
+                                if columns[column - 1] == 'balance':
+                                    total += value
+                                if not currency_id.is_zero(value):
+                                    flag = True
+                            c['sum'] = FormulaLine(vals, type='not_computed')
+                            if line.formulas:
+                                for f in line.formulas.split(';'):
+                                    [column, formula] = f.split('=')
+                                    column = column.strip()
+                                    if column == 'balance':
+                                        balance_formula = formula
+                                    if column in vals:
+                                        value = report_safe_eval(formula, c, nocopy=True)
+                                        vals[column] = line._format(value)
+                            if context['comparison']:
+                                vals['comparison'] = []
+                                for gb_cmp in gbs_cmp:
+                                    if gb_cmp.get(gb[0]):
+                                        c['sum'] = FormulaLine({'balance': gb_cmp[gb[0]]}, type='not_computed')
+                                        value = report_safe_eval(balance_formula, c, nocopy=True)
+                                        vals['comparison'].append(line._format(value))
+                                        total += value
+                                        if not currency_id.is_zero(value):
+                                            flag = True
+                                        del gb_cmp[gb[0]]
+                                    else:
+                                        vals['comparison'].append(line._format(0))
+                                    if context['periods_number'] == 1:
+                                        vals['comparison_pc'] = line._build_cmp(gb[1], gb_cmp.get(gb[0], 0))
+                            if extended:
+                                if gb_older.get(gb[0]):
+                                    c['sum'] = FormulaLine({'balance': gb_older[gb[0]]}, type='not_computed')
                                     value = report_safe_eval(balance_formula, c, nocopy=True)
-                                    vals['comparison'].append(self._format(value))
+                                    vals['older'] = line._format(value)
                                     total += value
                                     if not currency_id.is_zero(value):
                                         flag = True
-                                    del gb_cmp[gb[0]]
+                                    del gb_older[gb[0]]
                                 else:
-                                    vals['comparison'].append(self._format(0))
-                                if context['periods_number'] == 1:
-                                    vals['comparison_pc'] = self._build_cmp(gb[1], gb_cmp.get(gb[0], 0))
-                        if extended:
-                            if gb_older.get(gb[0]):
-                                c['sum'] = FormulaLine({'balance': gb_older[gb[0]]}, type='not_computed')
-                                value = report_safe_eval(balance_formula, c, nocopy=True)
-                                vals['older'] = self._format(value)
-                                total += value
-                                if not currency_id.is_zero(value):
-                                    flag = True
-                                del gb_older[gb[0]]
-                            else:
-                                vals['older'] = self._format(0)
-                            if gb_non_issued.get(gb[0]):
-                                c['sum'] = FormulaLine({'balance': gb_non_issued[gb[0]]}, type='not_computed')
-                                value = report_safe_eval(balance_formula, c, nocopy=True)
-                                vals['non_issued'] = self._format(value)
-                                total += value
-                                if not currency_id.is_zero(value):
-                                    flag = True
-                                del gb_non_issued[gb[0]]
-                            else:
-                                vals['non_issued'] = self._format(0)
-                            vals['total'] = self._format(total)
-                        if flag:
-                            vals = self._put_columns_together(vals)
-                            lines.append(vals)
+                                    vals['older'] = line._format(0)
+                                if gb_non_issued.get(gb[0]):
+                                    c['sum'] = FormulaLine({'balance': gb_non_issued[gb[0]]}, type='not_computed')
+                                    value = report_safe_eval(balance_formula, c, nocopy=True)
+                                    vals['non_issued'] = line._format(value)
+                                    total += value
+                                    if not currency_id.is_zero(value):
+                                        flag = True
+                                    del gb_non_issued[gb[0]]
+                                else:
+                                    vals['non_issued'] = line._format(0)
+                                vals['total'] = line._format(total)
+                            if flag:
+                                vals = line._put_columns_together(vals)
+                                lines.append(vals)
 
-                    if gbs_cmp or (extended and (gb_older or gb_non_issued)):
-                        extra_gbs = []
-                        for gb_cmp in gbs_cmp:
-                            for key, value in gb_cmp.items() + (extended and gb_older.items() or []):
-                                if key not in extra_gbs:
-                                    extra_gbs.append(key)
-                        for extra_gb in extra_gbs:
-                            total = 0
-                            vals = {'id': extra_gb, 'name': self._get_gb_name(extra_gb), 'level': self.level + 2, 'type': self.groupby,
-                                    'balance': self._format(0), 'comparison': [], 'footnotes': self._get_footnotes(self.groupby, extra_gb)}
+                        if gbs_cmp or (extended and (gb_older or gb_non_issued)):
+                            extra_gbs = []
                             for gb_cmp in gbs_cmp:
-                                if extra_gb in gb_cmp:
-                                    c['sum'] = FormulaLine({'balance': gb_cmp[extra_gb]}, type='not_computed')
-                                    value = report_safe_eval(balance_formula, c, nocopy=True)
-                                    vals['comparison'].append(self._format(value))
-                                    total += value
-                                else:
-                                    vals['comparison'].append(self._format(0))
-                                if context['periods_number'] == 1:
-                                    vals['comparison_pc'] = self._build_cmp(0, gb_cmp.get(extra_gb, 0))
-                            if extended:
-                                if extra_gb in gb_older:
-                                    c['sum'] = FormulaLine({'balance': gb_older[extra_gb]}, type='not_computed')
-                                    value = report_safe_eval(balance_formula, c, nocopy=True)
-                                    vals['older'] = self._format(value)
-                                    total += value
-                                else:
-                                    vals['older'] = self._format(0)
-                                if extra_gb in gb_non_issued:
-                                    c['sum'] = FormulaLine({'balance': gb_non_issued[extra_gb]}, type='not_computed')
-                                    value = report_safe_eval(balance_formula, c, nocopy=True)
-                                    vals['non_issued'] = self._format(value)
-                                    total += value
-                                else:
-                                    vals['non_issued'] = self._format(0)
-                                vals['total'] = self._format(total)
-                            vals = self._put_columns_together(vals)
-                            lines.append(vals)
+                                for key, value in gb_cmp.items() + (extended and gb_older.items() or []):
+                                    if key not in extra_gbs:
+                                        extra_gbs.append(key)
+                            for extra_gb in extra_gbs:
+                                total = 0
+                                vals = {'id': extra_gb, 'name': line._get_gb_name(extra_gb), 'level': line.level + 2, 'type': line.groupby,
+                                        'balance': line._format(0), 'comparison': [], 'footnotes': line._get_footnotes(line.groupby, extra_gb)}
+                                for gb_cmp in gbs_cmp:
+                                    if extra_gb in gb_cmp:
+                                        c['sum'] = FormulaLine({'balance': gb_cmp[extra_gb]}, type='not_computed')
+                                        value = report_safe_eval(balance_formula, c, nocopy=True)
+                                        vals['comparison'].append(line._format(value))
+                                        total += value
+                                    else:
+                                        vals['comparison'].append(line._format(0))
+                                    if context['periods_number'] == 1:
+                                        vals['comparison_pc'] = line._build_cmp(0, gb_cmp.get(extra_gb, 0))
+                                if extended:
+                                    if extra_gb in gb_older:
+                                        c['sum'] = FormulaLine({'balance': gb_older[extra_gb]}, type='not_computed')
+                                        value = report_safe_eval(balance_formula, c, nocopy=True)
+                                        vals['older'] = line._format(value)
+                                        total += value
+                                    else:
+                                        vals['older'] = line._format(0)
+                                    if extra_gb in gb_non_issued:
+                                        c['sum'] = FormulaLine({'balance': gb_non_issued[extra_gb]}, type='not_computed')
+                                        value = report_safe_eval(balance_formula, c, nocopy=True)
+                                        vals['non_issued'] = line._format(value)
+                                        total += value
+                                    else:
+                                        vals['non_issued'] = line._format(0)
+                                    vals['total'] = line._format(total)
+                                vals = line._put_columns_together(vals)
+                                lines.append(vals)
 
-            else:
-                for aml in amls:
-                    vals = {'id': aml.id, 'name': aml.name, 'type': 'aml', 'level': self.level + 2, 'footnotes': self._get_footnotes('aml', aml.id)}
-                    c = FormulaContext(self.env['account.financial.report.line'], aml)
-                    flag = False
-                    if self.formulas:
-                        for f in self.formulas.split(';'):
-                            [column, formula] = f.split('=')
-                            column = column.strip()
-                            if column in columns:
-                                value = report_safe_eval(formula, c, nocopy=True)
-                                vals[column] = self._format(value)
+                else:
+                    for aml in amls:
+                        vals = {'id': aml.id, 'name': aml.name, 'type': 'aml', 'level': line.level + 2, 'footnotes': line._get_footnotes('aml', aml.id)}
+                        c = FormulaContext(self.env['account.financial.report.line'], aml)
+                        flag = False
+                        if line.formulas:
+                            for f in line.formulas.split(';'):
+                                [column, formula] = f.split('=')
+                                column = column.strip()
+                                if column in columns:
+                                    value = report_safe_eval(formula, c, nocopy=True)
+                                    vals[column] = line._format(value)
+                                    if column == 'balance':
+                                        balance = value
+                                    if not aml.company_id.currency_id.is_zero(value):
+                                        flag = True
                                 if column == 'balance':
-                                    balance = value
-                                if not aml.company_id.currency_id.is_zero(value):
-                                    flag = True
-                            if column == 'balance':
-                                if context['comparison']:
-                                    periods = context['periods']
-                                    vals['comparison'] = []
-                                    for period in periods:
-                                        aml_cmp_obj = aml_obj.with_context(date_from=period[0], date_to=period[1])
-                                        c_cmp = FormulaContext(self.env['account.financial.report.line'], aml_cmp_obj.browse(aml.id))
-                                        value = report_safe_eval(formula, c_cmp, nocopy=True)
-                                        vals['comparison'].append(self._format(value))
+                                    if context['comparison']:
+                                        periods = context['periods']
+                                        vals['comparison'] = []
+                                        for period in periods:
+                                            aml_cmp_obj = aml_obj.with_context(date_from=period[0], date_to=period[1])
+                                            c_cmp = FormulaContext(self.env['account.financial.report.line'], aml_cmp_obj.browse(aml.id))
+                                            value = report_safe_eval(formula, c_cmp, nocopy=True)
+                                            vals['comparison'].append(line._format(value))
+                                            if not aml.company_id.currency_id.is_zero(value):
+                                                flag = True
+                                            if context['periods_number'] == 1:
+                                                vals['comparison_pc'] = line._build_cmp(balance, value)
+                                    if extended:
+                                        aml_older_obj = aml_obj.with_context(closing_bal=True, date_to=older_date_to)
+                                        c_older = FormulaContext(self.env['account.financial.report.line'], aml_older_obj.browse(aml.id))
+                                        value = report_safe_eval(formula, c_older, nocopy=True)
+                                        vals['older'] = line._format(value)
+                                        total += value
                                         if not aml.company_id.currency_id.is_zero(value):
                                             flag = True
-                                        if context['periods_number'] == 1:
-                                            vals['comparison_pc'] = self._build_cmp(balance, value)
-                                if extended:
-                                    aml_older_obj = aml_obj.with_context(closing_bal=True, date_to=older_date_to)
-                                    c_older = FormulaContext(self.env['account.financial.report.line'], aml_older_obj.browse(aml.id))
-                                    value = report_safe_eval(formula, c_older, nocopy=True)
-                                    vals['older'] = self._format(value)
-                                    total += value
-                                    if not aml.company_id.currency_id.is_zero(value):
-                                        flag = True
-                                    aml_non_issued_obj = aml_obj.with_context(non_issued=True)
-                                    c_non_issued = FormulaContext(self.env['account.financial.report.line'], aml_non_issued_obj.browse(aml.id))
-                                    value = report_safe_eval(formula, c_non_issued, nocopy=True)
-                                    vals['non_issued'] = self._format(value)
-                                    total += value
-                                    vals['total'] = self._format(total)
-                                    if not aml.company_id.currency_id.is_zero(value):
-                                        flag = True
-                    if flag:
-                        vals = self._put_columns_together(vals)
-                        lines.append(vals)
-        new_lines = self.children_ids.get_lines(financial_report_id)
-        result = []
-        if self.level > 0:
-            result += lines
-        for new_line in new_lines:
-            result += new_line
-        if self.level <= 0:
-            result += lines
-        return result
+                                        aml_non_issued_obj = aml_obj.with_context(non_issued=True)
+                                        c_non_issued = FormulaContext(self.env['account.financial.report.line'], aml_non_issued_obj.browse(aml.id))
+                                        value = report_safe_eval(formula, c_non_issued, nocopy=True)
+                                        vals['non_issued'] = line._format(value)
+                                        total += value
+                                        vals['total'] = line._format(total)
+                                        if not aml.company_id.currency_id.is_zero(value):
+                                            flag = True
+                        if flag:
+                            vals = line._put_columns_together(vals)
+                            lines.append(vals)
+            new_lines = line.children_ids.get_lines(financial_report_id)
+            result = []
+            if line.level > 0:
+                result += lines
+            result += new_lines
+            if line.level <= 0:
+                result += lines
+            return_res += result
+
+        return return_res
 
 
 class account_financial_report_context(models.TransientModel):
