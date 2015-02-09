@@ -1003,7 +1003,7 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
-                inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
+                inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.tax_ids])] if line.tax_ids else [(6, 0, [x.id for x in line.product_id.taxes_id])]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
@@ -1140,11 +1140,14 @@ class pos_order(osv.osv):
             cur = order.pricelist_id.currency_id
             for line in order.lines:
                 tax_amount = 0
-                taxes = []
-                for t in line.product_id.taxes_id:
-                    if t.company_id.id == current_company.id:
-                        taxes.append(t)
-                computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
+                if line.tax_ids:
+                    tax_ids = line.tax_ids
+                else:
+                    tax_ids = []
+                    for t in line.product_id.taxes_id:
+                        if t.company_id.id == current_company.id:
+                            tax_ids.append(t)
+                computed_taxes = account_tax_obj.compute_all(cr, uid, tax_ids, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
                     tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
@@ -1345,6 +1348,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Account')),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
+        'tax_ids': fields.many2many('account.tax', 'pos_order_tax', 'pos_order_line_id', 'tax_id', 'Taxes', readonly=True),
     }
 
     _defaults = {

@@ -1001,6 +1001,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
                 price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().id,
+                tax_ids: [[6, false, _.map(this.get_applicable_taxes(), function(tax){ return tax.id; })]],
                 id: this.id,
             };
         },
