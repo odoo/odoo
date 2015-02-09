@@ -14,8 +14,6 @@ class crm_configuration(models.TransientModel):
 
     @api.multi
     def set_wsServer(self):
-        import ipdb
-        ipdb.set_trace()
         self.env['ir.config_parameter'].set_param('crm.voip.wsServer', self[0].wsServer)
 
     @api.multi
