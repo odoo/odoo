@@ -645,7 +645,7 @@ define([
         var eo = dom.nodeLength(ec);
 
         // browsers can't target a picture or void node
-        if (dom.isVoid(sc) || dom.isImg(sc)) {
+        if (dom.isVoid(sc)) {
           so = dom.listPrev(sc).length-1;
           sc = sc.parentNode;
         }
