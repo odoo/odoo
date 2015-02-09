@@ -39,6 +39,7 @@ from openerp import tools, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+MAX_POP_MESSAGES = 50
 
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
@@ -222,27 +223,31 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                         imap_server.logout()
             elif server.type == 'pop':
                 try:
-                    pop_server = server.connect()
-                    (numMsgs, totalSize) = pop_server.stat()
-                    pop_server.list()
-                    for num in range(1, numMsgs + 1):
-                        (header, msges, octets) = pop_server.retr(num)
-                        msg = '\n'.join(msges)
-                        res_id = None
-                        try:
-                            res_id = mail_thread.message_process(cr, uid, server.object_id.model,
-                                                                 msg,
-                                                                 save_original=server.original,
-                                                                 strip_attachments=(not server.attach),
-                                                                 context=context)
-                            pop_server.dele(num)
-                        except Exception:
-                            _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
-                            failed += 1
-                        if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
-                        cr.commit()
-                    _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
+                    while True:
+                        pop_server = server.connect()
+                        (numMsgs, totalSize) = pop_server.stat()
+                        pop_server.list()
+                        for num in range(1, min(MAX_POP_MESSAGES, numMsgs) + 1):
+                            (header, msges, octets) = pop_server.retr(num)
+                            msg = '\n'.join(msges)
+                            res_id = None
+                            try:
+                                res_id = mail_thread.message_process(cr, uid, server.object_id.model,
+                                                                     msg,
+                                                                     save_original=server.original,
+                                                                     strip_attachments=(not server.attach),
+                                                                     context=context)
+                                pop_server.dele(num)
+                            except Exception:
+                                _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
+                                failed += 1
+                            if res_id and server.action_id:
+                                action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
+                            cr.commit()
+                        if numMsgs < MAX_POP_MESSAGES:
+                            break
+                        pop_server.quit()
+                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
                     _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
                 finally:

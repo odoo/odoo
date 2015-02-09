@@ -638,7 +638,7 @@ def guess(method):
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id':
+                elif names[3] == 'id' or names[3] == 'res_id':
                     if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
@@ -845,8 +845,7 @@ class Environment(object):
     def add_todo(self, field, records):
         """ Mark `field` to be recomputed on `records`. """
         recs_list = self.all.todo.setdefault(field, [])
-        # use user admin for accessing records without access rights issues
-        recs_list.append(records.sudo())
+        recs_list.append(records)
 
     def remove_todo(self, field, records):
         """ Mark `field` as recomputed on `records`. """
