@@ -65,10 +65,12 @@ class format_address(object):
         for k, v in ADDRESS_FORMAT_LAYOUTS.items():
             if k in fmt:
                 doc = etree.fromstring(arch)
+                view_has_field_use_parent_address = (
+                    doc.find('.//field[@name="use_parent_address"]') is not None)
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
                     for childnode in tree.getchildren():
-                        if 'use_parent_address' in self._all_columns and childnode.tag == 'field':
+                        if view_has_field_use_parent_address::
                             childnode.set(
                                 'attrs', "{'readonly': [('use_parent_address','=',True)]}")
                         modifiers = {}
