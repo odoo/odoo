@@ -408,7 +408,7 @@
                 var $el;
                 var $nextEls = $(e.target).parents('tr').nextAll();
                 for (el in $nextEls) {
-                    $el = $($nextEls[el]).find("td span[style='font-style: italic; margin-left: 70px']");
+                    $el = $($nextEls[el]).find("td span.domainLine");
                     if ($el.length == 0)
                         break;
                     else {
@@ -439,7 +439,7 @@
                         var $nextEls = $(e.target).parents('tr').nextAll();
                         var isLoaded = false;
                         for (el in $nextEls) {
-                            $el = $($nextEls[el]).find("td span[style='font-style: italic; margin-left: 100px']");
+                            $el = $($nextEls[el]).find("td span.domainLine");
                             if ($el.length == 0)
                                 break;
                             else {
