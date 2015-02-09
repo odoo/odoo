@@ -2,26 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_project_kanban_inherited" model="ir.ui.view">
-            <field name="name">project.project.kanban.inherited</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project_kanban"/>
-            <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
-                    <field name="invoice_on_timesheets"/>
-                    <field name="hours_quantity"/>
-                    <field name="currency_id"/>
-                    <field name="partner_id"/>
-                </field>
-                <xpath expr="//div[contains(@class, 'oe_kanban_project_infos')]/div" position="after">
-                    <div class="col-md-6">
-                        <a t-if="record.invoice_on_timesheets.raw_value" style="margin-right: 10px"
-                        name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
-                    </div>
-                </xpath>
-            </field>
-        </record>
-
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
