@@ -70,7 +70,7 @@ class format_address(object):
                     tree = etree.fromstring(v)
                     # needs to apply modifiers
                     for childnode in tree.getchildren():
-                        if 'use_parent_address' in self._all_columns:
+                        if 'use_parent_address' in self._all_columns and childnode.tag == 'field':
                             childnode.set(
                                 'attrs', "{'readonly': [('use_parent_address','=',True)]}")
                         modifiers = {}
