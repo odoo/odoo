@@ -89,7 +89,7 @@ class report_account_financial_report(models.Model):
 
     name = fields.Char()
     debit_credit = fields.Boolean('Show Credit and Debit Columns')
-    line_id = fields.Many2one('account.financial.report.line', string='First/Top Line')
+    line_ids = fields.One2many('account.financial.report.line', 'financial_report_id', string='Lines')
     report_type = fields.Selection([('date_range', 'Based on date ranges'),
                                     ('date_range_extended', "Based on date ranges with 'older' and 'total' columns and last 3 months"),
                                     ('no_date_range', 'Based on a single date')],
@@ -104,7 +104,7 @@ class report_account_financial_report(models.Model):
     def get_lines(self, context_id, line_id=None):
         if isinstance(context_id, int):
             context_id = self.env['account.financial.report.context'].browse(context_id)
-        line_obj = self.line_id
+        line_obj = self.line_ids
         if line_id:
             line_obj = self.env['account.financial.report.line'].search([('id', '=', line_id)])
         if context_id.comparison:
@@ -120,7 +120,7 @@ class report_account_financial_report(models.Model):
             cash_basis=context_id.cash_basis,
             periods_number=context_id.periods_number,
             context_id=context_id,
-        ).get_lines(self)[0]
+        ).get_lines(self)
 
     def get_title(self):
         return self.name
@@ -147,15 +147,17 @@ class account_financial_report_line(models.Model):
     domain = fields.Char('Domain', default=None)
     formulas = fields.Char('Formulas')
     groupby = fields.Char('Group By', default=False)
-    foldable = fields.Boolean('Is the domain foldable', default=True)
     figure_type = fields.Selection([('float', 'Float'), ('percents', 'Percents'), ('no_unit', 'No Unit')],
                                    'Type of the figure', default='float', required=True)
-    closing_balance = fields.Boolean('Closing balance', default=False, required=True)
-    opening_year_balance = fields.Boolean('Opening year balance', default=False, required=True)
-    hidden = fields.Boolean('Should this line be hidden', default=False, required=True)
-    show_domain = fields.Boolean('Show the domain', default=True, required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
     level = fields.Integer(required=True)
+
+    closing_balance = fields.Boolean('Closing balance', default=False, required=True)
+    opening_year_balance = fields.Boolean('Opening year balance', default=False, required=True)
+
+    hidden = fields.Boolean('Should this line be hidden', default=False, required=True)
+    show_domain = fields.Boolean('Show the domain', default=True, required=True)
+    foldable = fields.Boolean('Is the domain foldable', default=True)
 
     @api.model
     def _ids_to_sql(self, ids):
@@ -317,7 +319,7 @@ class account_financial_report_line(models.Model):
             result.update({footnote.column: footnote.number})
         return result
 
-    @api.one
+    @api.multi
     def get_lines(self, financial_report_id):
         extended = False
         if financial_report_id.report_type == 'date_range_extended':

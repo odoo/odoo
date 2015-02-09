@@ -20,9 +20,15 @@
 
         <!-- PROFIT AND LOSS -->
 
+        <record id="account_financial_report_profitandloss0" model="account.financial.report">
+            <field name="name">Profit and Loss</field>
+            <field name="debit_credit" eval="False"/>
+            <field name="report_type">date_range</field>
+        </record>
         <record id="account_financial_report_net_profit0" model="account.financial.report.line">
             <field name="name">NET PROFIT</field>
             <field name="code">NEP</field>
+            <field name="financial_report_id" ref="account_financial_report_profitandloss0"/>
             <field name="formulas">balance = GRP.balance + LEX.balance</field>
             <field name="sequence" eval="1"/>
             <field name="level" eval="0" />
@@ -133,24 +139,15 @@
 
         <!-- BALANCE SHEET -->
 
-
-        <record id="account_financial_report_balancesheet_line0" model="account.financial.report.line">
+        <record id="account_financial_report_balancesheet0" model="account.financial.report">
             <field name="name">Balance Sheet</field>
-            <field name="sequence" eval="4"/>
-            <field name="hidden" eval="True"/>
-        </record>
-        <record id="account_financial_report_net_assets0" model="account.financial.report.line">
-            <field name="name">NET ASSETS</field>
-            <field name="code">NA</field>
-            <field name="formulas">balance = TA.balance - L.balance; credit = TA.credit - L.credit; debit = TA.debit - L.debit</field>
-            <field name="parent_id" ref='account_financial_report_balancesheet_line0'/>
-            <field name="sequence" eval="1"/>
-            <field name="level" eval="0" />
+            <field name="debit_credit" eval="True"/>
+            <field name="report_type">no_date_range</field>
         </record>
         <record id="account_financial_report_total_assets0" model="account.financial.report.line">
             <field name="name">ASSETS</field>
             <field name="code">TA</field>
-            <field name="parent_id" ref='account_financial_report_net_assets0'/>
+            <field name="financial_report_id" ref="account_financial_report_balancesheet0"/>
             <field name="formulas">balance = CA.balance + BA.balance + FA.balance + PNCA.balance; credit = CA.credit + BA.credit + FA.credit + PNCA.credit; debit = CA.debit + BA.debit + FA.debit + PNCA.debit</field>
             <field name="sequence" eval="1"/>
             <field name="level" eval="1" />
@@ -226,7 +223,7 @@
         <record id="account_financial_report_liabilities_view0" model="account.financial.report.line">
             <field name="name">LIABILITIES</field>
             <field name="code">L</field>
-            <field name="parent_id" ref='account_financial_report_net_assets0'/>
+            <field name="financial_report_id" ref="account_financial_report_balancesheet0"/>
             <field name="groupby">account_id</field>
             <field name="formulas">balance = CL.balance + NL.balance; credit = CL.credit + NL.credit; debit = CL.debit + NL.debit</field>
             <field name="sequence" eval="2"/>
@@ -239,7 +236,7 @@
             <field name="parent_id" ref='account_financial_report_liabilities_view0'/>
             <field name="domain" eval="['|', ('account_id.user_type', '=', ref('data_account_type_current_liabilities')), ('account_id.user_type.type', '=', 'payable')]"/>
             <field name="groupby">account_id</field>
-            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="formulas">balance = -sum.balance; credit = sum.credit; debit = sum.debit</field>
             <field name="sequence" eval="1"/>
             <field name="green_on_positive" eval="False"/>
             <field name="level" eval="2" />
@@ -250,30 +247,39 @@
             <field name="parent_id" ref='account_financial_report_liabilities_view0'/>
             <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_non_current_liabilities'))]" />
             <field name="groupby">account_id</field>
-            <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
+            <field name="formulas">balance = -sum.balance; credit = sum.credit; debit = sum.debit</field>
             <field name="sequence" eval="2"/>
             <field name="green_on_positive" eval="False"/>
             <field name="level" eval="2" />
         </record>
+        <record id="account_financial_report_net_assets0" model="account.financial.report.line">
+            <field name="name">NET ASSETS</field>
+            <field name="code">NA</field>
+            <field name="formulas">balance = TA.balance - L.balance; credit = TA.credit - L.credit; debit = TA.debit - L.debit</field>
+            <field name="financial_report_id" ref="account_financial_report_balancesheet0"/>
+            <field name="sequence" eval="3"/>
+            <field name="level" eval="0" />
+        </record>
         <record id="account_financial_report_equity0" model="account.financial.report.line">
             <field name="name">EQUITY</field>
             <field name="code">EQ</field>
-            <field name="formulas">balance = CUREAR.balance + RETEAR.balance; debit = CUREAR.debit + RETEAR.debit; credit = CUREAR.credit + RETEAR.credit</field>
-            <field name="sequence" eval="2"/>
-            <field name="parent_id" ref='account_financial_report_balancesheet_line0'/>
+            <field name="formulas">balance = UNAFFECTED_EARNINGS.balance + RETAINED_EARNINGS.balance; debit = UNAFFECTED_EARNINGS.debit + RETAINED_EARNINGS.debit; credit = UNAFFECTED_EARNINGS.credit + RETAINED_EARNINGS.credit</field>
+            <field name="sequence" eval="4"/>
+            <field name="financial_report_id" ref="account_financial_report_balancesheet0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_current_year_earnings0" model="account.financial.report.line">
-            <field name="name">CURRENT YEAR EARNINGS</field>
-            <field name="code">CUREAR</field>
-            <field name="formulas">balance = NEP.balance; debit = NEP.debit; credit = NEP.credit</field>
+            <field name="name">UNAFFECTED EARNINGS</field>
+            <field name="code">UNAFFECTED_EARNINGS</field>
+            <field name="domain" eval="[('account_id.user_type', '=', ref('data_unaffected_earnings'))]" />
+            <field name="formulas">balance = NEP.balance + sum.balance; debit = NEP.debit + sum.debit; credit = NEP.credit + sum.credit</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_equity0'/>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_retained_earnings0" model="account.financial.report.line">
             <field name="name">RETAINED EARNINGS</field>
-            <field name="code">RETEAR</field>
+            <field name="code">RETAINED_EARNINGS</field>
             <field name="domain" eval="[('account_id.user_type', '=', ref('data_account_type_equity'))]" />
             <field name="groupby">account_id</field>
             <field name="formulas">balance = sum.balance; credit = sum.credit; debit = sum.debit</field>
@@ -285,12 +291,16 @@
 
         <!-- CASH SUMMARY -->
 
+        <record id="account_financial_report_cashsummary0" model="account.financial.report">
+            <field name="name">Cash Summary</field>
+            <field name="line_id" ref="account_financial_report_cashsummary_line0"/>
+            <field name="report_type">date_range</field>
+        </record>
         <record id="account_financial_report_cashsummary_line0" model="account.financial.report.line">
             <field name="name">CASH SUMMARY</field>
             <field name="sequence" eval="1"/>
             <field name="hidden" eval="True"/>
         </record>
-
         <record id="account_financial_report_cashsummary_net_increase0" model="account.financial.report.line">
             <field name="name">Net increase in cash and cash equivalents</field>
             <field name="sequence" eval="1"/>
@@ -310,20 +320,20 @@
             <field name="code">CRE</field>
             <field name="sequence" eval="1"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_operating0'/>
-            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('debit', '>', 0)]" />
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'liquidity'), ('debit', '>', 0)]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="groupby">user_type</field>
             <field name="level" eval="2" />
+            <field name="groupby">account_id</field>
         </record>
         <record id="account_financial_report_cashsummary_cash_spent0" model="account.financial.report.line">
             <field name="name">Cash paid to suppliers and employees</field>
             <field name="code">CSP</field>
             <field name="sequence" eval="2"/>
             <field name="parent_id" ref='account_financial_report_cashsummary_operating0'/>
-            <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank')), ('credit', '>', 0)]" />
+            <field name="domain" eval="[('account_id.user_type.type', '=', 'liquidity'), ('credit', '>', 0)]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="groupby">user_type</field>
             <field name="level" eval="2" />
+            <field name="groupby">account_id</field>
         </record>
         <record id="account_financial_report_cashsummary_cash_generated0" model="account.financial.report.line">
             <field name="name">Cash generated from operations</field>
@@ -628,26 +638,6 @@
         <!-- 
             Financial Reports
         -->
-
-        <record id="account_financial_report_profitandloss0" model="account.financial.report">
-            <field name="name">Profit and Loss</field>
-            <field name="debit_credit" eval="False"/>
-            <field name="line_id" ref="account_financial_report_net_profit0"/>
-            <field name="report_type">date_range</field>
-        </record>
-        <record id="account_financial_report_balancesheet0" model="account.financial.report">
-            <field name="name">Balance Sheet</field>
-            <field name="debit_credit" eval="True"/>
-            <field name="line_id" ref="account_financial_report_balancesheet_line0"/>
-            <field name="report_type">no_date_range</field>
-            <field name="offset_level" eval="-1"/>
-        </record>
-        <record id="account_financial_report_cashsummary0" model="account.financial.report">
-            <field name="name">Cash Summary</field>
-            <field name="line_id" ref="account_financial_report_cashsummary_line0"/>
-            <field name="offset_level" eval="-1"/>
-            <field name="report_type">date_range</field>
-        </record>
         <record id="account_financial_report_executivesummary0" model="account.financial.report">
             <field name="name">Executive Summary</field>
             <field name="line_id" ref="account_financial_report_executivesummary_line0"/>
@@ -657,13 +647,11 @@
             <field name="name">Aged Payable</field>
             <field name="line_id" ref="account_financial_report_agedpayable_line0"/>
             <field name="report_type">date_range_extended</field>
-            <field name="offset_level" eval="2"/>
         </record>
         <record id="account_financial_report_agedreceivable0" model="account.financial.report">
             <field name="name">Aged Receivable</field>
             <field name="line_id" ref="account_financial_report_agedreceivable_line0"/>
             <field name="report_type">date_range_extended</field>
-            <field name="offset_level" eval="2"/>
         </record>
     </data>
 </openerp>
