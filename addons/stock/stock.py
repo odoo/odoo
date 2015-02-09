@@ -416,10 +416,12 @@ class stock_quant(osv.osv):
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+        context=context or {}
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
-                'package_id': dest_package_id,
                 'reservation_id': False}
+        if not context.get('entire_pack'):
+            vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -2336,16 +2338,17 @@ class stock_move(osv.osv):
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
                                                           restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                if ops.result_package_id.id and ops.product_id:
-                    #if a result package is given, all quants go there
-                    quant_dest_package_id = ops.result_package_id.id
-                elif ops.product_id and ops.package_id:
-                    #if a package and a product is given, we will remove quants from the pack.
-                    quant_dest_package_id = False
+                if ops.product_id:
+                    #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
+                    quant_dest_package_id  = ops.result_package_id.id
+                    ctx = context
                 else:
-                    #otherwise we keep the current pack of the quant, which may mean None
-                    quant_dest_package_id = ops.package_id.id
-                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
+                    # When a pack is moved entirely, the quants should not be written anything for the destination package
+                    quant_dest_package_id = False
+                    ctx = context.copy()
+                    ctx['entire_pack'] = True
+                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=ctx)
+
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
