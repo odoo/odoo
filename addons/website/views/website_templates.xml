@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
     <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
     <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-    
+
 </template>
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
@@ -500,6 +500,21 @@
             </tr>
         </tbody>
     </table>
+</template>
+
+
+<template id="search_bar">
+   <div class="input-group input-group select2-bootstrap-prepend js_search_bar">
+        <div class="input-group-btn">
+            <input type="hidden" class="js_select2_category form-control" t-att-data-route="category_route"></input>
+        </div>
+        <input type="text" class="form-control js_search_input" t-att-value="search" placeholder="Search..."></input>
+        <span class="input-group-btn">
+            <button class="btn btn-default js_search_redirect" t-att-data-url="redirect_url" type="button">
+                <i class="fa fa-search fa-lg"></i>
+            </button>
+        </span>
+    </div>
 </template>
 
 <!-- Error and special pages -->

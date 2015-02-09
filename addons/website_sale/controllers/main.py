@@ -215,7 +215,6 @@ class website_sale(http.Controller):
         values = {
             'search': search,
             'category': category,
-            'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
             'pricelist': pricelist,
@@ -268,7 +267,6 @@ class website_sale(http.Controller):
             'search': search,
             'category': category,
             'pricelist': pricelist,
-            'attrib_values': attrib_values,
             'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
@@ -292,6 +290,11 @@ class website_sale(http.Controller):
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+
+    @http.route('/shop/product/get_categories/', type='json', auth="public", website=True)
+    def get_categories(self, query):
+        Category = request.env['product.public.category']
+        return Category.search_read([('name', 'ilike', query)], ['name'], limit=20, order="name asc")
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):

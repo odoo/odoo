@@ -15,6 +15,7 @@
 
     var website = {};
     openerp.website = website;
+    var _t = openerp._t;
 
     website.translatable = !!$('html').data('translatable');
 
@@ -306,7 +307,7 @@
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
-                    return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
+                    return _t.database.load_translations(website.session, modules, website.get_context().lang);
                 }
             }).promise();
         }
@@ -334,6 +335,48 @@
         /* ----- KANBAN WEBSITE ---- */
         $('.js_kanban').each(function () {
             website.init_kanban(this);
+        });
+
+        $('.js_select2_category').select2({
+            allowClear: true,
+            placeholder: _t("Select Category"),
+            query: function (query) {
+                var route = this.element.data('route'),
+                    term = query.term;
+                openerp.jsonRpc(route, 'call', {'query': term}).then(function(data){
+                    var categories = {results: []};
+                    _.each(data, function (obj) {
+                        categories.results.push({id: obj.id, text: obj.name});
+                    });
+                    query.callback(categories);
+                });
+            }
+        });
+        $('.js_search_redirect').on('click', function(){
+            var url = $(this).data('url'),
+                $search_bar = $(this).parents('.js_search_bar'),
+                query = $search_bar.find('.js_search_input').val(),
+                category_id = $search_bar.find('.js_select2_category').select2('val'),
+                redirect_url;
+
+            if (!category_id){
+                redirect_url = _.str.sprintf(url.replace('/category/%s', ''), query);
+            }else{
+                redirect_url = _.str.sprintf(url, category_id, query);
+            }
+            //keep query string
+            var current_query = $.deparam.querystring(),
+                redirect_query = $.deparam.querystring(redirect_url),
+                query_string;
+            query_string = $.param(_.extend(current_query, redirect_query), true);
+            redirect_url = $.param.querystring(redirect_url, query_string, 2);
+
+            window.location = redirect_url;
+        }).parents('.js_search_bar').on('keypress', function(ev){
+            var key = ev.which;
+            if(key == 13){
+                $(this).find('.js_search_redirect').click();
+            }
         });
 
         setTimeout(function () {
