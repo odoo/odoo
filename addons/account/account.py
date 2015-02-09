@@ -733,9 +733,12 @@ class account_tax(models.Model):
 
     @api.v7
     def compute_all(self, cr, uid, ids, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, context=None):
+        currency = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context) or None
+        product = product_id and self.pool.get('product.product').browse(cr, uid, product_id, context=context) or None
+        partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency_id, quantity, product_id, partner_id)
+        return recs.compute_all(price_unit, currency, quantity, product, partner)
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
