@@ -334,6 +334,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         init: function(parent,options){
             this._super(parent,options);
             this.hidden = false;
+            this.unit_amount_to_hours_minutes = project_timesheet.unit_amount_to_hours_minutes;
             //this.project_timesheet_model = project_timesheet.project_timesheet_model;
             //this.project_timesheet_db = this.project_timesheet_model.project_timesheet_db;
         },
@@ -1226,6 +1227,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
         goto_edit_activity_screen: function(){
             // => chemin d'accès à l'activité du widget d'édition. à modifier avec les infos récupérées lors du click sur une acti
             // this.project_timesheet_widget.edit_activity_screen.activity;
+            this.project_timesheet_widget.edit_activity_screen.reset_activity();
             this.project_timesheet_widget.screen_selector.set_current_screen("edit_activity_screen");
         },
         // Go to the edit screen to edit a specific activity
@@ -1284,7 +1286,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         on_change_default_project: function(event){
             this.project_timesheet_model.set_default_project(event.target.dataset.project_id);
-            $(".pt_selected_default_project").html(this.settings.default_project_name + ' <span class="caret"></span>');
+            this.renderElement();
+            this.goto_settings();
         }
 
     });
@@ -1296,7 +1299,6 @@ function odoo_project_timesheet_screens(project_timesheet) {
             this.project_timesheet_widget = project_timesheet_widget;
             this.screen_name = "Edit Activity";
             this.project_timesheet_model = options.project_timesheet_model;
-            this.unit_amount_to_hours_minutes = project_timesheet.unit_amount_to_hours_minutes;
 
             _.extend(self.events,
                 {
@@ -1305,7 +1307,8 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     "change input.pt_activity_duration":"on_change_duration",
                     "change textarea.pt_description":"on_change_description",
                     "click .pt_project_create_confirm":"create_project",
-                    "change input.pt_selected_task":"on_change_task"
+                    "click .pt_discard_changes":"discard_changes",
+                    "click .pt_validate_btn" : "save_changes"
                 }
             );
 
@@ -1314,12 +1317,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
                 project: undefined,
                 task: undefined,
                 desc:"/",
-                unit_amount: undefined
+                unit_amount: undefined,
+                date: (project_timesheet.date_to_str(new Date()))
             };
-        },
-        on_change_task: function(event){
-            console.log(this.$("input.pt_selected_task").val());
-            debugger
         },
         select_project: function(event){
             var project_id = parseInt(event.currentTarget.dataset.project_id);
@@ -1361,6 +1361,33 @@ function odoo_project_timesheet_screens(project_timesheet) {
             if(!_.isUndefined(this.activity.project)){
                 this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
             }
+            this.renderElement();
+        },
+        save_changes: function(){
+            //TODO Save here
+
+            //To empty screen data
+            this.reset_activity();
+            this.goto_welcome_screen();
+        },
+        discard_changes: function(){
+            this.reset_activity();
+            this.goto_welcome_screen();
+        },
+        reset_activity: function(){
+            this.activity = {
+                project: undefined,
+                task: undefined,
+                desc:"/",
+                unit_amount: undefined,
+                date: (project_timesheet.date_to_str(new Date()))
+            };
+
+            if (!_.isUndefined(this.project_timesheet_model.settings.default_project)){
+                this.activity.project = this.project_timesheet_model.settings.default_project;
+                this.tasks = _.where(this.project_timesheet_model.tasks, {project_id : this.activity.project.id});
+            }
+
             this.renderElement();
         }
     });

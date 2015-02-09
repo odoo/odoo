@@ -51,7 +51,7 @@
     							</div>
     							<div class="col-xs-2">
                                     <t t-if="account_analytic_line.hours_minutes">
-        								<t t-esc="account_analytic_line.hours_minutes"/>
+        								<t t-esc="widget.unit_amount_to_hours_minutes(account_analytic_line.unit_amount)"/>
                                     </t>
     							</div>
         					</div>
@@ -107,15 +107,16 @@
 	    			<div class="col-xs-12">
 						<a class="dropdown">
 					        <a class="dropdown-toggle pt_selected_default_project" data-toggle="dropdown" href="javascript:void(0)">
-					        	<t t-if="widget.settings.default_project_name">
-					            	<t t-esc="widget.settings.default_project_name"/>
+					        	<t t-if="widget.settings.default_project">
+					            	<t t-esc="widget.settings.default_project.name"/>
 					            </t>
-					            <t t-if="!widget.settings.default_project_name">
+					            <t t-if="!widget.settings.default_project">
 					            	Select a project
 					            </t>
 					            <span class="caret"></span>
 					        </a>
 					        <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)" data-project_id="null" class="pt_default_project">No default project</a></li>
 					        	<li><a href="javascript:void(0)">Create project</a></li>
 				            	<t t-if="widget.project_timesheet_model.projects">
 				            		<t t-foreach="widget.project_timesheet_model.projects" t-as="project">
@@ -200,50 +201,49 @@
                     </div>
                 </div>
             </div>
-            <div class="panel">
-                <div class="panel-heading">
-                    <p>Task</p>
-                </div>
-                <div class="panel-body">
+            <div>
+                <p><br/>Task</p>
                     <t t-if="widget.activity.project">
                         <!--For some reason, the dropdown does not work without the following div-->
-                        <div class="col-xs-12">
-                            <!-- <a class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
-                                    <t t-if="!widget.activity.task">
-                                        Select a Task
-                                    </t>
-                                    <t t-if="widget.activity.task">
-                                        <t t-esc="widget.activity.task.name"/>
-                                    </t>
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)">Create Task</a></li>
-                                    <t t-if="widget.tasks">
-                                        <t t-foreach="widget.tasks" t-as="task">
-                                            <li><a href="javascript:void(0)" t-att-data-task_id="task.id" class="pt_activity_task"><t t-esc="task.name"/></a></li>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+                                        <t t-if="!widget.activity.task">
+                                            Select a Task
                                         </t>
-                                    </t>
-                                </ul>
-                            </a> -->
-                            <t t-if="widget.activity.task">
-                                <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" t-att-value="widget.activity.task.name"/>
-                            </t>
-                            <t t-if="!widget.activity.task">
-                                <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" value="Select a Task"/>
-                            </t>
-                            <datalist id="pt_tasks_list">
-                                <t t-foreach="widget.tasks" t-as="task">
-                                    <option t-att-data-task_id="task.id" t-att-value="task.name"><t t-esc="task.name"/></option>
+                                        <t t-if="widget.activity.task">
+                                            <t t-esc="widget.activity.task.name"/>
+                                        </t>
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="javascript:void(0)">Create Task</a></li>
+                                        <t t-if="widget.tasks">
+                                            <t t-foreach="widget.tasks" t-as="task">
+                                                <li><a href="javascript:void(0)" t-att-data-task_id="task.id" class="pt_activity_task"><t t-esc="task.name"/></a></li>
+                                            </t>
+                                        </t>
+                                    </ul>
+                                </a>
+                                <!-- <t t-if="widget.activity.task">
+                                    <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" t-att-value="widget.activity.task.name"/>
                                 </t>
-                            </datalist>
+                                <t t-if="!widget.activity.task">
+                                    <input type="text" class="form-control pt_selected_task" name="product" list="pt_tasks_list" value="Select a Task"/>
+                                </t>
+                                <datalist id="pt_tasks_list">
+                                    <t t-foreach="widget.tasks" t-as="task">
+                                        <option t-att-data-task_id="task.id" t-att-value="task.name"><t t-esc="task.name"/></option>
+                                    </t>
+                                </datalist> -->
+                            </div>
                         </div>
                     </t>
                     <t t-if="!widget.activity.project">
                         <p><small>Please select a project first</small></p>
                     </t>
-                </div>
+                    <br/>
             </div>
             <div>
                 <p>Time spent (hh:mm)</p>
@@ -284,7 +284,7 @@
         	    			</div>
                         </t>
                         <t t-if="widget.screen_name == 'Edit Activity'">
-                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-arrow-left pt_discard_changes" aria-hidden="true"></span></a>
                         </t>
 
     	    		</div>

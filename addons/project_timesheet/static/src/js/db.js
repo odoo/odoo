@@ -18,12 +18,12 @@ function odoo_project_timesheet_db(project_timesheet) {
                     "session_server":"http://localhost:8069",
                     "data":{
                         "settings":{
-                        "default_project":{
-                            "id":1,
-                            "name":"Implementation"
-                        },
-                        "minimal_duration":15,
-                        "time_unit":15
+                            "default_project":{
+                                "id":1,
+                                "name":"Implementation"
+                            },
+                            "minimal_duration":15,
+                            "time_unit":15
                         },
                         "projects":[
                             {
@@ -46,11 +46,15 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "id":2,
                                 "name":"Python",
                                 "project_id":1
+                            },
+                            {
+                                "id":3,
+                                "name":"Perl",
+                                "project_id":1
                             }                       
                         ],
                         "account_analytic_lines":[
                             {
-                                "task_id":1,
                                 "id":1,
                                 "desc":"/",
                                 "unit_amount":1,
@@ -61,7 +65,8 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "task":{
                                     "id":1,
                                     "name":"C#",
-                                }
+                                },
+                                "date":"2015-02-09"
                             },
                             {
                                 "id":2,
@@ -74,18 +79,20 @@ function odoo_project_timesheet_db(project_timesheet) {
                                 "task":{
                                     "id":2,
                                     "name":"Python",
-                                }
+                                },
+                                "date":"2015-02-09"
 
                             },
                             {
                                 "id":3,
                                 "desc":"/",
-                                "unit_amount":0.5
+                                "unit_amount":0.5,
+                                "date":"2015-02-09"
                             }
                         ],
                         "day_plan":[
-                            {"project_id":1, "task_id" : 1},
-                            {"project_id":1, "task_id" : 2}
+                            {"task_id" : 1},
+                            {"task_id" : 2}
                         ]
                     }
                 },
@@ -102,6 +109,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             var user_data = _.findWhere(this.stored_data, {session_user : session_user});//To reactivate later, commented now to test on runbot , session_server : session_server});
             return user_data;
         },
+        //TODO rename function.
         update_data : function(){
             localStorage.setItem("pt_data", JSON.stringify(this.stored_data));
         },
