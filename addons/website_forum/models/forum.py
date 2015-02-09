@@ -37,6 +37,14 @@ class Forum(models.Model):
             self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
 
     @api.model
+    def _get_default_search_help(self):
+        fname = modules.get_module_resource('website_forum', 'data', 'forum_default_search.html')
+        with open(fname, 'r') as f:
+            return f.read()
+        return False
+    search_help = fields.Html('Search Guidelines', default=_get_default_search_help, translate=True)
+
+    @api.model
     def _get_default_faq(self):
         fname = modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
         with open(fname, 'r') as f:
