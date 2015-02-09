@@ -1527,7 +1527,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.read([action_id], ['type'], request.context)
+        base_action = Actions.read([action_id], ['name', 'type'], request.context)
         if base_action:
             ctx = {}
             action_type = base_action[0]['type']
@@ -1536,7 +1536,7 @@ class Action(http.Controller):
             ctx.update(request.context)
             action = request.session.model(action_type).read([action_id], False, ctx)
             if action:
-                value = clean_action(action[0])
+                value = clean_action(dict(action[0], **base_action[0]))
         return value
 
     @http.route('/web/action/run', type='json', auth="user")
