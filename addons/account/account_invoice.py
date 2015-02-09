@@ -98,9 +98,9 @@ class account_invoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_signed = 0.0
+        sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_id:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
                 residual_signed += line.amount_residual * sign
                 if line.currency_id == self.currency_id:
                     residual += line.currency_id and line.amount_residual_currency or line.amount_residual
