@@ -18,6 +18,8 @@ Reference
     reference/qweb
     reference/javascript
 
+    reference/coding
+
     reference/translations
     reference/reports
     reference/workflows
