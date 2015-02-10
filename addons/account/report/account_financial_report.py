@@ -248,9 +248,10 @@ class account_financial_report_line(models.Model):
                 select = ',COALESCE(SUM(l.debit-l.credit), 0)'
                 if financial_report_id.debit_credit and not context['comparison']:
                     select += ',SUM(l.credit),SUM(l.debit)'
-                sql = "SELECT l." + self.groupby + "%s FROM account_move_line l WHERE %s AND l.id IN %s GROUP BY l." + self.groupby
-                query = sql % (select, amls._query_get(), self._ids_to_sql(amls.ids))
-                self.env.cr.execute(query)
+                sql = "SELECT l." + self.groupby + "%s FROM account_move_line l WHERE %s GROUP BY l." + self.groupby
+                where_clause, where_params = aml_obj._query_get(domain=self.domain)
+                query = sql % (select, where_clause)
+                self.env.cr.execute(query, where_params)
                 gbs = self.env.cr.fetchall()
                 for gb in gbs:
                     for k in gb[1:]:
@@ -261,8 +262,9 @@ class account_financial_report_line(models.Model):
                     aml_cmp_ids = aml_cmp_obj.search(report_safe_eval(self.domain))
                     if aml_cmp_ids:
                         select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                        query = sql % (select, aml_cmp_ids._query_get(), self._ids_to_sql(aml_cmp_ids.ids))
-                        self.env.cr.execute(query)
+                        where_clause, where_params = aml_cmp_obj._query_get(domain=self.domain)
+                        query = sql % (select, where_clause)
+                        self.env.cr.execute(query, where_params)
                         gbs_cmp = self.env.cr.fetchall()
                         for gb_cmp in gbs_cmp:
                             if not currency_id.is_zero(gb_cmp[1]):
@@ -321,9 +323,44 @@ class account_financial_report_line(models.Model):
         return result
 
     @api.multi
-    def get_lines(self, financial_report_id):
-        return_res = []
+    def get_lines(self, financial_report):
+
+        #build comparison table
+        comparison_table = []
+        #e.g:
+        #  1) filtering on last month + comparison with last year
+        #  comparison_table = [{'date_from': '01/01/2015', 'date_to': '31/01/2015'}, {'date_from': '01/01/2014', 'date_to': '31/01/2014'}]
+        #  2) filtering on last month + no comparison
+        #  comparison_table = [{'date_from': '01/01/2015', 'date_to': '31/01/2015'}]
+        final_result_table = []
         for line in self:
+            if line.chilren_ids:
+                sub_table = line.children_ids.get_lines(financial_report)
+                #flatten sub_table
+                final_result_table += sub_table
+            if line.groupby and line.unfolded:
+                sub_table =
+                #flatten sub_table
+                final_result_table += sub_table
+            res = []
+            for i in range(len(comparison_table)):
+                date_from = comparison_table[i].get('date_from')
+                date_to = comparison_table[i].get('date_to')
+                
+                debit_credit = i == 0 and len(comparison_table) == 1
+                tot, r = line.with_context(date_from=date_from, date_to=date_to).eval_formula(financial_report_id, debit_credit)
+                #r=[{25: 4960}]
+                #put res in the final result table
+                res.append(r)
+
+
+            #do some post processing: add comparison percentage if len(comparison_table) == 2
+            if len(comparison_table) == 2:
+                res.append(res[0]/res[1])
+            final_result_table += res
+        return final_result_table    
+            
+                
             extended = False
             if financial_report_id.report_type == 'date_range_extended':
                 extended = True
@@ -399,9 +436,10 @@ class account_financial_report_line(models.Model):
                         select = ',COALESCE(SUM(l.debit-l.credit), 0)'
                         if financial_report_id.debit_credit and not context['comparison']:
                             select += ',SUM(l.credit),SUM(l.debit)'
-                        sql = "SELECT l." + line.groupby + "%s FROM account_move_line l WHERE %s AND l.id IN %s GROUP BY l." + line.groupby
-                        query = sql % (select, amls._query_get(), line._ids_to_sql(amls.ids))
-                        self.env.cr.execute(query)
+                        sql = "SELECT l." + line.groupby + "%s FROM account_move_line l WHERE %s GROUP BY l." + line.groupby
+                        where_clause, where_params = aml_obj._query_get(domain=line.domain)
+                        query = sql % (select, where_clause)
+                        self.env.cr.execute(query, where_params)
                         gbs = self.env.cr.fetchall()
                         gbs_cmp = []
                         if context['comparison']:
@@ -410,20 +448,23 @@ class account_financial_report_line(models.Model):
                                 aml_cmp_obj = aml_obj.with_context(date_from=period[0], date_to=period[1])
                                 aml_cmp_ids = aml_cmp_obj.search(report_safe_eval(line.domain))
                                 select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                                query = sql % (select, aml_cmp_ids._query_get(), line._ids_to_sql(aml_cmp_ids.ids))
-                                self.env.cr.execute(query)
+                                where_clause, where_params = aml_cmp_obj._query_get(domain=line.domain)
+                                query = sql % (select, where_clause)
+                                self.env.cr.execute(query, where_params)
                                 gbs_cmp.append(dict(self.env.cr.fetchall()))
                         if extended:
                             aml_older_obj = aml_obj.with_context(closing_bal=True, date_to=older_date_to)
                             aml_older_ids = aml_older_obj.search(report_safe_eval(line.domain))
                             select = ',COALESCE(SUM(l.debit-l.credit), 0)'
-                            query = sql % (select, aml_older_ids._query_get(), line._ids_to_sql(aml_older_ids.ids))
-                            self.env.cr.execute(query)
+                            where_clause, where_params = aml_older_obj._query_get(domain=line.domain)
+                            query = sql % (select, where_clause)
+                            self.env.cr.execute(query, where_params)
                             gb_older = dict(self.env.cr.fetchall())
                             aml_non_issued_obj = aml_obj.with_context(non_issued=True)
                             aml_non_issued_ids = aml_non_issued_obj.search(report_safe_eval(line.domain))
-                            query = sql % (select, aml_non_issued_ids._query_get(), line._ids_to_sql(aml_non_issued_ids.ids))
-                            self.env.cr.execute(query)
+                            where_clause, where_params = aml_non_issued_obj._query_get(domain=line.domain)
+                            query = sql % (select, where_clause)
+                            self.env.cr.execute(query, where_params)
                             gb_non_issued = dict(self.env.cr.fetchall())
 
                         c = FormulaContext(self.env['account.financial.report.line'])

@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import time
-from datetime import datetime
-
-from openerp import workflow
 from openerp import api, fields, models, _
 from openerp.osv import osv, expression
 from openerp.exceptions import RedirectWarning, Warning
-import openerp.addons.decimal_precision as dp
-from openerp import tools
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
+from openerp.tools.safe_eval import safe_eval
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -139,23 +135,19 @@ class account_move_line(models.Model):
     user_type = fields.Many2one('account.account.type', related='account_id.user_type', string='User Type', index=True, store=True)
 
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
+        ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
 
     def compute_fields(self, field_names):
         if len(self) == 0:
             return []
-        select = ','.join(['l.'+k for k in field_names])
-        if 'balance' in field_names:
-            select = select.replace('l.balance', 'COALESCE(SUM(l.debit-l.credit), 0)')
-        sql = "SELECT l.id," + select + \
-                    """ FROM account_move_line l
-                    WHERE """ + \
-                self._query_get() + \
-                " AND l.id IN %s GROUP BY l.id"
+        select = ','.join(['l.' + k for k in field_names])
+        where_clause, where_params = self._query_get()
+        sql = "SELECT l.id," + select + " FROM account_move_line l WHERE " + where_clause + " AND l.id IN %s GROUP BY l.id"
 
-        self.env.cr.execute(sql, [tuple(self.ids)])
+        where_params += [tuple(self.ids)]
+        self.env.cr.execute(sql, where_params)
         results = self.env.cr.fetchall()
         results = dict([(k[0], k[1:]) for k in results])
         for id, l in results.items():
@@ -909,51 +901,73 @@ class account_move_line(models.Model):
         }
 
     @api.model
-    def _query_get(self, obj='l'):
-        account_obj = self.env['account.account']
+    def _query_get(self, obj='l', domain=None):
         context = dict(self._context or {})
-        company_clause = " "
-        if context.get('company_id', False):
-            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
+        domain = domain and safe_eval(domain) or []
 
-        state = context.get('state', False)
-        where_move_state = ''
-        where_move_lines_by_date = ''
-
-        if context.get('date_from', False) and context.get('date_to', False):
-            if context.get('initial_bal', False):
-                dt = context['date_from'][:4] + '-01-01'
-                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '"+context['date_from']+"')" \
-                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))"\
-                                           " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +dt+"' AND date <= '"+context['date_from']+"')"
-            elif context.get('closing_bal', False):
-                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_to']+"')"
-            elif context.get('opening_year_bal', False):
-                dt = context['date_from'][:4] + '-01-01'
-                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +dt+"')"
-            elif context.get('non_issued', False):
-                where_move_lines_by_date = obj+".move_id IN (SELECT id FROM account_move WHERE date > '" +context['date_to']+"')"
+        if context.get('date_to'):
+            domain += [('date', '<=', context['date_to'])]
+        if context.get('date_from'):
+            if not context.get('strict_range'):
+                domain += ['|', ('date', '>=', context['date_from']), ('account_id.user_type.include_initial_balance', '=', True)]
             else:
-                where_move_lines_by_date = "("+obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')" \
-                                           " OR ("+obj+".move_id IN (SELECT id FROM account_move WHERE date <= '" +context['date_from']+"'))" \
-                                           " AND "+obj+".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))" \
+                domain += [('date', '>=', context['date_from'])]
 
-        if state:
-            if state.lower() not in ['all']:
-                where_move_state = " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
+        if context.get('journal_ids'):
+            domain += [('journal_id', 'in', context['journal_ids'])]
 
-        query = "%s %s" % (where_move_lines_by_date, where_move_state)
+        state = context.get('state')
+        if state and state.lower() != 'all':
+            domain += [('move_id.state', '=', state)]
 
-        if context.get('journal_ids', False):
-            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
+        if context.get('company_id'):
+            domain += [('company_id', '=', context['company_id'])]
 
-        if context.get('chart_account_id', False): #  Deprecated ?
-            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
-            if child_ids:
-                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+        where_clause = ""
+        where_clause_params = []
+        if domain:
+            query = self._where_calc(domain)
+            dummy, where_clause, where_clause_params = query.get_sql()
+            where_clause = where_clause.replace('account_move_line', obj)
+            #TODO remove obj and use 'account_move_line' directly
 
-        query += company_clause
-        return query
+        #where_move_lines_by_date = ''
+        #if context.get('date_from', False) and context.get('date_to', False):
+        #    if context.get('initial_bal', False):
+        #        dt = context['date_from'][:4] + '-01-01'
+        #        where_move_lines_by_date = "(" + obj + ".move_id IN (SELECT id FROM account_move WHERE date <= '" + context['date_from'] + "')" \
+        #                                   " AND " + obj + ".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))"\
+        #                                   " OR " + obj + ".move_id IN (SELECT id FROM account_move WHERE date >= '" + dt + "' AND date <= '" + context['date_from'] + "')"
+        #    elif context.get('closing_bal', False):
+        #        where_move_lines_by_date = obj + ".move_id IN (SELECT id FROM account_move WHERE date <= '" + context['date_to'] + "')"
+        #    elif context.get('opening_year_bal', False):
+        #        dt = context['date_from'][:4] + '-01-01'
+        #        where_move_lines_by_date = obj + ".move_id IN (SELECT id FROM account_move WHERE date < '" + dt + "')"
+        #    elif context.get('non_issued', False):
+        #        where_move_lines_by_date = obj + ".move_id IN (SELECT id FROM account_move WHERE date > '" + context['date_to'] + "')"
+        #    else:
+        #        where_move_lines_by_date = "(" + obj + ".move_id IN (SELECT id FROM account_move WHERE date >= '" + context['date_from'] + "' AND date <= '" + context['date_to'] + "')" \
+        #                                   " OR (" + obj + ".move_id IN (SELECT id FROM account_move WHERE date <= '" + context['date_from'] + "'))" \
+        #                                   " AND " + obj + ".account_id IN (SELECT id FROM account_account WHERE user_type in (SELECT id FROM account_account_type WHERE include_initial_balance is True)))"
+
+        #if where_clause and where_move_lines_by_date:
+        #    where_move_lines_by_date = " AND " + where_move_lines_by_date
+        #query = where_clause + where_move_lines_by_date
+
+        #if context.get('journal_ids', False):
+        #    query += ' AND ' + obj + '.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
+
+        #where_move_state = ''
+        #state = context.get('state', False)
+        #if state and state.lower() not in ['all']:
+        #    where_move_state = " AND " + obj + ".move_id IN (SELECT id FROM account_move WHERE account_move.state = '" + state + "')"
+        #query += where_move_state
+
+        #company_clause = " "
+        #if context.get('company_id', False):
+        #    company_clause = " AND " + obj + ".company_id = %s" % context.get('company_id', False)
+        #query += company_clause
+        return where_clause, where_clause_params
 
 
 class account_partial_reconcile(models.Model):
