@@ -153,7 +153,7 @@ class crm_lead(models.Model):
             'opportunity_id': self.id,
             'partner_id': self.partner_id.id,
             'state': 'done',
-            'partner_phone': self.opportunity_id.phone or self.partner_id.phone,
+            'partner_phone': self.phone or self.partner_id.phone,
             'partner_mobile': self.partner_id.mobile,
             'in_queue': False,
         })
@@ -271,6 +271,7 @@ class crm_phonecall_log_wizard(models.TransientModel):
                 sec = '%.2f' % sec
                 time = str(mins) + ":" + sec[-2:]
                 message = "Call " + time + " min(s)"
+                phonecall.duration = self.custom_duration
             else:
                 message = "Call " + self.duration + " min(s)"
             if(phonecall.description):
