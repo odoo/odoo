@@ -54,7 +54,7 @@ class account_bank_statement(models.Model):
     all_lines_reconciled = fields.Boolean(compute='_check_lines_reconciled')
 
     @api.one
-    @api.constrains('state', 'balance_end', 'balance_end_real')
+    @api.constrains('state', 'balance_end', 'balance_end_real', 'difference')
     def _balance_check(self):
         if self.state == 'confirmed' and self.currency.is_zero(self.difference):
             digits = self.currency.decimal_places
