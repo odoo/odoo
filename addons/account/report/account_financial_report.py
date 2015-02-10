@@ -152,13 +152,8 @@ class account_financial_report_line(models.Model):
                                    'Type of the figure', default='float', required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
     level = fields.Integer(required=True)
-
-    closing_balance = fields.Boolean('Closing balance', default=False, required=True)
-    opening_year_balance = fields.Boolean('Opening year balance', default=False, required=True)
-
-    hidden = fields.Boolean('Should this line be hidden', default=False, required=True)
-    show_domain = fields.Boolean('Show the domain', default=True, required=True)
-    foldable = fields.Boolean('Is the domain foldable', default=True)
+    special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year')])
+    show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')])
 
     @api.model
     def _ids_to_sql(self, ids):

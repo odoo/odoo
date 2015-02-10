@@ -274,6 +274,7 @@
             <field name="domain" eval="[('account_id.user_type', '=', ref('data_unaffected_earnings'))]" />
             <field name="formulas">balance = NEP.balance + sum.balance; debit = NEP.debit + sum.debit; credit = NEP.credit + sum.credit</field>
             <field name="sequence" eval="1"/>
+            <field name="special_date_changer">from_beginning</field>
             <field name="parent_id" ref='account_financial_report_equity0'/>
             <field name="level" eval="2" />
         </record>
@@ -395,7 +396,7 @@
             <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
             <field name="formulas">balance = sum.balance</field>
             <field name="show_domain" eval="False"/>
-            <field name="opening_year_balance" eval='True'/>
+            <field name="special_date_changer">to_beginning_of_fy</field>
             <field name="level" eval="0" />
         </record>
         <record id="account_financial_report_cashsummary_closing_balance0" model="account.financial.report.line">
@@ -405,7 +406,6 @@
             <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
             <field name="formulas">balance = sum.balance</field>
             <field name="show_domain" eval="False"/>
-            <field name="closing_balance" eval='True'/>
             <field name="level" eval="0" />
         </record>
 
@@ -458,7 +458,6 @@
             <field name="sequence" eval="4"/>
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
             <field name="formulas">balance = CR.balance - CS.balance</field>
-            <field name="closing_balance" eval='True'/>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_profitability0" model="account.financial.report.line">
