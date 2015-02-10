@@ -289,26 +289,52 @@
         <record model="account.fiscal.position.template" id="fiscal_position_eu_no_id_purchase_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Lieferant EU (ohne Ust-ID)</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         </record>
         <record model="account.fiscal.position.template" id="fiscal_position_non_eu_purchase_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Lieferant Ausland</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" eval="False"/>
+            <field name="country_group_id" eval="False"/>
+            <field name="sequence">30</field>
         </record>
         <record model="account.fiscal.position.template" id="fiscal_position_eu_vat_id_sale_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Kunde EU Unternehmen (mit USt-ID)</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         </record>
         <record model="account.fiscal.position.template" id="fiscal_position_non_eu_sale_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Kunde Ausland</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" eval="False"/>
+            <field name="country_group_id" eval="False"/>
+            <field name="sequence">30</field>
         </record>
         <record model="account.fiscal.position.template" id="fiscal_position_eu_vat_id_purchase_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Lieferant EU Unternehmen (mit USt-ID)</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         </record>
         <record model="account.fiscal.position.template" id="fiscal_position_eu_no_id_sale_skr04">
             <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
             <field name="name">Kunde EU (ohne USt-ID)</field>
+            <field name="auto-apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         </record>
         <record id="account_fiscal_position_tax_eu_vat_id_sale_19_skr04" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_eu_vat_id_sale_skr04"/>
