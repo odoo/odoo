@@ -703,7 +703,7 @@ class account_move_line(models.Model):
 
         # Create tax lines
         tax_lines_vals = []
-        if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids') and vals['tax_ids']:
+        if apply_taxes and not context.get('dont_create_taxes') and vals.get('tax_ids'):
             # Get ids from triplets : https://www.odoo.com/documentation/master/reference/orm.html#openerp.models.Model.write
             tax_ids = map(lambda tax: tax[1], vals['tax_ids'])
             # Since create() receives ids instead of recordset, let's just use the old-api bridge
