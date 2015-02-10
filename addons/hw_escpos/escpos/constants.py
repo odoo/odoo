@@ -8,6 +8,13 @@ CTL_FF    = '\x0c'             # Form feed
 CTL_CR    = '\x0d'             # Carriage return
 CTL_HT    = '\x09'             # Horizontal tab
 CTL_VT    = '\x0b'             # Vertical tab
+
+# RT Status commands
+DLE_EOT_PRINTER   = '\x10\x04\x01'  # Transmit printer status
+DLE_EOT_OFFLINE   = '\x10\x04\x02'
+DLE_EOT_ERROR     = '\x10\x04\x03'
+DLE_EOT_PAPER     = '\x10\x04\x04'
+
 # Printer hardware
 HW_INIT   = '\x1b\x40'         # Clear data in buffer and reset modes
 HW_SELECT = '\x1b\x3d\x01'     # Printer select
