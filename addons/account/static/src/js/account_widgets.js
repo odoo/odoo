@@ -2019,8 +2019,8 @@ openerp.account = function (instance) {
 
             dict['account_id'] = this.st_line.open_balance_account_id;
             dict['name'] = this.st_line.name + ' : ' + _t("Open balance");
-            if (balance > 0) dict['debit'] = balance;
-            if (balance < 0) dict['credit'] = -1*balance;
+            dict['debit'] = balance > 0 ? balance : 0;
+            dict['credit'] = balance < 0 ? -1*balance : 0;
 
             return dict;
         },

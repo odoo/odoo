@@ -494,47 +494,44 @@ class account_bank_statement_line(models.Model):
             'ref': self.ref,
         }
 
-    def _prepare_move_line(self, move, amount, company_currency):
+    def _prepare_move_line(self, move, amount):
         """ Prepare the dict of values to create the move line from a statement line.
 
             :param recordset move: the account.move to link the move line
-            :param float amount: amount of the move line
-            :param recordset company_currency: currency of the concerned company
+            :param float amount: the amount of transaction that wasn't already reconciled
         """
-        if self.amount >= 0:
-            account_id = self.statement_id.journal_id.default_credit_account_id.id
+        company_currency = self.journal_id.company_id.currency_id
+        statement_currency = self.journal_id.currency or company_currency
+        st_line_currency = self.currency_id or statement_currency
+
+        if statement_currency == company_currency:
+            amount = self.amount
+        elif st_line_currency == company_currency:
+            amount = self.amount_currency
         else:
-            account_id = self.statement_id.journal_id.default_debit_account_id.id
-        partner_id = self.partner_id and self.partner_id.id or False
-        amount_currency = False
-        currency_id = self.statement_id.currency.id
-        if self.statement_id.currency != company_currency:
-            # FIXME : I'm certainly broken
-            amount_currency = amount
-            if self.currency_id == company_currency:
-                amount = self.amount_currency
-            else:
-                ctx = dict(self._context or {})
-                ctx['date'] = self.date
-                amount = self.statement_id.currency.with_context(ctx).compute(self.amount, company_currency)
-        elif self.currency_id and self.amount_currency:
+            amount = st_line_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
+
+        if statement_currency != company_currency:
+            amount_currency = self.amount
+        elif st_line_currency != company_currency:
             amount_currency = self.amount_currency
-            currency_id = self.currency_id.id
-        debit = amount > 0 and amount or 0.0
-        credit = amount < 0 and -amount or 0.0
+        else:
+            amount_currency = False
 
         return {
             'name': self.name,
             'date': self.date,
             'ref': self.ref,
             'move_id': move.id,
-            'partner_id': partner_id,
-            'account_id': account_id,
-            'credit': credit,
-            'debit': debit,
+            'partner_id': self.partner_id and self.partner_id.id or False,
+            'account_id': self.amount >= 0 \
+                and self.statement_id.journal_id.default_credit_account_id.id \
+                or self.statement_id.journal_id.default_debit_account_id.id,
+            'credit': amount < 0 and -amount or 0.0,
+            'debit': amount > 0 and amount or 0.0,
             'statement_id': self.statement_id.id,
             'journal_id': self.statement_id.journal_id.id,
-            'currency_id': amount_currency and currency_id,
+            'currency_id': st_line_currency != company_currency and st_line_currency.id or statement_currency.id or False,
             'amount_currency': amount_currency,
         }
 
@@ -585,9 +582,10 @@ class account_bank_statement_line(models.Model):
         counterpart_aml_dicts = counterpart_aml_dicts or []
         payment_aml_rec = payment_aml_rec or self.env['account.move.line']
         new_aml_dicts = new_aml_dicts or []
+        aml_obj = self.env['account.move.line']
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency or company_currency
-        aml_obj = self.env['account.move.line']
+        st_line_currency = self.currency_id or statement_currency
 
         # Check and prepare received data
         if self.journal_entry_ids.ids:
@@ -603,7 +601,6 @@ class account_bank_statement_line(models.Model):
                 # Transform the value in the format required for One2many and Many2many fields
                 aml_dict['tax_ids'] = map(lambda id: (4, id, None), aml_dict['tax_ids'])
 
-
         # Fully reconciled moves are just linked to the bank statement
         payment_aml_rec.write({'statement_id': self.statement_id.id})
         for aml_rec in payment_aml_rec:
@@ -612,6 +609,9 @@ class account_bank_statement_line(models.Model):
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
         if counterpart_aml_dicts or new_aml_dicts:
+            st_line_amount = self.currency_id and self.amount_currency or self.amount
+            st_line_currency = self.currency_id or statement_currency
+            st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
 
             # Create the move
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
@@ -619,15 +619,16 @@ class account_bank_statement_line(models.Model):
             move = self.env['account.move'].create(move_vals)
 
             # Create the move line for the statement line
-            st_line_amount = self.currency_id and self.amount_currency or self.amount
             for aml_rec in payment_aml_rec: # Deduce already reconciled amount
-                st_line_amount -= aml_rec.debit - aml_rec.credit # TODO get correct amount based on currency and date (see prepare_move_lines...)
-            st_line_move_line_vals = self._prepare_move_line(move, st_line_amount, company_currency)
+                aml_amount = aml_rec.debit - aml_rec.credit
+                aml_currency = aml_rec.currency_id or company_currency
+                if aml_rec.currency_id != st_line_currency:
+                    aml_amount = aml_rec.currency_id.with_context({'date': self.date}).compute(aml_amount)
+                st_line_amount -= aml_amount
+            st_line_move_line_vals = self._prepare_move_line(move, st_line_amount)
             aml_obj.create(st_line_move_line_vals, check=False)
 
             # Complete dicts to create both counterpart move lines and write-offs
-            st_line_currency = self.currency_id or statement_currency
-            st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
             for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
                 aml_dict['ref'] = move_name
                 aml_dict['move_id'] = move.id
@@ -657,6 +658,7 @@ class account_bank_statement_line(models.Model):
                     # Statement is in foreign currency but the transaction is in company currency
                     prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency
                     aml_dict['amount_currency'] = prorata_factor * self.amount
+                    aml_dict['currency_id'] = st_line_currency.id
 
             # Complete dicts, create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:

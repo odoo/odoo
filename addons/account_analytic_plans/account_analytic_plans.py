@@ -473,11 +473,11 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
     _inherit = "account.bank.statement.line"
     _name = "account.bank.statement.line"
-   
+
     analytics_id = fields.Many2one('account.analytic.plan.instance', string='Analytic Distribution')
 
-    def _prepare_move_line(self, move, amount, company_currency):
-        result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount, company_currency)
+    def _prepare_move_line(self, move, amount):
+        result = super(account_bank_statement, self)._prepare_bank_move_line(move, amount)
         result['analytics_id'] = self.analytics_id.id
         return result
 
