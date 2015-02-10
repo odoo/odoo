@@ -36,8 +36,13 @@ class account_invoice_report(osv.osv):
             context={}
         currency_obj = self.pool.get('res.currency')
         currency_rate_obj = self.pool.get('res.currency.rate')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user_currency_id = user.company_id.currency_id.id
+        currency_rate_id = currency_rate_obj.search(
+            cr, uid, [
+                ('rate', '=', 1),
+                ('currency_id.company_id', '=', user.company_id.id)
+                ], limit=1, context=context)[0]
         base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
         res = {}
         ctx = context.copy()
