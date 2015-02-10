@@ -6,7 +6,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">1</field>
-            <field name="state">draft</field>
+            <field name="stage_id" ref="crm_helpdesk.stage_helpdesk1"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-04 11:10:36')"/>
             <field name="name">Download old version of Odoo? </field>
@@ -18,7 +18,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">1</field>
-            <field name="state">draft</field>
+            <field name="stage_id" ref="crm_helpdesk.stage_helpdesk5"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-12 11:12:09')"/>
             <field name="name">Can not able to connect to Server</field>
@@ -30,7 +30,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
+            <field name="stage_id" ref="crm_helpdesk.stage_helpdesk2"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date" eval="time.strftime('%Y-%m-12 11:13:10')"/>
             <field name="name">Documentation for CRM?</field>
@@ -43,10 +43,22 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">1</field>
-            <field name="state">draft</field>
+            <field name="stage_id" ref="crm_helpdesk.stage_helpdesk3"/>
             <field name="date" eval="time.strftime('%Y-%m-12 11:15:17')"/>
             <field name="name">How to create a new module</field>
             <field eval="&quot;How can I create new module in Odoo?&quot;" name="description"/>
+        </record>
+
+        <record id="crm_helpdesk_5" model="crm.helpdesk">
+            <field eval="1" name="active"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="priority">1</field>
+            <field name="stage_id" ref="crm_helpdesk.stage_helpdesk4"/>
+            <field name="date" eval="time.strftime('%Y-%m-12 11:15:17')"/>
+            <field name="name">Repeat Helpdesk so its cancelled.</field>
+            <field eval="&quot;repeat its helpdesk in Odoo?&quot;" name="description"/>
         </record>
     </data>
 </openerp>
