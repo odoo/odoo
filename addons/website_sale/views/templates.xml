@@ -571,7 +571,7 @@
     <p class="text-muted">
       <t t-foreach="product.attribute_line_ids" t-as="variant_id">
         <t t-if="len(variant_id.value_ids)==1">
-          <span t-field="variant_id.attribute_id"/>: <span t-field="variant_id.value_ids[0].name"/><br/>
+          <span t-field="variant_id.attribute_id"/>: <span t-field="variant_id.value_ids[0].name" class="js_variant_static" t-att-value="variant_id.value_ids[0].id"/><br/>
         </t>
       </t>
     </p>
