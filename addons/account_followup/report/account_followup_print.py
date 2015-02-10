@@ -77,6 +77,7 @@ class report_rappel(report_sxw.rml_parse):
     def _get_text(self, stat_line, followup_id, context=None):
         context = dict(context or {}, lang=stat_line.partner_id.lang)
         fp_obj = self.pool['account_followup.followup']
+        lang_obj = self.pool['res.lang']
         fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
         if not fp_line:
             raise osv.except_osv(_('Error!'),_("The followup plan defined for the current company does not have any followup action."))
@@ -99,9 +100,11 @@ class report_rappel(report_sxw.rml_parse):
                 partner_max_text = i.followup_line_id.description
         text = partner_max_delay and partner_max_text or default_text
         if text:
+            lang_id = lang_obj.search(self.cr, self.uid, [('code', '=', stat_line.partner_id.lang)], context=context)
+            lang_date_format = lang_id and lang_obj.browse(self.cr, self.uid, lang_id[0], context=context).date_format or False
             text = text % {
                 'partner_name': stat_line.partner_id.name,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime(lang_date_format or '%Y-%m-%d'),
                 'company_name': stat_line.company_id.name,
                 'user_signature': self.pool['res.users'].browse(self.cr, self.uid, self.uid, context).signature or '',
             }
