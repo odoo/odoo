@@ -50,7 +50,7 @@ class account_invoice(models.Model):
         self.amount_tax = sum(line.amount for line in self.tax_line)
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_signed = self.amount_total
-        if self.currency_id != self.company_id.currency_id:
+        if self.currency_id and self.currency_id != self.company_id.currency_id:
             amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
         sign = self.type in ['in_invoice', 'out_refund'] and -1 or 1
         self.amount_total_signed = amount_total_signed * sign
@@ -1133,7 +1133,7 @@ class account_invoice_line(models.Model):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = self.invoice_line_tax_id.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded']
-        if self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+        if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.compute(price_subtotal_signed, self.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
