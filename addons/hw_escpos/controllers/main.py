@@ -16,6 +16,14 @@ import pickle
 import re
 import subprocess
 import traceback
+
+try: 
+    from xmlescpos import *
+    from xmlescpos.exceptions import *
+    from xmlescpos.printer import Usb
+except ImportError:
+    escpos = printer = None
+
 from threading import Thread, Lock
 from Queue import Queue, Empty
 
@@ -23,13 +31,6 @@ try:
     import usb.core
 except ImportError:
     usb = None
-
-try:
-    from .. import escpos
-    from ..escpos import printer
-    from ..escpos import supported_devices
-except ImportError:
-    escpos = printer = None
 
 from PIL import Image
 
@@ -110,39 +111,28 @@ class EscposDriver(Thread):
                 self.start()
     
     def get_escpos_printer(self):
-        try:
-            printers = self.connected_usb_devices()
-            if len(printers) > 0:
-                self.set_status('connected','Connected to '+printers[0]['name'])
-                return escpos.printer.Usb(printers[0]['vendor'], printers[0]['product'])
-            else:
-                self.set_status('disconnected','Printer Not Found')
-                return None
-        except Exception as e:
-            self.set_status('error',str(e))
+  
+        printers = self.connected_usb_devices()
+        if len(printers) > 0:
+            self.set_status('connected','Connected to '+printers[0]['name'])
+            return Usb(printers[0]['vendor'], printers[0]['product'])
+        else:
+            self.set_status('disconnected','Printer Not Found')
             return None
 
     def get_status(self):
         self.push_task('status')
         return self.status
 
-
-
     def open_cashbox(self,printer):
         printer.cashdraw(2)
         printer.cashdraw(5)
 
     def set_status(self, status, message = None):
+        _logger.info(status+' : '+ (message or 'no message'))
         if status == self.status['status']:
             if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
                 self.status['messages'].append(message)
-
-                if status == 'error' and message:
-                    _logger.error('ESC/POS Error: '+message)
-                elif status == 'disconnected' and message:
-                    _logger.warning('ESC/POS Device Disconnected: '+message)
-                else:
-                    _logger.info(status+' : '+ (message or 'no message'))
         else:
             self.status['status'] = status
             if message:
@@ -150,19 +140,19 @@ class EscposDriver(Thread):
             else:
                 self.status['messages'] = []
 
-            if status == 'error' and message:
-                _logger.error('ESC/POS Error: '+message)
-            elif status == 'disconnected' and message:
-                _logger.warning('ESC/POS Device Disconnected: '+message)
-            else:
-                _logger.info(status+' : '+ (message or 'no message'))
+        if status == 'error' and message:
+            _logger.error('ESC/POS Error: '+message)
+        elif status == 'disconnected' and message:
+            _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
+
         if not escpos:
             _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
             return
         while True:
             try:
+                error = True
                 timestamp, task, data = self.queue.get(True)
 
                 printer = self.get_escpos_printer()
@@ -170,6 +160,7 @@ class EscposDriver(Thread):
                 if printer == None:
                     if task != 'status':
                         self.queue.put((timestamp,task,data))
+                    error = False
                     time.sleep(5)
                     continue
                 elif task == 'receipt': 
@@ -186,11 +177,25 @@ class EscposDriver(Thread):
                     self.print_status(printer)
                 elif task == 'status':
                     pass
+                error = False
 
+            except NoDeviceError as e:
+                print "No device found %s" %str(e)
+            except HandleDeviceError as e:
+                print "Impossible to handle the device due to previous error %s" % str(e)
+            except TicketNotPrinted as e:
+                print "The ticket does not seems to have been fully printed %s" % str(e)
+            except NoStatusError as e:
+                print "Impossible to get the status of the printer %s" % str(e)
             except Exception as e:
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
                 _logger.error(errmsg);
+            finally:
+                if error: 
+                    self.queue.put((timestamp, task, data))
+                if printer:
+                    printer.close()
 
     def push_task(self,task, data = None):
         self.lockedstart()
