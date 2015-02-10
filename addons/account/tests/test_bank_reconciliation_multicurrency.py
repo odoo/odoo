@@ -1,15 +1,15 @@
 from openerp.tests.common import TransactionCase
 import time
 
-class TestReconciliation(TransactionCase):
-    """Tests for reconciliation (account.tax)
+class TestBankReconciliationMulticurrency(TransactionCase):
+    """Tests for reconciliation (account.bank.statement.line)
 
     Test used to check that when doing a sale or purchase invoice in a different currency,
     the result will be balanced.
     """
 
     def setUp(self):
-        super(TestReconciliation, self).setUp()
+        super(TestBankReconciliationMulticurrency, self).setUp()
         self.account_invoice_model = self.registry('account.invoice')
         self.account_invoice_line_model = self.registry('account.invoice.line')
         self.acc_bank_stmt_model = self.registry('account.bank.statement')
@@ -35,19 +35,22 @@ class TestReconciliation(TransactionCase):
     def create_invoice(self, type='out_invoice', currency=None):
         cr, uid = self.cr, self.uid
         #we create an invoice in given currency
-        invoice_id = self.account_invoice_model.create(cr, uid, {'partner_id': self.partner_agrolait_id,
+        invoice_id = self.account_invoice_model.create(cr, uid, {
+            'partner_id': self.partner_agrolait_id,
             'reference_type': 'none',
             'currency_id': currency,
             'name': type == 'out_invoice' and 'invoice to client' or 'invoice to supplier',
             'account_id': self.account_rcv_id,
             'type': type,
             'date_invoice': time.strftime('%Y') + '-07-01',
-            })
-        self.account_invoice_line_model.create(cr, uid, {'product_id': self.product_id,
+        })
+        self.account_invoice_line_model.create(cr, uid, {
+            'product_id': self.product_id,
             'quantity': 1,
             'price_unit': 100,
             'invoice_id': invoice_id,
-            'name': 'product that cost 100',})
+            'name': 'product that cost 100',
+        })
 
         #validate invoice
         self.registry('account.invoice').signal_workflow(cr, uid, [invoice_id], 'invoice_open')
@@ -61,13 +64,15 @@ class TestReconciliation(TransactionCase):
             'date': time.strftime('%Y') + '-07-15',
         })
 
-        bank_stmt_line_id = self.acc_bank_stmt_line_model.create(cr, uid, {'name': 'payment',
+        bank_stmt_line_id = self.acc_bank_stmt_line_model.create(cr, uid, {
+            'name': 'payment',
             'statement_id': bank_stmt_id,
             'partner_id': self.partner_agrolait_id,
             'amount': amount,
             'amount_currency': amount_currency,
             'currency_id': currency_id,
-            'date': time.strftime('%Y') + '-07-15',})
+            'date': time.strftime('%Y') + '-07-15',
+        })
 
         #reconcile the payment with the invoice
         for l in invoice_record.move_id.line_id:
@@ -75,8 +80,12 @@ class TestReconciliation(TransactionCase):
                 line_id = l
                 break
         amount_in_widget = currency_id and amount_currency or amount
-        self.acc_bank_stmt_line_model.process_reconciliation(cr, uid, bank_stmt_line_id, [
-            {'counterpart_move_line_id': line_id.id, 'debit': amount_in_widget < 0 and -amount_in_widget or 0.0, 'credit': amount_in_widget > 0 and amount_in_widget or 0.0, 'name': line_id.name,}])
+        self.acc_bank_stmt_line_model.process_reconciliation(cr, uid, bank_stmt_line_id, [{
+            'counterpart_move_line_id': line_id.id,
+            'debit': amount_in_widget < 0 and -amount_in_widget or 0.0,
+            'credit': amount_in_widget > 0 and amount_in_widget or 0.0,
+            'name': line_id.name,
+        }])
         return bank_stmt_id
 
     def check_results(self, move_line_ids, aml_dict):
@@ -100,7 +109,7 @@ class TestReconciliation(TransactionCase):
         invoice_record = self.create_invoice(type='in_invoice', currency=invoice_currency)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and trasaction_currency given
         bank_stmt_id = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency)
-        supplier_move_lines = self.acc_bank_stmt_model.browse(cr,uid,bank_stmt_id).move_line_ids
+        supplier_move_lines = self.acc_bank_stmt_model.browse(cr, uid, bank_stmt_id).move_line_ids
         return customer_move_lines, supplier_move_lines
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
