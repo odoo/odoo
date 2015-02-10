@@ -42,7 +42,7 @@ class account_invoice_report(osv.osv):
             cr, uid, [
                 ('rate', '=', 1),
                 '|',
-                    ('currency_id.company_id', '=', user.company_id.id)
+                    ('currency_id.company_id', '=', user.company_id.id),
                     ('currency_id.company_id', '=', False)
                 ], limit=1, context=context)[0]
         base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
