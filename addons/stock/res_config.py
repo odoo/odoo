@@ -27,6 +27,7 @@ class res_company(osv.osv):
     _columns = {
         'propagation_minimum_delta': fields.integer('Minimum Delta for Propagation of a Date Change on moves linked together'),
         'internal_transit_location_id': fields.many2one('stock.location', 'Internal Transit Location', help="Technical field used for resupply routes between warehouses that belong to this company", on_delete="restrict"),
+        'no_negative_stock': fields.boolean('No negative stock', help='Allows you to prohibit negative stock quantities.')
     }
 
     def create_transit_location(self, cr, uid, company_id, company_name, context=None):
@@ -110,6 +111,7 @@ This installs the module product_expiry."""),
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
         'module_stock_picking_wave': fields.boolean('Manage picking wave', help='Install the picking wave module which will help you grouping your pickings and processing them in batch'),
+        'no_negative_stock': fields.boolean('No negative stock', help='Allows you to prohibit negative stock quantities.')
     }
 
     def onchange_adv_location(self, cr, uid, ids, group_stock_adv_location, context=None):
@@ -129,6 +131,12 @@ This installs the module product_expiry."""),
         config = self.browse(cr, uid, ids[0], context)
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
         dp.write({'digits': config.decimal_precision})
+
+    def set_default_no_negative_stock(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context=context)
+        self.pool['ir.values'].set_default(cr, uid, 'stock.config.settings', 'no_negative_stock', config.no_negative_stock)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        user.company_ids.write({'no_negative_stock': config.no_negative_stock})
 
     _defaults = {
         'company_id': _default_company,

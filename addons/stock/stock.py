@@ -34,7 +34,7 @@ from openerp import SUPERUSER_ID, api, models
 import openerp.addons.decimal_precision as dp
 from openerp.addons.procurement import procurement
 import logging
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, Warning
 
 
 _logger = logging.getLogger(__name__)
@@ -503,8 +503,13 @@ class stock_quant(osv.osv):
             'owner_id': owner_id,
             'package_id': dest_package_id,
         }
-
         if move.location_id.usage == 'internal':
+            if move.location_id.company_id.no_negative_stock:
+                raise Warning(_('You have chosen to avoid negative stock. \
+                    %s pieces of %s are remaining in location %s  but you want to transfer  \
+                    %s pieces. Please adjust your quantities or \
+                    correct your stock with an inventory adjustment.')% \
+                    (move.product_id.qty_available, move.product_id.name, move.location_id.name, move.product_uom_qty))
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
             negative_vals = vals.copy()
