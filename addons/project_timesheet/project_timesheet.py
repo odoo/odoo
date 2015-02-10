@@ -243,3 +243,7 @@ class account_analytic_line(osv.osv):
     _columns = {
         'task_id' : fields.many2one('project.task', 'Task'),
     }
+
+    def load_data_for_ui(self, cr, uid, domain, fields=None, context=None):
+        res = self.search_read(cr, uid, domain=domain, fields=fields, context=context)
+        return res

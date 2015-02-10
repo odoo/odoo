@@ -1205,19 +1205,21 @@ function odoo_project_timesheet_screens(project_timesheet) {
             self._super.apply(this, arguments);
             self.project_timesheet_widget = project_timesheet_widget;
             self.screen_name = "Activities";
+            self.project_timesheet_model = options.project_timesheet_model;
 
             // Events specific to this screen
             _.extend(self.events,
                 {
                     "click .pt_button_plus_activity":"goto_edit_activity_screen",
                     "click .pt_activity":"edit_activity",
-                    "click .pt_btn_start_activity":"start_activity"
+                    "click .pt_btn_start_activity":"start_activity",
+                    "click .pt_test_btn":"test_fct"
                 }
             );
 
-            self.projects = options.project_timesheet_model.projects;
-            self.tasks = options.project_timesheet_model.tasks;
-            self.account_analytic_lines = options.project_timesheet_model.account_analytic_lines;
+            self.projects = self.project_timesheet_model.projects;
+            self.tasks = self.project_timesheet_model.tasks;
+            self.account_analytic_lines = self.project_timesheet_model.account_analytic_lines;
 
             _.each(self.account_analytic_lines, function(account_analytic_line){
                 account_analytic_line.hours_minutes = project_timesheet.unit_amount_to_hours_minutes(account_analytic_line.unit_amount);
@@ -1237,6 +1239,9 @@ function odoo_project_timesheet_screens(project_timesheet) {
         },
         start_activity: function(){
 
+        },
+        test_fct: function(){
+            this.project_timesheet_model.load_server_data();
         }
     });
 
@@ -1308,7 +1313,7 @@ function odoo_project_timesheet_screens(project_timesheet) {
                     "change textarea.pt_description":"on_change_description",
                     "click .pt_project_create_confirm":"create_project",
                     "click .pt_discard_changes":"discard_changes",
-                    "click .pt_validate_btn" : "save_changes"
+                    "click .pt_validate_edit_btn" : "save_changes"
                 }
             );
 

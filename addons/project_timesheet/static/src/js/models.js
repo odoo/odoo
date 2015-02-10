@@ -165,13 +165,11 @@ function odoo_project_timesheet_models(project_timesheet) {
 
         // Settings methods
         set_minimal_duration: function(minimal_duration){
-            var user_data = this.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
-            user_data.data.settings.minimal_duration = minimal_duration;
+            this.settings.minimal_duration = minimal_duration;
             this.db.update_data();
         },
         set_time_unit: function(time_unit){
-            var user_data = this.db.load_data(project_timesheet.session.username, project_timesheet.session.server);
-            user_data.data.settings.time_unit = time_unit;
+            this.settings.time_unit = time_unit;
             this.db.update_data();
         },
         set_default_project: function(default_project_id){
@@ -196,6 +194,19 @@ function odoo_project_timesheet_models(project_timesheet) {
         },
         create_task: function(task_name){
 
+        },
+        load_server_data: function(){
+            self = this;
+            var domain = [
+                ["user_id", "=", project_timesheet.session.uid],
+                ["is_timesheet","=",true],
+                ["date",">", project_timesheet.date_to_str(moment().subtract(30, 'days')._d)]
+            ];
+            var fields = ["id", "write_date", "create_date", "user_id", "task_id", "name", "unit_amount", "date", "account_id", 'reference_id', '__last_update', 'is_timesheet']
+            new project_timesheet.Model(project_timesheet.session, "account.analytic.line").call("load_data_for_ui", {
+                fields : fields,
+                domain : domain
+            });
         }
 
     });

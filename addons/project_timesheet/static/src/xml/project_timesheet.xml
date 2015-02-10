@@ -16,7 +16,7 @@
 
 		    		<div class="col-xs-6">
 			    		<!--Put time here-->
-			    		
+			    		<a href="javascript:void(0)" class="btn btn-default btn-raised btn-material-cyan pt_test_btn">test</a>
 			    	</div>
 			    	<div class="col-xs-3">
 			    		<!--Start button / stop button-->
@@ -295,7 +295,10 @@
     	    			<t t-if="widget.screen_name == 'Activities'">
     						<a href="javascript:void(0)"><span class="glyphicon glyphicon-plus pt_button_plus_activity" aria-hidden="true"></span></a>
     					</t>
-    					<t t-if="widget.screen_name != 'Activities'">
+                        <t t-if="widget.screen_name == 'Edit Activity'">
+                            <a href="javascript:void(0)"><span class="glyphicon glyphicon-ok pt_validate_edit_btn" aria-hidden="true"></span></a>
+                        </t>
+    					<t t-if="widget.screen_name != 'Activities' and widget.screen_name != 'Edit Activity'">
     						<a href="javascript:void(0)" class="pt_validate_btn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>
     					</t>
 	    		</div>

@@ -15,6 +15,7 @@ function odoo_project_timesheet_db(project_timesheet) {
             var test_data = [
                 {
                     "session_user":"admin",
+                    "session_uid":1,
                     "session_server":"http://localhost:8069",
                     "data":{
                         "settings":{
@@ -55,7 +56,9 @@ function odoo_project_timesheet_db(project_timesheet) {
                         ],
                         "account_analytic_lines":[
                             {
+                                "server_id":undefined,
                                 "id":1,
+                                "is_timesheet":true,
                                 "desc":"/",
                                 "unit_amount":1,
                                 "project":{
@@ -66,10 +69,13 @@ function odoo_project_timesheet_db(project_timesheet) {
                                     "id":1,
                                     "name":"C#",
                                 },
-                                "date":"2015-02-09"
+                                "date":"2015-02-09",
+                                "write_date":"2015-02-10 16:03:21"
                             },
                             {
+                                "server_id":undefined,
                                 "id":2,
+                                "is_timesheet":true,
                                 "desc":"Conversion from py 2.7 to 3.3",
                                 "unit_amount":2,
                                 "project":{
@@ -80,14 +86,18 @@ function odoo_project_timesheet_db(project_timesheet) {
                                     "id":2,
                                     "name":"Python",
                                 },
-                                "date":"2015-02-09"
+                                "date":"2015-02-09",
+                                "write_date":"2015-02-10 16:03:21"
 
                             },
                             {
+                                "server_id":undefined,
                                 "id":3,
+                                "is_timesheet":true,
                                 "desc":"/",
                                 "unit_amount":0.5,
-                                "date":"2015-02-09"
+                                "date":"2015-02-09",
+                                "write_date":"2015-02-10 16:03:21"
                             }
                         ],
                         "day_plan":[
@@ -98,6 +108,7 @@ function odoo_project_timesheet_db(project_timesheet) {
                 },
                 {
                    "session_user":"demoUser",
+                   "session_uid":1,
                     "session_server":"http://localhost:8069",
                     "data":{} 
                 }
