@@ -5715,9 +5715,13 @@ class BaseModel(object):
             }
             params = eval("[%s]" % params, global_vars, field_vars)
 
-            # call onchange method
+            # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)
-            method_res = getattr(self._model, method)(*args)
+            try:
+                method_res = getattr(self._model, method)(*args, context=self._context)
+            except TypeError:
+                method_res = getattr(self._model, method)(*args)
+
             if not isinstance(method_res, dict):
                 return
             if 'value' in method_res:
