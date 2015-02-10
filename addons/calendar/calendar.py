@@ -7,6 +7,7 @@ import openerp
 import openerp.service.report
 import uuid
 import collections
+import babel.dates
 from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -1440,7 +1441,16 @@ class calendar_event(osv.Model):
         return invitation
 
     def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
-        #Function used only in calendar_event_data.xml for email template
+        ''' Format and localize some dates to be used in email templates
+
+            :param string date: date/time to be formatted
+            :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
+            :param string tz: Timezone indicator (optional)
+
+            :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
+
+            (Function used only in calendar_event_data.xml) '''
+
         date = openerp.fields.Datetime.from_string(date)
 
         if tz:
@@ -1448,14 +1458,23 @@ class calendar_event(osv.Model):
             date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
 
         if interval == 'day':
-            res = str(date.day)
+            # Day number (1-31)
+            res = unicode(date.day)
+
         elif interval == 'month':
-            res = date.strftime('%B') + " " + str(date.year)
+            # Localized month name and year
+            res = babel.dates.format_date(date=date, format='MMMM y', locale=context.get('lang', 'en_US'))
+
         elif interval == 'dayname':
-            res = date.strftime('%A')
+            # Localized day name
+            res = babel.dates.format_date(date=date, format='EEEE', locale=context.get('lang', 'en_US'))
+
         elif interval == 'time':
+            # Localized time
+
             dummy, format_time = self.get_date_formats(cr, uid, context=context)
-            res = date.strftime(format_time + " %Z")
+            res = tools.ustr(date.strftime(format_time + " %Z"))
+
         return res
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
