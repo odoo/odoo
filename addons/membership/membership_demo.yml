@@ -10,6 +10,4 @@
     for id in invoice_ids[-4:]:
         pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
             9050.0, ref('account.cash'), time.strftime('%Y-%m-%d'),
-            ref('account.bank_journal'), ref('account.cash'),
-            ref('account.bank_journal'), name='Payment for test customer invoice')
-        assert (pay == True), "Incorrect Payment"
+            ref('account.bank_journal'), ref('account.cash'))

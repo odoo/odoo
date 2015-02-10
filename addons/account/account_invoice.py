@@ -1069,7 +1069,7 @@ class account_invoice(models.Model):
 
     @api.v8
     def pay_and_reconcile(self, pay_amount, pay_account_id, date, pay_journal_id,
-                          writeoff_acc_id, writeoff_journal_id, name=''):
+                          writeoff_acc_id=None):
         assert len(self) == 1, "Can only pay one invoice at a time."
 
         if self.type in ('in_invoice', 'in_refund'):
@@ -1083,17 +1083,17 @@ class account_invoice(models.Model):
             'date_paid': date,
             'reference': ref,
             'journal_id': pay_journal_id,
-            'payment_difference': 'open',
-            'writeoff_account': writeoff_acc_id,
+            'payment_difference': 'open' if writeoff_acc_id == None else 'reconcile',
+            'writeoff_account': writeoff_acc_id if writeoff_acc_id else False,
             })
         pay_wizard.pay()
 
     @api.v7
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, date, pay_journal_id,
-                          writeoff_acc_id, writeoff_journal_id, context=None, name=''):
+                          writeoff_acc_id=None, context=None):
         recs = self.browse(cr, uid, ids, context)
         return recs.pay_and_reconcile(pay_amount, pay_account_id, date, pay_journal_id,
-                    writeoff_acc_id, writeoff_journal_id, name=name)
+                    writeoff_acc_id)
 
 
 class account_invoice_line(models.Model):
