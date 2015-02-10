@@ -6,17 +6,31 @@
 
     <record id="fiscal_position_national_customers" model="account.fiscal.position.template">
         <field name="name">Portugal</field>
+        <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" ref="base.pt"/>
+            <field name="sequence">10</field>
         <field name="chart_template_id" ref="pt_chart_template"/>
     </record>
 
     <record id="fiscal_position_foreign_eu" model="account.fiscal.position.template">
         <field name="name">Europa</field>
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         <field name="chart_template_id" ref="pt_chart_template"/>
     </record>
 
     <record id="fiscal_position_foreign_other" model="account.fiscal.position.template">
         <field name="name">Extra-comunitário</field>
         <field name="chart_template_id" ref="pt_chart_template"/>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False"/>
+        <field name="country_id" eval="False"/>
+        <field name="country_group_id" eval="False"/>
+        <field name="sequence">30</field>
     </record>
 
     </data>
