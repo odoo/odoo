@@ -103,6 +103,7 @@ $('.oe_website_sale').each(function () {
 
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
         var $ul = $(this).parents('ul.js_add_cart_variants:first');
+        var $section = $(this).parents('#product_detail');
         var $parent = $ul.closest('.js_product');
         var $product_id = $parent.find('input.product_id').first();
         var $price = $parent.find(".oe_price:first .oe_currency_value");
@@ -111,6 +112,9 @@ $('.oe_website_sale').each(function () {
         var values = [];
         $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
             values.push(+$(this).val());
+        });
+        $section.find('span.js_variant_static').each(function () {
+            values.push(parseInt($(this).attr('value')));
         });
 
         $parent.find("label").removeClass("text-muted css_not_available");
