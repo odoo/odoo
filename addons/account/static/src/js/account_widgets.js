@@ -1044,8 +1044,9 @@ openerp.account = function (instance) {
                 };
                 // Use amount_before_tax since the amount of the newly created line is adjusted to
                 // reflect tax included in price in account_move_line.create()
-                dict['credit'] = (line.amount_before_tax > 0 ? line.amount_before_tax : 0);
-                dict['debit'] = (line.amount_before_tax < 0 ? -1 * line.amount_before_tax : 0);
+                var amount = line.tax_id ? line.amount_before_tax: line.amount;
+                dict['credit'] = (amount > 0 ? amount : 0);
+                dict['debit'] = (amount < 0 ? -1 * amount : 0);
                 if (line.tax_id) dict['tax_ids'] = [line.tax_id];
                 if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
                 return dict;
