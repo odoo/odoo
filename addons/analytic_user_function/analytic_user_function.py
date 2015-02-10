@@ -151,4 +151,4 @@ class hr_analytic_timesheet(osv.osv):
         for grid in account.user_product_ids:
             if grid.user_id.id==user_id:
                 return grid.price
-        return super(account_analytic_line, self)._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
+        return super(hr_analytic_timesheet, self)._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
