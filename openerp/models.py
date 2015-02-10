@@ -5734,13 +5734,20 @@ class BaseModel(object):
 
             :param values: dictionary mapping field names to values, giving the
                 current state of modification
-            :param field_name: name of the modified field_name
+            :param field_name: name of the modified field, or list of field
+                names (in view order), or False
             :param field_onchange: dictionary mapping field names to their
                 on_change attribute
         """
         env = self.env
+        if isinstance(field_name, list):
+            names = field_name
+        elif field_name:
+            names = [field_name]
+        else:
+            names = []
 
-        if field_name and field_name not in self._fields:
+        if not all(name in self._fields for name in names):
             return {}
 
         # determine subfields for field.convert_to_write() below
@@ -5759,23 +5766,24 @@ class BaseModel(object):
             # attach `self` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # determine which field should be triggered an onchange
-        todo = set([field_name]) if field_name else set(values)
+        # determine which field(s) should be triggered an onchange
+        todo = list(names) or list(values)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
             value = record[name]
             field = self._fields[name]
-            if not field_name and field.type == 'many2one' and field.delegate and not value:
+            if field.type == 'many2one' and field.delegate and not value:
                 # do not nullify all fields of parent record for new records
                 continue
             record[name] = value
 
         result = {'value': {}}
 
+        # process names in order (or the keys of values if no name given)
         while todo:
-            name = todo.pop()
+            name = todo.pop(0)
             if name in done:
                 continue
             done.add(name)
@@ -5799,7 +5807,7 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # keep result: newval may have been dirty before
                             pass
@@ -5809,14 +5817,15 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # clean up result to not return another value
                             result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
-        if field_name and self._fields[field_name].type in ('one2many', 'many2many'):
+        if field_name and not isinstance(field_name, list) and \
+                self._fields[field_name].type in ('one2many', 'many2many'):
             result['value'].pop(field_name, None)
 
         return result

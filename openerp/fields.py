@@ -1724,10 +1724,12 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if not self.relation:
-            if isinstance(self.column, fields.many2many):
+        if not self.relation and self.store:
+            # retrieve self.relation from the corresponding column
+            column = self.to_column()
+            if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = \
-                    self.column._sql_names(env[self.model_name])
+                    column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
