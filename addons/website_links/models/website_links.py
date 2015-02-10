@@ -43,24 +43,15 @@ class website_links(models.Model):
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
     icon_src = fields.Char(string='Favicon Source', compute='_compute_icon_src')
 
-    # List of link's href that will not be converted by the shortener
-    links_backlist = ['/unsubscribe_from_list']
-
     @api.model
-    def convert_links(self, html, utm_mixin):
+    def convert_links(self, html, vals, blacklist=None):
         for match in re.findall(URL_REGEX, html):
             href = match[0]
             long_url = match[1]
 
-            if not [s for s in self.links_backlist if s in long_url]:
-                vals = {'url': long_url}
+            vals['url'] = long_url
 
-                if utm_mixin.campaign_id:
-                    vals['campaign_id'] = utm_mixin.campaign_id.id
-                if utm_mixin.source_id:
-                    vals['source_id'] = utm_mixin.source_id.id
-                if utm_mixin.medium_id:
-                    vals['medium_id'] = utm_mixin.medium_id.id
+            if not blacklist or blacklist and not [s for s in blacklist if s in long_url]:
 
                 link = self.create(vals)
                 shorten_url = self.browse(link.id)[0].short_url
@@ -68,6 +59,7 @@ class website_links(models.Model):
                 if shorten_url:
                     new_href = href.replace(long_url, shorten_url)
                     html = html.replace(href, new_href)
+
         return html
 
     @api.one
@@ -159,10 +151,12 @@ class website_links(models.Model):
 
     @api.model
     def create(self, vals):
+        create_vals = vals.copy()
+
         if 'url' not in vals:
             raise ValueError('URL field required')
         else:
-            vals['url'] = VALIDATE_URL(vals['url'])
+            create_vals['url'] = VALIDATE_URL(vals['url'])
 
         search_domain = []
         for fname, value in vals.iteritems():
@@ -174,14 +168,14 @@ class website_links(models.Model):
             return result
 
         if not vals.get('title'):
-            vals['title'] = self._get_title_from_url(vals['url'])
+            create_vals['title'] = self._get_title_from_url(vals['url'])
 
         # Prevent the UTMs to be set by the values of UTM cookies
         for (key, fname) in self.env['utm.mixin'].tracking_fields():
             if fname not in vals:
-                vals[fname] = False
+                create_vals[fname] = False
 
-        link = super(website_links, self).create(vals)
+        link = super(website_links, self).create(create_vals)
 
         code = self.env['website.links.code'].get_random_code_string()
         self.env['website.links.code'].create({'code': code, 'link_id': link.id})

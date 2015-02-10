@@ -493,7 +493,7 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
-        'schedule_date': fields.datetime('Scheduled Send Date'),
+        'schedule_date': fields.datetime('Schedule in the Future'),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -769,6 +769,10 @@ class MassMailing(osv.Model):
                 comp_ctx = dict(context, active_ids=res_ids)
             else:
                 comp_ctx = {'active_ids': res_ids}
+
+            # Convert links in absolute URLs before the application of the shortener
+            self.write(cr, uid, [mailing.id], {'body_html': self.pool['mail.template']._replace_local_links(cr, uid, mailing.body_html, context)}, context=context)
+
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
@@ -787,19 +791,32 @@ class MassMailing(osv.Model):
 
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], auto_commit=True, context=comp_ctx)
-            self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
+            self.write(cr, uid, [mailing.id], {'state': 'done'}, context=context)
         return True
 
     def convert_links(self, cr, uid, ids, context=None):
         res = {}
         for mass_mailing in self.browse(cr, uid, ids, context=context):
-            res[mass_mailing.id] = mass_mailing.body_html if mass_mailing.body_html else ''
             utm_mixin = mass_mailing.mass_mailing_campaign_id if mass_mailing.mass_mailing_campaign_id else mass_mailing
-            res[mass_mailing.id] = self.pool['website.links'].convert_links(cr, uid, res[mass_mailing.id], utm_mixin, context=context)            
+            html = mass_mailing.body_html if mass_mailing.body_html else ''
+
+            vals = {'mass_mailing_id': mass_mailing.id}
+
+            if mass_mailing.mass_mailing_campaign_id:
+                vals['mass_mailing_campaign_id'] = mass_mailing.mass_mailing_campaign_id.id
+            if utm_mixin.campaign_id:
+                vals['campaign_id'] = utm_mixin.campaign_id.id
+            if utm_mixin.source_id:
+                vals['source_id'] = utm_mixin.source_id.id
+            if utm_mixin.medium_id:
+                vals['medium_id'] = utm_mixin.medium_id.id
+
+            res[mass_mailing.id] = self.pool['website.links'].convert_links(cr, uid, html, vals, blacklist=['/unsubscribe_from_list'], context=context)
+
         return res
 
     def put_in_queue(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'in_queue'}, context=context)
+        self.write(cr, uid, ids, {'sent_date': fields.datetime.now(), 'state': 'in_queue'}, context=context)
 
     def cancel_mass_mailing(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
@@ -830,18 +847,19 @@ class MassMailing(osv.Model):
 class MailMail(models.Model):
     _inherit = ['mail.mail']
 
-    links_backlist = ['/unsubscribe_from_list']
-
     @api.model
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
+
+        links_blacklist = ['/unsubscribe_from_list']
+
         if mail.mailing_id and mail.body_html and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
 
                 href = match[0]
                 url = match[1]
                 
-                if not [s for s in self.links_backlist if s in href]:
+                if not [s for s in links_blacklist if s in href]:
                     new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     mail.body_html = mail.body_html.replace(href, new_href)
 
