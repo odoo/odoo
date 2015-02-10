@@ -409,7 +409,7 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
                 ctx.update({v:req.context.get(v,False)})
             if ctx:
                 if action.get('context',False):
-                    ctx2 = str(action.get('context',False))
+                    ctx2 = action.get('context','')
                     ctx2 = ctx2.find('{') >= 0 and ctx2[ctx2.find('{')+1:]
                     if ctx2:
                         ctx = str(ctx)
