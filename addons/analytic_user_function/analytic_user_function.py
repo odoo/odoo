@@ -116,9 +116,8 @@ class hr_analytic_timesheet(osv.osv):
             res ['value']['general_account_id']= a
         return res
 
-    def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
-        #res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
-        res = {}
+    def on_change_user_id(self, cr, uid, ids, user_id, account_id, context, unit_amount=0):
+        res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, context=context)
 
         if account_id:
             #get the browse record related to user_id and account_id

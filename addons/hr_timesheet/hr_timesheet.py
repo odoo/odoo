@@ -137,6 +137,7 @@ class account_analytic_line(models.Model):
                     raise exceptions.ValidationError("The employee " + emp[0].name + " is not associated to a valid Financial Account. Please define one for him or select another user.")
 
     @api.onchange('user_id')
+    @api.multi
     def on_change_user_id(self):
         if "hr_timesheet" in self.env.context:
             emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or self.env.uid)])
@@ -149,6 +150,16 @@ class account_analytic_line(models.Model):
                 self.product_id = self._get_employee_product()
                 self.product_uom_id = self._get_employee_unit()
                 self.general_account_id = self._get_general_account()
+
+                #For child modules still written in old API that call super and expect a return value:
+                return {
+                    "value":{
+                        'journal_id' : self.journal_id,
+                        'product_id' : self.product_id,
+                        'uom_id' : self.product_uom_id,
+                        'general_account_id' : self.general_account_id
+                    }
+                }
 
     @api.onchange('date')
     def on_change_date(self):
