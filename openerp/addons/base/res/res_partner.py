@@ -34,36 +34,25 @@ from openerp.tools.translate import _
 ADDRESS_FORMAT_LAYOUTS = {
     '%(city)s %(state_code)s\n%(zip)s': """
         <div class="address_format">
-            <field name="city" placeholder="%(city)s" style="width: 50%%"
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s"
-                   style="width: 47%%" options='{"no_open": true}'
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+            <field name="city" placeholder="%(city)s" style="width: 50%%"/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" style="width: 47%%" options='{"no_open": true}'/>
             <br/>
-            <field name="zip" placeholder="%(zip)s"
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+            <field name="zip" placeholder="%(zip)s"/>
         </div>
     """,
     '%(zip)s %(city)s': """
         <div class="address_format">
-            <field name="zip" placeholder="%(zip)s" style="width: 40%%"
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-            <field name="city" placeholder="%(city)s" style="width: 57%%"
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+            <field name="zip" placeholder="%(zip)s" style="width: 40%%"/>
+            <field name="city" placeholder="%(city)s" style="width: 57%%"/>
             <br/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s"
-                   options='{"no_open": true}'
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
         </div>
     """,
     '%(city)s\n%(state_name)s\n%(zip)s': """
         <div class="address_format">
             <field name="city" placeholder="%(city)s"/>
-            <field name="state_id" class="oe_no_button" placeholder="%(state)s"
-                   options='{"no_open": true}'
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-            <field name="zip" placeholder="%(zip)s"
-                   attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+            <field name="state_id" class="oe_no_button" placeholder="%(state)s" options='{"no_open": true}'/>
+            <field name="zip" placeholder="%(zip)s"/>
         </div>
     """
 }
@@ -76,9 +65,14 @@ class format_address(object):
         for k, v in ADDRESS_FORMAT_LAYOUTS.items():
             if k in fmt:
                 doc = etree.fromstring(arch)
+                view_has_field_use_parent_address = (
+                    doc.find('.//field[@name="use_parent_address"]') is not None)
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v % {'city': _('City'), 'zip': _('ZIP'), 'state': _('State')})
                     for childnode in tree.getchildren():
+                        if view_has_field_use_parent_address and childnode.tag == 'field':
+                            childnode.set(
+                                'attrs', "{'readonly': [('use_parent_address','=',True)]}")
                         modifiers = {}
                         orm.transfer_node_to_modifiers(childnode, modifiers)
                         orm.transfer_modifiers_to_node(modifiers, childnode)
