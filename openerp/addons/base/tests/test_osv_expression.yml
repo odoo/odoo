@@ -378,7 +378,6 @@
 
         # set manually a bank  to the default company.
         self.pool['res.partner.bank'].write(cr, uid, bank_ids1, {'company_id': default_company.id})
-
         # one2many towards same model
         res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])]) # any company having a child of company3 as child
         res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])]) # any company having the first child of company3 as child
@@ -387,8 +386,8 @@
         res_4 = self.search(cr, uid, [('bank_ids', 'in', [default_company.bank_ids[0].id])]) # companies having first currency of main company
         res_5 = self.search(cr, uid, [('bank_ids', 'in', default_company.bank_ids[0].id)]) # companies having first currency of main company
         # res_6 = self.search(cr, uid, [('bank_ids', 'in', [default_company.currency_ids[0].name])]) # TODO
-        res_7 = self.search(cr, uid, [('bank_ids', '=', default_company.bank_ids[0].name)])
-        res_8 = self.search(cr, uid, [('bank_ids', 'like', default_company.bank_ids[0].name)])
+        res_7 = self.search(cr, uid, [('bank_ids', '=', default_company.bank_ids[0].acc_number)])
+        res_8 = self.search(cr, uid, [('bank_ids', 'like', default_company.bank_ids[0].acc_number)])
 
         res_9 = self.search(cr, uid, [('bank_ids', 'like', 'probably_unexisting_name')])
         # self.search(cr, uid, [('bank_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception

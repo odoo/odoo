@@ -43,11 +43,6 @@ class account_invoice(models.Model):
         },
     }
 
-    # @api.model
-    # def create(self, vals):
-    #     inv = super(account_invoice, self).create(vals)
-    #     inv.compute_taxes();
-
     @api.one
     @api.depends('invoice_line.price_subtotal', 'tax_line.amount', 'currency_id', 'company_id')
     def _compute_amount(self):
@@ -1075,84 +1070,23 @@ class account_invoice(models.Model):
     @api.v8
     def pay_and_reconcile(self, pay_amount, pay_account_id, date, pay_journal_id,
                           writeoff_acc_id, writeoff_journal_id, name=''):
-        # TODO check if we can use different period for payment and the writeoff line
         assert len(self) == 1, "Can only pay one invoice at a time."
-        # Take the seq as name for move
-        SIGN = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
-        direction = SIGN[self.type]
-        # take the chosen date
-        date = self._context.get('date_p') or fields.Date.context_today(self)
-
-        # Take the amount in currency and the currency of the payment
-        if self._context.get('amount_currency') and self._context.get('currency_id'):
-            amount_currency = self._context['amount_currency']
-            currency_id = self._context['currency_id']
-        else:
-            amount_currency = False
-            currency_id = False
 
         if self.type in ('in_invoice', 'in_refund'):
             ref = self.reference
         else:
             ref = self.number
-        partner = self.partner_id._find_accounting_partner(self.partner_id)
-        name = name or self.invoice_line.name or self.number
-        # Pay attention to the sign for both debit/credit AND amount_currency
-        l1 = {
-            'name': name,
-            'debit': direction * pay_amount > 0 and direction * pay_amount,
-            'credit': direction * pay_amount < 0 and -direction * pay_amount,
-            'account_id': self.account_id.id,
-            'partner_id': partner.id,
-            'ref': ref,
-            'date': date,
-            'currency_id': currency_id,
-            'amount_currency': direction * (amount_currency or 0.0),
-            'company_id': self.company_id.id,
-        }
-        l2 = {
-            'name': name,
-            'debit': direction * pay_amount < 0 and -direction * pay_amount,
-            'credit': direction * pay_amount > 0 and direction * pay_amount,
-            'account_id': pay_account_id,
-            'partner_id': partner.id,
-            'ref': ref,
-            'date': date,
-            'currency_id': currency_id,
-            'amount_currency': -direction * (amount_currency or 0.0),
-            'company_id': self.company_id.id,
-        }
-        move = self.env['account.move'].create({
-            'ref': ref,
-            'line_id': [(0, 0, l1), (0, 0, l2)],
+
+        pay_wizard = self.env['account.register.payment'].create({
+            'invoice_id': self.id,
+            'payment_amount': pay_amount,
+            'date_paid': date,
+            'reference': ref,
             'journal_id': pay_journal_id,
-            'date': date,
-        })
-        move_ids = (move | self.move_id).ids
-        self._cr.execute("SELECT id FROM account_move_line WHERE move_id IN %s",
-                         (tuple(move_ids),))
-        lines = self.env['account.move.line'].browse([r[0] for r in self._cr.fetchall()])
-        lines2rec = lines.browse()
-        total = 0.0
-        for line in itertools.chain(lines, self.payment_ids):
-            if line.account_id == self.account_id:
-                lines2rec += line
-                total += (line.debit or 0.0) - (line.credit or 0.0)
-
-        inv_id, name = self.name_get()[0]
-        if not round(total, self.company_id.currency_id.decimal_places) or writeoff_acc_id:
-            lines2rec.reconcile(self.env['account.account'].browse(writeoff_acc_id), self.env['account.journal'].browse(writeoff_journal_id))
-        else:
-            code = self.currency_id.symbol
-            # TODO: use currency's formatting function
-            msg = _("Invoice partially paid: %s%s of %s%s (%s%s remaining).") % \
-                    (pay_amount, code, self.amount_total, code, total, code)
-            self.message_post(body=msg)
-            #TODO check if this method is really needed, seems to only be used in test and data files
-            # lines2rec.reconcile()
-
-        # Update the stored value (fields.function), so we write to trigger recompute
-        return self.write({})
+            'payment_difference': 'open',
+            'writeoff_account': writeoff_acc_id,
+            })
+        pay_wizard.pay()
 
     @api.v7
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, date, pay_journal_id,
