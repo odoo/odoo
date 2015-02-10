@@ -1,101 +1,109 @@
 <?xml version="1.0"  encoding="utf-8"?>
 <openerp>
-	<data >
+    <data >
 
-		<record id="account_fiscal_position_template_rrif_domairpartneri0" model="account.fiscal.position.template">
-			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-			<field name="name">R1 partneri</field>
-		</record>
+        <record id="account_fiscal_position_template_rrif_domairpartneri0" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+            <field name="name">R1 partneri</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" ref="base.hr"/>
+            <field name="sequence">10</field>
+        </record>
 
-		<record id="account_fiscal_position_template_rrif_2" model="account.fiscal.position.template">
-			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-			<field name="name">R2 partneri</field>
-		</record>
+        <record id="account_fiscal_position_template_rrif_2" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" ref="base.hr"/>
+            <field name="sequence">10</field>
+            <field name="name">R2 partneri</field>
+        </record>
 
-		<record id="account_fiscal_position_template_rrif_3" model="account.fiscal.position.template">
-			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-			<field name="name">EU Inozemni</field>
-			<field name="auto_apply" eval="True"/>
+        <record id="account_fiscal_position_template_rrif_3" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+            <field name="name">EU Inozemni</field>
+            <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
             <field name="sequence">20</field>
-		</record>
+        </record>
 
-		<record id="account_fiscal_position_template_rrif_4" model="account.fiscal.position.template">
-			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-			<field name="name">Inozemni</field>
-			<field name="auto_apply" eval="True"/>
+        <record id="account_fiscal_position_template_rrif_4" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+            <field name="name">Inozemni</field>
+            <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="False"/>
             <field name="country_id" eval="False"/>
             <field name="country_group_id" eval="False"/>
             <field name="sequence">30</field>
-		</record>
+        </record>
 
-		<record id="account_fiscal_position_template_rrif_5" model="account.fiscal.position.template">
+        <record id="account_fiscal_position_template_rrif_5" model="account.fiscal.position.template">
             <field name="name">nacionalna</field>
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="False"/>
             <field name="country_id" ref="base.hr"/>
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-		</record>
+        </record>
 
 
        <!-- R2 Partneri -->
-		
-		<record id="account_fiscal_position_tax_template_rrif_3" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
-			<field name="tax_src_id" ref="rrif_pp_25"/>
-			<field name="tax_dest_id" ref="rrif_ppr2_25"/> 
-		</record>
+    
+        <record id="account_fiscal_position_tax_template_rrif_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
+            <field name="tax_src_id" ref="rrif_pp_25"/>
+            <field name="tax_dest_id" ref="rrif_ppr2_25"/>
+        </record>
 
-		<record id="account_fiscal_position_tax_template_rrif_3" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
-			<field name="tax_src_id" ref="rrif_pp_25usl"/>
-			<field name="tax_dest_id" ref="rrif_ppr2_25"/>
-		</record>
+        <record id="account_fiscal_position_tax_template_rrif_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
+            <field name="tax_src_id" ref="rrif_pp_25usl"/>
+            <field name="tax_dest_id" ref="rrif_ppr2_25"/>
+        </record>
 
-		<record id="account_fiscal_position_account_template_rrif_1" model="account.fiscal.position.account.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
-			<field name="account_dest_id" ref="kp_rrif2220"/>
-			<field name="account_src_id" ref="kp_rrif2200"/>
-		</record>
+        <record id="account_fiscal_position_account_template_rrif_1" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_2"/>
+            <field name="account_dest_id" ref="kp_rrif2220"/>
+            <field name="account_src_id" ref="kp_rrif2200"/>
+        </record>
 
 
        <!-- INO Partneri -->
 
-		<record id="account_fiscal_position_account_template_rrif_2" model="account.fiscal.position.account.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="account_dest_id" ref="kp_rrif1210"/>
-			<field name="account_src_id" ref="kp_rrif1200"/>
-		</record>
-		<record id="account_fiscal_position_account_template_rrif_3" model="account.fiscal.position.account.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="account_dest_id" ref="kp_rrif2210"/>
-			<field name="account_src_id" ref="kp_rrif2200"/>
-		</record>
+        <record id="account_fiscal_position_account_template_rrif_2" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="account_dest_id" ref="kp_rrif1210"/>
+            <field name="account_src_id" ref="kp_rrif1200"/>
+        </record>
+        <record id="account_fiscal_position_account_template_rrif_3" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="account_dest_id" ref="kp_rrif2210"/>
+            <field name="account_src_id" ref="kp_rrif2200"/>
+        </record>
 
-		<record id="account_fiscal_position_tax_template_rrif_4" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="tax_src_id" ref="rrif_pdv_25"/>
-			<field name="tax_dest_id" ref="rrif_pdv_osl_izvoz_0"/>
-		</record>
-		<record id="account_fiscal_position_tax_template_rrif_5" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="tax_src_id" ref="rrif_pdv_25usl"/>
-			<field name="tax_dest_id" ref="rrif_pdv_osl_izvoz_0"/>
-		</record>
-		
-		<record id="account_fiscal_position_tax_template_rrif_6" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="tax_src_id" ref="rrif_pp_25"/>
-			<field name="tax_dest_id" ref="rrif_pp_uvoz_0"/>
-		</record>
-		<record id="account_fiscal_position_tax_template_rrif_7" model="account.fiscal.position.tax.template">
-			<field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
-			<field name="tax_src_id" ref="rrif_pp_25usl"/>
-			<field name="tax_dest_id" ref="rrif_pp_uvoz_samopdv_25usl"/>
-		</record>
-		
-	</data>
+        <record id="account_fiscal_position_tax_template_rrif_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="tax_src_id" ref="rrif_pdv_25"/>
+            <field name="tax_dest_id" ref="rrif_pdv_osl_izvoz_0"/>
+        </record>
+        <record id="account_fiscal_position_tax_template_rrif_5" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="tax_src_id" ref="rrif_pdv_25usl"/>
+            <field name="tax_dest_id" ref="rrif_pdv_osl_izvoz_0"/>
+        </record>
+   
+        <record id="account_fiscal_position_tax_template_rrif_6" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="tax_src_id" ref="rrif_pp_25"/>
+            <field name="tax_dest_id" ref="rrif_pp_uvoz_0"/>
+        </record>
+        <record id="account_fiscal_position_tax_template_rrif_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="account_fiscal_position_template_rrif_3"/>
+            <field name="tax_src_id" ref="rrif_pp_25usl"/>
+            <field name="tax_dest_id" ref="rrif_pp_uvoz_samopdv_25usl"/>
+        </record>
+   
+    </data>
 </openerp>
