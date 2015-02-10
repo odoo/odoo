@@ -17,13 +17,31 @@
             <field name="name">Intra-EU B2B</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
             <field name="note">French VAT exemption according to articles 262 ter I (for products) and/or 283-2 (for services) of "CGI"</field>
+             <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+            <field name="sequence">20</field>
         </record>
 
         <record id="fiscal_position_template_import_export" model="account.fiscal.position.template">
             <field name="name">Import/Export + DOM-TOM</field>
             <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
             <field name="note">French VAT exemption according to articles 262 I of "CGI"</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" eval="False"/>
+            <field name="country_group_id" eval="False"/>
+            <field name="sequence">30</field>
         </record>
+
+        <record id="fiscal_position_template_national" model="account.fiscal.position.template">
+            <field name="name">Régime National</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="False"/>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
 
 
     <!-- = = = = = = = = = = = = = = = -->

@@ -15,7 +15,7 @@
 		<record id="account_fiscal_position_template_rrif_3" model="account.fiscal.position.template">
 			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
 			<field name="name">EU Inozemni</field>
-			<field name="auto-apply" eval="True"/>
+			<field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
             <field name="sequence">20</field>
@@ -24,7 +24,7 @@
 		<record id="account_fiscal_position_template_rrif_4" model="account.fiscal.position.template">
 			<field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
 			<field name="name">Inozemni</field>
-			<field name="auto-apply" eval="True"/>
+			<field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="False"/>
             <field name="country_id" eval="False"/>
             <field name="country_group_id" eval="False"/>
@@ -33,7 +33,7 @@
 
 		<record id="account_fiscal_position_template_rrif_5" model="account.fiscal.position.template">
             <field name="name">nacionalna</field>
-            <field name="auto-apply" eval="True"/>
+            <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="False"/>
             <field name="country_id" ref="base.hr"/>
             <field name="sequence">10</field>
