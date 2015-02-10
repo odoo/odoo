@@ -3,6 +3,7 @@ import itertools
 import logging
 import operator
 from odsreader import *
+import datetime
 
 try:
     import xlrd
@@ -134,30 +135,50 @@ class ir_import(orm.TransientModel):
         return fields
 
     def _read_import_file(self, record, options):
+        rows = []
         if record.file_type == 'text/csv':
             rows = self._read_csv(record, options)
         elif record.file_type == 'application/vnd.ms-excel' or record.file_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
             if xlrd is None:
                 raise UserError(_(" XLRD library not found. XLS/XLSX file would not import."))
             else:
-                rows = self._read_xls_xlsx(record)
+                rows = self._read_xls_xlsx(record, options)
         elif record.file_type == 'application/vnd.oasis.opendocument.spreadsheet':
-            rows = self._read_ods(record)
+            rows = self._read_ods(record, options)
         return rows
 
-    def _read_xls_xlsx(self, record):
+    def _read_xls_xlsx(self, record, options):
         book = xlrd.open_workbook(file_contents=record.file)
         bk = book.sheet_by_index(0)
-        dict_list = []
-        for row_index in xrange(0, bk.nrows):
-            keys = [bk.cell(row_index, col_index).value for col_index in xrange(bk.ncols)]
-            dict_list.append(keys)
-        return iter(dict_list)
+        keys = []
+        for row_index in range(0, bk.nrows):
+            keys.append([])
+            for col_index in range(bk.ncols):
+                if bk.cell_type(row_index, col_index) == 3:
+                    keys[-1].append(datetime.datetime(* \
+                        (xlrd.xldate_as_tuple(bk.cell_value(row_index, col_index), \
+                            book.datemode))).strftime('%Y-%m-%d %H:%M:%S'))
+                elif bk.cell_type(row_index, col_index) == 2:
+                    keys[-1].append(str(bk.cell_value(row_index, col_index)))
+                elif bk.cell_type(row_index, col_index) == 4:
+                    if bk.cell_value(row_index, col_index) == 1:
+                        keys[-1].append('True')
+                    elif bk.cell_value(row_index, col_index) == 0:
+                        keys[-1].append('False')
+                elif bk.cell_type(row_index, col_index) == 6:
+                    keys[-1].append("")
+                else:
+                    keys[-1].append(bk.cell_value(row_index, col_index))
+        encoding = options.get('encoding', 'utf-8')
+        dict_list = itertools.imap(lambda row: [item.decode(encoding) for item in row], keys)
+        return dict_list
 
-    def _read_ods(self, record):
+    def _read_ods(self, record, options):
         rows = odsreader(record.file)
-        dict_list = [row for row in rows]
-        return iter(dict_list)
+        keys = [row for row in rows]
+        encoding = options.get('encoding', 'utf-8')
+        dict_list = itertools.imap(lambda row: [item.decode(encoding) for item in row], keys)
+        return dict_list
 
     def _read_csv(self, record, options):
         """ Returns a CSV-parsed iterator of all empty lines in the file

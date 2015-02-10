@@ -219,6 +219,11 @@ var DataImport = Widget.extend({
 
     //- File & settings change section
     onfile_loaded: function () {
+        if (!(this.$('input.oe_import_file').val().split('.').pop() == "csv")) {
+            this.$el.find('.oe_import_toggled').children().nextAll().hide()
+        }else {
+            this.$el.find('.oe_import_toggled').children().nextAll().show()
+        }
         this.$('.oe_import_button, .oe_import_file_reload')
                 .prop('disabled', true);
         if (!this.$('input.oe_import_file').val()) { return; }
