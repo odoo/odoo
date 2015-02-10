@@ -752,7 +752,7 @@ class website_menu(osv.osv):
     _order = "sequence"
 
     # would be better to take a menu_id as argument
-    def get_tree(self, cr, uid, website_id, context=None):
+    def get_tree(self, cr, uid, website_id, menu_id=None, context=None):
         def make_tree(node):
             menu_node = dict(
                 id=node.id,
@@ -766,7 +766,10 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
+        if menu_id:
+            menu = self.browse(cr, uid, menu_id, context=context)
+        else:
+            menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):
