@@ -261,7 +261,9 @@ class ir_sequence(models.Model):
         if not self.use_date_range:
             return self._next_do()
         # date mode
-        dt = self.env.context.get('ir_sequence_date', fields.Date.today())
+        dt = fields.Date.today()
+        if self.env.context.get('ir_sequence_date'):
+            dt = self.env.context.get('ir_sequence_date')
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
