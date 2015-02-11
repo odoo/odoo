@@ -75,34 +75,36 @@ class account_analytic_line(models.Model):
                 return res
         return res
 
-
-    def _get_employee_product(self):
+    @api.model
+    def _get_employee_product(self, user_id=None):
         if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id  or self.env.uid)])
+            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id  or self.env.uid)])
             if emp and emp[0].product_id.id:
                 return emp[0].product_id.id
             else:
                 raise exceptions.ValidationError("This user or employee is not associated to a valid Product")
-
-    def _get_employee_unit(self):
+    @api.model
+    def _get_employee_unit(self, user_id=None):
         if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or self.env.uid)])
+            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id or self.env.uid)])
             if emp and emp[0].product_id.uom_id.id:
                 return emp[0].product_id.uom_id.id
             else:
                 raise exceptions.ValidationError("This user or employee is not associated to a valid Product Amount Type")    
 
-    def _get_general_account(self):
+    @api.model
+    def _get_general_account(self, user_id=None):
         if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or self.env.uid)])
+            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id or user_id or self.env.uid)])
             if emp and emp[0].product_id.categ_id.property_account_expense_categ.id:
                 return emp[0].product_id.categ_id.property_account_expense_categ.id
             else:
                 raise exceptions.ValidationError("This user or employee is not associated to a valid Product Financial Account")
 
-    def _get_analytic_journal(self):
+    @api.model
+    def _get_analytic_journal(self, user_id=None):
         if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or self.env.uid)])
+            emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or user_id or self.env.uid)])
             if emp and emp[0].journal_id.id:
                 return emp[0].journal_id.id
             else:
@@ -137,29 +139,39 @@ class account_analytic_line(models.Model):
                     raise exceptions.ValidationError("The employee " + emp[0].name + " is not associated to a valid Financial Account. Please define one for him or select another user.")
 
     @api.onchange('user_id')
-    @api.multi
-    def on_change_user_id(self):
+    def V8_on_change_user_id(self):
         if "hr_timesheet" in self.env.context:
-            emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or self.env.uid)])
-            if not emp:
-                model, action_id = self.env['ir.model.data'].get_object_reference('hr', 'open_view_employee_list_my')
-                msg = _("Employee is not created for this user. Please create one from configuration panel.")
-                raise exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
-            else:
-                self.journal_id = self._get_analytic_journal()
-                self.product_id = self._get_employee_product()
-                self.product_uom_id = self._get_employee_unit()
-                self.general_account_id = self._get_general_account()
+            new_values = self.on_change_user_id(self.user_id.id)
+            self.journal_id = new_values["value"]['journal_id']
+            self.product_id = new_values["value"]['product_id']
+            self.product_uom_id = new_values["value"]['uom_id']
+            self.general_account_id = new_values["value"]['general_account_id']
 
-                #For child modules still written in old API that call super and expect a return value:
-                return {
-                    "value":{
-                        'journal_id' : self.journal_id,
-                        'product_id' : self.product_id,
-                        'uom_id' : self.product_uom_id,
-                        'general_account_id' : self.general_account_id
+            # New API style
+            #     emp = self.env['hr.employee'].search([('user_id','=',self.user_id.id or self.env.uid)])
+            #     if not emp:
+            #         model, action_id = self.env['ir.model.data'].get_object_reference('hr', 'open_view_employee_list_my')
+            #         msg = _("Employee is not created for this user. Please create one from configuration panel.")
+            #         raise exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+            #     else:
+            #         self.journal_id = self._get_analytic_journal()
+            #         self.product_id = self._get_employee_product()
+            #         self.product_uom_id = self._get_employee_unit()
+            #         self.general_account_id = self._get_general_account()
+
+    def on_change_user_id(self, cr, uid, ids, user_id, context):
+        if "hr_timesheet" in context:
+            if not user_id:
+                return {}
+            else:
+                res = {"value": {
+                    'journal_id' : self._get_analytic_journal(cr,uid, user_id, context=context),
+                    'product_id' : self._get_employee_product(cr,uid, user_id, context=context),
+                    'uom_id' : self._get_employee_unit(cr,uid, user_id, context=context),
+                    'general_account_id' : self._get_general_account(cr,uid, user_id, context=context)
                     }
                 }
+                return res
 
     @api.onchange('date')
     def on_change_date(self):
