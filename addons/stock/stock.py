@@ -420,10 +420,12 @@ class stock_quant(osv.osv):
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
+        context=context or {}
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
-                'package_id': dest_package_id,
                 'reservation_id': False}
+        if not context.get('entire_pack'):
+            vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
     def quants_get_prefered_domain(self, cr, uid, location, product, qty, domain=None, prefered_domain_list=[], restrict_lot_id=False, restrict_partner_id=False, context=None):
@@ -1061,7 +1063,7 @@ class stock_picking(osv.osv):
                     'product_qty': 1.0,
                     'location_id': pack.location_id.id,
                     'location_dest_id': quants_suggested_locations[pack_quants[0]],
-                    'owner_id': picking.owner_id.id,
+                    'owner_id': pack.owner_id.id,
                 })
             #remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
@@ -2359,16 +2361,17 @@ class stock_move(osv.osv):
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain_list=prefered_domain_list,
                                                           restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                if ops.result_package_id.id:
-                    #if a result package is given, all quants go there
-                    quant_dest_package_id = ops.result_package_id.id
-                elif ops.product_id and ops.package_id:
-                    #if a package and a product is given, we will remove quants from the pack.
-                    quant_dest_package_id = False
+                if ops.product_id:
+                    #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
+                    quant_dest_package_id  = ops.result_package_id.id
+                    ctx = context
                 else:
-                    #otherwise we keep the current pack of the quant, which may mean None
-                    quant_dest_package_id = ops.package_id.id
-                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
+                    # When a pack is moved entirely, the quants should not be written anything for the destination package
+                    quant_dest_package_id = False
+                    ctx = context.copy()
+                    ctx['entire_pack'] = True
+                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=ctx)
+
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
@@ -3711,9 +3714,28 @@ class stock_package(osv.osv):
         """Returns packages from quants for store"""
         res = set()
         for quant in self.browse(cr, uid, ids, context=context):
-            if quant.package_id:
-                res.add(quant.package_id.id)
+            pack = quant.package_id
+            while pack:
+                res.add(pack.id)
+                pack = pack.parent_id
         return list(res)
+
+    def _get_package_info(self, cr, uid, ids, name, args, context=None):
+        quant_obj = self.pool.get("stock.quant")
+        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
+        for pack in self.browse(cr, uid, ids, context=context):
+            quants = quant_obj.search(cr, uid, [('package_id', 'child_of', pack.id)], context=context)
+            if quants:
+                quant = quant_obj.browse(cr, uid, quants[0], context=context)
+                res[pack.id]['location_id'] = quant.location_id.id
+                res[pack.id]['owner_id'] = quant.owner_id.id
+                res[pack.id]['company_id'] = quant.company_id.id
+            else:
+                res[pack.id]['location_id'] = False
+                res[pack.id]['owner_id'] = False
+                res[pack.id]['company_id'] = False
+        return res
 
     def _get_packages_to_relocate(self, cr, uid, ids, context=None):
         res = set()
@@ -3722,20 +3744,6 @@ class stock_package(osv.osv):
             if pack.parent_id:
                 res.add(pack.parent_id.id)
         return list(res)
-
-    def _get_package_info(self, cr, uid, ids, name, args, context=None):
-        default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = dict((res_id, {'location_id': False, 'company_id': default_company_id, 'owner_id': False}) for res_id in ids)
-        for pack in self.browse(cr, uid, ids, context=context):
-            if pack.quant_ids:
-                res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
-                res[pack.id]['owner_id'] = pack.quant_ids[0].owner_id and pack.quant_ids[0].owner_id.id or False
-                res[pack.id]['company_id'] = pack.quant_ids[0].company_id.id
-            elif pack.children_ids:
-                res[pack.id]['location_id'] = pack.children_ids[0].location_id and pack.children_ids[0].location_id.id or False
-                res[pack.id]['owner_id'] = pack.children_ids[0].owner_id and pack.children_ids[0].owner_id.id or False
-                res[pack.id]['company_id'] = pack.children_ids[0].company_id and pack.children_ids[0].company_id.id or False
-        return res
 
     _columns = {
         'name': fields.char('Package Reference', select=True, copy=False),

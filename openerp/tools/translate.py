@@ -169,7 +169,8 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr
+        # try, in order: cr, cursor, self.env.cr, self.cr,
+        # request.env.cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
@@ -179,6 +180,11 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
+        try:
+            from openerp.http import request
+            return request.env.cr, False
+        except RuntimeError:
+            pass
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -197,7 +203,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang')
+        # self.env.lang, self.localcontext.get('lang'), request.env.lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -212,6 +218,12 @@ class GettextAlias(object):
             if not lang:
                 if hasattr(s, 'localcontext'):
                     lang = s.localcontext.get('lang')
+            if not lang:
+                try:
+                    from openerp.http import request
+                    lang = request.env.lang
+                except RuntimeError:
+                    pass
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we

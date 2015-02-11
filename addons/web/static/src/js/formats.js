@@ -177,7 +177,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return value.format(date_format + ' ' + time_format);
         case 'date':
             if (typeof(value) == "string")
-                value = moment(instance.web.str_to_date(value.substring(0,10)));
+                value = moment(instance.web.auto_str_to_date(value));
             else {
                 value = moment(value);
             }

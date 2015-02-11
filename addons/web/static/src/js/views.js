@@ -841,6 +841,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
+            if (!controller.grouped && !_.isEmpty(groupby)){
+                self.dataset.set_sort([]);
+            }
             $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
                 self.active_search.resolve();
             });
