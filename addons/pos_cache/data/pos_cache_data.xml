@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.cron" id="refresh_pos_cache_cron">
+            <field name="name">Refresh POS Cache</field>
+            <field name="active" eval="False"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'pos.cache'"/>
+            <field name="function" eval="'refresh_all_caches'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+    </data>
+</odoo>
