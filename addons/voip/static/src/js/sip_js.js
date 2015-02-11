@@ -221,7 +221,6 @@ openerp.voip = function(openerp) {
             var self = this;
             if(self.session){
                 self.session.refer(number);
-                self.stop_automatic_call();
             }
         },
     });
