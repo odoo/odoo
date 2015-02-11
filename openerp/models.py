@@ -5623,10 +5623,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
+            names = [f.name for f in field.computed_fields if f.store]
             for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
                 try:
                     values = rec._convert_to_write({
-                        f.name: rec[f.name] for f in field.computed_fields
+                        name: rec[name] for name in names
                     })
                     rec1._write(values)
                 except MissingError:
