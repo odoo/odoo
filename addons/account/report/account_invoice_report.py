@@ -160,17 +160,8 @@ class account_invoice_report(osv.osv):
                      WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                         THEN - ai.residual
                         ELSE ai.residual
-                    END / CASE
-                           WHEN (( SELECT count(l.id) AS count
-                                   FROM account_invoice_line l
-                                   LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                   WHERE a.id = ai.id)) <> 0
-                               THEN ( SELECT count(l.id) AS count
-                                      FROM account_invoice_line l
-                                      LEFT JOIN account_invoice a ON a.id = l.invoice_id
-                                      WHERE a.id = ai.id)
-                               ELSE 1::bigint
-                          END::numeric AS residual
+                    END / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    count(*) AS residual
         """
         return select_str
 

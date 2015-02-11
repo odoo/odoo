@@ -650,7 +650,7 @@ openerp.web.list_editable = function (instance) {
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$el.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible') && !field.get('effective_readonly'); })
                 .last()
                 .value();
             // tabbed from last field in form
