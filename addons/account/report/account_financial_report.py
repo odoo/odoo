@@ -144,7 +144,7 @@ class account_financial_report_line(models.Model):
                                    'Type of the figure', default='float', required=True)
     green_on_positive = fields.Boolean('Is growth good when positive', default=True)
     level = fields.Integer(required=True)
-    special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year')])
+    special_date_changer = fields.Selection([('from_beginning', 'From the beginning'), ('to_beginning_of_fy', 'At the beginning of the Year'), ('normal', 'Use given dates')], default='normal')
     show_domain = fields.Selection([('always', 'Always'), ('never', 'Never'), ('foldable', 'Foldable')], default='foldable')
 
     @api.model
@@ -271,15 +271,22 @@ class account_financial_report_line(models.Model):
 
     @api.multi
     def get_lines(self, financial_report, context):
-
-        #build comparison table
-        comparison_table = context.get_periods()
         final_result_table = []
+        comparison_table = context.get_periods()
+        #build comparison table
+
         for line in self:
+            line_comparison_table = comparison_table
+            if line.special_date_changer == 'from_beginning':
+                line_comparison_table = [(False, k[1]) for k in comparison_table]
+            if line.special_date_changer == 'to_begining_of_fy':
+                for period in line_comparison_table:
+                    date_to = datetime.strptime(period[1], "%Y-%m-%d")
+                    period[1] = date_to.strftime('%Y-01-01')
             res = []
             debit_credit = len(comparison_table) == 1
             domain_ids = {'line'}
-            for period in comparison_table:
+            for period in line_comparison_table:
                 r = line.with_context(date_from=period[0], date_to=period[1]).eval_formula(financial_report, debit_credit, context)
                 debit_credit = False
                 res.append(r)
