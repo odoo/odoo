@@ -22,4 +22,3 @@
 
 import project_issue
 import report
-import res_config

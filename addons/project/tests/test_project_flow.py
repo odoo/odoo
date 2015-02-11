@@ -75,25 +75,12 @@ class TestProjectFlow(TestProjectBase):
 
     def test_project_process_project_manager_state(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
-        pigs.set_pending()
-        self.assertEqual(pigs.state, 'pending')
-        # Re-open
-        pigs.set_open()
-        self.assertEqual(pigs.state, 'open')
-        # Close project
-        pigs.set_done()
-        self.assertEqual(pigs.state, 'close')
-        # Re-open
-        pigs.set_open()
         # Re-convert into a template and schedule tasks
         pigs.set_template()
         pigs.schedule_tasks()
         # Copy the project
         new_project = pigs.copy()
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
-        # Cancel the project
-        pigs.set_cancel()
-        self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
 
     @mute_logger('openerp.addons.mail.mail_thread')
     def test_task_process(self):
