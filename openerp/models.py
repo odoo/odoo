@@ -5782,6 +5782,8 @@ class BaseModel(object):
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
+            if name == 'id':
+                continue
             value = record[name]
             field = self._fields[name]
             if field.type == 'many2one' and field.delegate and not value:
