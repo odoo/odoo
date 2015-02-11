@@ -667,9 +667,8 @@ class account_bank_statement_line(models.Model):
 
                 counterpart_move_line = aml_dict.pop('move_line')
                 if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
-                    print "here we are"
                     aml_dict['currency_id'] = counterpart_move_line.currency_id.id
-                    aml_dict['amount_currency'] = statement_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
+                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.create(aml_dict, check=False)
                 (new_aml | counterpart_move_line).reconcile()
 
