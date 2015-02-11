@@ -381,7 +381,7 @@
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
           <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
       </h4>
-      <h4 class="css_editable_mode_display" style="display: none;">
+      <h4 class="css_non_editable_mode_hidden">
         <span t-field="product.lst_price"
             t-field-options='{
                "widget": "monetary",
