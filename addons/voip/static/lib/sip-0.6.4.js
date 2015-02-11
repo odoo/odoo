@@ -1,5 +1,5 @@
 /*
- * SIP version 0.6.3
+ * SIP version 0.6.4
  * Copyright (c) 2014-2014 Junction Networks, Inc <http://www.onsip.com>
  * Homepage: http://sipjs.com
  * License: http://sipjs.com/license/
@@ -37,7 +37,7 @@ module.exports={
   "name": "sip.js",
   "title": "SIP.js",
   "description": "A simple, intuitive, and powerful JavaScript signaling library",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "main": "src/SIP.js",
   "homepage": "http://sipjs.com",
   "author": "Will Mitchell <will@onsip.com>",
@@ -2445,12 +2445,8 @@ module.exports = function(SIP) {
  * as to most easily track when particular hacks may not be necessary anymore.
  */
 
-module.exports = function (window) {
-
-var Hacks;
-
-Hacks = {
-
+module.exports = function (SIP) {
+var Hacks = {
   AllBrowsers: {
     maskDtls: function (message) {
       if (message.body) {
@@ -2476,12 +2472,6 @@ Hacks = {
     /* Condition to detect if hacks are applicable */
     isFirefox: function () {
       return window.mozRTCPeerConnection !== undefined;
-    },
-
-    cannotHandleRelayCandidates: function (message) {
-      if (this.isFirefox() && message.body) {
-        message.body = message.body.replace(/relay/g, 'host generation 0');
-      }
     },
 
     cannotHandleExtraWhitespace: function (message) {
@@ -2516,7 +2506,7 @@ Hacks = {
           if (mlines[i].toString().search(/i=.*/) >= 0) {
             insertAt = sdp.indexOf(mlines[i].toString())+mlines[i].toString().length;
             if (sdp.substr(insertAt,2)!=='c=') {
-              sdp = sdp.substr(0,insertAt) + '\r\nc=IN IP 4 0.0.0.0' + sdp.substr(insertAt);
+              sdp = sdp.substr(0,insertAt) + '\r\nc=IN IP4 0.0.0.0' + sdp.substr(insertAt);
             }
 
           // else add the C line if it's missing
@@ -2527,6 +2517,19 @@ Hacks = {
         }
       }
       return sdp;
+    },
+
+    hasIncompatibleCLineWithSomeSIPEndpoints: function(sdp) {
+      /*
+       * Firefox appears to be following https://tools.ietf.org/html/rfc5245#section-9.1.1.1
+       * and using a c line IP address of 0.0.0.0. This is completely valid, however it is
+       * causing some endpoints (such as FreeSWITCH) to interpret the SDP as being on hold
+       * https://freeswitch.org/jira/browse/FS-6955. To get around this issue we pull the
+       * replace the c line with 1.1.1.1 which SIP clients do not interpret as hold.
+       * This makes the other endpoint believe that the call is not on hold and audio flows
+       * because ICE determines the media pathway (not the c line).
+       */
+      return sdp.replace(/(0\.0\.0\.0)/gmi, SIP.Utils.getRandomTestNetIP());
     }
   },
 
@@ -2554,9 +2557,9 @@ Hacks = {
   }
 };
 
-
 return Hacks;
 };
+
 
 },{}],11:[function(_dereq_,module,exports){
 
@@ -3623,7 +3626,7 @@ module.exports = (function(window) {
   var WebRTCMediaStreamManager = _dereq_('./WebRTC/MediaStreamManager.js')(SIP);
   SIP.WebRTC = _dereq_('./WebRTC.js')(SIP.Utils, window, WebRTCMediaHandler, WebRTCMediaStreamManager);
   _dereq_('./UA.js')(SIP, window);
-  SIP.Hacks = _dereq_('./Hacks.js')(window);
+  SIP.Hacks = _dereq_('./Hacks.js')(SIP);
   _dereq_('./SanityCheck.js')(SIP);
   SIP.DigestAuthentication = _dereq_('./DigestAuthentication.js')(SIP.Utils);
   SIP.Grammar = _dereq_('./Grammar/dist/Grammar')(SIP);
@@ -5507,7 +5510,6 @@ InviteServerContext = function(ua, request) {
   }
 
   //TODO: move this into media handler
-  SIP.Hacks.Firefox.cannotHandleRelayCandidates(request);
   SIP.Hacks.Firefox.cannotHandleExtraWhitespace(request);
   SIP.Hacks.AllBrowsers.maskDtls(request);
 
@@ -5805,7 +5807,7 @@ InviteServerContext.prototype = {
    */
   accept: function(options) {
     options = options || {};
-
+    options = SIP.Utils.desugarSessionOptions(options);
     SIP.Utils.optionsOverride(options, 'media', 'mediaConstraints', true, this.logger, this.ua.configuration.media);
     this.mediaHint = options.media;
 
@@ -5983,7 +5985,6 @@ InviteServerContext.prototype = {
         if (!this.hasAnswer) {
           if(request.body && request.getHeader('content-type') === 'application/sdp') {
             // ACK contains answer to an INVITE w/o SDP negotiation
-            SIP.Hacks.Firefox.cannotHandleRelayCandidates(request);
             SIP.Hacks.Firefox.cannotHandleExtraWhitespace(request);
             SIP.Hacks.AllBrowsers.maskDtls(request);
 
@@ -6353,7 +6354,6 @@ InviteClientContext.prototype = {
             return;
           }
 
-          SIP.Hacks.Firefox.cannotHandleRelayCandidates(response);
           SIP.Hacks.Firefox.cannotHandleExtraWhitespace(response);
           SIP.Hacks.AllBrowsers.maskDtls(response);
 
@@ -6480,7 +6480,6 @@ InviteClientContext.prototype = {
           break;
         }
 
-        SIP.Hacks.Firefox.cannotHandleRelayCandidates(response);
         SIP.Hacks.Firefox.cannotHandleExtraWhitespace(response);
         SIP.Hacks.AllBrowsers.maskDtls(response);
 
@@ -7985,8 +7984,6 @@ Transport.prototype = {
     if(this.ws && this.ws.readyState === window.WebSocket.OPEN) {
       if (this.ua.configuration.traceSip === true) {
         this.logger.log('sending WebSocket message:\n\n' + message + '\n');
-        // console.log('MESSAGE: ['+message+']');
-        // if (message.indexOf('ice-ufrag') > -1) { debugger; }
       }
       this.ws.send(message);
       return true;
@@ -8488,6 +8485,7 @@ UA.prototype.isConnected = function() {
  */
 UA.prototype.invite = function(target, options) {
   options = options || {};
+  options = SIP.Utils.desugarSessionOptions(options);
   SIP.Utils.optionsOverride(options, 'media', 'mediaConstraints', true, this.logger);
 
   var context = new SIP.InviteClientContext(this, target, options);
@@ -9134,6 +9132,7 @@ UA.prototype.loadConfig = function(configuration) {
       // Hacks
       hackViaTcp: false,
       hackIpInContact: false,
+      hackWssInTransport: false,
 
       //autostarting
       autostart: true,
@@ -9183,14 +9182,19 @@ UA.prototype.loadConfig = function(configuration) {
 
   SIP.Utils.optionsOverride(configuration, 'rel100', 'reliable', true, this.logger, SIP.C.supported.UNSUPPORTED);
 
+  var emptyArraysAllowed = ['stunServers', 'turnServers'];
+
   // Check Optional parameters
   for(parameter in UA.configuration_check.optional) {
     aliasUnderscored(parameter, this.logger);
     if(configuration.hasOwnProperty(parameter)) {
       value = configuration[parameter];
 
-      // If the parameter value is null, empty string,undefined, or empty array then apply its default value.
-      if(value === null || value === "" || value === undefined || (value instanceof Array && value.length === 0)) { continue; }
+      // If the parameter value is an empty array, but shouldn't be, apply its default value.
+      if (value instanceof Array && value.length === 0 && emptyArraysAllowed.indexOf(parameter) < 0) { continue; }
+
+      // If the parameter value is null, empty string, or undefined then apply its default value.
+      if(value === null || value === "" || value === undefined) { continue; }
       // If it's a number with NaN value then also apply its default value.
       // NOTE: JS does not allow "value === NaN", the following does the work:
       else if(typeof(value) === 'number' && isNaN(value)) { continue; }
@@ -9256,7 +9260,7 @@ UA.prototype.loadConfig = function(configuration) {
   this.contact = {
     pub_gruu: null,
     temp_gruu: null,
-    uri: new SIP.URI('sip', SIP.Utils.createRandomToken(8), settings.viaHost, null, {transport: 'ws'}),
+    uri: new SIP.URI('sip', SIP.Utils.createRandomToken(8), settings.viaHost, null, {transport: ((settings.hackWssInTransport)?'wss':'ws')}),
     toString: function(options){
       options = options || {};
 
@@ -9266,7 +9270,7 @@ UA.prototype.loadConfig = function(configuration) {
         contact = '<';
 
       if (anonymous) {
-        contact += (this.temp_gruu || 'sip:anonymous@anonymous.invalid;transport=ws').toString();
+        contact += (this.temp_gruu || ('sip:anonymous@anonymous.invalid;transport='+(settings.hackWssInTransport)?'wss':'ws')).toString();
       } else {
         contact += (this.pub_gruu || this.uri).toString();
       }
@@ -9336,6 +9340,7 @@ UA.configuration_skeleton = (function() {
       "displayName",
       "hackViaTcp", // false.
       "hackIpInContact", //false
+      "hackWssInTransport", //false
       "instanceId",
       "noAnswerTimeout", // 30 seconds.
       "password",
@@ -9507,6 +9512,12 @@ UA.configuration_check = {
     hackIpInContact: function(hackIpInContact) {
       if (typeof hackIpInContact === 'boolean') {
         return hackIpInContact;
+      }
+    },
+
+    hackWssInTransport: function(hackWssInTransport) {
+      if (typeof hackWssInTransport === 'boolean') {
+        return hackWssInTransport;
       }
     },
 
@@ -9914,6 +9925,7 @@ SIP.URI = URI;
 };
 
 },{}],30:[function(_dereq_,module,exports){
+(function (global){
 /**
  * @fileoverview Utils
  */
@@ -9948,6 +9960,25 @@ Utils= {
     }
 
     options[winner] = options[winner] || options[loser] || defaultValue;
+  },
+
+  desugarSessionOptions: function desugarSessionOptions (options) {
+    if (global.HTMLMediaElement && options instanceof global.HTMLMediaElement) {
+      options = {
+        media: {
+          constraints: {
+            audio: true,
+            video: options.tagName === 'VIDEO'
+          },
+          render: {
+            remote: {
+              video: options
+            }
+          }
+        }
+      };
+    }
+    return options;
   },
 
   str_utf8_length: function(string) {
@@ -10378,6 +10409,7 @@ Utils= {
 SIP.Utils = Utils;
 };
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],31:[function(_dereq_,module,exports){
 /**
  * @fileoverview WebRTC
@@ -10437,6 +10469,7 @@ var MediaHandler = function(session, options) {
     'userMedia',
     'userMediaFailed',
     'iceGathering',
+    'iceCandidate',
     'iceComplete',
     'iceFailed',
     'getDescription',
@@ -10474,7 +10507,9 @@ var MediaHandler = function(session, options) {
   /* Change 'url' to 'urls' whenever this issue is solved:
    * https://code.google.com/p/webrtc/issues/detail?id=2096
    */
-  servers.push({'url': stunServers});
+  [].concat(stunServers).forEach(function (server) {
+    servers.push({'url': server});
+  });
 
   length = turnServers.length;
   for (idx = 0; idx < length; idx++) {
@@ -10499,6 +10534,7 @@ var MediaHandler = function(session, options) {
   };
 
   this.peerConnection.onicecandidate = function(e) {
+    self.emit('iceCandidate', e);
     if (e.candidate) {
       self.logger.log('ICE candidate received: '+ (e.candidate.candidate === null ? null : e.candidate.candidate.trim()));
     } else if (self.onIceCompleted !== undefined) {
@@ -10676,9 +10712,6 @@ MediaHandler.prototype = Object.create(SIP.MediaHandler.prototype, {
     this.emit('setDescription', rawDescription);
 
     var description = new SIP.WebRTC.RTCSessionDescription(rawDescription);
-    console.log("DESCRIPTION");
-    console.log(description);
-    console.log(description.sdp);
     this.peerConnection.setRemoteDescription(description, onSuccess, onFailure);
   }},
 
@@ -10836,6 +10869,7 @@ MediaHandler.prototype = Object.create(SIP.MediaHandler.prototype, {
 
       sdp = SIP.Hacks.Chrome.needsExplicitlyInactiveSDP(sdp);
       sdp = SIP.Hacks.AllBrowsers.unmaskDtls(sdp);
+      sdp = SIP.Hacks.Firefox.hasIncompatibleCLineWithSomeSIPEndpoints(sdp);
 
       var sdpWrapper = {
         type: methodName === 'createOffer' ? 'offer' : 'answer',
