@@ -187,6 +187,8 @@ openerp.web_timeline = function (session) {
                 'show_read_unread_button': true,
                 'show_link': true,
                 'show_compose_message': true,
+                'show_compact_message': false,
+                'compose_as_todo': false,
                 'emails_from_on_composer': false,
                 'fetch_limit': 30,
                 'followers_limit': 10,
@@ -208,10 +210,22 @@ openerp.web_timeline = function (session) {
         },
 
         load_timeline: function (fields_view_get) {
+            var self = this;
+
             this.fields_view = fields_view_get;
             this.fields_keys = _.keys(this.fields_view.fields);
     
             this.add_qweb_template();
+
+            if (this.options.$buttons) {
+                this.$buttons = $(QWeb.render("TimelineView.buttons", {'widget': this}));
+                this.$buttons.appendTo(this.options.$buttons);
+                this.$buttons
+                    .on('click', 'button.oe_timeline_button_new', this.on_compose_message)
+                    .on('click', '.oe_timeline_share', function(event) {
+                        self.write_to_followers(event, self);
+                    });
+            } 
 
             this.has_been_loaded.resolve();
         },
@@ -290,11 +304,29 @@ openerp.web_timeline = function (session) {
 
         set_message_ids: function (val) {
             this.options.message_ids = val;
+        },
+
+        on_compose_message: function (event) {
+            event.preventDefault();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {},
+            };
+            session.client.action_manager.do_action(action);
+        },
+
+        write_to_followers: function (event, view) {
+            view.root.instantiate_write_to_followers(event);
         }
     });
 
     openerp.web_timeline.MailRoot = session.web.Widget.extend({
-        className: 'oe_timeline container-fluid',
+        className: 'oe_timeline',
 
         init: function (parent, dataset, options) {
             this._super(parent, dataset);
@@ -348,6 +380,17 @@ openerp.web_timeline = function (session) {
             else {
                 this.thread.message_fetch(null, null, this.options.message_ids, 'default');
             }
+        },
+
+        instantiate_write_to_followers: function (event) {
+            if (this.thread) {
+                var self = this;
+                return this.thread.on_compose_message(event)
+                    .then(function () {
+                        self.$('.oe_tl_msg_composer').addClass('oe_tl_write_to_followers');
+                    });
+            }
+            return false;
         },
     });
     
@@ -406,8 +449,8 @@ openerp.web_timeline = function (session) {
         
         on_compose_message: function (event) {
             this.instantiate_compose_message();
-            this.compose_message.on_toggle_quick_composer(event);
-            return false;
+            return this.compose_message.on_toggle_quick_composer(event);
+            //return false;
         },
 
         /**
@@ -544,7 +587,6 @@ openerp.web_timeline = function (session) {
          * older and newer message to insert the message (before, after).
          * If there are no older or newer, the message is prepend or append to
          * the thread (parent object or on root thread for flat view).
-         * The sort is define by the thread_level (O for newer on top).
          * @param : {object} ThreadMessage object
          */
         insert_message: function (message, prepend_to, dom_insert_before, prepend) {
@@ -780,7 +822,7 @@ openerp.web_timeline = function (session) {
                 author.push(parsed_email[0], parsed_email[1]);
             }
             return author;
-        },            
+        },  
 
         /** 
          * Upload the file on the server, add in the attachments list and reload display
@@ -1226,7 +1268,7 @@ openerp.web_timeline = function (session) {
                 'subject': false,
                 'parent_id': this.parent_id || this.id,
                 'partner_ids': partner_ids,
-                'attachment_ids': _.map(this.attachment_ids, function (file) { return file.id; }),
+                'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'context': _.extend(this.parent_thread.context, {
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
@@ -1353,11 +1395,10 @@ openerp.web_timeline = function (session) {
         bindTooltipTo: function ($el, value) {
             $el.tooltip({
                 'title': value,
-                'placement': 'top',
-                'container': this.el,
+                'placement': 'right',
                 'html': true,
                 'trigger': 'manual',
-                'animation': false
+                'animation': false,
             }).on("mouseleave", function () {
                 setTimeout(function () {
                     if (!$(".tooltip:hover").length) {

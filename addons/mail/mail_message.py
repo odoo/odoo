@@ -21,6 +21,7 @@
 
 import logging
 from operator import methodcaller
+import pdb
 
 from openerp import tools
 
@@ -693,6 +694,7 @@ class mail_message(osv.Model):
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
         limit = limit or self._message_read_limit
+        thread_level = 0
 
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
@@ -703,7 +705,13 @@ class mail_message(osv.Model):
 
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
+            #if mode == 'parent':
+            #    ids = self.search(cr, uid, domain + [('parent_id', '=', False)], context=context, limit=limit)
+            #    ids += self.search(cr, uid, domain + [('parent_id', 'in', ids)], context=context)
+            #else:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
+
+        print "ids = ", ids
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
@@ -739,6 +747,9 @@ class mail_message(osv.Model):
         parent_list = parent_tree.items()
         parent_list = sorted(parent_list, key=lambda item: max([msg.get('date') for msg in item[1]]) if item[1] else item[0], reverse=True)
 
+        print "parent_list = ", parent_list
+        #pdb.set_trace();
+
         message_list = [message for (key, msg_list) in parent_list for message in msg_list]
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
 
@@ -771,12 +782,12 @@ class mail_message(osv.Model):
                 message_list[i]['last_author_avatar'] = msg_last_author_avatar[i]
                 message_list[i]['nb_messages'] = message_unread_nb[i]
 
-            return message_list
-            
-        if mode == 'child':                                                                 
-            # get the child expandable messages for the tree
-            self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
-                thread_level=1, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+        elif mode == 'child':
+            thread_level = 1
+                                                                             
+        # get the child expandable messages for the tree
+        self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree, thread_level=thread_level,
+            message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
 
         return message_list
 
