@@ -509,7 +509,7 @@ class account_bank_statement_line(models.Model):
         elif st_line_currency == company_currency:
             amount = self.amount_currency
         else:
-            amount = st_line_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
+            amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency)
 
         if statement_currency != company_currency:
             amount_currency = self.amount
@@ -531,7 +531,7 @@ class account_bank_statement_line(models.Model):
             'debit': amount > 0 and amount or 0.0,
             'statement_id': self.statement_id.id,
             'journal_id': self.statement_id.journal_id.id,
-            'currency_id': st_line_currency != company_currency and st_line_currency.id or statement_currency.id or False,
+            'currency_id': statement_currency != company_currency and statement_currency.id or (st_line_currency != company_currency and st_line_currency.id or False),
             'amount_currency': amount_currency,
         }
 
@@ -621,13 +621,14 @@ class account_bank_statement_line(models.Model):
             # Create the move line for the statement line
             for aml_rec in payment_aml_rec: # Deduce already reconciled amount
                 aml_amount = aml_rec.debit - aml_rec.credit
-                aml_currency = aml_rec.currency_id or company_currency
                 if aml_rec.currency_id != st_line_currency:
                     aml_amount = aml_rec.currency_id.with_context({'date': self.date}).compute(aml_amount)
                 st_line_amount -= aml_amount
             st_line_move_line_vals = self._prepare_move_line(move, st_line_amount)
             aml_obj.create(st_line_move_line_vals, check=False)
 
+            ctx = self._context.copy()
+            ctx['date'] = self.date
             # Complete dicts to create both counterpart move lines and write-offs
             for aml_dict in (counterpart_aml_dicts + new_aml_dicts):
                 aml_dict['ref'] = move_name
@@ -638,8 +639,6 @@ class account_bank_statement_line(models.Model):
                 aml_dict['company_id'] = self.company_id.id
                 aml_dict['statement_id'] = self.statement_id.id
                 if st_line_currency.id != company_currency.id:
-                    ctx = self._context.copy()
-                    ctx['date'] = self.date
                     aml_dict['amount_currency'] = aml_dict['debit'] - aml_dict['credit']
                     aml_dict['currency_id'] = st_line_currency.id
                     if self.currency_id and statement_currency.id == company_currency.id and st_line_currency_rate:
@@ -667,8 +666,12 @@ class account_bank_statement_line(models.Model):
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
 
                 counterpart_move_line = aml_dict.pop('move_line')
+                if counterpart_move_line.currency_id and counterpart_move_line.currency_id != company_currency and not aml_dict.get('currency_id'):
+                    print "here we are"
+                    aml_dict['currency_id'] = counterpart_move_line.currency_id.id
+                    aml_dict['amount_currency'] = statement_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], counterpart_move_line.currency_id)
                 new_aml = aml_obj.create(aml_dict, check=False)
-                (new_aml|counterpart_move_line).reconcile()
+                (new_aml | counterpart_move_line).reconcile()
 
             # Complete dicts and create write-offs
             for aml_dict in new_aml_dicts:
