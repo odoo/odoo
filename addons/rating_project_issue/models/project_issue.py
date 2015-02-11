@@ -94,3 +94,23 @@ class Project(models.Model):
         domain = [('rating', '!=', -1)] + domain # prepend the condition to avoid empty rating
         return dict(action, domain=domain)
 
+
+
+class Rating(models.Model):
+
+    _inherit = "rating.rating"
+
+    @api.model
+    def apply_rating(self, rate, res_model=None, res_id=None, token=None):
+        """ check if the auto_validation_kanban_state is activated. If so, apply the modification of the
+            kanban state according to the given rating.
+        """
+        rating = super(Rating, self).apply_rating(rate, res_model, res_id, token)
+        if rating.res_model == 'project.issue':
+            issue = self.env[rating.res_model].sudo().browse(rating.res_id)
+            if issue.stage_id.auto_validation_kanban_state:
+                if rating.rating > 5:
+                    issue.write({'kanban_state' : 'done'})
+                else:
+                    issue.write({'kanban_state' : 'blocked'})
+        return rating

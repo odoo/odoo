@@ -11,6 +11,10 @@ class ProjectTaskType(models.Model):
         string='Rating Email Template',
         domain=[('model', '=', 'rating.rating')],
         help="Select an email template. An email will be sent to the customer when the task reach this step.")
+    auto_validation_kanban_state = fields.Boolean('Auto Kanban state validation', default=False,
+        help="Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+            " * A great feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+            " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
 class Task(models.Model):
 
@@ -68,3 +72,24 @@ class Project(models.Model):
     def action_view_all_rating(self):
         """ return the action to see all the rating about the all sort of activity of the project (tasks, issues, ...) """
         return self.action_view_task_rating()
+
+
+
+class Rating(models.Model):
+
+    _inherit = "rating.rating"
+
+    @api.model
+    def apply_rating(self, rate, res_model=None, res_id=None, token=None):
+        """ check if the auto_validation_kanban_state is activated. If so, apply the modification of the
+            kanban state according to the given rating.
+        """
+        rating = super(Rating, self).apply_rating(rate, res_model, res_id, token)
+        if rating.res_model == 'project.task':
+            task = self.env[rating.res_model].sudo().browse(rating.res_id)
+            if task.stage_id.auto_validation_kanban_state:
+                if rating.rating > 5:
+                    task.write({'kanban_state' : 'done'})
+                else:
+                    task.write({'kanban_state' : 'blocked'})
+        return rating

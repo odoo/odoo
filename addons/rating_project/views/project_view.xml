@@ -28,7 +28,8 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sequence']" position="after">
-                     <field name="rating_template_id"/>
+                    <field name="rating_template_id"/>
+                    <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}"/>
                 </xpath>
             </field>
         </record>
