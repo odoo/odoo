@@ -124,9 +124,9 @@ class calendar_attendee(osv.Model):
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return datetime.strptime(idate.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT).replace(tzinfo=pytz.timezone('UTC'))
+                    return openerp.fields.Date.from_string(idate)
                 else:
-                    return datetime.strptime(idate.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT).replace(tzinfo=pytz.timezone('UTC'))
+                    return openerp.fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -893,12 +893,12 @@ class calendar_event(osv.Model):
                 stop_date = values.get('stop_date') or event.stop_date
                 start_date = values.get('start_date') or event.start_date
                 if stop_date and start_date:
-                    diff = datetime.strptime(stop_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(start_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+                    diff = openerp.fields.Date.from_string(stop_date) - openerp.fields.Date.from_string(start_date)
             elif values.get('stop_datetime') or values.get('start_datetime'):
                 stop_datetime = values.get('stop_datetime') or event.stop_datetime
                 start_datetime = values.get('start_datetime') or event.start_datetime
                 if stop_datetime and start_datetime:
-                    diff = datetime.strptime(stop_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(start_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+                    diff = openerp.fields.Datetime.from_string(stop_datetime) - openerp.fields.Datetime.from_string(start_datetime)
             if diff:
                 duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
                 values['duration'] = round(duration, 2)
@@ -1020,7 +1020,7 @@ class calendar_event(osv.Model):
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
 
             if starttime:
-                start = datetime.strptime(starttime.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+                start = openerp.fields.Datetime.from_string(starttime)
                 startdate = tz.localize(start)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
@@ -1441,7 +1441,7 @@ class calendar_event(osv.Model):
 
     def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
         #Function used only in calendar_event_data.xml for email template
-        date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+        date = openerp.fields.Datetime.from_string(date)
 
         if tz:
             timezone = pytz.timezone(tz or 'UTC')
