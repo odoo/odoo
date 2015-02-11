@@ -464,8 +464,10 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
 # HTML/Text management
 #----------------------------------------------------------
 
-def html2plaintext(html, body_id=None, encoding='utf-8'):
+def html2plaintext(html, body_id=None, encoding='utf-8', keep_inline_style=True):
     """ From an HTML text, convert the HTML to plain text.
+    If @param keep_inline_style is provided then it will preserve the
+    marks for <b>, <i>, <u> for reverse HTML conversion in the resulted plaintext.
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
     """
@@ -493,17 +495,24 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             link.text = '%s [%s]' % (link.text, i)
             url_index.append(url)
 
+    for ol in tree.xpath('//ol'):
+        for i, li in enumerate(ol.findall('li')):
+            li.text = "{}. {}".format(i + 1, li.text if li.text else '')
+    for li in tree.xpath('//ul/li'):
+        li.text = "{} {}".format("*", li.text if li.text else '')
     html = ustr(etree.tostring(tree, encoding=encoding))
     # \r char is converted into &#13;, must remove it
     html = html.replace('&#13;', '')
 
-    html = html.replace('<strong>', '*').replace('</strong>', '*')
-    html = html.replace('<b>', '*').replace('</b>', '*')
-    html = html.replace('<h3>', '*').replace('</h3>', '*')
-    html = html.replace('<h2>', '**').replace('</h2>', '**')
-    html = html.replace('<h1>', '**').replace('</h1>', '**')
-    html = html.replace('<em>', '/').replace('</em>', '/')
-    html = html.replace('<tr>', '\n')
+    if keep_inline_style:
+        html = html.replace('<strong>', '*').replace('</strong>', '*')
+        html = html.replace('<b>', '*').replace('</b>', '*')
+        html = html.replace('<h3>', '*').replace('</h3>', '*')
+        html = html.replace('<h2>', '**').replace('</h2>', '**')
+        html = html.replace('<h1>', '**').replace('</h1>', '**')
+        html = html.replace('<em>', '/').replace('</em>', '/')
+        html = html.replace('<tr>', '\n')
+    html = html.replace('</li>', '\n')
     html = html.replace('</p>', '\n')
     html = re.sub('<br\s*/?>', '\n', html)
     html = re.sub('<.*?>', ' ', html)
