@@ -49,5 +49,5 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
         'l10n_in_wizard.xml',
     ],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

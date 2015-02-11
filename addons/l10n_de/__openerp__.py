@@ -145,5 +145,5 @@ German accounting chart and localization.
         'account_tax_fiscal_position_skr04.xml',
         'l10n_de_wizard.xml',
     ],
-    'installable': True,
+    'installable': False,
 }

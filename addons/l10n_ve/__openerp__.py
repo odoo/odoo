@@ -70,5 +70,5 @@ but you will need set manually account defaults for taxes.
              'data/l10n_chart_ve_wizard.xml'
     ],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

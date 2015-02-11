@@ -40,5 +40,5 @@ Accounting chart and localization for Ecuador.
         'l10n_chart_ec_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

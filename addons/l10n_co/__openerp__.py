@@ -43,5 +43,5 @@
         'wizard/account_wizard.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

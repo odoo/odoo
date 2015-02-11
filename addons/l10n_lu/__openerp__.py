@@ -53,6 +53,6 @@ This is the base module to manage the accounting chart for Luxembourg.
     ],
     'test': [],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

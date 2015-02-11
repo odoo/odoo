@@ -49,6 +49,6 @@ Italian accounting chart and localization.
         'l10n_chart_it_generic.xml',
         ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

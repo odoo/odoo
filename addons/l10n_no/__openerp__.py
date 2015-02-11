@@ -30,5 +30,5 @@
     "data" : ["account_chart.xml",
                     'account_tax.xml','l10n_chart_no_wizard.xml'],
     "active": False,
-    "installable": True
+    "installable": False
 }

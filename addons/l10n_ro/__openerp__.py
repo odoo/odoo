@@ -41,5 +41,5 @@ Romanian accounting chart and localization.
               'fiscal_position_template.xml',
               'l10n_chart_ro_wizard.xml',
               ],
-    "installable": True,
+    "installable": False,
 }

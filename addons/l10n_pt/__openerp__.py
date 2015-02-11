@@ -42,5 +42,5 @@
                    'l10n_chart_pt_wizard.xml',
                    ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

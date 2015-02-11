@@ -33,5 +33,5 @@ Thai accounting chart and localization.
     'website': 'http://almacom.co.th/',
     'depends': ['account_chart'],
     'data': [ 'account_data.xml' ],
-    'installable': True,
+    'installable': False,
 }

@@ -53,6 +53,6 @@ This is the latest Ethiopian OpenERP localization and consists of:
     ],
     'demo': [
     ],
-    'installable': True,
+    'installable': False,
     'active': False,
 }

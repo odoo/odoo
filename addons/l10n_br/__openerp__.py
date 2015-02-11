@@ -71,5 +71,5 @@ come with any additional paid permission for online use of 'private modules'.
                 'account_view.xml',
                 'l10n_br_wizard.xml',
     ],
-    'installable': True,
+    'installable': False,
 }

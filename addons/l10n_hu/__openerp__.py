@@ -47,6 +47,6 @@ This module consists :
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

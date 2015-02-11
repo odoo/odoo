@@ -64,6 +64,6 @@ please go to http://translations.launchpad.net/openerp-costa-rica.
         'l10n_wizard.xml',
     ],
     'license': 'Other OSI approved licence',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
 }

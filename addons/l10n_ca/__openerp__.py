@@ -72,5 +72,5 @@ position.
         'l10n_ca_wizard.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

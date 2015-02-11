@@ -52,5 +52,5 @@ and the Lempira currency.""",
         'l10n_hn_base.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }

@@ -40,5 +40,5 @@ SUNAT 2011 (PCGE 2010).
     ],
     'demo': [],
     'active': False,
-    'installable': True,
+    'installable': False,
 }

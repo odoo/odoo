@@ -44,5 +44,5 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
     ],
     'demo': [],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

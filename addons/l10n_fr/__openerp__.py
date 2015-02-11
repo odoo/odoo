@@ -72,5 +72,5 @@ configuration of their taxes and fiscal positions manually.
     'test': ['test/l10n_fr_report.yml'],
     'demo': [],
     'auto_install': False,
-    'installable': True,
+    'installable': False,
 }

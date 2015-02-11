@@ -52,5 +52,5 @@ taxes and the Quetzal currency.""",
         'l10n_gt_base.xml',
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }
