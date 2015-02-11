@@ -1541,6 +1541,7 @@ openerp.web_timeline = function (session) {
              'click .oe_read':'on_message_read',
              'click .oe_unread':'on_message_unread',
              'click .oe_reply':'on_message_reply',
+             'click .oe_tl_go_to_doc':'on_record_clicked',
              'mouseenter .oe_follwrs':'on_display_followers',
         },
 
@@ -1634,6 +1635,29 @@ openerp.web_timeline = function (session) {
                 });
             }
         }, 
+
+        on_record_clicked: function (event) {
+            event.preventDefault();
+
+            var self = this;
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+
+            session.webclient.action_manager.do_push_state(state);
+
+            this.context.params = {
+                model: this.model,
+                res_id: this.res_id,
+            };
+
+            this.thread.ds_thread.call("message_redirect_action", {context: this.context})
+                .then(function(action){
+                    self.do_action(action); 
+                });
+        },
     });
 
     openerp.web_timeline.ThreadExpendable = openerp.web_timeline.ThreadMessageCommon.extend({

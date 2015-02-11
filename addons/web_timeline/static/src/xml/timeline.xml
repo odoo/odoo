@@ -208,8 +208,7 @@
     </span> <!-- *** date *** -->
 
     <div class="oe_tl_parent_message">
-        <div t-attf-class="oe_tl_msg_icons" 
-         t-if="!widget.options.readonly"> 
+        <div class="oe_tl_msg_icons" t-if="!widget.options.readonly"> 
             <span class='oe_read' t-if="widget.options.show_read">
                 <i title="Done" class="fa fa-check"/>
             </span>
@@ -217,7 +216,8 @@
                 <i title="Set back to Todo" class="fa fa-inbox"/>
             </span>
         </div>
-        <span class="oe_tl_parent_subject default">
+        <span t-attf-class="oe_tl_parent_subject default 
+                            #{widget.model and widget.res_id and widget.options.show_link ? 'oe_tl_small_subject' : ''}">
             <span class="oe_tl_subject">
                 <t t-if="widget.record_name and widget.subject">
                     <t t-raw="widget.record_name"/> : <t t-raw="widget.subject"/>
@@ -233,6 +233,11 @@
                 </t>
             </span>
             (<span class="oe_tl_nb_unread_msg"><t t-raw="widget.nb_messages"/></span>)
+        </span>
+        <span class="oe_tl_go_to_doc" t-if="widget.res_id and widget.model and widget.options.show_link">
+            <a t-attf-href="#action=mail.action_mail_redirect&amp;model=#{widget.model}&amp;res_id=#{widget.res_id}">
+                <i class="fa fa-arrow-circle-right" title="Go to document"></i>
+            </a>
         </span>
         <span class="oe_tl_parent_avatar">
             <a t-if="widget.options.show_link" 

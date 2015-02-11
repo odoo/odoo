@@ -83,12 +83,20 @@
             vertical-align: middle;
         }
 
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject {
+            width: 490px;
+        }
+
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_subject {
             display: inline-block;
             max-width: 495px;
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject.oe_tl_small_subject .oe_tl_subject {
+            max-width: 460px;
         }
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_message .oe_tl_parent_subject .oe_tl_nb_unread_msg {
@@ -132,6 +140,31 @@
             border-radius: 2px;
         }
 
+        /* go to doc */
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i  {
+            text-decoration: none;
+            color: #AAA;
+            font-size: 1.2em;
+            padding-top: 1px;
+            cursor: pointer;
+            /*text-shadow: 0px 1px blue,0px -1px green, -1px 0px red, 1px 0px black, 0px 3px 3px rgba(0,0,0,0.1);*/
+            -webkit-transition: all 0.2s linear;
+               -moz-transition: all 0.2s linear;
+                 -o-transition: all 0.2s linear;
+                    transition: all 0.2s linear;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i:hover {
+            font-size: 1.5em;
+        }
+
         /* followers */
 
         .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_parent_followers {
@@ -152,6 +185,18 @@
                -moz-transition: all 0.2s linear;
                  -o-transition: all 0.2s linear;
                     transition: all 0.2s linear;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc {
+            margin-left: 10px;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i {
+            font-size: 1.2em;
+        }
+
+        .openerp .oe_timeline .oe_tl_thread_parent .oe_tl_go_to_doc i:hover {
+            font-size: 1.3em;
         }
 
         /* icons */
