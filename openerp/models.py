@@ -2862,10 +2862,15 @@ class BaseModel(object):
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
             for name, field in parent._fields.iteritems():
+                # inherited fields are implemented as related fields, with the
+                # following specific properties:
+                #  - reading inherited fields should not bypass access rights
+                #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
                     related=(parent_field, name),
                     related_sudo=False,
+                    copy=field.copy,
                 )
 
         # add inherited fields that are not redefined locally
