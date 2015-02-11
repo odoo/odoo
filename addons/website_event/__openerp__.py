@@ -6,7 +6,6 @@
     'sequence': 135,
     'summary': 'Schedule, Promote and Sell Events',
     'website': 'https://www.odoo.com/page/website-builder',
-    'version': '1.0',
     'description': """
 Online Events
         """,
@@ -18,10 +17,8 @@ Online Events
         'security/ir.model.access.csv',
         'security/website_event_security.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/website_event_demo.xml'
     ],
-    'installable': True,
     'application': True,
 }
