@@ -410,7 +410,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.$('.oe_searchview_unfold_drawer')
             .toggleClass('fa-caret-down', !this.visible_filters)
             .toggleClass('fa-caret-up', this.visible_filters);
-        return this.alive($.when(this._super(), load_view.then(this.view_loaded.bind(this))));
+        return this.alive($.when(this._super(), this.alive(load_view).then(this.view_loaded.bind(this))));
     },
     view_loaded: function (r) {
         var self = this;
