@@ -328,7 +328,7 @@ class sale_order(osv.osv):
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'], context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
