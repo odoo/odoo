@@ -67,9 +67,7 @@ class account_bank_statement(models.Model):
         if vals.get('name', '/') == '/':
             journal_id = vals.get('journal_id', self._context.get('default_journal_id', False))
             journal = self.env['account.journal'].browse(journal_id)
-            context = self._context
-            context['ir_sequence_date'] = vals.get('date')
-            vals['name'] = journal.sequence_id.with_context(context).next_by_id()
+            vals['name'] = journal.sequence_id.with_context(ir_sequence_date=vals.get('date')).next_by_id()
         return super(account_bank_statement, self).create(vals)
 
     @api.multi
