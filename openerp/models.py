@@ -188,7 +188,7 @@ def get_pg_type(f, type_override=None):
     elif issubclass(field_type, (fields.char, fields.reference)):
         pg_type = ('varchar', pg_varchar(f.size))
     elif issubclass(field_type, fields.selection):
-        if (isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
+        if (f.selection and isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
                 or getattr(f, 'size', None) == -1:
             pg_type = ('int4', 'INTEGER')
         else:
@@ -2504,7 +2504,7 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size and (f.size is None or f_pg_size < f.size):
+                            if f_pg_type == 'varchar' and f._type in ('char', 'selection') and f_pg_size and (f.size is None or f_pg_size < f.size):
                                 try:
                                     with cr.savepoint():
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))

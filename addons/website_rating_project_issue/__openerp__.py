@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import time
-from openerp.report import report_sxw
-
-class code_barcode(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(code_barcode, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-        })
-report_sxw.report_sxw('report.mrp.code.barcode', 'mrp_operations.operation.code', 'addons/mrp_operations/report/mrp_code_barcode.rml',parser=code_barcode,header=False)
+{
+    'name': 'Website Rating Project Issue',
+    'version': '0.1',
+    'category': 'Website',
+    'complexity': 'easy',
+    'description': """
+This module display project customer satisfaction on your website.
+==================================================================================================
+    """,
+    'author': 'Odoo SA',
+    'depends': [
+        'website_project_issue',
+        'rating_project_issue'
+    ],
+    'data': [
+        'views/website_rating_project.xml'
+    ],
+    'installable': True,
+}

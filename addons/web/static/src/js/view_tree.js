@@ -145,7 +145,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, context).toJSON()) {
+            if (py.PY_isTrue(py.evaluate(expression, context))) {
                 return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
@@ -258,11 +258,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
 
     do_show: function () {
         this.$el.show();
+        this._super();
     },
 
     do_hide: function () {
         this.$el.hide();
         this.hidden = true;
+        this._super();
     }
 });
 })();

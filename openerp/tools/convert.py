@@ -342,6 +342,10 @@ form: module.record_id""" % (xml_id,)
                     group_id = self.id_get(cr, group)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
+        if rec.get('paperformat'):
+            pf_name = rec.get('paperformat')
+            pf_id = self.id_get(cr,pf_name)
+            res['paperformat_id'] = pf_id
 
         id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
@@ -349,12 +353,13 @@ form: module.record_id""" % (xml_id,)
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             value = 'ir.actions.report.xml,'+str(id)
-            replace = rec.get('replace', True)
-            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+            ir_values_id = self.pool['ir.values'].set_action(cr, self.uid, res['name'], keyword, res['model'], value)
+            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': ir_values_id})
         elif self.mode=='update' and eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
             self._remove_ir_values(cr, res['name'], value, res['model'])
+            self.pool['ir.actions.report.xml'].write(cr, self.uid, id, {'ir_values_id': False})
         return id
 
     def _tag_function(self, cr, rec, data_node=None, mode=None):

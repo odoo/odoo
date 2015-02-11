@@ -37,6 +37,9 @@ body {
 }
 
 .documentwrapper {
+  .make-md-column(12);
+}
+.with-sidebar .documentwrapper {
   .make-md-column(9);
 }
 .sphinxsidebar {
@@ -403,8 +406,12 @@ div.section > h2 {
   margin-top: 0;
 }
 // ~docs-section
-.body > .section > .section {
-  margin-bottom: 60px;
+.body {
+  // otherwise main section right column content may not be visible
+  position: relative;
+  > .section > .section {
+    margin-bottom: 60px;
+  }
 }
 
 .literal:extend(code) {}

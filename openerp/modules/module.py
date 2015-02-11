@@ -31,6 +31,7 @@ import re
 import sys
 import time
 import unittest
+import threading
 from os.path import join as opj
 
 import unittest2
@@ -461,6 +462,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     global current_test
     current_test = module_name
     mods = get_test_modules(module_name)
+    threading.currentThread().testing = True
     r = True
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
@@ -478,6 +480,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
 
     current_test = None
+    threading.currentThread().testing = False
     return r
 
 def unwrap_suite(test):

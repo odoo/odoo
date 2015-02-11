@@ -61,6 +61,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
             <field name="search_view_id" ref="view_report_event_registration_search"/>
+            <field name="context">{}</field>  <!-- force empty -->
         </record>
 
         <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="50" groups="event.group_event_manager" name="Events"/>

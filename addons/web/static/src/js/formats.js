@@ -390,4 +390,9 @@ instance.web.normalize_format_table = {
 };
 var _normalize_format_cache = {};
 
+instance.web.float_is_zero = function(value, decimals){
+    epsilon = Math.pow(10, -decimals);
+    return Math.abs(instance.web.round_precision(value, epsilon)) < epsilon;
+};
+
 })();

@@ -40,6 +40,7 @@ class account_invoice(models.Model):
         'state': {
             'account.mt_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj.state == 'paid' and obj.type in ('out_invoice', 'out_refund'),
             'account.mt_invoice_validated': lambda self, cr, uid, obj, ctx=None: obj.state == 'open' and obj.type in ('out_invoice', 'out_refund'),
+            'account.mt_invoice_created': lambda self, cr, uid, obj, ctx=None: obj.state == 'draft' and obj.type in ('out_invoice', 'out_refund'),
         },
     }
 
@@ -298,6 +299,10 @@ class account_invoice(models.Model):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    @api.model
+    def create(self, vals):
+        return super(account_invoice, self.with_context(mail_create_nolog = True)).create(vals)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):

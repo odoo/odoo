@@ -220,7 +220,7 @@ class account_voucher(models.Model):
             elif voucher.journal_id.sequence_id:
                 if not voucher.journal_id.sequence_id.active:
                     raise UserError(_('Please activate the sequence of selected journal !'))
-                name = voucher.journal_id.sequence_id.next_by_id()
+                name = voucher.journal_id.sequence_id.with_context(ir_sequence_date=voucher.date).next_by_id()
             else:
                 raise UserError(_('Please define a sequence on the journal.'))
             ref = voucher.reference or name

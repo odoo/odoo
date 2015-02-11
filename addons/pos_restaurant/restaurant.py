@@ -31,16 +31,21 @@ _logger = logging.getLogger(__name__)
 class restaurant_floor(osv.osv):
     _name = 'restaurant.floor'
     _columns = {
-        'name':             fields.char('Floor Name', size=32, required=True, help='An internal identification of the restaurant floor'),
+        'name':             fields.char('Floor Name', required=True, help='An internal identification of the restaurant floor'),
         'pos_config_id':    fields.many2one('pos.config','Point of Sale'),
         'background_image': fields.binary('Background Image', help='A background image used to display a floor layout in the point of sale interface'),  
+        'background_color': fields.char('Background Color', help='The background color of the floor layout, (must be specified in a html-compatible format)'),
         'table_ids':        fields.one2many('restaurant.table','floor_id','Tables', help='The list of tables in this floor'),
         'sequence':         fields.integer('Sequence',help='Used to sort Floors'),
     }
 
     _defaults = {
         'sequence': 1,
+        'background_color': 'rgb(210, 210, 210)',
     }
+
+    def set_background_color(self, cr, uid, id, background, context=None):
+        self.write(cr, uid, [id], {'background_color': background}, context=context)
 
 class restaurant_table(osv.osv):
     _name = 'restaurant.table'
@@ -48,17 +53,19 @@ class restaurant_table(osv.osv):
         'name':         fields.char('Table Name', size=32, required=True, help='An internal identification of a table'),
         'floor_id':     fields.many2one('restaurant.floor','Floor'),
         'shape':        fields.selection([('square','Square'),('round','Round')],'Shape', required=True),
-        'position_h':   fields.float('Horizontal Position', help="The table's horizontal position from the left side to the table's center, in percentage of the floor's width"),
-        'position_v':   fields.float('Vertical Position', help="The table's vertical position from the top to the table's center, in percentage of the floor's height"),
-        'width':        fields.float('Width', help="The table's width in percentage of the floor's width"),
-        'height':       fields.float('Height', help="The table's height in percentage of the floor's height"),
-        'color':        fields.char('Color', size=32, help="The table's color"),
+        'position_h':   fields.float('Horizontal Position', help="The table's horizontal position from the left side to the table's center, in pixels"),
+        'position_v':   fields.float('Vertical Position', help="The table's vertical position from the top to the table's center, in pixels"),
+        'width':        fields.float('Width',   help="The table's width in pixels"),
+        'height':       fields.float('Height',  help="The table's height in pixels"),
+        'seats':        fields.integer('Seats', help="The default number of customer served at this table."),
+        'color':        fields.char('Color',    help="The table's color, expressed as a valid 'background' CSS property value"),
         'active':       fields.boolean('Active',help='If false, the table is deactivated and will not be available in the point of sale'),
         'pos_order_ids':fields.one2many('pos.order','table_id','Pos Orders', help='The orders served at this table'),
     }
 
     _defaults = {
         'shape': 'square',
+        'seats': 1,
         'position_h': 10,
         'position_v': 10,
         'height': 50,
@@ -116,4 +123,11 @@ class pos_order(osv.osv):
     _inherit = 'pos.order'
     _columns = {
         'table_id': fields.many2one('restaurant.table','Table', help='The table where this order was served'),
+        'customer_count' : fields.integer('Guests', help='The amount of customers that have been served by this order.'),
     }
+
+    def _order_fields(self, cr, uid, ui_order, context=None):
+        fields = super(pos_order,self)._order_fields(cr,uid,ui_order,context)
+        fields['table_id']       = ui_order.get('table_id',0)
+        fields['customer_count'] = ui_order.get('customer_count',0)
+        return fields

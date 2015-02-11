@@ -125,6 +125,9 @@ openerp.pos_restaurant.load_splitbill = function(instance, module){
                     neworder.saveChanges();
                 }
 
+                neworder.set_customer_count(1);
+                order.set_customer_count(order.get_customer_count() - 1);
+
                 this.pos.get('orders').add(neworder);
                 this.pos.set('selectedOrder',neworder);
             }

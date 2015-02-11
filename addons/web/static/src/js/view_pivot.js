@@ -87,7 +87,7 @@ instance.web.PivotView = instance.web.View.extend({
             self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
         });
 
-        var another_ctx = {fields: _.pairs(this.groupable_fields)};
+        var another_ctx = {fields: _.chain(this.groupable_fields).pairs().sortBy(function(f){return f[1].string;}).value()};
         this.$field_selection = this.$('.o-field-selection');
         this.$field_selection.html(QWeb.render('PivotView.FieldSelection', another_ctx));
         openerp.web.bus.on('click', self, function () {

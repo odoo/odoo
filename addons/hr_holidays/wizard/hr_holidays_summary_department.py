@@ -45,11 +45,7 @@ class hr_holidays_summary_dept(osv.osv_memory):
             raise UserError(_('You have to select at least one Department. And try again.'))
         datas = {
              'ids': [],
-             'model': 'ir.ui.menu',
+             'model': 'hr.department',
              'form': data
             }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'holidays.summary',
-            'datas': datas,
-            }
+        return self.pool['report'].get_action(cr, uid, data['depts'], 'hr_holidays.report_holidayssummary', data=datas, context=context)

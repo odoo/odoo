@@ -119,18 +119,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.widgets.length > 1) {
             widget = this.widgets[this.widgets.length - 2];
             var index = widget.view_stack && widget.view_stack.length - 1;
-            this.select_widget(widget, index);
+            return this.select_widget(widget, index);
         }
+        return $.Deferred().reject();
     },
     select_widget: function(widget, index) {
         var self = this;
         if (this.webclient.has_uncommitted_changes()) {
-            return false;
+            return $.Deferred().reject();
         }
         var widget_index = this.widgets.indexOf(widget),
             def = $.when(widget.select_view && widget.select_view(index));
 
-        def.done(function () {
+        return def.done(function () {
             if (widget.__on_reverse_breadcrumb) {
                 widget.__on_reverse_breadcrumb();
             }
@@ -445,7 +446,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
-            if ((next = new ClientWidget(this, action))) {
+            if ((next = ClientWidget(this, action))) {
                 return this.do_action(next, options);
             }
             return $.when();
@@ -630,6 +631,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 action : self.action,
                 action_views_ids : views_ids,
             }, self.flags, self.flags[view.type], view.options);
+            view.$container = self.$(".oe-view-manager-view-" + view.type);
             // show options.$buttons as views will put their $buttons inside it
             // and call show/hide on them
             view.options.$buttons.show();
@@ -743,7 +745,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             options.initial_mode = 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options),
-            $container = this.$(".oe-view-manager-view-" + view.type + ":first");
+            $container = view.$container;
 
         $container.hide();
         view.controller = controller;

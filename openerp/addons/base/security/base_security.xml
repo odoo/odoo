@@ -50,6 +50,7 @@
                 multicompany setups.
             -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="active" eval="False"/>
         </record>
 
         <record model="ir.rule" id="res_partner_portal_public_rule">

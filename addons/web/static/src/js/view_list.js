@@ -182,7 +182,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 pair = this.fonts[i];
                 var font = pair[0];
                 expression = pair[1];
-                if (py.evaluate(expression, context).toJSON()) {
+                if (py.PY_isTrue(py.evaluate(expression, context))) {
                     switch(font) {
                     case 'bold':
                         style += 'font-weight: bold;';
@@ -203,7 +203,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             pair = this.colors[i];
             var color = pair[0];
             expression = pair[1];
-            if (py.evaluate(expression, context).toJSON()) {
+            if (py.PY_isTrue(py.evaluate(expression, context))) {
                 return style += 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
@@ -2230,7 +2230,7 @@ instance.web.list.Column = instance.web.Class.extend({
         }
         if (attrs.invisible) { return ''; }
 
-        if (!row_data[this.id]) {
+        if (!(row_data[this.id] && row_data[this.id].value)) {
             return options.value_if_empty === undefined
                     ? ''
                     : options.value_if_empty;

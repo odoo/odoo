@@ -131,7 +131,6 @@
             <button class="input-button numpad-backspace">
                 <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
-            <br />
         </div>
     </t>
 
@@ -512,6 +511,11 @@
                             </tr>
                         </t>
                     </t>
+                    <t t-if='extradue'>
+                        <tr class='paymentline extra' t-att-data-cid='0'>
+                            <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(extradue)' /> </td>
+                        </tr>
+                    </t>
                 </tbody>
             </table>
         </t>
@@ -541,7 +545,6 @@
             <button class="input-button numpad-backspace" data-action='BACKSPACE' >
                 <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
             </button>
-            <br />
         </div>
     </t>
 
@@ -594,6 +597,11 @@
                                     <i class='fa fa-file-text-o' /> Invoice
                                 </div>
                             </t>
+                        </t>
+                        <t t-if='widget.pos.config.tip_product_id'>
+                            <div class='button js_tip'>
+                                <i class='fa fa-heart' /> Tip 
+                            </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_cashdrawer'>
@@ -667,6 +675,9 @@
                         <div>--------------------------------</div>
                         <div>Served by <t t-esc='receipt.cashier' /></div>
                     </div>
+                </t>
+                <t t-if='!receipt.customer_count'>
+                    <div>Guests: <t t-esc='receipt.customer_count' /></div>
                 </t>
             </div>
             <br /><br />
@@ -983,17 +994,29 @@
                     <button class="input-button number-char" data-action='1'>1</button>
                     <button class="input-button number-char" data-action='2'>2</button>
                     <button class="input-button number-char" data-action='3'>3</button>
-                    <button class="mode-button add" data-action='+10'>+10</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+1'>+1</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+10'>+10</button>
+                    </t>
                     <br />
                     <button class="input-button number-char" data-action='4'>4</button>
                     <button class="input-button number-char" data-action='5'>5</button>
                     <button class="input-button number-char" data-action='6'>6</button>
-                    <button class="mode-button add" data-action='+20'>+20</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+2'>+2</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+20'>+20</button>
+                    </t>
                     <br />
                     <button class="input-button number-char" data-action='7'>7</button>
                     <button class="input-button number-char" data-action='8'>8</button>
                     <button class="input-button number-char" data-action='9'>9</button>
-                    <button class="mode-button add" data-action='+50'>+50</button>
+                    <t t-if="widget.options.cheap">
+                        <button class="mode-button add" data-action='+5'>+5</button>
+                    </t><t t-if="!widget.options.cheap">
+                        <button class="mode-button add" data-action='+50'>+50</button>
+                    </t>
                     <br />
                     <button class="input-button numpad-char" data-action='CLEAR' >C</button>
                     <button class="input-button number-char" data-action='0'>0</button>
@@ -1004,11 +1027,11 @@
                     <br />
                 </div>
                 <div class="footer">
-                    <div class="button confirm">
-                        Ok
-                    </div>
                     <div class="button cancel">
                         Cancel 
+                    </div>
+                    <div class="button confirm">
+                        Ok
                     </div>
                 </div>
             </div>
@@ -1074,21 +1097,23 @@
         <div class="order-container">
             <div class="order-scroller touch-scrollable">
                 <div class="order">
-                    <ul class="orderlines">
-                        <t t-if="orderlines.length === 0">
-                            <li class="orderline empty">
-                                Your shopping cart is empty
-                            </li>
-                        </t>
-                    </ul>
-                    <div class="summary clearfix">
-                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
-                            <div class='entry total'>
-                                <span class="label">Total: </span> <span class="value">0.00 €</span>
-                                <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                    <t t-if="orderlines.length === 0" >
+                        <div class='order-empty'>
+                            <i class='fa fa-shopping-cart' />
+                            <h1>Your shopping cart is empty</h1>
+                        </div>
+                    </t>
+                    <t t-if="orderlines.length > 0">
+                        <ul class="orderlines"></ul>
+                        <div class="summary clearfix">
+                            <div class="line">
+                                <div class='entry total'>
+                                    <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                    <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </t>
                 </div>
             </div>
         </div>
@@ -1097,9 +1122,9 @@
 
 
     <t t-name="DebugWidget">
-        <div class="debug-widget">
+        <div class="debug-widget oe_hidden">
             <h1>Debug Window</h1>
-            <div class="toggle">▾</div>
+            <div class="toggle"><i class='fa fa-times' /></div>
             <div class="content">
                 <p class="category">Electronic Scale</p>
                 <ul>

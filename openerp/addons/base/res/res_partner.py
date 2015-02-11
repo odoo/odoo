@@ -657,14 +657,19 @@ class res_partner(osv.Model, format_address):
             query = """SELECT id
                          FROM res_partner
                       {where} ({email} {operator} {percent}
-                           OR {display_name} {operator} {percent})
-                     ORDER BY {display_name}
-                    """.format(where=where_str, operator=operator,
+                           OR {display_name} {operator} {percent}
+                           OR {reference} {operator} {percent})
+                           -- don't panic, trust postgres bitmap
+                     ORDER BY {display_name} {operator} {percent} desc,
+                              {display_name}
+                    """.format(where=where_str,
+                               operator=operator,
                                email=unaccent('email'),
                                display_name=unaccent('display_name'),
+                               reference=unaccent('ref'),
                                percent=unaccent('%s'))
 
-            where_clause_params += [search_name, search_name]
+            where_clause_params += [search_name]*4
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)

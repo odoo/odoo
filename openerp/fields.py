@@ -317,8 +317,9 @@ class Field(object):
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
-            # by default, related fields are not stored
+            # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
+            attrs['copy'] = attrs.get('copy', False)
 
         # fix for function fields overridden by regular columns
         if not isinstance(attrs.get('column'), (NoneType, fields.function)):

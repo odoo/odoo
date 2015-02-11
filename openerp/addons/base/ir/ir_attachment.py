@@ -264,10 +264,10 @@ class ir_attachment(osv.osv):
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
         mimetype = 'application/octet-stream'
-        if 'datas_fname' in values:
-            mimetype = mimetypes.guess_type(values.get('datas_fname'))[0]
-        if 'datas' in values:
-            mimetype = guess_mimetype(values.get('datas').decode('base64'))
+        if values.get('datas_fname'):
+            mimetype = mimetypes.guess_type(values['datas_fname'])[0]
+        if values.get('datas'):
+            mimetype = guess_mimetype(values['datas'].decode('base64'))
         return mimetype
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
@@ -362,7 +362,7 @@ class ir_attachment(osv.osv):
                 ima.check(cr, uid, model, mode)
             self.pool[model].check_access_rule(cr, uid, existing_ids, mode, context=context)
         if require_employee:
-            if not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
+            if not uid == SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_user'):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):

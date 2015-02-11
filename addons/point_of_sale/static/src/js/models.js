@@ -1470,6 +1470,33 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
         get_last_orderline: function(){
             return this.orderlines.at(this.orderlines.length -1);
         },
+        get_tip: function() {
+            var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
+            var lines = this.get_orderlines();
+            if (!tip_product) {
+                return 0;
+            } else {
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i].get_product() === tip_product) {
+                        return lines[i].get_unit_price();
+                    }
+                }
+                return 0;
+            }
+        },
+        set_tip: function(tip) {
+            var tip_product = this.pos.db.get_product_by_id(this.pos.config.tip_product_id[0]);
+            var lines = this.get_orderlines();
+            if (tip_product) {
+                for (var i = 0; i < lines.length; i++) {
+                    if (lines[i].get_product() === tip_product) {
+                        lines[i].set_unit_price(tip);
+                        return; 
+                    }
+                }
+                this.add_product(tip_product, {quantity: 1, price: tip });
+            }
+        },
         remove_orderline: function( line ){
             this.assert_editable();
             this.orderlines.remove(line);

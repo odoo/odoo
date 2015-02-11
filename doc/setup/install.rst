@@ -316,7 +316,7 @@ Source installation requires manually installing dependencies:
       they require compilation.
     - add ``pypiwin32`` because it's needed under windows.
 
-    Then use pip to install install the dependencies using the following
+    Then use pip to install the dependencies using the following
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
 

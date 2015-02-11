@@ -1322,7 +1322,7 @@ define(['summernote/summernote'], function () {
                 var $node = $(node);
 
                 // add class to display inline-block for empty t-field
-                if(window.getComputedStyle(node).display === "inline") {
+                if(window.getComputedStyle(node).display === "inline" && $node.data('oe-type') !== "image") {
                     $node.addClass('o_is_inline_editable');
                 }
 

@@ -54,9 +54,7 @@
           <templates>
             <t t-name="kanban-box">
 
-              <t t-set="record.group_fancy" t-value="1"  groups="note.group_note_fancy"/>
-
-              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
+              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
                 <div class="oe_dropdown_kanban oe_dropdown_toggle">
                   <!-- dropdown menu -->
                   <i class="fa fa-bars fa-lg"/>
@@ -153,10 +151,6 @@
                   <div>
                       <field name="module_note_pad" class="oe_inline"/>
                       <label for="module_note_pad"/>
-                  </div>
-                  <div>
-                      <field name="group_note_fancy" class="oe_inline"/>
-                      <label for="group_note_fancy"/>
                   </div>
               </div>
           </group>
