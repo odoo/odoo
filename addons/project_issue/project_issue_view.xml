@@ -24,8 +24,8 @@
                                 "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </div>
                     </div>
-                    <label for="categ_ids" class="oe_edit_only"/>
-                    <field name="categ_ids" widget="many2many_tags"/>
+                    <label for="tag_ids" class="oe_edit_only"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                     <group>
                         <group>
                             <field name="user_id"
@@ -91,7 +91,7 @@
                     <field name="create_date"/>
                     <field name="user_id"/>
                     <field name="stage_id" widget="selection" readonly="1"/>
-                    <field name="categ_ids" invisible="1"/>
+                    <field name="tag_ids" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                 </tree>
             </field>
@@ -107,7 +107,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
-                    <field name="categ_ids"/>
+                    <field name="tag_ids"/>
                     <field name="stage_id" domain="[]"/>
                     <filter string="My Issues" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
@@ -160,7 +160,7 @@
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
                               <li><b>Project:</b> <field name="project_id"/></li>
-                              <li><b>Category:</b> <field name="categ_ids"/></li>
+                              <li><b>Category:</b> <field name="tag_ids"/></li>
                            </ul>
                         </t>
                         <t t-name="kanban-box">
@@ -179,7 +179,7 @@
                                         <field name="partner_id"/> <br/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <field name="categ_ids"/>
+                                        <field name="tag_ids"/>
                                     </div>
                                     <div class="oe_kanban_bottom_left">
                                         <t t-raw="record.message_summary.raw_value"/>

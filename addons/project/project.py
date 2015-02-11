@@ -61,11 +61,11 @@ class project_task_type(osv.osv):
                                'there are no records in that stage to display.'),
     }
 
-    def _get_default_project_ids(self, cr, uid, ctx={}):
-        project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
-        if project_id:
-            return [project_id]
-        return None
+    def _get_default_project_ids(self, cr, uid, ctx=None):
+        if ctx is None:
+            ctx = {}
+        default_project_id = ctx.get('default_project_id')
+        return [default_project_id] if default_project_id else None
 
     _defaults = {
         'sequence': 1,
@@ -88,18 +88,6 @@ class project(osv.osv):
         alias_context = dict(context, alias_model_name='project.task')
         return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(project, self)._auto_init,
             'project.task', self._columns['alias_id'], 'id', alias_prefix='project+', alias_defaults={'project_id':'id'}, context=alias_context)
-
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        if user == 1:
-            return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        if context and context.get('user_preference'):
-                cr.execute("""SELECT project.id FROM project_project project
-                           LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
-                           LEFT JOIN project_user_rel rel ON rel.project_id = project.id
-                           WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
-                return [(r[0]) for r in cr.fetchall()]
-        return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
-            context=context, count=count)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
@@ -281,18 +269,6 @@ class project(osv.osv):
 
     def set_template(self, cr, uid, ids, context=None):
         return self.setActive(cr, uid, ids, value=False, context=context)
-
-    def set_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
-
-    def set_cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
-
-    def set_pending(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'pending'}, context=context)
-
-    def set_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def reset_project(self, cr, uid, ids, context=None):
         return self.setActive(cr, uid, ids, value=True, context=context)
@@ -521,48 +497,31 @@ class task(osv.osv):
     _mail_post_access = 'read'
 
     def _get_default_partner(self, cr, uid, context=None):
-        project_id = self._get_default_project_id(cr, uid, context)
-        if project_id:
-            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        if context is None:
+            context = {}
+        if 'default_project_id' in context:
+            project = self.pool.get('project.project').browse(cr, uid, context['default_project_id'], context=context)
             if project and project.partner_id:
                 return project.partner_id.id
         return False
 
-    def _get_default_project_id(self, cr, uid, context=None):
-        """ Gives default section by checking if present in the context """
-        return (self._resolve_project_id_from_context(cr, uid, context=context) or False)
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
-
-    def _resolve_project_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of project based on the value of 'default_project_id'
-            context key, or None if it cannot be resolved to a single
-            project.
-        """
         if context is None:
             context = {}
-        if type(context.get('default_project_id')) in (int, long):
-            return context['default_project_id']
-        if isinstance(context.get('default_project_id'), basestring):
-            project_name = context['default_project_id']
-            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
-            if len(project_ids) == 1:
-                return project_ids[0][0]
-        return None
+        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        if context is None:
+            context = {}
         stage_obj = self.pool.get('project.task.type')
         order = stage_obj._order
         access_rights_uid = access_rights_uid or uid
         if read_group_order == 'stage_id desc':
             order = '%s desc' % order
         search_domain = []
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
-        if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        if 'default_project_id' in context:
+            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
             search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
@@ -576,11 +535,12 @@ class task(osv.osv):
         return result, fold
 
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        if context is None:
+            context = {}
         res_users = self.pool.get('res.users')
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         access_rights_uid = access_rights_uid or uid
-        if project_id:
-            ids += self.pool.get('project.project').read(cr, access_rights_uid, project_id, ['members'], context=context)['members']
+        if 'default_project_id' in context:
+            ids += self.pool.get('project.project').read(cr, access_rights_uid, context['default_project_id'], ['members'], context=context)['members']
             order = res_users._order
             # lame way to allow reverting search, should just work in the trivial case
             if read_group_order == 'user_id desc':
@@ -596,26 +556,6 @@ class task(osv.osv):
         'stage_id': _read_group_stage_ids,
         'user_id': _read_group_user_id,
     }
-
-    def _str_get(self, task, level=0, border='***', context=None):
-        return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
-            border[0]+' '+(task.name or '')+'\n'+ \
-            (task.description or '')+'\n\n'
-
-    # Compute: effective_hours, total_hours, progress
-    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        res = {}
-        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
-        hours = dict(cr.fetchall())
-        for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': (task.remaining_hours or 0.0) + hours.get(task.id, 0.0)}
-            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
-            res[task.id]['progress'] = 0.0
-            if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            if task.stage_id and task.stage_id.fold:
-                res[task.id]['progress'] = 100.0
-        return res
 
     def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
         if remaining and not planned:
@@ -672,7 +612,7 @@ class task(osv.osv):
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]", copy=False),
-        'categ_ids': fields.many2many('project.category', string='Tags'),
+        'tag_ids': fields.many2many('project.tags', string='Tags', oldname='categ_ids'),
         'kanban_state': fields.selection([('normal', 'In Progress'),('done', 'Ready for next stage'),('blocked', 'Blocked')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
@@ -703,7 +643,7 @@ class task(osv.osv):
     }
     _defaults = {
         'stage_id': _get_default_stage_id,
-        'project_id': _get_default_project_id,
+        'project_id': lambda self, cr, uid, ctx=None: ctx.get('default_project_id') if ctx is not None else False,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
         'priority': '0',
@@ -914,25 +854,6 @@ class task(osv.osv):
             }, context=context)
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
-
-    def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
-        for task in self.browse(cr, uid, ids, context=context):
-            if (task.stage_id and task.stage_id.sequence <= 1) or (task.planned_hours == 0.0):
-                self.write(cr, uid, [task.id], {'planned_hours': remaining_time + task.effective_hours}, context=context)
-        self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
-        return True
-
-    def set_remaining_time_1(self, cr, uid, ids, context=None):
-        return self.set_remaining_time(cr, uid, ids, 1.0, context)
-
-    def set_remaining_time_2(self, cr, uid, ids, context=None):
-        return self.set_remaining_time(cr, uid, ids, 2.0, context)
-
-    def set_remaining_time_5(self, cr, uid, ids, context=None):
-        return self.set_remaining_time(cr, uid, ids, 5.0, context)
-
-    def set_remaining_time_10(self, cr, uid, ids, context=None):
-        return self.set_remaining_time(cr, uid, ids, 10.0, context)
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1287,10 +1208,10 @@ class project_task_history_cumulative(osv.osv):
         )
         """)
 
-class project_category(osv.osv):
-    """ Category of project's task (or issue) """
-    _name = "project.category"
-    _description = "Category of project's task, issue, ..."
+class project_tags(osv.Model):
+    """ Tags of project's tasks (or issues) """
+    _name = "project.tags"
+    _description = "Tags of project's tasks, issues..."
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
