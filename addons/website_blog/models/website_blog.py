@@ -17,8 +17,8 @@ class Blog(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
     _columns = {
-        'name': fields.char('Blog Name', required=True),
-        'subtitle': fields.char('Blog Subtitle'),
+        'name': fields.char('Blog Name', required=True, translate=True),
+        'subtitle': fields.char('Blog Subtitle', translate=True),
     }
 
     def all_tags(self, cr, uid, ids, min_limit=1, context=None):
