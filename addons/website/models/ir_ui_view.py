@@ -147,6 +147,25 @@ class view(osv.osv):
             xml_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
         return xml_id
 
+    def _prepare_qcontext(self, cr, uid, context=None):
+        if not context:
+            context = {}
+
+        company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
+
+        qcontext = dict(
+            context.copy(),
+            website=request.website,
+            url_for=website.url_for,
+            slug=website.slug,
+            res_company=company,
+            user_id=self.pool.get("res.users").browse(cr, uid, uid),
+            translatable=context.get('lang') != request.website.default_lang_code,
+            editable=request.website.is_publisher(),
+            menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
+        )
+        return qcontext
+
     @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
@@ -155,22 +174,7 @@ class view(osv.osv):
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
 
-            if not context:
-                context = {}
-
-            company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
-
-            qcontext = dict(
-                context.copy(),
-                website=request.website,
-                url_for=website.url_for,
-                slug=website.slug,
-                res_company=company,
-                user_id=self.pool.get("res.users").browse(cr, uid, uid),
-                translatable=context.get('lang') != request.website.default_lang_code,
-                editable=request.website.is_publisher(),
-                menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
-            )
+            qcontext = self._prepare_qcontext(cr, uid, context=context)
 
             # add some values
             if values:
