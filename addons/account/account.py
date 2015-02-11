@@ -662,7 +662,7 @@ class account_tax(models.Model):
         """
         self.ensure_one()
         if self.amount_type == 'fixed':
-            return math.copysign(self.amount, base_amount)
+            return math.copysign(self.amount, base_amount) * quantity
         if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
             return base_amount * self.amount / 100
         if self.amount_type == 'percent' and self.price_include:
