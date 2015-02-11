@@ -2,18 +2,20 @@
 
 import re
 
-from openerp import models, fields, api, _
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, _
+from odoo.addons.website.models.website import slug
 
 
-class event(models.Model):
+class Event(models.Model):
+
     _name = 'event.event'
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 
-    twitter_hashtag = fields.Char('Twitter Hashtag', default=lambda self: self._default_hashtag())
+    def _default_hashtag(self):
+        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
+
+    twitter_hashtag = fields.Char('Twitter Hashtag', default=_default_hashtag)
     website_published = fields.Boolean(track_visibility='onchange')
-    # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
     website_message_ids = fields.One2many(
         'mail.message', 'res_id',
         domain=lambda self: [
@@ -23,6 +25,11 @@ class event(models.Model):
         help="Website communication history",
     )
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
+
+    show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
+                               help="Creates menus Introduction, Location and Register on the page "
+                                    " of the event on the website.", store=True)
+    menu_id = fields.Many2one('website.menu', 'Event Menu')
 
     def _compute_is_participating(self):
         # we don't allow public user to see participating label
@@ -35,17 +42,9 @@ class event(models.Model):
     @api.multi
     @api.depends('name')
     def _website_url(self, name, arg):
-        res = super(event, self)._website_url(name, arg)
-        res.update({(e.id, '/event/%s' % slug(e)) for e in self})
+        res = super(Event, self)._website_url(name, arg)
+        res.update({(event.id, '/event/%s' % slug(event)) for event in self})
         return res
-
-    def _default_hashtag(self):
-        return re.sub("[- \\.\\(\\)\\@\\#\\&]+", "", self.env.user.company_id.name).lower()
-
-    show_menu = fields.Boolean('Dedicated Menu', compute='_get_show_menu', inverse='_set_show_menu',
-                               help="Creates menus Introduction, Location and Register on the page "
-                                    " of the event on the website.", store=True)
-    menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     @api.multi
     def _get_new_menu_pages(self):
@@ -88,16 +87,18 @@ class event(models.Model):
         for event in self:
             event.show_menu = bool(event.menu_id)
 
-    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
-        event = self.browse(cr, uid, ids[0], context=context)
-        if event.address_id:
-            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_img()
+    @api.multi
+    def google_map_img(self, zoom=8, width=298, height=298):
+        self.ensure_one()
+        if self.address_id:
+            return self.sudo().address_id.google_map_img(zoom=zoom, width=width, height=height)
         return None
 
-    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
-        event = self.browse(cr, uid, ids[0], context=context)
-        if event.address_id:
-            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
+    @api.multi
+    def google_map_link(self, zoom=8):
+        self.ensure_one()
+        if self.address_id:
+            return self.sudo().address_id.google_map_link(zoom=zoom)
         return None
 
     @api.multi
@@ -107,7 +108,7 @@ class event(models.Model):
             return 'website_event.mt_event_published'
         elif 'website_published' in init_values and not self.website_published:
             return 'website_event.mt_event_unpublished'
-        return super(event, self)._track_subtype(init_values)
+        return super(Event, self)._track_subtype(init_values)
 
     @api.multi
     def action_open_badge_editor(self):
