@@ -658,7 +658,7 @@ class account_bank_statement_line(models.Model):
                     # Statement is in foreign currency but the transaction is in company currency
                     prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency
                     aml_dict['amount_currency'] = prorata_factor * self.amount
-                    aml_dict['currency_id'] = st_line_currency.id
+                    aml_dict['currency_id'] = statement_currency.id
 
             # Complete dicts, create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
