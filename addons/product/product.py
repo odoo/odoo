@@ -938,43 +938,48 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _set_suppliers(self, cr, uid, id, field_name, field_value, args, context=None):
+    def _set_suppliers(self, cr, uid, product_id, field_name, field_value, args, context=None):
         if not field_value:
             return
-        product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
+        product_tmpl = self.browse(cr, uid, product_id, context=context).product_tmpl_id
         supplierinfo = self.pool['product.supplierinfo']
         for value in field_value:
             if value[0] == 0:
-                value[2].update(product_tmpl_id=product_tmpl_id, product_id=id)
+                value[2].update(product_tmpl_id=product_tmpl.id, product_id=product_id)
                 supplierinfo.create(cr, uid, value[2], context=context)
             elif value[0] == 1:
                 if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
-                    raise UserError(_("You are not allowed to modify the attributes of product template's suppliers."))
+                    raise UserError(_("Attributes of the general supplier(s) of the the product '%s' \
+                                        can be modified from the 'Products' menu.") % product_tmpl.name)
                 supplierinfo.write(cr, uid, [value[1]], value[2], context=context)
             elif value[0] in [2, 3]:
                 if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
-                    raise UserError(_("You are not allowed to remove the suppliers of Product Template."))
+                    raise UserError(_("General supplier(s) of the product '%s' can be deleted \
+                                        from the 'Products' menu.") % product_tmpl.name)
                 supplierinfo.unlink(cr, uid, [value[1]], context=context)
             elif value[0] == 4:
                 vals = {}
                 if supplierinfo.browse(cr, uid, value[1], context=context).product_id:
-                    vals = dict(product_id=id)
-                supplierinfo.write(cr, uid, [value[1]], dict(vals, product_tmpl_id=product_tmpl_id), context=context)
+                    vals = dict(product_id=product_id)
+                supplierinfo.write(cr, uid, [value[1]], dict(vals, product_tmpl_id=product_tmpl.id), context=context)
             elif value[0] in [5, 6]:
-                old_ids = supplierinfo.search(cr, uid, [('product_id', '=', id)], context=context)
+                old_ids = supplierinfo.search(cr, uid, [('product_id', '=', product_id)], context=context)
                 supplierinfo.unlink(cr, uid, old_ids, context=context)
                 if value[0] == 6:
-                    supplierinfo.write(cr, uid, value[2], dict(product_tmpl_id=product_tmpl_id, product_id=id), context=context)
-        return
+                    supplierinfo.write(cr, uid, value[2], dict(product_tmpl_id=product_tmpl.id, product_id=product_id), context=context)
+        return True
 
-    def _get_suppliers(self, cr, uid, ids, name, args, context=None):
-        res = dict.fromkeys(ids, False)
+    def _get_suppliers(self, cr, uid, ids, field_name, args, context=None):
+        res = dict()
         supplierinfo = self.pool['product.supplierinfo']
-        for id in ids:
-            product_tmpl_id = self.browse(cr, uid, id, context=context).product_tmpl_id.id
-            supplier_ids = supplierinfo.search(cr, uid, ['|', ('product_id', '=', id),
-                 ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)], context=context)
-            res[id] = supplier_ids
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = supplierinfo.search(cr, uid,
+                       ['|',
+                            ('product_id', '=', product.id),
+                            '&',
+                                ('product_id', '=', False),
+                                ('product_tmpl_id', '=', product.product_tmpl_id.id)],
+                          context=context)
         return res
 
     _columns = {
