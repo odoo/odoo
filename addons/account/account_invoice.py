@@ -122,10 +122,14 @@ class account_invoice(models.Model):
             lines = self.env['account.move.line'].search(domain)
             if len(lines) != 0:
                 for line in lines:
-                    line_currency = line.currency_id or line.company_id.currency_id
+                    # get the outstanding residual value in invoice currency
+                    if line.currency_id:
+                        amount_to_show = line.currency_id.compute(abs(line.amount_residual_currency), self.currency_id)
+                    else:
+                        amount_to_show = line.company_id.currency_id.compute(abs(line.amount_residual), self.currency_id)
                     info['content'].append({
                         'ref': line.ref or line.move_id.name,
-                        'amount': line_currency.compute(abs(line.amount_residual),self.currency_id) if line_currency != self.currency_id else abs(line.amount_residual_currency),
+                        'amount': amount_to_show,
                         'currency': self.currency_id.symbol,
                         'id': line.id,
                         'position': self.currency_id.position,
@@ -146,13 +150,18 @@ class account_invoice(models.Model):
                 elif self.type in ('in_invoice', 'out_refund'):
                     amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
                     amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_id])
-                if payment.currency_id and float_is_zero(amount_currency, precision_digits=payment.currency_id.decimal_places):
+                #we don't take into account the movement created due to a change difference
+                if payment.currency_id and payment.move_id.rate_diff_partial_rec_id:
                     continue
-                payment_currency = payment.currency_id or payment.company_id.currency_id
+                # get the payment value in invoice currency
+                if payment.currency_id and amount_currency != 0:
+                    amount_to_show = amount_currency
+                else:
+                    amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
                 info['content'].append({
                     'name': payment.name,
                     'ref': payment.journal_id.name,
-                    'amount': payment_currency.compute(-amount,self.currency_id) if payment_currency != self.currency_id else -amount_currency,
+                    'amount': amount_to_show,
                     'currency': self.currency_id.symbol,
                     'digits': [69, self.currency_id.decimal_places],
                     'position': self.currency_id.position,
