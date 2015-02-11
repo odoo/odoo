@@ -460,7 +460,7 @@ class res_partner(osv.osv):
             help="The maximum follow-up level", 
             store={
                 'res.partner': (lambda self, cr, uid, ids, c: ids,[],10),
-                'account.move.line': (_get_partners, ['followup_line_id'], 10),
+                'account.move.line': (_get_partners, ['reconciled', 'followup_line_id'], 10),
             }, 
             multi="latest"), 
         'latest_followup_level_id_without_lit':fields.function(_get_latest, method=True, 
@@ -468,7 +468,7 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store={
                 'res.partner': (lambda self, cr, uid, ids, c: ids,[],10),
-                'account.move.line': (_get_partners, ['followup_line_id'], 10),
+                'account.move.line': (_get_partners, ['reconciled', 'followup_line_id'], 10),
             }, 
             multi="latest"),
         'payment_amount_due':fields.function(_get_amounts_and_date, 
