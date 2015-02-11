@@ -129,7 +129,7 @@ class TestReconciliation(TransactionCase):
 
     def test_statement_usd_invoice_eur_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, self.bank_journal_usd, 42, 30, self.currency_euro_id)
-        self.check_results(customer_move_lines.ids, {
+        self.check_results(customer_move_lines, {
             self.account_usd.id: {'debit': 30.0, 'credit': 0.0, 'amount_currency': 42, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 30.0, 'amount_currency': -42, 'currency_id': self.currency_usd_id},
         })
@@ -197,9 +197,9 @@ class TestReconciliation(TransactionCase):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, self.bank_journal_euro, 42, 50, self.currency_swiss_id)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 42.0, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id, 'currency_diff': 3.79},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro.id: {'debit': 0.0, 'credit': 42.0, 'amount_currency': -50, 'currency_id': self.currency_swiss_id},
-            self.account_rcv.id: {'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id, 'currency_diff': -3.79},
+            self.account_rcv.id: {'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_swiss_id},
         })
