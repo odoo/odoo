@@ -296,18 +296,12 @@
             <field name="name">Cash Summary</field>
             <field name="report_type">date_range</field>
         </record>
-        <record id="account_financial_report_cashsummary_line0" model="account.financial.report.line">
-            <field name="name">CASH SUMMARY</field>
-            <field name="sequence" eval="1"/>
-            <field name="hidden" eval="True"/>
-            <field name="level" eval="0" />
-        </record>
         <record id="account_financial_report_cashsummary_net_increase0" model="account.financial.report.line">
             <field name="name">Net increase in cash and cash equivalents</field>
             <field name="sequence" eval="1"/>
             <field name="formulas">balance = OP.balance + FI.balance + IN.balance</field>
-            <field name="parent_id" ref='account_financial_report_cashsummary_line0'/>
             <field name="level" eval="0" />
+            <field name="financial_report_id" ref="account_financial_report_cashsummary0"/>
         </record>
 
         <record id="account_financial_report_cashsummary_operating0" model="account.financial.report.line">
@@ -392,20 +386,20 @@
         <record id="account_financial_report_cashsummary_opening_balance0" model="account.financial.report.line">
             <field name="name">Cash and cash equivalents, beginning of year</field>
             <field name="sequence" eval="2"/>
-            <field name="parent_id" ref='account_financial_report_cashsummary_line0'/>
             <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
             <field name="special_date_changer">to_beginning_of_fy</field>
+            <field name="financial_report_id" ref="account_financial_report_cashsummary0"/>
             <field name="level" eval="0" />
         </record>
         <record id="account_financial_report_cashsummary_closing_balance0" model="account.financial.report.line">
             <field name="name">Cash and cash equivalents, closing balance</field>
             <field name="sequence" eval="3"/>
-            <field name="parent_id" ref='account_financial_report_cashsummary_line0'/>
             <field name="domain" eval="[('journal_id.type', 'in', ('cash', 'bank'))]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
+            <field name="financial_report_id" ref="account_financial_report_cashsummary0"/>
             <field name="level" eval="0" />
         </record>
 
@@ -413,16 +407,14 @@
             EXECUTIVE SUMMARY
         -->
 
-        <record id="account_financial_report_executivesummary_line0" model="account.financial.report.line">
+        <record id="account_financial_report_executivesummary0" model="account.financial.report">
             <field name="name">Executive Summary</field>
-            <field name="sequence" eval="1"/>
-            <field name="hidden" eval="True"/>
-            <field name="level" eval="0" />
+            <field name="report_type">date_range</field>
         </record>
         <record id="account_financial_report_executivesummary_cash0" model="account.financial.report.line">
             <field name="name">CASH</field>
             <field name="sequence" eval="1"/>
-            <field name="parent_id" ref='account_financial_report_executivesummary_line0'/>
+            <field name="financial_report_id" ref="account_financial_report_executivesummary0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_cash_received0" model="account.financial.report.line">
@@ -432,7 +424,7 @@
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'liquidity')]" />
             <field name="formulas">balance = sum.debit</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_cash_spent0" model="account.financial.report.line">
@@ -442,7 +434,7 @@
             <field name="parent_id" ref='account_financial_report_executivesummary_cash0'/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'liquidity')]" />
             <field name="formulas">balance = sum.credit</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
             <field name="green_on_positive" eval="False"/>
             <field name="level" eval="2" />
         </record>
@@ -463,7 +455,7 @@
         <record id="account_financial_report_executivesummary_profitability0" model="account.financial.report.line">
             <field name="name">PROFITABILITY</field>
             <field name="sequence" eval="2"/>
-            <field name="parent_id" ref='account_financial_report_executivesummary_line0'/>
+            <field name="financial_report_id" ref="account_financial_report_executivesummary0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_income0" model="account.financial.report.line">
@@ -506,7 +498,7 @@
         <record id="account_financial_report_executivesummary_balancesheet0" model="account.financial.report.line">
             <field name="name">BALANCE SHEET</field>
             <field name="sequence" eval="3"/>
-            <field name="parent_id" ref='account_financial_report_executivesummary_line0'/>
+            <field name="financial_report_id" ref="account_financial_report_executivesummary0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_debtors0" model="account.financial.report.line">
@@ -516,7 +508,7 @@
             <field name="parent_id" ref='account_financial_report_executivesummary_balancesheet0'/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable')]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
             <field name="level" eval="2" />
         </record>
         <record id="account_financial_report_executivesummary_creditors0" model="account.financial.report.line">
@@ -526,7 +518,7 @@
             <field name="parent_id" ref='account_financial_report_executivesummary_balancesheet0'/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'payable')]" />
             <field name="formulas">balance = sum.balance</field>
-            <field name="show_domain" eval="False"/>
+            <field name="show_domain">never</field>
             <field name="green_on_positive" eval="False"/>
             <field name="level" eval="2" />
         </record>
@@ -540,7 +532,7 @@
         <record id="account_financial_report_executivesummary_performance0" model="account.financial.report.line">
             <field name="name">PERFORMANCE</field>
             <field name="sequence" eval="4"/>
-            <field name="parent_id" ref='account_financial_report_executivesummary_line0'/>
+            <field name="financial_report_id" ref="account_financial_report_executivesummary0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_gpmargin0" model="account.financial.report.line">
@@ -570,7 +562,7 @@
         <record id="account_financial_report_executivesummary_position0" model="account.financial.report.line">
             <field name="name">POSITION</field>
             <field name="sequence" eval="5"/>
-            <field name="parent_id" ref='account_financial_report_executivesummary_line0'/>
+            <field name="financial_report_id" ref="account_financial_report_executivesummary0"/>
             <field name="level" eval="1" />
         </record>
         <record id="account_financial_report_executivesummary_avdebt0" model="account.financial.report.line">
@@ -611,47 +603,39 @@
             Aged Payable
         -->
 
+        <record id="account_financial_report_agedpayable0" model="account.financial.report">
+            <field name="name">Aged Payable</field>
+            <field name="report_type">date_range_extended</field>
+        </record>
         <record id="account_financial_report_agedpayable_line0" model="account.financial.report.line">
             <field name="name">Aged Payable</field>
             <field name="sequence" eval="1"/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'payable'), ('reconciled', '=', False)]" />
             <field name="groupby">partner_id</field>
             <field name="formulas">balance = sum.balance</field>
-            <field name="foldable" eval="False"></field>
+            <field name="show_domain">always</field>
             <field name="level" eval="2" />
+            <field name="financial_report_id" ref="account_financial_report_agedpayable0"/>
         </record>
 
         <!--
             Aged Receivable
         -->
 
+        <record id="account_financial_report_agedreceivable0" model="account.financial.report">
+            <field name="name">Aged Receivable</field>
+            <field name="report_type">date_range_extended</field>
+        </record>
         <record id="account_financial_report_agedreceivable_line0" model="account.financial.report.line">
             <field name="name">Aged Receivable</field>
             <field name="sequence" eval="1"/>
             <field name="domain" eval="[('account_id.user_type.type', '=', 'receivable'), ('reconciled', '=', False)]" />
             <field name="groupby">partner_id</field>
             <field name="formulas">balance = sum.balance</field>
-            <field name="foldable" eval="False"></field>
+            <field name="show_domain">always</field>
             <field name="level" eval="2" />
+            <field name="financial_report_id" ref="account_financial_report_agedreceivable0"/>
         </record>
 
-        <!-- 
-            Financial Reports
-        -->
-        <record id="account_financial_report_executivesummary0" model="account.financial.report">
-            <field name="name">Executive Summary</field>
-            <field name="line_id" ref="account_financial_report_executivesummary_line0"/>
-            <field name="report_type">date_range</field>
-        </record>
-        <record id="account_financial_report_agedpayable0" model="account.financial.report">
-            <field name="name">Aged Payable</field>
-            <field name="line_id" ref="account_financial_report_agedpayable_line0"/>
-            <field name="report_type">date_range_extended</field>
-        </record>
-        <record id="account_financial_report_agedreceivable0" model="account.financial.report">
-            <field name="name">Aged Receivable</field>
-            <field name="line_id" ref="account_financial_report_agedreceivable_line0"/>
-            <field name="report_type">date_range_extended</field>
-        </record>
     </data>
 </openerp>

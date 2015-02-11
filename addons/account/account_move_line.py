@@ -142,9 +142,9 @@ class account_move_line(models.Model):
     def compute_fields(self, field_names):
         if len(self) == 0:
             return []
-        select = ','.join(['l.' + k for k in field_names])
+        select = ','.join(['\"account_move_line\".' + k for k in field_names])
         where_clause, where_params = self._query_get()
-        sql = "SELECT l.id," + select + " FROM account_move_line l WHERE " + where_clause + " AND l.id IN %s GROUP BY l.id"
+        sql = "SELECT \"account_move_line\".id," + select + " FROM \"account_move_line\" WHERE " + where_clause + " AND \"account_move_line\".id IN %s GROUP BY \"account_move_line\".id"
 
         where_params += [tuple(self.ids)]
         self.env.cr.execute(sql, where_params)
@@ -928,7 +928,7 @@ class account_move_line(models.Model):
         if domain:
             query = self._where_calc(domain)
             dummy, where_clause, where_clause_params = query.get_sql()
-            where_clause = where_clause.replace('account_move_line', obj)
+            #where_clause = where_clause.replace('account_move_line', obj)
             #TODO remove obj and use 'account_move_line' directly
 
         #where_move_lines_by_date = ''
