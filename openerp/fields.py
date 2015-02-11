@@ -21,6 +21,7 @@
 
 """ High-level objects for fields. """
 
+from collections import OrderedDict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -1269,7 +1270,9 @@ class Selection(Field):
                 if 'selection' in field._attrs:
                     selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
-                    selection = selection + field._attrs['selection_add']
+                    # use an OrderedDict to update existing values
+                    selection_add = field._attrs['selection_add']
+                    selection = OrderedDict(selection + selection_add).items()
             else:
                 selection = None
         self.selection = selection

@@ -2862,10 +2862,15 @@ class BaseModel(object):
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
             for name, field in parent._fields.iteritems():
+                # inherited fields are implemented as related fields, with the
+                # following specific properties:
+                #  - reading inherited fields should not bypass access rights
+                #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
                     related=(parent_field, name),
                     related_sudo=False,
+                    copy=field.copy,
                 )
 
         # add inherited fields that are not redefined locally
@@ -5623,10 +5628,11 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
+            names = [f.name for f in field.computed_fields if f.store]
             for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
                 try:
                     values = rec._convert_to_write({
-                        f.name: rec[f.name] for f in field.computed_fields
+                        name: rec[name] for name in names
                     })
                     rec1._write(values)
                 except MissingError:
@@ -5715,9 +5721,13 @@ class BaseModel(object):
             }
             params = eval("[%s]" % params, global_vars, field_vars)
 
-            # call onchange method
+            # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)
-            method_res = getattr(self._model, method)(*args)
+            try:
+                method_res = getattr(self._model, method)(*args, context=self._context)
+            except TypeError:
+                method_res = getattr(self._model, method)(*args)
+
             if not isinstance(method_res, dict):
                 return
             if 'value' in method_res:
@@ -5772,6 +5782,8 @@ class BaseModel(object):
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
+            if name == 'id':
+                continue
             value = record[name]
             field = self._fields[name]
             if field.type == 'many2one' and field.delegate and not value:
