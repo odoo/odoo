@@ -157,7 +157,7 @@
                     <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('project_id', '=', False), ('partner_id', '=', False)]}"
                     options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
                 </xpath>
-                <field name="categ_ids" position="after">
+                <field name="tag_ids" position="after">
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="progress" widget="progressbar"
                                 groups="project.group_time_work_estimation_tasks"/>

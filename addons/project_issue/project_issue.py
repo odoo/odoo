@@ -42,39 +42,23 @@ class project_issue(osv.Model):
     _mail_post_access = 'read'
 
     def _get_default_partner(self, cr, uid, context=None):
-        project_id = self._get_default_project_id(cr, uid, context)
-        if project_id:
-            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        if context is None:
+            context = {}
+        if 'default_project_id' in context:
+            project = self.pool.get('project.project').browse(cr, uid, context['default_project_id'], context=context)
             if project and project.partner_id:
                 return project.partner_id.id
         return False
 
-    def _get_default_project_id(self, cr, uid, context=None):
-        """ Gives default project by checking if present in the context """
-        return self._resolve_project_id_from_context(cr, uid, context=context)
-
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
-
-    def _resolve_project_id_from_context(self, cr, uid, context=None):
-        """ Returns ID of project based on the value of 'default_project_id'
-            context key, or None if it cannot be resolved to a single
-            project.
-        """
         if context is None:
             context = {}
-        if type(context.get('default_project_id')) in (int, long):
-            return context.get('default_project_id')
-        if isinstance(context.get('default_project_id'), basestring):
-            project_name = context['default_project_id']
-            project_ids = self.pool.get('project.project').name_search(cr, uid, name=project_name, context=context)
-            if len(project_ids) == 1:
-                return int(project_ids[0][0])
-        return None
+        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        if context is None:
+            context = {}
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('project.task.type')
         order = stage_obj._order
@@ -86,9 +70,8 @@ class project_issue(osv.Model):
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
-        project_id = self._resolve_project_id_from_context(cr, uid, context=context)
-        if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id), ('id', 'in', ids)]
+        if 'default_project_id' in context:
+            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
             search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
@@ -203,7 +186,7 @@ class project_issue(osv.Model):
         'date': fields.datetime('Date'),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel': fields.char('Channel', help="Communication channel."),
-        'categ_ids': fields.many2many('project.category', string='Tags'),
+        'tag_ids': fields.many2many('project.tags', string='Tags'),
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
