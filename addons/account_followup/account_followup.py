@@ -365,7 +365,7 @@ class res_partner(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         having_where_clause = ' AND '.join(map(lambda x: '(SUM(bal2) %s %%s)' % (x[1]), args))
         having_values = [x[2] for x in args]
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        query, query_params = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         overdue_only_str = overdue_only and 'AND date_maturity <= NOW()' or ''
         return ('''SELECT pid AS partner_id, SUM(bal2) FROM
                     (SELECT CASE WHEN bal IS NOT NULL THEN bal
@@ -382,7 +382,7 @@ class res_partner(osv.osv):
                     ''' + query + ''') AS l
                     RIGHT JOIN res_partner p
                     ON p.id = partner_id ) AS pl
-                    GROUP BY pid HAVING ''' + having_where_clause, [company_id] + having_values)
+                    GROUP BY pid HAVING ''' + having_where_clause, [company_id] + query_params + having_values)
 
     def _payment_overdue_search(self, cr, uid, obj, name, args, context=None):
         if not args:
@@ -400,7 +400,7 @@ class res_partner(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         having_where_clause = ' AND '.join(map(lambda x: '(MIN(l.date_maturity) %s %%s)' % (x[1]), args))
         having_values = [x[2] for x in args]
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        query, query_params = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute('SELECT partner_id FROM account_move_line l '\
                     'WHERE account_id IN '\
                         '(SELECT a.id FROM account_account a'\
@@ -411,7 +411,7 @@ class res_partner(osv.osv):
                     'AND '+query+' '\
                     'AND partner_id IS NOT NULL '\
                     'GROUP BY partner_id HAVING '+ having_where_clause,
-                     [company_id] + having_values)
+                     [company_id] + query_params + having_values)
         res = cr.fetchall()
         if not res:
             return [('id','=','0')]
