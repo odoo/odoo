@@ -49,7 +49,7 @@
             },
             {
                 title:     "Check that the cart contains exactly 3 elements",
-                element:   'a:has(.my_cart_quantity):containsExact(3)',
+                element:   'a:has(.my_cart_quantity:containsExact(3))',
             },
             {
                 title:     "Modify the cart to add 1 unit of `VIP` ticket type",
