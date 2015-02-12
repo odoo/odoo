@@ -45,6 +45,7 @@
             },
             {
                 title:     "Validate attendees details",
+                waitFor:   "input[name='1-name'], input[name='2-name'], input[name='3-name']",
                 element:   '.modal button:contains("Continue")',
             },
             {
