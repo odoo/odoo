@@ -4,8 +4,10 @@
         window.top.openerp[callback+"_set_value"] = function (value, fields_values) {
             var $editable = $("#wrapwrap .o_editable:first");
             if (value !== $editable.html()) {
-                openerp.website.editor_bar.rte.historyRecordUndo($editable);
-                openerp.website.editor_bar.snippets.make_active(false);
+                if ($('body').hasClass('editor_enable')) {
+                    openerp.website.editor_bar.rte.historyRecordUndo($editable);
+                    openerp.website.editor_bar.snippets.make_active(false);
+                }
                 $editable.html(value);
             }
         };
