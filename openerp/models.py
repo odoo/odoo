@@ -3973,7 +3973,7 @@ class BaseModel(object):
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
-        if context.get('recompute', True):
+        if recs.env.recompute and context.get('recompute', True):
             recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
@@ -4220,7 +4220,7 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if context.get('recompute', True):
+        if recs.env.recompute and context.get('recompute', True):
             result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
@@ -4233,7 +4233,7 @@ class BaseModel(object):
             # recompute new-style fields
             recs.recompute()
 
-        if self._log_create and context.get('recompute', True):
+        if self._log_create and recs.env.recompute and context.get('recompute', True):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
@@ -5629,12 +5629,13 @@ class BaseModel(object):
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
             names = [f.name for f in field.computed_fields if f.store]
-            for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
+            for rec in recs:
                 try:
                     values = rec._convert_to_write({
                         name: rec[name] for name in names
                     })
-                    rec1._write(values)
+                    with rec.env.norecompute():
+                        rec._write(values)
                 except MissingError:
                     pass
             # mark the computed fields as done

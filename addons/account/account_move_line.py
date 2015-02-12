@@ -1391,7 +1391,8 @@ class account_move_line(osv.osv):
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
+        recompute = journal.env.recompute and context.get('recompute', True)
+        if check and not context.get('novalidate') and (recompute or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
