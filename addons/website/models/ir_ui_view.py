@@ -28,6 +28,11 @@ class view(osv.osv):
         'customize_show': False,
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(view, self).unlink(cr, uid, ids, context=context)
+        self.clear_caches()
+        return res
+
     def _view_obj(self, cr, uid, view_id, context=None):
         if isinstance(view_id, basestring):
             return self.pool['ir.model.data'].xmlid_to_object(

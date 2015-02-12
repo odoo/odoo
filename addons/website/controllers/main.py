@@ -77,6 +77,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         except ValueError, e:
             # page not found
             if request.website.is_publisher():
+                values.pop('deletable')
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)

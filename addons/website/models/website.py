@@ -205,7 +205,8 @@ class website(osv.osv):
 
         # find a free xmlid
         inc = 0
-        while view.search(cr, openerp.SUPERUSER_ID, [('key', '=', page_xmlid)], context=dict(context or {}, active_test=False)):
+        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
             inc += 1
             page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
         page_name += (inc and "-%s" % inc or "")
@@ -267,12 +268,12 @@ class website(osv.osv):
             for page in View.browse(cr, uid, pages, context=context):
                 if page.page:
                     dep[page_key].append({
-                        'text': _('Page <b>%s</b> probably has a link to this page !' % page.key),
+                        'text': _('Page <b>%s</b> seems to have a link to this page !' % page.key),
                         'link': '/page/%s' % page.key
                     })
                 else:
                     dep[page_key].append({
-                        'text': _('Template <b>%s (id:%s)</b> probably has a link to this page !' % (page.key, page.id)),
+                        'text': _('Template <b>%s (id:%s)</b> seems to have a link to this page !' % (page.key, page.id)),
                         'link': '#'
                     })
 
@@ -288,8 +289,8 @@ class website(osv.osv):
                 dep[menu_key] = []
             for menu in Menu.browse(cr, uid, menus, context=context):
                 dep[menu_key].append({
-                    'text': _('Menu <b>%s</b> probably has a link to this page !' % menu.name),
-                    'link': '#'
+                    'text': _('Menu <b>%s</b> seems to have a link to this page !' % menu.name),
+                    'link': False
                 })
 
         return dep
