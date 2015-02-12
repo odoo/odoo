@@ -2020,6 +2020,9 @@
         on_clone: function (event) {
             event.preventDefault();
             var $clone = this.$target.clone(false);
+
+            this.BuildingBlock.parent.rte.historyRecordUndo(this.$target);
+            
             this.$target.after($clone);
             for (var i in this.styles){
                 this.styles[i].on_clone($clone);
