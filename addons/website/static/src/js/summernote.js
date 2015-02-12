@@ -1969,6 +1969,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     };
     $.summernote.pluginEvents.fontSize = function (event, editor, layoutInfo, value) {
       var $editable = layoutInfo.editable();
+      event.preventDefault();
       $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, value);
       editor.afterCommand($editable);
     };
