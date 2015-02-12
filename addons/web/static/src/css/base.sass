@@ -858,10 +858,6 @@ $sheet-padding: 16px
                 left: 6px
                 top: 3px
                 content: "\f00c"
-        .oe-right-toolbar
-            float: right
-            > div
-                display: inline-block
         .row:first-child
             padding-top: 3px
             padding-bottom: 3px
@@ -1189,7 +1185,10 @@ $sheet-padding: 16px
     input.oe-save-name
         width: auto
     .oe_pager_value
-        display: inline-block  
+        display: inline-block
+        select
+            // FIXME: remove default padding on select line 246
+            padding: 0 0
 
     // }}}
     // Views Common {{{
