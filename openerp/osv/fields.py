@@ -736,57 +736,58 @@ class one2many(_column):
         result = []
         context = dict(context or {})
         context.update(self._context)
-        context['recompute'] = False    # recomputation is done by outer create/write
         if not values:
             return
         obj = obj.pool[self._obj]
-        _table = obj._table
-        for act in values:
-            if act[0] == 0:
-                act[2][self._fields_id] = id
-                id_new = obj.create(cr, user, act[2], context=context)
-                result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
-            elif act[0] == 1:
-                obj.write(cr, user, [act[1]], act[2], context=context)
-            elif act[0] == 2:
-                obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0] == 3:
-                inverse_field = obj._fields.get(self._fields_id)
-                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the model has on delete cascade, just delete the row
-                if inverse_field.ondelete == "cascade":
+        rec = obj.browse(cr, user, [], context=context)
+        with rec.env.norecompute():
+            _table = obj._table
+            for act in values:
+                if act[0] == 0:
+                    act[2][self._fields_id] = id
+                    id_new = obj.create(cr, user, act[2], context=context)
+                    result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
+                elif act[0] == 1:
+                    obj.write(cr, user, [act[1]], act[2], context=context)
+                elif act[0] == 2:
                     obj.unlink(cr, user, [act[1]], context=context)
-                else:
-                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
-            elif act[0] == 4:
-                # table of the field (parent_model in case of inherit)
-                field = obj.pool[self._obj]._fields[self._fields_id]
-                field_model = field.base_field.model_name
-                field_table = obj.pool[field_model]._table
-                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
-                if not cr.fetchone():
-                    # Must use write() to recompute parent_store structure if needed and check access rules
-                    obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
-            elif act[0] == 5:
-                inverse_field = obj._fields.get(self._fields_id)
-                assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
-                # if the o2m has a static domain we must respect it when unlinking
-                domain = self._domain(obj) if callable(self._domain) else self._domain
-                extra_domain = domain or []
-                ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
-                # If the model has cascade deletion, we delete the rows because it is the intended behavior,
-                # otherwise we only nullify the reverse foreign key column.
-                if inverse_field.ondelete == "cascade":
-                    obj.unlink(cr, user, ids_to_unlink, context=context)
-                else:
-                    obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
-            elif act[0] == 6:
-                # Must use write() to recompute parent_store structure if needed
-                obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
-                ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
-                ids3 = map(lambda x:x[0], cr.fetchall())
-                obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                elif act[0] == 3:
+                    inverse_field = obj._fields.get(self._fields_id)
+                    assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                    # if the model has on delete cascade, just delete the row
+                    if inverse_field.ondelete == "cascade":
+                        obj.unlink(cr, user, [act[1]], context=context)
+                    else:
+                        cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                elif act[0] == 4:
+                    # table of the field (parent_model in case of inherit)
+                    field = obj.pool[self._obj]._fields[self._fields_id]
+                    field_model = field.base_field.model_name
+                    field_table = obj.pool[field_model]._table
+                    cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
+                    if not cr.fetchone():
+                        # Must use write() to recompute parent_store structure if needed and check access rules
+                        obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
+                elif act[0] == 5:
+                    inverse_field = obj._fields.get(self._fields_id)
+                    assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                    # if the o2m has a static domain we must respect it when unlinking
+                    domain = self._domain(obj) if callable(self._domain) else self._domain
+                    extra_domain = domain or []
+                    ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
+                    # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                    # otherwise we only nullify the reverse foreign key column.
+                    if inverse_field.ondelete == "cascade":
+                        obj.unlink(cr, user, ids_to_unlink, context=context)
+                    else:
+                        obj.write(cr, user, ids_to_unlink, {self._fields_id: False}, context=context)
+                elif act[0] == 6:
+                    # Must use write() to recompute parent_store structure if needed
+                    obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
+                    ids2 = act[2] or [0]
+                    cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
+                    ids3 = map(lambda x:x[0], cr.fetchall())
+                    obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):

@@ -577,16 +577,14 @@ class ir_actions_server(osv.osv):
         'condition': 'True',
         'type': 'ir.actions.server',
         'sequence': 5,
-        'code': """# You can use the following variables:
-#  - self: ORM model of the record on which the action is triggered
+        'code': """# Available locals:
+#  - time, datetime, dateutil: Python libraries
+#  - env: Odoo Environement
+#  - model: Model of the record on which the action is triggered
 #  - object: Record on which the action is triggered if there is one, otherwise None
-#  - pool: ORM model pool (i.e. self.pool)
-#  - cr: database cursor
-#  - uid: current user id
-#  - context: current context
-#  - time: Python time module
 #  - workflow: Workflow engine
-# If you plan to return an action, assign: action = {...}""",
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
         'use_write': 'current',
@@ -947,25 +945,35 @@ class ir_actions_server(osv.osv):
         :param action: the current server action
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)eval """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         obj_pool = self.pool[action.model_id.model]
+        env = openerp.api.Environment(cr, uid, context)
+        model = env[action.model_id.model]
         obj = None
         if context.get('active_model') == action.model_id.model and context.get('active_id'):
-            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            obj = model.browse(context['active_id'])
         return {
-            'self': obj_pool,
-            'object': obj,
-            'obj': obj,
-            'pool': self.pool,
+            # python libs
             'time': time,
             'datetime': datetime,
             'dateutil': dateutil,
+            # orm
+            'env': env,
+            'model': model,
+            'workflow': workflow,
+            # Exceptions
+            'Warning': openerp.exceptions.Warning,
+            # record
+            # TODO: When porting to master move badly named obj and object to
+            # deprecated and define record (active_id) and records (active_ids)
+            'object': obj,
+            'obj': obj,
+            # Deprecated use env or model instead
+            'self': obj_pool,
+            'pool': self.pool,
             'cr': cr,
             'uid': uid,
-            'user': user,
             'context': context,
-            'workflow': workflow,
-            'Warning': openerp.exceptions.Warning,
+            'user': env.user,
         }
 
     def run(self, cr, uid, ids, context=None):

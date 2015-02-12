@@ -216,10 +216,11 @@ class res_partner_bank(osv.osv):
         return {'value': result}
 
 
-    def onchange_partner_id(self, cr, uid, id, partner_id, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         result = {}
-        if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        if partner_id is not False:
+            # be careful: partner_id may be a NewId
+            part = self.pool['res.partner'].browse(cr, uid, [partner_id], context=context)
             result['owner_name'] = part.name
             result['street'] = part.street or False
             result['city'] = part.city or False
