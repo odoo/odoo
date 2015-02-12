@@ -1055,9 +1055,10 @@ class account_move_line(osv.osv):
         move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
             move_ids.add(line.move_id.id)
-            context['journal_id'] = line.journal_id.id
-            context['period_id'] = line.period_id.id
-            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
+            localcontext = dict(context)
+            localcontext['journal_id'] = line.journal_id.id
+            localcontext['period_id'] = line.period_id.id
+            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=localcontext)
         move_ids = list(move_ids)
         if check and move_ids:
             move_obj.validate(cr, uid, move_ids, context=context)
