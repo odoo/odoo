@@ -318,7 +318,8 @@ class hr_timesheet_line(osv.osv):
         for ts_line in self.browse(cursor, user, ids, context=context):
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
-                 ('employee_id.user_id', '=', ts_line.user_id.id)],
+                 ('employee_id.user_id', '=', ts_line.user_id.id),
+                 ('state', 'in', ['draft', 'new'])],
                 context=context)
             if sheet_ids:
             # [0] because only one sheet possible for an employee between 2 dates
@@ -357,17 +358,11 @@ class hr_timesheet_line(osv.osv):
             ),
     }
 
-    def _check_sheet_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for timesheet_line in self.browse(cr, uid, ids, context=context):
-            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
-                return False
-        return True
-
-    _constraints = [
-        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !', ['state']),
-    ]
+    def write(self, cr, uid, ids, values, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        self._check(cr, uid, ids)
+        return super(hr_timesheet_line, self).write(cr, uid, ids, values, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         if isinstance(ids, (int, long)):

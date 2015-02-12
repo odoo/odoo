@@ -1444,6 +1444,13 @@ class product_product(osv.Model):
             for product_id in ids
         }
 
+    def action_view_purchases(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = self.pool['product.template']._get_act_window_dict(cr, uid, 'purchase.action_purchase_line_product_tree', context=context)
+        result['domain'] = "[('product_id','in',[" + ','.join(map(str, ids)) + "])]"
+        return result
+
     _columns = {
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }

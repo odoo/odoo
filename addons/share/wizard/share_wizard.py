@@ -212,8 +212,15 @@ class share_wizard(osv.TransientModel):
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
         share_group_name = '%s: %s (%d-%s)' %('Shared', wizard_data.name, uid, time.time())
+        values = {'name': share_group_name, 'share': True}
+        try:
+            implied_group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'group_shared')[1]
+        except ValueError:
+            implied_group_id = None
+        if implied_group_id:
+            values['implied_ids'] = [(4, implied_group_id)]
         # create share group without putting admin in it
-        return group_obj.create(cr, UID_ROOT, {'name': share_group_name, 'share': True}, {'noadmin': True})
+        return group_obj.create(cr, UID_ROOT, values, {'noadmin': True})
 
     def _create_new_share_users(self, cr, uid, wizard_data, group_id, context=None):
         """Create one new res.users record for each email address provided in
@@ -486,7 +493,7 @@ class share_wizard(osv.TransientModel):
         # already granted
         for dummy, model in fields_relations:
             # mail.message is transversal: it should not received directly the access rights
-            if model.model in ['mail.message']: continue
+            if model.model in ['mail.message', 'mail.notification']: continue
             values = {
                 'name': _('Copied access for sharing'),
                 'group_id': group_id,
@@ -618,7 +625,7 @@ class share_wizard(osv.TransientModel):
             if domain:
                 for rel_field, model in fields_relations:
                     # mail.message is transversal: it should not received directly the access rights
-                    if model.model in ['mail.message']: continue
+                    if model.model in ['mail.message', 'mail.notification']: continue
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:
@@ -892,8 +899,8 @@ class share_result_line(osv.osv_memory):
         for this in self.browse(cr, uid, ids, context=context):
             data = dict(dbname=cr.dbname, login=this.login, password=this.password)
             if this.share_wizard_id and this.share_wizard_id.action_id:
-                data['action_id'] = this.share_wizard_id.action_id.id
-            this = this.with_context(share_url_template_hash_arguments=['action_id'])
+                data['action'] = this.share_wizard_id.action_id.id
+            this = this.with_context(share_url_template_hash_arguments=['action'])
             result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 

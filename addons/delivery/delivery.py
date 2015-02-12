@@ -127,6 +127,7 @@ class delivery_carrier(osv.osv):
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
             if grid_id and not (record.normal_price or record.free_if_more_than):
                 grid_pool.unlink(cr, uid, grid_id, context=context)
+                grid_id = None
 
             # Check that float, else 0.0 is False
             if not (isinstance(record.normal_price,float) or record.free_if_more_than):

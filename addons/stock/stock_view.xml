@@ -101,7 +101,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="location_id"/>
+                            <field name="location_id" domain="[('usage','not in', ['supplier','production'])]"/>
                             <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                         <group>
