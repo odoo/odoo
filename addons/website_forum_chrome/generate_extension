@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Odoo extension creation tool, allow you to create a extension directory which can be imported directly in chrome
+
+echo "step 1: Creating extension directory"
+mkdir forum_link_extension
+
+echo "step 2: Copying data to extension directory"
+cp -r static forum_link_extension
+cp views/index.html forum_link_extension
+cp views/manifest.json forum_link_extension
+
+echo "setp 3: You can import this extension folder to chrome extensions localy or if you want to upload this extension then zip it and upload this extension.zip to chrome store."

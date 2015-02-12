@@ -2,4 +2,5 @@
 
 import gamification
 import res_users
+import res_config
 import forum

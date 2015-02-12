@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_forum_forum_form_chrome_inherit" model="ir.ui.view">
+            <field name="name">forum.forum.form.chrome.inherit</field>
+            <field name="model">forum.forum</field>
+            <field name="inherit_id" ref="website_forum.view_forum_forum_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='allow_discussion']" position="after">
+                    <field name="allow_chrome_extension"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
