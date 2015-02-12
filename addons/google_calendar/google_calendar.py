@@ -212,13 +212,20 @@ class google_calendar(osv.AbstractModel):
             type = 'dateTime'
             vstype = 'date'
         attendee_list = []
-
         for attendee in event.attendee_ids:
             attendee_list.append({
                 'email': attendee.email or 'NoEmail@mail.com',
                 'displayName': attendee.partner_id.name,
                 'responseStatus': attendee.state or 'needsAction',
             })
+
+        reminders = []
+        for alarm in event.alarm_ids:
+            reminders.append({
+                "method": "email" if alarm.type == "email" else "popup",
+                "minutes": alarm.duration_minutes
+            })
+
         data = {
             "summary": event.name or '',
             "description": event.description or '',
@@ -233,6 +240,7 @@ class google_calendar(osv.AbstractModel):
                 'timeZone': 'UTC'
             },
             "attendees": attendee_list,
+            "reminders": {"overrides": reminders},
             "location": event.location or '',
             "visibility": event['class'] or 'public',
         }
@@ -244,7 +252,6 @@ class google_calendar(osv.AbstractModel):
 
         if not self.get_need_synchro_attendee(cr, uid, context=context):
             data.pop("attendees")
-
         return data
 
     def create_an_event(self, cr, uid, event, context=None):
@@ -400,14 +407,16 @@ class google_calendar(osv.AbstractModel):
         calendar_event = self.pool['calendar.event']
         res_partner_obj = self.pool['res.partner']
         calendar_attendee_obj = self.pool['calendar.attendee']
+        calendar_alarm_obj = self.pool['calendar.alarm']
         user_obj = self.pool['res.users']
         myPartnerID = user_obj.browse(cr, uid, uid, context).partner_id.id
         attendee_record = []
+        alarm_record = []
         partner_record = [(4, myPartnerID)]
         result = {}
 
-        if single_event_dict.get('attendees', False):
-            for google_attendee in single_event_dict['attendees']:
+        if self.get_need_synchro_attendee(cr, uid, context=context):
+            for google_attendee in single_event_dict.get('attendees', []):
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
                         if oe_attendee.email == google_attendee['email']:
@@ -415,22 +424,41 @@ class google_calendar(osv.AbstractModel):
                             google_attendee['found'] = True
                             continue
 
-                if google_attendee.get('found', False):
+                if google_attendee.get('found'):
                     continue
-                if self.get_need_synchro_attendee(cr, uid, context=context):
-                    attendee_id = res_partner_obj.search(cr, uid, [('email', '=', google_attendee['email'])], context=context)
-                    if not attendee_id:
-                        data = {
-                            'email': google_attendee['email'],
-                            'customer': False,
-                            'name': google_attendee.get("displayName", False) or google_attendee['email']
-                        }
-                        attendee_id = [res_partner_obj.create(cr, uid, data, context=context)]
-                    attendee = res_partner_obj.read(cr, uid, attendee_id[0], ['email'], context=context)
-                    partner_record.append((4, attendee.get('id')))
-                    attendee['partner_id'] = attendee.pop('id')
-                    attendee['state'] = google_attendee['responseStatus']
-                    attendee_record.append((0, 0, attendee))
+
+                attendee_id = res_partner_obj.search(cr, uid, [('email', '=', google_attendee['email'])], context=context)
+                if not attendee_id:
+                    data = {
+                        'email': google_attendee['email'],
+                        'customer': False,
+                        'name': google_attendee.get("displayName", False) or google_attendee['email']
+                    }
+                    attendee_id = [res_partner_obj.create(cr, uid, data, context=context)]
+                attendee = res_partner_obj.read(cr, uid, attendee_id[0], ['email'], context=context)
+                partner_record.append((4, attendee.get('id')))
+                attendee['partner_id'] = attendee.pop('id')
+                attendee['state'] = google_attendee['responseStatus']
+                attendee_record.append((0, 0, attendee))
+        for google_alarm in single_event_dict.get('reminders', {}).get('overrides', []):
+            alarm_id = calendar_alarm_obj.search(
+                cr,
+                uid,
+                [
+                    ('type', '=', google_alarm['method'] if google_alarm['method'] == 'email' else 'notification'),
+                    ('duration_minutes', '=', google_alarm['minutes'])
+                ],
+                context=context
+            )
+            if not alarm_id:
+                data = {
+                    'type': google_alarm['method'] if google_alarm['method'] == 'email' else 'notification',
+                    'duration': google_alarm['minutes'],
+                    'interval': 'minutes',
+                    'name': "%s minutes - %s" % (google_alarm['minutes'], google_alarm['method'])
+                }
+                alarm_id = [calendar_alarm_obj.create(cr, uid, data, context=context)]
+            alarm_record.append(alarm_id[0])
 
         UTC = pytz.timezone('UTC')
         if single_event_dict.get('start') and single_event_dict.get('end'):  # If not cancelled
@@ -458,6 +486,7 @@ class google_calendar(osv.AbstractModel):
         result.update({
             'attendee_ids': attendee_record,
             'partner_ids': list(set(partner_record)),
+            'alarm_ids': [(6, 0, alarm_record)],
 
             'name': single_event_dict.get('summary', 'Event'),
             'description': single_event_dict.get('description', False),
@@ -943,7 +972,7 @@ class calendar_event(osv.Model):
     _inherit = "calendar.event"
 
     def get_fields_need_update_google(self, cr, uid, context=None):
-        return ['name', 'description', 'allday', 'date', 'date_end', 'stop', 'attendee_ids', 'location', 'class', 'active']
+        return ['name', 'description', 'allday', 'date', 'date_end', 'stop', 'attendee_ids', 'alarm_ids', 'location', 'class', 'active']
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
