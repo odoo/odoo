@@ -1,20 +1,13 @@
 openerp.web_view_editor = function(instance) {
 var _t = instance.web._t;
 var QWeb = instance.web.qweb;
-instance.web.ControlPanel.include({
-    on_debug_changed:function(evt){
-        var val = $(evt.target).data('action'),
-            current_view = this.active_view.controller;
-        if(val === "manage_views"){
-            if (current_view.fields_view && current_view.fields_view.arch) {
-                    var view_editor = new instance.web_view_editor.ViewEditor(current_view, current_view.$el, this.dataset, current_view.fields_view.arch);
-                    view_editor.start();
-                } else {
-                    this.do_warn(_t("Manage Views"),
-                            _t("Could not find current view declaration"));
-                }
-        }else{
-            return this._super.apply(this,arguments);
+instance.web.DebugManager.include({
+    manage_views: function() {
+        if (this.view.fields_view && this.view.fields_view.arch) {
+            var view_editor = new instance.web_view_editor.ViewEditor(this.view, this.view.$el, this.dataset, this.view.fields_view.arch);
+            view_editor.start();
+        } else {
+            this.do_warn(_t("Manage Views"), _t("Could not find current view declaration"));
         }
     }
 });

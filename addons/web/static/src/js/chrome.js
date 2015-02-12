@@ -1456,6 +1456,13 @@ instance.web.WebClient = instance.web.Client.extend({
             }
         });
     },
+    /**
+     * When do_action is performed on the WebClient, forward it to the main ActionManager
+     * This allows to widgets that are not inside the ActionManager to perform do_action
+     */
+    do_action: function() {
+        this.action_manager.do_action.apply(this, arguments);
+    },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
             el.destroy();
