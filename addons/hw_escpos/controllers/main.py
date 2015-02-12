@@ -18,9 +18,9 @@ import subprocess
 import traceback
 
 try: 
-    from xmlescpos import *
-    from xmlescpos.exceptions import *
-    from xmlescpos.printer import Usb
+    from .. escpos import *
+    from .. escpos.exceptions import *
+    from .. escpos.printer import Usb
 except ImportError:
     escpos = printer = None
 
