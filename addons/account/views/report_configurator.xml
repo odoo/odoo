@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_configurator">
+    <form role="form" method="get" name="form">
+        <style>
+            <t t-if="context.date_filter != 'custom'">
+                .custom-date {
+                    visibility: hidden;
+                }
+            </t>
+            <t t-if="context.date_filter_cmp != 'custom'">
+                .custom-cmp {
+                    display: none;
+                }
+            </t>
+        </style>
+        <div class="form-group oe_account_report_widgets">
+            <div class="row mt32">
+                <div t-if="context.multi_company" class="col-sm-3">
+                    <label for="company_id">Company :</label>
+                    <select name="company_id" class="form-control">
+                        <t t-foreach="context.get_companies()" t-as="c"> 
+                            <option t-if="c == context.company_id" selected="selected" t-att-value="c.id">
+                                <t t-esc="c.name"></t>
+                            </option>
+                            <option t-if="c != context.company_id" t-att-value="c.id">
+                                <t t-esc="c.name"></t>
+                            </option>
+                        </t>   
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label for="date_filter">Date Filter :</label>
+                    <select name="date_filter" t-if="o.get_report_type() == 'no_date_range'" class="form-control">
+                        <option selected="selected" t-if="context.date_filter == 'today'" value='today'>Today</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_month'" value='last_month'>End of Last Month</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_quarter'" value='last_quarter'>End of Last Quarter</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_year'" value='last_year'>End of Last Financial Year</option>
+                        <option selected="selected" t-if="context.date_filter == 'custom'" value='custom'>Custom</option>
+                        <option t-if="context.date_filter != 'today'" value='today'>Today</option>
+                        <option t-if="context.date_filter != 'last_month'" value='last_month'>End of Last Month</option>
+                        <option t-if="context.date_filter != 'last_quarter'" value='last_quarter'>End of Last Quarter</option>
+                        <option t-if="context.date_filter != 'last_year'" value='last_year'>End of Last Financial Year</option>
+                        <option t-if="context.date_filter != 'custom'" value='custom'>Custom</option>
+                    </select>
+                    <select name="date_filter" t-if="o.get_report_type() != 'no_date_range'" class="form-control">
+                        <option selected="selected" t-if="context.date_filter == 'this_month'" value='this_month'>This Month</option>
+                        <option t-if="context.date_filter != 'this_month'" value='this_month'>This Month</option>
+                        <option selected="selected" t-if="context.date_filter == 'this_year'" value='this_year'>This Financial Year</option>
+                        <option t-if="context.date_filter != 'this_year'" value='this_year'>This Financial Year</option>
+                        <option disabled="disabled">&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_month'" value='last_month'>Last month</option>
+                        <option t-if="context.date_filter != 'last_month'" value='last_month'>Last Month</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_quarter'" value='last_quarter'>Last Quarter</option>
+                        <option t-if="context.date_filter != 'last_quarter'" value='last_quarter'>Last Quarter</option>
+                        <option selected="selected" t-if="context.date_filter == 'last_year'" value='last_year'>Last Financial Year</option>
+                        <option t-if="context.date_filter != 'last_year'" value='last_year'>Last Financial Year</option>
+                        <option selected="selected" t-if="context.date_filter == 'custom'" value='custom'>Custom</option>
+                        <option t-if="context.date_filter != 'custom'" value='custom'>Custom</option>
+                    </select>
+                    <label for="date_filter_cmp">Comparison Date Filter :</label>
+                    <select name="date_filter_cmp" class="form-control">
+                        <option selected="selected" t-if="context.date_filter_cmp == 'no_comparison'" value='no_comparison'>No Comparison</option>
+                        <option t-if="context.date_filter_cmp != 'no_comparison'" value='no_comparison'>No Comparison</option>
+                        <option disabled="disabled">&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;&amp;#9472;</option>
+                        <option selected="selected" t-if="context.date_filter_cmp == 'previous_period'" value='previous_period'>Previous Period</option>
+                        <option t-if="context.date_filter_cmp != 'previous_period'" value='previous_period'>Previous Period</option>
+                        <option selected="selected" t-if="context.date_filter_cmp == 'same_last_year'" value='same_last_year'>Same Period Last Year</option>
+                        <option t-if="context.date_filter_cmp != 'same_last_year'" value='same_last_year'>Same Period Last Year</option>
+                        <option selected="selected" t-if="context.date_filter_cmp == 'custom'" value='custom'>Custom</option>
+                        <option t-if="context.date_filter_cmp != 'custom'" value='custom'>Custom</option>
+                    </select>
+                    <div class="checkbox">
+                        <label> 
+                            <input t-if="context.all_entries == False" type="checkbox" name="all_entries" value="True" />
+                            <input t-if="context.all_entries == True" type="checkbox" name="all_entries" value="True" checked="checked" />
+                            Show all entries
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label> 
+                            <input t-if="context.cash_basis == False" type="checkbox" name="cash_basis" value="True" />
+                            <input t-if="context.cash_basis == True" type="checkbox" name="cash_basis" value="True" checked="checked" />
+                            Cash Basis Method
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-3" t-if="o.get_report_type() != 'no_date_range'">
+                    <label class="custom-date" t-if="o.get_report_type() != 'no_date_range'" for="date_from">Start Date :</label>
+                    <input t-if="o.get_report_type() != 'no_date_range'" type="date" class="form-control custom-date" name="date_from" t-att-value="context.date_from"></input>
+                    <label class="custom-cmp" t-if="o.get_report_type() != 'no_date_range'" for="date_from_cmp">Comparison Start Date :</label>
+                    <input t-if="o.get_report_type() != 'no_date_range'" type="date" class="form-control custom-cmp" name="date_from_cmp" t-att-value="context.date_from_cmp"></input>
+                    <t t-set="style" value="''" />
+                    <t t-if="context.date_filter_cmp == 'custom'"><t t-set="style" t-value="'display: none'" /></t>
+                    <span t-att-style="style">
+                        <label for="periods_number">Number of periods :</label>
+                        <input type="number" name="periods_number" t-att-value="context.periods_number"/>
+                    </span>
+                </div>
+                <div class="col-sm-3">
+                    <label class="custom-date" for="date_to" t-if="o.get_report_type() != 'no_date_range'">End Date :</label>
+                    <label class="custom-date" for="date_to" t-if="o.get_report_type() == 'no_date_range'">Date :</label>
+                    <input type="date" class="form-control custom-date" name="date_to" t-att-value="context.date_to"></input>
+                    <label class="custom-cmp" for="date_to_cmp" t-if="o.get_report_type() != 'no_date_range'">Comparison End Date :</label>
+                    <label class="custom-cmp" for="date_to_cmp" t-if="o.get_report_type() == 'no_date_range'">Comparison Date :</label>
+                    <input type="date" class="form-control custom-cmp" name="date_to_cmp" t-att-value="context.date_to_cmp"></input>
+                    <span t-if="o.get_report_type() == 'no_date_range'" t-att-style="style">
+                        <label for="periods_number">Number of periods :</label>
+                        <input type="number" name="periods_number" t-att-value="context.periods_number"/>
+                    </span>
+                </div>
+            </div>
+            <div class="mt32">
+                <input type="submit" class="btn btn-primary" value="Update" />
+            </div>
+        </div>
+    </form>
+<!--     <form role="form" method="POST" name="form" action="/account/reportconfigurator/download/account.report_financial">
+        <input type="hidden" name="html" id="js_html"/>
+        <button class="btn btn-primary getPDF">PDF</button>
+    </form> -->
+</template>
+</data>
+</openerp>

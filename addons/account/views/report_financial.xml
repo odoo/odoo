@@ -1,120 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="report_financial">
-    <t t-call="report.html_container">
-        <t t-call="report.internal_layout">
-            <div class="page">
-                <h2 t-esc="data['form']['account_report_id'][1]"/>
 
-                <div class="row mt32 mb32">
-                    <div class="col-xs-3">
-                        <strong>Chart of Accounts:</strong>
-                        <p t-esc="get_account(data)"/>
-                    </div>
-                    <div class="col-xs-3">
-                        <strong>Fiscal Year:</strong>
-                        <p t-esc="get_fiscalyear(data)"/>
-                    </div>
-                    <div class="col-xs-3">
-                        <strong>Filter By:</strong>
-                        <p>
-                            <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
-                            <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
-                            <p t-if="data['form']['filter'] == 'filter_date'">
-                                Date from : <span t-esc="get_start_date(data)"/><br />
-                                Date to : <span t-esc="get_end_date(data)"/>
-                            </p>
-                        </p>
-                    </div>
-                    <div class="col-xs-3">
-                        <strong>Target Moves:</strong>
-                        <p t-esc="get_target_move(data)"/>
+<record model="ir.actions.act_url" id="action_account_report_pnl">
+    <field name="name">Profit And Loss</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_profitandloss0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_bs">
+    <field name="name">Balance Sheet</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_balancesheet0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_cs">
+    <field name="name">Cash Summary</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_cashsummary0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_es">
+    <field name="name">Executive Summary</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_executivesummary0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_ar">
+    <field name="name">Aged Receivable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedreceivable0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_ap">
+    <field name="name">Aged Payable</field>
+    <field name="url" eval="'/account/financial_report/'+str(ref('account_financial_report_agedpayable0'))"/>
+    <field name="target">self</field>
+</record>
+<record model="ir.actions.act_url" id="action_account_report_gt">
+    <field name="name">Generic Tax Report</field>
+    <field name="url">/account/generic_tax_report/1</field>
+    <field name="target">self</field>
+</record>
+<menuitem id="menu_action_account_report_pnl" name="Profit And Loss" action="action_account_report_pnl" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_bs" name="Balance Sheet" action="action_account_report_bs" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_cs" name="Cash Summary" action="action_account_report_cs" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_es" name="Executive Summary" action="action_account_report_es" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ap" name="Aged Payable" action="action_account_report_ap" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_ar" name="Aged Receivable" action="action_account_report_ar" parent="account.menu_finance_legal_statement"/>
+<menuitem id="menu_action_account_report_gt" name="Generic Tax Report" action="action_account_report_gt" parent="account.menu_finance_legal_statement"/>
+
+<template id="report_financial_footnote_sup">
+    <t t-if="column in a['footnotes']">
+        <sup t-if="mode != 'print'">
+            <b class="footnoteSup"><a t-att-href="'#footnote' + str(a['footnotes'][column])"><t t-esc="a['footnotes'][column]"/></a></b>
+        </sup>
+        <sup t-if="mode == 'print'">
+            <t t-esc="a['footnotes'][column]"/>
+        </sup>
+    </t>
+</template>
+
+<template id="report_financial_line">
+    <t t-if="a.get('level') == 1 or a.get('level') == 0">
+        <tr class='emptyLine'>
+            <td height="22"></td>
+            <t t-foreach="context.get_columns_names()" t-as="column_name">
+                <td></td>
+            </t>
+        </tr>
+    </t>
+    <t t-set="trclass" t-value="'defaultStyle'"/>
+    <t t-set="style" t-value="'margin-left: 40px'"/>
+    <t t-if="a.get('level') == 0"><t t-set="trclass" t-value="'level0'"/></t>
+    <t t-if="a.get('level') == 1"><t t-set="trclass" t-value="'level1'"/></t>
+    <t t-if="a.get('level') == 2"><t t-set="style" t-value="'font-weight: bold; margin-left: 20px;'"/><t t-set="trclass" t-value="'level2'"/></t>
+    <t t-if="not a.get('level') &gt; 1"><t t-set="style" t-value="'font-weight: bold;'"/></t>
+    <t t-if="a['type'] != 'line'"><t t-set="style" t-value="'font-style: italic;'"/></t>
+    <t t-set="column" t-value="0" />
+    <tr t-att-class="' '.join([a['type'], str(a['id']), trclass])">
+        <t t-set="tdclass" t-value="''" />
+        <t t-if="a.get('unfoldable') and a.get('unfolded')"><t t-set="tdclass" t-value="' '.join(['foldable', str(a.get('id'))])" /></t>
+        <t t-if="a.get('unfoldable') and not a.get('unfolded')"><t t-set="tdclass" t-value="' '.join(['unfoldable', str(a.get('id'))])" /></t>
+        <td t-att-class="tdclass">
+            <t t-if="mode != 'print'">
+                <t t-if="a.get('unfoldable') and a.get('unfolded')">
+                    <span t-att-class="' '.join(['foldable', str(a.get('id')), 'caretIcon'])"><i class="fa fa-caret-down"></i></span>
+                </t>
+                <t t-if="a.get('unfoldable') and not a.get('unfolded')">
+                    <span t-att-class="' '.join(['unfoldable', str(a.get('id')), 'caretIcon'])"><i class="fa fa-caret-right"></i></span>
+                </t>
+            </t>
+            <t t-if="mode == 'print' and a['type'] != 'line'"><span t-att-class="a.get('type') + ' ' + str(a.get('id')) + ' domainLine'"><t t-esc="a.get('name')"/></span><t t-call="account.report_financial_footnote_sup" /></t>
+            <a t-if="a['type'] not in ['account_id', 'line', 'tax_id'] and mode != 'print'"><span t-att-class="a.get('type') + ' ' + str(a.get('id')) + ' domainLine'"><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></a>
+            <div class="dropdown" t-if="(a['type'] == 'account_id' or a['type'] == 'tax_id') and mode != 'print'">
+                <a data-toggle="dropdown">
+                    <span t-att-class="' '.join([a['type'], str(a['id']), 'domainLine'])">
+                        <t t-esc="a.get('name')"/>
+                    </span>
+                    <span class="caret"></span>
+                </a>
+                <t t-call="account.report_financial_footnote_sup" />
+                <ul class="dropdown-menu domainDropdown" role="menu" aria-labelledby="dLabel">
+                    <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="to_graph">Graph</a></li>
+                    <li role="presentation" t-if="a['type'] == 'account_id'"><a role="menuitem" tabindex="-1" class="to_amls">Account Move Lines</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" class="add_footnote">Add Footnote</a></li>
+                    <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="to_net">See net move lines</a></li>
+                    <li role="presentation" t-if="a['type'] == 'tax_id'"><a role="menuitem" tabindex="-1" class="to_tax">See tax move lines</a></li>
+                </ul>
+            </div>
+            <t t-if="a['type'] == 'line'"><span t-att-style="style" ><span style="color: black;"><i class="fa fa-pencil-square"></i></span><t t-esc="a.get('name')"/><t t-call="account.report_financial_footnote_sup" /></span></t>
+        </td>
+        <t t-set="base_style" t-value="style" />
+        <t t-foreach="a['columns']" t-as="c">
+            <td class="text-right" style="white-space: nowrap;">
+                <t t-set="column" t-value="column + 1" />
+                <t t-if="isinstance(c, tuple)"><t t-set="style" t-value="c[1] + base_style" /><t t-set="c" t-value="c[0]" /></t>
+                <span class="annotable" t-att-style="style">
+                    <span style="color: black;"><i class="fa fa-pencil-square"></i></span>
+                    <t t-raw="c" /><t t-call="account.report_financial_footnote_sup" />
+                </span>
+                <t t-if="style != base_style"><t t-set="style" t-value="base_style" /></t>
+            </td>
+        </t>
+    </tr>
+</template>
+<template id="report_financial">
+    <t t-if="mode == 'print'"><t t-raw="'&lt;base href=%s&gt;' % base_url"/></t>
+    <t t-call="report.html_container">
+        <span class="oe_account_report_widgets">
+            <h2 t-esc="o.get_title()"/>
+            <t t-if="mode != 'print' and o.get_report_type() != 'date_range_extended'"><t t-call="account.report_configurator"/></t>
+            <t t-call-assets="web.assets_common" t-css="false" />
+            <t t-call-assets="web.assets_backend" t-css="false" />
+            <script type="text/javascript" src="/account/static/src/js/account_report_widgets.js"></script>
+            <link rel="stylesheet" href="/account/static/src/css/account_financial_report.css" />
+            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+            <div t-att-class="' '.join(['page', 'oe_account_report_widgets', str(o.get_name()), str(context.id)])">
+                <div t-if="mode != 'print' and context.summary == ''" class="summary">
+                    <div class="alert alert-info alert-dismissible addSummary" role="alert">
+                        <span><input type='text' class="form-control" name='summary' placeholder='Click to add a summary' /></span>
                     </div>
                 </div>
-
-                <table class="table table-condensed" t-if="data['form']['debit_credit']">
+                <div t-if="mode != 'print' and context.summary != ''" class="summary">
+                    <div class="alert alert-info alert-dismissible savedSummary" role="alert">
+                        <button type="button" class="close closeSummary"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close"><i style="font-size: 16px;" class="fa fa-pencil"></i> </button>
+                        <span><t t-raw="context.summary" /></span>
+                    </div>
+                </div>
+                <div t-if="mode == 'print' and context.summary != ''" class="alert alert-info alert-dismissible savedSummary" role="alert">
+                    <span><t t-raw="context.summary" /></span>
+                </div>
+                <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th class="text-right">Debit</th>
-                            <th class="text-right">Credit</th>
-                            <th class="text-right">Balance</th>
+                            <th></th>
+                            <t t-foreach="context.get_columns_names()" t-as="column_name">
+                                <th class="text-right" t-raw="column_name" />
+                            </t>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="get_lines(data)" t-as="a">
-                            <t t-if="a['level'] != 0">
-                                <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
-                                <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
-
-                                <td>
-                                    <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                    <span t-att-style="style" t-esc="a.get('name')"/>
-                                </td>
-                                <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('debit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                                </td>
-                                <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('credit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                                </td>
-                                <td class="text-right" style="white-space: nowrap;">
-                                    <span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
-                                </td>
-                            </t>
-                        </tr>
+                        <t t-foreach="lines" t-as="a">
+                            <t t-call="account.report_financial_line" />
+                        </t>
                     </tbody>
                 </table>
-
-                <table class="table table-condensed" t-if="not data['form']['enable_filter'] and not data['form']['debit_credit']">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th class="text-right">Balance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="get_lines(data)" t-as="a">
-                            <t t-if="a['level'] != 0">
-                                <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
-                                <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
-
-                                <td>
-                                    <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                    <span t-att-style="style" t-esc="a.get('name')"/>
-                                </td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                            </t>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table table-condensed" t-if="data['form']['enable_filter'] and not data['form']['debit_credit']">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th class="text-right">Balance</th>
-                            <th class="text-right"><span t-esc="data['form']['label_filter']"/></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="get_lines(data)" t-as="a">
-                            <t t-if="a['level'] != 0">
-                                <t t-if="a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: normal;'"/></t>
-                                <t t-if="not a.get('level') &gt; 3"><t t-set="style" t-value="'font-weight: bold;'"/></t>
-
-                                <td>
-                                    <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
-                                    <span t-att-style="style" t-esc="a.get('name')"/>
-                                </td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                                <td class="text-right"><span t-att-style="style" t-esc="a.get('balance_cmp')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
-                            </t>
-                        </tr>
-                    </tbody>
-                </table>
+                <t t-foreach="context.footnotes" t-as="footnote">
+                    <p class="footnote" t-att-id="'footnote' + str(footnote.number)">
+                        <span class='text'><t t-raw="str(footnote.number) + '. ' + footnote.text"/></span>
+                        <span class='footnoteIcons'><i class="fa fa-pencil-square"></i><i class="fa fa-trash-o"></i></span>
+                    </p>
+                </t>
             </div>
-        </t>
+            <div t-if="mode != 'print'" class="dropdown exportDropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    Export
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?pdf">PDF</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?xls">XLS</a></li>
+                </ul>
+            </div>
+            <!-- Modal -->
+            <div t-if="mode != 'print'" class="modal fade" id="footnoteModal" tabindex="-1" role="dialog" aria-labelledby="footnoteLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="footnoteLabel">Add footnote</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form">
+                                <label for="note">Add a footnote</label>
+                                <textarea name="note" id="note" rows='4' class="form-control" placeholder="Insert foot note here"></textarea>
+                                <input type='hidden' id='type' />
+                                <input type='hidden' id='target_id' />
+                                <input type='hidden' id='column' />
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="saveFootNote">Save changes</button> or <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </span>
     </t>
 </template>
 </data>

@@ -6,6 +6,7 @@ from openerp.osv import osv, expression
 from openerp.exceptions import RedirectWarning, UserError
 from openerp.report import report_sxw
 from openerp.tools import float_is_zero
+from openerp.tools.safe_eval import safe_eval
 
 class account_move_line(models.Model):
     _name = "account.move.line"
@@ -44,6 +45,16 @@ class account_move_line(models.Model):
 
             line.amount_residual = line.company_id.currency_id.round(amount * sign)
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
+
+    @api.depends('debit', 'credit')
+    def _store_balance(self):
+        for line in self:
+            line.balance = line.debit - line.credit
+
+    @api.depends('credit_cash_basis', 'debit_cash_basis')
+    def _store_balance_cash_basis(self):
+        for line in self:
+            line.balance_cash_basis = line.debit_cash_basis - line.credit_cash_basis
 
     @api.model
     def _get_currency(self):
@@ -88,8 +99,10 @@ class account_move_line(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Float(digits=0, default=0.0)
     credit = fields.Float(digits=0, default=0.0)
+    balance = fields.Float(compute='_store_balance', store=True, digits=0, default=0.0, help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
     debit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
     credit_cash_basis = fields.Float(digits=0, default=0.0, compute='_compute_cash_basis', store=True)
+    balance_cash_basis = fields.Float(compute='_store_balance_cash_basis', store=True, digits=0, default=0.0, help="Technical field holding the debit_cash_basis - credit_cash_basis in order to open meaningful graph views from reports")
     amount_currency = fields.Float(string='Amount Currency', default=0.0, digits=0,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
@@ -128,11 +141,27 @@ class account_move_line(models.Model):
     # TODO: put the invoice link and partner_id on the account_move
     invoice = fields.Many2one('account.invoice', string='Invoice')
     partner_id = fields.Many2one('res.partner', string='Partner', index=True, ondelete='restrict')
+    user_type = fields.Many2one('account.account.type', related='account_id.user_type', string='User Type', index=True, store=True)
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
     ]
+
+    def compute_fields(self, field_names):
+        if len(self) == 0:
+            return []
+        select = ','.join(['\"account_move_line\".' + k for k in field_names])
+        where_clause, where_params = self._query_get()
+        sql = "SELECT \"account_move_line\".id," + select + " FROM \"account_move_line\" WHERE " + where_clause + " AND \"account_move_line\".id IN %s GROUP BY \"account_move_line\".id"
+
+        where_params += [tuple(self.ids)]
+        self.env.cr.execute(sql, where_params)
+        results = self.env.cr.fetchall()
+        results = dict([(k[0], k[1:]) for k in results])
+        for id, l in results.items():
+            results[id] = dict([(field_names[i], k) for i, k in enumerate(l)])
+        return results
 
     @api.multi
     @api.constrains('account_id')
@@ -885,45 +914,34 @@ class account_move_line(models.Model):
         }
 
     @api.model
-    def _query_get(self, obj='l'):
-        """ Build SQL query to fetch lines based on obj and context """
-
-        account_obj = self.env['account.account']
+    def _query_get(self, domain=None):
         context = dict(self._context or {})
-        initial_bal = context.get('initial_bal', False)
-        company_clause = " "
-        query = ''
-        if context.get('company_id', False):
-            company_clause = " AND " + obj + ".company_id = %s" % context.get('company_id', False)
+        domain = domain and safe_eval(domain) or []
 
-        state = context.get('state', False)
-        where_move_state = ''
-        where_move_lines_by_date = ''
-
-        if context.get('date_from', False) and context.get('date_to', False):
-            if initial_bal:
-                where_move_lines_by_date = " AND " + obj + ".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+        if context.get('date_to'):
+            domain += [('date', '<=', context['date_to'])]
+        if context.get('date_from'):
+            if not context.get('strict_range'):
+                domain += ['|', ('date', '>=', context['date_from']), ('account_id.user_type.include_initial_balance', '=', True)]
             else:
-                where_move_lines_by_date = " AND " + obj + ".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+                domain += [('date', '>=', context['date_from'])]
 
-        if state:
-            if state.lower() not in ['all']:
-                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
-            #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
-            #so we have to invalidate this query
-            raise UserError(_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
+        if context.get('journal_ids'):
+            domain += [('journal_id', 'in', context['journal_ids'])]
 
-        if context.get('journal_ids', False):
-            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
+        state = context.get('state')
+        if state and state.lower() != 'all':
+            domain += [('move_id.state', '=', state)]
 
-        if context.get('chart_account_id', False):
-            child_ids = account_obj.browse(context['chart_account_id'])._get_children_and_consol()
-            if child_ids:
-                query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+        if context.get('company_id'):
+            domain += [('company_id', '=', context['company_id'])]
 
-        query += company_clause
-        return query
+        where_clause = ""
+        where_clause_params = []
+        if domain:
+            query = self._where_calc(domain)
+            dummy, where_clause, where_clause_params = query.get_sql()
+        return where_clause, where_clause_params
 
 
 class account_partial_reconcile(models.Model):
